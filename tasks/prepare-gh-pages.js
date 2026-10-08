@@ -39,9 +39,6 @@ function processHtmlFiles(dir) {
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      if (entry.name === 'examples') {
-        continue; // examples already use relative paths "./"
-      }
       processHtmlFiles(fullPath);
     } else if (entry.isFile() && entry.name.endsWith('.html')) {
       let content = fs.readFileSync(fullPath, 'utf8');
