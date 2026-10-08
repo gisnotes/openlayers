@@ -1,22 +1,61 @@
 ---
 layout: example.html
-title: Change Tile Layer Style
-shortdesc: Updating the style of a WebGL tile layer
-docs: >
+title: Change Tile Layer Style / 更改瓦片图层样式
+shortdesc: Updating the style of a WebGL tile layer / 更新 WebGL 瓦片图层的样式
+docs: |
   When you want to change the style of a WebGL tile layer based on some change in your
   application state, you should use the `layer.updateStyleVariables()` method.  A layer can
   be efficiently rendered even if style variables are changed on every render frame.
   In cases where you need to completely replace the style of a layer, you can call the
   `layer.setStyle()` method.  This method should not be called in response to frequent
   user events (e.g. mouse movement, dragging a slider, etc.).
+
+  当您希望根据应用程序状态的变化来更改 WebGL 瓦片图层的样式时，应使用 `layer.updateStyleVariables()` 方法。即使在每个渲染帧上都更改样式变量，图层也能够被高效渲染。在需要完全替换图层样式的情况下，您可以调用 `layer.setStyle()` 方法。不应在响应高频用户事件（例如鼠标移动、拖动滑块等）时调用此方法。
+
+  ---
+
+  ### 📚 学习记录与技术笔记 (Learning Notes)
+
+  #### 1. 下拉选项与调色板说明
+  * **`w/` 的含义**：英文日常与技术文档中常见的 **`with`**（带有/使用）缩写（与之对应的是 `w/o` = `without`）。例如 `NDVI w/ palette 1` 即代表 `NDVI with palette 1`（使用调色板 1 的 NDVI）。在中文语境下可简称为“NDVI 调色板 1”。
+  * **palette 1 与 palette 2**：
+    * **palette 1 (`ndviPalettePlasma`)**：采用科学可视化经典的 **Plasma（等离子体）** 色阶（蓝紫 &rarr; 紫红 &rarr; 明黄）。
+    * **palette 2 (`ndviPaletteViridis`)**：采用著名的 **Viridis（翠绿）** 色阶（深紫 &rarr; 蓝 &rarr; 绿 &rarr; 黄），具备感知均匀性且对色盲色弱人群极度友好。
+
+  #### 2. 本示例中 `style` 标签的核心演示机制
+  本示例演示的并非传统的矢量要素样式，而是 OpenLayers 极具特色的 **WebGL 瓦片图层声明式着色表达式（WebGL Tile Layer Style Expressions）**：
+  * **客户端解耦计算**：数据源（GeoTIFF，包含 4 个原始波段）完全不变，所有图像效果纯粹由前端 GPU 片段着色器根据样式表达式逐像素计算生成。
+  * **波段提取与运算（Band Math）**：利用 `['band', n]` 提取特定波段，通过算术操作符 `['/', value, max]` 做动态归一化。
+  * **多通道色彩合成（RGB Composite）**：
+    * **真彩色（True Color）**：将红、绿、蓝波段分别送入 RGB 通道，配合 `gamma: 1.1` 提升暗部对比度。
+    * **标准假彩色（False Color）**：用近红外（NIR）替代红通道，使植被呈现醒目的红色。
+  * **连续插值渐变（`interpolate`）**：在 GPU 上实时计算 NDVI 植被指数公式 `(NIR - Red) / (NIR + Red)`，并根据断点平滑插值输出颜色。
+  * **调色板映射（`palette`）**：将归一化后的指标映射至离散颜色数组。
+  * **API 运行时建议**：彻底更换着色算法使用 `layer.setStyle(style)`；如需高频平滑调节参数（如对比度、亮度），推荐在样式中配置 `variables` 并使用 `layer.updateStyleVariables()`。
+
+  #### 3. 遥感与多波段基础概念速记
+  * **普通照片 vs. 卫星遥感**：普通手机照片只有红绿蓝（RGB）3 个通道；卫星遥感相机是多光谱相机，不仅能拍到可见光，还能捕获人眼不可见的**近红外（NIR）**、短波红外等。每个波段本质上是一张特定波长下的黑白灰度图矩阵。
+  * **本例 4 个波段**：Band 1 (红光 Red)、Band 2 (绿光 Green)、Band 3 (蓝光 Blue)、Band 4 (近红外 NIR)。
+  * **为什么近红外（NIR）如此关键**：健康植物叶绿素强烈吸收红光（用于光合作用），同时叶片细胞强烈反射近红外光（防止被晒伤）。因此植物在近红外波段下格外明亮（数值极高），在红光波段极暗（数值极低）。
+  * **NDVI 归一化植被指数**：`(NIR - Red) / (NIR + Red)`，结果在 -1.0 到 1.0 之间。云、雪、水体为负值；裸土在 0 左右；稀疏草地到茂密森林在 0.2~0.8。
+
+  #### 4. 代码中的 `const max = 3000` 是如何确定的？换新影像怎么处理？
+  * **为什么是 3000**：欧空局哨兵2号（Sentinel-2）L2A 地表反射率真实范围为 0.0 到 1.0（0% 到 100%），为了以 16 位整数（Uint16）紧凑存储，数据放大了 10,000 倍。然而地球表面绝大部分地物（树木、土壤、水体）的自然反射率都在 0% 到 30%（即 0 到 3000）之间。若直接除以 10000，大部分画面会集中在 0.0 到 0.3 而极度昏暗。因此将 3000 作为白平衡上限进行视觉拉伸截断，使地物细节更加明亮饱满。
+  * **更换 TIF 影像时的判定规则**：
+    * **8位影像（Uint8，如航拍图）**：像素范围 0 到 255，max 取 255（或启用数据源自带的 `normalize: true` 自动处理）。
+    * **其他 16 位卫星影像（如 Landsat、高分卫星）**：查阅产品元数据说明，或在 QGIS / `gdalinfo -stats` 中查看直方图的 98% 累积截断值（通常在 3000 到 6000）。
+    * **32位浮点影像（Float32）**：数值本身即 0.0 到 1.0，直接使用即可，无需除以 max。
+    * **DEM 高程数据**：像素代表海拔高度（如 -50 到 8848 米），需根据区域实际的 min 和 max 进行区间线性拉伸。
+    * **动态工程实践**：推荐通过 `variables: { max: 3000 }` 与 `['var', 'max']` 配合滑动条组件，使用 `layer.updateStyleVariables()` 供用户交互式调节对比度（可参考同目录下的 `cog-stretch.html` 示例）。
 tags: "cog, webgl, style"
 ---
 <div id="map" class="map"></div>
-Set the layer style
+<label for="style">Set the layer style / 设置图层样式：</label>
 <select id="style">
-  <option value="trueColor">True Color</option>
-  <option value="falseColor">False Color</option>
-  <option value="ndvi">NDVI</option>
-  <option value="ndviPalettePlasma">NDVI w/ palette 1</option>
-  <option value="ndviPaletteViridis">NDVI w/ palette 2</option>
+  <option value="trueColor">True Color / 真彩色</option>
+  <option value="falseColor">False Color / 假彩色</option>
+  <option value="ndvi">NDVI / 归一化植被指数</option>
+  <option value="ndviPalettePlasma">NDVI w/ palette 1 / NDVI 调色板 1</option>
+  <option value="ndviPaletteViridis">NDVI w/ palette 2 / NDVI 调色板 2</option>
 </select>
+

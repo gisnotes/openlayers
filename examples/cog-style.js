@@ -3,32 +3,43 @@ import View from '../src/ol/View.js';
 import TileLayer from '../src/ol/layer/WebGLTile.js';
 import GeoTIFF from '../src/ol/source/GeoTIFF.js';
 
+// Normalization function: scale Sentinel-2 reflectance values (0-3000) to 0-1 range
+// 归一化函数：将哨兵2号（Sentinel-2）反射率值（0-3000）缩放到 0-1 范围
 const max = 3000;
 function normalize(value) {
   return ['/', value, max];
 }
 
+// 4 bands of Sentinel-2: Band 1 (Red), Band 2 (Green), Band 3 (Blue), Band 4 (NIR)
+// 哨兵2号的 4 个波段：波段 1（红光）、波段 2（绿光）、波段 3（蓝光）、波段 4（近红外 NIR）
 const red = normalize(['band', 1]);
 const green = normalize(['band', 2]);
 const blue = normalize(['band', 3]);
 const nir = normalize(['band', 4]);
 
+// True Color style (RGB composite)
+// 真彩色样式（RGB 合成）
 const trueColor = {
   color: ['array', red, green, blue, 1],
   gamma: 1.1,
 };
 
+// False Color style (NIR, Red, Green composite) - useful for highlighting vegetation
+// 标准假彩色样式（近红外、红光、绿光合成）—— 常用于突出显示植被
 const falseColor = {
   color: ['array', nir, red, green, 1],
   gamma: 1.1,
 };
 
+// NDVI: (NIR - Red) / (NIR + Red)
+// 归一化植被指数 NDVI: (近红外 - 红光) / (近红外 + 红光)
 const ndvi = {
   color: [
     'interpolate',
     ['linear'],
     ['/', ['-', nir, red], ['+', nir, red]],
     // color ramp for NDVI values, ranging from -1 to 1
+    // NDVI 值的颜色渐变（Color Ramp），取值范围从 -1 到 1
     -0.2,
     [191, 191, 191],
     -0.1,
@@ -72,6 +83,8 @@ const ndvi = {
   ],
 };
 
+// NDVI using Plasma discrete color palette
+// 使用 Plasma 离散调色板渲染的 NDVI
 const ndviPalettePlasma = {
   color: [
     'palette',
@@ -87,6 +100,9 @@ const ndviPalettePlasma = {
     ['#0d0887', '#7e03a8', '#cb4778', '#f89540', '#f0f921'],
   ],
 };
+
+// NDVI using Viridis discrete color palette
+// 使用 Viridis 离散调色板渲染的 NDVI
 const ndviPaletteViridis = {
   color: [
     'palette',
@@ -103,6 +119,8 @@ const ndviPaletteViridis = {
   ],
 };
 
+// Create a WebGL tile layer with a Cloud Optimized GeoTIFF (COG) source
+// 创建带有云优化 GeoTIFF (COG) 数据源的 WebGL 瓦片图层
 const layer = new TileLayer({
   style: trueColor,
   source: new GeoTIFF({
@@ -115,6 +133,8 @@ const layer = new TileLayer({
   }),
 });
 
+// Initialize the map
+// 初始化地图
 const map = new Map({
   target: 'map',
   layers: [layer],
@@ -136,6 +156,8 @@ const styles = {
 
 const styleSelector = document.getElementById('style');
 
+// Update layer style when user changes the dropdown selection
+// 用户切换下拉框选择时更新图层样式
 function update() {
   const style = styles[styleSelector.value];
   layer.setStyle(style);
