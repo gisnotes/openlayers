@@ -1,12 +1,37 @@
 ---
 layout: example.html
-title: Drawing Features Style
-shortdesc: Example of using the ol/interaction/Draw interaction with drawing style configured.
-docs: >
+title: Drawing Features Style / 绘制要素时的自定义样式
+shortdesc: Example of using the ol/interaction/Draw interaction with drawing style configured. / 使用配置了自定义绘制草绘样式的 ol/interaction/Draw 交互示例。
+docs: |
   The Draw interaction in this example uses a custom drawing style. Select a geometry type from the
   dropdown above to start drawing. To finish drawing, click the last
   point. To activate freehand drawing for lines, polygons, and circles, hold
-  the `Shift` key. 
+  the `Shift` key.
+
+  此示例中的 Draw 交互使用了自定义的草绘样式（Drawing Style）。从上方的下拉列表中选择几何类型即可开始绘制。若要完成绘制，请双击或点击最后一个点。对于线、多边形和圆，按住 `Shift` 键可激活自由手绘模式（Freehand）。
+
+  ---
+
+  ### 📚 学习记录与技术笔记 (Learning Notes)
+
+  #### 1. 这里是如何更改绘制点线面时的样式的？
+  * **样式定义方式（Flat / Literal Style）**：
+    代码中没有使用传统的 `new Style({ ... })`，而是采用了 OpenLayers 的**字面量扁平样式对象（Flat Style）**：
+    * **Point**：`'circle-radius': 5, 'circle-fill-color': 'red'`（鼠标光标所在顶点显示红色圆点）。
+    * **LineString**：黄色线条描边（宽度 2px），顶点伴随红色圆点。
+    * **Polygon**：黄色边框，内部填充蓝色，顶点伴随红色圆点。
+    * **Circle**：蓝色边框，内部填充黄色，顶点伴随红色圆点。
+  * **样式注入方式**：
+    在 `addInteraction()` 函数中，将对应几何类型的样式直接作为 `style` 配置项传入 `new Draw({ source, type, style: styles[value] })`。
+
+  #### 2. 这个例子是在什么时机下更改样式的？
+  这里包含两个维度的关键时机：
+  * **交互切换时机（用户交互层面）**：
+    当用户在顶部下拉列表中切换几何类型时，触发 `typeSelect.onchange` 事件。逻辑中先通过 `map.removeInteraction(draw)` 销毁移除旧的交互实例，再调用 `addInteraction()` 重新创建一个绑定了新几何类型和对应 `styles[value]` 的 `Draw` 实例并重新挂载到地图上。
+  * **要素生命周期时机（渲染生效阶段 - 核心原理）**：
+    **传给 `Draw({ style })` 的样式仅仅在“正在绘制中（草绘状态 Sketching）”这一阶段生效**。
+    * **绘制中（草绘要素 Sketch Feature）**：由 `Draw` 实例的 `style` 管控，呈现自定义的红点、黄线、蓝面等高对比度指示效果；
+    * **绘制完成后（正式要素 Finished Feature）**：一旦完成绘制（双击或点击最后一点），要素便脱离 `Draw` 交互并提交存入 `VectorSource` 中。此时要素不再由 `Draw` 管控，而是立刻转变为由所在 `VectorLayer` 图层的样式来渲染（因示例中矢量图层未配置自定义 style，故要素瞬间变回 OpenLayers 默认的蓝灰矢量样式）。
 tags: "draw, style"
 resources:
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css
@@ -15,13 +40,13 @@ resources:
 <div class="row">
   <div class="col-auto">
     <span class="input-group">
-      <label class="input-group-text" for="type">Geometry type:</label>
+      <label class="input-group-text" for="type">Geometry type / 几何类型:</label>
       <select class="form-select" id="type">
-        <option value="Point">Point</option>
-        <option value="LineString">LineString</option>
-        <option value="Polygon">Polygon</option>
-        <option value="Circle">Circle</option>
-        <option value="None">None</option>
+        <option value="Point">Point / 点</option>
+        <option value="LineString">LineString / 线</option>
+        <option value="Polygon">Polygon / 多边形</option>
+        <option value="Circle">Circle / 圆</option>
+        <option value="None">None / 无</option>
       </select>
     </span>
   </div>

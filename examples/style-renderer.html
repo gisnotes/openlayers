@@ -1,9 +1,52 @@
 ---
 layout: example.html
-title: Style renderer
-shortdesc: Example of a style with a custom renderer.
-docs: >
+title: Style renderer / 样式渲染器（自定义渲染函数）
+shortdesc: Example of a style with a custom renderer. / 使用自定义 renderer 渲染函数的样式示例。
+docs: |
   A custom style renderer and a clip path are used to render the flag of a country as fill for the country shape.
+
+  使用自定义样式渲染器（Custom Style Renderer）和 Canvas 剪裁路径（Clip Path），将各个国家的国旗图标作为填充图像渲染到对应国家的几何轮廓中。
+
+  ---
+
+  ### 📚 学习记录与技术解析 (Learning Notes)
+
+  #### 1. 核心概念：什么是自定义样式渲染器 (`Style` 的 `renderer`)？
+  * **传统样式的局限**：OpenLayers 默认通过 `Fill`、`Stroke`、`Icon`、`Text` 等规则定义要素样式，适合常规 GIS 可视化；但当遇到需要任意形状图元剪裁（Clip）、Canvas 纹理混合、粒子动画等高度定制化的视觉效果时，标准样式配置难以满足。
+  * **自定义渲染器机制**：在 `Style` 中配置 `renderer` 回调函数：
+    ```javascript
+    new Style({
+      renderer: function (pixelCoordinates, state) { ... }
+    })
+    ```
+    该函数在地图渲染每一帧时逐要素触发，开发者可以直接获取底层 HTML5 Canvas 2D 上下文（`state.context`），利用原生 Canvas 2D API 自由操控几何图元的绘制管线。
+
+  #### 2. 自定义渲染函数中的关键参数与执行步骤
+  * **核心入参**：
+    * `pixelCoordinates`：OpenLayers 已预先将该要素的几何坐标转换为当前视图帧下的**屏幕像素坐标（Pixel Coordinates）**，免去了手动投影计算的繁琐步骤。
+    * `state`：当前渲染帧的上下文状态对象，常用属性包括：
+      * `state.context`：当前图层渲染所在的 HTML5 Canvas 2D 绘图上下文（`CanvasRenderingContext2D`）。
+      * `state.geometry`：要素原始的地理几何对象。
+      * `state.feature`：当前正在渲染的要素实例（`Feature`）。
+  * **关键执行步骤**：
+    1. **像素坐标映射与边界计算**：
+       ```javascript
+       const geometry = state.geometry.clone();
+       geometry.setCoordinates(pixelCoordinates);
+       ```
+       克隆要素几何体并赋予像素坐标，通过 `geometry.getExtent()` 快速获得屏幕像素空间的外包矩形，利用 `getWidth`、`getHeight` 计算图片宽高，以及通过 `getBottomLeft` 获取绘制起点。
+    2. **上下文状态栈管理 (`context.save()` / `context.restore()`)**：
+       底层 Canvas 是整个图层共享的，任何剪裁、变换或样式修改都会影响后续绘制。因此在设置剪裁与贴图前必须调用 `context.save()` 保存状态，绘制完成后必须通过 `context.restore()` 彻底还原。
+    3. **路径构建与几何剪裁 (`toContext` + `context.clip()`)**：
+       * 使用 OpenLayers 核心工具 `toContext(context)` 包装原生 Canvas 绘图上下文。
+       * 通过 `renderContext.setFillStrokeStyle(fill, stroke)` 设置白色轮廓边框样式。
+       * 调用 `renderContext.drawGeometry(geometry)` 绘制国家多边形路径，紧接着执行原生 `context.clip()`，将后续的绘制区域精确锁定在该国家多边形轮廓范围之内。
+    4. **国旗图片贴图绘制 (`context.drawImage()`)**：
+       调用原生 `context.drawImage(flag, left, bottom, width, height)` 在外包矩形内绘制国旗图片。得益于先前的 `clip()` 剪裁路径，超出国家边界的图片内容被自动遮罩截除，呈现出与国家轮廓严丝合缝的国旗填充效果。
+
+  #### 3. 动态图片加载与要素更新时机
+  * **按需拉取国旗**：在矢量数据源（`VectorSource`）上监听 `addfeature` 事件。国家要素加载解析完成后，根据其两字母代码（`iso_a2`）向 FlagCDN 异步请求对应的国旗图片。
+  * **属性变更触发重绘**：图片加载完成时（`img.onload`），执行 `feature.set('flag', img)` 将图片实例挂载到要素上。在 OpenLayers 中，调用 `feature.set()` 会自动触发要素变更事件（`change`），通知图层发起重新渲染，使得自定义 `renderer` 在下一帧中获取到国旗图片并完成绘制。
 tags: "vector, geojson, style, custom, renderer"
 ---
 <div id="map" class="map"></div>
