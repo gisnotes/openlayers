@@ -1,4 +1,5 @@
 import {apply} from 'ol-mapbox-style';
+import {demoTokens} from '../../examples/config/demo-tokens.js';
 import Map from '../../src/ol/Map.js';
 import View from '../../src/ol/View.js';
 import FullScreen from '../../src/ol/control/FullScreen.js';
@@ -83,9 +84,13 @@ const map = new Map({
 
 map.addControl(new FullScreen());
 
+const maptilerToken =
+  demoTokens.find((t) => t.env === 'MAPTILER_KEY')?.value ||
+  'get_your_own_D6rA4zTHduk6KOKTXzGB';
+
 apply(
   map,
-  'https://api.maptiler.com/maps/outdoor-v2/style.json?key=get_your_own_D6rA4zTHduk6KOKTXzGB',
+  'https://api.maptiler.com/maps/outdoor-v2/style.json?key=' + maptilerToken,
 );
 
 container.onmouseover = function () {
