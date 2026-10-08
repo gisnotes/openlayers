@@ -16,6 +16,12 @@ fs.mkdirSync(outDir, {recursive: true});
 // 2. Copy site/build (homepage, docs, theme, etc.) to outDir root
 fs.cpSync(siteBuildDir, outDir, {recursive: true});
 
+// 2.1 Copy real src/ol/ol.css to theme/ol.css (resolving Windows symlink issue)
+fs.copyFileSync(
+  path.resolve(rootDir, 'src/ol/ol.css'),
+  path.join(outDir, 'theme/ol.css'),
+);
+
 // 3. Copy build/examples to outDir/examples and outDir/en/latest/examples
 fs.mkdirSync(path.join(outDir, 'en', 'latest'), {recursive: true});
 fs.cpSync(examplesBuildDir, path.join(outDir, 'examples'), {recursive: true});
@@ -41,12 +47,19 @@ function processHtmlFiles(dir) {
       let content = fs.readFileSync(fullPath, 'utf8');
       content = content
         .replaceAll('href="/theme/', `href="${repoPath}/theme/`)
+        .replaceAll("href='/theme/", `href='${repoPath}/theme/`)
         .replaceAll('src="/theme/', `src="${repoPath}/theme/`)
+        .replaceAll("src='/theme/", `src='${repoPath}/theme/`)
         .replaceAll('href="/doc/', `href="${repoPath}/doc/`)
+        .replaceAll("href='/doc/", `href='${repoPath}/doc/`)
         .replaceAll('href="/download/', `href="${repoPath}/download/`)
+        .replaceAll("href='/download/", `href='${repoPath}/download/`)
         .replaceAll('href="/3rd-party/', `href="${repoPath}/3rd-party/`)
+        .replaceAll("href='/3rd-party/", `href='${repoPath}/3rd-party/`)
         .replaceAll('href="/en/', `href="${repoPath}/en/`)
-        .replaceAll('href="/"', `href="${repoPath}/"`);
+        .replaceAll("href='/en/", `href='${repoPath}/en/`)
+        .replaceAll('href="/"', `href="${repoPath}/"`)
+        .replaceAll("href='/'", `href='${repoPath}/'`);
       fs.writeFileSync(fullPath, content, 'utf8');
     }
   }
