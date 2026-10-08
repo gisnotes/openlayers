@@ -158,7 +158,11 @@ class StadiaMaps extends XYZ {
     };
 
     const layerConfig = LayerConfig[options.layer];
-    const query = options.apiKey ? '?api_key=' + options.apiKey : '';
+    const apiKey =
+      options.apiKey !== undefined
+        ? options.apiKey
+        : '0499ff32-917c-4910-bc27-3b864eed91c8';
+    const query = apiKey ? '?api_key=' + apiKey : '';
     const retina = providerConfig.retina && options.retina ? '@2x' : '';
 
     const url =
