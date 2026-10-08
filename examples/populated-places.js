@@ -36,7 +36,7 @@ const populatedPlaces = new VectorLayer({
   },
 });
 
-const key = 'get_your_own_D6rA4zTHduk6KOKTXzGB';
+const key = 'EPhPi7Zr1GTS500UybLu';
 
 const map = new Map({
   layers: [

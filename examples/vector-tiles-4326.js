@@ -5,7 +5,7 @@ import VectorTileLayer from '../src/ol/layer/VectorTile.js';
 import VectorTileSource from '../src/ol/source/VectorTile.js';
 import {createXYZ} from '../src/ol/tilegrid.js';
 
-const key = 'get_your_own_D6rA4zTHduk6KOKTXzGB';
+const key = 'EPhPi7Zr1GTS500UybLu';
 const url = 'https://api.maptiler.com/maps/basic-4326/style.json?key=' + key;
 
 // Match the server resolutions

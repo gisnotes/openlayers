@@ -9,7 +9,7 @@ const osm = new TileLayer({
   source: new OSM({wrapX: true}),
 });
 
-const key = 'get_your_own_D6rA4zTHduk6KOKTXzGB';
+const key = 'EPhPi7Zr1GTS500UybLu';
 
 const imagery = new TileLayer({
   source: new ImageTile({

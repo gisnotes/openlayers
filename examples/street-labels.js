@@ -20,7 +20,7 @@ const style = new Style({
   }),
 });
 
-const key = 'get_your_own_D6rA4zTHduk6KOKTXzGB';
+const key = 'EPhPi7Zr1GTS500UybLu';
 const attributions =
   '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> ' +
   '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>';

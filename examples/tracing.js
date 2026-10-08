@@ -10,7 +10,7 @@ import VectorSource from '../src/ol/source/Vector.js';
 
 const raster = new TileLayer({
   source: new ImageTile({
-    url: 'https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=get_your_own_D6rA4zTHduk6KOKTXzGB',
+    url: 'https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=EPhPi7Zr1GTS500UybLu',
     maxZoom: 20,
   }),
 });

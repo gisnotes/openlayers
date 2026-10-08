@@ -8,7 +8,7 @@ import VectorTileLayer from '../src/ol/layer/VectorTile.js';
 import {get} from '../src/ol/proj.js';
 import VectorTileSource from '../src/ol/source/VectorTile.js';
 
-const key = 'get_your_own_D6rA4zTHduk6KOKTXzGB';
+const key = 'EPhPi7Zr1GTS500UybLu';
 
 /** @type {any} */
 const worker = self;

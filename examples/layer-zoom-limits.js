@@ -5,7 +5,7 @@ import {fromLonLat} from '../src/ol/proj.js';
 import OSM from '../src/ol/source/OSM.js';
 import TileJSON from '../src/ol/source/TileJSON.js';
 
-const key = 'get_your_own_D6rA4zTHduk6KOKTXzGB';
+const key = 'EPhPi7Zr1GTS500UybLu';
 
 const map = new Map({
   target: 'map',

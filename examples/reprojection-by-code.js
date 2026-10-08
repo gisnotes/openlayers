@@ -10,7 +10,7 @@ import OSM from '../src/ol/source/OSM.js';
 import TileDebug from '../src/ol/source/TileDebug.js';
 import Stroke from '../src/ol/style/Stroke.js';
 
-const key = 'get_your_own_D6rA4zTHduk6KOKTXzGB';
+const key = 'EPhPi7Zr1GTS500UybLu';
 
 const osmSource = new OSM();
 

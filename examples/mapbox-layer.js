@@ -8,7 +8,7 @@ import Source from '../src/ol/source/Source.js';
 import VectorSource from '../src/ol/source/Vector.js';
 
 const center = [-98.8, 37.9];
-const key = 'get_your_own_D6rA4zTHduk6KOKTXzGB';
+const key = 'EPhPi7Zr1GTS500UybLu';
 
 const mbMap = new mapboxgl.Map({
   style: 'https://api.maptiler.com/maps/dataviz-light/style.json?key=' + key,

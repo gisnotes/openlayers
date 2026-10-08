@@ -4,7 +4,7 @@ import TileLayer from '../src/ol/layer/WebGLTile.js';
 import ImageTile from '../src/ol/source/ImageTile.js';
 import OSM from '../src/ol/source/OSM.js';
 
-const key = 'get_your_own_D6rA4zTHduk6KOKTXzGB';
+const key = 'EPhPi7Zr1GTS500UybLu';
 
 const imagery = new TileLayer({
   className: 'ol-layer-imagery',

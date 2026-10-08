@@ -15,7 +15,7 @@ proj4.defs(
 );
 register(proj4);
 
-const key = 'get_your_own_D6rA4zTHduk6KOKTXzGB';
+const key = 'EPhPi7Zr1GTS500UybLu';
 const url = 'https://api.maptiler.com/maps/basic-4326/style.json?key=' + key;
 
 const layer = new VectorTileLayer({
