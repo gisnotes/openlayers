@@ -1,10 +1,56 @@
 ---
 layout: example.html
-title: Vector tiles created from a Mapbox Style object
-shortdesc: Example of using ol-mapbox-style with tiles from maptiler.com.
-docs: >
-  Example of using `ol-mapbox-style` with tiles from maptiler.com.
-  **Note**: Make sure to get your own API key at https://www.maptiler.com/cloud/ when using this example. No map will be visible when the API key has expired.
+title: Vector tiles created from a Mapbox Style object / 使用 Mapbox 样式对象创建矢量切片地图
+shortdesc: Example of using ol-mapbox-style with tiles from maptiler.com. / 使用 ol-mapbox-style 库和来自 maptiler.com 矢量切片的示例。
+docs: |
+  Example of using `ol-mapbox-style` with tiles from maptiler.com. **Note**: Make sure to get your own API key at https://www.maptiler.com/cloud/ when using this example. No map will be visible when the API key has expired.
+
+  使用 `ol-mapbox-style` 库加载来自 maptiler.com 矢量切片样式的示例。**注意**：在实际项目中使用此示例时，请务必在 https://www.maptiler.com/cloud/ 获取您自己的有效 API 密钥。如果 API 密钥过期或无效，地图将无法显示。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么代码如此简短？`olms` 的幕后魔法
+  平时编写 OpenLayers 地图，我们需要繁琐地实例化 `new Map(...)`、`new View(...)`、配置复杂的 `VectorTileLayer`、设置投影坐标系、并编写海量的 `Style` 样式代码。
+  而在本示例中，整段核心代码仅有短短数行：
+  ```javascript
+  olms('map', 'https://api.maptiler.com/maps/outdoor-v2/style.json?key=' + key)
+    .then(function (map) {
+      map.addControl(new FullScreen());
+    });
+  ```
+  这是因为引入了专门的生态库 **`ol-mapbox-style`**（在代码中简写导入为 `olms`）：
+  * **一站式自动构建**：`olms(target, style)` 内部自动创建了 `ol/Map` 容器，自动解析了样式中的中心点与缩放级别创建 `ol/View`，并自动构建所有图层。
+  * **异步 Promise 机制**：由于 `style.json` 及其引用的字体、精灵图都是异步网络请求，该函数返回一个标准 Promise。在 `.then((map) => ...)` 回调中，你可以拿到已经完全就绪的 `ol/Map` 实例，自由调用所有原生 OpenLayers API（例如添加全屏控件 `map.addControl(...)`、注册点击事件等）。
+
+  #### 2. 什么是 Mapbox Style 规范（Mapbox Style Specification）？
+  * 它是由 Mapbox 制定的行业通用地图样式 JSON 规范（版本为 v8），现已成为 WebGIS 矢量瓦片的事实标准（MapLibre、MapTiler 等均全面兼容）。
+  * 一个 `style.json` 文件完整定义了一幅现代电子地图的一切视觉元素：
+    1. **`sources`（数据源）**：定义瓦片来自哪里（例如 MapTiler 的矢量切片 URL）。
+    2. **`layers`（图层与渲染规则）**：包含几十上百个子图层定义（如背景色、水系填充、等高线、森林绿地、不同等级道路线宽、地名标注文字等），并通过表达式进行动态滤镜筛选（`filter`）和样式赋值（`paint`/`layout`）。
+    3. **`glyphs`（字形字库）**：文本与注记所需的矢量字体切片模板。
+    4. **`sprite`（雪碧图）**：POI 图标、路牌盾牌图标等符号图集。
+
+  #### 3. 核心 API：`ol-mapbox-style` 关键用法全景
+  `ol-mapbox-style` 提供了多种维度的 API 供开发者灵活选用：
+  1. **快捷一键建图：`olms(target, style, [options])`**
+     * 最常用、最便捷的方法（即本示例所用）。
+     * `target`：可以是 DOM 元素的 `id` 字符串（如 `'map'`），也可以是一个已经存在的 `ol/Map` 实例。如果传入现有地图，它会将样式图层追加应用上去。
+     * `style`：可以是 `style.json` 的在线 URL 地址，也可以是已经解析好的 JavaScript JSON 对象。
+     * 返回值：`Promise<ol/Map>`，成功后返回当前地图对象。
+  2. **应用到现有地图：`apply(map, style, [options])`**
+     * 如果你之前已经自己通过 `new Map({...})` 创建好了地图，可以使用 `apply(map, style)` 将 Mapbox 样式规范直接赋给该地图。
+  3. **应用到单个图层：`applyStyle(layer, style, sourceOrLayers, [options])`**
+     * 仅将样式规则应用到某一个特定的 `VectorTileLayer` 或 `VectorLayer`，而不是接管整张地图。
+  4. **生成底层样式函数：`stylefunction(layer, style, source)`**
+     * 将 Mapbox Style 编译为原生 OpenLayers 的 `StyleFunction` 回调函数 `(feature, resolution) => Style[]`，适合高度定制化开发的场景。
+  5. **面向对象图层类：`MapboxVectorLayer`**
+     * 允许直接作为 OpenLayers 图层数组的一员：`new MapboxVectorLayer({ styleUrl: '...' })`。
+
+  #### 4. 为什么要在 OpenLayers 中使用 Mapbox Style？
+  * **设计与代码彻底解耦**：制图人员可以在 MapTiler Cloud、Mapbox Studio 或开源的 Maputnik 可视化编辑器中像使用 Photoshop 一样自由调整道路颜色、字体大小、注记避让，导出 JSON 即可生效，无需前端工程师手写数千行样式代码。
+  * **兼具两大体系优势**：享受 Mapbox 顶级矢量地图美感与性能的同时，依然能使用 OpenLayers 强大的 GIS 专业功能（例如复杂的拓扑编辑、投影重投影、WMS/WFS/WMTS 工业级服务集成、海量矢量分析等）。
 tags: "vector tiles, mapbox style, ol-mapbox-style, maptiler"
 ---
 <div id="map" class="map"></div>
