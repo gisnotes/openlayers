@@ -127,6 +127,7 @@ export default defineConfig({
     },
   },
   optimizeDeps: {
+    include: ['@maplibre/maplibre-gl-style-spec', 'pbf'],
     exclude: ['ol-mapbox-style', 'ol'],
   },
   build: {

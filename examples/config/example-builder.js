@@ -396,6 +396,13 @@ export default function exampleBuilder(config) {
 
       server.middlewares.use(async (req, res, next) => {
         try {
+          if (req.url) {
+            req.url =
+              req.url.replace(
+                /^\/(?:openlayers(?:\/en\/latest\/examples|\/examples)?|en\/latest\/examples|examples)(?=\/|\?|$)/,
+                '',
+              ) || '/';
+          }
           const url = req.url?.split('?')[0];
           if (!url) {
             return next();
@@ -447,8 +454,9 @@ export default function exampleBuilder(config) {
           const htmlMatch = url.match(/^\/([\w-]+)\.html$/);
           if (htmlMatch && exampleNames.includes(htmlMatch[1])) {
             const assets = await getAssets();
-            const html = assets[`${htmlMatch[1]}.html`];
+            let html = assets[`${htmlMatch[1]}.html`];
             if (html) {
+              html = await server.transformIndexHtml(req.url, html);
               res.statusCode = 200;
               res.setHeader('Content-Type', 'text/html');
               res.end(html);
