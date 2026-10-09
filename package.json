@@ -21,6 +21,7 @@
     "build-examples": "shx rm -rf build/examples && vite build --config examples/config/vite.config.js",
     "build-site": "node site/build.js",
     "serve-site": "npm run build-site && vite preview --outDir site/build --port 3000",
+    "serve-all": "npm run build-site && node tasks/prepare-gh-pages.js --local && vite preview --outDir build/site-dist --port 3000",
     "build-package": "npm run build-full && npm run copy-css && npm run generate-types && node tasks/prepare-package.js",
     "build-index": "shx rm -f build/index.js && npm run transpile && node tasks/generate-index.js",
     "build-full": "shx rm -rf build/full && npm run build-index && npx rollup --config config/rollup-full-build.js",
