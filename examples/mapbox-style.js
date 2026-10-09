@@ -23,4 +23,3 @@ olms(
   // 此时可以像操作常规 OpenLayers 地图一样自由调用所有原生 API（例如添加全屏控件）。
   map.addControl(new FullScreen());
 });
-
