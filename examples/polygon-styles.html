@@ -1,11 +1,74 @@
 ---
 layout: example.html
-title: Custom Polygon Styles
-shortdesc: Showing the vertices of a polygon with a custom style geometry.
-docs: >
+title: Custom Polygon Styles / 自定义多边形样式与顶点渲染
+shortdesc: Showing the vertices of a polygon with a custom style geometry. / 使用自定义几何图形函数（GeometryFunction）展示多边形的顶点节点。
+docs: |
   In this example two different styles are created for the polygons:
    * The first style is for the polygons themselves.
    * The second style is to draw the vertices of the polygons.
-tags: "polygon, vector, style, GeometryFunction"
+
+  在此示例中，为多边形（Polygon）要素创建了两个不同的渲染样式（复合样式数组）：
+   * **第一种样式**：应用于多边形本体（设置蓝色的边框描边与半透明填充色）。
+   * **第二种样式**：用于提取并绘制多边形各个顶点的控制点（通过在 Style 中配置自定义 `geometry` 函数，动态将多边形外环节点转换为 `MultiPoint` 多点几何，并使用橙色圆点进行渲染）。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么需要复合样式（Style Array）？
+  在很多 GIS 场景中，单个要素往往需要同时呈现多种不同维度的视觉效果：
+  * 例如：多边形既要有**面填充**，又要在**边界顶点**显示可供编辑拖拽的控制手柄（Anchor/Vertex Nodes）；
+  * 又如：道路中心线需要绘制“双线描边”，或者铁路需要绘制黑白相间的“斑马纹”；
+  * 在 OpenLayers 中，图层或要素的 `style` 属性不仅可以接收单个 `Style` 实例，还可以接收一个 `Style[]` 数组。当传入样式数组时，OpenLayers 会对同一个要素进行**多重渲染通道（Multi-pass Rendering）**，按数组先后顺序依次层叠绘制。
+
+  #### 2. 核心特性：`Style` 的 `geometry` 动态函数（GeometryFunction）
+  通常情况下，点样式（`CircleStyle` / `Icon`）只能绘制在 `Point` 类型的要素上，如果直接赋给 `Polygon` 面要素，由于面要素没有单一点坐标，点图标是不会显示的。
+  但是，OpenLayers 的 `ol/style/Style` 提供了一个极其强大的配置项 —— **`geometry`**：
+  ```javascript
+  new Style({
+    image: new CircleStyle({
+      radius: 5,
+      fill: new Fill({color: 'orange'}),
+    }),
+    geometry: function (feature) {
+      // 动态提取多边形外环坐标，返回一个 MultiPoint 几何对象
+      const coordinates = feature.getGeometry().getCoordinates()[0];
+      return new MultiPoint(coordinates);
+    },
+  })
+  ```
+  * **原理**：`geometry` 配置项可以是一个具体的几何对象，也可以是一个回调函数（`GeometryFunction`）。
+  * **执行时机**：在每次图层渲染准备绘制该样式时触发，接收当前的 `feature` 作为入参。
+  * **返回值**：返回一个新的几何对象（或要素本身的某个几何部分）。OpenLayers 将会**使用返回的临时几何对象来替代要素原始的几何形状**进行当前样式的绘制。
+  * **优势**：原始要素的数据源（`feature.getGeometry()`）丝毫不受影响，完全是在渲染管线中实时、纯动态派生的！
+
+  #### 3. 多边形坐标结构剖析：为什么是 `getCoordinates()[0]`？
+  在 GeoJSON 及 OpenLayers 中，`ol/geom/Polygon` 的内部坐标是一个三维数组 `number[][][]`：
+  ```javascript
+  polygonCoordinates = [
+    [ [x0, y0], [x1, y1], [x2, y2], [x0, y0] ], // 索引 0: 外环 (Exterior Ring)
+    [ ... ],                                     // 索引 1: 内环 1 (洞 Hole 1，可选)
+    [ ... ]                                      // 索引 2: 内环 2 (洞 Hole 2，可选)
+  ];
+  ```
+  * `feature.getGeometry().getCoordinates()[0]` 精准提取出多边形的**最外层闭合环轮廓**的所有顶点坐标列表。
+  * 将这个二维点坐标数组传入 `new MultiPoint(coordinates)`，便瞬间生成了一个“多点几何对象”。随后配置的 `CircleStyle` 就会自动在这个多点集的每一个坐标位置上绘制一个橙色圆圈。
+
+  #### 4. 关键 API 深度解析
+  * **`ol/style/Style` 的 `geometry` 参数**：
+    * 类型：`string | ol/geom/Geometry | ((feature: ol/Feature) => ol/geom/Geometry | undefined)`
+    * 作用：重定向样式的渲染几何载体。
+  * **`ol/geom/MultiPoint`**：
+    * 多点几何类型，接收点坐标数组 `Array<ol/coordinate/Coordinate>`，一次性表示多个离散点。
+  * **`ol/style/Circle` (`CircleStyle`)**：
+    * 常用的点状矢量符号样式，通过 `radius` 设置像素半径，通过 `fill` 和 `stroke` 定义填充色与轮廓线。
+  * **`ol/format/GeoJSON`**：
+    * `new GeoJSON().readFeatures(geojsonObject)`：用于解析标准 GeoJSON 对象或字符串，自动转换为 OpenLayers 原生 `Feature` 实例数组。
+
+  #### 5. 实际生产中的衍生应用场景
+  * **图形编辑交互（Edit Handles）**：在用户选中要素或者进行绘制/修改交互时，通过 `geometry` 提取所有端点展示蓝/白方块节点，供用户拖拽。
+  * **线段箭头与方向标识（Line Arrows）**：通过 `geometry` 函数获取线要素的终点坐标（或中间点），并动态计算切线方位角，返回点几何来渲染带有旋转角度的箭头图标。
+  * **多边形质心标注（Centroid Labels）**：通过 `geometry: (f) => f.getGeometry().getInteriorPoint()` 动态提取多边形内部中心点，用于呈现文本标注（`Text` 样式），确保文字精准居中在多边形内部。
+tags: "polygon, vector, style, GeometryFunction, 多边形, 矢量, 样式, 顶点"
 ---
 <div id="map" class="map"></div>
