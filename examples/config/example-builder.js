@@ -384,8 +384,10 @@ export default function exampleBuilder(config) {
     name: 'example-builder',
     configureServer(server) {
       server.watcher.on('change', (file) => {
+        const normalizedFile = path.resolve(file);
+        const normalizedDir = path.resolve(examplesDir);
         if (
-          file.startsWith(examplesDir) &&
+          normalizedFile.startsWith(normalizedDir) &&
           (file.endsWith('.html') ||
             file.endsWith('.js') ||
             file.endsWith('.css'))
