@@ -1,0 +1,540 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>Change Tile Layer Style / 更改瓦片图层样式</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="./theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="./theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="./theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="./theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="./theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="../examples/">Examples</a></li>
+          <li class="nav-item"><a class="nav-link" href="../apidoc/"><i class="fa fa-sitemap me-1"></i>API</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container-fluid line-numbers">
+      <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
+        <button id="latest-dismiss" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        This example uses OpenLayers v<span>10.11.1-dev</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
+      </div>
+
+
+      <div class="row-fluid">
+        <a href="#" id="codepen-button" class="btn btn-link float-end">
+          <i class="fab fa-codepen fa-lg"></i> Edit
+        </a>
+        <h4 id="title">Change Tile Layer Style / 更改瓦片图层样式</h4>
+        <p class="tags">
+          <span class="badge-group">
+            <a
+              href="./index.html?q=cog" class="badge badge-info">cog</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="cog"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-stretch.html&quot;&gt;Band Contrast Stretch / 遥感波段组合与对比度拉伸&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog.html&quot;&gt;Cloud Optimized GeoTIFF (COG)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-blob.html&quot;&gt;Cloud Optimized GeoTIFF (COG) from a Blob&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-custom-client.html&quot;&gt;Cloud Optimized GeoTIFF (COG) with Custom Loader&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;COG with ModelTransformation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF Reprojection&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-pyramid.html&quot;&gt;GeoTIFF tile pyramid&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-overviews.html&quot;&gt;GeoTIFF with Overviews&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG sources&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math.html&quot;&gt;NDVI from a Sentinel 2 COG&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-colors.html&quot;&gt;NDVI with a Dynamic Color Ramp&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC support&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >16</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=webgl" class="badge badge-info">webgl</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="webgl"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-webgl-line.html&quot;&gt;Applying a filter along lines rendered with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-stretch.html&quot;&gt;Band Contrast Stretch / 遥感波段组合与对比度拉伸&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering features with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-layer-swipe.html&quot;&gt;Layer Swipe (WebGL)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG sources&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./numpytile.html&quot;&gt;Rendering 16-bit NumpyTiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-sea-level.html&quot;&gt;Sea Level (with WebGL)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-shaded-relief.html&quot;&gt;Shaded Relief (with WebGL)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL points layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tiles.html&quot;&gt;WebGL Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-layer.html&quot;&gt;WebGL Vector Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time-webgl.html&quot;&gt;WMS Time (WebGL)&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >19</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=style" class="badge badge-info">style</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="style"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-stretch.html&quot;&gt;Band Contrast Stretch / 遥感波段组合与对比度拉伸&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geozarr-stretch.html&quot;&gt;Band Selection and Contrast Stretch / GeoZarr 波段选择与对比度拉伸&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features-style.html&quot;&gt;Drawing Features Style / 绘制要素时的自定义样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-renderer.html&quot;&gt;Style renderer / 样式渲染器（自定义渲染函数）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >27</a>
+          </span>
+        </p>
+        <div class="modal modal-tag-example" id="tag-example-list" tabindex="-1" role="dialog" aria-labelledby="tag-example-title" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="tag-example-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="list-group"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="map" class="map"></div>
+<label for="style">Set the layer style / 设置图层样式：</label>
+<select id="style">
+  <option value="trueColor">True Color / 真彩色</option>
+  <option value="falseColor">False Color / 假彩色</option>
+  <option value="ndvi">NDVI / 归一化植被指数</option>
+  <option value="ndviPalettePlasma">NDVI w/ palette 1 / NDVI 调色板 1</option>
+  <option value="ndviPaletteViridis">NDVI w/ palette 2 / NDVI 调色板 2</option>
+</select>
+
+
+        <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
+          <input id="codesandbox-params" type="hidden" name="parameters">
+        </form>
+      </div>
+
+      <div class="row-fluid">
+        <p id="shortdesc">Updating the style of a WebGL tile layer / 更新 WebGL 瓦片图层的样式</p>
+        <div id="docs"><p>When you want to change the style of a WebGL tile layer based on some change in your
+application state, you should use the <code>layer.updateStyleVariables()</code> method.  A layer can
+be efficiently rendered even if style variables are changed on every render frame.
+In cases where you need to completely replace the style of a layer, you can call the
+<code>layer.setStyle()</code> method.  This method should not be called in response to frequent
+user events (e.g. mouse movement, dragging a slider, etc.).</p>
+<p>当您希望根据应用程序状态的变化来更改 WebGL 瓦片图层的样式时，应使用 <code>layer.updateStyleVariables()</code> 方法。即使在每个渲染帧上都更改样式变量，图层也能够被高效渲染。在需要完全替换图层样式的情况下，您可以调用 <code>layer.setStyle()</code> 方法。不应在响应高频用户事件（例如鼠标移动、拖动滑块等）时调用此方法。</p>
+<hr>
+<h3>📚 学习记录与技术笔记 (Learning Notes)</h3>
+<h4>1. 下拉选项与调色板说明</h4>
+<ul>
+<li><strong><code>w/</code> 的含义</strong>：英文日常与技术文档中常见的 <strong><code>with</code></strong>（带有/使用）缩写（与之对应的是 <code>w/o</code> = <code>without</code>）。例如 <code>NDVI w/ palette 1</code> 即代表 <code>NDVI with palette 1</code>（使用调色板 1 的 NDVI）。在中文语境下可简称为“NDVI 调色板 1”。</li>
+<li><strong>palette 1 与 palette 2</strong>：<ul>
+<li><strong>palette 1 (<code>ndviPalettePlasma</code>)</strong>：采用科学可视化经典的 <strong>Plasma（等离子体）</strong> 色阶（蓝紫 &rarr; 紫红 &rarr; 明黄）。</li>
+<li><strong>palette 2 (<code>ndviPaletteViridis</code>)</strong>：采用著名的 <strong>Viridis（翠绿）</strong> 色阶（深紫 &rarr; 蓝 &rarr; 绿 &rarr; 黄），具备感知均匀性且对色盲色弱人群极度友好。</li>
+</ul>
+</li>
+</ul>
+<h4>2. 本示例中 <code>style</code> 标签的核心演示机制</h4>
+<p>本示例演示的并非传统的矢量要素样式，而是 OpenLayers 极具特色的 <strong>WebGL 瓦片图层声明式着色表达式（WebGL Tile Layer Style Expressions）</strong>：</p>
+<ul>
+<li><strong>客户端解耦计算</strong>：数据源（GeoTIFF，包含 4 个原始波段）完全不变，所有图像效果纯粹由前端 GPU 片段着色器根据样式表达式逐像素计算生成。</li>
+<li><strong>波段提取与运算（Band Math）</strong>：利用 <code>[&#39;band&#39;, n]</code> 提取特定波段，通过算术操作符 <code>[&#39;/&#39;, value, max]</code> 做动态归一化。</li>
+<li><strong>多通道色彩合成（RGB Composite）</strong>：<ul>
+<li><strong>真彩色（True Color）</strong>：将红、绿、蓝波段分别送入 RGB 通道，配合 <code>gamma: 1.1</code> 提升暗部对比度。</li>
+<li><strong>标准假彩色（False Color）</strong>：用近红外（NIR）替代红通道，使植被呈现醒目的红色。</li>
+</ul>
+</li>
+<li><strong>连续插值渐变（<code>interpolate</code>）</strong>：在 GPU 上实时计算 NDVI 植被指数公式 <code>(NIR - Red) / (NIR + Red)</code>，并根据断点平滑插值输出颜色。</li>
+<li><strong>调色板映射（<code>palette</code>）</strong>：将归一化后的指标映射至离散颜色数组。</li>
+<li><strong>API 运行时建议</strong>：彻底更换着色算法使用 <code>layer.setStyle(style)</code>；如需高频平滑调节参数（如对比度、亮度），推荐在样式中配置 <code>variables</code> 并使用 <code>layer.updateStyleVariables()</code>。</li>
+</ul>
+<h4>3. 遥感与多波段基础概念速记</h4>
+<ul>
+<li><strong>普通照片 vs. 卫星遥感</strong>：普通手机照片只有红绿蓝（RGB）3 个通道；卫星遥感相机是多光谱相机，不仅能拍到可见光，还能捕获人眼不可见的<strong>近红外（NIR）</strong>、短波红外等。每个波段本质上是一张特定波长下的黑白灰度图矩阵。</li>
+<li><strong>本例 4 个波段</strong>：Band 1 (红光 Red)、Band 2 (绿光 Green)、Band 3 (蓝光 Blue)、Band 4 (近红外 NIR)。</li>
+<li><strong>为什么近红外（NIR）如此关键</strong>：健康植物叶绿素强烈吸收红光（用于光合作用），同时叶片细胞强烈反射近红外光（防止被晒伤）。因此植物在近红外波段下格外明亮（数值极高），在红光波段极暗（数值极低）。</li>
+<li><strong>NDVI 归一化植被指数</strong>：<code>(NIR - Red) / (NIR + Red)</code>，结果在 -1.0 到 1.0 之间。云、雪、水体为负值；裸土在 0 左右；稀疏草地到茂密森林在 0.2~0.8。</li>
+</ul>
+<h4>4. 代码中的 <code>const max = 3000</code> 是如何确定的？换新影像怎么处理？</h4>
+<ul>
+<li><strong>为什么是 3000</strong>：欧空局哨兵2号（Sentinel-2）L2A 地表反射率真实范围为 0.0 到 1.0（0% 到 100%），为了以 16 位整数（Uint16）紧凑存储，数据放大了 10,000 倍。然而地球表面绝大部分地物（树木、土壤、水体）的自然反射率都在 0% 到 30%（即 0 到 3000）之间。若直接除以 10000，大部分画面会集中在 0.0 到 0.3 而极度昏暗。因此将 3000 作为白平衡上限进行视觉拉伸截断，使地物细节更加明亮饱满。</li>
+<li><strong>更换 TIF 影像时的判定规则</strong>：<ul>
+<li><strong>8位影像（Uint8，如航拍图）</strong>：像素范围 0 到 255，max 取 255（或启用数据源自带的 <code>normalize: true</code> 自动处理）。</li>
+<li><strong>其他 16 位卫星影像（如 Landsat、高分卫星）</strong>：查阅产品元数据说明，或在 QGIS / <code>gdalinfo -stats</code> 中查看直方图的 98% 累积截断值（通常在 3000 到 6000）。</li>
+<li><strong>32位浮点影像（Float32）</strong>：数值本身即 0.0 到 1.0，直接使用即可，无需除以 max。</li>
+<li><strong>DEM 高程数据</strong>：像素代表海拔高度（如 -50 到 8848 米），需根据区域实际的 min 和 max 进行区间线性拉伸。</li>
+<li><strong>动态工程实践</strong>：推荐通过 <code>variables: { max: 3000 }</code> 与 <code>[&#39;var&#39;, &#39;max&#39;]</code> 配合滑动条组件，使用 <code>layer.updateStyleVariables()</code> 供用户交互式调节对比度（可参考同目录下的 <code>cog-stretch.html</code> 示例）。</li>
+</ul>
+</li>
+</ul>
+<h4>5. <code>ndvi</code> 对象的 <code>color</code> 属性中众多数值是如何确定的？（API 规范 vs NDVI 业务概念）</h4>
+<ul>
+<li><strong>外层语法骨架（OpenLayers API 严格规定）</strong>：<ul>
+<li>规范参见 <code>src/ol/expr/expression.js</code> 中关于 <code>[&#39;interpolate&#39;, interpolation, input, stop1, output1, ...stopN, outputN]</code> 的标准定义。</li>
+<li>规则要求：<code>&#39;interpolate&#39;</code> 为固定操作符；第二项为插值算法（如 <code>[&#39;linear&#39;]</code> 线性插值）；第三项为输入自变量表达式（此处为计算出的 NDVI）；后续参数必须成对提供<strong>严格升序排列的断点数值（stop）<strong>与其对应的</strong>输出颜色数组（output，如 <code>[R, G, B]</code>）</strong>。底层 GPU 着色器会自动在相邻断点之间进行线性渐变过渡。</li>
+</ul>
+</li>
+<li><strong>内层数值与色阶（结合 NDVI 物理概念自定义）</strong>：<ul>
+<li>API 文档<strong>绝不规定</strong>具体的断点数值与颜色。数组里的数值完全是遥感中经典的 NDVI 植被色阶（Color Ramp）：<ul>
+<li><strong><code>&lt; 0</code>（-0.2 到 -0.1）</strong>：水体、雪、厚云，赋予灰色（<code>[191, 191, 191]</code> 等）；</li>
+<li><strong><code>0 到 0.1</code></strong>：裸土、岩石、荒漠，赋予米黄色至浅土黄色（<code>[255, 255, 224]</code> 到 <code>[204, 199, 130]</code>）；</li>
+<li><strong><code>0.1 到 0.3</code></strong>：低矮植被、稀疏草地，由黄绿逐渐过渡为草绿；</li>
+<li><strong><code>0.35 到 0.65+</code></strong>：茂密树冠、健康森林，由浅绿深入浓郁的深绿（<code>[0, 69, 0]</code>）。</li>
+</ul>
+</li>
+<li><strong>为什么 0 到 0.2 之间断点如此密集（0.025, 0.05, 0.075...）</strong>：自然地表从寸草不生到稍有杂草覆盖，NDVI 变化极其敏锐。密集断点是为了让荒漠、裸土和低植被区域呈现丰富细腻的视觉层次，避免大片单一单调色彩。</li>
+</ul>
+</li>
+</ul>
+</div>
+      </div>
+
+      <details open>
+        <summary class="source-heading">main.js</summary>
+        <div class="row-fluid">
+          <pre><code id="example-js-source" class="language-js">import Map from &#x27;ol/Map.js&#x27;;
+import View from &#x27;ol/View.js&#x27;;
+import TileLayer from &#x27;ol/layer/WebGLTile.js&#x27;;
+import GeoTIFF from &#x27;ol/source/GeoTIFF.js&#x27;;
+
+// Normalization function: scale Sentinel-2 reflectance values (0-3000) to 0-1 range
+// 归一化函数：将哨兵2号（Sentinel-2）反射率值（0-3000）缩放到 0-1 范围
+const max &#x3D; 3000;
+function normalize(value) {
+  return [&#x27;/&#x27;, value, max];
+}
+
+// 4 bands of Sentinel-2: Band 1 (Red), Band 2 (Green), Band 3 (Blue), Band 4 (NIR)
+// 哨兵2号的 4 个波段：波段 1（红光）、波段 2（绿光）、波段 3（蓝光）、波段 4（近红外 NIR）
+const red &#x3D; normalize([&#x27;band&#x27;, 1]);
+const green &#x3D; normalize([&#x27;band&#x27;, 2]);
+const blue &#x3D; normalize([&#x27;band&#x27;, 3]);
+const nir &#x3D; normalize([&#x27;band&#x27;, 4]);
+
+// True Color style (RGB composite)
+// 真彩色样式（RGB 合成）
+const trueColor &#x3D; {
+  color: [&#x27;array&#x27;, red, green, blue, 1],
+  gamma: 1.1,
+};
+
+// False Color style (NIR, Red, Green composite) - useful for highlighting vegetation
+// 标准假彩色样式（近红外、红光、绿光合成）—— 常用于突出显示植被
+const falseColor &#x3D; {
+  color: [&#x27;array&#x27;, nir, red, green, 1],
+  gamma: 1.1,
+};
+
+// NDVI: (NIR - Red) / (NIR + Red)
+// 归一化植被指数 NDVI: (近红外 - 红光) / (近红外 + 红光)
+const ndvi &#x3D; {
+  color: [
+    &#x27;interpolate&#x27;,
+    [&#x27;linear&#x27;],
+    [&#x27;/&#x27;, [&#x27;-&#x27;, nir, red], [&#x27;+&#x27;, nir, red]],
+    // color ramp for NDVI values, ranging from -1 to 1
+    // NDVI 值的颜色渐变（Color Ramp），取值范围从 -1 到 1
+    -0.2,
+    [191, 191, 191],
+    -0.1,
+    [219, 219, 219],
+    0,
+    [255, 255, 224],
+    0.025,
+    [255, 250, 204],
+    0.05,
+    [237, 232, 181],
+    0.075,
+    [222, 217, 156],
+    0.1,
+    [204, 199, 130],
+    0.125,
+    [189, 184, 107],
+    0.15,
+    [176, 194, 97],
+    0.175,
+    [163, 204, 89],
+    0.2,
+    [145, 191, 82],
+    0.25,
+    [128, 179, 71],
+    0.3,
+    [112, 163, 64],
+    0.35,
+    [97, 150, 54],
+    0.4,
+    [79, 138, 46],
+    0.45,
+    [64, 125, 36],
+    0.5,
+    [48, 110, 28],
+    0.55,
+    [33, 97, 18],
+    0.6,
+    [15, 84, 10],
+    0.65,
+    [0, 69, 0],
+  ],
+};
+
+// NDVI using Plasma discrete color palette
+// 使用 Plasma 离散调色板渲染的 NDVI
+const ndviPalettePlasma &#x3D; {
+  color: [
+    &#x27;palette&#x27;,
+    [
+      &#x27;interpolate&#x27;,
+      [&#x27;linear&#x27;],
+      [&#x27;/&#x27;, [&#x27;-&#x27;, nir, red], [&#x27;+&#x27;, nir, red]],
+      -0.2,
+      0,
+      0.65,
+      4,
+    ],
+    [&#x27;#0d0887&#x27;, &#x27;#7e03a8&#x27;, &#x27;#cb4778&#x27;, &#x27;#f89540&#x27;, &#x27;#f0f921&#x27;],
+  ],
+};
+
+// NDVI using Viridis discrete color palette
+// 使用 Viridis 离散调色板渲染的 NDVI
+const ndviPaletteViridis &#x3D; {
+  color: [
+    &#x27;palette&#x27;,
+    [
+      &#x27;interpolate&#x27;,
+      [&#x27;linear&#x27;],
+      [&#x27;/&#x27;, [&#x27;-&#x27;, nir, red], [&#x27;+&#x27;, nir, red]],
+      -0.2,
+      0,
+      0.65,
+      4,
+    ],
+    [&#x27;#440154&#x27;, &#x27;#3b528b&#x27;, &#x27;#21918c&#x27;, &#x27;#5ec962&#x27;, &#x27;#fde725&#x27;],
+  ],
+};
+
+// Create a WebGL tile layer with a Cloud Optimized GeoTIFF (COG) source
+// 创建带有云优化 GeoTIFF (COG) 数据源的 WebGL 瓦片图层
+const layer &#x3D; new TileLayer({
+  style: trueColor,
+  source: new GeoTIFF({
+    normalize: false,
+    sources: [
+      {
+        url: &#x27;https://cloudlessdownloads.eox.at/api/public/dl/jvu06wnt/exploitation-ready-epsg-4326/exploitation-ready_eoxcloudless-sentinel-2-2024_zoom-1_4bands_16bit.tif&#x27;,
+      },
+    ],
+  }),
+});
+
+// Initialize the map
+// 初始化地图
+const map &#x3D; new Map({
+  target: &#x27;map&#x27;,
+  layers: [layer],
+  view: new View({
+    projection: &#x27;EPSG:4326&#x27;,
+    center: [0, 0],
+    zoom: 2,
+    maxZoom: 6,
+  }),
+});
+
+const styles &#x3D; {
+  trueColor,
+  falseColor,
+  ndvi,
+  ndviPalettePlasma,
+  ndviPaletteViridis,
+};
+
+const styleSelector &#x3D; document.getElementById(&#x27;style&#x27;);
+
+// Update layer style when user changes the dropdown selection
+// 用户切换下拉框选择时更新图层样式
+function update() {
+  const style &#x3D; styles[styleSelector.value];
+  layer.setStyle(style);
+}
+styleSelector.addEventListener(&#x27;change&#x27;, update);
+</code></pre>
+        </div>
+      </details>
+
+      <details open>
+        <summary class="source-heading">index.html</summary>
+        <div class="row-fluid">
+          <pre><code id="example-html-source" class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/title&gt;
+    &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
+    &lt;style&gt;
+      .map {
+        width: 100%;
+        height: 400px;
+      }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
+    &lt;label for&#x3D;&quot;style&quot;&gt;Set the layer style / 设置图层样式：&lt;/label&gt;
+    &lt;select id&#x3D;&quot;style&quot;&gt;
+      &lt;option value&#x3D;&quot;trueColor&quot;&gt;True Color / 真彩色&lt;/option&gt;
+      &lt;option value&#x3D;&quot;falseColor&quot;&gt;False Color / 假彩色&lt;/option&gt;
+      &lt;option value&#x3D;&quot;ndvi&quot;&gt;NDVI / 归一化植被指数&lt;/option&gt;
+      &lt;option value&#x3D;&quot;ndviPalettePlasma&quot;&gt;NDVI w/ palette 1 / NDVI 调色板 1&lt;/option&gt;
+      &lt;option value&#x3D;&quot;ndviPaletteViridis&quot;&gt;NDVI w/ palette 2 / NDVI 调色板 2&lt;/option&gt;
+    &lt;/select&gt;
+    
+
+    &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        </div>
+      </details>
+
+
+      <details open>
+        <summary class="source-heading">package.json</summary>
+        <div class="row-fluid">
+          <pre><code id="example-pkg-source" class="language-json">{
+  &quot;name&quot;: &quot;cog-style&quot;,
+  &quot;dependencies&quot;: {
+    &quot;ol&quot;: &quot;10.11.1-dev&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;vite&quot;: &quot;^8.1.5&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;vite&quot;,
+    &quot;build&quot;: &quot;vite build&quot;
+  }
+}</code></pre>
+        </div>
+      </details>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="cog-style.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+    <script src="./resources/common.js"></script>
+    <script>
+      document.getElementById('tag-example-list')
+        .addEventListener('show.bs.modal', function (event) {
+          const button = event.relatedTarget; // Button that triggered the modal
+          this.querySelector('.modal-title').innerText = button.dataset.title;
+          this.querySelector('.modal-body').innerHTML = button.dataset.content;
+        });
+    </script>
+    <script>
+      const releaseUrl = 'https://cdn.jsdelivr.net/npm/ol/package.json';
+      fetch(releaseUrl).then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        const latestVersion = json.version;
+        document.getElementById('latest-version').innerHTML = latestVersion;
+        const url = window.location.href;
+        const branchSearch = url.match(/\/([^\/]*)\/examples\//);
+        const storageKey = 'ol-dismissed=-' + latestVersion;
+        const dismissed = localStorage.getItem(storageKey) === 'true';
+        if (branchSearch && !dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '10.11.1-dev' != latestVersion) {
+          const link = url.replace(branchSearch[0], '/latest/examples/');
+          fetch(link, {method: 'head'}).then(function(response) {
+            const a = document.getElementById('latest-link');
+            a.href = response.status == 200 ? link : '../../latest/examples/';
+          });
+          const latestCheck = document.getElementById('latest-check');
+          latestCheck.style.display = '';
+          document.getElementById('latest-dismiss').onclick = function() {
+            latestCheck.style.display = 'none';
+            localStorage.setItem(storageKey, 'true');
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

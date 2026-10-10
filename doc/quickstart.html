@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - Quick Start</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="quick-start">Quick Start</h1>
+<h1 id="快速入门">快速入门</h1>
+<p>This primer shows you how to put a map on a web page.  The development setup uses <a href="https://nodejs.org/">Node</a> (14 or higher) and requires that you have <a href="https://github.com/git-guides/install-git"><code>git</code></a> installed.</p>
+<p>本入门指南将向您展示如何在网页中嵌入地图。开发环境基于 <a href="https://nodejs.org/">Node</a>（14 或更高版本），并需要安装 <a href="https://github.com/git-guides/install-git"><code>git</code></a>。</p>
+<h2 id="set-up-a-new-project">Set up a new project</h2>
+<h2 id="创建新项目">创建新项目</h2>
+<p>The easiest way to start building a project with OpenLayers is to run <code>npm create ol-app</code>:</p>
+<p>使用 OpenLayers 构建项目最简单的方法是运行 <code>npm create ol-app</code>：</p>
+<pre><code class="language-bash">npm create ol-app my-app
+cd my-app
+npm start
+</code></pre>
+<p>The first command will create a directory called <code>my-app</code> (you can use a different name if you wish), install OpenLayers and a development server, and set up a basic app with <code>index.html</code>, <code>main.js</code>, and <code>style.css</code> files.</p>
+<p>第一条命令将创建一个名为 <code>my-app</code> 的目录（您可以按需使用其他名称），安装 OpenLayers 和开发服务器，并使用 <code>index.html</code>、<code>main.js</code> 和 <code>style.css</code> 文件搭建一个基础应用。</p>
+<p>The second command (<code>cd my-app</code>) changes the working directory to your new <code>my-app</code> project so you can start working with it.</p>
+<p>第二条命令（<code>cd my-app</code>）将当前工作目录切换到新建的 <code>my-app</code> 项目中，以便开始开发。</p>
+<p>The third command (<code>npm start</code>) starts a development server so you can view your application in a browser while working on it.  After running <code>npm start</code>, you&#39;ll see output that tells you the URL to open.  Open <a href="http://localhost:5173/">http://localhost:5173/</a> (or whatever URL is displayed) to see your new application.</p>
+<p>第三条命令（<code>npm start</code>）将启动一个开发服务器，以便在开发过程中于浏览器中实时查看应用。运行 <code>npm start</code> 后，终端输出将提示需要打开的 URL。打开 <a href="http://localhost:5173/">http://localhost:5173/</a> （或终端中显示的 URL）即可查看您的新应用。</p>
+<h2 id="exploring-the-parts">Exploring the parts</h2>
+<h2 id="探究各组成部分">探究各组成部分</h2>
+<p>An OpenLayers application is composed of three basic parts:</p>
+<p>一个 OpenLayers 应用程序由三个基本部分组成：</p>
+<ul>
+<li><p>The HTML markup with an element to contain the map (<code>index.html</code>)</p>
+<p>包含承载地图元素的 HTML 标记文件（<code>index.html</code>）</p>
+</li>
+<li><p>The JavaScript that initializes the map (<code>main.js</code>)</p>
+<p>用于初始化地图的 JavaScript 文件（<code>main.js</code>）</p>
+</li>
+<li><p>The CSS styles that determine the map size and any other customizations (<code>style.css</code>)</p>
+<p>用于决定地图尺寸及其他自定义样式的 CSS 样式文件（<code>style.css</code>）</p>
+</li>
+</ul>
+<h3 id="the-markup">The markup</h3>
+<h3 id="html-标记">HTML 标记</h3>
+<p>Open the <code>index.html</code> file in a text editor.  It should look something like this:</p>
+<p>在文本编辑器中打开 <code>index.html</code> 文件，其内容大致如下：</p>
+<pre><code class="language-html">&lt;!DOCTYPE html&gt;
+&lt;html lang=&quot;en&quot;&gt;
+  &lt;head&gt;
+    &lt;meta charset=&quot;UTF-8&quot; /&gt;
+    &lt;meta name=&quot;viewport&quot; content=&quot;width=device-width, initial-scale=1.0&quot; /&gt;
+    &lt;title&gt;Quick Start&lt;/title&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id=&quot;map&quot;&gt;&lt;/div&gt;
+    &lt;script type=&quot;module&quot; src=&quot;./main.js&quot;&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;
+</code></pre>
+<p>The two important parts in the markup are the <code>&lt;div&gt;</code> element to contain the map and the <code>&lt;script&gt;</code> tag to pull in the JavaScript.  The map container or target should be a block level element (like a <code>&lt;div&gt;</code>) and it must appear in the document before the <code>&lt;script&gt;</code> tag that initializes the map.</p>
+<p>标记中两个重要的部分是承载地图的 <code>&lt;div&gt;</code> 元素和引入 JavaScript 的 <code>&lt;script&gt;</code> 标签。地图容器（目标元素）应该是一个块级元素（例如 <code>&lt;div&gt;</code>），且它在文档中的位置必须先于初始化地图的 <code>&lt;script&gt;</code> 标签。</p>
+<h2 id="the-script">The script</h2>
+<h2 id="脚本逻辑">脚本逻辑</h2>
+<p>Open the <code>main.js</code> file in a text editor.  It should look something like this:</p>
+<p>在文本编辑器中打开 <code>main.js</code> 文件，其内容大致如下：</p>
+<pre><code class="language-js">import &#39;./style.css&#39;;
+import Map from &#39;ol/Map.js&#39;;
+import OSM from &#39;ol/source/OSM.js&#39;;
+import TileLayer from &#39;ol/layer/Tile.js&#39;;
+import View from &#39;ol/View.js&#39;;
+
+const map = new Map({
+  target: &#39;map&#39;,
+  layers: [
+    new TileLayer({
+      source: new OSM(),
+    }),
+  ],
+  view: new View({
+    center: [0, 0],
+    zoom: 2,
+  }),
+});
+</code></pre>
+<p>OpenLayers is packaged as a collection of <a href="https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive/">ES modules</a>.  The <code>import</code> lines are used to pull in the modules that your application needs.  Take a look through the <a href="/openlayers/en/latest/examples/">examples</a> and <a href="/openlayers/en/latest/apidoc/">API docs</a> to understand which modules you might want to use.</p>
+<p>OpenLayers 是作为一系列 <a href="https://hacks.mozilla.org/2018/03/es-modules-a-cartoon-deep-dive/">ES 模块</a> 进行打包分发的。其中的 <code>import</code> 语句用于引入应用程序所需的各个模块。您可以浏览<a href="/openlayers/en/latest/examples/">示例</a>和 <a href="/openlayers/en/latest/apidoc/">API 文档</a>，以了解可能需要使用的模块。</p>
+<p>The <code>import &#39;./style.css&#39;;</code> line might be a bit unexpected.  In this example, we&#39;re using <a href="https://vitejs.dev/">Vite</a> as a development server.  Vite allows CSS to be imported from JavaScript modules.  If you were using a different development server, you might include the <code>style.css</code> in a <code>&lt;link&gt;</code> tag in the <code>index.html</code> instead.</p>
+<p><code>import &#39;./style.css&#39;;</code> 这一行可能让人稍感意外。在本示例中，我们使用 <a href="https://vitejs.dev/">Vite</a> 作为开发服务器。Vite 支持直接在 JavaScript 模块中导入 CSS。如果您使用其他开发服务器，则可以改在 <code>index.html</code> 中通过 <code>&lt;link&gt;</code> 标签引入 <code>style.css</code>。</p>
+<p>The <code>main.js</code> module serves as an entry point for your application.  It initializes a new map, giving it a single layer with an OSM source and a view describing the center and zoom level.  Read through the <a href="./tutorials/concepts.html">Basic Concepts tutorial</a> to learn more about <code>Map</code>, <code>View</code>, <code>Layer</code>, and <code>Source</code> components.</p>
+<p><code>main.js</code> 模块是应用程序的入口点。它初始化了一个新地图，为其配置了一个带有 OSM 数据源的单一图层，以及一个定义了中心点和缩放级别的视图。阅读<a href="./tutorials/concepts.html">基本概念教程</a>可深入了解 <code>Map</code>、<code>View</code>、<code>Layer</code> 和 <code>Source</code> 组件。</p>
+<h2 id="the-style">The style</h2>
+<h2 id="样式设计">样式设计</h2>
+<p>Open the <code>style.css</code> file in a text editor.  It should look something like this:</p>
+<p>在文本编辑器中打开 <code>style.css</code> 文件，其内容大致如下：</p>
+<pre><code class="language-css">@import &quot;node_modules/ol/ol.css&quot;;
+
+html,
+body {
+  margin: 0;
+  height: 100%;
+}
+
+#map {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  width: 100%;
+}
+</code></pre>
+<p>The first line imports the <code>ol.css</code> file that comes with the <code>ol</code> package (OpenLayers is published as the <a href="https://www.npmjs.com/package/ol"><code>ol</code> package</a> in the npm registry).  The <code>ol</code> package was installed in the <code>npm create ol-app</code> step above.  If you were starting with an existing application instead of using <code>npm create ol-app</code>, you would install the package with <code>npm install ol</code>.  The <code>ol.css</code> stylesheet includes styles for the elements that OpenLayers creates – things like buttons for zooming in and out.</p>
+<p>第一行导入了 <code>ol</code> 软件包自带的 <code>ol.css</code> 文件（OpenLayers 在 npm 仓库中以 <a href="https://www.npmjs.com/package/ol"><code>ol</code> 软件包</a> 的形式发布）。<code>ol</code> 包已在上述 <code>npm create ol-app</code> 步骤中安装。如果您是在已有应用程序中集成，而非使用 <code>npm create ol-app</code>，则可以通过 <code>npm install ol</code> 安装该包。<code>ol.css</code> 样式表包含了 OpenLayers 所创建元素的样式——例如放大和缩小按钮等。</p>
+<p>The remaining rules in the <code>style.css</code> file make it so the <code>&lt;div id=&quot;map&quot;&gt;</code> element that contains the map fills the entire page.</p>
+<p><code>style.css</code> 文件中的其余规则用于让承载地图的 <code>&lt;div id=&quot;map&quot;&gt;</code> 元素填满整个页面。</p>
+<h2 id="deploying-your-app">Deploying your app</h2>
+<h2 id="部署您的应用">部署您的应用</h2>
+<p>You can make edits to the <code>index.html</code>, <code>main.js</code>, or <code>style.css</code> files and see the resulting change in your browser while running the development server (with <code>npm start</code>).  After you have finished making edits, it is time to bundle or build your application so that it can be deployed as a static website (without needing to run a development server like Vite).</p>
+<p>在运行开发服务器（通过 <code>npm start</code>）期间，您可以编辑 <code>index.html</code>、<code>main.js</code> 或 <code>style.css</code> 文件，并在浏览器中实时查看相应的更改。完成编辑后，即可对应用程序进行打包或构建，以便将其作为静态网站部署（无需再运行像 Vite 这样的开发服务器）。</p>
+<p>To build your application, run the following:</p>
+<p>要构建您的应用程序，请运行以下命令：</p>
+<pre><code class="language-bash">npm run build
+</code></pre>
+<p>This will create a <code>dist</code> directory with a new <code>index.html</code> and assets that make up your application.  These <code>dist</code> files can be deployed with your production website.</p>
+<p>这将创建一个 <code>dist</code> 目录，其中包含构成应用程序的新 <code>index.html</code> 和静态资产。您可以将这些 <code>dist</code> 文件部署到生产网站中。</p>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

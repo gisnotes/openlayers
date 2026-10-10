@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - Basic Concepts</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="basic-concepts">Basic Concepts</h1>
+<h1 id="基本概念">基本概念</h1>
+<h2 id="map">Map</h2>
+<h2 id="地图（map）">地图（Map）</h2>
+<p>The core component of OpenLayers is the map (from the <code>ol/Map</code> module). It is rendered to a <code>target</code> container (e.g. a <code>div</code> element on the web page that contains the map). All map properties can either be configured at construction time, or by using setter methods, e.g. <code>setTarget()</code>.</p>
+<p>OpenLayers 的核心组件是地图（来自 <code>ol/Map</code> 模块）。它被渲染到一个 <code>target</code> 容器中（例如网页上包含地图的 <code>div</code> 元素）。所有的地图属性都可以在构造时进行配置，或者通过使用 setter 方法（例如 <code>setTarget()</code>）进行设置。</p>
+<p>The markup below could be used to create a <code>&lt;div&gt;</code> that contains your map.</p>
+<p>下面的 HTML 标记可用于创建一个承载地图的 <code>&lt;div&gt;</code>。</p>
+<pre><code class="language-xml">&lt;div id=&quot;map&quot; style=&quot;width: 100%; height: 400px&quot;&gt;&lt;/div&gt;
+</code></pre>
+<p>The script below constructs a map that is rendered in the <code>&lt;div&gt;</code> above, using the <code>map</code> id of the element as a selector.</p>
+<p>下面的脚本构建了一个渲染在上述 <code>&lt;div&gt;</code> 中的地图，使用该元素的 <code>map</code> id 作为选择器。</p>
+<pre><code class="language-js">import Map from &#39;ol/Map.js&#39;;
+
+const map = new Map({target: &#39;map&#39;});
+</code></pre>
+<h2 id="view">View</h2>
+<h2 id="视图（view）">视图（View）</h2>
+<p>The map is not responsible for things like center, zoom level and projection of the map. Instead, these are properties of a <code>ol/View</code> instance.</p>
+<p>地图本身并不负责地图的中心点、缩放级别和投影等属性。相反，这些是 <code>ol/View</code> 实例的属性。</p>
+<pre><code class="language-js">import View from &#39;ol/View.js&#39;;
+
+map.setView(new View({
+  center: [0, 0],
+  zoom: 2,
+}));
+</code></pre>
+<p>A <code>View</code> also has a <code>projection</code>. The projection determines the coordinate system of the <code>center</code> and the units for map resolution calculations. If not specified (like in the above snippet), the default projection is Spherical Mercator (EPSG:3857), with meters as map units.</p>
+<p><code>View</code> 还包含一个投影（<code>projection</code>）。投影决定了中心点（<code>center</code>）的坐标系统以及用于地图分辨率计算的单位。如果未显式指定（如上文代码片段所示），默认投影为球形墨卡托（Spherical Mercator，EPSG:3857），地图单位为米。</p>
+<p>The <code>zoom</code> option is a convenient way to specify the map resolution. The available zoom levels are determined by <code>maxZoom</code> (default: 28), <code>zoomFactor</code> (default: 2) and <code>maxResolution</code> (default is calculated in such a way that the projection&#39;s validity extent fits in a 256x256 pixel tile). Starting at zoom level 0 with a resolution of <code>maxResolution</code> units per pixel, subsequent zoom levels are calculated by dividing the previous zoom level&#39;s resolution by <code>zoomFactor</code>, until zoom level <code>maxZoom</code> is reached.</p>
+<p><code>zoom</code> 选项是一种指定地图分辨率的便捷方式。可用的缩放级别由 <code>maxZoom</code>（默认值：28）、<code>zoomFactor</code>（默认值：2）和 <code>maxResolution</code> 共同决定（默认的 <code>maxResolution</code> 计算方式是使投影的有效范围恰好适应一个 256x256 像素的瓦片）。从缩放级别 0（分辨率为每像素 <code>maxResolution</code> 单位）开始，后续缩放级别的分辨率是通过将上一级缩放分辨率除以 <code>zoomFactor</code> 计算得出，直到达到 <code>maxZoom</code> 缩放级别。</p>
+<h2 id="source">Source</h2>
+<h2 id="数据源（source）">数据源（Source）</h2>
+<p>To get remote data for a layer, OpenLayers uses <code>ol/source/Source</code> subclasses. These are available for free and commercial map tile services like OpenStreetMap or Bing, for OGC sources like WMS or WMTS, and for vector data in formats like GeoJSON or KML.</p>
+<p>为了获取图层的远程数据，OpenLayers 使用了 <code>ol/source/Source</code> 的子类。这些数据源适用于免费和商业地图瓦片服务（如 OpenStreetMap 或 Bing）、OGC 数据源（如 WMS 或 WMTS），以及常见格式的矢量数据（如 GeoJSON 或 KML）。</p>
+<pre><code class="language-js">import OSM from &#39;ol/source/OSM.js&#39;;
+
+const source = new OSM();
+</code></pre>
+<h2 id="layer">Layer</h2>
+<h2 id="图层（layer）">图层（Layer）</h2>
+<p>A layer is a visual representation of data from a source. OpenLayers has four basic types of layers:</p>
+<p>图层是数据源中数据的可视化呈现。OpenLayers 提供了四种基本类型的图层：</p>
+<ul>
+<li><p><code>ol/layer/Tile</code> - Renders sources that provide tiled images in grids that are organized by zoom levels for specific resolutions.</p>
+<p><code>ol/layer/Tile</code> - 渲染以网格形式提供瓦片图片的数据源，这些网格按特定分辨率的缩放级别进行组织。</p>
+</li>
+<li><p><code>ol/layer/Image</code> - Renders sources that provide map images at arbitrary extents and resolutions.</p>
+<p><code>ol/layer/Image</code> - 渲染提供任意范围和分辨率的单张地图图像的数据源。</p>
+</li>
+<li><p><code>ol/layer/Vector</code> - Renders vector data client-side.</p>
+<p><code>ol/layer/Vector</code> - 在客户端渲染矢量数据。</p>
+</li>
+<li><p><code>ol/layer/VectorTile</code> - Renders data that is provided as vector tiles.</p>
+<p><code>ol/layer/VectorTile</code> - 渲染以矢量瓦片格式提供的数据。</p>
+</li>
+</ul>
+<pre><code class="language-js">import TileLayer from &#39;ol/layer/Tile.js&#39;;
+
+// ...
+const layer = new TileLayer({source: source});
+map.addLayer(layer);
+</code></pre>
+<h2 id="putting-it-all-together">Putting it all together</h2>
+<h2 id="综合示例">综合示例</h2>
+<p>The above snippets can be combined into a single script that renders a map with a single tile layer:</p>
+<p>上述代码片段可以组合成一个完整的脚本，渲染出一个包含单一瓦片图层的地图：</p>
+<pre><code class="language-js">import Map from &#39;ol/Map.js&#39;;
+import View from &#39;ol/View.js&#39;;
+import OSM from &#39;ol/source/OSM.js&#39;;
+import TileLayer from &#39;ol/layer/Tile.js&#39;;
+
+new Map({
+  layers: [
+    new TileLayer({source: new OSM()}),
+  ],
+  view: new View({
+    center: [0, 0],
+    zoom: 2,
+  }),
+  target: &#39;map&#39;,
+});
+</code></pre>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

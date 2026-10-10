@@ -1,0 +1,1175 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>Icon and Label Scale / 图标与文本标注的双向缩放及空间变换</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="./theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="./theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="./theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="./theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="./theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="../examples/">Examples</a></li>
+          <li class="nav-item"><a class="nav-link" href="../apidoc/"><i class="fa fa-sitemap me-1"></i>API</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container-fluid line-numbers">
+      <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
+        <button id="latest-dismiss" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        This example uses OpenLayers v<span>10.11.1-dev</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
+      </div>
+
+
+      <div class="row-fluid">
+        <a href="#" id="codepen-button" class="btn btn-link float-end">
+          <i class="fab fa-codepen fa-lg"></i> Edit
+        </a>
+        <h4 id="title">Icon and Label Scale / 图标与文本标注的双向缩放及空间变换</h4>
+        <p class="tags">
+          <span class="badge-group">
+            <a
+              href="./index.html?q=vector" class="badge badge-info">vector</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="vector"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles-advanced.html&quot;&gt;Advanced Mapbox Vector Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-webgl-line.html&quot;&gt;Applying a filter along lines rendered with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cluster.html&quot;&gt;Clustered Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-circle-render.html&quot;&gt;Custom Circle Render&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-hit-detection-renderer.html&quot;&gt;Custom Hit Detection Render&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-interactions.html&quot;&gt;Custom Interactions&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./declutter-group.html&quot;&gt;Declutter Group&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-features.html&quot;&gt;Draw and Modify Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-geodesic.html&quot;&gt;Draw and Modify Geodesic Circles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features.html&quot;&gt;Draw Features / 绘制要素&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-modify-trace-snap.html&quot;&gt;Draw, modify, trace and snap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./equal-earth-geojson.html&quot;&gt;Equal Earth projection with dynamic center meridian&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./fractal.html&quot;&gt;Fractal Rendering&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson.html&quot;&gt;GeoJSON&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson-vt.html&quot;&gt;geojson-vt integration&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-icon.html&quot;&gt;Icon modification&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./jsts.html&quot;&gt;JSTS Integration&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-arrows.html&quot;&gt;LineString Arrows&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-layer.html&quot;&gt;Mapbox Vector Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles.html&quot;&gt;Mapbox Vector Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-ogc-features.html&quot;&gt;MapServer OGC Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure.html&quot;&gt;Measure&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-features.html&quot;&gt;Modify Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-test.html&quot;&gt;Modify Features Test&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles.html&quot;&gt;OGC Vector Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles-geographic.html&quot;&gt;OGC Vector Tiles (Geographic)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./osm-vector-tiles.html&quot;&gt;OSM Vector Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./populated-places.html&quot;&gt;Populated Places&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rich-text-labels.html&quot;&gt;Rich Text Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-features.html&quot;&gt;Select Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-hover-features.html&quot;&gt;Select Features by Hover&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-multiple-features.html&quot;&gt;Select multiple Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap.html&quot;&gt;Snap Interaction&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap-custom-segmenter.html&quot;&gt;Snap Interaction with Custom Segmenter&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-renderer.html&quot;&gt;Style renderer / 样式渲染器（自定义渲染函数）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./synthetic-lines.html&quot;&gt;Synthetic Lines&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./synthetic-points.html&quot;&gt;Synthetic Points&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tooltip-on-hover.html&quot;&gt;Tooltip on Hover&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topolis.html&quot;&gt;topolis integration&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tracing.html&quot;&gt;Tracing around a polygon&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./translate-features.html&quot;&gt;Translate Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./turf.html&quot;&gt;turf.js&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-vector-layer.html&quot;&gt;Vector Image Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-label-decluttering.html&quot;&gt;Vector Label Decluttering&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels.html&quot;&gt;Vector Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels-justify-text.html&quot;&gt;Vector Labels - Justify Text&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-layer.html&quot;&gt;Vector Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./hitdetect-vector.html&quot;&gt;Vector Layer Hit Detection&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-layer.html&quot;&gt;WebGL Vector Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >86</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=style" class="badge badge-info">style</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="style"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-stretch.html&quot;&gt;Band Contrast Stretch / 遥感波段组合与对比度拉伸&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geozarr-stretch.html&quot;&gt;Band Selection and Contrast Stretch / GeoZarr 波段选择与对比度拉伸&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features-style.html&quot;&gt;Drawing Features Style / 绘制要素时的自定义样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-renderer.html&quot;&gt;Style renderer / 样式渲染器（自定义渲染函数）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >27</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=icon" class="badge badge-info">icon</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="icon"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering features with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-icon.html&quot;&gt;Icon modification&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >9</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=label" class="badge badge-info">label</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="label"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels.html&quot;&gt;Vector Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels-justify-text.html&quot;&gt;Vector Labels - Justify Text&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >4</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=scale" class="badge badge-info">scale</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="scale"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./print-to-scale.html&quot;&gt;Print to scale example&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./projection-and-scale.html&quot;&gt;Projection and Scale&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >4</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=矢量" class="badge badge-info">矢量</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="矢量"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >8</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=样式" class="badge badge-info">样式</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="样式"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >8</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=图标" class="badge badge-info">图标</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="图标"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >6</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=标注" class="badge badge-info">标注</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="标注"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >2</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=缩放" class="badge badge-info">缩放</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="缩放"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >2</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=锚点" class="badge badge-info">锚点</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="锚点"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+        </p>
+        <div class="modal modal-tag-example" id="tag-example-list" tabindex="-1" role="dialog" aria-labelledby="tag-example-title" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="tag-example-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="list-group"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="map" class="map"></div>
+<table class="controls">
+  <tr>
+    <th>
+      Image / 图标 (Icon)
+    </th>
+    <th></th>
+    <th style="visibility: hidden;">-0.00 π</th>
+    <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
+    <th>
+      Text / 文本 (Text)
+    </th>
+    <th></th>
+    <th></th>
+  </tr>
+  <tr>
+    <td><label for="rotateWithView">Rotate with view / 随视图旋转</label>&nbsp;&nbsp;</td>
+    <td>
+      <input id="rotateWithView" type="checkbox" />
+    </td>
+    <td><span id="rotateWithViewOut"></span></td>
+    <td></td>
+    <td><label for="textRotateWithView">Rotate with view / 随视图旋转</label>&nbsp;&nbsp;</td>
+    <td>
+      <input id="textRotateWithView" type="checkbox" />
+    </td>
+    <td><span id="textRotateWithViewOut"></span></td>
+  </tr>
+  <tr>
+    <td><label for="rotation">Rotation / 旋转角度</label></td>
+    <td>
+      <input
+        id="rotation"
+        type="range"
+        min="-1"
+        max="1"
+        step="0.05"
+        value="0.25"
+      />
+    </td>
+    <td><span id="rotationOut"></span> π</td>
+    <td></td>
+    <td><label for="textRotation">Rotation / 旋转角度</label></td>
+    <td>
+      <input
+        id="textRotation"
+        type="range"
+        min="-1"
+        max="1"
+        step="0.05"
+        value="0.25"
+      />
+    </td>
+    <td><span id="textRotationOut"></span> π</td>
+  </tr>
+  <tr>
+    <td><label for="scaleX">Scale X / 水平缩放</label></td>
+    <td>
+      <input
+        id="scaleX"
+        type="range"
+        min="-2"
+        max="2"
+        step="0.1"
+        value="1"
+      />
+    </td>
+    <td><span id="scaleXOut"></span></td>
+    <td></td>
+    <td><label for="textScaleX">Scale X / 水平缩放</label></td>
+    <td>
+      <input
+        id="textScaleX"
+        type="range"
+        min="-2"
+        max="2"
+        step="0.1"
+        value="1"
+      />
+    </td>
+    <td><span id="textScaleXOut"></span></td>
+  </tr>
+  <tr>
+    <td><label for="scaleY">Scale Y / 垂直缩放</label></td>
+    <td>
+      <input
+        id="scaleY"
+        type="range"
+        min="-2"
+        max="2"
+        step="0.1"
+        value="1"
+      />
+    </td>
+    <td><span id="scaleYOut"></span></td>
+    <td></td>
+    <td><label for="textScaleY">Scale Y / 垂直缩放</label></td>
+    <td>
+      <input
+        id="textScaleY"
+        type="range"
+        min="-2"
+        max="2"
+        step="0.1"
+        value="1"
+      />
+    </td>
+    <td><span id="textScaleYOut"></span></td>
+  </tr>
+  <tr>
+    <td><label for="anchorX">Anchor X / 水平锚点</label></td>
+    <td>
+      <input
+        id="anchorX"
+        type="range"
+        min="0"
+        max="1"
+        step="0.01"
+        value="0.5"
+      />
+    </td>
+    <td><span id="anchorXOut"></span></td>
+    <td></td>
+    <td><label for="textAlign">Align / 水平对齐</label></td>
+    <td>
+      <input
+        id="textAlign"
+        type="range"
+        min="0"
+        max="2"
+        step="1"
+        value="1"
+      />
+    </td>
+    <td><span id="textAlignOut"></span></td>
+  </tr>
+  <tr>
+    <td><label for="anchorY">Anchor Y / 垂直锚点</label></td>
+    <td>
+      <input
+        id="anchorY"
+        type="range"
+        min="0"
+        max="1"
+        step="0.01"
+        value="1"
+      />
+    </td>
+    <td><span id="anchorYOut"></span></td>
+    <td></td>
+    <td><label for="textBaseline">Baseline / 垂直基线</label></td>
+    <td>
+      <input
+        id="textBaseline"
+        type="range"
+        min="0"
+        max="2"
+        step="1"
+        value="0"
+      />
+    </td>
+    <td><span id="textBaselineOut"></span></td>
+  </tr>
+  <tr>
+    <td><label for="displacementX">Displacement X / 水平位移</label></td>
+    <td>
+      <input
+        id="displacementX"
+        type="range"
+        min="-100"
+        max="100"
+        value="0"
+      />
+    </td>
+    <td><span id="displacementXOut"></span></td>
+    <td></td>
+    <td><label for="textOffsetX">Offset X / 水平偏移</label></td>
+    <td>
+      <input id="textOffsetX" type="range" min="-100" max="100" value="0" />
+    </td>
+    <td><span id="textOffsetXOut"></span></td>
+  </tr>
+  <tr>
+    <td><label for="displacementY">Displacement Y / 垂直位移</label></td>
+    <td>
+      <input
+        id="displacementY"
+        type="range"
+        min="-100"
+        max="100"
+        value="0"
+      />
+    </td>
+    <td><span id="displacementYOut"></span></td>
+    <td></td>
+    <td><label for="textOffsetY">Offset Y / 垂直偏移</label></td>
+    <td>
+      <input id="textOffsetY" type="range" min="-100" max="100" value="0" />
+    </td>
+    <td><span id="textOffsetYOut"></span></td>
+  </tr>
+</table>
+
+
+        <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
+          <input id="codesandbox-params" type="hidden" name="parameters">
+        </form>
+      </div>
+
+      <div class="row-fluid">
+        <p id="shortdesc">Example of scaling icons and labels. / 演示图标（Icon）与文本标注（Text）的二维独立缩放、负数镜像翻转、锚点、偏移与旋转控制。</p>
+        <div id="docs"><p>Icons and labels can be scaled in both dimensions if required. A negative value will flip the image
+or text around its anchor point (reversed text is <b>not</b> suitable for line placement).</p>
+<p>如有需要，图标（Icons）和文本标注（Labels）可以在水平（X）和垂直（Y）两个维度上独立进行非均匀缩放。将缩放值设为<strong>负数</strong>时，图像或文字会围绕其锚点（Anchor Point）发生<strong>镜像翻转</strong>（注意：翻转后的反向文字<strong>不</strong>适用于沿线排列 <code>placement: &#39;line&#39;</code> 的场景）。</p>
+<hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 为什么给同一个点要素同时设置 <code>[pointStyle, iconStyle]</code> 两个样式？</h4>
+<p>在代码中，<code>iconFeature.setStyle([pointStyle, iconStyle])</code> 使用了复合样式数组：</p>
+<ul>
+<li><strong><code>pointStyle</code>（黑底白边小圆点）</strong>：固定绘制在 <code>[0, 0]</code> 真实地理坐标处，充当<strong>视觉基准靶心（Reference Origin）</strong>。</li>
+<li><strong><code>iconStyle</code>（图片图标 + 多行文字）</strong>：叠加在基准点之上。</li>
+<li><strong>设计用意</strong>：当你在下方拖动锚点（Anchor）、位移（Displacement/Offset）、缩放（Scale）或旋转（Rotation）滑块时，可以直观地对比图标和文字相对于<strong>黑色真实坐标点</strong>是如何变换的！</li>
+</ul>
+<h4>2. 二维独立缩放 <code>[scaleX, scaleY]</code> 与负数镜像翻转技巧</h4>
+<p><code>setScale()</code> 不仅支持传入单个数字（等比例缩放），还支持传入二元数组 <strong><code>[scaleX, scaleY]</code></strong>：</p>
+<ul>
+<li><strong>非均匀拉伸</strong>：例如 <code>[2, 0.5]</code> 会将图标横向拉宽 2 倍、纵向压扁一半。</li>
+<li><strong>负数镜像翻转（Negative Scale Flipping）</strong>：<ul>
+<li>当 <code>scaleX = -1, scaleY = 1</code> 时：围绕锚点进行<strong>左右水平镜像翻转</strong>。</li>
+<li>当 <code>scaleX = 1, scaleY = -1</code> 时：围绕锚点进行<strong>上下垂直翻转</strong>。</li>
+<li><strong>实战妙用</strong>：当项目中只有一张“车头朝左”的车辆/船舶图标，需要渲染“车头朝右”时，无需让设计师再切一张新图，直接设置 <code>scale: [-1, 1]</code> 即可零成本实现水平翻转！</li>
+</ul>
+</li>
+</ul>
+<h4>3. 图标（<code>Icon</code>）与文字（<code>Text</code>）四大变换属性全景对比（含易错坑点！）</h4>
+<table>
+<thead>
+<tr>
+<th align="left">变换维度</th>
+<th align="left"><code>ol/style/Icon</code> (图标)</th>
+<th align="left"><code>ol/style/Text</code> (文本标注)</th>
+<th align="left">核心原理与高频避坑指南</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>1. 锚点 / 对齐基准</strong></td>
+<td align="left"><code>setAnchor([anchorX, anchorY])</code><br/>范围 <code>0~1</code>，默认 <code>[0.5, 0.5]</code>（中心）。本例初始为 <code>[0.5, 1]</code>（底部正中，如大头针尖端）</td>
+<td align="left"><code>setTextAlign(&#39;left&#39;|&#39;center&#39;|&#39;right&#39;)</code><br/><code>setTextBaseline(&#39;top&#39;|&#39;middle&#39;|&#39;bottom&#39;)</code></td>
+<td align="left"><strong>极其重要</strong>：无论是缩放、负数翻转还是旋转，<strong>全都是以该锚点/对齐基线作为圆心（Pivot）进行的</strong>！</td>
+</tr>
+<tr>
+<td align="left"><strong>2. 像素偏移方向</strong></td>
+<td align="left"><code>setDisplacement([dx, dy])</code></td>
+<td align="left"><code>setOffsetX(dx)</code><br/><code>setOffsetY(dy)</code></td>
+<td align="left"><strong>⚠️ 头号易错坑点（Y 轴方向相反）</strong>：<br/>• <code>Icon</code> 的 <code>displacementY</code> <strong>向上为正 (<code>+Y</code> 朝上)</strong>！<br/>• <code>Text</code> 的 <code>offsetY</code> <strong>向下为正 (<code>+Y</code> 朝下)</strong>！</td>
+</tr>
+<tr>
+<td align="left"><strong>3. 旋转角度</strong></td>
+<td align="left"><code>setRotation(radians)</code></td>
+<td align="left"><code>setRotation(radians)</code></td>
+<td align="left">单位均为**弧度（Radians）**而非角度，顺时针为正（如 <code>0.25 * Math.PI</code> 即顺时针旋转 45°）。</td>
+</tr>
+<tr>
+<td align="left"><strong>4. 随视图旋转</strong></td>
+<td align="left"><code>setRotateWithView(boolean)</code></td>
+<td align="left"><code>setRotateWithView(boolean)</code></td>
+<td align="left">按住 <code>Alt + Shift</code> 鼠标拖拽旋转地图时：<br/>• <code>false</code>（默认）：始终朝向屏幕正上方（适合地名、POI 图标）；<br/>• <code>true</code>：钉死在地理表面随地图一起旋转（适合车头航向、风向标）。</td>
+</tr>
+</tbody></table>
+<h4>4. 为什么修改样式后必须调用 <code>iconFeature.changed()</code>？</h4>
+<p>在 <code>updateStyle()</code> 函数末尾有一行不可省略的关键代码：</p>
+<pre><code class="language-javascript">iconFeature.changed();
+</code></pre>
+<ul>
+<li><strong>原因</strong>：直接调用 <code>iconStyle.getImage().setScale(...)</code> 修改的是 <code>Style</code> 内部子对象的属性，OpenLayers 的 <code>Feature</code> 和 <code>VectorLayer</code> <strong>不会自动深度监听 <code>Style</code> 内部属性的变化</strong>。</li>
+<li><strong>机制</strong>：如果不调用 <code>iconFeature.changed()</code>（或 <code>vectorLayer.changed()</code>），要素的修订版本号（Revision）不会增加，矢量图层会认为数据没有变化而继续使用旧的渲染缓存。调用 <code>.changed()</code> 会触发 <code>change</code> 事件，通知图层立即重新生成渲染指令并重绘画面。</li>
+</ul>
+</div>
+      </div>
+
+      <details open>
+        <summary class="source-heading">main.js</summary>
+        <div class="row-fluid">
+          <pre><code id="example-js-source" class="language-js">import Feature from &#x27;ol/Feature.js&#x27;;
+import Map from &#x27;ol/Map.js&#x27;;
+import View from &#x27;ol/View.js&#x27;;
+import Point from &#x27;ol/geom/Point.js&#x27;;
+import TileLayer from &#x27;ol/layer/Tile.js&#x27;;
+import VectorLayer from &#x27;ol/layer/Vector.js&#x27;;
+import OGCMapTile from &#x27;ol/source/OGCMapTile.js&#x27;;
+import VectorSource from &#x27;ol/source/Vector.js&#x27;;
+import Circle from &#x27;ol/style/Circle.js&#x27;;
+import Fill from &#x27;ol/style/Fill.js&#x27;;
+import Icon from &#x27;ol/style/Icon.js&#x27;;
+import Stroke from &#x27;ol/style/Stroke.js&#x27;;
+import Style from &#x27;ol/style/Style.js&#x27;;
+import Text from &#x27;ol/style/Text.js&#x27;;
+
+// Create a single point feature at [0, 0] (Null Island)
+// 在地理坐标 [0, 0] 处创建一个点要素
+const iconFeature &#x3D; new Feature({
+  geometry: new Point([0, 0]),
+});
+
+// Style 1: Combined Icon (image) and Text (label) style to be dynamically transformed
+// 样式 1：包含图片图标（Icon）与多行文本标注（Text）的主样式，后续将通过滑块动态调整其各项空间变换参数
+const iconStyle &#x3D; new Style({
+  image: new Icon({
+    anchor: [0.5, 1], // Default anchor at bottom-center (0.5, 1) / 初始锚点位于图标底部正中心
+    src: &#x27;data/world.png&#x27;,
+  }),
+  text: new Text({
+    text: &#x27;World\nText&#x27;, // Multi-line text / 双行文本标注
+    font: &#x27;bold 30px Calibri,sans-serif&#x27;,
+    fill: new Fill({
+      color: &#x27;black&#x27;,
+    }),
+    stroke: new Stroke({
+      color: &#x27;white&#x27;,
+      width: 2,
+    }),
+  }),
+});
+
+// Style 2: Fixed black circle at [0, 0] acting as the visual reference origin (pivot point)
+// 样式 2：固定在 [0, 0] 原点处的黑底白边圆点，作为观察图标/文字锚点、位移、缩放与旋转的视觉基准靶心
+const pointStyle &#x3D; new Style({
+  image: new Circle({
+    radius: 7,
+    fill: new Fill({
+      color: &#x27;black&#x27;,
+    }),
+    stroke: new Stroke({
+      color: &#x27;white&#x27;,
+      width: 2,
+    }),
+  }),
+});
+
+// Apply composite style array: render the reference point first, then the icon and text on top
+// 应用复合样式数组：先绘制底层基准黑点，再在上方叠加绘制图标与文字
+iconFeature.setStyle([pointStyle, iconStyle]);
+
+const vectorSource &#x3D; new VectorSource({
+  features: [iconFeature],
+});
+
+const vectorLayer &#x3D; new VectorLayer({
+  source: vectorSource,
+});
+
+// Basemap layer using OGC API - Tiles (NaturalEarth raster)
+// 使用符合 OGC API - Tiles 标准的 NaturalEarth 全球自然地貌栅格瓦片作为底图
+const rasterLayer &#x3D; new TileLayer({
+  source: new OGCMapTile({
+    url: &#x27;https://maps.gnosis.earth/ogcapi/collections/NaturalEarth:raster:HYP_HR_SR_OB_DR/map/tiles/WebMercatorQuad&#x27;,
+    crossOrigin: &#x27;&#x27;,
+  }),
+});
+
+const map &#x3D; new Map({
+  layers: [rasterLayer, vectorLayer],
+  target: &#x27;map&#x27;,
+  view: new View({
+    center: [0, 0],
+    zoom: 3,
+  }),
+});
+
+// Lookup arrays mapping slider indices (0, 1, 2) to Canvas textAlign and textBaseline enum strings
+// 将滑块数值（0, 1, 2）映射为 Canvas 文本水平对齐（textAlign）和垂直基线（textBaseline）枚举字符串
+const textAlignments &#x3D; [&#x27;left&#x27;, &#x27;center&#x27;, &#x27;right&#x27;];
+const textBaselines &#x3D; [&#x27;top&#x27;, &#x27;middle&#x27;, &#x27;bottom&#x27;];
+const controls &#x3D; {};
+const controlIds &#x3D; [
+  &#x27;rotation&#x27;,
+  &#x27;rotateWithView&#x27;,
+  &#x27;scaleX&#x27;,
+  &#x27;scaleY&#x27;,
+  &#x27;anchorX&#x27;,
+  &#x27;anchorY&#x27;,
+  &#x27;displacementX&#x27;,
+  &#x27;displacementY&#x27;,
+  &#x27;textRotation&#x27;,
+  &#x27;textRotateWithView&#x27;,
+  &#x27;textScaleX&#x27;,
+  &#x27;textScaleY&#x27;,
+  &#x27;textAlign&#x27;,
+  &#x27;textBaseline&#x27;,
+  &#x27;textOffsetX&#x27;,
+  &#x27;textOffsetY&#x27;,
+];
+
+// Bind &#x27;input&#x27; events to all 16 DOM controls and synchronize their display labels
+// 遍历绑定全部 16 个 DOM 控件的 input 事件，并实时更新右侧的数值显示标签
+controlIds.forEach(function (id) {
+  const control &#x3D; document.getElementById(id);
+  const output &#x3D; document.getElementById(id + &#x27;Out&#x27;);
+  function setOutput() {
+    const value &#x3D; parseFloat(control.value);
+    if (control.type &#x3D;&#x3D;&#x3D; &#x27;checkbox&#x27;) {
+      output.innerText &#x3D; String(control.checked);
+    } else if (id &#x3D;&#x3D;&#x3D; &#x27;textAlign&#x27;) {
+      output.innerText &#x3D; textAlignments[value];
+    } else if (id &#x3D;&#x3D;&#x3D; &#x27;textBaseline&#x27;) {
+      output.innerText &#x3D; textBaselines[value];
+    } else {
+      output.innerText &#x3D; control.step.startsWith(&#x27;0.&#x27;)
+        ? value.toFixed(2)
+        : String(value);
+    }
+  }
+  control.addEventListener(&#x27;input&#x27;, function () {
+    setOutput();
+    updateStyle();
+  });
+  setOutput();
+  controls[id] &#x3D; control;
+});
+
+/**
+ * Apply all current UI control values to the Icon and Text styles, then trigger feature re-render
+ * 将所有 UI 控件的当前值同步设置到 Icon 和 Text 样式对象上，并通知要素触发重绘
+ */
+function updateStyle() {
+  // --- 1. Update Icon (Image) transformations / 更新图标（Icon）变换属性 ---
+  // Rotation in radians (slider value * π) / 旋转弧度（滑块值 * π）
+  iconStyle
+    .getImage()
+    .setRotation(parseFloat(controls[&#x27;rotation&#x27;].value) * Math.PI);
+
+  // Whether icon rotates with map view (Alt+Shift+Drag) / 是否随地图视图一起旋转
+  iconStyle.getImage().setRotateWithView(controls[&#x27;rotateWithView&#x27;].checked);
+
+  // 2D non-uniform scale [scaleX, scaleY] (negative values flip the image around anchor)
+  // 二维独立缩放 [scaleX, scaleY]（负值会围绕锚点发生镜像翻转）
+  iconStyle
+    .getImage()
+    .setScale([
+      parseFloat(controls[&#x27;scaleX&#x27;].value),
+      parseFloat(controls[&#x27;scaleY&#x27;].value),
+    ]);
+
+  // Normalized anchor point [anchorX, anchorY] in range [0, 1] / 归一化锚点坐标 [0~1]
+  iconStyle
+    .getImage()
+    .setAnchor([
+      parseFloat(controls[&#x27;anchorX&#x27;].value),
+      parseFloat(controls[&#x27;anchorY&#x27;].value),
+    ]);
+
+  // Pixel displacement [dx, dy] (Note: +Y is UPWARDS for Icon!)
+  // 图标像素位移 [dx, dy]（注意：Icon 的 Y 轴正方向是向上的！）
+  iconStyle
+    .getImage()
+    .setDisplacement([
+      parseFloat(controls[&#x27;displacementX&#x27;].value),
+      parseFloat(controls[&#x27;displacementY&#x27;].value),
+    ]);
+
+  // --- 2. Update Text (Label) transformations / 更新文本（Text）变换属性 ---
+  iconStyle
+    .getText()
+    .setRotation(parseFloat(controls[&#x27;textRotation&#x27;].value) * Math.PI);
+
+  iconStyle.getText().setRotateWithView(controls[&#x27;textRotateWithView&#x27;].checked);
+
+  // 2D scale for text [scaleX, scaleY] (negative values flip text around align/baseline pivot)
+  // 文本二维独立缩放 [scaleX, scaleY]（负值会围绕对齐基点镜像翻转文字）
+  iconStyle
+    .getText()
+    .setScale([
+      parseFloat(controls[&#x27;textScaleX&#x27;].value),
+      parseFloat(controls[&#x27;textScaleY&#x27;].value),
+    ]);
+
+  iconStyle
+    .getText()
+    .setTextAlign(textAlignments[parseFloat(controls[&#x27;textAlign&#x27;].value)]);
+
+  iconStyle
+    .getText()
+    .setTextBaseline(textBaselines[parseFloat(controls[&#x27;textBaseline&#x27;].value)]);
+
+  // Pixel offset for text (Note: +Y is DOWNWARDS for Text!)
+  // 文本像素偏移（注意：与 Icon 相反，Text 的 OffsetY 正方向是向下的！）
+  iconStyle.getText().setOffsetX(parseFloat(controls[&#x27;textOffsetX&#x27;].value));
+  iconStyle.getText().setOffsetY(parseFloat(controls[&#x27;textOffsetY&#x27;].value));
+
+  // CRITICAL: Mutating style sub-objects does not automatically notify the feature/layer.
+  // Call feature.changed() to increment revision and trigger a vector layer re-render!
+  // 关键步骤：直接调用 Style 子对象的 setter 不会自动触发重绘，必须调用 changed() 通知要素更新版本号并重绘！
+  iconFeature.changed();
+}
+updateStyle();
+
+// Change mouse cursor to pointer when hovering over the feature
+// 当鼠标悬停在要素（图标或文字碰撞盒）上方时，将鼠标指针切换为手型（pointer）
+map.on(&#x27;pointermove&#x27;, function (e) {
+  const hit &#x3D; map.hasFeatureAtPixel(e.pixel);
+  map.getTargetElement().style.cursor &#x3D; hit ? &#x27;pointer&#x27; : &#x27;&#x27;;
+});
+</code></pre>
+        </div>
+      </details>
+
+      <details open>
+        <summary class="source-heading">index.html</summary>
+        <div class="row-fluid">
+          <pre><code id="example-html-source" class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/title&gt;
+    &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
+    &lt;style&gt;
+      .map {
+        width: 100%;
+        height: 400px;
+      }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
+    &lt;table class&#x3D;&quot;controls&quot;&gt;
+      &lt;tr&gt;
+        &lt;th&gt;
+          Image / 图标 (Icon)
+        &lt;/th&gt;
+        &lt;th&gt;&lt;/th&gt;
+        &lt;th style&#x3D;&quot;visibility: hidden;&quot;&gt;-0.00 π&lt;/th&gt;
+        &lt;th&gt;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&lt;/th&gt;
+        &lt;th&gt;
+          Text / 文本 (Text)
+        &lt;/th&gt;
+        &lt;th&gt;&lt;/th&gt;
+        &lt;th&gt;&lt;/th&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;rotateWithView&quot;&gt;Rotate with view / 随视图旋转&lt;/label&gt;&amp;nbsp;&amp;nbsp;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;input id&#x3D;&quot;rotateWithView&quot; type&#x3D;&quot;checkbox&quot; /&gt;
+        &lt;/td&gt;
+        &lt;td&gt;&lt;span id&#x3D;&quot;rotateWithViewOut&quot;&gt;&lt;/span&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;textRotateWithView&quot;&gt;Rotate with view / 随视图旋转&lt;/label&gt;&amp;nbsp;&amp;nbsp;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;input id&#x3D;&quot;textRotateWithView&quot; type&#x3D;&quot;checkbox&quot; /&gt;
+        &lt;/td&gt;
+        &lt;td&gt;&lt;span id&#x3D;&quot;textRotateWithViewOut&quot;&gt;&lt;/span&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;rotation&quot;&gt;Rotation / 旋转角度&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;input
+            id&#x3D;&quot;rotation&quot;
+            type&#x3D;&quot;range&quot;
+            min&#x3D;&quot;-1&quot;
+            max&#x3D;&quot;1&quot;
+            step&#x3D;&quot;0.05&quot;
+            value&#x3D;&quot;0.25&quot;
+          /&gt;
+        &lt;/td&gt;
+        &lt;td&gt;&lt;span id&#x3D;&quot;rotationOut&quot;&gt;&lt;/span&gt; π&lt;/td&gt;
+        &lt;td&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;textRotation&quot;&gt;Rotation / 旋转角度&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;input
+            id&#x3D;&quot;textRotation&quot;
+            type&#x3D;&quot;range&quot;
+            min&#x3D;&quot;-1&quot;
+            max&#x3D;&quot;1&quot;
+            step&#x3D;&quot;0.05&quot;
+            value&#x3D;&quot;0.25&quot;
+          /&gt;
+        &lt;/td&gt;
+        &lt;td&gt;&lt;span id&#x3D;&quot;textRotationOut&quot;&gt;&lt;/span&gt; π&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;scaleX&quot;&gt;Scale X / 水平缩放&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;input
+            id&#x3D;&quot;scaleX&quot;
+            type&#x3D;&quot;range&quot;
+            min&#x3D;&quot;-2&quot;
+            max&#x3D;&quot;2&quot;
+            step&#x3D;&quot;0.1&quot;
+            value&#x3D;&quot;1&quot;
+          /&gt;
+        &lt;/td&gt;
+        &lt;td&gt;&lt;span id&#x3D;&quot;scaleXOut&quot;&gt;&lt;/span&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;textScaleX&quot;&gt;Scale X / 水平缩放&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;input
+            id&#x3D;&quot;textScaleX&quot;
+            type&#x3D;&quot;range&quot;
+            min&#x3D;&quot;-2&quot;
+            max&#x3D;&quot;2&quot;
+            step&#x3D;&quot;0.1&quot;
+            value&#x3D;&quot;1&quot;
+          /&gt;
+        &lt;/td&gt;
+        &lt;td&gt;&lt;span id&#x3D;&quot;textScaleXOut&quot;&gt;&lt;/span&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;scaleY&quot;&gt;Scale Y / 垂直缩放&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;input
+            id&#x3D;&quot;scaleY&quot;
+            type&#x3D;&quot;range&quot;
+            min&#x3D;&quot;-2&quot;
+            max&#x3D;&quot;2&quot;
+            step&#x3D;&quot;0.1&quot;
+            value&#x3D;&quot;1&quot;
+          /&gt;
+        &lt;/td&gt;
+        &lt;td&gt;&lt;span id&#x3D;&quot;scaleYOut&quot;&gt;&lt;/span&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;textScaleY&quot;&gt;Scale Y / 垂直缩放&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;input
+            id&#x3D;&quot;textScaleY&quot;
+            type&#x3D;&quot;range&quot;
+            min&#x3D;&quot;-2&quot;
+            max&#x3D;&quot;2&quot;
+            step&#x3D;&quot;0.1&quot;
+            value&#x3D;&quot;1&quot;
+          /&gt;
+        &lt;/td&gt;
+        &lt;td&gt;&lt;span id&#x3D;&quot;textScaleYOut&quot;&gt;&lt;/span&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;anchorX&quot;&gt;Anchor X / 水平锚点&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;input
+            id&#x3D;&quot;anchorX&quot;
+            type&#x3D;&quot;range&quot;
+            min&#x3D;&quot;0&quot;
+            max&#x3D;&quot;1&quot;
+            step&#x3D;&quot;0.01&quot;
+            value&#x3D;&quot;0.5&quot;
+          /&gt;
+        &lt;/td&gt;
+        &lt;td&gt;&lt;span id&#x3D;&quot;anchorXOut&quot;&gt;&lt;/span&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;textAlign&quot;&gt;Align / 水平对齐&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;input
+            id&#x3D;&quot;textAlign&quot;
+            type&#x3D;&quot;range&quot;
+            min&#x3D;&quot;0&quot;
+            max&#x3D;&quot;2&quot;
+            step&#x3D;&quot;1&quot;
+            value&#x3D;&quot;1&quot;
+          /&gt;
+        &lt;/td&gt;
+        &lt;td&gt;&lt;span id&#x3D;&quot;textAlignOut&quot;&gt;&lt;/span&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;anchorY&quot;&gt;Anchor Y / 垂直锚点&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;input
+            id&#x3D;&quot;anchorY&quot;
+            type&#x3D;&quot;range&quot;
+            min&#x3D;&quot;0&quot;
+            max&#x3D;&quot;1&quot;
+            step&#x3D;&quot;0.01&quot;
+            value&#x3D;&quot;1&quot;
+          /&gt;
+        &lt;/td&gt;
+        &lt;td&gt;&lt;span id&#x3D;&quot;anchorYOut&quot;&gt;&lt;/span&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;textBaseline&quot;&gt;Baseline / 垂直基线&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;input
+            id&#x3D;&quot;textBaseline&quot;
+            type&#x3D;&quot;range&quot;
+            min&#x3D;&quot;0&quot;
+            max&#x3D;&quot;2&quot;
+            step&#x3D;&quot;1&quot;
+            value&#x3D;&quot;0&quot;
+          /&gt;
+        &lt;/td&gt;
+        &lt;td&gt;&lt;span id&#x3D;&quot;textBaselineOut&quot;&gt;&lt;/span&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;displacementX&quot;&gt;Displacement X / 水平位移&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;input
+            id&#x3D;&quot;displacementX&quot;
+            type&#x3D;&quot;range&quot;
+            min&#x3D;&quot;-100&quot;
+            max&#x3D;&quot;100&quot;
+            value&#x3D;&quot;0&quot;
+          /&gt;
+        &lt;/td&gt;
+        &lt;td&gt;&lt;span id&#x3D;&quot;displacementXOut&quot;&gt;&lt;/span&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;textOffsetX&quot;&gt;Offset X / 水平偏移&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;input id&#x3D;&quot;textOffsetX&quot; type&#x3D;&quot;range&quot; min&#x3D;&quot;-100&quot; max&#x3D;&quot;100&quot; value&#x3D;&quot;0&quot; /&gt;
+        &lt;/td&gt;
+        &lt;td&gt;&lt;span id&#x3D;&quot;textOffsetXOut&quot;&gt;&lt;/span&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+      &lt;tr&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;displacementY&quot;&gt;Displacement Y / 垂直位移&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;input
+            id&#x3D;&quot;displacementY&quot;
+            type&#x3D;&quot;range&quot;
+            min&#x3D;&quot;-100&quot;
+            max&#x3D;&quot;100&quot;
+            value&#x3D;&quot;0&quot;
+          /&gt;
+        &lt;/td&gt;
+        &lt;td&gt;&lt;span id&#x3D;&quot;displacementYOut&quot;&gt;&lt;/span&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;textOffsetY&quot;&gt;Offset Y / 垂直偏移&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;
+          &lt;input id&#x3D;&quot;textOffsetY&quot; type&#x3D;&quot;range&quot; min&#x3D;&quot;-100&quot; max&#x3D;&quot;100&quot; value&#x3D;&quot;0&quot; /&gt;
+        &lt;/td&gt;
+        &lt;td&gt;&lt;span id&#x3D;&quot;textOffsetYOut&quot;&gt;&lt;/span&gt;&lt;/td&gt;
+      &lt;/tr&gt;
+    &lt;/table&gt;
+    
+
+    &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        </div>
+      </details>
+
+
+      <details open>
+        <summary class="source-heading">package.json</summary>
+        <div class="row-fluid">
+          <pre><code id="example-pkg-source" class="language-json">{
+  &quot;name&quot;: &quot;icon-scale&quot;,
+  &quot;dependencies&quot;: {
+    &quot;ol&quot;: &quot;10.11.1-dev&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;vite&quot;: &quot;^8.1.5&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;vite&quot;,
+    &quot;build&quot;: &quot;vite build&quot;
+  }
+}</code></pre>
+        </div>
+      </details>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="icon-scale.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+    <script src="./resources/common.js"></script>
+    <script>
+      document.getElementById('tag-example-list')
+        .addEventListener('show.bs.modal', function (event) {
+          const button = event.relatedTarget; // Button that triggered the modal
+          this.querySelector('.modal-title').innerText = button.dataset.title;
+          this.querySelector('.modal-body').innerHTML = button.dataset.content;
+        });
+    </script>
+    <script>
+      const releaseUrl = 'https://cdn.jsdelivr.net/npm/ol/package.json';
+      fetch(releaseUrl).then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        const latestVersion = json.version;
+        document.getElementById('latest-version').innerHTML = latestVersion;
+        const url = window.location.href;
+        const branchSearch = url.match(/\/([^\/]*)\/examples\//);
+        const storageKey = 'ol-dismissed=-' + latestVersion;
+        const dismissed = localStorage.getItem(storageKey) === 'true';
+        if (branchSearch && !dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '10.11.1-dev' != latestVersion) {
+          const link = url.replace(branchSearch[0], '/latest/examples/');
+          fetch(link, {method: 'head'}).then(function(response) {
+            const a = document.getElementById('latest-link');
+            a.href = response.status == 200 ? link : '../../latest/examples/';
+          });
+          const latestCheck = document.getElementById('latest-check');
+          latestCheck.style.display = '';
+          document.getElementById('latest-dismiss').onclick = function() {
+            latestCheck.style.display = 'none';
+            localStorage.setItem(storageKey, 'true');
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

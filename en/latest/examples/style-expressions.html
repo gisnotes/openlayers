@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
+    <title>Style Expressions / 样式表达式与规则驱动样式</title>
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="./theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="./theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="./theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="./theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="./theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="../examples/">Examples</a></li>
+          <li class="nav-item"><a class="nav-link" href="../apidoc/"><i class="fa fa-sitemap me-1"></i>API</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container-fluid line-numbers">
+      <div id="latest-check" class="alert alert-warning alert-dismissible" role="alert" style="display:none">
+        <button id="latest-dismiss" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        This example uses OpenLayers v<span>10.11.1-dev</span>. The <a id="latest-link" href="#" class="alert-link">latest</a> is v<span id="latest-version"></span>.
+      </div>
+
+
+      <div class="row-fluid">
+        <a href="#" id="codepen-button" class="btn btn-link float-end">
+          <i class="fab fa-codepen fa-lg"></i> Edit
+        </a>
+        <h4 id="title">Style Expressions / 样式表达式与规则驱动样式</h4>
+        <p class="tags">
+          <span class="badge-group">
+            <a
+              href="./index.html?q=vector" class="badge badge-info">vector</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="vector"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles-advanced.html&quot;&gt;Advanced Mapbox Vector Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-webgl-line.html&quot;&gt;Applying a filter along lines rendered with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cluster.html&quot;&gt;Clustered Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-circle-render.html&quot;&gt;Custom Circle Render&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-hit-detection-renderer.html&quot;&gt;Custom Hit Detection Render&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-interactions.html&quot;&gt;Custom Interactions&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./declutter-group.html&quot;&gt;Declutter Group&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-features.html&quot;&gt;Draw and Modify Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-geodesic.html&quot;&gt;Draw and Modify Geodesic Circles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features.html&quot;&gt;Draw Features / 绘制要素&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-modify-trace-snap.html&quot;&gt;Draw, modify, trace and snap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./equal-earth-geojson.html&quot;&gt;Equal Earth projection with dynamic center meridian&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./fractal.html&quot;&gt;Fractal Rendering&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson.html&quot;&gt;GeoJSON&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson-vt.html&quot;&gt;geojson-vt integration&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-icon.html&quot;&gt;Icon modification&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./jsts.html&quot;&gt;JSTS Integration&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-arrows.html&quot;&gt;LineString Arrows&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-layer.html&quot;&gt;Mapbox Vector Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles.html&quot;&gt;Mapbox Vector Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-ogc-features.html&quot;&gt;MapServer OGC Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure.html&quot;&gt;Measure&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-features.html&quot;&gt;Modify Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-test.html&quot;&gt;Modify Features Test&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles.html&quot;&gt;OGC Vector Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles-geographic.html&quot;&gt;OGC Vector Tiles (Geographic)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./osm-vector-tiles.html&quot;&gt;OSM Vector Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./populated-places.html&quot;&gt;Populated Places&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rich-text-labels.html&quot;&gt;Rich Text Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-features.html&quot;&gt;Select Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-hover-features.html&quot;&gt;Select Features by Hover&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-multiple-features.html&quot;&gt;Select multiple Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap.html&quot;&gt;Snap Interaction&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap-custom-segmenter.html&quot;&gt;Snap Interaction with Custom Segmenter&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-renderer.html&quot;&gt;Style renderer / 样式渲染器（自定义渲染函数）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./synthetic-lines.html&quot;&gt;Synthetic Lines&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./synthetic-points.html&quot;&gt;Synthetic Points&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tooltip-on-hover.html&quot;&gt;Tooltip on Hover&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topolis.html&quot;&gt;topolis integration&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tracing.html&quot;&gt;Tracing around a polygon&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./translate-features.html&quot;&gt;Translate Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./turf.html&quot;&gt;turf.js&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-vector-layer.html&quot;&gt;Vector Image Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-label-decluttering.html&quot;&gt;Vector Label Decluttering&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels.html&quot;&gt;Vector Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels-justify-text.html&quot;&gt;Vector Labels - Justify Text&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-layer.html&quot;&gt;Vector Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./hitdetect-vector.html&quot;&gt;Vector Layer Hit Detection&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-layer.html&quot;&gt;WebGL Vector Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >86</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=style" class="badge badge-info">style</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="style"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-stretch.html&quot;&gt;Band Contrast Stretch / 遥感波段组合与对比度拉伸&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geozarr-stretch.html&quot;&gt;Band Selection and Contrast Stretch / GeoZarr 波段选择与对比度拉伸&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features-style.html&quot;&gt;Drawing Features Style / 绘制要素时的自定义样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-renderer.html&quot;&gt;Style renderer / 样式渲染器（自定义渲染函数）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >27</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=expression" class="badge badge-info">expression</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="expression"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=矢量" class="badge badge-info">矢量</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="矢量"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >8</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=样式" class="badge badge-info">样式</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="样式"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >8</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=表达式" class="badge badge-info">表达式</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="表达式"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=规则" class="badge badge-info">规则</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="规则"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+        </p>
+        <div class="modal modal-tag-example" id="tag-example-list" tabindex="-1" role="dialog" aria-labelledby="tag-example-title" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-scrollable" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="tag-example-title"></h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                <div class="list-group"></div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="map" class="map"></div>
+
+
+        <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
+          <input id="codesandbox-params" type="hidden" name="parameters">
+        </form>
+      </div>
+
+      <div class="row-fluid">
+        <p id="shortdesc">Demonstrates rule based styling. / 演示基于规则和表达式驱动的动态矢量样式（Flat Style &amp; Rule-based Styling）。</p>
+        <div id="docs"><p>To style all features in a layer in the same way, you can use a symbolizer object with literal values as shown below for the land layer. In this case, all features have the same fill color.</p>
+<p>若要为图层中的所有要素赋予统一的样式，可以使用包含字面量值的符号化对象（如本示例中的陆地陆块图层 <code>land</code>），此时所有要素共享相同的填充颜色。</p>
+<p>To style features in a layer based on a feature property, an expression can be provided in a symbolizer instead of literal values. In the first populated places layer below, the circle radius is based on the <code>scalerank</code> property.</p>
+<p>若要基于要素属性动态控制样式表现，可以在符号化属性中使用表达式代替固定的字面量。例如在下方的第一个居民点图层中，圆点的半径大小（<code>circle-radius</code>）直接由要素的 <code>scalerank</code>（等级缩放标尺）属性驱动。</p>
+<p>To conditionally apply different symbolizers based on a feature property, a list of rules can be provided. Each rule can have a <code>filter</code> expression. If this expression evaluates to true, the rule&#39;s <code>style</code> is applied. A rule with <code>else: true</code> applies if no previous rules have applied. The populated place labels are rendered with a list of rules given to the third layer.</p>
+<p>若要根据属性条件应用不同的符号化规则，可以传入一个规则列表（<code>rules</code> 数组）。每个规则都可以包含一个 <code>filter</code>（过滤表达式），当表达式求值结果为 <code>true</code> 时，该规则的 <code>style</code> 便会生效。包含 <code>else: true</code> 的规则作为保底分支，仅在之前的所有规则均未命中时才会生效。本示例中第三个图层的居民点标注文字，就是使用这种基于规则的列表来实现不同人口规模城市的分级标注。</p>
+<hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 为什么推荐使用声明式扁平样式（Flat Style）与表达式？</h4>
+<p>在传统的 OpenLayers 开发中，若要根据要素属性动态渲染样式，开发者通常需要编写一个命令式的 <code>StyleFunction</code> 回调：</p>
+<pre><code class="language-javascript">// 传统做法：每次渲染都要在 JS 线程中反复执行回调函数并不断 new Style()
+layer.setStyle(function(feature, resolution) {
+  const pop = feature.get(&#39;pop_max&#39;);
+  if (pop &gt; 10000000) {
+    return new Style({ ... });
+  }
+  return new Style({ ... });
+});
+</code></pre>
+<p>传统命令式做法在海量要素渲染时存在三大痛点：</p>
+<ol>
+<li><strong>CPU 开销大</strong>：每次视口平移、缩放，每个要素都需要在主线程中执行一次 JS 函数，频繁创建/销毁 Style 对象，GC 压力大。</li>
+<li><strong>不可序列化</strong>：StyleFunction 是原生 JS 代码，无法以纯 JSON 形式从后端接口或配置文件中下发或持久化存储。</li>
+<li><strong>无法下沉到 WebGL/GPU</strong>：由于函数逻辑完全黑盒，OpenLayers 无法将其解析并编译为 GPU Shader（着色器）代码。</li>
+</ol>
+<p>为此，OpenLayers 引入了现代化的<strong>声明式扁平样式（Flat Style）<strong>与</strong>样式表达式体系（Style Expressions）</strong>：</p>
+<ul>
+<li><strong>纯 JSON 纯数据结构</strong>：无需导入 <code>Style</code>、<code>Fill</code>、<code>Stroke</code>、<code>CircleStyle</code>、<code>Text</code> 等一众类名，直接使用纯字面量对象。</li>
+<li><strong>极佳的性能</strong>：内部直接编译为优化的渲染指令，同时支持 Canvas 和 WebGL 高性能渲染。</li>
+<li><strong>易于序列化与分享</strong>：可以直接保存为 JSON，方便前后端解耦与云端制图配图。</li>
+</ul>
+<h4>2. 扁平样式键名规范（Flat Style Syntax）</h4>
+<p>扁平样式采用“前缀-属性名”的直观命名结构：</p>
+<ul>
+<li><strong>多边形填充与描边</strong>：<code>&#39;fill-color&#39;</code>, <code>&#39;stroke-color&#39;</code>, <code>&#39;stroke-width&#39;</code>, <code>&#39;stroke-line-dash&#39;</code> 等。</li>
+<li><strong>点状要素圆形</strong>：<code>&#39;circle-radius&#39;</code>, <code>&#39;circle-fill-color&#39;</code>, <code>&#39;circle-stroke-color&#39;</code>, <code>&#39;circle-stroke-width&#39;</code>。</li>
+<li><strong>点状图标</strong>：<code>&#39;icon-src&#39;</code>, <code>&#39;icon-scale&#39;</code>, <code>&#39;icon-rotation&#39;</code>, <code>&#39;icon-anchor&#39;</code>。</li>
+<li><strong>文字标注</strong>：<code>&#39;text-value&#39;</code>, <code>&#39;text-font&#39;</code>, <code>&#39;text-fill-color&#39;</code>, <code>&#39;text-stroke-color&#39;</code>, <code>&#39;text-stroke-width&#39;</code>。</li>
+</ul>
+<h4>3. 样式表达式结构（Expression Architecture）</h4>
+<p>表达式采用类似 Lisp / Mapbox GL 的前缀表达式数组：<code>[operator, ...arguments]</code>。</p>
+<p>本示例涵盖了三个最典型的核心操作符：</p>
+<ol>
+<li><strong>属性取值 <code>[&#39;get&#39;, &#39;propertyName&#39;]</code></strong>：<ul>
+<li>从当前要素的 <code>properties</code> 中提取指定字段的值。例如 <code>[&#39;get&#39;, &#39;scalerank&#39;]</code> 读取城市的等级字段。</li>
+</ul>
+</li>
+<li><strong>条件比较 <code>[&#39;&gt;&#39;, [&#39;get&#39;, &#39;pop_max&#39;], 10_000_000]</code></strong>：<ul>
+<li>判断人口最大值 <code>pop_max</code> 是否大于 1000 万，返回布尔值 <code>true</code> 或 <code>false</code>。</li>
+<li>常用的逻辑/比较操作符还包括：<code>&#39;&lt;&#39;</code>, <code>&#39;&lt;=&#39;</code>, <code>&#39;&gt;=&#39;</code>, <code>&#39;==&#39;</code>, <code>&#39;!=&#39;</code>, <code>&#39;all&#39;</code>（与）, <code>&#39;any&#39;</code>（或）, <code>&#39;not&#39;</code>（非）, <code>&#39;between&#39;</code>。</li>
+</ul>
+</li>
+<li><strong>字符串拼接 <code>[&#39;concat&#39;, ...strings]</code></strong>：<ul>
+<li>将多个字段或字符串常量合并。例如：<code>[&#39;concat&#39;, [&#39;get&#39;, &#39;adm1name&#39;], &#39;, &#39;, [&#39;get&#39;, &#39;adm0name&#39;]]</code> 会将省州名和国家名拼成如 <code>&quot;New York, United States&quot;</code>。</li>
+</ul>
+</li>
+</ol>
+<h4>4. 基于规则的分支过滤（Rule-based Styling &amp; else 分支）</h4>
+<p>通过传入一个规则数组 <code>Rule[]</code>，可以实现类似 <code>if ... else if ... else</code> 的分级专题图渲染：</p>
+<pre><code class="language-javascript">style: [
+  {
+    // 规则 1：超大城市（人口 &gt; 1000 万）
+    filter: [&#39;&gt;&#39;, [&#39;get&#39;, &#39;pop_max&#39;], 10_000_000],
+    style: {
+      &#39;text-value&#39;: [&#39;concat&#39;, [&#39;get&#39;, &#39;adm1name&#39;], &#39;, &#39;, [&#39;get&#39;, &#39;adm0name&#39;]],
+      &#39;text-font&#39;: &#39;16px sans-serif&#39;,
+      // ...
+    },
+  },
+  {
+    // 规则 2：特大城市（人口 &gt; 500 万且未命中上一条规则）
+    else: true, // 关键：互斥分支
+    filter: [&#39;&gt;&#39;, [&#39;get&#39;, &#39;pop_max&#39;], 5_000_000],
+    style: {
+      &#39;text-value&#39;: [&#39;get&#39;, &#39;nameascii&#39;],
+      &#39;text-font&#39;: &#39;12px sans-serif&#39;,
+      // ...
+    },
+  },
+]
+</code></pre>
+<ul>
+<li><strong><code>filter</code> 属性</strong>：求值结果必须为布尔类型。如果为 <code>true</code> 则采纳当前规则。</li>
+<li><strong><code>else: true</code> 属性</strong>：声明当前规则具有互斥性，只有当在它<strong>之前</strong>声明的所有规则都未命中时，才会去评估它的 <code>filter</code>。</li>
+</ul>
+<h4>5. <code>declutter: true</code> 标注碰撞避让</h4>
+<p>在文字标注图层上启用了 <code>declutter: true</code>（防拥挤碰撞避让）：</p>
+<ul>
+<li>当多个城市地名在视口中距离太近、文字发生重叠覆盖时，OpenLayers 会自动开启空间拓扑碰撞检测。</li>
+<li>位于更前列的规则、更高权重的标注会被保留，被压盖的次级标注则会被自动隐去，避免地图出现杂乱无章的重影乱码。</li>
+</ul>
+</div>
+      </div>
+
+      <details open>
+        <summary class="source-heading">main.js</summary>
+        <div class="row-fluid">
+          <pre><code id="example-js-source" class="language-js">import Map from &#x27;ol/Map.js&#x27;;
+import View from &#x27;ol/View.js&#x27;;
+import GeoJSON from &#x27;ol/format/GeoJSON.js&#x27;;
+import Layer from &#x27;ol/layer/Vector.js&#x27;;
+import Source from &#x27;ol/source/Vector.js&#x27;;
+
+// GeoJSON format reader used across vector sources
+// 共享的 GeoJSON 格式解析器实例
+const format &#x3D; new GeoJSON();
+
+const map &#x3D; new Map({
+  layers: [
+    // Layer 1: Land polygons with uniform literal style
+    // 图层 1：全球陆地多边形底图，使用固定的字面量扁平样式（所有陆地多边形统一填充暗灰蓝色）
+    new Layer({
+      background: &#x27;#1a2b39&#x27;, // Ocean background color / 海洋背景底色
+      source: new Source({
+        url: &#x27;https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_110m_land.geojson&#x27;,
+        format,
+      }),
+      style: {
+        &#x27;fill-color&#x27;: &#x27;darkgray&#x27;,
+      },
+    }),
+    // Layer 2: Populated places points with expression-driven radius
+    // 图层 2：居民点散点图层，圆点半径由要素属性表达式动态驱动
+    new Layer({
+      source: new Source({
+        url: &#x27;https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_populated_places_simple.geojson&#x27;,
+        format,
+      }),
+      style: {
+        // Use the &#x27;get&#x27; expression to read the &#x27;scalerank&#x27; property directly as the circle radius
+        // 使用 [&#x27;get&#x27;, &#x27;scalerank&#x27;] 表达式动态读取要素属性中的等级数字作为圆点半径
+        &#x27;circle-radius&#x27;: [&#x27;get&#x27;, &#x27;scalerank&#x27;],
+        &#x27;circle-fill-color&#x27;: &#x27;gray&#x27;,
+        &#x27;circle-stroke-color&#x27;: &#x27;white&#x27;,
+        &#x27;circle-stroke-width&#x27;: 0.5,
+      },
+    }),
+    // Layer 3: Rule-based text labels with filters, &#x27;else&#x27; branching, and decluttering
+    // 图层 3：基于规则数组的城市地名文本标注，展示条件过滤、else 分支与标注防重叠避让
+    new Layer({
+      source: new Source({
+        url: &#x27;https://d2ad6b4ur7yvpq.cloudfront.net/naturalearth-3.3.0/ne_50m_populated_places_simple.geojson&#x27;,
+        format,
+      }),
+      // Enable collision detection to prevent overlapping text labels
+      // 开启文本标注碰撞检测避让机制，避免地名密集时发生文字重叠遮挡
+      declutter: true,
+      style: [
+        // Rule 1: Megacities (population &gt; 10,000,000)
+        // 规则 1：超大城市（人口大于 1000 万），显示 &quot;省/州, 国家&quot;，字号较大 (16px)
+        {
+          filter: [&#x27;&gt;&#x27;, [&#x27;get&#x27;, &#x27;pop_max&#x27;], 10_000_000],
+          style: {
+            &#x27;text-value&#x27;: [
+              &#x27;concat&#x27;,
+              [&#x27;get&#x27;, &#x27;adm1name&#x27;],
+              &#x27;, &#x27;,
+              [&#x27;get&#x27;, &#x27;adm0name&#x27;],
+            ],
+            &#x27;text-font&#x27;: &#x27;16px sans-serif&#x27;,
+            &#x27;text-fill-color&#x27;: &#x27;white&#x27;,
+            &#x27;text-stroke-color&#x27;: &#x27;gray&#x27;,
+            &#x27;text-stroke-width&#x27;: 2,
+          },
+        },
+        // Rule 2: Large cities (population &gt; 5,000,000, but not matching Rule 1)
+        // 规则 2：特大城市（人口大于 500 万且未命中规则 1），仅显示简短城市名，字号较小 (12px)
+        {
+          else: true,
+          filter: [&#x27;&gt;&#x27;, [&#x27;get&#x27;, &#x27;pop_max&#x27;], 5_000_000],
+          style: {
+            &#x27;text-value&#x27;: [&#x27;get&#x27;, &#x27;nameascii&#x27;],
+            &#x27;text-font&#x27;: &#x27;12px sans-serif&#x27;,
+            &#x27;text-fill-color&#x27;: &#x27;white&#x27;,
+            &#x27;text-stroke-color&#x27;: &#x27;gray&#x27;,
+            &#x27;text-stroke-width&#x27;: 2,
+          },
+        },
+      ],
+    }),
+  ],
+  target: &#x27;map&#x27;,
+  view: new View({
+    center: [0, 0],
+    zoom: 1,
+  }),
+});
+</code></pre>
+        </div>
+      </details>
+
+      <details open>
+        <summary class="source-heading">index.html</summary>
+        <div class="row-fluid">
+          <pre><code id="example-html-source" class="language-markup">&lt;!DOCTYPE html&gt;
+&lt;html lang="en"&gt;
+  &lt;head&gt;
+    &lt;meta charset="UTF-8"&gt;
+    &lt;title&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/title&gt;
+    &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
+    &lt;style&gt;
+      .map {
+        width: 100%;
+        height: 400px;
+      }
+    &lt;/style&gt;
+  &lt;/head&gt;
+  &lt;body&gt;
+    &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
+    
+
+    &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
+  &lt;/body&gt;
+&lt;/html&gt;</code></pre>
+        </div>
+      </details>
+
+
+      <details open>
+        <summary class="source-heading">package.json</summary>
+        <div class="row-fluid">
+          <pre><code id="example-pkg-source" class="language-json">{
+  &quot;name&quot;: &quot;style-expressions&quot;,
+  &quot;dependencies&quot;: {
+    &quot;ol&quot;: &quot;10.11.1-dev&quot;
+  },
+  &quot;devDependencies&quot;: {
+    &quot;vite&quot;: &quot;^8.1.5&quot;
+  },
+  &quot;scripts&quot;: {
+    &quot;start&quot;: &quot;vite&quot;,
+    &quot;build&quot;: &quot;vite build&quot;
+  }
+}</code></pre>
+        </div>
+      </details>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script type="module" src="style-expressions.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+    <script src="./resources/common.js"></script>
+    <script>
+      document.getElementById('tag-example-list')
+        .addEventListener('show.bs.modal', function (event) {
+          const button = event.relatedTarget; // Button that triggered the modal
+          this.querySelector('.modal-title').innerText = button.dataset.title;
+          this.querySelector('.modal-body').innerHTML = button.dataset.content;
+        });
+    </script>
+    <script>
+      const releaseUrl = 'https://cdn.jsdelivr.net/npm/ol/package.json';
+      fetch(releaseUrl).then(function(response) {
+        return response.json();
+      }).then(function(json) {
+        const latestVersion = json.version;
+        document.getElementById('latest-version').innerHTML = latestVersion;
+        const url = window.location.href;
+        const branchSearch = url.match(/\/([^\/]*)\/examples\//);
+        const storageKey = 'ol-dismissed=-' + latestVersion;
+        const dismissed = localStorage.getItem(storageKey) === 'true';
+        if (branchSearch && !dismissed && /^v[0-9\.]*$/.test(branchSearch[1]) && '10.11.1-dev' != latestVersion) {
+          const link = url.replace(branchSearch[0], '/latest/examples/');
+          fetch(link, {method: 'head'}).then(function(response) {
+            const a = document.getElementById('latest-link');
+            a.href = response.status == 200 ? link : '../../latest/examples/';
+          });
+          const latestCheck = document.getElementById('latest-check');
+          latestCheck.style.display = '';
+          document.getElementById('latest-dismiss').onclick = function() {
+            latestCheck.style.display = 'none';
+            localStorage.setItem(storageKey, 'true');
+          }
+        }
+      });
+    </script>
+  </body>
+</html>

@@ -1,0 +1,256 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - Errors</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="errors">Errors</h1>
+<h1 id="错误代码">错误代码</h1>
+<h3 id="1">1</h3>
+<p>The view center is not defined.</p>
+<p>视图中心点（center）未定义。</p>
+<h3 id="2">2</h3>
+<p>The view resolution is not defined.</p>
+<p>视图分辨率（resolution）未定义。</p>
+<h3 id="3">3</h3>
+<p>The view rotation is not defined.</p>
+<p>视图旋转角度（rotation）未定义。</p>
+<h3 id="4">4</h3>
+<p><code>image</code> and <code>src</code> cannot be provided at the same time.</p>
+<p>不能同时提供 <code>image</code> 和 <code>src</code>。</p>
+<h3 id="5">5</h3>
+<p><code>imgSize</code> must be set when <code>image</code> is provided.</p>
+<p>提供 <code>image</code> 时必须设置 <code>imgSize</code>。</p>
+<h3 id="6">6</h3>
+<p>A defined and non-empty <code>src</code> or <code>image</code> must be provided.</p>
+<p>必须提供已定义且非空的 <code>src</code> 或 <code>image</code>。</p>
+<h3 id="7">7</h3>
+<p><code>format</code> must be set when <code>url</code> is set.</p>
+<p>设置了 <code>url</code> 时必须设置 <code>format</code>。</p>
+<h3 id="8">8</h3>
+<p>Unknown <code>serverType</code> configured.</p>
+<p>配置了未知的 <code>serverType</code>。</p>
+<h3 id="9">9</h3>
+<p><code>url</code> must be configured or set using <code>#setUrl()</code>.</p>
+<p>必须配置 <code>url</code> 或使用 <code>#setUrl()</code> 进行设置。</p>
+<h3 id="10">10</h3>
+<p>The default <code>geometryFunction</code> can only handle <code>ol/geom/Point</code> geometries.</p>
+<p>默认的 <code>geometryFunction</code> 只能处理 <code>ol/geom/Point</code> 类型的几何图形。</p>
+<h3 id="11">11</h3>
+<p><code>options.featureTypes</code> must be an Array.</p>
+<p><code>options.featureTypes</code> 必须是一个数组（Array）。</p>
+<h3 id="12">12</h3>
+<p><code>options.geometryName</code> must also be provided when <code>options.bbox</code> is set.</p>
+<p>设置了 <code>options.bbox</code> 时，必须同时提供 <code>options.geometryName</code>。</p>
+<h3 id="13">13</h3>
+<p>Invalid corner. Valid corners are <code>top-left</code>, <code>top-right</code>, <code>bottom-right</code> and <code>bottom-left</code>.</p>
+<p>无效的角（corner）。有效的角为 <code>top-left</code>、<code>top-right</code>、<code>bottom-right</code> 和 <code>bottom-left</code>。</p>
+<h3 id="14">14</h3>
+<p>Invalid color. Valid colors are all <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color">CSS colors</a>.</p>
+<p>无效的颜色。有效的颜色为所有 <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/color">CSS 颜色</a>。</p>
+<h3 id="15">15</h3>
+<p>Tried to get a value for a key that does not exist in the cache.</p>
+<p>尝试获取缓存中不存在的键的值。</p>
+<h3 id="16">16</h3>
+<p>Tried to set a value for a key that is used already.</p>
+<p>尝试为已被占用的键设置值。</p>
+<h3 id="17">17</h3>
+<p><code>resolutions</code> must be sorted in descending order.</p>
+<p><code>resolutions</code> 必须按降序排列。</p>
+<h3 id="18">18</h3>
+<p>Either <code>origin</code> or <code>origins</code> must be configured, never both.</p>
+<p>只能配置 <code>origin</code> 或 <code>origins</code> 其中之一，不能同时配置两者。</p>
+<h3 id="19">19</h3>
+<p>Number of <code>tileSizes</code> and <code>resolutions</code> must be equal.</p>
+<p><code>tileSizes</code> 的数量必须与 <code>resolutions</code> 的数量相等。</p>
+<h3 id="20">20</h3>
+<p>Number of <code>origins</code> and <code>resolutions</code> must be equal.</p>
+<p><code>origins</code> 的数量必须与 <code>resolutions</code> 的数量相等。</p>
+<h3 id="22">22</h3>
+<p>Either <code>tileSize</code> or <code>tileSizes</code> must be configured, never both.</p>
+<p>只能配置 <code>tileSize</code> 或 <code>tileSizes</code> 其中之一，不能同时配置两者。</p>
+<h3 id="24">24</h3>
+<p>Invalid extent or geometry provided as <code>geometry</code>.</p>
+<p>作为 <code>geometry</code> 提供的范围（extent）或几何图形无效。</p>
+<h3 id="25">25</h3>
+<p>Cannot fit empty extent provided as <code>geometry</code>.</p>
+<p>无法适应作为 <code>geometry</code> 提供的空范围（extent）。</p>
+<h3 id="26">26</h3>
+<p>Features for <code>deletes</code> must have an id set by the feature reader or  <code>ol.Feature#setId()</code>.</p>
+<p>用于 <code>deletes</code> 的要素必须具有由要素读取器或 <code>ol.Feature#setId()</code> 设置的 id。</p>
+<h3 id="27">27</h3>
+<p>Features for <code>updates</code> must have an id set by the feature reader or <code>ol.Feature#setId()</code>.</p>
+<p>用于 <code>updates</code> 的要素必须具有由要素读取器或 <code>ol.Feature#setId()</code> 设置的 id。</p>
+<h3 id="28">28</h3>
+<p><code>renderMode</code> must be <code>&#39;hybrid&#39;</code> or <code>&#39;vector&#39;</code>.</p>
+<p><code>renderMode</code> 必须为 <code>&#39;hybrid&#39;</code> 或 <code>&#39;vector&#39;</code>。</p>
+<h3 id="30">30</h3>
+<p>The passed <code>feature</code> was already added to the source.</p>
+<p>传入的要素（<code>feature</code>）已被添加到数据源中。</p>
+<h3 id="31">31</h3>
+<p>Tried to enqueue an <code>element</code> that was already added to the queue.</p>
+<p>尝试将已存在于队列中的元素（<code>element</code>）入队。</p>
+<h3 id="32">32</h3>
+<p>Transformation matrix cannot be inverted.</p>
+<p>变换矩阵不可逆。</p>
+<h3 id="33">33</h3>
+<p>Invalid <code>units</code>. <code>&#39;degrees&#39;</code>, <code>&#39;imperial&#39;</code>, <code>&#39;nautical&#39;</code>, <code>&#39;metric&#39;</code> or <code>&#39;us&#39;</code> required.</p>
+<p>无效的单位（<code>units</code>）。必须为 <code>&#39;degrees&#39;</code>、<code>&#39;imperial&#39;</code>、<code>&#39;nautical&#39;</code>、<code>&#39;metric&#39;</code> 或 <code>&#39;us&#39;</code>。</p>
+<h3 id="34">34</h3>
+<p>Invalid geometry layout. Must be <code>XY</code>, <code>XYZ</code>, <code>XYM</code> or <code>XYZM</code>.</p>
+<p>几何布局（geometry layout）无效。必须为 <code>XY</code>、<code>XYZ</code>、<code>XYM</code> 或 <code>XYZM</code>。</p>
+<h3 id="36">36</h3>
+<p>Unknown SRS type. Expected <code>&quot;name&quot;</code>.</p>
+<p>未知的 SRS 类型。应为 <code>&quot;name&quot;</code>。</p>
+<h3 id="37">37</h3>
+<p>Unknown geometry type found. Expected <code>&#39;Point&#39;</code>, <code>&#39;LineString&#39;</code>, <code>&#39;Polygon&#39;</code> or <code>&#39;GeometryCollection&#39;</code>.</p>
+<p>发现未知的几何图形类型。应为 <code>&#39;Point&#39;</code>、<code>&#39;LineString&#39;</code>、<code>&#39;Polygon&#39;</code> 或 <code>&#39;GeometryCollection&#39;</code>。</p>
+<h3 id="38">38</h3>
+<p><code>styleMapValue</code> has an unknown type.</p>
+<p><code>styleMapValue</code> 的类型未知。</p>
+<h3 id="39">39</h3>
+<p>Unknown geometry type found. Expected <code>&#39;GeometryCollection&#39;</code>, <code>&#39;MultiPoint&#39;</code>, <code>&#39;MultiLineString&#39;</code> or <code>&#39;MultiPolygon&#39;</code>.</p>
+<p>发现未知的几何图形类型。应为 <code>&#39;GeometryCollection&#39;</code>、<code>&#39;MultiPoint&#39;</code>、<code>&#39;MultiLineString&#39;</code> 或 <code>&#39;MultiPolygon&#39;</code>。</p>
+<h3 id="40">40</h3>
+<p>Expected <code>feature</code> to have a geometry.</p>
+<p>要素（<code>feature</code>）必须包含几何图形（geometry）。</p>
+<h3 id="41">41</h3>
+<p>Expected an <code>ol.style.Style</code> or an array of <code>ol.style.Style</code>.</p>
+<p>预期为 <code>ol.style.Style</code> 或 <code>ol.style.Style</code> 的数组。</p>
+<h3 id="43">43</h3>
+<p>Expected <code>layers</code> to be an array or an <code>ol.Collection</code>.</p>
+<p><code>layers</code> 预期为一个数组或 <code>ol.Collection</code>。</p>
+<h3 id="47">47</h3>
+<p>Expected <code>controls</code> to be an array or an <code>ol.Collection</code>.</p>
+<p><code>controls</code> 预期为一个数组或 <code>ol.Collection</code>。</p>
+<h3 id="48">48</h3>
+<p>Expected <code>interactions</code> to be an array or an <code>ol.Collection</code>.</p>
+<p><code>interactions</code> 预期为一个数组或 <code>ol.Collection</code>。</p>
+<h3 id="49">49</h3>
+<p>Expected <code>overlays</code> to be an array or an <code>ol.Collection</code>.</p>
+<p><code>overlays</code> 预期为一个数组或 <code>ol.Collection</code>。</p>
+<h3 id="50">50</h3>
+<p>Cannot determine Rest Service from url.</p>
+<p>无法从 url 确定 REST 服务类型。</p>
+<h3 id="51">51</h3>
+<p>Either <code>url</code> or <code>tileJSON</code> options must be provided.</p>
+<p>必须提供 <code>url</code> 或 <code>tileJSON</code> 选项之一。</p>
+<h3 id="52">52</h3>
+<p>Unknown <code>serverType</code> configured.</p>
+<p>配置了未知的 <code>serverType</code>。</p>
+<h3 id="53">53</h3>
+<p>Unknown <code>tierSizeCalculation</code> configured.</p>
+<p>配置了未知的 <code>tierSizeCalculation</code>。</p>
+<h3 id="55">55</h3>
+<p>The <code>{-y}</code> placeholder requires a tile grid with extent.</p>
+<p><code>{-y}</code> 占位符需要具有范围（extent）的瓦片网格（tile grid）。</p>
+<h3 id="56">56</h3>
+<p><code>mapBrowserEvent</code> must originate from a pointer event.</p>
+<p><code>mapBrowserEvent</code> 必须源自指针事件（pointer event）。</p>
+<h3 id="57">57</h3>
+<p>At least 2 conditions are required.</p>
+<p>至少需要 2 个条件。</p>
+<h3 id="58">58</h3>
+<p>Duplicate item added to a unique collection.  For example, it may be that you tried to add the same layer to a map twice.  Check for calls to <code>map.addLayer()</code> or other places where the map&#39;s layer collection is modified.</p>
+<p>向唯一集合（unique collection）中添加了重复项。例如，可能是您尝试将同一个图层向地图中添加了两次。请检查 <code>map.addLayer()</code> 的调用或修改地图图层集合的其他位置。</p>
+<h3 id="59">59</h3>
+<p>Invalid command found in the PBF.  This indicates that the loaded vector tile may be corrupt.</p>
+<p>在 PBF 中发现无效命令。这表明加载的矢量瓦片可能已损坏。</p>
+<h3 id="60">60</h3>
+<p>Missing or invalid <code>size</code>.</p>
+<p>缺少 <code>size</code> 或 <code>size</code> 无效。</p>
+<h3 id="61">61</h3>
+<p>Cannot determine IIIF Image API version from provided image information JSON.</p>
+<p>无法从提供的图像信息 JSON 中确定 IIIF Image API 版本。</p>
+<h3 id="62">62</h3>
+<p>A <code>WebGLArrayBuffer</code> must either be of type <code>ELEMENT_ARRAY_BUFFER</code> or <code>ARRAY_BUFFER</code>.</p>
+<p><code>WebGLArrayBuffer</code> 的类型必须为 <code>ELEMENT_ARRAY_BUFFER</code> 或 <code>ARRAY_BUFFER</code>。</p>
+<h3 id="64">64</h3>
+<p>Layer opacity must be a number.</p>
+<p>图层不透明度（opacity）必须是一个数字。</p>
+<h3 id="66">66</h3>
+<p><code>forEachFeatureAtCoordinate</code> cannot be used on a WebGL layer if the hit detection logic has not been enabled.</p>
+<p>如果未启用命中检测（hit detection）逻辑，则不能在 WebGL 图层上使用 <code>forEachFeatureAtCoordinate</code>。</p>
+<h3 id="67">67</h3>
+<p>A layer can only be added to the map once. Use either <code>layer.setMap()</code> or <code>map.addLayer()</code>, not both.</p>
+<p>一个图层只能被添加到地图一次。请使用 <code>layer.setMap()</code> 或 <code>map.addLayer()</code> 之一，切勿同时使用两者。</p>
+<h3 id="68">68</h3>
+<p>Data from this source can only be rendered if it has a projection compatible with the view projection.</p>
+<p>仅当该数据源的投影与视图投影兼容时，其数据才能被渲染。</p>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
