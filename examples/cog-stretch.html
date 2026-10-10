@@ -1,44 +1,111 @@
 ---
 layout: example.html
-title: Band Contrast Stretch
-shortdesc: Choosing bands and applying contrast stretch
-docs: >
+title: Band Contrast Stretch / 遥感波段组合与对比度拉伸
+shortdesc: Choosing bands and applying contrast stretch / 自定义遥感影像波段通道组合（真彩色/假彩色）并实时调整线性对比度拉伸。
+docs: |
   This example uses the `layer.updateStyleVariables()` method to update the rendering
   of a GeoTIFF based on user selected bands and contrast stretch parameters.
-tags: "cog, webgl, style"
+
+  本示例演示如何使用 `layer.updateStyleVariables()` 方法，根据用户选择的遥感波段通道和对比度拉伸阈值，在 GPU 中实时更新云优化 GeoTIFF（COG）卫星影像的渲染效果。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心概念科普：COG、多光谱波段与对比度拉伸
+  * **什么是 COG（Cloud Optimized GeoTIFF）？**
+    * 传统遥感 TIFF 影像体积巨大，无法直接在网页加载。**COG（云优化 GeoTIFF）** 在文件内部自带了多级分辨率金字塔（Overviews）和分块索引。
+    * OpenLayers 的 `ol/source/GeoTIFF` 利用浏览器的 **HTTP Range（字节范围请求）**，按需只下载当前屏幕视野和缩放级别所需的局部数据块，无需后端切片服务器即可直接渲染百 GB 级卫星影像。
+  * **多光谱波段合成（Band Combination）**：
+    * 本示例加载的是 **Sentinel-2（哨兵 2 号）** 16 位无云全球卫星影像，包含 4 个光谱波段：
+      * `Band 1`：可见光红光（Visible Red）
+      * `Band 2`：可见光绿光（Visible Green）
+      * `Band 3`：可见光蓝光（Visible Blue）
+      * `Band 4`：近红外波段（Near Infrared, NIR）
+    * **真彩色（True Color）**：`R=1, G=2, B=3`，即人眼看到的地球自然色彩。
+    * **标准假彩色（False Color NIR）**：尝试在界面中将下拉框改为 **`R=4 (近红外), G=1 (红), B=2 (绿)`**！由于绿色植物叶绿素对近红外光有极强的反射率，健康植被在画面中会瞬间变成鲜艳的**亮红色**，这是遥感科学中识别森林、农作物长势最核心的手段。
+  * **为什么需要对比度拉伸（Contrast Stretch）与 `normalize: false`？**
+    * 该卫星影像是 **16-bit（16 位无符号整型）**，理论数值范围是 `0 ~ 65535`，但地球表面绝大多数地物的反射率数值都集中在 `0 ~ 3000` 之间。
+    * 如果开启默认的 `normalize: true`（按 65535 归一化），`3000 / 65535 ≈ 0.045`，整张地图会几乎全黑！
+    * 因此代码中设置 `normalize: false` 保留原始反射率真值，并通过除法表达式 `['/', ['band', ...], ['var', 'redMax']]` 手动将 `0 ~ max` 映射到显示器所需的 `0.0 ~ 1.0` 范围。调小 `max` 滑块即可提亮暗部细节、增强对比度。
+
+  #### 2. WebGL 着色器表达式与 GPU 实时渲染
+  处理 16 位遥感影像需要对屏幕上上百万个像素逐一执行浮点数学运算，CPU（Canvas 2D）无法胜任，因此必须使用 **`ol/layer/WebGLTile`**：
+  ```javascript
+  style: {
+    variables: getVariables(),
+    color: [
+      'array',
+      ['/', ['band', ['var', 'red']], ['var', 'redMax']],     // Red 分量 (0.0 ~ 1.0)
+      ['/', ['band', ['var', 'green']], ['var', 'greenMax']], // Green 分量 (0.0 ~ 1.0)
+      ['/', ['band', ['var', 'blue']], ['var', 'blueMax']],   // Blue 分量 (0.0 ~ 1.0)
+      1,                                                      // Alpha 不透明度 (1.0)
+    ],
+  }
+  ```
+  * **`['band', N]`**：读取影像第 `N` 个波段的像素值（注意：**波段序号从 1 开始**）。
+  * **`['var', 'name']`**：读取 `style.variables` 中声明的动态变量（底层对应 WebGL GLSL 着色器中的 `uniform` 变量）。
+  * **`['array', R, G, B, A]`**：构造一个 4 维 RGBA 颜色向量输出给显卡片元着色器（Fragment Shader）。
+
+  #### 3. 性能杀手锏：`layer.updateStyleVariables()`
+  当用户拖动滑块或切换波段下拉框时，代码仅调用了一行：
+  ```javascript
+  layer.updateStyleVariables(getVariables());
+  ```
+  * **为什么拖动滑块如此丝滑？**
+    * 如果直接替换整个 `layer.setStyle(...)`，OpenLayers 需要重新解析表达式、重新编译 GLSL 着色器程序（Shader Program），会产生明显卡顿。
+    * 而 `updateStyleVariables()` **无需重新编译着色器，更无需重新请求网络瓦片**，它仅仅通过 WebGL 的 `gl.uniform1f()` 接口向显卡内存更新了几个数值参数，GPU 在下一帧（16.6ms 内）即可完成全屏百万像素的重新着色！
+
+  #### 4. 关联示例对比：本示例 (`cog-stretch`) vs GeoZarr 拉伸 (`geozarr-stretch`)
+  OpenLayers 实现了**“数据源（Source）与 GPU 渲染层（WebGLTile）彻底解耦”**，因此本示例与 `geozarr-stretch` 的着色器表达式完全一致，但底层架构有以下核心差异：
+
+  | 对比维度 | `cog-stretch` 本示例 (GeoTIFF) | `geozarr-stretch` 示例 (GeoZarr) |
+  | :--- | :--- | :--- |
+  | **1. 云原生数据源格式** | **`ol/source/GeoTIFF` (COG)**：单文件 `.tif`，面向传统 **2D 平面栅格影像** | **`ol/source/GeoZarr` (Zarr)**：分布式 `.zarr` 目录，面向**多维科学数据立方体**（支持时间、波段、高程等多维切片） |
+  | **2. 波段按需加载机制** | 4 个波段打包在同一个 TIFF 文件内，按字节范围读取 | 通过 `bands: ['b04', 'b03', 'b02', 'b11']` **按名称独立点菜**，每个波段是云端独立压缩数组，只下载选中的波段 |
+  | **3. 第 4 波段物理光谱** | **近红外 (NIR)**：用于高亮健康绿色植被 | **短波红外 (SWIR, `b11`)**：穿透烟雾能力强，用于区分水体、冰雪、矿物及火灾高温点 |
+  | **4. 像素值类型与滑块范围** | **16 位整数 (`2000 ~ 5000`)**：需配置 `normalize: false`，用 `parseInt` | **物理反射率浮点数 (`0.2 ~ 0.5`)**：Zarr 自动还原为 `0.0 ~ 1.0` 小数，用 `parseFloat` |
+  | **5. 样式新增特性** | 仅包含线性除法对比度拉伸 | 新增 **`gamma: 1.5`（伽马校正）**，非线性提亮暗部与中间调，视觉更通透 |
+  | **6. 视图 (`View`) 初始化** | **手动硬编码**：`new View({ projection: 'EPSG:4326', center: [0,0], zoom: 2 })` | **全自动函数式管道**：`getView(source, withHigherResolutions(2), withExtentCenter())`，自动从远程元数据解析投影与中心点 |
+
+  **💡 架构选型建议 —— 与 COG（Cloud Optimized GeoTIFF）的互补关系**：
+  * 如果数据是**单纯的 2D/3D 单期遥感影像**（如 Landsat、Sentinel-2 正射影像），目前 **COG** 依然是最成熟、生态支持最广的标准。
+  * 如果数据是**高维时空数据**（如逐小时气象预报、多年长时间序列卫星立方体、海洋三维洋流模型），COG 表达能力受限，**GeoZarr (Zarr)** 是目前公认的最优解。
+tags: "cog, webgl, style, 遥感, 卫星影像, 波段, 对比度拉伸"
 ---
 <div id="map" class="map"></div>
 <div class="controls">
-  <label for="red">Red channel</label>
+  <label for="red">Red channel / 红通道 (R)</label>
   <select id="red">
-    <option value="1" selected>visible red</option>
-    <option value="2">visible green</option>
-    <option value="3">visible blue</option>
-    <option value="4">near infrared</option>
+    <option value="1" selected>visible red / 可见光红 (Band 1)</option>
+    <option value="2">visible green / 可见光绿 (Band 2)</option>
+    <option value="3">visible blue / 可见光蓝 (Band 3)</option>
+    <option value="4">near infrared / 近红外 (Band 4)</option>
   </select>
-  <label>max
+  <label>max / 拉伸上限
     <input type="range" id="redMax" value="3000" min="2000" max="5000">
   </label>
 
-  <label for="green">Green channel</label>
+  <label for="green">Green channel / 绿通道 (G)</label>
   <select id="green">
-    <option value="1">visible red</option>
-    <option value="2" selected>visible green</option>
-    <option value="3">visible blue</option>
-    <option value="4">near infrared</option>
+    <option value="1">visible red / 可见光红 (Band 1)</option>
+    <option value="2" selected>visible green / 可见光绿 (Band 2)</option>
+    <option value="3">visible blue / 可见光蓝 (Band 3)</option>
+    <option value="4">near infrared / 近红外 (Band 4)</option>
   </select>
-  <label>max
+  <label>max / 拉伸上限
     <input type="range" id="greenMax" value="3000" min="2000" max="5000">
   </label>
 
-  <label for="blue">Blue channel</label>
+  <label for="blue">Blue channel / 蓝通道 (B)</label>
   <select id="blue">
-    <option value="1">visible red</option>
-    <option value="2">visible green</option>
-    <option value="3" selected>visible blue</option>
-    <option value="4">near infrared</option>
+    <option value="1">visible red / 可见光红 (Band 1)</option>
+    <option value="2">visible green / 可见光绿 (Band 2)</option>
+    <option value="3" selected>visible blue / 可见光蓝 (Band 3)</option>
+    <option value="4">near infrared / 近红外 (Band 4)</option>
   </select>
-  <label>max
+  <label>max / 拉伸上限
     <input type="range" id="blueMax" value="3000" min="2000" max="5000">
   </label>
 </div>
+

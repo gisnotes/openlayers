@@ -1,42 +1,79 @@
 ---
 layout: example.html
-title: Icon and Label Scale
-shortdesc: Example of scaling icons and labels.
-docs: >
+title: Icon and Label Scale / 图标与文本标注的双向缩放及空间变换
+shortdesc: Example of scaling icons and labels. / 演示图标（Icon）与文本标注（Text）的二维独立缩放、负数镜像翻转、锚点、偏移与旋转控制。
+docs: |
   Icons and labels can be scaled in both dimensions if required. A negative value will flip the image
   or text around its anchor point (reversed text is <b>not</b> suitable for line placement).
-tags: "vector, style, icon, label, scale"
+
+  如有需要，图标（Icons）和文本标注（Labels）可以在水平（X）和垂直（Y）两个维度上独立进行非均匀缩放。将缩放值设为**负数**时，图像或文字会围绕其锚点（Anchor Point）发生**镜像翻转**（注意：翻转后的反向文字**不**适用于沿线排列 `placement: 'line'` 的场景）。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么给同一个点要素同时设置 `[pointStyle, iconStyle]` 两个样式？
+  在代码中，`iconFeature.setStyle([pointStyle, iconStyle])` 使用了复合样式数组：
+  * **`pointStyle`（黑底白边小圆点）**：固定绘制在 `[0, 0]` 真实地理坐标处，充当**视觉基准靶心（Reference Origin）**。
+  * **`iconStyle`（图片图标 + 多行文字）**：叠加在基准点之上。
+  * **设计用意**：当你在下方拖动锚点（Anchor）、位移（Displacement/Offset）、缩放（Scale）或旋转（Rotation）滑块时，可以直观地对比图标和文字相对于**黑色真实坐标点**是如何变换的！
+
+  #### 2. 二维独立缩放 `[scaleX, scaleY]` 与负数镜像翻转技巧
+  `setScale()` 不仅支持传入单个数字（等比例缩放），还支持传入二元数组 **`[scaleX, scaleY]`**：
+  * **非均匀拉伸**：例如 `[2, 0.5]` 会将图标横向拉宽 2 倍、纵向压扁一半。
+  * **负数镜像翻转（Negative Scale Flipping）**：
+    * 当 `scaleX = -1, scaleY = 1` 时：围绕锚点进行**左右水平镜像翻转**。
+    * 当 `scaleX = 1, scaleY = -1` 时：围绕锚点进行**上下垂直翻转**。
+    * **实战妙用**：当项目中只有一张“车头朝左”的车辆/船舶图标，需要渲染“车头朝右”时，无需让设计师再切一张新图，直接设置 `scale: [-1, 1]` 即可零成本实现水平翻转！
+
+  #### 3. 图标（`Icon`）与文字（`Text`）四大变换属性全景对比（含易错坑点！）
+
+  | 变换维度 | `ol/style/Icon` (图标) | `ol/style/Text` (文本标注) | 核心原理与高频避坑指南 |
+  | :--- | :--- | :--- | :--- |
+  | **1. 锚点 / 对齐基准** | `setAnchor([anchorX, anchorY])`<br/>范围 `0~1`，默认 `[0.5, 0.5]`（中心）。本例初始为 `[0.5, 1]`（底部正中，如大头针尖端） | `setTextAlign('left'\|'center'\|'right')`<br/>`setTextBaseline('top'\|'middle'\|'bottom')` | **极其重要**：无论是缩放、负数翻转还是旋转，**全都是以该锚点/对齐基线作为圆心（Pivot）进行的**！ |
+  | **2. 像素偏移方向** | `setDisplacement([dx, dy])` | `setOffsetX(dx)`<br/>`setOffsetY(dy)` | **⚠️ 头号易错坑点（Y 轴方向相反）**：<br/>• `Icon` 的 `displacementY` **向上为正 (`+Y` 朝上)**！<br/>• `Text` 的 `offsetY` **向下为正 (`+Y` 朝下)**！ |
+  | **3. 旋转角度** | `setRotation(radians)` | `setRotation(radians)` | 单位均为**弧度（Radians）**而非角度，顺时针为正（如 `0.25 * Math.PI` 即顺时针旋转 45°）。 |
+  | **4. 随视图旋转** | `setRotateWithView(boolean)` | `setRotateWithView(boolean)` | 按住 `Alt + Shift` 鼠标拖拽旋转地图时：<br/>• `false`（默认）：始终朝向屏幕正上方（适合地名、POI 图标）；<br/>• `true`：钉死在地理表面随地图一起旋转（适合车头航向、风向标）。 |
+
+  #### 4. 为什么修改样式后必须调用 `iconFeature.changed()`？
+  在 `updateStyle()` 函数末尾有一行不可省略的关键代码：
+  ```javascript
+  iconFeature.changed();
+  ```
+  * **原因**：直接调用 `iconStyle.getImage().setScale(...)` 修改的是 `Style` 内部子对象的属性，OpenLayers 的 `Feature` 和 `VectorLayer` **不会自动深度监听 `Style` 内部属性的变化**。
+  * **机制**：如果不调用 `iconFeature.changed()`（或 `vectorLayer.changed()`），要素的修订版本号（Revision）不会增加，矢量图层会认为数据没有变化而继续使用旧的渲染缓存。调用 `.changed()` 会触发 `change` 事件，通知图层立即重新生成渲染指令并重绘画面。
+tags: "vector, style, icon, label, scale, 矢量, 样式, 图标, 标注, 缩放, 锚点"
 ---
 <div id="map" class="map"></div>
 <table class="controls">
   <tr>
     <th>
-      Image
+      Image / 图标 (Icon)
     </th>
     <th></th>
     <th style="visibility: hidden;">-0.00 π</th>
     <th>&nbsp;&nbsp;&nbsp;&nbsp;</th>
     <th>
-      Text
+      Text / 文本 (Text)
     </th>
     <th></th>
     <th></th>
   </tr>
   <tr>
-    <td><label for="rotateWithView">Rotate with view</label>&nbsp;&nbsp;</td>
+    <td><label for="rotateWithView">Rotate with view / 随视图旋转</label>&nbsp;&nbsp;</td>
     <td>
       <input id="rotateWithView" type="checkbox" />
     </td>
     <td><span id="rotateWithViewOut"></span></td>
     <td></td>
-    <td><label for="textRotateWithView">Rotate with view</label>&nbsp;&nbsp;</td>
+    <td><label for="textRotateWithView">Rotate with view / 随视图旋转</label>&nbsp;&nbsp;</td>
     <td>
       <input id="textRotateWithView" type="checkbox" />
     </td>
     <td><span id="textRotateWithViewOut"></span></td>
   </tr>
   <tr>
-    <td><label for="rotation">Rotation</label></td>
+    <td><label for="rotation">Rotation / 旋转角度</label></td>
     <td>
       <input
         id="rotation"
@@ -49,7 +86,7 @@ tags: "vector, style, icon, label, scale"
     </td>
     <td><span id="rotationOut"></span> π</td>
     <td></td>
-    <td><label for="textRotation">Rotation</label></td>
+    <td><label for="textRotation">Rotation / 旋转角度</label></td>
     <td>
       <input
         id="textRotation"
@@ -63,7 +100,7 @@ tags: "vector, style, icon, label, scale"
     <td><span id="textRotationOut"></span> π</td>
   </tr>
   <tr>
-    <td><label for="scaleX">Scale X</label></td>
+    <td><label for="scaleX">Scale X / 水平缩放</label></td>
     <td>
       <input
         id="scaleX"
@@ -76,7 +113,7 @@ tags: "vector, style, icon, label, scale"
     </td>
     <td><span id="scaleXOut"></span></td>
     <td></td>
-    <td><label for="textScaleX">Scale X</label></td>
+    <td><label for="textScaleX">Scale X / 水平缩放</label></td>
     <td>
       <input
         id="textScaleX"
@@ -90,7 +127,7 @@ tags: "vector, style, icon, label, scale"
     <td><span id="textScaleXOut"></span></td>
   </tr>
   <tr>
-    <td><label for="scaleY">Scale Y</label></td>
+    <td><label for="scaleY">Scale Y / 垂直缩放</label></td>
     <td>
       <input
         id="scaleY"
@@ -103,7 +140,7 @@ tags: "vector, style, icon, label, scale"
     </td>
     <td><span id="scaleYOut"></span></td>
     <td></td>
-    <td><label for="textScaleY">Scale Y</label></td>
+    <td><label for="textScaleY">Scale Y / 垂直缩放</label></td>
     <td>
       <input
         id="textScaleY"
@@ -117,7 +154,7 @@ tags: "vector, style, icon, label, scale"
     <td><span id="textScaleYOut"></span></td>
   </tr>
   <tr>
-    <td><label for="anchorX">Anchor X</label></td>
+    <td><label for="anchorX">Anchor X / 水平锚点</label></td>
     <td>
       <input
         id="anchorX"
@@ -130,7 +167,7 @@ tags: "vector, style, icon, label, scale"
     </td>
     <td><span id="anchorXOut"></span></td>
     <td></td>
-    <td><label for="textAlign">Align</label></td>
+    <td><label for="textAlign">Align / 水平对齐</label></td>
     <td>
       <input
         id="textAlign"
@@ -144,7 +181,7 @@ tags: "vector, style, icon, label, scale"
     <td><span id="textAlignOut"></span></td>
   </tr>
   <tr>
-    <td><label for="anchorY">Anchor Y</label></td>
+    <td><label for="anchorY">Anchor Y / 垂直锚点</label></td>
     <td>
       <input
         id="anchorY"
@@ -157,7 +194,7 @@ tags: "vector, style, icon, label, scale"
     </td>
     <td><span id="anchorYOut"></span></td>
     <td></td>
-    <td><label for="textBaseline">Baseline</label></td>
+    <td><label for="textBaseline">Baseline / 垂直基线</label></td>
     <td>
       <input
         id="textBaseline"
@@ -171,7 +208,7 @@ tags: "vector, style, icon, label, scale"
     <td><span id="textBaselineOut"></span></td>
   </tr>
   <tr>
-    <td><label for="displacementX">Displacement X</label></td>
+    <td><label for="displacementX">Displacement X / 水平位移</label></td>
     <td>
       <input
         id="displacementX"
@@ -183,14 +220,14 @@ tags: "vector, style, icon, label, scale"
     </td>
     <td><span id="displacementXOut"></span></td>
     <td></td>
-    <td><label for="textOffsetX">Offset X</label></td>
+    <td><label for="textOffsetX">Offset X / 水平偏移</label></td>
     <td>
       <input id="textOffsetX" type="range" min="-100" max="100" value="0" />
     </td>
     <td><span id="textOffsetXOut"></span></td>
   </tr>
   <tr>
-    <td><label for="displacementY">Displacement Y</label></td>
+    <td><label for="displacementY">Displacement Y / 垂直位移</label></td>
     <td>
       <input
         id="displacementY"
@@ -202,10 +239,11 @@ tags: "vector, style, icon, label, scale"
     </td>
     <td><span id="displacementYOut"></span></td>
     <td></td>
-    <td><label for="textOffsetY">Offset Y</label></td>
+    <td><label for="textOffsetY">Offset Y / 垂直偏移</label></td>
     <td>
       <input id="textOffsetY" type="range" min="-100" max="100" value="0" />
     </td>
     <td><span id="textOffsetYOut"></span></td>
   </tr>
 </table>
+

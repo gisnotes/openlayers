@@ -1,10 +1,47 @@
 ---
 layout: example.html
-title: Icon Colors
-shortdesc: Example assigning a custom color to an icon
-docs: >
+title: Icon Colors / 图标动态着色（单图多色复用）
+shortdesc: Example assigning a custom color to an icon / 演示如何通过 color 属性为白色底图图标动态赋予自定义颜色与透明度。
+docs: |
   Example assigning a custom color to an icon. The icon styles in this example use images with a white fill. For some features, custom colors set using the `color` property.
   Note that icon files need to obey the same origin policy or send proper CORS headers for this to work. When relying on CORS headers, the `ol/style/Icon` must be configured with `crossOrigin: 'anonymous'`.
-tags: "vector, style, icon, marker"
+
+  本示例演示如何通过 `color` 属性为图标（`ol/style/Icon`）动态赋予自定义颜色。示例中的图标源文件均采用**纯白色填充**设计：其中部分城市要素（罗马、伦敦、巴黎）通过 `color` 属性进行了动态染色，而另一些城市（马德里、柏林）则保留了原始的白色外观作为对照。
+  **注意**：由于图标染色需要在 Canvas 中进行像素级合成处理，图标文件必须遵循浏览器的**同源策略（Same-Origin Policy）**或由服务端返回正确的 **CORS 跨域响应头**。当使用跨域图片资源时，必须在 `ol/style/Icon` 中显式配置 `crossOrigin: 'anonymous'`。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心业务价值：为什么要用 `color` 动态染色？
+  在复杂的 WebGIS 项目中，同一类点位图标（如监控摄像头、传感器、车辆、定位针）往往有多种状态色（正常绿、告警橙、故障红、离线灰）：
+  * **传统笨办法**：让设计师切出 `camera-green.png`、`camera-red.png` 等十几种颜色的图片。不仅维护成本高，前端还需要发起多次 HTTP 请求。
+  * **OpenLayers 最佳实践**：只需准备 **1 张纯白色的母版图标（PNG 或 SVG）**，在前端通过 `new Icon({ src: '...', color: '#ff0000' })` 即可衍生出任意 RGB 颜色和透明度的图标，且多处复用同一张底层图片纹理缓存！
+
+  #### 2. 底层渲染原理：为什么母版图标必须是“白色填充”？
+  OpenLayers 对图标染色采用的是计算机图形学中的 **正片叠底（Color Multiply / 通道相乘）** 算法：
+  ```text
+  最终颜色(R, G, B, A) = (原图像素(R, G, B, A) / 255) × (目标 Color(R, G, B, A) / 255)
+  ```
+  * **纯白色区域 `(255, 255, 255)`**：归一化后为 `1.0`。`1.0 × 目标颜色 = 目标颜色本身`！因此白色部分会被 100% 精准染成你指定的 `color`。
+  * **黑色描边或阴影 `(0, 0, 0)`**：归一化后为 `0.0`。`0.0 × 目标颜色 = 0.0（依然是黑色）`！这意味着如果母版图标带有黑色轮廓线或灰度立体阴影，染色后**立体感与黑边依然能完美保留**！
+  * **⚠️ 常见踩坑**：如果母版图标本身是纯红色的 `(255, 0, 0)`，你设置 `color: 'blue'` `(0, 0, 255)`，两者通道相乘后结果为 `(0, 0, 0)` —— **图标会直接变成死黑色**！因此母版图标主体务必设计为纯白色。
+
+  #### 3. 5 个欧洲城市的染色对照表
+
+  | 城市要素 | 图标源文件 | `color` 配置值 | 最终渲染视觉效果 |
+  | :--- | :--- | :--- | :--- |
+  | **罗马 (`rome`)** | `data/square.svg` | `'#BADA55'` | 染成黄绿色方块 |
+  | **伦敦 (`london`)** | `data/bigdot.png` | `'rgba(255, 0, 0, .5)'` | 染成**半透明红色**圆点（同时通过 `rgba` 控制了 Alpha 透明度） |
+  | **马德里 (`madrid`)** | `data/bigdot.png` | *未设置（对照组）* | 展示 `bigdot.png` 原始的**纯白色**圆点外观 |
+  | **巴黎 (`paris`)** | `data/dot.svg` | `'#8959A8'` | 染成紫罗兰色圆点 |
+  | **柏林 (`berlin`)** | `data/dot.svg` | *未设置（对照组）* | 展示 `dot.svg` 原始的**纯白色**圆点外观 |
+
+  #### 4. 关键避坑指南：跨域污染（Tainted Canvas）与 `crossOrigin: 'anonymous'`
+  * **为什么染色需要配置 `crossOrigin: 'anonymous'`？**
+    * 普通不染色的图标直接绘制即可，但一旦配置了 `color` 属性，OpenLayers 内部需要在离屏 Canvas 上读取像素并执行颜色混合。
+    * 如果图片来自第三方 CDN 或独立的对象存储域名，且没有声明 `crossOrigin: 'anonymous'`，浏览器的安全机制会将画布锁死为 **Tainted Canvas（受污染画布）**，导致像素操作抛出安全异常或图标无法显示。
+tags: "vector, style, icon, marker, 矢量, 样式, 图标, 染色, 颜色"
 ---
 <div id="map" class="map"></div>
+

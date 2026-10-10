@@ -1,19 +1,98 @@
 ---
 layout: example.html
-title: Style Expressions
-shortdesc: Demonstrates rule based styling.
-docs: >
-  To style all features in a layer in the same way, you can use a symbolizer object with literal values
-  as shown below for the land layer.  In this case, all features have the same fill color.
+title: Style Expressions / 样式表达式与规则驱动样式
+shortdesc: Demonstrates rule based styling. / 演示基于规则和表达式驱动的动态矢量样式（Flat Style & Rule-based Styling）。
+docs: |
+  To style all features in a layer in the same way, you can use a symbolizer object with literal values as shown below for the land layer. In this case, all features have the same fill color.
 
-  To style features in a layer based on a feature property, an expression can be provided in a symbolizer
-  instead of literal values.  In the first populated places layer below, the circle radius is based on the
-  `scalerank` property.
+  若要为图层中的所有要素赋予统一的样式，可以使用包含字面量值的符号化对象（如本示例中的陆地陆块图层 `land`），此时所有要素共享相同的填充颜色。
 
-  To conditionally apply different symbolizers based on a feature property, a list of rules can be provided.
-  Each rule can have a `filter` expression.  If this expression evaluates to true, the rule's `style` is
-  applied.  A rule with `else: true` applies if no previous rules have applied.  The populated place labels
-  are rendered with a list of rules given to the third layer.
-tags: "vector, style, expression"
+  To style features in a layer based on a feature property, an expression can be provided in a symbolizer instead of literal values. In the first populated places layer below, the circle radius is based on the `scalerank` property.
+
+  若要基于要素属性动态控制样式表现，可以在符号化属性中使用表达式代替固定的字面量。例如在下方的第一个居民点图层中，圆点的半径大小（`circle-radius`）直接由要素的 `scalerank`（等级缩放标尺）属性驱动。
+
+  To conditionally apply different symbolizers based on a feature property, a list of rules can be provided. Each rule can have a `filter` expression. If this expression evaluates to true, the rule's `style` is applied. A rule with `else: true` applies if no previous rules have applied. The populated place labels are rendered with a list of rules given to the third layer.
+
+  若要根据属性条件应用不同的符号化规则，可以传入一个规则列表（`rules` 数组）。每个规则都可以包含一个 `filter`（过滤表达式），当表达式求值结果为 `true` 时，该规则的 `style` 便会生效。包含 `else: true` 的规则作为保底分支，仅在之前的所有规则均未命中时才会生效。本示例中第三个图层的居民点标注文字，就是使用这种基于规则的列表来实现不同人口规模城市的分级标注。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么推荐使用声明式扁平样式（Flat Style）与表达式？
+  在传统的 OpenLayers 开发中，若要根据要素属性动态渲染样式，开发者通常需要编写一个命令式的 `StyleFunction` 回调：
+  ```javascript
+  // 传统做法：每次渲染都要在 JS 线程中反复执行回调函数并不断 new Style()
+  layer.setStyle(function(feature, resolution) {
+    const pop = feature.get('pop_max');
+    if (pop > 10000000) {
+      return new Style({ ... });
+    }
+    return new Style({ ... });
+  });
+  ```
+  传统命令式做法在海量要素渲染时存在三大痛点：
+  1. **CPU 开销大**：每次视口平移、缩放，每个要素都需要在主线程中执行一次 JS 函数，频繁创建/销毁 Style 对象，GC 压力大。
+  2. **不可序列化**：StyleFunction 是原生 JS 代码，无法以纯 JSON 形式从后端接口或配置文件中下发或持久化存储。
+  3. **无法下沉到 WebGL/GPU**：由于函数逻辑完全黑盒，OpenLayers 无法将其解析并编译为 GPU Shader（着色器）代码。
+
+  为此，OpenLayers 引入了现代化的**声明式扁平样式（Flat Style）**与**样式表达式体系（Style Expressions）**：
+  * **纯 JSON 纯数据结构**：无需导入 `Style`、`Fill`、`Stroke`、`CircleStyle`、`Text` 等一众类名，直接使用纯字面量对象。
+  * **极佳的性能**：内部直接编译为优化的渲染指令，同时支持 Canvas 和 WebGL 高性能渲染。
+  * **易于序列化与分享**：可以直接保存为 JSON，方便前后端解耦与云端制图配图。
+
+  #### 2. 扁平样式键名规范（Flat Style Syntax）
+  扁平样式采用“前缀-属性名”的直观命名结构：
+  * **多边形填充与描边**：`'fill-color'`, `'stroke-color'`, `'stroke-width'`, `'stroke-line-dash'` 等。
+  * **点状要素圆形**：`'circle-radius'`, `'circle-fill-color'`, `'circle-stroke-color'`, `'circle-stroke-width'`。
+  * **点状图标**：`'icon-src'`, `'icon-scale'`, `'icon-rotation'`, `'icon-anchor'`。
+  * **文字标注**：`'text-value'`, `'text-font'`, `'text-fill-color'`, `'text-stroke-color'`, `'text-stroke-width'`。
+
+  #### 3. 样式表达式结构（Expression Architecture）
+  表达式采用类似 Lisp / Mapbox GL 的前缀表达式数组：`[operator, ...arguments]`。
+  
+  本示例涵盖了三个最典型的核心操作符：
+  1. **属性取值 `['get', 'propertyName']`**：
+     * 从当前要素的 `properties` 中提取指定字段的值。例如 `['get', 'scalerank']` 读取城市的等级字段。
+  2. **条件比较 `['>', ['get', 'pop_max'], 10_000_000]`**：
+     * 判断人口最大值 `pop_max` 是否大于 1000 万，返回布尔值 `true` 或 `false`。
+     * 常用的逻辑/比较操作符还包括：`'<'`, `'<='`, `'>='`, `'=='`, `'!='`, `'all'`（与）, `'any'`（或）, `'not'`（非）, `'between'`。
+  3. **字符串拼接 `['concat', ...strings]`**：
+     * 将多个字段或字符串常量合并。例如：`['concat', ['get', 'adm1name'], ', ', ['get', 'adm0name']]` 会将省州名和国家名拼成如 `"New York, United States"`。
+
+  #### 4. 基于规则的分支过滤（Rule-based Styling & else 分支）
+  通过传入一个规则数组 `Rule[]`，可以实现类似 `if ... else if ... else` 的分级专题图渲染：
+  ```javascript
+  style: [
+    {
+      // 规则 1：超大城市（人口 > 1000 万）
+      filter: ['>', ['get', 'pop_max'], 10_000_000],
+      style: {
+        'text-value': ['concat', ['get', 'adm1name'], ', ', ['get', 'adm0name']],
+        'text-font': '16px sans-serif',
+        // ...
+      },
+    },
+    {
+      // 规则 2：特大城市（人口 > 500 万且未命中上一条规则）
+      else: true, // 关键：互斥分支
+      filter: ['>', ['get', 'pop_max'], 5_000_000],
+      style: {
+        'text-value': ['get', 'nameascii'],
+        'text-font': '12px sans-serif',
+        // ...
+      },
+    },
+  ]
+  ```
+  * **`filter` 属性**：求值结果必须为布尔类型。如果为 `true` 则采纳当前规则。
+  * **`else: true` 属性**：声明当前规则具有互斥性，只有当在它**之前**声明的所有规则都未命中时，才会去评估它的 `filter`。
+
+  #### 5. `declutter: true` 标注碰撞避让
+  在文字标注图层上启用了 `declutter: true`（防拥挤碰撞避让）：
+  * 当多个城市地名在视口中距离太近、文字发生重叠覆盖时，OpenLayers 会自动开启空间拓扑碰撞检测。
+  * 位于更前列的规则、更高权重的标注会被保留，被压盖的次级标注则会被自动隐去，避免地图出现杂乱无章的重影乱码。
+tags: "vector, style, expression, 矢量, 样式, 表达式, 规则"
 ---
 <div id="map" class="map"></div>
+

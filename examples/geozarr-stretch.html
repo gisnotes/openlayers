@@ -1,45 +1,100 @@
 ---
 layout: example.html
-title: Band Selection and Contrast Stretch
-shortdesc: Choosing bands and applying contrast stretch
-docs: >
+title: Band Selection and Contrast Stretch / GeoZarr 波段选择与对比度拉伸
+shortdesc: Choosing bands and applying contrast stretch / 从云原生 GeoZarr 多维数组中加载多光谱波段并实时调整对比度拉伸。
+docs: |
   This example shows how to load multiple bands from a GeoZarr and use the `layer.updateStyleVariables()`
   method to update the rendering based on user selected bands and contrast stretch parameters.
-tags: "geozarr, zarr, style"
+
+  本示例演示如何从云原生 **GeoZarr** 数据源中按需加载多个遥感波段（可见光红、绿、蓝及短波红外 SWIR），并结合 `layer.updateStyleVariables()` 方法在 GPU 中实时更新波段组合与对比度拉伸参数。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 什么是 GeoZarr？它与 COG（GeoTIFF）有何区别？
+  在云原生地球科学（Cloud-Native Geospatial）领域，**COG** 和 **GeoZarr** 是两大核心标准：
+  * **COG（Cloud Optimized GeoTIFF）**：适合传统的 **2D 平面栅格影像**。
+  * **GeoZarr（基于 Zarr 规范的空间多维数组）**：专为**多维科学数据立方体（N-Dimensional Data Cubes，如 `时间 × 波段 × 高程 × 纬度 × 经度`）**设计。它将庞大的多维数组切分为独立压缩的小数据块（Chunks）直接存放在对象存储（如 S3）中。
+  * **生态背景**：欧洲航天局（ESA）新一代哨兵卫星数据处理框架（EOPF）已全面采用 Zarr 格式发布 Sentinel-2 L2A 地表反射率产品。OpenLayers 底层通过 `zarrita` 库实现纯前端按需拉取 Zarr 分块并在 WebGL 中实时渲染。
+
+  #### 2. 哨兵 2 号（Sentinel-2）波段映射与短波红外（SWIR）
+  在代码中配置了 `bands: ['b04', 'b03', 'b02', 'b11']`，它们按数组顺序依次映射为着色器中的 `['band', 1]` 到 `['band', 4]`：
+  * **第 1 波段 (`b04`)**：可见光红光（Visible Red, 665nm）
+  * **第 2 波段 (`b03`)**：可见光绿光（Visible Green, 560nm）
+  * **第 3 波段 (`b02`)**：可见光蓝光（Visible Blue, 490nm）
+  * **第 4 波段 (`b11`)**：**短波红外（Short-Wave Infrared, SWIR, 1610nm）**
+    * *科学用途*：短波红外对**岩石矿物成分、土壤湿度、植被含水量以及森林火灾高温点**极其敏感，且具备极强的穿透薄雾与烟尘能力。将红通道切换为 `short-wave infrared` 可以清晰区分含水体、冰雪与裸露岩土。
+
+  #### 3. 为什么本例的拉伸上限是 `0.2 ~ 0.5` 小数，且多了 `gamma: 1.5`？
+  对比上一个 `cog-stretch` 示例（拉伸上限为 `2000 ~ 5000` 的整数）：
+  * **浮点反射率**：本例的 GeoZarr 数据集在存储时已经通过元数据转换为了物理意义上的**地表反射率浮点数（Surface Reflectance，`0.0 ~ 1.0`）**，因此使用 `parseFloat()` 读取 `0.2 ~ 0.5` 的小数作为拉伸分母。
+  * **伽马校正（`gamma: 1.5`）**：在 `WebGLTile` 的 `style` 中配置了 `gamma: 1.5`。由于卫星传感器记录的是线性光强，直接显示在屏幕上暗部会偏暗；通过 `gamma > 1` 的非线性幂函数校正，可以显著提亮中间调细节，使遥感画面更符合人眼视觉习惯。
+
+  #### 4. 全新函数式视图管道：`getView`、`withHigherResolutions` 与 `withExtentCenter`
+  本示例展示了 OpenLayers 极其优雅的**异步视图自动推导与函数式转换管道（View Transform Pipeline）**：
+  ```javascript
+  view: getView(source, withHigherResolutions(2), withExtentCenter())
+  ```
+  * **`getView(source, ...transforms)`**：
+    * 自动等待 `source.getView()` 异步读取远程 GeoZarr 的元数据（自动解析出原始投影坐标系如 UTM、数据边界 `extent`、瓦片分辨率序列 `resolutions`），然后依次流经后续的转换函数，最终返回一个 `Promise<ViewOptions>` 直接赋给 `Map`！
+  * **`withHigherResolutions(2)`**：
+    * 在数据源最高原生分辨率的基础上，额外追加 **2 个更高倍率的缩放级别**（每次分辨率除以 2），允许用户放大到超过原始像素分辨率的层级进行细节观察（超分辨率放大 Overzooming）。
+  * **`withExtentCenter()`**：
+    * 将视图初始中心点 `center` 设置为数据集 `extent` 的几何中心，同时**移除 `extent` 视野锁定限制**，使用户既能一打开就对准卫星影像中心，又能自由拖拽浏览周围的 `OSM` 全球底图！
+
+  #### 5. 深度对比：本示例 (`geozarr-stretch`) vs 上一示例 (`cog-stretch`)
+  **为什么两个示例的 `WebGLTile` 样式配置看起来几乎一样？**  
+  这是因为 OpenLayers 实现了**“数据源（Source）与 GPU 渲染层（WebGLTile）彻底解耦”**。无论底层是传统的 `GeoTIFF` 还是新一代的 `GeoZarr`，进入渲染管线后都会被抽象为标准的 **`DataTile`（多波段数据瓦片）**，因此上层的着色器表达式 `['band', N]` 和 `updateStyleVariables()` 可以 100% 复用！
+
+  | 对比维度 | `cog-stretch` 示例 (GeoTIFF) | `geozarr-stretch` 本示例 (GeoZarr) |
+  | :--- | :--- | :--- |
+  | **1. 云原生数据源格式** | **`ol/source/GeoTIFF` (COG)**：单文件 `.tif`，面向传统 **2D 平面栅格影像** | **`ol/source/GeoZarr` (Zarr)**：分布式 `.zarr` 目录，面向**多维科学数据立方体**（支持时间、波段、高程等多维切片） |
+  | **2. 波段按需加载机制** | 4 个波段打包在同一个 TIFF 文件内，按字节范围读取 | 通过 `bands: ['b04', 'b03', 'b02', 'b11']` **按名称独立点菜**，每个波段是云端独立压缩数组，只下载选中的波段 |
+  | **3. 第 4 波段物理光谱** | **近红外 (NIR)**：用于高亮健康绿色植被 | **短波红外 (SWIR, `b11`)**：穿透烟雾能力强，用于区分水体、冰雪、矿物及火灾高温点 |
+  | **4. 像素值类型与滑块范围** | **16 位整数 (`2000 ~ 5000`)**：需配置 `normalize: false`，用 `parseInt` | **物理反射率浮点数 (`0.2 ~ 0.5`)**：Zarr 自动还原为 `0.0 ~ 1.0` 小数，用 `parseFloat` |
+  | **5. 样式新增特性** | 仅包含线性除法对比度拉伸 | 新增 **`gamma: 1.5`（伽马校正）**，非线性提亮暗部与中间调，视觉更通透 |
+  | **6. 视图 (`View`) 初始化** | **手动硬编码**：`new View({ projection: 'EPSG:4326', center: [0,0], zoom: 2 })` | **全自动函数式管道**：`getView(source, withHigherResolutions(2), withExtentCenter())`，自动从远程元数据解析投影与中心点 |
+
+  ** 💡 架构选型建议 —— 与 COG（Cloud Optimized GeoTIFF）的互补关系**：
+  *  如果数据是**单纯的 2D/3D 单期遥感影像**（如 Landsat、Sentinel-2 正射影像），目前 **COG** 依然是最成熟、生态支持最广的标准。
+  *  如果数据是**高维时空数据**（如逐小时气象预报、多年长时间序列卫星立方体、海洋三维洋流模型），COG 表达能力受限，**GeoZarr (Zarr)** 是目前公认的最优解。
+tags: "geozarr, zarr, style, 遥感, 多维数组, 波段, 对比度拉伸"
 experimental: true
 ---
 <div id="map" class="map"></div>
 <div class="controls">
-  <label for="red">Red channel</label>
+  <label for="red">Red channel / 红通道 (R)</label>
   <select id="red">
-    <option value="1" selected>visible red</option>
-    <option value="2">visible green</option>
-    <option value="3">visible blue</option>
-    <option value="4">short-wave infrared</option>
+    <option value="1" selected>visible red / 可见光红 (b04)</option>
+    <option value="2">visible green / 可见光绿 (b03)</option>
+    <option value="3">visible blue / 可见光蓝 (b02)</option>
+    <option value="4">short-wave infrared / 短波红外 (b11)</option>
   </select>
-  <label>max
+  <label>max / 拉伸上限
     <input type="range" id="redMax" value="0.3" min="0.2" max="0.5" step="0.01">
   </label>
 
-  <label for="green">Green channel</label>
+  <label for="green">Green channel / 绿通道 (G)</label>
   <select id="green">
-    <option value="1">visible red</option>
-    <option value="2" selected>visible green</option>
-    <option value="3">visible blue</option>
-    <option value="4">short-wave infrared</option>
+    <option value="1">visible red / 可见光红 (b04)</option>
+    <option value="2" selected>visible green / 可见光绿 (b03)</option>
+    <option value="3">visible blue / 可见光蓝 (b02)</option>
+    <option value="4">short-wave infrared / 短波红外 (b11)</option>
   </select>
-  <label>max
+  <label>max / 拉伸上限
     <input type="range" id="greenMax" value="0.3" min="0.2" max="0.5" step="0.01">
   </label>
 
-  <label for="blue">Blue channel</label>
+  <label for="blue">Blue channel / 蓝通道 (B)</label>
   <select id="blue">
-    <option value="1">visible red</option>
-    <option value="2">visible green</option>
-    <option value="3" selected>visible blue</option>
-    <option value="4">short-wave infrared</option>
+    <option value="1">visible red / 可见光红 (b04)</option>
+    <option value="2">visible green / 可见光绿 (b03)</option>
+    <option value="3" selected>visible blue / 可见光蓝 (b02)</option>
+    <option value="4">short-wave infrared / 短波红外 (b11)</option>
   </select>
-  <label>max
+  <label>max / 拉伸上限
     <input type="range" id="blueMax" value="0.3" min="0.2" max="0.5" step="0.01">
   </label>
 </div>
+

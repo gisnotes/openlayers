@@ -1,9 +1,76 @@
 ---
 layout: example.html
-title: Icon Pixel Operations
-shortdesc: Canvas pixel operations on a point icon.
-docs: >
+title: Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）
+shortdesc: Canvas pixel operations on a point icon / 使用 Canvas 对点要素图标进行像素级操作（反色/负片效果）。
+docs: |
   Example using an icon to symbolize a point. Click on the icon to select it, and it will be rendered using its negative image.
-tags: "vector, style, icon, marker, canvas, select"
+
+  本示例展示了如何使用图标（`ol/style/Icon`）符号化点要素，并结合 HTML5 Canvas 对图标进行底层的像素级处理。点击地图上的图标将其选中时，会通过离屏 Canvas 动态计算并渲染该图标的 **反色（负片/Negative）** 图像。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 与前序示例（`icon-color`）的对比：何时使用离屏 Canvas 像素处理？
+  在前一个示例（`icon-color`）中，我们通过 `Icon` 自带的 `color` 属性实现了 **正片叠底（Multiply）** 染色，但它仅支持通道乘法混色，无法实现 **反色（负片/Negative）**、**灰度化（Grayscale）**、**复古褐色（Sepia）**、**二值化（Threshold）** 或 **动态绘制角标数字** 等复杂像素级操作。
+
+  | 对比维度 | `icon-color`（内置 `color` 属性） | `icon-negative`（离屏 Canvas + `img` 属性） |
+  | :--- | :--- | :--- |
+  | **核心配置项** | `new Icon({ src: '...', color: '#ff0000' })` | `new Icon({ img: canvas })`（`src` 设为 `undefined`） |
+  | **色彩算法能力** | 仅支持正片叠底（通道乘法），需配合纯白底图 | 支持任意 Canvas 2D 像素级滤镜（`getImageData` / `putImageData`）及图形合成 |
+  | **适用场景** | 同一白底图标衍生多种状态颜色（红/绿/黄/半透明） | 选中态反色、离线设备图标置灰（去色）、动态合成气泡文字或角标 |
+  | **跨域要求** | 跨域图片需配置 `crossOrigin: 'anonymous'` | 跨域图片必须配置 `crossOrigin: 'anonymous'`（否则触发 Tainted Canvas 报错） |
+
+  #### 2. `Icon` 的两种互补图像源模式：`src` 与 `img`
+  在 `createStyle(src, img)` 工厂函数中，展示了 `ol/style/Icon` 接收图像源的两种模式：
+  * **`src`（图片 URL 字符串）**：传入图片路径（如 `'data/icon.png'`），由 OpenLayers 内部创建并异步加载 `HTMLImageElement`。用于初始默认状态的图标渲染。
+  * **`img`（DOM 图像或画布对象）**：直接传入已就绪的 `HTMLImageElement` 或 **`HTMLCanvasElement`**（此时 `src` 设为 `undefined`）。当需要对原始图片进行自定义的 Canvas 像素级滤镜处理或动态绘图时，`img: canvas` 是最核心的桥梁。
+
+  #### 3. 为什么使用 `feature.set('style', ...)` 而不是 `feature.setStyle(...)`？
+  细看代码会发现，作者没有直接调用 `iconFeature.setStyle(...)`，而是把样式对象存在要素的普通业务属性 `'style'` 中：
+  ```js
+  iconFeature.set('style', createStyle('data/icon.png', undefined));
+  ```
+  然后在 `VectorLayer` 的 `style` 函数和 `Select` 交互的 `style` 函数中分别通过 `feature.get('style')` 读取它：
+  * 这样做的好处是：**将要素的“原始常态样式”作为数据属性持久化保存在要素身上**。当要素被 `Select` 交互选中并接管渲染时，我们在 `Select` 的样式函数里依然能随时通过 `feature.get('style')` 拿到原始未选中的 `Icon` 实例及其底层的原图 `HTMLImageElement`。
+
+  #### 4. 链式获取底层 `HTMLImageElement`：为什么连调两次 `.getImage()`？
+  在 `Select` 交互的动态样式函数中，有这样一行关键代码：
+  ```js
+  const image = feature.get('style').getImage().getImage();
+  ```
+  两个 `.getImage()` 所处的类层级完全不同：
+  1. **第一次 `.getImage()`**：调用的是 `ol/style/Style.prototype.getImage()`，返回该样式的图形符号对象（即 `ol/style/Icon` 实例）。
+  2. **第二次 `.getImage()`**：调用的是 `ol/style/Icon.prototype.getImage()`，返回该图标内部已经加载完成的原生 DOM **`HTMLImageElement`（即 `<img>` 元素）**，从而可以直接传给原生 Canvas API `context.drawImage(image, ...)`。
+
+  #### 5. 离屏 Canvas 像素反色算法（巧妙跳过 Alpha 透明度通道）
+  通过 `context.getImageData(0, 0, canvas.width, canvas.height)` 获取到的 `imageData.data` 是一个一维的 `Uint8ClampedArray` 数组，每 **4 个连续字节**代表一个像素的 `[R, G, B, A]` 分量（取值范围均为 `0 ~ 255`）：
+  ```js
+  for (let i = 0, ii = data.length; i < ii; i = i + (i % 4 == 2 ? 2 : 1)) {
+    data[i] = 255 - data[i];
+  }
+  ```
+  循环步进表达式 `i = i + (i % 4 == 2 ? 2 : 1)` 的执行逻辑如下：
+  ```text
+  索引 i % 4 == 0  -->  R（红色通道）：反色计算 255 - R，随后步进 +1
+  索引 i % 4 == 1  -->  G（绿色通道）：反色计算 255 - G，随后步进 +1
+  索引 i % 4 == 2  -->  B（蓝色通道）：反色计算 255 - B，随后步进 +2（直接跨过 i % 4 == 3 的 Alpha 通道！）
+  索引 i % 4 == 3  -->  A（透明通道）：保持原值不变（不进入循环体）
+  ```
+  * **为什么必须跳过 Alpha 通道？**
+    如果对 Alpha 通道也执行 `255 - A`，原本图标四周完全透明的背景像素（`A = 0`）会变成完全不透明的纯色矩形块（`A = 255`），而原本不透明的图标主体（`A = 255`）反而会变成完全透明消失（`A = 0`）。
+  * **💡 举一反三（如何改为“离线设备图标置灰”？）**：
+    在实际项目中，若要将彩色图标动态转为灰度图（Grayscale），只需将循环改为每次步进 `i += 4`，并计算亮度平均值：
+    ```js
+    for (let i = 0; i < data.length; i += 4) {
+      const gray = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+      data[i] = data[i + 1] = data[i + 2] = gray; // R, G, B 设为相同灰度值，data[i + 3] (Alpha) 保持不变
+    }
+    ```
+
+  #### 6. 跨域安全属性 `crossOrigin: 'anonymous'` 与样式缓存（`selectStyle[image.src]`）
+  * **防止画布污染（Tainted Canvas）**：在 `createStyle` 中配置 `crossOrigin: 'anonymous'` 是调用 `context.getImageData()` 的前提。若跨域图片未携带 CORS 头就被绘制到 `<canvas>` 上，画布会被浏览器标记为“污染状态”，调用 `getImageData()` 会立即抛出 `SecurityError` 异常。
+  * **样式字典缓存**：`Select` 的 `style` 函数在每次重绘时都会调用，而逐像素遍历属于同步 CPU 密集型操作。使用 `selectStyle[image.src]` 字典按图片地址缓存生成好的反色 `Style` 实例，确保每种图标 URL **仅在第一次被选中时计算一次像素反色**，后续重复选中直接复用缓存。
+tags: "vector, style, icon, marker, canvas, select, 矢量, 样式, 图标, 像素, 反色, 负片, 画布, 选中"
 ---
 <div id="map" class="map"></div>

@@ -1,11 +1,53 @@
 ---
 layout: example.html
-title: Icon Symbolizer width and height
-shortdesc: Example using the width and height properties of an icon.
-docs: >
+title: Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）
+shortdesc: Example using the width and height properties of an icon / 演示如何使用 Icon 的 width 和 height 属性直接指定图标渲染的像素宽高，并自动推导 scale 缩放比。
+docs: |
   Example using the width and height properties of an icon.
   Adjust the actual <strong>width</strong> and <strong>height</strong> with the input fields above.
-tags: "vector, style, icon, marker, width, height"
+
+  本示例展示了如何使用 `ol/style/Icon` 的 `width`（宽度）和 `height`（高度）属性，以**目标像素尺寸（px）**直接控制图标的显示大小。你可以通过地图下方的输入框实时调整图标的实际像素宽高，或点击 `clear（清除）` 按钮观察单边锁定时自动保持原始宽高比的效果。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么需要 `width` 和 `height` 属性？（告别手动计算 `scale`）
+  在早期的 OpenLayers 版本中，如果你有一张 `32 × 48` 像素的图标，想让它在地图上显示为 `40px` 宽，你必须先知道原图宽度是 `32`，再手动算出 `scale: 40 / 32 = 1.25`。一旦后端返回的图片分辨率不固定（有的图标是 `64×64`，有的是 `128×128`），前端就必须先异步加载图片读取 `naturalWidth` 才能算出统一尺寸的 `scale`。
+
+  为此，OpenLayers 在 `ol/style/Icon` 中直接引入了 **`width` 和 `height` 配置项（单位：像素 px）**，由引擎在图片加载完成后自动完成 `scale` 的换算！
+
+  #### 2. `width` / `height` 的三种组合模式与 `scale` 推导公式
+  示例所用的原图 `data/icon.png` 原始尺寸为 **`32 × 48` 像素**（宽高比为 `2 : 3`）。`width` 和 `height` 的设置方式决定了图标是“强制拉伸”还是“等比缩放”：
+
+  | 配置模式 | 代码写法示例 | 内部 `scale` 推导逻辑 | 视觉效果（以原图 `32×48` 为例） |
+  | :--- | :--- | :--- | :--- |
+  | **模式 A：同时指定 `width` 和 `height`** | `new Icon({ src, width: 40, height: 40 })` | `scale = [width / 原图宽, height / 原图高]` | 强制拉伸/压缩为指定的矩形尺寸 `40×40`，此时 `scale` 为 `[40/32, 40/48] = [1.25, 0.83]`（非等比变形） |
+  | **模式 B：仅指定 `width`（清除 `height`）** | `new Icon({ src, width: 40 })` | `scale = width / 原图宽`（X、Y 轴共用同一比例），自动推算 `height = 原图高 × scale` | **自动保持原图宽高比**！当 `width: 40` 时，`scale` 为 `1.25`，高度自动变为 `48 × 1.25 = 60px` |
+  | **模式 C：仅指定 `height`（清除 `width`）** | `new Icon({ src, height: 40 })` | `scale = height / 原图高`（X、Y 轴共用同一比例），自动推算 `width = 原图宽 × scale` | **自动保持原图宽高比**！当 `height: 40` 时，`scale` 为 `40/48 ≈ 0.83`，宽度自动变为 `32 × 0.83 ≈ 27px` |
+
+  > **⚠️ 互斥约束注意**：在 `new Icon({...})` 构造函数中，`width` / `height` 与 `scale` 参数**不能同时传入**（若指定了 `width` 或 `height`，OpenLayers 会根据原图尺寸自动计算并覆盖内部的 `scale`）。
+
+  #### 3. 为什么动态修改宽高时需要重新 `new Icon(...)`？
+  细看 `widthInput` 和 `heightInput` 的事件监听代码：
+  ```js
+  const currentIcon = iconStyle.getImage();
+  iconStyle.setImage(
+    new Icon({
+      src: 'data/icon.png',
+      width: Number(event.target.value),
+      height: currentIcon.getHeight(),
+    }),
+  );
+  iconFeature.setStyle(iconStyle);
+  ```
+  * **API 设计细节**：`ol/style/Icon` 提供了 `getWidth()`、`getHeight()`、`getScale()` 和 `setScale(scale)`，但**没有提供 `setWidth()` 或 `setHeight()` 方法**。
+  * 因此，当需要在运行时按像素修改 `width` 或 `height`（或者清除其中某一项以恢复等比缩放）时，标准做法是：通过 `iconStyle.getImage()` 读取当前状态，构造一个新的 `new Icon({...})` 实例，调用 `iconStyle.setImage(newIcon)` 替换图形符号，最后调用 `iconFeature.setStyle(iconStyle)` 通知要素重绘。
+
+  #### 4. 为什么在 `map.on('rendercomplete', ...)` 中读取 `getScale()`？
+  * 当创建一个带有 `src: 'data/icon.png'` 的 `new Icon` 时，如果图片尚未完成解码或渲染管线尚未执行完当前帧，立即同步读取可能拿不到最新的渲染状态。
+  * 监听地图的 `rendercomplete`（当前帧渲染完成）事件来更新界面上的 `Scale approx.` 读数，可以确保每次图标重绘落地后，展示出的 `iconStyle.getImage().getScale()` 始终是最新、最准确的实际缩放倍率。
+tags: "vector, style, icon, marker, width, height, 矢量, 样式, 图标, 宽度, 高度, 尺寸, 缩放"
 resources:
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js
@@ -14,17 +56,17 @@ resources:
 
 <div class="controls">
   <div style="margin: 1em 0;">
-    <label for="width">Width:</label>
+    <label for="width-input">Width（宽度 px）:</label>
     <input id="width-input" name="width" type="number" value="40"/>
-    <button id="clear-width-button">clear</button>
+    <button id="clear-width-button">clear（清除宽度，按高度等比自适应）</button>
   </div>
   <div style="margin: 1em 0;">
-    <label for="height">Height:</label>
+    <label for="height-input">Height（高度 px）:</label>
     <input id="height-input" name="height" type="number" value="40"/>
-    <button id="clear-height-button">clear</button>
+    <button id="clear-height-button">clear（清除高度，按宽度等比自适应）</button>
   </div>
   <div style="margin: 1em 0;">
-    <label for="height">Scale approx.:</label>
+    <label>Scale approx.（折算缩放比例）:</label>
     <span id="scale"></span>
   </div>
 </div>

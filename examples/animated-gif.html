@@ -1,12 +1,67 @@
 ---
 layout: example.html
-title: Animated GIF
-shortdesc: Example of using an animated GIF as an icon.
-docs: >
+title: Animated GIF / 动态 GIF 图标渲染
+shortdesc: Example of using an animated GIF as an icon. / 演示如何使用动态 GIF 作为矢量要素的图标（基于 Gifler 逐帧解码与离屏 Canvas）。
+docs: |
   Example of using an animated GIF as an icon.
   Animation is achieved using the <a href="https://themadcreator.github.io/gifler/" target="_blank">Gifler</a> library.
-tags: "animation, vector, style, icon, gif"
+
+  这是一个将动态 GIF 动图作为矢量要素图标（Icon）进行渲染的示例。
+  该动画效果借助了开源的 <a href="https://themadcreator.github.io/gifler/" target="_blank">Gifler</a> GIF 逐帧解码库来实现。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心技术痛点：为什么 `new Icon({ src: 'xxx.gif' })` 动不起来？
+  在很多 WebGIS 初学者的直觉中，既然 HTML 的 `<img>` 标签可以直接播放 GIF，那么直接给 OpenLayers 的 `Icon` 传入 GIF 地址应该也能动：
+  ```javascript
+  // ❌ 错误常识：这样地图上只会显示一张定格的静态图片！
+  new Icon({ src: 'globe.gif' })
+  ```
+  * **底层原理**：OpenLayers 的矢量图层默认基于 **HTML5 Canvas 2D API** 进行渲染。
+  * **浏览器规范限制**：Canvas 规范中的 `ctx.drawImage(img, ...)` 传入 GIF 图片对象时，浏览器**只会截取并绘制该 GIF 的第一帧静态画面**，Canvas 内部根本不会自动推进 GIF 的多帧播放时间轴。
+
+  #### 2. 破局之道：四步组合拳实现 Canvas 动态渲染
+  本示例展示了在 Canvas 渲染管线下播放 GIF 的行业标准解法：
+  1. **引入解码库 `Gifler`**：由于浏览器原生 JavaScript 没有暴露 GIF 逐帧解码 API，引入轻量级库 `gifler`，它负责异步下载 GIF 二进制流，并精确按照每帧的延迟毫秒数调度播放。
+  2. **创建离屏画布（Offscreen Canvas）**：在内存中创建一个游离的 `<canvas>` 画布，作为动态帧图像的“画板”。
+  3. **利用 `Icon({ img: canvas })`**：OpenLayers 的 `ol/style/Icon` 不仅支持 `src` 字符串，还支持传入 **`img: HTMLCanvasElement`**，即把离屏 Canvas 直接作为图标的数据源。
+  4. **每帧刷新驱动 `map.render()`**：每当 Gifler 解码并把最新一帧绘制到离屏 Canvas 上时，立即调用 `map.render()`，通知 OpenLayers 请求下一帧渲染，完成画面同步。
+
+  #### 3. 关键性能优化细节
+  * **单次绑定样式（Avoid Repeated Allocation）**：
+    ```javascript
+    if (!iconFeature.getStyle()) {
+      iconFeature.setStyle(new Style({
+        image: new Icon({ img: ctx.canvas, opacity: 0.8 })
+      }));
+    }
+    ```
+    代码中通过 `if (!iconFeature.getStyle())` 做了保护，**仅在第一帧初始化时创建一次 `Style` 实例**。在后续几十次/秒的 GIF 播放循环中，离屏 Canvas 内存地址保持不变，避免在动画循环中频繁 `new Style()` 引起 JavaScript 内存暴涨与频繁 GC（垃圾回收卡顿）。
+  * **非阻塞重绘 `map.render()`**：
+    `map.render()` 底层基于浏览器的 `requestAnimationFrame` 实现。它是异步批处理机制，即使一秒触发多次，也会被浏览器自动合并同步到屏幕的 60Hz/120Hz 刷新率中，性能极高。
+
+  #### 4. 关键 API 深度解析
+  * **`ol/style/Icon` 的 `img` 参数**：
+    * 类型：`HTMLImageElement | HTMLCanvasElement`
+    * 作用：直接绑定一个内存中的图片或 Canvas DOM 元素作为图标载体。
+  * **`map.render()`**：
+    * 作用：请求地图重新执行一次渲染管线。适合在有外部动画循环、视频纹理流或外部数据定时刷新时主动通知地图重绘。
+  * **`map.hasFeatureAtPixel(pixel)` 与手型悬停交互**：
+    * 作用：快速检测屏幕像素点下方是否存在矢量要素。配合 `map.on('pointermove')` 事件，动态切换 `cursor: pointer`，提升用户交互体验。
+
+  #### 5. 替代方案对比：Canvas 方案 vs CSS Overlay 方案
+  在 WebGIS 实际开发中，渲染动图或富交互图标通常有两种思路：
+  * **方案 A：本示例方案（离屏 Canvas + 矢量 Icon）**：
+    * *优点*：要素是纯原生的 Vector Feature，可以完美参与图层层级控制、随地图无缝缩放平移、支持几千个要素的高性能渲染与要素拾取。
+    * *缺点*：需要借助 Gifler 等解码库。
+  * **方案 B：OpenLayers `Overlay`（DOM 叠加层）**：
+    * *优点*：直接用原生 `<img src="xxx.gif">` 塞进 `new Overlay({ element })`，无需任何第三方库。
+    * *缺点*：每个动图都是独立的真实 DOM 元素，数量超过几十上百个时，浏览器 DOM 树开销剧增，地图平移时容易产生拖影与掉帧。
+tags: "animation, vector, style, icon, gif, 动画, 矢量, 样式, 图标"
 resources:
   - https://cdn.jsdelivr.net/npm/gifler@0.1.0/gifler.min.js
 ---
 <div id="map" class="map"></div>
+

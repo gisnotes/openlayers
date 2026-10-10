@@ -1,10 +1,61 @@
 ---
 layout: example.html
-title: Icon Symbolizer
-shortdesc: Example using an icon to symbolize a point.
-docs: >
+title: Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）
+shortdesc: Example using an icon to symbolize a point / 演示使用 Icon 符号化点要素，并结合 Overlay 与 Bootstrap Popover 实现点击气泡弹窗。
+docs: |
   Example using an icon to symbolize a point.
-tags: "vector, style, icon, marker, popup"
+
+  本示例是 OpenLayers 图标（`ol/style/Icon`）系列的基础入门篇，演示了如何使用外部图片将点要素（`Point`）符号化为地图标注针（Marker），并结合 `ol/Overlay` 与 Bootstrap `Popover` 组件实现点击图标弹出属性气泡框、鼠标悬停指针变为手型、拖动地图自动关闭弹窗等完整的 WebGIS 点位交互闭环。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. OpenLayers 5 大 `Icon` 示例全景对比与知识体系
+  OpenLayers 官方通过 5 个递进的示例完整展示了 `ol/style/Icon` 的全部核心能力：
+
+  | 示例名称 | 定位与核心主题 | 关键 API / 配置项 | 典型业务场景 |
+  | :--- | :--- | :--- | :--- |
+  | **1. `icon`（本示例）** | **基础篇**：图标打点、锚点单位混搭与弹窗交互 | `src`、`anchor`、`anchorXUnits`、`anchorYUnits`、`Overlay` | 地图 POI 打点、点击图标弹出详情气泡框、悬停变手型 |
+  | **2. `icon-width`** | **尺寸篇**：按目标像素宽高自适应缩放图标 | `width`、`height`、`getWidth()`、`getHeight()`、`getScale()` | 将不同分辨率的图标统一缩放到固定像素尺寸（如 `40×40`），或单边锁定等比缩放 |
+  | **3. `icon-scale`** | **变换篇**：双向缩放（含镜像翻转）、锚点方位、旋转与精灵图裁剪 | `scale: [sx, sy]`、`anchorOrigin`、`rotation`、`offset`、`size` | 航向角旋转、负数 `scale` 实现左右/上下镜像翻转、CSS Sprite 精灵大图裁剪、图文排版对齐 |
+  | **4. `icon-color`** | **染色篇**：单张纯白母版图标的正片叠底动态着色 | `color`（支持 Hex / RGB / RGBA）、`crossOrigin: 'anonymous'` | 1 张白底 SVG/PNG 图标动态渲染出正常（绿）、告警（橙）、故障（红）等任意状态色 |
+  | **5. `icon-negative`** | **像素滤镜篇**：基于离屏 Canvas 的底层像素级处理 | `img: canvas`、`getImageData()`、`putImageData()` | 选中态反色（负片）、离线设备图标置灰（Grayscale）、Canvas 动态合成角标文字 |
+
+  #### 2. 锚点单位混搭技巧：`anchorXUnits: 'fraction'` + `anchorYUnits: 'pixels'`
+  在本示例中，图标样式的配置非常具有代表性：
+  ```js
+  new Icon({
+    anchor: [0.5, 46],
+    anchorXUnits: 'fraction', // X 轴使用比例（0.5 即水平居中 50%）
+    anchorYUnits: 'pixels',   // Y 轴使用像素（从图片顶部向下第 46 像素处）
+    src: 'data/icon.png',
+  })
+  ```
+  * **为什么要把 X 轴设为比例（`fraction`），而把 Y 轴设为像素（`pixels`）？**
+    * 默认情况下，`anchor` 是 `[0.5, 0.5]`（即图片正中心对准地理坐标点），但这会导致水滴形定位针的“肚子”而不是“针尖”对准经纬度。
+    * 水平方向上，定位针是对称的，无论图片多宽，针尖一定在水平正中间，因此 X 轴用 `0.5`（`'fraction'`）最直观。
+    * 垂直方向上，`data/icon.png` 的原图尺寸为 `32 × 48` 像素，针尖底部留有 2 像素的阴影留白，真正的针尖精确落在第 `46` 像素行。直接设置 `anchorYUnits: 'pixels'` 和 `46`，比手动换算成小数 `46 / 48 = 0.958333...`（如 `icon-negative` 中近似写成 `0.96`）更加精准且易维护！
+
+  #### 3. 要素属性的一体化构造（`new Feature({...})`）
+  创建 `Feature` 时，除了可以直接传入几何对象 `new Feature(new Point([0, 0]))` 外，还可以像本示例一样直接传入一个**包含 `geometry` 和任意业务字段的键值对对象**：
+  ```js
+  const iconFeature = new Feature({
+    geometry: new Point([0, 0]),
+    name: 'Null Island', // 业务属性：名称（“虚无岛”，位于赤道与本初子午线交点 [0, 0]）
+    population: 4000,    // 业务属性：人口
+    rainfall: 500,       // 业务属性：降雨量
+  });
+  ```
+  后续在点击事件中，只需调用 `feature.get('name')` 即可取出对应的业务属性展示在弹窗中。
+
+  #### 4. 像素碰撞检测的性能最佳实践：`forEachFeatureAtPixel` vs `hasFeatureAtPixel`
+  本示例在两个鼠标事件中分别使用了两个不同的像素检测 API，体现了极佳的性能意识：
+  * **`click` 点击事件 —— 使用 `map.forEachFeatureAtPixel(evt.pixel, callback)`**：
+    点击发生频率低，且我们需要**获取被点击的具体 `Feature` 实例**以读取其 `name` 属性，并在回调中 `return feature` 提前终止遍历（只取最顶层要素）。
+  * **`pointermove` 鼠标移动事件 —— 使用 `map.hasFeatureAtPixel(e.pixel)`**：
+    鼠标移动每毫秒都可能触发！此时我们只需要知道“鼠标下有没有要素”来切换手型指针（`cursor: 'pointer'`），不需要拿出要素对象。`hasFeatureAtPixel` 在底层一旦检测到命中像素就会立即返回布尔值 `true`，开销远小于构造要素回调。
+tags: "vector, style, icon, marker, popup, 矢量, 样式, 图标, 标注, 弹窗"
 resources:
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js
