@@ -1,21 +1,23 @@
 /**
- * The zoomslider in the second map shall be placed between the zoom-in and
- * zoom-out buttons.
+ * 样式二（#map2）：将缩放滑块（ZoomSlider）嵌入到默认缩放控件的“放大（+）”与“缩小（-）”按钮正中间
  */
+/* 1. 将“缩小（-）”按钮向下推开 200px，为中间的滑块腾出垂直空间 */
 #map2 .ol-zoom .ol-zoom-out {
   margin-top: 200px;
 }
 #map2 .ol-zoomslider {
   background-color: transparent;
   /*
-  Zoom control top: 0.5em
-  Zoom control padding: 2px
-  Zoom in button margin top: 1px
-  Zoom in button height: font size 1.14em * 1.375 height
-  */
+   * 精确计算滑块顶部（top）偏移量，使其紧贴在“放大（+）”按钮正下方：
+   * Zoom 控件外层 top: 0.5em
+   * Zoom 控件内边距 padding: 2px
+   * Zoom-in 按钮上外边距 margin-top: 1px
+   * Zoom-in 按钮自身高度: 字体大小 1.14em * 行高 1.375
+   */
   top: calc(0.5em + 2px + 1px + 1.14 * 1.375em);
 }
 
+/* 针对移动触摸设备（.ol-touch 下按钮尺寸更大）的间距适配 */
 #map2 .ol-touch .ol-zoom .ol-zoom-out {
   margin-top: 212px;
 }
@@ -23,6 +25,7 @@
   top: 2.75em;
 }
 
+/* 修正按钮悬停/聚焦时的内置无障碍提示框（tooltip）垂直对齐位置 */
 #map2 .ol-zoom-in.ol-has-tooltip:hover [role=tooltip],
 #map2 .ol-zoom-in.ol-has-tooltip:focus [role=tooltip] {
   top: 3px;
@@ -34,15 +37,16 @@
 }
 
 /**
- * The zoomslider in the third map shall be horizontal, placed in the top-right
- * corner, smaller and orange.
+ * 样式三（#map3）：将缩放滑块移至地图右上角，改为橙色发光圆角外观，并切换为“水平滑动”模式
+ * 核心机制：当 CSS 设置 width (200px) > height (15px) 时，OpenLayers 的 ZoomSlider.prototype.initSlider_()
+ * 会通过 getComputedStyle 自动检测到宽度大于高度，从而将内部滑动方向自动切换为水平（HORIZONTAL）！
  */
 #map3 .ol-zoomslider {
   top: 8px;
-  left: auto;
-  right: 8px;
+  left: auto; /* 取消默认的左上角定位 */
+  right: 8px; /* 停靠在地图右上角 */
   background-color: rgba(255,69,0,0.2);
-  width: 200px;
+  width: 200px; /* 宽度大于高度（200px > 15px），触发 ZoomSlider 自动进入水平滑动模式 */
   height: 15px;
   padding: 0;
   box-shadow: 0 0 5px rgb(255,69,0);
@@ -53,6 +57,7 @@
   background-color: rgba(255,69,0,0.3);
 }
 
+/* 自定义滑块拖拽手柄（.ol-zoomslider-thumb）为 15x15 的正圆形橙色按钮 */
 #map3 .ol-zoomslider-thumb {
   height: 15px;
   width: 15px;

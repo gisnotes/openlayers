@@ -26,8 +26,9 @@ var vector = new VectorLayer({
 	style: styleFunction
 });
 /**
-* @param {string} name e.g. GMT -08:30
-* @return {number|null} The offset from UTC in minutes
+* 从 KML 要素名称中解析相对 UTC 的分钟偏移量
+* @param {string} name 时区名称字符串，例如 "GMT -08:30" 或 "GMT +05:45"
+* @return {number|null} 相对 UTC 的偏移分钟数（如 -510），若不匹配则返回 null
 */
 function parseOffsetFromUtc(name) {
 	const match = name.match(/([+-]?)(\d{2}):(\d{2})$/);

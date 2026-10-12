@@ -208,6 +208,29 @@ a>img {
   margin-top: 1em;
 }
 
+#docs table {
+  border-collapse: collapse;
+  width: 100%;
+  margin: 1em 0;
+  font-size: 0.95em;
+}
+
+#docs th,
+#docs td {
+  border: 1px solid #d0d7de;
+  padding: 8px 12px;
+  vertical-align: top;
+}
+
+#docs thead th {
+  background-color: var(--ol-accent-background-color);
+  font-weight: 700;
+}
+
+#docs tbody tr:nth-child(even) {
+  background-color: #fafbfc;
+}
+
 ul.inline,
 ol.inline {
   margin-left: 0;

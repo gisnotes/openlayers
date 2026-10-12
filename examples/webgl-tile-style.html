@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>WebGL Tile Layer Styles</title>
+    <title>WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -61,7 +61,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">WebGL Tile Layer Styles</h4>
+        <h4 id="title">WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -86,14 +86,15 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-shaded-relief.html&quot;&gt;Shaded Relief (with WebGL)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL points layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tiles.html&quot;&gt;WebGL Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-layer.html&quot;&gt;WebGL Vector Layer&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind.html&quot;&gt;Wind / WebGL 全球风场粒子流线动画（Flow 图层与双线性插值数据瓦片）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time-webgl.html&quot;&gt;WMS Time (WebGL)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
-              >19</a>
+              >20</a>
           </span>
           <span class="badge-group">
             <a
@@ -120,20 +121,133 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles / 使用矢量样式进行测量&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes / 正多边形与星形矢量符号（RegularShape 全解）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-renderer.html&quot;&gt;Style renderer / 样式渲染器（自定义渲染函数）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows / 气象风向标箭头（RegularShape 组合与动态缩放位移）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders / 缩放滑块控件与纯 CSS 样式定制（ZoomSlider）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >27</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=瓦片" class="badge badge-info">瓦片</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="瓦片"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=样式" class="badge badge-info">样式</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="样式"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders / 缩放滑块控件与纯 CSS 样式定制（ZoomSlider）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >14</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=曝光度" class="badge badge-info">曝光度</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="曝光度"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=对比度" class="badge badge-info">对比度</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="对比度"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=饱和度" class="badge badge-info">饱和度</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="饱和度"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=滤镜" class="badge badge-info">滤镜</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="滤镜"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=遥感" class="badge badge-info">遥感</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="遥感"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-stretch.html&quot;&gt;Band Contrast Stretch / 遥感波段组合与对比度拉伸&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geozarr-stretch.html&quot;&gt;Band Selection and Contrast Stretch / GeoZarr 波段选择与对比度拉伸&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >3</a>
           </span>
         </p>
         <div class="modal modal-tag-example" id="tag-example-list" tabindex="-1" role="dialog" aria-labelledby="tag-example-title" aria-hidden="true">
@@ -153,15 +267,15 @@
 <div id="controls">
   <label>
     <input id="exposure" type="range" min="-0.5" max="0.5" step="0.01">
-    <br>exposure <span id="exposure-value"></span>
+    <br>exposure（曝光度） <span id="exposure-value"></span>
   </label>
   <label>
     <input id="contrast" type="range" min="-0.5" max="0.5" step="0.01">
-    <br>contrast <span id="contrast-value"></span>
+    <br>contrast（对比度） <span id="contrast-value"></span>
   </label>
   <label>
     <input id="saturation" type="range" min="-0.5" max="0.5" step="0.01">
-    <br>saturation <span id="saturation-value"></span>
+    <br>saturation（饱和度） <span id="saturation-value"></span>
   </label>
 </div>
 
@@ -171,8 +285,136 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Styling raster tiles with WebGL.</p>
-        <div id="docs"><p>The <code>style</code> property of a WebGL tile layer can be used to adjust properties like <code>exposure</code>, <code>contrast</code>, and <code>saturation</code>.  Typically those values would be set to numeric constants to apply a filter to imagery.  In this example, the style properties are set to variables that can be updated based on application state.  Adjusting the sliders results in a call to <code>layer.updateStyleVariables()</code> to use new values for the associated style properties.</p>
+        <p id="shortdesc">Styling raster tiles with WebGL / 演示使用 WebGLTile 图层的 style 属性与 [&#x27;var&#x27;, ...] 着色器变量实时调节卫星瓦片底图的曝光度（exposure）、对比度（contrast）与饱和度（saturation）。</p>
+        <div id="docs"><p>The <code>style</code> property of a WebGL tile layer can be used to adjust properties like <code>exposure</code>, <code>contrast</code>, and <code>saturation</code>. Typically those values would be set to numeric constants to apply a filter to imagery. In this example, the style properties are set to variables that can be updated based on application state. Adjusting the sliders results in a call to <code>layer.updateStyleVariables()</code> to use new values for the associated style properties.</p>
+<p>WebGL 瓦片图层（<code>ol/layer/WebGLTile</code>）的 <code>style</code> 属性可用于调节栅格影像的 <strong><code>exposure</code>（曝光度）</strong>、<strong><code>contrast</code>（对比度）</strong> 和 <strong><code>saturation</code>（饱和度）</strong> 等光学色彩属性。在常规静态配图中，这些属性可以直接设为数字常量，以便为底图瓦片添加固定的色彩滤镜；而在本示例中，我们将这些样式属性绑定到了动态变量表达式（<code>[&#39;var&#39;, &#39;...&#39;]</code>）上。拖动地图下方的滑块时，代码会调用 <code>layer.updateStyleVariables()</code> 将新数值实时传递给 GPU 着色器，实现 60 FPS 丝滑的全局卫星影像调色。</p>
+<hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 架构选型核心：<code>ol/layer/WebGLTile</code> vs 传统 <code>ol/layer/Tile</code></h4>
+<p>细看 <code>main.js</code> 的第 4 行导入语句：</p>
+<pre><code class="language-js">import TileLayer from &#39;ol/layer/WebGLTile.js&#39;;
+</code></pre>
+<p>虽然代码里把导入的类命名为了 <code>TileLayer</code>，但它实际上导入的是 <strong><code>ol/layer/WebGLTile.js</code>（WebGL 硬件加速瓦片图层）</strong>，而不是传统的 Canvas 2D <code>ol/layer/Tile.js</code>！</p>
+<h5>为什么遥感影像与科学栅格渲染首选 <code>WebGLTile</code>？</h5>
+<p>在现代 WebGIS 架构中，<code>WebGLTile</code> 是<strong>多波段遥感影像（COG / GeoZarr）与定量科学栅格数据</strong>的核心渲染引擎。两者的核心差异与选型边界如下：</p>
+<table>
+<thead>
+<tr>
+<th align="left">对比维度</th>
+<th align="left">传统 <code>ol/layer/Tile</code>（Canvas 2D 渲染）</th>
+<th align="left"><code>ol/layer/WebGLTile</code>（GPU 着色器加速渲染）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>底层渲染管线</strong></td>
+<td align="left">CPU 调用 <code>CanvasRenderingContext2D.drawImage()</code> 贴图</td>
+<td align="left">将瓦片作为纹理上传至显卡（<code>gl.texImage2D</code>），由 <strong>GPU 片元着色器（GLSL）</strong> 并行计算每个像素</td>
+</tr>
+<tr>
+<td align="left"><strong>支持的数据源与位深</strong></td>
+<td align="left">仅支持浏览器原生 8-bit RGB/RGBA 图片（PNG / JPEG / WebP）</td>
+<td align="left">除了普通图片外，<strong>原生支持 16-bit 整型 / 32-bit 浮点型多波段数值矩阵（<code>DataTile</code>、<code>GeoTIFF</code>、<code>GeoZarr</code>）</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>遥感波段运算与拉伸</strong></td>
+<td align="left"><strong>不支持</strong>（若用 CPU 逐像素遍历 200 万像素会严重卡顿）</td>
+<td align="left"><strong>毫秒级实时计算</strong>：支持 <code>[&#39;band&#39;, n]</code> 波段提取、线性对比度拉伸、NDVI 归一化植被指数、DEM 动态山体阴影与淹没分析</td>
+</tr>
+<tr>
+<td align="left"><strong>实时光学滤镜（<code>style</code>）</strong></td>
+<td align="left"><strong>不支持</strong> <code>style</code> 属性</td>
+<td align="left">原生支持 <code>exposure</code>（曝光度）、<code>contrast</code>（对比度）、<code>saturation</code>（饱和度）、<code>brightness</code>（亮度）、<code>gamma</code>（伽马）等 GPU 滤镜</td>
+</tr>
+<tr>
+<td align="left"><strong>跨域（CORS）要求</strong></td>
+<td align="left"><strong>宽松</strong>：即使第三方瓦片服务未配置 CORS 头，依然能正常显示在地图上（仅画布被标记为 Tainted）</td>
+<td align="left"><strong>极其严格</strong>：WebGL 纹理上传强制要求同源或服务端返回 CORS 头（<code>Access-Control-Allow-Origin</code>），否则完全无法渲染</td>
+</tr>
+<tr>
+<td align="left"><strong>浏览器上下文限制</strong></td>
+<td align="left">无数量限制，多个图层可共享同一个 2D Canvas</td>
+<td align="left">受浏览器单页面 <strong>WebGL 上下文数量上限（通常为 8~16 个）</strong> 及显存开销限制</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>💡 架构选型口诀</strong>：</p>
+<ul>
+<li><strong>用 <code>WebGLTile</code> 的场景</strong>：加载 <strong>COG (<code>GeoTIFF</code>) / <code>GeoZarr</code> 遥感影像</strong>、<strong>DEM 高程地形渲染</strong>、需要对栅格做<strong>波段代数运算/假彩色合成/色彩分级映射（Color Ramp）</strong>，或者需要对普通瓦片底图做<strong>实时曝光/对比度/饱和度滤镜调色</strong>。</li>
+<li><strong>用传统 <code>Tile</code> 的场景</strong>：仅用于展示常规已经配好色的 8-bit 电子地图底图（如天地图、高德、OSM、内网老旧无 CORS 头的 WMTS/XYZ 瓦片服务），且不需要做像素级动态调色。</li>
+</ul>
+</blockquote>
+<h4>2. <code>WebGLTile</code> 样式（<code>Style</code>）五大核心属性与 GPU 着色器数学公式</h4>
+<p>在 <code>ol/layer/WebGLTile</code> 的 <code>style</code> 配置对象中，支持以下核心色彩调控属性（其中后四项在片元着色器中按顺序依次作用于像素 RGB 分量）：</p>
+<table>
+<thead>
+<tr>
+<th align="left">样式属性</th>
+<th align="left">取值范围</th>
+<th align="left">默认值</th>
+<th align="left">片元着色器（GLSL）底层数学原理</th>
+<th align="left">视觉效果与典型 GIS 场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong><code>color</code></strong></td>
+<td align="left">颜色表达式</td>
+<td align="left"><em>原图颜色</em></td>
+<td align="left">多波段组合与ストレッチ拉伸（见 <code>cog-stretch</code> / <code>geozarr-stretch</code> 示例）</td>
+<td align="left">遥感假彩色合成、NDVI 植被指数赋色、DEM 高程设色</td>
+</tr>
+<tr>
+<td align="left"><strong><code>brightness</code></strong></td>
+<td align="left"><code>-1.0 ~ 1.0</code></td>
+<td align="left"><code>0</code></td>
+<td align="left"><code>rgb = rgb + brightness</code>（全通道线性加减偏移）</td>
+<td align="left">整体提亮或压暗底图</td>
+</tr>
+<tr>
+<td align="left"><strong><code>exposure</code>（曝光度）</strong></td>
+<td align="left"><code>-1.0 ~ 1.0</code></td>
+<td align="left"><code>0</code></td>
+<td align="left"><code>rgb = rgb × (1.0 + exposure)</code>（全通道按比例乘算增益）</td>
+<td align="left">模拟相机曝光补偿：正值增强高光与明度，负值压暗强光（比 <code>brightness</code> 更能保留暗部层次）</td>
+</tr>
+<tr>
+<td align="left"><strong><code>contrast</code>（对比度）</strong></td>
+<td align="left"><code>-1.0 ~ 1.0</code></td>
+<td align="left"><code>0</code></td>
+<td align="left"><code>rgb = (rgb - 0.5) × (1.0 + contrast) + 0.5</code>（围绕中灰 <code>0.5</code> 扩张/收缩）</td>
+<td align="left">正值使亮处更亮、暗处更暗（凸显地物纹理边界）；负值使画面趋向柔和灰雾状</td>
+</tr>
+<tr>
+<td align="left"><strong><code>saturation</code>（饱和度）</strong></td>
+<td align="left"><code>-1.0 ~ 1.0</code></td>
+<td align="left"><code>0</code></td>
+<td align="left">在像素灰度亮度值 <code>L</code> 与原始 <code>rgb</code> 之间线性插值：<code>mix(vec3(L), rgb, 1.0 + saturation)</code></td>
+<td align="left">正值使植被/水体色彩更浓郁鲜艳；负值降低色彩饱和度（当设为 <strong><code>-1</code></strong> 时直接变为<strong>纯黑白全色灰阶底图</strong>）</td>
+</tr>
+<tr>
+<td align="left"><strong><code>gamma</code>（伽马值）</strong></td>
+<td align="left"><code>&gt; 0</code></td>
+<td align="left"><code>1.0</code></td>
+<td align="left"><code>rgb = pow(rgb, vec3(1.0 / gamma))</code>（非线性幂律校正）</td>
+<td align="left">修正传感器非线性响应，提亮遥感影像暗部阴影细节而不使高光过曝</td>
+</tr>
+</tbody></table>
+<h4>3. 为什么使用 <code>[&#39;var&#39;, name]</code> + <code>layer.updateStyleVariables()</code>？</h4>
+<p>本示例采用了与 <code>cog-stretch</code>（COG 波段拉伸）和 <code>geozarr-stretch</code> 完全一致的 <strong>GPU Uniform 动态变量范式</strong>：</p>
+<pre><code class="language-js">style: {
+  exposure: [&#39;var&#39;, &#39;exposure&#39;],
+  contrast: [&#39;var&#39;, &#39;contrast&#39;],
+  saturation: [&#39;var&#39;, &#39;saturation&#39;],
+  variables: variables,
+}
+</code></pre>
+<ul>
+<li><strong>避免重编译着色器（Zero Shader Recompilation）</strong>：
+如果在拖动滑块的 <code>input</code> 事件中直接调用 <code>layer.setStyle({...})</code>，OpenLayers 每次都会重新生成 GLSL 源码并调用 WebGL <code>compileShader</code> 和 <code>linkProgram</code>，在高频拖动下会产生明显的掉帧卡顿。</li>
+<li><strong>Uniform 寄存器级极速更新</strong>：
+通过 <code>[&#39;var&#39;, &#39;exposure&#39;]</code> 将属性声明为着色器中的 <code>uniform float u_exposure</code> 变量后，滑块拖动时调用的 <code>layer.updateStyleVariables({ [name]: value })</code> 仅仅是在当前帧向显卡发送一条 <code>gl.uniform1f(...)</code> 指令，开销几乎为零！</li>
+</ul>
+<h4>4. 代码工程技巧：基于 <code>for...in</code> 数据驱动的双向绑定</h4>
+<p>看代码第 41~53 行，作者没有为 <code>exposure</code>、<code>contrast</code>、<code>saturation</code> 重复编写三遍完全相同的 DOM 读取与事件监听代码，而是利用 HTML 控件 <code>id</code>（如 <code>id=&quot;exposure&quot;</code> 和 <code>id=&quot;exposure-value&quot;</code>）与 <code>variables</code> 对象的键名严格一致的约定，通过一个 <code>for (variable in variables)</code> 循环一次性完成了初始值回填、数值格式化展示（<code>toFixed(2)</code>）以及 <code>input</code> 事件与 <code>updateStyleVariables({ [name]: value })</code> 的动态绑定。</p>
 </div>
       </div>
 
@@ -181,20 +423,24 @@
         <div class="row-fluid">
           <pre><code id="example-js-source" class="language-js">import Map from &#x27;ol/Map.js&#x27;;
 import View from &#x27;ol/View.js&#x27;;
+// 注意：此处导入的是 WebGL 硬件加速瓦片图层（ol/layer/WebGLTile.js），而非传统的 Canvas 2D TileLayer
 import TileLayer from &#x27;ol/layer/WebGLTile.js&#x27;;
 import ImageTile from &#x27;ol/source/ImageTile.js&#x27;;
 
+// MapTiler API 密钥与地图版权说明
 const key &#x3D; &#x27;Get your own API key at https://www.maptiler.com/cloud/&#x27;;
 const attributions &#x3D;
   &#x27;&lt;a href&#x3D;&quot;https://www.maptiler.com/copyright/&quot; target&#x3D;&quot;_blank&quot;&gt;&amp;copy; MapTiler&lt;/a&gt; &#x27; +
   &#x27;&lt;a href&#x3D;&quot;https://www.openstreetmap.org/copyright&quot; target&#x3D;&quot;_blank&quot;&gt;&amp;copy; OpenStreetMap contributors&lt;/a&gt;&#x27;;
 
+// 定义传递给 WebGL 片元着色器（Fragment Shader）的初始样式变量字典
 const variables &#x3D; {
-  exposure: 0,
-  contrast: 0,
-  saturation: 0,
+  exposure: 0, // 曝光度初始值（0 表示保持原图曝光）
+  contrast: 0, // 对比度初始值（0 表示保持原图对比度）
+  saturation: 0, // 饱和度初始值（0 表示保持原图饱和度）
 };
 
+// 创建 WebGL 瓦片图层：将曝光度、对比度、饱和度绑定到动态变量表达式 [&#x27;var&#x27;, &#x27;...&#x27;]
 const layer &#x3D; new TileLayer({
   style: {
     exposure: [&#x27;var&#x27;, &#x27;exposure&#x27;],
@@ -210,6 +456,7 @@ const layer &#x3D; new TileLayer({
   }),
 });
 
+// 初始化地图实例
 const map &#x3D; new Map({
   target: &#x27;map&#x27;,
   layers: [layer],
@@ -219,13 +466,17 @@ const map &#x3D; new Map({
   }),
 });
 
+// 遍历 variables 字典，自动将同名滑块控件（#exposure, #contrast, #saturation）与图层样式变量双向绑定
 let variable;
 for (variable in variables) {
   const name &#x3D; variable;
   const element &#x3D; document.getElementById(name);
   const value &#x3D; variables[name];
+  // 初始化滑块位置与旁边的数值文本（保留两位小数）
   element.value &#x3D; value.toString();
   document.getElementById(name + &#x27;-value&#x27;).innerText &#x3D; value.toFixed(2);
+
+  // 监听滑块实时拖动事件：调用 layer.updateStyleVariables() 极速更新 GPU Uniform 变量（无需重新编译着色器）
   element.addEventListener(&#x27;input&#x27;, function (event) {
     const value &#x3D; parseFloat(event.target.value);
     document.getElementById(name + &#x27;-value&#x27;).innerText &#x3D; value.toFixed(2);
@@ -243,7 +494,7 @@ for (variable in variables) {
 &lt;html lang="en"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;WebGL Tile Layer Styles&lt;/title&gt;
+    &lt;title&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -261,15 +512,15 @@ for (variable in variables) {
     &lt;div id&#x3D;&quot;controls&quot;&gt;
       &lt;label&gt;
         &lt;input id&#x3D;&quot;exposure&quot; type&#x3D;&quot;range&quot; min&#x3D;&quot;-0.5&quot; max&#x3D;&quot;0.5&quot; step&#x3D;&quot;0.01&quot;&gt;
-        &lt;br&gt;exposure &lt;span id&#x3D;&quot;exposure-value&quot;&gt;&lt;/span&gt;
+        &lt;br&gt;exposure（曝光度） &lt;span id&#x3D;&quot;exposure-value&quot;&gt;&lt;/span&gt;
       &lt;/label&gt;
       &lt;label&gt;
         &lt;input id&#x3D;&quot;contrast&quot; type&#x3D;&quot;range&quot; min&#x3D;&quot;-0.5&quot; max&#x3D;&quot;0.5&quot; step&#x3D;&quot;0.01&quot;&gt;
-        &lt;br&gt;contrast &lt;span id&#x3D;&quot;contrast-value&quot;&gt;&lt;/span&gt;
+        &lt;br&gt;contrast（对比度） &lt;span id&#x3D;&quot;contrast-value&quot;&gt;&lt;/span&gt;
       &lt;/label&gt;
       &lt;label&gt;
         &lt;input id&#x3D;&quot;saturation&quot; type&#x3D;&quot;range&quot; min&#x3D;&quot;-0.5&quot; max&#x3D;&quot;0.5&quot; step&#x3D;&quot;0.01&quot;&gt;
-        &lt;br&gt;saturation &lt;span id&#x3D;&quot;saturation-value&quot;&gt;&lt;/span&gt;
+        &lt;br&gt;saturation（饱和度） &lt;span id&#x3D;&quot;saturation-value&quot;&gt;&lt;/span&gt;
       &lt;/label&gt;
     &lt;/div&gt;
 

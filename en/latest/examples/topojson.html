@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>TopoJSON</title>
+    <title>TopoJSON / TopoJSON 拓扑矢量数据解析与渲染</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -60,7 +60,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">TopoJSON</h4>
+        <h4 id="title">TopoJSON / TopoJSON 拓扑矢量数据解析与渲染</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -73,7 +73,7 @@
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop.html&quot;&gt;Drag-and-Drop&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -124,14 +124,14 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./jsts.html&quot;&gt;JSTS Integration&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-arrows.html&quot;&gt;LineString Arrows&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-layer.html&quot;&gt;Mapbox Vector Layer&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles.html&quot;&gt;Mapbox Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-ogc-features.html&quot;&gt;MapServer OGC Features&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure.html&quot;&gt;Measure&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles / 使用矢量样式进行测量&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-features.html&quot;&gt;Modify Features&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-test.html&quot;&gt;Modify Features Test&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles.html&quot;&gt;OGC Vector Tiles&lt;/a&gt;
@@ -139,7 +139,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./osm-vector-tiles.html&quot;&gt;OSM Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./populated-places.html&quot;&gt;Populated Places&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes / 正多边形与星形矢量符号（RegularShape 全解）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rich-text-labels.html&quot;&gt;Rich Text Labels&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-features.html&quot;&gt;Select Features&lt;/a&gt;
@@ -152,9 +152,9 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-renderer.html&quot;&gt;Style renderer / 样式渲染器（自定义渲染函数）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./synthetic-lines.html&quot;&gt;Synthetic Lines&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./synthetic-points.html&quot;&gt;Synthetic Points&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tooltip-on-hover.html&quot;&gt;Tooltip on Hover&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topolis.html&quot;&gt;topolis integration&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tracing.html&quot;&gt;Tracing around a polygon&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap&lt;/a&gt;
@@ -172,7 +172,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows / 气象风向标箭头（RegularShape 组合与动态缩放位移）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >86</a>
@@ -202,20 +202,115 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles / 使用矢量样式进行测量&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes / 正多边形与星形矢量符号（RegularShape 全解）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-renderer.html&quot;&gt;Style renderer / 样式渲染器（自定义渲染函数）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows / 气象风向标箭头（RegularShape 组合与动态缩放位移）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders / 缩放滑块控件与纯 CSS 样式定制（ZoomSlider）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >27</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=拓扑" class="badge badge-info">拓扑</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="拓扑"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=矢量" class="badge badge-info">矢量</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="矢量"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes / 正多边形与星形矢量符号（RegularShape 全解）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows / 气象风向标箭头（RegularShape 组合与动态缩放位移）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >13</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=样式" class="badge badge-info">样式</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="样式"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders / 缩放滑块控件与纯 CSS 样式定制（ZoomSlider）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >14</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=行政区划" class="badge badge-info">行政区划</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="行政区划"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=性能优化" class="badge badge-info">性能优化</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="性能优化"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
           </span>
         </p>
         <div class="modal modal-tag-example" id="tag-example-list" tabindex="-1" role="dialog" aria-labelledby="tag-example-title" aria-hidden="true">
@@ -239,8 +334,82 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Demonstrates rendering of features from a TopoJSON topology.</p>
+        <p id="shortdesc">Demonstrates rendering of features from a TopoJSON topology / 演示使用 ol/format/TopoJSON 加载并按图层过滤渲染 TopoJSON 全球国家拓扑边界数据。</p>
         <div id="docs"><p>This example uses a vector layer with <code>ol/format/TopoJSON</code> for rendering features from <a href="https://github.com/mbostock/topojson/wiki">TopoJSON</a>.</p>
+<p>本示例展示了如何在矢量图层（<code>ol/layer/Vector</code>）中配合 <code>ol/format/TopoJSON</code> 格式解析器，加载并渲染 <a href="https://github.com/topojson/topojson">TopoJSON</a> 拓扑格式的全球国家边界数据（<code>data/topojson/world-110m.json</code>）。</p>
+<hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心概念：什么是 TopoJSON？它比 GeoJSON 强在哪里？</h4>
+<p><strong>TopoJSON</strong> 是由 D3.js 作者 Mike Bostock 提出的 GeoJSON 拓扑扩展格式。在 WebGIS 中传输行政区划（国界、省界、地块）时，TopoJSON 相比传统 GeoJSON 有两大核心优势：</p>
+<table>
+<thead>
+<tr>
+<th align="left">对比维度</th>
+<th align="left">传统 GeoJSON (<code>ol/format/GeoJSON</code>)</th>
+<th align="left">拓扑格式 TopoJSON (<code>ol/format/TopoJSON</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>公共边界存储方式</strong></td>
+<td align="left"><strong>独立重复存储</strong>：中国与蒙古国交界处的数千个边界点，在两国的 Polygon 坐标数组中会被完整重复记录两遍</td>
+<td align="left"><strong>拓扑弧段（<code>arcs</code>）共享</strong>：将所有边界切分为不重复的共享弧段（Arc），每个国家只存储弧段的<strong>索引编号数组</strong>（如 <code>[0, 1, -2]</code>，负数代表反向连接）</td>
+</tr>
+<tr>
+<td align="left"><strong>坐标压缩机制</strong></td>
+<td align="left">明文存储冗长的浮点数经纬度（如 <code>116.397128, 39.916527</code>）</td>
+<td align="left">支持<strong>整数化量化（Quantization）+ 差分编码（Delta-encoding）</strong>，只记录相对前一个点的整数增量</td>
+</tr>
+<tr>
+<td align="left"><strong>文件体积与网络传输</strong></td>
+<td align="left">体积较大（100% 基准）</td>
+<td align="left">文件体积通常比同精度的 GeoJSON <strong>缩小 60% ~ 80%</strong>，显著加快首屏加载速度</td>
+</tr>
+<tr>
+<td align="left"><strong>单文件多图层能力</strong></td>
+<td align="left">单个 <code>FeatureCollection</code> 通常只表达一层要素</td>
+<td align="left">顶层 <code>objects</code> 字典内可同时封装多个共用同一套 <code>arcs</code> 的命名图层（如 <code>land</code> 陆地轮廓层 + <code>countries</code> 国家边界层）</td>
+</tr>
+</tbody></table>
+<h4>2. <code>new TopoJSON({ layers: [&#39;countries&#39;] })</code>：单文件内多拓扑图层的按需过滤</h4>
+<p>在代码第 26~30 行中：</p>
+<pre><code class="language-js">format: new TopoJSON({
+  layers: [&#39;countries&#39;],
+}),
+</code></pre>
+<ul>
+<li>打开 <code>data/topojson/world-110m.json</code> 源码可以看到，它的 <code>&quot;objects&quot;</code> 节点下同时包含了两个拓扑对象集合：<ol>
+<li><code>&quot;land&quot;</code>：将全球所有大陆合并为一个整体的陆地外轮廓多边形。</li>
+<li><code>&quot;countries&quot;</code>：全球各个国家的独立多边形集合。</li>
+</ol>
+</li>
+<li><strong>如果不传 <code>layers</code> 参数</strong>：<code>ol/format/TopoJSON</code> 默认会把 <code>&quot;objects&quot;</code> 下的<strong>所有图层</strong>（<code>land</code> + <code>countries</code>）全部提取成 <code>Feature</code> 渲染出来，导致海岸线被重复绘制两遍。</li>
+<li><strong>传入 <code>layers: [&#39;countries&#39;]</code></strong>：精准指定只提取并解析 <code>&quot;countries&quot;</code> 这一层要素，忽略 <code>&quot;land&quot;</code> 层。</li>
+<li><strong>💡 进阶技巧（<code>layerName</code> 属性标记）</strong>：如果你确实需要同时加载多个子图层并对它们设置不同样式，可以配置 <code>new TopoJSON({ layerName: &#39;layer&#39; })</code>。这样解析出的每个 <code>Feature</code> 都会自动带上 <code>feature.get(&#39;layer&#39;)</code> 属性（值为 <code>&#39;land&#39;</code> 或 <code>&#39;countries&#39;</code>），从而可以在样式函数中轻松区分！</li>
+</ul>
+<h4>3. 关键性能优化参数：<code>overlaps: false</code>（无重叠拓扑数据源优化）</h4>
+<p>在 <code>VectorSource</code> 的配置中（代码第 31 行），有一行非常容易被忽略但极具价值的优化配置：</p>
+<pre><code class="language-js">overlaps: false,
+</code></pre>
+<ul>
+<li><strong>含义</strong>：告诉 OpenLayers 该矢量数据源中的所有多边形要素在空间上<strong>彼此互不重叠</strong>（像拼图一样严丝合缝，仅共享公共边界）。</li>
+<li><strong>为什么 TopoJSON 行政区划最适合开启 <code>overlaps: false</code>？</strong><ul>
+<li>默认情况下（<code>overlaps: true</code>），OpenLayers 必须假设多边形之间可能存在上下交叠，因此在做空间索引（RBush）碰撞检测和渲染裁剪时需要做额外的重叠判断。</li>
+<li>而由 TopoJSON 生成的国家级/省市级行政区划天然具备严格的拓扑不重叠特性。显式声明 <code>overlaps: false</code> 可以让渲染器与拾取检测跳过重叠要素排查，提升渲染与交互响应效率。</li>
+</ul>
+</li>
+</ul>
+<h4>4. 扁平化声明式样式（FlatStyle）与 512px 高清瓦片底图</h4>
+<ol>
+<li><strong>简洁的 FlatStyle 字面量语法</strong>：
+代码第 33~36 行没有实例化传统的 <code>new Style({ stroke: new Stroke({...}) })</code>，而是直接传入了扁平样式对象：<pre><code class="language-js">style: {
+  &#39;stroke-color&#39;: &#39;white&#39;,
+  &#39;stroke-width&#39;: 1.5,
+},
+</code></pre>
+当只需要静态配置描边或填充时，FlatStyle 字面量比传统类实例写法更加简洁直观。</li>
+<li><strong><code>ImageTile</code> 配合 <code>tileSize: 512</code></strong>：
+底图使用了 MapTiler 的深色数据可视化底图（<code>dataviz-dark</code>），其瓦片尺寸为 <code>512 × 512</code> 像素（传统 OSM 瓦片为 <code>256 × 256</code>），因此需在 <code>new ImageTile({...})</code> 中显式声明 <code>tileSize: 512</code>，以确保瓦片网格（TileGrid）层级与分辨率匹配正确。</li>
+</ol>
 </div>
       </div>
 
@@ -255,11 +424,13 @@ import VectorLayer from &#x27;ol/layer/Vector.js&#x27;;
 import ImageTile from &#x27;ol/source/ImageTile.js&#x27;;
 import VectorSource from &#x27;ol/source/Vector.js&#x27;;
 
+// MapTiler API 密钥与地图版权归属HTML说明
 const key &#x3D; &#x27;Get your own API key at https://www.maptiler.com/cloud/&#x27;;
 const attributions &#x3D;
   &#x27;&lt;a href&#x3D;&quot;https://www.maptiler.com/copyright/&quot; target&#x3D;&quot;_blank&quot;&gt;&amp;copy; MapTiler&lt;/a&gt; &#x27; +
   &#x27;&lt;a href&#x3D;&quot;https://www.openstreetmap.org/copyright&quot; target&#x3D;&quot;_blank&quot;&gt;&amp;copy; OpenStreetMap contributors&lt;/a&gt;&#x27;;
 
+// 1. 创建深色数据可视化栅格瓦片底图（瓦片规格为 512x512 像素）
 const raster &#x3D; new TileLayer({
   source: new ImageTile({
     attributions: attributions,
@@ -269,22 +440,26 @@ const raster &#x3D; new TileLayer({
   }),
 });
 
+// 2. 创建 TopoJSON 矢量图层：加载全球 1:1.1亿 比例尺拓扑国家边界数据
 const vector &#x3D; new VectorLayer({
   source: new VectorSource({
     url: &#x27;data/topojson/world-110m.json&#x27;,
     format: new TopoJSON({
-      // don&#x27;t want to render the full world polygon (stored as &#x27;land&#x27; layer),
-      // which repeats all countries
+      // world-110m.json 的 objects 中同时包含 &#x27;land&#x27;（全球陆地外轮廓）和 &#x27;countries&#x27;（各国边界）两层，
+      // 此处指定仅提取 &#x27;countries&#x27; 图层，避免与整个陆地多边形重复叠加绘制
       layers: [&#x27;countries&#x27;],
     }),
+    // 性能优化：告知数据源各国家多边形之间满足拓扑不重叠关系，可加速空间索引查询与渲染
     overlaps: false,
   }),
+  // 使用声明式扁平样式（FlatStyle）将国家边界渲染为 1.5px 宽的纯白色线条
   style: {
     &#x27;stroke-color&#x27;: &#x27;white&#x27;,
     &#x27;stroke-width&#x27;: 1.5,
   },
 });
 
+// 3. 初始化地图实例
 const map &#x3D; new Map({
   layers: [raster, vector],
   target: &#x27;map&#x27;,
@@ -304,7 +479,7 @@ const map &#x3D; new Map({
 &lt;html lang="en"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;TopoJSON&lt;/title&gt;
+    &lt;title&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

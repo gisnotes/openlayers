@@ -833,6 +833,16 @@ var windData = new Promise((resolve, reject) => {
 	};
 	image.src = "./data/wind.png";
 });
+/**
+* 标量双线性插值函数：根据水平与垂直方向的小数偏移权重（xAlong, yAlong），对四个相邻格点值进行平滑插值
+* @param {number} xAlong 水平方向距离左格点的小数比例 [0, 1)
+* @param {number} yAlong 垂直方向距离上格点的小数比例 [0, 1)
+* @param {number} v11 左上角格点值
+* @param {number} v21 右上角格点值
+* @param {number} v12 左下角格点值
+* @param {number} v22 右下角格点值
+* @return {number} 插值后的平滑数值
+*/
 function bilinearInterpolation(xAlong, yAlong, v11, v21, v12, v22) {
 	const q11 = (1 - xAlong) * (1 - yAlong) * v11;
 	const q21 = xAlong * (1 - yAlong) * v21;
@@ -840,6 +850,16 @@ function bilinearInterpolation(xAlong, yAlong, v11, v21, v12, v22) {
 	const q22 = xAlong * yAlong * v22;
 	return q11 + q21 + q12 + q22;
 }
+/**
+* 对多波段像素数组（如 [R, G]）的每个通道分别执行双线性插值
+* @param {number} xAlong 水平插值权重
+* @param {number} yAlong 垂直插值权重
+* @param {Array<number>} p11 左上像素通道数组
+* @param {Array<number>} p21 右上像素通道数组
+* @param {Array<number>} p12 左下像素通道数组
+* @param {Array<number>} p22 右下像素通道数组
+* @return {Array<number>} 插值后的通道数组
+*/
 function interpolatePixels(xAlong, yAlong, p11, p21, p12, p22) {
 	return p11.map((_, i) => bilinearInterpolation(xAlong, yAlong, p11[i], p21[i], p12[i], p22[i]));
 }

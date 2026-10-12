@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Line Styles</title>
+    <title>Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -61,7 +61,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Line Styles</h4>
+        <h4 id="title">Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,7 +74,7 @@
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-webgl-line.html&quot;&gt;Applying a filter along lines rendered with WebGL&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -125,14 +125,14 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./jsts.html&quot;&gt;JSTS Integration&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-arrows.html&quot;&gt;LineString Arrows&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-layer.html&quot;&gt;Mapbox Vector Layer&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles.html&quot;&gt;Mapbox Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-ogc-features.html&quot;&gt;MapServer OGC Features&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure.html&quot;&gt;Measure&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles / 使用矢量样式进行测量&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-features.html&quot;&gt;Modify Features&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-test.html&quot;&gt;Modify Features Test&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles.html&quot;&gt;OGC Vector Tiles&lt;/a&gt;
@@ -140,7 +140,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./osm-vector-tiles.html&quot;&gt;OSM Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./populated-places.html&quot;&gt;Populated Places&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes / 正多边形与星形矢量符号（RegularShape 全解）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rich-text-labels.html&quot;&gt;Rich Text Labels&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-features.html&quot;&gt;Select Features&lt;/a&gt;
@@ -153,9 +153,9 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-renderer.html&quot;&gt;Style renderer / 样式渲染器（自定义渲染函数）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./synthetic-lines.html&quot;&gt;Synthetic Lines&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./synthetic-points.html&quot;&gt;Synthetic Points&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tooltip-on-hover.html&quot;&gt;Tooltip on Hover&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topolis.html&quot;&gt;topolis integration&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tracing.html&quot;&gt;Tracing around a polygon&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap&lt;/a&gt;
@@ -173,7 +173,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows / 气象风向标箭头（RegularShape 组合与动态缩放位移）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >86</a>
@@ -203,17 +203,17 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles / 使用矢量样式进行测量&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes / 正多边形与星形矢量符号（RegularShape 全解）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-renderer.html&quot;&gt;Style renderer / 样式渲染器（自定义渲染函数）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows / 气象风向标箭头（RegularShape 组合与动态缩放位移）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders / 缩放滑块控件与纯 CSS 样式定制（ZoomSlider）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >27</a>
@@ -227,7 +227,116 @@
               data-bs-target="#tag-example-list"
               data-title="offset"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=线条" class="badge badge-info">线条</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="线条"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=矢量" class="badge badge-info">矢量</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="矢量"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes / 正多边形与星形矢量符号（RegularShape 全解）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows / 气象风向标箭头（RegularShape 组合与动态缩放位移）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >13</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=样式" class="badge badge-info">样式</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="样式"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders / 缩放滑块控件与纯 CSS 样式定制（ZoomSlider）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >14</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=描边" class="badge badge-info">描边</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="描边"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=虚线" class="badge badge-info">虚线</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="虚线"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=偏移" class="badge badge-info">偏移</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="偏移"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -249,36 +358,36 @@
         <div id="map" class="map"></div>
 
 <form id="line-style-options-form">
-  <label for="color">Color</label>
+  <label for="color">Color（颜色）</label>
   <input type="color" id="color" name="color" value="#004D7D">
 
-  <span>Line Cap</span>
+  <span>Line Cap（端帽）</span>
   <div class="radios">
-    <label><input type="radio" name="lineCap" value="butt"> butt</label>
-    <label><input type="radio" name="lineCap" value="round" checked> round</label>
-    <label><input type="radio" name="lineCap" value="square"> square</label>
+    <label><input type="radio" name="lineCap" value="butt"> butt（平直）</label>
+    <label><input type="radio" name="lineCap" value="round" checked> round（圆头）</label>
+    <label><input type="radio" name="lineCap" value="square"> square（方头）</label>
   </div>
 
-  <span>Line Join</span>
+  <span>Line Join（转角）</span>
   <div class="radios">
-    <label><input type="radio" name="lineJoin" value="bevel"> bevel</label>
-    <label><input type="radio" name="lineJoin" value="round" checked> round</label>
-    <label><input type="radio" name="lineJoin" value="miter"> miter</label>
+    <label><input type="radio" name="lineJoin" value="bevel"> bevel（平切）</label>
+    <label><input type="radio" name="lineJoin" value="round" checked> round（圆角）</label>
+    <label><input type="radio" name="lineJoin" value="miter"> miter（尖角）</label>
   </div>
 
-  <label for="lineDash">Line Dash</label>
+  <label for="lineDash">Line Dash（虚线）</label>
   <input type="text" id="lineDash" name="lineDash" placeholder="1, 3">
 
-  <label for="lineDashOffset">Line Dash Offset</label>
+  <label for="lineDashOffset">Dash Offset（虚线偏移）</label>
   <input type="number" id="lineDashOffset" name="lineDashOffset" min="-200" max="20" value="0">
 
-  <label for="miterLimit">Miter Limit</label>
+  <label for="miterLimit">Miter Limit（斜接限制）</label>
   <input type="number" id="miterLimit" name="miterLimit" min="1" max="20" value="10">
 
-  <label for="offset">Offset</label>
+  <label for="offset">Offset（法向偏移）</label>
   <input type="number" id="offset" name="offset" min="-20" max="20" value="0">
 
-  <label for="width">Width</label>
+  <label for="width">Width（线宽）</label>
   <input type="number" id="width" name="width" min="1" max="40" value="2">
 </form>
 
@@ -288,8 +397,101 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Showing the line styling possibilities with canvas rendering.</p>
-        <div id="docs"><p>This example demonstrates the line stroke styling capabilities when rendering with canvas. All stroke properties provided by <code>ol/style/Stroke.js</code> can be modified dynamically to observe their visual effect. In addition to the predefined line features, you can draw new lines directly on the map to experiment with different stroke configurations in real time.</p>
+        <p id="shortdesc">Showing the line styling possibilities with canvas rendering / 演示 Canvas 渲染下 ol/style/Stroke 的全部线条样式属性（端帽、转角、虚线、法向偏移等）及实时绘制交互。</p>
+        <div id="docs"><p>This example demonstrates the line stroke styling capabilities when rendering with canvas.
+All stroke properties provided by <code>ol/style/Stroke.js</code> can be modified dynamically to observe their visual effect.
+In addition to the predefined line features, you can draw new lines directly on the map to experiment with different stroke configurations in real time.</p>
+<p>本示例全方位演示了在使用 Canvas 渲染矢量要素时，<code>ol/style/Stroke</code> 所提供的全部线条描边样式能力。
+你可以通过地图下方的控制面板动态修改 <code>ol/style/Stroke.js</code> 的所有属性，实时观察它们的视觉变化。除了地图上预置的测试线条与多边形要素外，你还可以直接在地图上<strong>绘制新的多边形（Draw）</strong>，或<strong>拖拽已有要素的顶点（Modify + Snap）</strong>（例如将折角拖成极尖的锐角来测试斜接限制 <code>miterLimit</code>）。</p>
+<hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. <code>ol/style/Stroke</code> 八大核心属性全景速查表</h4>
+<table>
+<thead>
+<tr>
+<th align="left">属性名</th>
+<th align="left">类型</th>
+<th align="left">默认值</th>
+<th align="left">核心作用与视觉效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong><code>color</code></strong></td>
+<td align="left"><code>Color | ColorLike</code></td>
+<td align="left"><code>#3399CC</code></td>
+<td align="left">线条颜色，支持 Hex（<code>#004D7D</code>）、<code>rgb()</code>、<code>rgba()</code> 或 Canvas 渐变/图案对象</td>
+</tr>
+<tr>
+<td align="left"><strong><code>width</code></strong></td>
+<td align="left"><code>number</code></td>
+<td align="left"><code>1.25</code></td>
+<td align="left">线条像素宽度（单位：<code>px</code>）</td>
+</tr>
+<tr>
+<td align="left"><strong><code>lineCap</code></strong></td>
+<td align="left"><code>&#39;butt&#39; | &#39;round&#39; | &#39;square&#39;</code></td>
+<td align="left"><code>&#39;round&#39;</code></td>
+<td align="left"><strong>线端帽样式</strong>（控制开放线段的两端，以及<strong>每一段虚线</strong>的两端如何收尾）</td>
+</tr>
+<tr>
+<td align="left"><strong><code>lineJoin</code></strong></td>
+<td align="left"><code>&#39;bevel&#39; | &#39;round&#39; | &#39;miter&#39;</code></td>
+<td align="left"><code>&#39;round&#39;</code></td>
+<td align="left"><strong>折线转角连接样式</strong>（控制两条线段在顶点交汇处的外侧拐角形态）</td>
+</tr>
+<tr>
+<td align="left"><strong><code>miterLimit</code></strong></td>
+<td align="left"><code>number</code></td>
+<td align="left"><code>10</code></td>
+<td align="left"><strong>斜接长度限制</strong>（仅当 <code>lineJoin: &#39;miter&#39;</code> 时生效，防止锐角拐弯处产生过长的尖刺）</td>
+</tr>
+<tr>
+<td align="left"><strong><code>lineDash</code></strong></td>
+<td align="left"><code>Array&lt;number&gt;</code></td>
+<td align="left"><code>undefined</code></td>
+<td align="left"><strong>虚线排列模式</strong>，如 <code>[10, 5]</code> 表示“10px 实线 + 5px 空白”循环交替</td>
+</tr>
+<tr>
+<td align="left"><strong><code>lineDashOffset</code></strong></td>
+<td align="left"><code>number</code></td>
+<td align="left"><code>0</code></td>
+<td align="left"><strong>虚线起始相位偏移量（px）</strong>，动态递增该值即可实现“蚂蚁线 / 管网流向动画”</td>
+</tr>
+<tr>
+<td align="left"><strong><code>offset</code></strong></td>
+<td align="left"><code>number</code></td>
+<td align="left"><code>0</code></td>
+<td align="left"><strong>平行法向偏移量（px）</strong>，沿几何路径法线方向左/右平移线条（或多边形内缩/外扩描边）</td>
+</tr>
+</tbody></table>
+<h4>2. 深度解析：<code>lineCap</code>（端帽）与 <code>lineJoin</code>（转角）的几何差异</h4>
+<h5>（1）<code>lineCap</code> 三种端帽对比</h5>
+<pre><code class="language-text">几何端点位置:       |                     |
+butt   (平直截断):  |=====================|     (精确停在端点处，不向外延伸)
+round  (半圆端帽): (|=====================|)    (两端各附加一个半径为 width/2 的半圆)
+square (方形端帽): [|=====================|]    (两端各向外延伸一个长为 width/2 的矩形)
+</code></pre>
+<ul>
+<li><strong>💡 实用技巧（圆点虚线）</strong>：当把 <code>lineCap</code> 设为 <code>&#39;round&#39;</code>，将 <code>Width</code> 调大（如 <code>10</code>），并将 <code>Line Dash</code> 设为 <code>1, 15</code>（实线极短、间距较大）时，每一段实线都会变成一个圆润的<strong>圆点（Dotted Line）</strong>！</li>
+</ul>
+<h5>（2）<code>lineJoin</code> 三种转角与 <code>miterLimit</code> 防尖刺机制</h5>
+<ul>
+<li><strong><code>round</code>（圆角）</strong>：拐角外侧用圆弧平滑过渡，最适合道路、河流等自然要素。</li>
+<li><strong><code>bevel</code>（斜角/平切）</strong>：像用刀把拐角外侧直接削平，形成一个平直切面。</li>
+<li><strong><code>miter</code>（尖角/斜接）</strong>：延伸两侧外边缘直至相交成尖角。但当两条线段夹角极小时（锐角），交点会飞出很远形成难看的“长矛尖刺”。<ul>
+<li>此时 <strong><code>miterLimit</code></strong> 登场：它限制了 <code>斜接尖角长度 / 线宽 (width)</code> 的最大比值（默认 <code>10</code>）。你可以在地图上把 <code>lineJoin</code> 切为 <code>miter</code>，将 <code>Width</code> 调到 <code>15</code>，然后<strong>用鼠标把折线顶点拖成一个极窄的锐角</strong>，再调小 <code>Miter Limit</code>（如改为 <code>2</code> 或 <code>3</code>），就能亲眼看到尖刺在超过阈值瞬间自动回退变成 <code>bevel</code> 平切角！</li>
+</ul>
+</li>
+</ul>
+<h4>3. OpenLayers 特色几何能力：<code>offset</code>（平行法向偏移）与多样式叠加</h4>
+<p>原生 HTML5 Canvas 2D 并没有“平行偏移线”的 API，但 OpenLayers 在 <code>ol/style/Stroke</code> 中内置了几何级 <strong><code>offset</code></strong> 属性：</p>
+<ul>
+<li><strong>双线道路 / 境界线内侧色带</strong>：在 GIS 制图中，常需要沿着行政区划边界内部画一条半透明色带（内缩描边），或沿着道路中心线两侧画双轨线。只需设置正/负 <code>offset</code> 像素值即可轻松实现，无需借助 Turf.js 重新计算缓冲偏移几何！</li>
+<li><strong>多样式数组叠加（<code>Array&lt;Style&gt;</code>）</strong>：
+细看代码第 44~54 行，当检测到 <code>Math.abs(offset) &gt; 0</code> 时，代码向 <code>styles</code> 数组中 <code>push</code> 了第二个灰色的虚线 <code>Style</code>（不带 <code>offset</code>）。这展示了 OpenLayers 样式系统的强大特性——<strong>一个要素可以同时绑定多个 <code>Style</code> 实例组成的数组</strong>，引擎会按数组顺序依次叠加绘制，从而在渲染偏移线条的同时，把原始几何中心线作为灰色虚线基准参考线画出来！</li>
+</ul>
+<h4>4. 代码工程技巧：使用原生 <code>FormData</code> 优雅收集多表单项</h4>
+<p>面对包含颜色、单选框、文本、数字等 8 个控件的复杂表单，本示例没有写 8 个 <code>document.getElementById</code> 去逐一读取，而是直接利用浏览器原生的 <strong><code>new FormData(styleOptionsForm)</code></strong> 配合表单整体的 <code>&#39;change&#39;</code> 事件委托，仅用几行代码就完成了所有样式的响应式收集与更新。</p>
 </div>
       </div>
 
@@ -310,35 +512,41 @@ import VectorSource from &#x27;ol/source/Vector.js&#x27;;
 import Stroke from &#x27;ol/style/Stroke.js&#x27;;
 import Style from &#x27;ol/style/Style.js&#x27;;
 
+// 1. 创建矢量数据源：加载预置的测试线条与多边形 GeoJSON 数据
 const source &#x3D; new VectorSource({
   url: &#x27;data/geojson/line-samples.geojson&#x27;,
   format: new GeoJSON(),
 });
 
+// 2. 创建矢量图层
 const vector &#x3D; new VectorLayer({source: source});
 
+// 3. 获取样式配置表单，并定义响应式更新图层样式的函数
 const styleOptionsForm &#x3D; document.getElementById(&#x27;line-style-options-form&#x27;);
 function updateStyles() {
+  // 使用浏览器原生 FormData 一次性读取表单中所有控件的当前值
   const formData &#x3D; new FormData(styleOptionsForm);
   const styles &#x3D; [
     new Style({
       stroke: new Stroke({
-        color: formData.get(&#x27;color&#x27;),
-        lineCap: formData.get(&#x27;lineCap&#x27;),
-        lineJoin: formData.get(&#x27;lineJoin&#x27;),
+        color: formData.get(&#x27;color&#x27;), // 线条颜色
+        lineCap: formData.get(&#x27;lineCap&#x27;), // 线端帽样式：&#x27;butt&#x27; | &#x27;round&#x27; | &#x27;square&#x27;
+        lineJoin: formData.get(&#x27;lineJoin&#x27;), // 转角连接样式：&#x27;bevel&#x27; | &#x27;round&#x27; | &#x27;miter&#x27;
+        // 将逗号分隔的字符串（如 &quot;1, 3&quot;）解析为数字数组 [1, 3] 作为虚线排列模式
         lineDash: formData
           .get(&#x27;lineDash&#x27;)
           ?.split(&#x27;,&#x27;)
           ?.map((value) &#x3D;&gt; Number(value)),
-        lineDashOffset: formData.get(&#x27;lineDashOffset&#x27;),
-        miterLimit: formData.get(&#x27;miterLimit&#x27;),
-        width: formData.get(&#x27;width&#x27;),
-        offset: formData.get(&#x27;offset&#x27;),
+        lineDashOffset: formData.get(&#x27;lineDashOffset&#x27;), // 虚线起始相位偏移量（px）
+        miterLimit: formData.get(&#x27;miterLimit&#x27;), // 尖角斜接长度限制比值（仅在 lineJoin 为 &#x27;miter&#x27; 时生效）
+        width: formData.get(&#x27;width&#x27;), // 线条像素宽度（px）
+        offset: formData.get(&#x27;offset&#x27;), // 平行法向偏移像素值（正负值控制向左/向右或向内/向外偏移）
       }),
     }),
   ];
 
-  // If offset is defined, add a reference line style to also see the original line without offset
+  // 如果设置了非零的法向偏移（offset），则追加第二个灰色细虚线样式
+  // 用于在原始几何位置绘制一条无偏移的基准参考线，方便直观对比偏移前后的位置关系
   if (Math.abs(formData.get(&#x27;offset&#x27;)) &gt; 0) {
     styles.push(
       new Style({
@@ -350,15 +558,21 @@ function updateStyles() {
       }),
     );
   }
+
+  // 将样式数组应用到矢量图层（图层会按数组顺序依次叠加渲染每个 Style）
   vector.setStyle(styles);
 }
+
+// 初始化执行一次样式设置，并监听表单整体的 change 事件实现实时更新
 updateStyles();
 styleOptionsForm.addEventListener(&#x27;change&#x27;, updateStyles);
 
+// 4. 创建编辑与绘制交互：支持拖拽修改现有顶点（Modify）、绘制新多边形（Draw）及顶点吸附（Snap）
 const modify &#x3D; new Modify({source});
 const draw &#x3D; new Draw({source, type: &#x27;Polygon&#x27;});
 const snap &#x3D; new Snap({source: source});
 
+// 5. 初始化地图实例，并将 Modify / Draw / Snap 扩展到默认交互集合中
 const map &#x3D; new Map({
   layers: [
     new TileLayer({
@@ -384,7 +598,7 @@ const map &#x3D; new Map({
 &lt;html lang="en"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Line Styles&lt;/title&gt;
+    &lt;title&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -393,7 +607,7 @@ const map &#x3D; new Map({
       }
       #line-style-options-form {
         display: grid;
-        grid-template-columns: 140px auto;
+        grid-template-columns: 185px auto;
         grid-template-rows: repeat(8, 1fr);
         gap: 6px 10px;
         align-items: center;
@@ -417,38 +631,38 @@ const map &#x3D; new Map({
   &lt;/head&gt;
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
-    
+
     &lt;form id&#x3D;&quot;line-style-options-form&quot;&gt;
-      &lt;label for&#x3D;&quot;color&quot;&gt;Color&lt;/label&gt;
+      &lt;label for&#x3D;&quot;color&quot;&gt;Color（颜色）&lt;/label&gt;
       &lt;input type&#x3D;&quot;color&quot; id&#x3D;&quot;color&quot; name&#x3D;&quot;color&quot; value&#x3D;&quot;#004D7D&quot;&gt;
-    
-      &lt;span&gt;Line Cap&lt;/span&gt;
+
+      &lt;span&gt;Line Cap（端帽）&lt;/span&gt;
       &lt;div class&#x3D;&quot;radios&quot;&gt;
-        &lt;label&gt;&lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;lineCap&quot; value&#x3D;&quot;butt&quot;&gt; butt&lt;/label&gt;
-        &lt;label&gt;&lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;lineCap&quot; value&#x3D;&quot;round&quot; checked&gt; round&lt;/label&gt;
-        &lt;label&gt;&lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;lineCap&quot; value&#x3D;&quot;square&quot;&gt; square&lt;/label&gt;
+        &lt;label&gt;&lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;lineCap&quot; value&#x3D;&quot;butt&quot;&gt; butt（平直）&lt;/label&gt;
+        &lt;label&gt;&lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;lineCap&quot; value&#x3D;&quot;round&quot; checked&gt; round（圆头）&lt;/label&gt;
+        &lt;label&gt;&lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;lineCap&quot; value&#x3D;&quot;square&quot;&gt; square（方头）&lt;/label&gt;
       &lt;/div&gt;
-    
-      &lt;span&gt;Line Join&lt;/span&gt;
+
+      &lt;span&gt;Line Join（转角）&lt;/span&gt;
       &lt;div class&#x3D;&quot;radios&quot;&gt;
-        &lt;label&gt;&lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;lineJoin&quot; value&#x3D;&quot;bevel&quot;&gt; bevel&lt;/label&gt;
-        &lt;label&gt;&lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;lineJoin&quot; value&#x3D;&quot;round&quot; checked&gt; round&lt;/label&gt;
-        &lt;label&gt;&lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;lineJoin&quot; value&#x3D;&quot;miter&quot;&gt; miter&lt;/label&gt;
+        &lt;label&gt;&lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;lineJoin&quot; value&#x3D;&quot;bevel&quot;&gt; bevel（平切）&lt;/label&gt;
+        &lt;label&gt;&lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;lineJoin&quot; value&#x3D;&quot;round&quot; checked&gt; round（圆角）&lt;/label&gt;
+        &lt;label&gt;&lt;input type&#x3D;&quot;radio&quot; name&#x3D;&quot;lineJoin&quot; value&#x3D;&quot;miter&quot;&gt; miter（尖角）&lt;/label&gt;
       &lt;/div&gt;
-    
-      &lt;label for&#x3D;&quot;lineDash&quot;&gt;Line Dash&lt;/label&gt;
+
+      &lt;label for&#x3D;&quot;lineDash&quot;&gt;Line Dash（虚线）&lt;/label&gt;
       &lt;input type&#x3D;&quot;text&quot; id&#x3D;&quot;lineDash&quot; name&#x3D;&quot;lineDash&quot; placeholder&#x3D;&quot;1, 3&quot;&gt;
-    
-      &lt;label for&#x3D;&quot;lineDashOffset&quot;&gt;Line Dash Offset&lt;/label&gt;
+
+      &lt;label for&#x3D;&quot;lineDashOffset&quot;&gt;Dash Offset（虚线偏移）&lt;/label&gt;
       &lt;input type&#x3D;&quot;number&quot; id&#x3D;&quot;lineDashOffset&quot; name&#x3D;&quot;lineDashOffset&quot; min&#x3D;&quot;-200&quot; max&#x3D;&quot;20&quot; value&#x3D;&quot;0&quot;&gt;
-    
-      &lt;label for&#x3D;&quot;miterLimit&quot;&gt;Miter Limit&lt;/label&gt;
+
+      &lt;label for&#x3D;&quot;miterLimit&quot;&gt;Miter Limit（斜接限制）&lt;/label&gt;
       &lt;input type&#x3D;&quot;number&quot; id&#x3D;&quot;miterLimit&quot; name&#x3D;&quot;miterLimit&quot; min&#x3D;&quot;1&quot; max&#x3D;&quot;20&quot; value&#x3D;&quot;10&quot;&gt;
-    
-      &lt;label for&#x3D;&quot;offset&quot;&gt;Offset&lt;/label&gt;
+
+      &lt;label for&#x3D;&quot;offset&quot;&gt;Offset（法向偏移）&lt;/label&gt;
       &lt;input type&#x3D;&quot;number&quot; id&#x3D;&quot;offset&quot; name&#x3D;&quot;offset&quot; min&#x3D;&quot;-20&quot; max&#x3D;&quot;20&quot; value&#x3D;&quot;0&quot;&gt;
-    
-      &lt;label for&#x3D;&quot;width&quot;&gt;Width&lt;/label&gt;
+
+      &lt;label for&#x3D;&quot;width&quot;&gt;Width（线宽）&lt;/label&gt;
       &lt;input type&#x3D;&quot;number&quot; id&#x3D;&quot;width&quot; name&#x3D;&quot;width&quot; min&#x3D;&quot;1&quot; max&#x3D;&quot;40&quot; value&#x3D;&quot;2&quot;&gt;
     &lt;/form&gt;
 

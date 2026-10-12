@@ -6,6 +6,9 @@ import { t as Modify } from "./Modify.js";
 var typeSelect = document.getElementById("type");
 var showSegments = document.getElementById("segments");
 var clearPrevious = document.getElementById("clear");
+/**
+* 1. 基础几何图形样式（用于渲染被测量的折线、多边形以及绘制时的光标圆点）
+*/
 var style = new Style({
 	fill: new Fill({ color: "rgba(255, 255, 255, 0.2)" }),
 	stroke: new Stroke({
@@ -19,6 +22,11 @@ var style = new Style({
 		fill: new Fill({ color: "rgba(255, 255, 255, 0.2)" })
 	})
 });
+/**
+* 2. 总测量结果（总长度 / 总面积）的主气泡标签样式
+* 巧妙地利用 Text（带黑底背景框，向上偏移 15px）+ RegularShape（旋转 180° 的倒正三角形，向上位移 10px）
+* 在纯 Canvas 中拼合成带底部指示尖角的气泡标签（Callout Bubble）
+*/
 var labelStyle = new Style({
 	text: new Text({
 		font: "14px Calibri,sans-serif",
@@ -41,6 +49,9 @@ var labelStyle = new Style({
 		fill: new Fill({ color: "rgba(0, 0, 0, 0.7)" })
 	})
 });
+/**
+* 3. 绘制过程中的鼠标跟随操作提示样式（如“Click to start measuring”）
+*/
 var tipStyle = new Style({ text: new Text({
 	font: "12px Calibri,sans-serif",
 	fill: new Fill({ color: "rgba(255, 255, 255, 1)" }),
@@ -54,6 +65,9 @@ var tipStyle = new Style({ text: new Text({
 	textAlign: "left",
 	offsetX: 15
 }) });
+/**
+* 4. 顶点编辑（Modify 交互）时的捕捉点与操作提示样式（“Drag to modify”）
+*/
 var modifyStyle = new Style({
 	image: new CircleStyle({
 		radius: 5,
@@ -75,6 +89,9 @@ var modifyStyle = new Style({
 		offsetX: 15
 	})
 });
+/**
+* 5. 每一条线段（或边）中点处的分段长度小气泡标签样式模板
+*/
 var segmentStyle = new Style({
 	text: new Text({
 		font: "12px Calibri,sans-serif",
@@ -98,6 +115,11 @@ var segmentStyle = new Style({
 	})
 });
 var segmentStyles = [segmentStyle];
+/**
+* 计算并格式化折线的球面大圆距离（使用 ol/sphere 的 getLength）
+* @param {LineString} line 折线几何对象
+* @return {string} 格式化后的长度字符串（m 或 km）
+*/
 var formatLength = function(line) {
 	const length = getLength(line);
 	let output;
@@ -105,6 +127,11 @@ var formatLength = function(line) {
 	else output = Math.round(length * 100) / 100 + " m";
 	return output;
 };
+/**
+* 计算并格式化多边形的球面真实面积（使用 ol/sphere 的 getArea）
+* @param {import("../src/ol/geom/Polygon.js").default} polygon 多边形几何对象
+* @return {string} 格式化后的面积字符串（m² 或 km²）
+*/
 var formatArea = function(polygon) {
 	const area = getArea(polygon);
 	let output;
@@ -119,6 +146,14 @@ var modify = new Modify({
 	style: modifyStyle
 });
 var tipPoint;
+/**
+* 核心动态样式函数（同时服务于已完成的 VectorLayer 和正在绘制的 Draw 交互草图图层）
+* @param {import("../src/ol/Feature.js").FeatureLike} feature 当前渲染的要素
+* @param {boolean} segments 是否显示每条线段的分段长度
+* @param {string} [drawType] 当前正在绘制的几何类型（仅在 Draw 样式回调中传入）
+* @param {string} [tip] 当前鼠标跟随提示文本（仅在 Draw 样式回调中传入）
+* @return {Array<Style>} 叠加渲染的样式数组
+*/
 function styleFunction(feature, segments, drawType, tip) {
 	const styles = [];
 	const geometry = feature.getGeometry();

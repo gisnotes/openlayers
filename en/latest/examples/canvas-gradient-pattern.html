@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Styling feature with CanvasGradient or CanvasPattern</title>
+    <title>Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -60,7 +60,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Styling feature with CanvasGradient or CanvasPattern</h4>
+        <h4 id="title">Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -76,7 +76,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./render-geometry.html&quot;&gt;Render geometries to a canvas&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >6</a>
@@ -90,7 +90,7 @@
               data-bs-target="#tag-example-list"
               data-title="gradient"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -104,7 +104,7 @@
               data-bs-target="#tag-example-list"
               data-title="pattern"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -134,20 +134,118 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles / 使用矢量样式进行测量&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes / 正多边形与星形矢量符号（RegularShape 全解）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-renderer.html&quot;&gt;Style renderer / 样式渲染器（自定义渲染函数）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows / 气象风向标箭头（RegularShape 组合与动态缩放位移）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders / 缩放滑块控件与纯 CSS 样式定制（ZoomSlider）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >27</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=画布" class="badge badge-info">画布</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="画布"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >2</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=渐变" class="badge badge-info">渐变</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="渐变"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=图案" class="badge badge-info">图案</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="图案"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=纹理" class="badge badge-info">纹理</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="纹理"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=样式" class="badge badge-info">样式</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="样式"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders / 缩放滑块控件与纯 CSS 样式定制（ZoomSlider）&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >14</a>
+          </span>
+          <span class="badge-group">
+            <a
+              href="./index.html?q=填充" class="badge badge-info">填充</a
+            ><a
+              class="badge badge-info tag-modal-toggle"
+              data-bs-toggle="modal"
+              data-bs-target="#tag-example-list"
+              data-title="填充"
+              data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
+                &lt;/ul&gt;"
+              tabindex="0"
+              >1</a>
           </span>
         </p>
         <div class="modal modal-tag-example" id="tag-example-list" tabindex="-1" role="dialog" aria-labelledby="tag-example-title" aria-hidden="true">
@@ -171,8 +269,109 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example showing a vector layer styled with a gradient.</p>
-        <div id="docs"><p>This example creates a <a href="https://developer.mozilla.org/en/docs/Web/API/CanvasGradient"><code>CanvasGradient</code></a>. The vector data is loaded from a file and features are filled with the gradient. The same technique can be used with a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasPattern"><code>CanvasPattern</code></a>.</p>
+        <p id="shortdesc">Example showing a vector layer styled with a gradient / 演示如何将原生 CanvasGradient（彩虹线性渐变）与 CanvasPattern（纹理平铺图案）直接作为 Fill 填充色赋给矢量图层。</p>
+        <div id="docs"><p>This example creates a <a href="https://developer.mozilla.org/en/docs/Web/API/CanvasGradient"><code>CanvasGradient</code></a>.
+The vector data is loaded from a file and features are filled with the gradient.
+The same technique can be used with a <a href="https://developer.mozilla.org/en-US/docs/Web/API/CanvasPattern"><code>CanvasPattern</code></a>.</p>
+<p>本示例展示了如何创建一个原生的 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasGradient"><code>CanvasGradient</code>（Canvas 渐变对象）</a>，并将其直接作为多边形填充色（<code>Fill</code> 的 <code>color</code> 属性）应用到从 KML 文件加载的美国各州行政区划矢量要素上。
+完全相同的技术也适用于 <a href="https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasPattern"><code>CanvasPattern</code>（Canvas 图案平铺对象）</a>。</p>
+<hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心原理：为什么 <code>Fill</code> 和 <code>Stroke</code> 的 <code>color</code> 能接收渐变和图案？</h4>
+<p>在 OpenLayers 中，<code>ol/style/Fill</code> 和 <code>ol/style/Stroke</code> 的 <code>color</code> 属性类型为 <code>Color | ColorLike</code>。当 Canvas 2D 渲染器绘制矢量要素时，它最终会将 <code>color</code> 直接赋值给原生 <code>CanvasRenderingContext2D</code> 的 <code>ctx.fillStyle</code> 或 <code>ctx.strokeStyle</code>。
+因此，凡是浏览器原生 <code>ctx.fillStyle</code> 支持的对象，都可以直接传给 <code>new Fill({ color: ... })</code>：</p>
+<ul>
+<li><strong>普通颜色</strong>：十六进制字符串 <code>&#39;#3399CC&#39;</code>、<code>&#39;rgba(255, 0, 0, 0.5)&#39;</code> 或数组 <code>[255, 0, 0, 0.5]</code>。</li>
+<li><strong>线性渐变（<code>CanvasGradient</code>）</strong>：通过 <code>context.createLinearGradient(x0, y0, x1, y1)</code> 创建。</li>
+<li><strong>径向/放射渐变（<code>CanvasGradient</code>）</strong>：通过 <code>context.createRadialGradient(x0, y0, r0, x1, y1, r1)</code> 创建。</li>
+<li><strong>纹理图案填充（<code>CanvasPattern</code>）</strong>：通过 <code>context.createPattern(imageOrCanvas, &#39;repeat&#39;)</code> 创建（常用于地质岩性图例、斜线剖面阴影、沼泽/森林纹理填充）。</li>
+</ul>
+<h4>2. 核心现象追问：为什么地图放大、缩小或平移时，多边形的渐变颜色会实时改变？</h4>
+<p>在运行本示例时，你会立刻注意到一个现象：<strong>一旦缩放或拖动地图，美国各州多边形内部的过渡颜色会实时发生变化！</strong></p>
+<ul>
+<li><strong>根本原因（屏幕视口像素坐标系 vs 地理坐标系）</strong>：
+代码中通过 <code>context.createLinearGradient(0, 0, 1024 * pixelRatio, 0)</code> 创建的是一个<strong>静态的画布像素空间渐变</strong>。在 HTML5 Canvas 2D 规范中，<code>CanvasGradient</code> 的坐标 <code>(0, 0) -&gt; (1024 * pixelRatio, 0)</code> 永远绑定在<strong>地图视口 <code>&lt;canvas&gt;</code> 的左上角到右侧 <code>1024px</code> 处</strong>，而不是绑定在美国本土的经纬度坐标上：<ul>
+<li><strong>当缩小地图（Zoom Out）时</strong>：整个美国版图缩小到屏幕正中央（例如仅占据屏幕 <code>x = 400px ~ 600px</code> 的区间），此时全美 50 个州只落在了彩虹渐变的中间段（绿色/青色区），两端的红色和紫色完全落在了美国版图之外。</li>
+<li><strong>当放大地图（Zoom In）时</strong>：单个州被放大到撑满整个屏幕宽度（<code>0 ~ 1024px</code>），于是这一个州独占了从红到紫的完整七色彩虹；而屏幕左侧 <code>&lt; 0px</code> 和右侧 <code>&gt; 1024px</code> 之外的区域则被截断为纯红色或纯紫色。</li>
+<li><strong>当平移地图（Pan）时</strong>：多边形在屏幕画布上左右移动，相当于在固定的“彩虹滤光片”下方滑动，因此每个州的颜色会随屏幕位置实时变化。</li>
+</ul>
+</li>
+<li><strong>高分屏（Retina / HiDPI）物理像素适配</strong>：
+在 <code>DEVICE_PIXEL_RATIO = 2</code> 的高分屏上，OpenLayers 内部渲染画布的物理像素宽高是 CSS 逻辑宽高的 <code>2</code> 倍。因此必须乘以 <code>pixelRatio</code>，否则 <code>1024</code> 物理像素在 2 倍屏上只占 <code>512</code> CSS 像素。</li>
+</ul>
+<h4>3. 💡 进阶实战：如何让渐变颜色“锁定”在地理坐标上，随地图缩放/平移保持不变？</h4>
+<p>如果你希望<strong>无论地图怎么放大、缩小或拖动，每个多边形（或整个研究区）的渐变颜色始终固定在它的地理边界上</strong>，只需将静态 <code>Style</code> 改为<strong>动态样式函数 <code>style: function(feature)</code></strong>，在每次渲染时将要素（或数据源）的地理包络盒（<code>Extent</code>）实时转换为屏幕像素坐标来生成渐变：</p>
+<pre><code class="language-js">const fill = new Fill();
+const stroke = new Stroke({color: &#39;#333&#39;, width: 1});
+const dynamicStyle = new Style({fill, stroke});
+
+const vectorLayer = new VectorLayer({
+  background: &#39;white&#39;,
+  source: vectorSource,
+  // 使用样式函数：每次重绘时根据地理范围动态计算渐变起止像素
+  style: function (feature) {
+    // 方案 A：锁定在整个美国版图范围 -&gt; const extent = vectorSource.getExtent();
+    // 方案 B：每个州各自独立拥有完整的左红右紫渐变 -&gt; const extent = feature.getGeometry().getExtent();
+    const extent = vectorSource.getExtent();
+    const leftPx = map.getPixelFromCoordinate([extent[0], extent[1]]);
+    const rightPx = map.getPixelFromCoordinate([extent[2], extent[3]]);
+    if (!leftPx || !rightPx) {
+      return dynamicStyle;
+    }
+
+    // 将地理边界实时对应的屏幕像素乘以 pixelRatio，使彩虹渐变严格跟随地理边界缩放与平移！
+    const geoGradient = context.createLinearGradient(
+      leftPx[0] * pixelRatio,
+      0,
+      rightPx[0] * pixelRatio,
+      0,
+    );
+    geoGradient.addColorStop(0, &#39;red&#39;);
+    geoGradient.addColorStop(1 / 6, &#39;orange&#39;);
+    geoGradient.addColorStop(2 / 6, &#39;yellow&#39;);
+    geoGradient.addColorStop(3 / 6, &#39;green&#39;);
+    geoGradient.addColorStop(4 / 6, &#39;aqua&#39;);
+    geoGradient.addColorStop(5 / 6, &#39;blue&#39;);
+    geoGradient.addColorStop(1, &#39;purple&#39;);
+
+    fill.setColor(geoGradient);
+    return dynamicStyle;
+  },
+});
+</code></pre>
+<h4>4. 避坑指南：为什么加载 KML 时必须设置 <code>extractStyles: false</code>？</h4>
+<p>在代码第 36 行中：</p>
+<pre><code class="language-js">format: new KML({extractStyles: false}),
+</code></pre>
+<ul>
+<li>KML 格式（<code>data/kml/states.kml</code>）与 GeoJSON 不同，KML 文件内部通常自带了 <code>&lt;Style&gt;</code> 样式标签。</li>
+<li><code>ol/format/KML</code> 默认开启了 <code>extractStyles: true</code>，即解析 KML 时会自动把文件里自带的样式提取出来并调用 <code>feature.setStyle(...)</code> 绑定到每个要素身上。</li>
+<li>在 OpenLayers 中，<strong>要素级样式（Feature Style）的优先级高于图层级样式（Layer Style）</strong>！如果不设置 <code>extractStyles: false</code>，KML 自带的默认样式就会屏蔽掉我们在 <code>VectorLayer</code> 上配置的彩虹渐变样式。</li>
+</ul>
+<h4>5. 💡 实战扩展：如何使用 <code>CanvasPattern</code> 绘制 GIS 斜线阴影填充（Hatch Pattern）？</h4>
+<p>除了彩虹渐变外，在规划制图、地质灾害区或禁飞区标绘中，经常需要用到<strong>斜线网格/剖面线阴影填充（<code>CanvasPattern</code>）</strong>。只需用一个小巧的 <code>16 × 16</code> 离屏 Canvas 即可实现：</p>
+<pre><code class="language-js">// 1. 创建一个 16x16（适配高分屏）的微型离屏 Canvas 作为纹理瓦片母版
+const patternCanvas = document.createElement(&#39;canvas&#39;);
+const size = Math.round(16 * DEVICE_PIXEL_RATIO);
+patternCanvas.width = size;
+patternCanvas.height = size;
+
+// 2. 在微型画布上绘制一条对角斜线
+const patternCtx = patternCanvas.getContext(&#39;2d&#39;);
+patternCtx.strokeStyle = &#39;rgba(255, 0, 0, 0.7)&#39;;
+patternCtx.lineWidth = 2 * DEVICE_PIXEL_RATIO;
+patternCtx.beginPath();
+patternCtx.moveTo(0, size);
+patternCtx.lineTo(size, 0);
+patternCtx.stroke();
+
+// 3. 生成可无限平铺（&#39;repeat&#39;）的 CanvasPattern 并传给 Fill
+const pattern = patternCtx.createPattern(patternCanvas, &#39;repeat&#39;);
+const hatchStyle = new Style({
+  fill: new Fill({color: pattern}),
+  stroke: new Stroke({color: &#39;#d00&#39;, width: 1.5}),
+});
+</code></pre>
 </div>
       </div>
 
@@ -190,30 +389,34 @@ import Fill from &#x27;ol/style/Fill.js&#x27;;
 import Stroke from &#x27;ol/style/Stroke.js&#x27;;
 import Style from &#x27;ol/style/Style.js&#x27;;
 
-// Gradient and pattern are in canvas pixel space, so we adjust for the
-// renderer&#x27;s pixel ratio
+// CanvasGradient（渐变）和 CanvasPattern（图案）定义在底层 Canvas 的物理像素空间中，
+// 因此需要乘以当前设备的像素比（DEVICE_PIXEL_RATIO），以确保在高分屏（Retina）下渐变跨度一致
 const pixelRatio &#x3D; DEVICE_PIXEL_RATIO;
 
-// Generate a rainbow gradient
+// 1. 创建一个离屏 &lt;canvas&gt; 上下文，用于生成横向七色彩虹线性渐变（CanvasGradient）
+// 注：此处创建的 canvas 无需挂载到 DOM，仅作为调用 createLinearGradient 工厂方法的载体
 const canvas &#x3D; document.createElement(&#x27;canvas&#x27;);
 const context &#x3D; canvas.getContext(&#x27;2d&#x27;);
+// 定义从画布左上角 (0, 0) 到水平向右 (1024 * pixelRatio, 0) 的线性渐变
 const gradient &#x3D; context.createLinearGradient(0, 0, 1024 * pixelRatio, 0);
-gradient.addColorStop(0, &#x27;red&#x27;);
-gradient.addColorStop(1 / 6, &#x27;orange&#x27;);
-gradient.addColorStop(2 / 6, &#x27;yellow&#x27;);
-gradient.addColorStop(3 / 6, &#x27;green&#x27;);
-gradient.addColorStop(4 / 6, &#x27;aqua&#x27;);
-gradient.addColorStop(5 / 6, &#x27;blue&#x27;);
-gradient.addColorStop(1, &#x27;purple&#x27;);
+gradient.addColorStop(0, &#x27;red&#x27;); // 0/6 处：红
+gradient.addColorStop(1 / 6, &#x27;orange&#x27;); // 1/6 处：橙
+gradient.addColorStop(2 / 6, &#x27;yellow&#x27;); // 2/6 处：黄
+gradient.addColorStop(3 / 6, &#x27;green&#x27;); // 3/6 处：绿
+gradient.addColorStop(4 / 6, &#x27;aqua&#x27;); // 4/6 处：青
+gradient.addColorStop(5 / 6, &#x27;blue&#x27;); // 5/6 处：蓝
+gradient.addColorStop(1, &#x27;purple&#x27;); // 6/6 处：紫
 
+// 2. 创建矢量图层：加载美国各州 KML 边界数据，并将 CanvasGradient 直接作为 Fill 的 color 传入
 const vectorLayer &#x3D; new VectorLayer({
-  background: &#x27;white&#x27;,
+  background: &#x27;white&#x27;, // 设置图层背景为纯白色（无需加载底图瓦片）
   source: new VectorSource({
     url: &#x27;data/kml/states.kml&#x27;,
+    // 关键配置：设为 false 以忽略 KML 文件内部自带的样式，从而让当前图层的渐变 style 生效
     format: new KML({extractStyles: false}),
   }),
   style: new Style({
-    fill: new Fill({color: gradient}),
+    fill: new Fill({color: gradient}), // 直接传入 CanvasGradient 实例（同样也可传入 CanvasPattern 实例）
     stroke: new Stroke({
       color: &#x27;#333&#x27;,
       width: 1,
@@ -221,11 +424,12 @@ const vectorLayer &#x3D; new VectorLayer({
   }),
 });
 
+// 3. 初始化地图实例
 const map &#x3D; new Map({
   layers: [vectorLayer],
   target: &#x27;map&#x27;,
   view: new View({
-    center: fromLonLat([-100, 38.5]),
+    center: fromLonLat([-100, 38.5]), // 视图中心定位在美国本土中心（经度 -100°, 纬度 38.5°）
     zoom: 4,
   }),
 });
@@ -240,7 +444,7 @@ const map &#x3D; new Map({
 &lt;html lang="en"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Styling feature with CanvasGradient or CanvasPattern&lt;/title&gt;
+    &lt;title&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
