@@ -1,23 +1,48 @@
 ---
 layout: example-verbatim.html
-title: Wind
-shortdesc: Rendering wind velocities with a flow layer.
-docs: >
-  This example uses a flow layer to render wind velocity.  The input wind velocity data is encoded
-  in a PNG, and much of the example code is related to sampling that PNG and generating data tiles
-  representing a velocity field.  The first band (or the red channel) of the data tile is the east-west
-  component vector of the wind velocity, and the second band (or green channel) is the north-south
-  component vector.  The flow layer is configured with this data tile source and a style for applying
-  a color ramp based on wind speed.
+title: Wind / WebGL 全球风场粒子流线动画（Flow 图层与双线性插值数据瓦片）
+shortdesc: Rendering wind velocities with a flow layer / 演示使用实验性 ol/layer/Flow 流场图层与 DataTileSource 双线性插值采样 PNG 风速栅格，渲染全球动态风场粒子流线。
+docs: |
+  This example uses a flow layer to render wind velocity. The input wind velocity data is encoded in a PNG, and much of the example code is related to sampling that PNG and generating data tiles representing a velocity field. The first band (or the red channel) of the data tile is the east-west component vector of the wind velocity, and the second band (or green channel) is the north-south component vector. The flow layer is configured with this data tile source and a style for applying a color ramp based on wind speed.
+
+  本示例使用 OpenLayers 的流场图层（`ol/layer/Flow`）渲染全球连续风速粒子流线动画。输入的全球风速向量场被压缩编码在一张 `360 × 180` 的 PNG 图片（`./data/wind.png`）中；示例代码的核心部分展示了如何对该 PNG 进行跨投影双线性插值重采样，并生成代表二维风速向量场的数据瓦片（`ol/source/DataTile`）：其中数据瓦片的**第 1 波段（对应红光通道 R）**存储风速的**东西向分量（纬向风 `U`）**，**第 2 波段（对应绿光通道 G）**存储风速的**南北向分量（经向风 `V`）**。最后将 `Flow` 图层绑定至该数据瓦片源，并通过样式表达式根据合成风速（`['get', 'speed']`）应用 `viridis` 渐变色带。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构：`ol/layer/Flow` 连续粒子流场的工作原理
+  与 `wind-arrows` 示例绘制离散站点的静态箭头不同，`ol/layer/Flow` 是一个基于 **WebGL 帧缓冲区的 GPU 粒子物理模拟图层**（视觉效果类似著名的 `earth.nullschool.net` 或 `Windy.com`）：
+  1. **数据驱动（U/V 向量场）**：`Flow` 图层要求其数据源（`DataTileSource`）为每个瓦片像素提供两个浮点数值通道：
+     * **第 1 通道（`U` 分量）**：水平方向（东-西向）流速，向东为正（单位：`m/s`）。
+     * **第 2 通道（`V` 分量）**：垂直方向（南-北向）流速，向北为正（单位：`m/s`）。
+  2. **GPU 粒子运动与尾迹衰减**：在每一帧渲染中，GPU 在视口内随机播撒成千上万个虚拟粒子，每个粒子根据所在位置的 `(U, V)` 向量沿流线方向步进移动，同时将上一帧的画面透明度略微衰减，从而形成丝滑的彗星尾迹流线效果。
+  3. **自动计算标量风速 `['get', 'speed']`**：`Flow` 内部会自动根据勾股定理算出每个像素位置的合成风速标量 `speed = sqrt(u * u + v * v)`，并暴露给样式表达式 `['get', 'speed']`，使开发者可以用 `['interpolate', ['linear'], ['get', 'speed'], ...]` 轻松实现按风力大小动态赋色！
+
+  #### 2. 为什么需要用 PNG 编码风场数据？又是如何解码还原的？
+  如果直接传输全球浮点型 NetCDF / GRIB2 气象格网文件，体积往往高达数 MB。气象可视化界（如 Mapbox / Leaflet-velocity）通用的轻量化方案是**将浮点风速量化压缩到一张 8-bit PNG 图片的 R、G 通道中**：
+  * **编码规则**：`./data/wind.png` 是一张 `360 × 180` 像素（分辨率 `1° × 1°`，`EPSG:4326` 等经纬度投影）的图片：
+    * **R 通道（`0 ~ 255`）** 对应东西向风速 `U ∈ [-21.32, 26.8] m/s`。
+    * **G 通道（`0 ~ 255`）** 对应南北向风速 `V ∈ [-21.57, 21.42] m/s`。
+  * **线性逆向解码公式（代码第 126~127 行）**：
+    ```text
+    实际东西向风速 u = minU + (maxU - minU) × (像素R值 / 255)
+    实际南北向风速 v = minV + (maxV - minV) × (像素G值 / 255)
+    ```
+
+  #### 3. 跨投影重采样与双线性插值（`bilinearInterpolation`）
+  * **为什么不能直接把 `wind.png` 贴到地图上？**
+    1. **投影不一致**：输入的 `wind.png` 是 `EPSG:4326`（等经纬度），而地图视口使用的是 `EPSG:3857`（Web Mercator 投影，纬度越高纵向拉伸越剧烈）。因此 `loader(z, x, y)` 中遍历 `256 × 256` 瓦片的每个像素时，必须先通过 `transform([mapX, mapY], 'EPSG:3857', 'EPSG:4326')` 反算出对应的经纬度 `[lon, lat]`。
+    2. **消除马赛克锯齿（双线性插值）**：原图只有 `360 × 180` 个格点（每格跨度 `1°`）。当放大地图时，如果只取最近的格点（最近邻插值），风场会出现明显的方块突变。代码通过寻找周围 4 个格点 `[[x1, y1], [x2, y1], [x1, y2], [x2, y2]]` 并按小数偏移权重 `xAlong`、`yAlong` 执行**双线性插值（Bilinear Interpolation）**，确保了在任意缩放级别下风速场都是平滑连续过渡的！
 experimental: true
-tags: "wind"
+tags: "wind, flow, webgl, datatile, 风场, 流场, 粒子动画, 双线性插值, 气象"
 ---
 <!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Wind</title>
+    <title>Wind / WebGL 全球风场粒子流线动画</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/theme/ol.css">
     <link rel="stylesheet" type="text/css" href="/theme/site.css">
@@ -39,8 +64,9 @@ tags: "wind"
     <div id="map"></div>
     <div id="experimental-notice" class="alert alert-warning alert-dismissible" role="alert" style="position: absolute; bottom: 0; margin: 1em;">
       <button id="experimental-dismiss" type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-      This example uses features that are not part of the stable API and subject to change between releases.  Consult the <a href="/en/latest/apidoc/">API documentation</a>
-      to see what is supported in the latest release.
+      This example uses features that are not part of the stable API and subject to change between releases. Consult the <a href="/en/latest/apidoc/">API documentation</a>
+      to see what is supported in the latest release.<br>
+      本示例使用了实验性 API（<code>ol/layer/Flow</code> 流场粒子图层），未来版本可能会发生调整。
     </div>
 
     <script type="module" src="wind.js"></script>

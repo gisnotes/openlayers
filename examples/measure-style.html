@@ -1,8 +1,8 @@
 ---
 layout: example.html
-title: Measure using vector styles
-shortdesc: Example of measuring lengths and areas using vector styles.
-docs: >
+title: Measure using vector styles / 使用矢量样式进行测量
+shortdesc: Example of measuring lengths and areas using vector styles. / 使用矢量样式（Vector Styles）测量长度与面积的示例。
+docs: |
   <p>Using vector styles instead of overlays makes it easy to set up, then modify and
   clear a measure.  Additional information such as the lengths of individual segments
   or sides can be included as required.</p>
@@ -15,19 +15,55 @@ docs: >
   different than on-the-ground measures in certain situations — in northern
   and southern latitudes using Web Mercator for example.  For better results,
   use the functions in the <code>ol/sphere</code> module.</p>
+
+  <p>使用矢量样式（Vector Styles）代替 DOM 叠加层（<code>ol/Overlay</code>），可以极其轻松地建立、修改（Modify）和清除测量结果。同时还能按需附加上每一段折线（或每一条多边形边）的分段长度等额外信息。</p>
+  <p><code>ol/sphere</code> 模块中的 <code>getLength()</code> 与 <code>getArea()</code> 函数用于计算几何图形在球面上的真实长度与面积：长度通过假设几何坐标之间为大圆弧段（Great Circle Segments）进行计算；面积则将多边形的各条边视作大圆弧段进行球面多边形积分计算。</p>
+  <p>请注意，几何对象自带的 <code>geometry.getLength()</code> 与 <code>geometry.getArea()</code> 方法返回的是投影平面（Planar）上的欧氏几何测量值。在许多场景下（例如在 Web 墨卡托投影的高纬度南北地区），平面测量值与地面真实距离/面积会产生巨大偏差。为了获得准确的地面测量结果，请务必使用 <code>ol/sphere</code> 模块中的球面计算函数。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么用“矢量样式（`Style`）”代替“DOM 叠加层（`Overlay`）”做测量？
+  在传统的测量实现（如 `measure.html`）中，往往每画一个图形就创建一个 HTML `<div>` 并挂载为 `ol/Overlay`。当需要显示**每一段边的分段长度**，或者支持**拖拽顶点实时修改（`Modify`）**时，DOM 方案会面临繁琐的节点创建、位置同步与销毁清理问题。
+  而本示例完全基于 Canvas 矢量渲染管线，通过一个动态样式函数 `styleFunction(feature, segments, drawType, tip)` 返回一个 **`Style` 数组**，一次性完成所有测量要素的绘制：
+
+  | 样式对象 | 作用目标 | 几何位置绑定（`setGeometry`） | 视觉效果与实现技巧 |
+  | :--- | :--- | :--- | :--- |
+  | `style` | 被测量的主折线 / 多边形及绘制光标点 | 默认绑定要素自身几何 | 半透明白底填充 + 黑色虚线描边（`lineDash: [10, 10]`）+ 圆形顶点光标 |
+  | `labelStyle` | 总长度 / 总面积主气泡标签 | 多边形内部点 `getInteriorPoint()` 或折线终点 `getLastCoordinate()` | `Text`（带 `backgroundFill` 黑底与 `offsetY: -15`）+ 倒三角形 `RegularShape`（`points: 3, angle: Math.PI`）拼成纯 Canvas 指向气泡框 |
+  | `segmentStyles[i]` | 每一条线段的分段长度小气泡 | 线段中点 `segment.getCoordinateAt(0.5)` | 通过 `line.forEachSegment(a, b)` 遍历每条边，并采用**样式对象池（Object Pool）**按需克隆复用 `segmentStyle.clone()` |
+  | `tipStyle` | 绘制过程中的鼠标跟随操作提示 | 绘制交互的 `Point` 草图几何 | 在光标右侧（`offsetX: 15`）显示点击开始/继续绘制提示 |
+  | `modifyStyle` | 顶点拖拽修改（`Modify`）提示 | `Modify` 交互的捕捉光标点 | 当鼠标吸附到已有图形的顶点或边上时，显示“拖拽以修改图形” |
+
+  #### 2. 纯 Canvas 气泡指向框（Callout Bubble）的合成技巧
+  在 OpenLayers 的单个 `Style` 对象中，可以同时配置 `text`（文本样式）和 `image`（点符号样式），它们会渲染在同一个锚点坐标上：
+  - **气泡矩形主体**：由 `new Text({ backgroundFill, padding: [3, 3, 3, 3], textBaseline: 'bottom', offsetY: -15 })` 绘制，向上偏移 15 像素。
+  - **气泡底部倒三角尖角**：由 `new RegularShape({ radius: 8, points: 3, angle: Math.PI, displacement: [0, 10], fill })` 绘制。正三角形旋转 `Math.PI`（180°）后尖角朝下，再通过 `displacement: [0, 10]` 向上平移与文本框底边无缝拼接，无需任何外部图片或 HTML DOM 即可在 Canvas 内合成带箭头的气泡标签。
+
+  #### 3. 分段测量与样式对象池（Style Object Pooling）
+  - 折线直接使用自身 `geometry.forEachSegment(...)` 遍历每条线段；多边形则提取外环坐标构造临时折线 `new LineString(geometry.getCoordinates()[0])` 后遍历每条边。
+  - 由于 `styleFunction` 会在鼠标移动和地图重绘时高频触发（每秒可达 60 次），如果每次都在循环内 `new Style(...)` 会产生大量临时对象并引发垃圾回收（GC）卡顿。代码通过 `segmentStyles` 数组维护了一个**样式对象池**：只有当线段序号 `count` 超过池子现有长度时才调用 `segmentStyle.clone()` 扩容，后续帧直接复用已有实例并更新 `setGeometry(segmentPoint)` 和 `setText(label)`。
+
+  #### 4. `Draw` 与 `Modify` 双交互的提示语互斥与平滑交接
+  同时启用 `Draw`（绘制）和 `Modify`（修改）两个交互时，如果不做控制，两者的鼠标提示框会重叠在一起。本示例通过三步实现无缝衔接：
+  1. **悬停已有图形时隐藏绘制提示**：在 `styleFunction` 中判断 `!modify.getOverlay().getSource().getFeatures().length`。一旦鼠标靠近已有图形触发了 `Modify` 的顶点捕捉图层，其内部草图源中就会出现捕捉点要素，此时自动隐藏 `Draw` 的 `tipStyle`，只显示 `Modify` 的“拖拽以修改图形”。
+  2. **开始绘制时临时禁用修改**：监听 `drawstart` 事件，执行 `modify.setActive(false)`，防止正在画新图形时误触旧图形的顶点拖拽。
+  3. **结束绘制时的平滑过渡**：监听 `drawend` 事件重新启用 `modify.setActive(true)`，并利用 `modifyStyle.setGeometry(tipPoint)` 将修改提示暂时固定在刚结束的终点位置，直到下一次鼠标移动（`map.once('pointermove', ...)`）再恢复跟随。
 tags: "draw, edit, measure, modify, style, vector"
 ---
 <div id="map" class="map"></div>
 <form>
-  <label for="type">Measurement type &nbsp;</label>
+  <label for="type">测量类型（Measurement type）&nbsp;</label>
   <select id="type">
-    <option value="LineString">Length (LineString)</option>
-    <option value="Polygon">Area (Polygon)</option>
+    <option value="LineString">长度（Length - LineString）</option>
+    <option value="Polygon">面积（Area - Polygon）</option>
   </select>
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <label for="segments">Show segment lengths:&nbsp;</label>
+  <label for="segments">显示分段长度（Show segment lengths）：&nbsp;</label>
   <input type="checkbox" id="segments" checked />
   &nbsp;&nbsp;&nbsp;&nbsp;
-  <label for="clear">Clear previous measure:&nbsp;</label>
+  <label for="clear">清除上一次测量（Clear previous measure）：&nbsp;</label>
   <input type="checkbox" id="clear" checked />
 </form>
+

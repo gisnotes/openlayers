@@ -1,11 +1,114 @@
 ---
 layout: example.html
-title: Styling feature with CanvasGradient or CanvasPattern
-shortdesc: Example showing a vector layer styled with a gradient.
-docs: >
+title: Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素
+shortdesc: Example showing a vector layer styled with a gradient / 演示如何将原生 CanvasGradient（彩虹线性渐变）与 CanvasPattern（纹理平铺图案）直接作为 Fill 填充色赋给矢量图层。
+docs: |
   This example creates a [`CanvasGradient`](https://developer.mozilla.org/en/docs/Web/API/CanvasGradient).
   The vector data is loaded from a file and features are filled with the gradient.
   The same technique can be used with a [`CanvasPattern`](https://developer.mozilla.org/en-US/docs/Web/API/CanvasPattern).
-tags: "canvas, gradient, pattern, style"
+
+  本示例展示了如何创建一个原生的 [`CanvasGradient`（Canvas 渐变对象）](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasGradient)，并将其直接作为多边形填充色（`Fill` 的 `color` 属性）应用到从 KML 文件加载的美国各州行政区划矢量要素上。
+  完全相同的技术也适用于 [`CanvasPattern`（Canvas 图案平铺对象）](https://developer.mozilla.org/zh-CN/docs/Web/API/CanvasPattern)。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心原理：为什么 `Fill` 和 `Stroke` 的 `color` 能接收渐变和图案？
+  在 OpenLayers 中，`ol/style/Fill` 和 `ol/style/Stroke` 的 `color` 属性类型为 `Color | ColorLike`。当 Canvas 2D 渲染器绘制矢量要素时，它最终会将 `color` 直接赋值给原生 `CanvasRenderingContext2D` 的 `ctx.fillStyle` 或 `ctx.strokeStyle`。
+  因此，凡是浏览器原生 `ctx.fillStyle` 支持的对象，都可以直接传给 `new Fill({ color: ... })`：
+  * **普通颜色**：十六进制字符串 `'#3399CC'`、`'rgba(255, 0, 0, 0.5)'` 或数组 `[255, 0, 0, 0.5]`。
+  * **线性渐变（`CanvasGradient`）**：通过 `context.createLinearGradient(x0, y0, x1, y1)` 创建。
+  * **径向/放射渐变（`CanvasGradient`）**：通过 `context.createRadialGradient(x0, y0, r0, x1, y1, r1)` 创建。
+  * **纹理图案填充（`CanvasPattern`）**：通过 `context.createPattern(imageOrCanvas, 'repeat')` 创建（常用于地质岩性图例、斜线剖面阴影、沼泽/森林纹理填充）。
+
+  #### 2. 核心现象追问：为什么地图放大、缩小或平移时，多边形的渐变颜色会实时改变？
+  在运行本示例时，你会立刻注意到一个现象：**一旦缩放或拖动地图，美国各州多边形内部的过渡颜色会实时发生变化！**
+  * **根本原因（屏幕视口像素坐标系 vs 地理坐标系）**：
+    代码中通过 `context.createLinearGradient(0, 0, 1024 * pixelRatio, 0)` 创建的是一个**静态的画布像素空间渐变**。在 HTML5 Canvas 2D 规范中，`CanvasGradient` 的坐标 `(0, 0) -> (1024 * pixelRatio, 0)` 永远绑定在**地图视口 `<canvas>` 的左上角到右侧 `1024px` 处**，而不是绑定在美国本土的经纬度坐标上：
+    * **当缩小地图（Zoom Out）时**：整个美国版图缩小到屏幕正中央（例如仅占据屏幕 `x = 400px ~ 600px` 的区间），此时全美 50 个州只落在了彩虹渐变的中间段（绿色/青色区），两端的红色和紫色完全落在了美国版图之外。
+    * **当放大地图（Zoom In）时**：单个州被放大到撑满整个屏幕宽度（`0 ~ 1024px`），于是这一个州独占了从红到紫的完整七色彩虹；而屏幕左侧 `< 0px` 和右侧 `> 1024px` 之外的区域则被截断为纯红色或纯紫色。
+    * **当平移地图（Pan）时**：多边形在屏幕画布上左右移动，相当于在固定的“彩虹滤光片”下方滑动，因此每个州的颜色会随屏幕位置实时变化。
+  * **高分屏（Retina / HiDPI）物理像素适配**：
+    在 `DEVICE_PIXEL_RATIO = 2` 的高分屏上，OpenLayers 内部渲染画布的物理像素宽高是 CSS 逻辑宽高的 `2` 倍。因此必须乘以 `pixelRatio`，否则 `1024` 物理像素在 2 倍屏上只占 `512` CSS 像素。
+
+  #### 3. 💡 进阶实战：如何让渐变颜色“锁定”在地理坐标上，随地图缩放/平移保持不变？
+  如果你希望**无论地图怎么放大、缩小或拖动，每个多边形（或整个研究区）的渐变颜色始终固定在它的地理边界上**，只需将静态 `Style` 改为**动态样式函数 `style: function(feature)`**，在每次渲染时将要素（或数据源）的地理包络盒（`Extent`）实时转换为屏幕像素坐标来生成渐变：
+
+  ```js
+  const fill = new Fill();
+  const stroke = new Stroke({color: '#333', width: 1});
+  const dynamicStyle = new Style({fill, stroke});
+
+  const vectorLayer = new VectorLayer({
+    background: 'white',
+    source: vectorSource,
+    // 使用样式函数：每次重绘时根据地理范围动态计算渐变起止像素
+    style: function (feature) {
+      // 方案 A：锁定在整个美国版图范围 -> const extent = vectorSource.getExtent();
+      // 方案 B：每个州各自独立拥有完整的左红右紫渐变 -> const extent = feature.getGeometry().getExtent();
+      const extent = vectorSource.getExtent();
+      const leftPx = map.getPixelFromCoordinate([extent[0], extent[1]]);
+      const rightPx = map.getPixelFromCoordinate([extent[2], extent[3]]);
+      if (!leftPx || !rightPx) {
+        return dynamicStyle;
+      }
+
+      // 将地理边界实时对应的屏幕像素乘以 pixelRatio，使彩虹渐变严格跟随地理边界缩放与平移！
+      const geoGradient = context.createLinearGradient(
+        leftPx[0] * pixelRatio,
+        0,
+        rightPx[0] * pixelRatio,
+        0,
+      );
+      geoGradient.addColorStop(0, 'red');
+      geoGradient.addColorStop(1 / 6, 'orange');
+      geoGradient.addColorStop(2 / 6, 'yellow');
+      geoGradient.addColorStop(3 / 6, 'green');
+      geoGradient.addColorStop(4 / 6, 'aqua');
+      geoGradient.addColorStop(5 / 6, 'blue');
+      geoGradient.addColorStop(1, 'purple');
+
+      fill.setColor(geoGradient);
+      return dynamicStyle;
+    },
+  });
+  ```
+
+  #### 4. 避坑指南：为什么加载 KML 时必须设置 `extractStyles: false`？
+  在代码第 36 行中：
+  ```js
+  format: new KML({extractStyles: false}),
+  ```
+  * KML 格式（`data/kml/states.kml`）与 GeoJSON 不同，KML 文件内部通常自带了 `<Style>` 样式标签。
+  * `ol/format/KML` 默认开启了 `extractStyles: true`，即解析 KML 时会自动把文件里自带的样式提取出来并调用 `feature.setStyle(...)` 绑定到每个要素身上。
+  * 在 OpenLayers 中，**要素级样式（Feature Style）的优先级高于图层级样式（Layer Style）**！如果不设置 `extractStyles: false`，KML 自带的默认样式就会屏蔽掉我们在 `VectorLayer` 上配置的彩虹渐变样式。
+
+  #### 5. 💡 实战扩展：如何使用 `CanvasPattern` 绘制 GIS 斜线阴影填充（Hatch Pattern）？
+  除了彩虹渐变外，在规划制图、地质灾害区或禁飞区标绘中，经常需要用到**斜线网格/剖面线阴影填充（`CanvasPattern`）**。只需用一个小巧的 `16 × 16` 离屏 Canvas 即可实现：
+  ```js
+  // 1. 创建一个 16x16（适配高分屏）的微型离屏 Canvas 作为纹理瓦片母版
+  const patternCanvas = document.createElement('canvas');
+  const size = Math.round(16 * DEVICE_PIXEL_RATIO);
+  patternCanvas.width = size;
+  patternCanvas.height = size;
+
+  // 2. 在微型画布上绘制一条对角斜线
+  const patternCtx = patternCanvas.getContext('2d');
+  patternCtx.strokeStyle = 'rgba(255, 0, 0, 0.7)';
+  patternCtx.lineWidth = 2 * DEVICE_PIXEL_RATIO;
+  patternCtx.beginPath();
+  patternCtx.moveTo(0, size);
+  patternCtx.lineTo(size, 0);
+  patternCtx.stroke();
+
+  // 3. 生成可无限平铺（'repeat'）的 CanvasPattern 并传给 Fill
+  const pattern = patternCtx.createPattern(patternCanvas, 'repeat');
+  const hatchStyle = new Style({
+    fill: new Fill({color: pattern}),
+    stroke: new Stroke({color: '#d00', width: 1.5}),
+  });
+  ```
+tags: "canvas, gradient, pattern, style, 画布, 渐变, 图案, 纹理, 样式, 填充"
 ---
 <div id="map" class="map"></div>

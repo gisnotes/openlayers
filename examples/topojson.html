@@ -1,9 +1,62 @@
 ---
 layout: example.html
-title: TopoJSON
-shortdesc: Demonstrates rendering of features from a TopoJSON topology.
-docs: >
+title: TopoJSON / TopoJSON 拓扑矢量数据解析与渲染
+shortdesc: Demonstrates rendering of features from a TopoJSON topology / 演示使用 ol/format/TopoJSON 加载并按图层过滤渲染 TopoJSON 全球国家拓扑边界数据。
+docs: |
   This example uses a vector layer with `ol/format/TopoJSON` for rendering features from [TopoJSON](https://github.com/mbostock/topojson/wiki).
-tags: "topojson, vector, style"
+
+  本示例展示了如何在矢量图层（`ol/layer/Vector`）中配合 `ol/format/TopoJSON` 格式解析器，加载并渲染 [TopoJSON](https://github.com/topojson/topojson) 拓扑格式的全球国家边界数据（`data/topojson/world-110m.json`）。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心概念：什么是 TopoJSON？它比 GeoJSON 强在哪里？
+  **TopoJSON** 是由 D3.js 作者 Mike Bostock 提出的 GeoJSON 拓扑扩展格式。在 WebGIS 中传输行政区划（国界、省界、地块）时，TopoJSON 相比传统 GeoJSON 有两大核心优势：
+
+  | 对比维度 | 传统 GeoJSON (`ol/format/GeoJSON`) | 拓扑格式 TopoJSON (`ol/format/TopoJSON`) |
+  | :--- | :--- | :--- |
+  | **公共边界存储方式** | **独立重复存储**：中国与蒙古国交界处的数千个边界点，在两国的 Polygon 坐标数组中会被完整重复记录两遍 | **拓扑弧段（`arcs`）共享**：将所有边界切分为不重复的共享弧段（Arc），每个国家只存储弧段的**索引编号数组**（如 `[0, 1, -2]`，负数代表反向连接） |
+  | **坐标压缩机制** | 明文存储冗长的浮点数经纬度（如 `116.397128, 39.916527`） | 支持**整数化量化（Quantization）+ 差分编码（Delta-encoding）**，只记录相对前一个点的整数增量 |
+  | **文件体积与网络传输** | 体积较大（100% 基准） | 文件体积通常比同精度的 GeoJSON **缩小 60% ~ 80%**，显著加快首屏加载速度 |
+  | **单文件多图层能力** | 单个 `FeatureCollection` 通常只表达一层要素 | 顶层 `objects` 字典内可同时封装多个共用同一套 `arcs` 的命名图层（如 `land` 陆地轮廓层 + `countries` 国家边界层） |
+
+  #### 2. `new TopoJSON({ layers: ['countries'] })`：单文件内多拓扑图层的按需过滤
+  在代码第 26~30 行中：
+  ```js
+  format: new TopoJSON({
+    layers: ['countries'],
+  }),
+  ```
+  * 打开 `data/topojson/world-110m.json` 源码可以看到，它的 `"objects"` 节点下同时包含了两个拓扑对象集合：
+    1. `"land"`：将全球所有大陆合并为一个整体的陆地外轮廓多边形。
+    2. `"countries"`：全球各个国家的独立多边形集合。
+  * **如果不传 `layers` 参数**：`ol/format/TopoJSON` 默认会把 `"objects"` 下的**所有图层**（`land` + `countries`）全部提取成 `Feature` 渲染出来，导致海岸线被重复绘制两遍。
+  * **传入 `layers: ['countries']`**：精准指定只提取并解析 `"countries"` 这一层要素，忽略 `"land"` 层。
+  * **💡 进阶技巧（`layerName` 属性标记）**：如果你确实需要同时加载多个子图层并对它们设置不同样式，可以配置 `new TopoJSON({ layerName: 'layer' })`。这样解析出的每个 `Feature` 都会自动带上 `feature.get('layer')` 属性（值为 `'land'` 或 `'countries'`），从而可以在样式函数中轻松区分！
+
+  #### 3. 关键性能优化参数：`overlaps: false`（无重叠拓扑数据源优化）
+  在 `VectorSource` 的配置中（代码第 31 行），有一行非常容易被忽略但极具价值的优化配置：
+  ```js
+  overlaps: false,
+  ```
+  * **含义**：告诉 OpenLayers 该矢量数据源中的所有多边形要素在空间上**彼此互不重叠**（像拼图一样严丝合缝，仅共享公共边界）。
+  * **为什么 TopoJSON 行政区划最适合开启 `overlaps: false`？**
+    * 默认情况下（`overlaps: true`），OpenLayers 必须假设多边形之间可能存在上下交叠，因此在做空间索引（RBush）碰撞检测和渲染裁剪时需要做额外的重叠判断。
+    * 而由 TopoJSON 生成的国家级/省市级行政区划天然具备严格的拓扑不重叠特性。显式声明 `overlaps: false` 可以让渲染器与拾取检测跳过重叠要素排查，提升渲染与交互响应效率。
+
+  #### 4. 扁平化声明式样式（FlatStyle）与 512px 高清瓦片底图
+  1. **简洁的 FlatStyle 字面量语法**：
+     代码第 33~36 行没有实例化传统的 `new Style({ stroke: new Stroke({...}) })`，而是直接传入了扁平样式对象：
+     ```js
+     style: {
+       'stroke-color': 'white',
+       'stroke-width': 1.5,
+     },
+     ```
+     当只需要静态配置描边或填充时，FlatStyle 字面量比传统类实例写法更加简洁直观。
+  2. **`ImageTile` 配合 `tileSize: 512`**：
+     底图使用了 MapTiler 的深色数据可视化底图（`dataviz-dark`），其瓦片尺寸为 `512 × 512` 像素（传统 OSM 瓦片为 `256 × 256`），因此需在 `new ImageTile({...})` 中显式声明 `tileSize: 512`，以确保瓦片网格（TileGrid）层级与分辨率匹配正确。
+tags: "topojson, vector, style, 拓扑, 矢量, 样式, 行政区划, 性能优化"
 ---
 <div id="map" class="map"></div>

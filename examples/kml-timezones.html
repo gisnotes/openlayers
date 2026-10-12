@@ -1,11 +1,71 @@
 ---
 layout: example.html
-title: Timezones in KML
-shortdesc: Demonstrates rendering timezones from KML.
-docs: >
-  This example parses a KML file and renders the features as a vector layer.  The layer is given a <code>ol/style/Style</code> that fills timezones
-  yellow with an opacity calculated based on the current offset to local noon.
-tags: "KML, vector, style"
+title: Timezones in KML / KML 全球时区渲染与昼夜光照动态样式
+shortdesc: Demonstrates rendering timezones from KML / 演示解析 KML 全球时区多边形，并根据各时区距离当地正午 12 点的实时时差动态计算填充透明度（模拟全球昼夜光照分布）。
+docs: |
+  This example parses a KML file and renders the features as a vector layer. The layer is given a `ol/style/Style` that fills timezones yellow with an opacity calculated based on the current offset to local noon.
+
+  本示例解析了一个包含全球时区边界的 KML 文件（`data/kml/timezones.kml`），并将其渲染为矢量图层。图层绑定了一个动态样式函数（`styleFunction`）：根据用户当前的系统时间，实时推算每个时区此时距离当地**正午 12:00（Noon）**的小时差，并以此动态计算明黄色填充的透明度（`opacity`）——正午时区最明亮（透明度 `0.75`），午夜时区完全透明（透明度 `0`），从而在黑白底图上直观呈现出全球实时的“白昼与黑夜”光照分布效果。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心算法：如何根据 UTC 偏移量计算全球各时区的“正午光照透明度”？
+
+  ##### （1）时区时间换算（JavaScript `Date` 的巧妙偏移）
+  在 `styleFunction` 中，有这样一段经典的时间换算代码（第 21~24 行）：
+  ```js
+  const local = new Date();
+  local.setTime(
+    local.getTime() + (local.getTimezoneOffset() + (tzOffset || 0)) * 60000,
+  );
+  ```
+  * **为什么是 `local.getTimezoneOffset() + tzOffset`？**
+    * 在 JavaScript 中，`new Date().getTimezoneOffset()` 返回的是 **`UTC 时间 - 浏览器本地时间` 的分钟差**（注意符号相反！例如北京时间 `UTC+8`，`getTimezoneOffset()` 返回的是 **`-480` 分钟**）。
+    * 因此，`local.getTime() + local.getTimezoneOffset() * 60000` 会先将时间戳拨回到 **UTC 零时区（格林尼治标准时间）** 的挂钟时刻。
+    * 随后再加上该时区多边形自身的 `tzOffset * 60000`（例如西八区为 `-480` 分钟，东八区为 `+480` 分钟），此时调用 `local.getHours()` 和 `local.getMinutes()` 拿到的就是**该时区此时此刻的当地时间**！
+
+  ##### （2）正午时差（`delta`）与透明度（`opacity`）线性映射公式
+  拿到该时区的当地时间后，计算它与正午 12 点的距离 `delta`（取值范围 `0 ~ 12` 小时）：
+  ```text
+  当前时区浮点小时数 hour = local.getHours() + local.getMinutes() / 60
+  距离正午 12 点的小时差 delta = |12 - hour|   （若 delta > 12，则取 24 - delta）
+  黄色填充不透明度 opacity = 0.75 × (1 - delta / 12)
+  ```
+  | 该时区当地时间 | 距正午时差 `delta` | 计算出的 `opacity` | 最终填充色 `[0xff, 0xff, 0x33, opacity]` 视觉效果 |
+  | :--- | :--- | :--- | :--- |
+  | **12:00（正午阳光直射）** | `0` 小时 | **`0.75`** | 最明亮的半透明黄色（代表正午白昼中心） |
+  | **06:00 / 18:00（晨昏线）** | `6` 小时 | **`0.375`** | 中等透明度的柔和黄色（代表清晨或傍晚） |
+  | **00:00（午夜）** | `12` 小时 | **`0.0`** | **完全透明**，直接透出底图深黑色的 `stamen_toner`（代表黑夜） |
+
+  #### 2. 性能优化精髓：在 `featuresloadend` 中预解析属性 + `silent = true` 静默赋值
+  细看代码第 66~71 行：
+  ```js
+  vector.getSource().on('featuresloadend', function (evt) {
+    evt.features.forEach(function (feature) {
+      const tzOffset = parseOffsetFromUtc(feature.get('name'));
+      feature.set('tz-offset', tzOffset, true);
+    });
+  });
+  ```
+  这里包含两个在大型 WebGIS 项目中极其重要的性能优化技巧：
+  1. **属性预计算（避免在 `styleFunction` 中做正则匹配）**：
+     * KML 要素原始只有字符串格式的 `name` 属性（如 `"GMT -08:30"`）。
+     * `styleFunction` 在每次地图平移、缩放重绘时都会对所有可见要素高频执行。如果在 `styleFunction` 里跑正则表达式 `name.match(...)`，会造成大量重复的 CPU 字符串解析开销。
+     * 因此，在数据源加载完成的 **`featuresloadend` 事件中一次性用正则解析出分钟数**并存入 `'tz-offset'` 数字属性，后续每次渲染只需直接读取数字做加减乘除！
+  2. **`feature.set(key, value, true)` 第三个参数 `silent = true` 的妙用**：
+     * 默认情况下，每调用一次 `feature.set('tz-offset', tzOffset)`，该要素就会派发一次 `'change'` 事件，进而触发 `VectorSource` 和 `VectorLayer` 申请重绘。
+     * 如果在 `forEach` 循环中批量修改几百个要素而不传 `true`，会瞬间触发几百次多余的变更事件风暴！传入第三个参数 **`true`（静默更新 `opt_silent`）**，可以只修改属性值而不触发任何事件，等 `featuresloadend` 走完后由图层统一渲染一次。
+
+  #### 3. 交互细节：跟随鼠标指针的轻量级 Tooltip（对比 `Overlay`）
+  * **为什么不用 `ol/Overlay`？**
+    在 `icon.html` 示例中，点要素有明确的单个经纬度坐标，适合用 `Overlay` 锚定在地理坐标上；而本示例中的时区多边形纵跨南北极，用户希望看到的是**紧跟鼠标指针移动的悬浮提示框（Cursor-following Tooltip）**。
+  * **控件防遮挡判断（`target.closest('.ol-control')`）**：
+    在 `displayFeatureInfo` 中，首先判断鼠标事件的目标 DOM 是否位于 `.ol-control`（如左上角缩放按钮 `+` / `-` 或右下角版权折叠按钮）内部。如果是，则直接返回 `undefined` 隐藏 Tooltip，避免鼠标移到地图控件按钮上时还弹出底层多边形的时区提示框。
+  * **按需更新 DOM 内容（`feature !== currentFeature`）**：
+    只有当鼠标跨越边界进入**另一个不同时区的多边形**时，才调用 `tooltip.setContent(...)` 修改文字；若在同一个时区内部移动，则仅更新坐标并调用 `tooltip.update()`，避免高频操作 DOM 文本。
+tags: "KML, vector, style, 时区, 矢量, 样式, 昼夜, 动态透明度, 提示框"
 resources:
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js

@@ -1,28 +1,82 @@
 ---
 layout: example.html
-title: WebGL Tile Layer Styles
-shortdesc: Styling raster tiles with WebGL.
-docs: >
-  The `style` property of a WebGL tile layer can be used to adjust properties like
-  `exposure`, `contrast`, and `saturation`.  Typically those values would be set to
-  numeric constants to apply a filter to imagery.  In this example, the style properties
-  are set to variables that can be updated based on application state.  Adjusting the
-  sliders results in a call to `layer.updateStyleVariables()` to use new values for the
-  associated style properties.
-tags: "webgl, style"
+title: WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）
+shortdesc: Styling raster tiles with WebGL / 演示使用 WebGLTile 图层的 style 属性与 ['var', ...] 着色器变量实时调节卫星瓦片底图的曝光度（exposure）、对比度（contrast）与饱和度（saturation）。
+docs: |
+  The `style` property of a WebGL tile layer can be used to adjust properties like `exposure`, `contrast`, and `saturation`. Typically those values would be set to numeric constants to apply a filter to imagery. In this example, the style properties are set to variables that can be updated based on application state. Adjusting the sliders results in a call to `layer.updateStyleVariables()` to use new values for the associated style properties.
+
+  WebGL 瓦片图层（`ol/layer/WebGLTile`）的 `style` 属性可用于调节栅格影像的 **`exposure`（曝光度）**、**`contrast`（对比度）** 和 **`saturation`（饱和度）** 等光学色彩属性。在常规静态配图中，这些属性可以直接设为数字常量，以便为底图瓦片添加固定的色彩滤镜；而在本示例中，我们将这些样式属性绑定到了动态变量表达式（`['var', '...']`）上。拖动地图下方的滑块时，代码会调用 `layer.updateStyleVariables()` 将新数值实时传递给 GPU 着色器，实现 60 FPS 丝滑的全局卫星影像调色。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 架构选型核心：`ol/layer/WebGLTile` vs 传统 `ol/layer/Tile`
+  细看 `main.js` 的第 4 行导入语句：
+  ```js
+  import TileLayer from 'ol/layer/WebGLTile.js';
+  ```
+  虽然代码里把导入的类命名为了 `TileLayer`，但它实际上导入的是 **`ol/layer/WebGLTile.js`（WebGL 硬件加速瓦片图层）**，而不是传统的 Canvas 2D `ol/layer/Tile.js`！
+
+  ##### 为什么遥感影像与科学栅格渲染首选 `WebGLTile`？
+  在现代 WebGIS 架构中，`WebGLTile` 是**多波段遥感影像（COG / GeoZarr）与定量科学栅格数据**的核心渲染引擎。两者的核心差异与选型边界如下：
+
+  | 对比维度 | 传统 `ol/layer/Tile`（Canvas 2D 渲染） | `ol/layer/WebGLTile`（GPU 着色器加速渲染） |
+  | :--- | :--- | :--- |
+  | **底层渲染管线** | CPU 调用 `CanvasRenderingContext2D.drawImage()` 贴图 | 将瓦片作为纹理上传至显卡（`gl.texImage2D`），由 **GPU 片元着色器（GLSL）** 并行计算每个像素 |
+  | **支持的数据源与位深** | 仅支持浏览器原生 8-bit RGB/RGBA 图片（PNG / JPEG / WebP） | 除了普通图片外，**原生支持 16-bit 整型 / 32-bit 浮点型多波段数值矩阵（`DataTile`、`GeoTIFF`、`GeoZarr`）** |
+  | **遥感波段运算与拉伸** | **不支持**（若用 CPU 逐像素遍历 200 万像素会严重卡顿） | **毫秒级实时计算**：支持 `['band', n]` 波段提取、线性对比度拉伸、NDVI 归一化植被指数、DEM 动态山体阴影与淹没分析 |
+  | **实时光学滤镜（`style`）** | **不支持** `style` 属性 | 原生支持 `exposure`（曝光度）、`contrast`（对比度）、`saturation`（饱和度）、`brightness`（亮度）、`gamma`（伽马）等 GPU 滤镜 |
+  | **跨域（CORS）要求** | **宽松**：即使第三方瓦片服务未配置 CORS 头，依然能正常显示在地图上（仅画布被标记为 Tainted） | **极其严格**：WebGL 纹理上传强制要求同源或服务端返回 CORS 头（`Access-Control-Allow-Origin`），否则完全无法渲染 |
+  | **浏览器上下文限制** | 无数量限制，多个图层可共享同一个 2D Canvas | 受浏览器单页面 **WebGL 上下文数量上限（通常为 8~16 个）** 及显存开销限制 |
+
+  > **💡 架构选型口诀**：
+  > * **用 `WebGLTile` 的场景**：加载 **COG (`GeoTIFF`) / `GeoZarr` 遥感影像**、**DEM 高程地形渲染**、需要对栅格做**波段代数运算/假彩色合成/色彩分级映射（Color Ramp）**，或者需要对普通瓦片底图做**实时曝光/对比度/饱和度滤镜调色**。
+  > * **用传统 `Tile` 的场景**：仅用于展示常规已经配好色的 8-bit 电子地图底图（如天地图、高德、OSM、内网老旧无 CORS 头的 WMTS/XYZ 瓦片服务），且不需要做像素级动态调色。
+
+  #### 2. `WebGLTile` 样式（`Style`）五大核心属性与 GPU 着色器数学公式
+  在 `ol/layer/WebGLTile` 的 `style` 配置对象中，支持以下核心色彩调控属性（其中后四项在片元着色器中按顺序依次作用于像素 RGB 分量）：
+
+  | 样式属性 | 取值范围 | 默认值 | 片元着色器（GLSL）底层数学原理 | 视觉效果与典型 GIS 场景 |
+  | :--- | :--- | :--- | :--- | :--- |
+  | **`color`** | 颜色表达式 | *原图颜色* | 多波段组合与ストレッチ拉伸（见 `cog-stretch` / `geozarr-stretch` 示例） | 遥感假彩色合成、NDVI 植被指数赋色、DEM 高程设色 |
+  | **`brightness`** | `-1.0 ~ 1.0` | `0` | `rgb = rgb + brightness`（全通道线性加减偏移） | 整体提亮或压暗底图 |
+  | **`exposure`（曝光度）** | `-1.0 ~ 1.0` | `0` | `rgb = rgb × (1.0 + exposure)`（全通道按比例乘算增益） | 模拟相机曝光补偿：正值增强高光与明度，负值压暗强光（比 `brightness` 更能保留暗部层次） |
+  | **`contrast`（对比度）** | `-1.0 ~ 1.0` | `0` | `rgb = (rgb - 0.5) × (1.0 + contrast) + 0.5`（围绕中灰 `0.5` 扩张/收缩） | 正值使亮处更亮、暗处更暗（凸显地物纹理边界）；负值使画面趋向柔和灰雾状 |
+  | **`saturation`（饱和度）** | `-1.0 ~ 1.0` | `0` | 在像素灰度亮度值 `L` 与原始 `rgb` 之间线性插值：`mix(vec3(L), rgb, 1.0 + saturation)` | 正值使植被/水体色彩更浓郁鲜艳；负值降低色彩饱和度（当设为 **`-1`** 时直接变为**纯黑白全色灰阶底图**） |
+  | **`gamma`（伽马值）** | `> 0` | `1.0` | `rgb = pow(rgb, vec3(1.0 / gamma))`（非线性幂律校正） | 修正传感器非线性响应，提亮遥感影像暗部阴影细节而不使高光过曝 |
+
+  #### 3. 为什么使用 `['var', name]` + `layer.updateStyleVariables()`？
+  本示例采用了与 `cog-stretch`（COG 波段拉伸）和 `geozarr-stretch` 完全一致的 **GPU Uniform 动态变量范式**：
+  ```js
+  style: {
+    exposure: ['var', 'exposure'],
+    contrast: ['var', 'contrast'],
+    saturation: ['var', 'saturation'],
+    variables: variables,
+  }
+  ```
+  * **避免重编译着色器（Zero Shader Recompilation）**：
+    如果在拖动滑块的 `input` 事件中直接调用 `layer.setStyle({...})`，OpenLayers 每次都会重新生成 GLSL 源码并调用 WebGL `compileShader` 和 `linkProgram`，在高频拖动下会产生明显的掉帧卡顿。
+  * **Uniform 寄存器级极速更新**：
+    通过 `['var', 'exposure']` 将属性声明为着色器中的 `uniform float u_exposure` 变量后，滑块拖动时调用的 `layer.updateStyleVariables({ [name]: value })` 仅仅是在当前帧向显卡发送一条 `gl.uniform1f(...)` 指令，开销几乎为零！
+
+  #### 4. 代码工程技巧：基于 `for...in` 数据驱动的双向绑定
+  看代码第 41~53 行，作者没有为 `exposure`、`contrast`、`saturation` 重复编写三遍完全相同的 DOM 读取与事件监听代码，而是利用 HTML 控件 `id`（如 `id="exposure"` 和 `id="exposure-value"`）与 `variables` 对象的键名严格一致的约定，通过一个 `for (variable in variables)` 循环一次性完成了初始值回填、数值格式化展示（`toFixed(2)`）以及 `input` 事件与 `updateStyleVariables({ [name]: value })` 的动态绑定。
+tags: "webgl, style, 瓦片, 样式, 曝光度, 对比度, 饱和度, 滤镜, 遥感"
 ---
 <div id="map" class="map"></div>
 <div id="controls">
   <label>
     <input id="exposure" type="range" min="-0.5" max="0.5" step="0.01">
-    <br>exposure <span id="exposure-value"></span>
+    <br>exposure（曝光度） <span id="exposure-value"></span>
   </label>
   <label>
     <input id="contrast" type="range" min="-0.5" max="0.5" step="0.01">
-    <br>contrast <span id="contrast-value"></span>
+    <br>contrast（对比度） <span id="contrast-value"></span>
   </label>
   <label>
     <input id="saturation" type="range" min="-0.5" max="0.5" step="0.01">
-    <br>saturation <span id="saturation-value"></span>
+    <br>saturation（饱和度） <span id="saturation-value"></span>
   </label>
 </div>

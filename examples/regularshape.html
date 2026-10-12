@@ -1,17 +1,59 @@
 ---
 layout: example.html
-title: Regular Shapes
-shortdesc: Example of some Regular Shape styles.
-docs: >
-  This example shows how several regular shapes
-  or symbols (representing `x`, `cross`, `star`,
-  `triangle`, `square` and `stacked`) can be created.
+title: Regular Shapes / 正多边形与星形矢量符号（RegularShape 全解）
+shortdesc: Example of some Regular Shape styles / 演示使用 ol/style/RegularShape 纯代码绘制正方形、长方形、三角形、五角星、十字丝、叉号及堆叠组合符号。
+docs: |
+  This example shows how several regular shapes or symbols (representing `x`, `cross`, `star`, `triangle`, `square` and `stacked`) can be created.
   A `rectangle` is produced by scaling a square created without rotation.
+  Style `stacked` represents possibility to stack multiple shapes with offset.
 
-  Style `stacked` represents possility to stack multiple shapes with offset
-tags: "vector, symbol, regularshape, style, square, rectangle, cross, star, triangle, x"
+  本示例展示了如何使用 `ol/style/RegularShape` 在不加载任何外部图片（PNG/SVG）的情况下，纯代码生成多种常用测量与制图几何符号：包括 **叉号（`x`）**、**十字丝（`cross`）**、**五角星（`star`）**、**三角形（`triangle`）**、**正方形（`square`）**、**长方形（`rectangle`）** 以及 **上下堆叠符号（`stacked`）**。
+  点击地图下方的按钮，还可以动态切换所有正方形符号的填充颜色，并观察共享样式实例的高效重绘机制。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么要用 `RegularShape`？（对比 `Icon` 外部图片）
+  在 WebGIS 中绘制海量散点（如 250 个甚至上万个传感器、控制点、采样点）时，`ol/style/RegularShape` 相比 `ol/style/Icon` 有三大优势：
+  1. **零网络请求**：无需下载任何外部 PNG/SVG 图标资源，直接在内存中的离屏 Canvas 上通过几何公式矢量化绘制。
+  2. **参数化动态生成**：只需调整 `points`（顶点数）、`radius`（外半径）、`radius2`（内半径）和 `angle`（起始角），一套代码即可衍生出正 N 边形、星形、十字丝等数十种专业测绘符号。
+  3. **高清无损与动态换色**：可通过 `setFill()` / `setStroke()` 随时动态修改填充色与描边，无需考虑跨域（CORS）或白底正片叠底限制。
+
+  #### 2. 核心几何原理：7 种符号的参数构造秘籍
+  `RegularShape` 的核心机制是围绕圆心计算顶点坐标：
+  * 当**不传 `radius2`** 时：在半径为 `radius` 的圆周上等分取 `points` 个顶点，连成**正多边形**。
+  * 当**传入 `radius2`** 时：在外圆（`radius`）和内圆（`radius2`）上交替取 `2 × points` 个顶点，连成**星形**或**十字放射线（当 `radius2: 0` 时）**。
+  * **默认起始角（`angle: 0`）**：第 1 个顶点默认指向**正上方（12 点钟方向）**。
+
+  | 符号名称 | `points` | `radius` (外圆) | `radius2` (内圆) | `angle` (起始角) | 其他变换参数 | 几何成型原理解析 |
+  | :--- | :--- | :--- | :--- | :--- | :--- | :--- |
+  | **`square`（正方形 `□`）** | `4` | `10` | *未设置* | `Math.PI / 4` (45°) | — | 若 `angle: 0`，4 个顶点在上下左右，呈**菱形 `◇`**；将起始角旋转 **45°（`Math.PI / 4`）** 后，4 个顶点落入四角，变成水平正放的正方形 `□` |
+  | **`rectangle`（长方形 `▭`）** | `4` | `10 / √2` | `10` | `0` | `scale: [1, 0.5]` | 先构造一个不带旋转的正方形包络，再通过 `scale: [1, 0.5]` 将 Y 轴高度压缩一半，形成宽扁长方形 |
+  | **`triangle`（三角形 `△`）** | `3` | `10` | *未设置* | `0` | `rotation: Math.PI / 4` | `points: 3, angle: 0` 生成正立等边三角形 `△`，再通过 `rotation` 将整个图形顺时针旋转 45° |
+  | **`star`（五角星 `☆`）** | `5` | `10` | `4` | `0` | — | 5 个外尖角落在半径 `10` 的外圆上，5 个内凹角落在半径 `4` 的内圆上，交替相连成标准五角星 |
+  | **`cross`（十字丝 `+`）** | `4` | `10` | `0` | `0` | — | **精髓技巧**：当内圆半径 **`radius2: 0`** 时，所有内凹顶点全部坍缩到圆心 `[0, 0]`！`angle: 0` 时 4 个外顶点指向上下左右，形成正十字 `+` |
+  | **`x`（叉号 `×`）** | `4` | `10` | `0` | `Math.PI / 4` (45°) | — | 与 `cross` 完全相同，仅将起始角旋转 **45°（`Math.PI / 4`）**，正十字 `+` 即变成对角叉号 `×` |
+  | **`stacked`（堆叠符号）** | `4` + `4` | `5` + `10` | *未设置* | `Math.PI / 4` | `displacement: [0, 10]` | 使用 **`Style` 数组**叠加两个正方形：小正方形（`radius: 5`）通过 `displacement: [0, 10]` 向上偏移 10px，恰好叠在大正方形（`radius: 10`）正上方 |
+
+  #### 3. 易混概念辨析：`angle` vs `rotation` 与 `displacement` 坐标系
+  1. **`angle` 与 `rotation` 有什么区别？**
+     * **`angle`**：在生成多边形顶点路径阶段（执行 `scale` 缩放**之前**）旋转顶点的起始角度。例如要把菱形转成正方形，再用 `scale: [1, 0.5]` 压扁成长方形，必须用 `angle: Math.PI / 4`；如果误用了 `rotation: Math.PI / 4`，图形会先压扁再歪着转 45°，变成斜平行四边形！
+     * **`rotation`**：在整个符号（含 `scale` 缩放）绘制成型**之后**，围绕锚点对最终图形进行的整体旋转。
+  2. **`displacement: [dx, dy]` 的 Y 轴方向注意**：
+     * 在 `RegularShape`（以及 `Circle`、`Icon`）中，`displacement: [dx, dy]` 的 **X 轴向右为正，Y 轴向上为正**（与数学笛卡尔坐标系一致，而与屏幕像素向下为正相反）。因此在 `stacked` 中，`displacement: [0, 10]` 是将小正方形**向上**推移 10 像素。
+
+  #### 4. 性能优化范式：样式实例复用 + 原地修改 + `vectorLayer.changed()`
+  * 示例中生成了 250 个随机点要素，但并没有创建 250 个 `Style` 对象，而是所有要素**共享 `styles` 字典中的 7 个样式实例**（极大节省内存与离屏 Canvas 数量）。
+  * 当点击按钮修改所有正方形颜色时（代码第 139~145 行）：
+    ```js
+    styles.square.getImage().setFill(new Fill({color: colors[currentColor % colors.length]}));
+    vectorLayer.changed();
+    ```
+    直接调用 `styles.square.getImage().setFill(...)` 原地替换该共享符号的填充色，随后调用一次 **`vectorLayer.changed()`** 通知图层重绘，地图上几十个正方形即可在瞬间同步变色，无需遍历要素调用 `feature.setStyle()`！
+tags: "vector, symbol, regularshape, style, square, rectangle, cross, star, triangle, x, 矢量, 符号, 正多边形, 星形, 十字丝, 正方形, 三角形"
 ---
 <div id="map" class="map"></div>
 <div>
-  <button id="color-changer">Change Square Colors</button>
+  <button id="color-changer">Change Square Colors（切换正方形填充颜色）</button>
 </div>
