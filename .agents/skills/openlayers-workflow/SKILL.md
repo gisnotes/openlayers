@@ -88,6 +88,10 @@ openlayers/
 3. **三级页面（技术专题指南）**：[`site/summary/*.md`](file:///d:/Users/Downloads/openlayers/site/summary/)
    - Markdown 原文保存在 `site/summary/`，不要在 `site/src/summary/` 下保留多余的 `.md` 文件。
    - `site/build.js` 会在编译时自动临时拷贝 `site/summary/*.md` 到 `site/src/summary/`，编译生成 HTML 到 `site/build/summary/*.html` 后自动清理临时文件，保持工作区绝对干净。
+4. **自动写作润色（强制联动 `humanizer-zh` 技能）**：
+   - 在生成、编写或更新任何技术专题总结（`site/summary/*.md`）时，**必须自动加载并严格遵循 [`.agents/skills/humanizer-zh/SKILL.md`](../humanizer-zh/SKILL.md) 规范**。
+   - 彻底去除“起跑式铺垫”（如“让我们深入看看...”）、“伪深度格言”、“意义拔高”（如“标志着全新时代的到来”）和 AI 模板化套话（如“赋能、闭环、至关重要”）。
+   - 坚持工程师视角、直入主题、语言通透自然；完整保护代码块、参数类型、数据表格与相对链接。
 
 ---
 
