@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Earthquakes Heatmap</title>
+    <title>Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -31,9 +31,11 @@
                 <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
                 <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
                 <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
-                <a class="dropdown-item" href="/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
             </div>
           </li>
           <li class="nav-item"><a class="nav-link" href="../examples/">Examples</a></li>
@@ -60,7 +62,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Earthquakes Heatmap</h4>
+        <h4 id="title">Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -71,7 +73,7 @@
               data-bs-target="#tag-example-list"
               data-title="heatmap"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
@@ -89,10 +91,10 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-custom-kmz.html&quot;&gt;Custom Drag-and-Drop (KMZ)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop.html&quot;&gt;Drag-and-Drop&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters / 地震点位聚合与悬停散开渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml.html&quot;&gt;KML&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -126,11 +128,11 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-modify-trace-snap.html&quot;&gt;Draw, modify, trace and snap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters / 地震点位聚合与悬停散开渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./equal-earth-geojson.html&quot;&gt;Equal Earth projection with dynamic center meridian&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
@@ -213,11 +215,11 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features-style.html&quot;&gt;Drawing Features Style / 绘制要素时的自定义样式&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters / 地震点位聚合与悬停散开渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
@@ -251,7 +253,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-stretch.html&quot;&gt;Band Contrast Stretch / 遥感波段组合与对比度拉伸&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering features with WebGL&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-layer-swipe.html&quot;&gt;Layer Swipe (WebGL)&lt;/a&gt;
@@ -287,11 +289,12 @@
         </div>
         <div id="map" class="map"></div>
 <form>
-  <label for="radius">radius size</label>
+  <label for="radius">半径大小（radius size）</label>
   <input id="radius" type="range" min="1" max="50" step="1" value="5"/>
-  <label for="blur">blur size</label>
+  <label for="blur">模糊大小（blur size）</label>
   <input id="blur" type="range" min="1" max="50" step="1" value="15"/>
 </form>
+
 
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
           <input id="codesandbox-params" type="hidden" name="parameters">
@@ -299,8 +302,74 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Demonstrates the use of a heatmap layer.</p>
+        <p id="shortdesc">Demonstrates the use of a heatmap layer. / 演示如何使用基于 WebGL 渲染的 ol/layer/Heatmap 热力图图层展示KML点位密度与权重。</p>
         <div id="docs"><p>This example parses a KML file and renders the features as a <code>ol/layer/Heatmap</code> layer.</p>
+<p>本示例解析了一份 KML 地震数据文件，并使用 <code>ol/layer/Heatmap</code> 热力图图层将地震点要素渲染为连续的密度与震级热力分布图。</p>
+<hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 为什么这个示例带有 <code>webgl</code> 标签？<code>ol/layer/Heatmap</code> 的底层渲染原理是什么？</h4>
+<p>翻看 OpenLayers 源码 <a href="https://github.com/openlayers/openlayers/blob/main/src/ol/layer/Heatmap.js"><code>src/ol/layer/Heatmap.js</code></a> 可以看到，<code>Heatmap</code> 图层底层直接基于 <strong><code>WebGLVectorLayerRenderer</code>（GPU 着色器管线）</strong> 实现，并通过 <strong>两阶段渲染（Two-Pass Rendering）</strong> 合成热力图：</p>
+<ol>
+<li><strong>第一阶段：离屏灰度/Alpha 能量累加（Additive Blending）</strong><ul>
+<li>GPU 将每个点要素（也支持 <code>LineString</code> 线要素）绘制为一个中心最亮、向外平滑衰减的圆形高斯核（Radial Falloff Kernel）。</li>
+<li>每个点的中心强度乘以该要素的权重 <code>weight</code>，并通过 WebGL 混合模式（Additive Blending）在离屏帧缓冲纹理（Framebuffer Texture）中累加——点位越密集、单个点权重越高，累加出的灰度能量值就越接近 <code>1.0</code>。</li>
+</ul>
+</li>
+<li><strong>第二阶段：后处理一维色带映射（1D Gradient Lookup）</strong><ul>
+<li>后处理片元着色器（Fragment Shader）读取离屏纹理中每个像素累加后的能量值（<code>0.0 ~ 1.0</code>），在一维渐变色带纹理（默认 <code>gradient: [&#39;#00f&#39;, &#39;#0ff&#39;, &#39;#0f0&#39;, &#39;#ff0&#39;, &#39;#f00&#39;]</code>，即 <strong>蓝 → 青 → 绿 → 黄 → 红</strong>）中进行采样着色，最终输出炫酷的彩色热力图。</li>
+</ul>
+</li>
+</ol>
+<h4>2. 核心配置参数详解（<code>radius</code>、<code>blur</code>、<code>weight</code>、<code>gradient</code>）</h4>
+<table>
+<thead>
+<tr>
+<th align="left">配置项</th>
+<th align="left">类型与默认值</th>
+<th align="left">动态更新方法</th>
+<th align="left">物理意义与调参技巧</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong><code>radius</code></strong></td>
+<td align="left"><code>number | Expression</code>（默认 <code>8</code> px）</td>
+<td align="left"><code>layer.setRadius(val)</code></td>
+<td align="left">每个热力点核心区域的<strong>像素半径</strong>。调大 <code>radius</code> 会让单个点的影响范围变大，更容易与周围的点连成片</td>
+</tr>
+<tr>
+<td align="left"><strong><code>blur</code></strong></td>
+<td align="left"><code>number | Expression</code>（默认 <code>15</code> px）</td>
+<td align="left"><code>layer.setBlur(val)</code></td>
+<td align="left">附加在 <code>radius</code> 外围的<strong>羽化模糊像素宽度</strong>。<code>blur</code> 越小，热力点边缘越锐利（呈现明显的独立圆斑）；<code>blur</code> 越大，点与点之间的过渡越柔和丝滑</td>
+</tr>
+<tr>
+<td align="left"><strong><code>weight</code></strong></td>
+<td align="left"><code>string | Function | Expression</code>（默认属性名 <code>&#39;weight&#39;</code>）</td>
+<td align="left">—</td>
+<td align="left">决定每个要素对热力强度的贡献权重，<strong>有效值域为 <code>[0, 1]</code></strong>（超出范围的值会被源码自动 <code>clamp(val, 0, 1)</code> 截断到 <code>0~1</code> 之间）</td>
+</tr>
+<tr>
+<td align="left"><strong><code>gradient</code></strong></td>
+<td align="left"><code>Array&lt;string&gt;</code>（默认蓝青绿黄红五色）</td>
+<td align="left"><code>layer.setGradient(arr)</code></td>
+<td align="left">自定义热力图色带数组（支持任意 CSS 颜色字符串），从低密度（索引 0）向高密度（末尾索引）线性插值</td>
+</tr>
+</tbody></table>
+<h4>3. 本示例中的震级归一化权重计算（<code>weight</code> 函数）</h4>
+<p>在代码第 21~28 行中：</p>
+<pre><code class="language-js">weight: function (feature) {
+  const name = feature.get(&#39;name&#39;);
+  const magnitude = parseFloat(name.substr(2));
+  return magnitude - 5;
+},
+</code></pre>
+<ul>
+<li>因为 <code>2012_Earthquakes_Mag5.kml</code> 数据集中记录的是 5 级以上地震，震级大多分布在 <code>5.0 ~ 6.0+</code> 之间。</li>
+<li>用 <code>magnitude - 5</code> 计算后：<code>5.0</code> 级地震权重为 <code>0</code>（最微弱），<code>5.5</code> 级地震权重为 <code>0.5</code>（中等贡献），<code>6.0</code> 及以上强震权重达到或被截断为 <code>1.0</code>（满额热力贡献）。</li>
+<li><strong>实战注意</strong>：在你自己的业务数据中（例如房价、人口、传感器数值），传入 <code>weight</code> 函数时一定要先做 <strong><code>(val - min) / (max - min)</code> 归一化到 <code>[0, 1]</code> 区间</strong>；如果直接返回大于 <code>1</code> 的原始业务数值（如 <code>500</code>、<code>1000</code>），会被全部截断成 <code>1.0</code>，导致所有点权重完全一样、失去权重区分度！</li>
+</ul>
+<h4>4. 为什么拖动滑块调用 <code>setBlur</code> / <code>setRadius</code> 性能极高？</h4>
+<p>在代码末尾，滑块的 <code>input</code> 事件直接调用了 <code>vector.setBlur(...)</code> 和 <code>vector.setRadius(...)</code>。由于 <code>HeatmapLayer</code> 基于 WebGL 渲染，修改 <code>blur</code> 和 <code>radius</code> <strong>不需要重新解析 KML 或重建 GPU 顶点缓冲区（VBO）</strong>，仅仅是更新了着色器中的两个 <code>uniform</code> 浮点变量并重绘一帧，因此在万级点位下拖动滑块依然能保持 60 FPS 满帧丝滑响应。</p>
 </div>
       </div>
 
@@ -315,28 +384,38 @@ import TileLayer from &#x27;ol/layer/Tile.js&#x27;;
 import StadiaMaps from &#x27;ol/source/StadiaMaps.js&#x27;;
 import VectorSource from &#x27;ol/source/Vector.js&#x27;;
 
+// 获取页面中的“模糊大小（blur）”和“半径大小（radius）”滑块 DOM 元素
 const blur &#x3D; document.getElementById(&#x27;blur&#x27;);
 const radius &#x3D; document.getElementById(&#x27;radius&#x27;);
 
+// 创建基于 WebGL 渲染的热力图图层（ol/layer/Heatmap）
 const vector &#x3D; new HeatmapLayer({
   source: new VectorSource({
     url: &#x27;data/kml/2012_Earthquakes_Mag5.kml&#x27;,
     format: new KML({
+      // 忽略 KML 文件内置的图标样式，仅提取点几何与属性用于热力图渲染
       extractStyles: false,
     }),
   }),
+  // 初始羽化模糊像素宽度（10 进制整数）
   blur: parseInt(blur.value, 10),
+  // 初始热力点核心像素半径（10 进制整数）
   radius: parseInt(radius.value, 10),
+  // 权重计算函数：返回值应在 [0, 1] 区间内（超出区间的值会被底层自动截断到 0~1）
   weight: function (feature) {
     // 2012_Earthquakes_Mag5.kml stores the magnitude of each earthquake in a
     // standards-violating &lt;magnitude&gt; tag in each Placemark.  We extract it from
     // the Placemark&#x27;s name instead.
+    // 2012_Earthquakes_Mag5.kml 将每次地震的震级保存在了不符合 KML 标准的 &lt;magnitude&gt; 标签中，
+    // 因此我们改为直接从 Placemark 的 name 属性（如 &quot;M 5.8 - ...&quot;）中截取解析震级数值。
     const name &#x3D; feature.get(&#x27;name&#x27;);
     const magnitude &#x3D; parseFloat(name.substr(2));
+    // 将 5.0 ~ 6.0+ 的震级减去 5，归一化映射到 [0, 1] 权重区间
     return magnitude - 5;
   },
 });
 
+// 创建 StadiaMaps (Stamen Toner 黑白底图) 瓦片图层，突出彩色热力分布
 const raster &#x3D; new TileLayer({
   source: new StadiaMaps({
     layer: &#x27;stamen_toner&#x27;,
@@ -352,10 +431,12 @@ new Map({
   }),
 });
 
+// 监听模糊度滑块拖动：实时更新 WebGL 着色器中的 blur uniform 参数并重绘
 blur.addEventListener(&#x27;input&#x27;, function () {
   vector.setBlur(parseInt(blur.value, 10));
 });
 
+// 监听半径滑块拖动：实时更新 WebGL 着色器中的 radius uniform 参数并重绘
 radius.addEventListener(&#x27;input&#x27;, function () {
   vector.setRadius(parseInt(radius.value, 10));
 });
@@ -370,7 +451,7 @@ radius.addEventListener(&#x27;input&#x27;, function () {
 &lt;html lang="en"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Earthquakes Heatmap&lt;/title&gt;
+    &lt;title&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -382,11 +463,12 @@ radius.addEventListener(&#x27;input&#x27;, function () {
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
     &lt;form&gt;
-      &lt;label for&#x3D;&quot;radius&quot;&gt;radius size&lt;/label&gt;
+      &lt;label for&#x3D;&quot;radius&quot;&gt;半径大小（radius size）&lt;/label&gt;
       &lt;input id&#x3D;&quot;radius&quot; type&#x3D;&quot;range&quot; min&#x3D;&quot;1&quot; max&#x3D;&quot;50&quot; step&#x3D;&quot;1&quot; value&#x3D;&quot;5&quot;/&gt;
-      &lt;label for&#x3D;&quot;blur&quot;&gt;blur size&lt;/label&gt;
+      &lt;label for&#x3D;&quot;blur&quot;&gt;模糊大小（blur size）&lt;/label&gt;
       &lt;input id&#x3D;&quot;blur&quot; type&#x3D;&quot;range&quot; min&#x3D;&quot;1&quot; max&#x3D;&quot;50&quot; step&#x3D;&quot;1&quot; value&#x3D;&quot;15&quot;/&gt;
     &lt;/form&gt;
+    
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
   &lt;/body&gt;

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Earthquakes with custom symbols</title>
+    <title>Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -31,9 +31,11 @@
                 <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
                 <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
                 <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
-                <a class="dropdown-item" href="/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
             </div>
           </li>
           <li class="nav-item"><a class="nav-link" href="../examples/">Examples</a></li>
@@ -60,7 +62,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Earthquakes with custom symbols</h4>
+        <h4 id="title">Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,10 +76,10 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-custom-kmz.html&quot;&gt;Custom Drag-and-Drop (KMZ)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop.html&quot;&gt;Drag-and-Drop&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters / 地震点位聚合与悬停散开渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml.html&quot;&gt;KML&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -111,11 +113,11 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-modify-trace-snap.html&quot;&gt;Draw, modify, trace and snap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters / 地震点位聚合与悬停散开渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./equal-earth-geojson.html&quot;&gt;Equal Earth projection with dynamic center meridian&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
@@ -198,11 +200,11 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features-style.html&quot;&gt;Drawing Features Style / 绘制要素时的自定义样式&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters / 地震点位聚合与悬停散开渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
@@ -234,7 +236,7 @@
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-tiles.html&quot;&gt;Canvas Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-tiles-tms.html&quot;&gt;Custom Canvas Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./render-geometry.html&quot;&gt;Render geometries to a canvas&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
@@ -251,7 +253,7 @@
               data-bs-target="#tag-example-list"
               data-title="symbol"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes / 正多边形与星形矢量符号（RegularShape 全解）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows / 气象风向标箭头（RegularShape 组合与动态缩放位移）&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -274,14 +276,96 @@
         </div>
         <div id="map" class="map"></div>
 
+
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
           <input id="codesandbox-params" type="hidden" name="parameters">
         </form>
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Demonstrates the use of &#x60;toContext&#x60; to create custom icon symbols.</p>
-        <div id="docs"><p>This example parses a KML file and renders the features as a vector layer.  The layer is given a <code>style</code> that renders earthquake locations with a custom lightning symbol and a size relative to their magnitude.</p>
+        <p id="shortdesc">Demonstrates the use of &#x60;toContext&#x60; to create custom icon symbols. / 演示如何使用 &#x60;toContext&#x60; 在离屏 Canvas 上直接绘制矢量几何，以生成自定义图标符号。</p>
+        <div id="docs"><p>This example parses a KML file and renders the features as a vector layer. The layer is given a <code>style</code> that renders earthquake locations with a custom lightning symbol and a size relative to their magnitude.</p>
+<p>本示例解析一份 KML 文件并将要素渲染为矢量图层。图层配置了一个动态 <code>style</code> 函数，使用自定义的闪电矢量符号来渲染地震位置，并根据震级（Magnitude）大小动态缩放闪电符号的尺寸。</p>
+<hr>
+<h3>核心知识点与代码解析</h3>
+<h4>1. 离屏矢量渲染利器：<code>toContext</code> 与立即渲染器（Immediate Renderer）</h4>
+<ul>
+<li>当内置的 <code>CircleStyle</code>（圆形）和 <code>RegularShape</code>（正多边形/星形）无法满足复杂异形符号（如本例中的不规则闪电、自定义风向标、战术标绘符号）需求，且又不想引入外部静态图片时，<code>ol/render.js</code> 中的 <code>toContext</code> 是最佳解决方案。</li>
+<li><strong>工作原理</strong>：<code>toContext(canvas.getContext(&#39;2d&#39;), options)</code> 将一个标准的原生 HTML5 Canvas 2D 上下文包装为 OpenLayers 的 <code>CanvasImmediateRenderer</code>（即 <code>VectorContext</code> 立即渲染器）。</li>
+<li><strong>核心优势</strong>：开发者无需编写繁琐的原生 Canvas 路径指令（如 <code>beginPath</code>、<code>moveTo</code>、<code>lineTo</code>、<code>stroke</code>），而是可以直接调用 <code>vectorContext.setStyle(style)</code> 和 <code>vectorContext.drawGeometry(geometry)</code>，复用 OpenLayers 完整的几何变换 API 与样式系统，在内存中的离屏 <code>&lt;canvas&gt;</code> 上把矢量多边形光栅化为位图，再将其直接传给 <code>new Icon({ img: canvas })</code> 作为点要素图标使用。</li>
+</ul>
+<h4>2. 闪电多边形的几何变换与包围盒归一化（<code>getSymbolOutline</code>）</h4>
+<ul>
+<li><strong>闭包预构造基础图形</strong>：代码通过 IIFE（立即执行函数表达式）在初始化阶段创建了一个由 6 个顶点组成的闭合闪电多边形 <code>symbolOutline</code>，并调用 <code>symbolOutline.rotate(1.2, path[0])</code> 绕起点旋转 <code>1.2</code> 弧度（约 68.75°）。由于旋转操作只需执行一次，放在闭包外层避免了每次生成图标时重复计算三角函数。</li>
+<li><strong>克隆与按震级缩放</strong>：在返回的函数中，先调用 <code>symbolOutline.clone()</code> 克隆基础几何体（防止污染原始模板），再调用 <code>outline.scale(scale, scale, path[0])</code> 按震级比例 <code>scale = 1 + 4 * (magnitude - 5)</code> 等比放大。</li>
+<li><strong>为什么必须执行 <code>translate</code> 平移归一化？</strong><ul>
+<li>经过旋转和缩放后，多边形的部分顶点坐标可能变为负数或偏离原点。如果直接绘制到 Canvas 上，位于负坐标象限的图形会被画布边界截断！</li>
+<li>同时，图形具有 <code>lineWidth = 2</code> 的描边宽度，描边会向多边形轮廓外侧扩展 <code>lineWidth / 2</code>（即 1 像素）。</li>
+<li>因此，代码先通过 <code>const origin = getBottomLeft(outline.getExtent())</code> 获取几何体包围盒的最小坐标 <code>[minX, minY]</code>，再调用 <code>outline.translate(offset - origin[0], offset - origin[1])</code>（其中 <code>offset = Math.ceil(lineWidth / 2)</code>），将整个闪电多边形严丝合缝地平移到 <code>[offset, offset]</code> 起点处，既消除了负坐标截断，又在左上角预留了描边安全边距。</li>
+</ul>
+</li>
+<li><strong>画布尺寸精确计算</strong>：平移完成后，<code>getTopRight(outline.getExtent())</code> 返回的 <code>[maxX, maxY]</code> 即为图形右下角极值，再加上右下侧的半个线宽 <code>Math.ceil(n + lineWidth / 2)</code>，就得到了能够完整包裹整个闪电及其描边的最小离屏 Canvas 逻辑宽高 <code>size</code>。</li>
+</ul>
+<h4>3. 高分屏（Retina / HiDPI）无损抗锯齿范式（<code>DEVICE_PIXEL_RATIO</code>）</h4>
+<ul>
+<li>在 Mac Retina 屏或高分辨率移动设备上，直接将普通 Canvas 作为 <code>Icon</code> 渲染会出现明显的边缘模糊和锯齿。本示例展示了 OpenLayers 官方推荐的高分屏二步适配法：<ol>
+<li><strong>物理像素超采样绘制</strong>：在 <code>toContext</code> 配置中传入 <code>pixelRatio: DEVICE_PIXEL_RATIO</code>（例如在 2 倍屏上为 <code>2</code>）。<code>toContext</code> 会自动将离屏 Canvas 的实际物理宽高（<code>canvas.width</code> / <code>canvas.height</code>）扩大 <code>DEVICE_PIXEL_RATIO</code> 倍，并在内部绘制 <code>outline</code> 和 <code>Stroke</code> 时自动按该倍率放大坐标与线宽。</li>
+<li><strong>逻辑像素等比还原</strong>：在构造 <code>new Icon({ img: canvas, scale: 1 / DEVICE_PIXEL_RATIO })</code> 时，通过将 <code>scale</code> 设为 <code>1 / DEVICE_PIXEL_RATIO</code>，把高分辨率的离屏画布缩回到原有的 CSS 逻辑像素尺寸，从而在高分屏上呈现出刀刻般锐利的矢量级画质。</li>
+</ol>
+</li>
+</ul>
+<h4>4. 性能优化双保险：<code>featuresloadend</code> 静默预处理 + <code>styleCache</code> 缓存</h4>
+<ul>
+<li><strong>数据加载期一次性提取属性（<code>featuresloadend</code> + <code>silent: true</code>）</strong>：<ul>
+<li>KML 文件中的震级隐藏在 <code>&lt;name&gt;</code> 标签文本（如 <code>&quot;M 5.8 - ...&quot;</code>）中。本示例没有在高频触发的 <code>style</code> 渲染函数里反复截取字符串，而是监听 <code>vector.getSource().on(&#39;featuresloadend&#39;, ...)</code> 事件，在数据加载完毕时一次性解析并写入 <code>magnitude</code> 属性。</li>
+<li><strong>关键细节 <code>f.set(&#39;magnitude&#39;, val, true)</code></strong>：第三个参数 <code>true</code> 表示 <code>silent</code>（静默更新），即修改属性时不派发要素的 <code>change</code> 事件。如果省略该参数，遍历上千个要素调用 <code>set()</code> 会连续触发上千次图层重绘通知，造成不必要的首屏卡顿。</li>
+</ul>
+</li>
+<li><strong>按震级缓存离屏 Canvas（<code>styleCache[magnitude]</code>）</strong>：<ul>
+<li>创建 <code>&lt;canvas&gt;</code> DOM 节点并执行 2D 上下文光栅化属于重量级操作。由于震级数值通常保留一位小数（如 <code>5.0</code> ~ <code>9.0</code> 之间仅有几十种离散值），通过 <code>styleCache[magnitude]</code> 字典缓存生成的 <code>Style</code> 对象，使得成百上千个同震级地震要素直接共享同一个离屏 Canvas 纹理，渲染帧率与原生静态图片别无二致。</li>
+</ul>
+</li>
+</ul>
+<h4>5. OpenLayers 地震数据可视化四大示例横向对比</h4>
+<table>
+<thead>
+<tr>
+<th align="left">示例名称</th>
+<th align="left">核心技术方案</th>
+<th align="left">几何符号形态</th>
+<th align="left">性能优化手段</th>
+<th align="left">适用业务场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong><code>kml-earthquakes</code></strong></td>
+<td align="left"><code>VectorLayer</code> + <code>CircleStyle</code></td>
+<td align="left">半透明圆形（半径与震级挂钩） + 悬停 Tooltip</td>
+<td align="left"><code>styleCache[radius]</code> 缓存 <code>Style</code> 实例</td>
+<td align="left">轻量级科学数据原貌展示与精确单体拾取</td>
+</tr>
+<tr>
+<td align="left"><strong><code>earthquake-custom-symbol</code></strong>（本示例）</td>
+<td align="left"><code>toContext</code> 离屏 Canvas + <code>Icon</code></td>
+<td align="left">自定义旋转闪电多边形（按震级缩放）</td>
+<td align="left"><code>featuresloadend</code> 静默预处理 + <code>styleCache</code> 画布缓存</td>
+<td align="left">需要绘制复杂异形矢量符号且兼顾高帧率的专题图</td>
+</tr>
+<tr>
+<td align="left"><strong><code>earthquake-clusters</code></strong></td>
+<td align="left"><code>Cluster</code> 聚合源 + <code>RegularShape</code></td>
+<td align="left">单要素为星形，聚合点为渐变光晕圆 + 数字文本</td>
+<td align="left">视图分辨率缓存 + 单例微交互样式复用</td>
+<td align="left">海量点位防遮挡降维展示与多级下钻探索</td>
+</tr>
+<tr>
+<td align="left"><strong><code>heatmap-earthquakes</code></strong></td>
+<td align="left"><code>Heatmap</code> WebGL 热力图层</td>
+<td align="left">高斯核密度连续色彩渐变场</td>
+<td align="left">GPU 着色器并行离屏帧缓冲累加</td>
+<td align="left">宏观空间分布密度、高频灾害带趋势分析</td>
+</tr>
+</tbody></table>
 </div>
       </div>
 
@@ -304,7 +388,13 @@ import Icon from &#x27;ol/style/Icon.js&#x27;;
 import Stroke from &#x27;ol/style/Stroke.js&#x27;;
 import Style from &#x27;ol/style/Style.js&#x27;;
 
+/**
+ * 闭包函数：生成指定缩放比例和偏移量的不规则闪电多边形几何轮廓。
+ * 通过 IIFE（立即执行函数表达式）预先定义基础图形并执行一次旋转，
+ * 避免在渲染循环中重复创建和旋转多边形模板，提升运行效率。
+ */
 const getSymbolOutline &#x3D; (function () {
+  // 闪电符号的 6 个特征顶点（形成一个闭合折线环）
   const path &#x3D; [
     [0, 0],
     [4, 2],
@@ -314,79 +404,117 @@ const getSymbolOutline &#x3D; (function () {
     [4, 5],
     [0, 0],
   ];
+  // 基于顶点坐标构建基础多边形
   const symbolOutline &#x3D; new Polygon([path]);
+  // 绕原点 [0, 0] 顺时针旋转 1.2 弧度（约 68.75 度），使其呈现倾斜俯冲的闪电姿态
   symbolOutline.rotate(1.2, path[0]);
+
+  /**
+   * @param {number} scale 几何体缩放倍数（与震级挂钩）
+   * @param {number} offset 坐标内边距偏移量（通常取描边宽度的一半），防止绘制时边缘描边被画布裁剪
+   * @return {Polygon} 缩放并平移归一化后的多边形几何对象
+   */
   return function (scale, offset) {
+    // 克隆旋转后的几何模板，避免直接修改污染原多边形
     const outline &#x3D; symbolOutline.clone();
+    // 绕起点按指定倍率进行等比缩放
     outline.scale(scale, scale, path[0]);
+    // 获取旋转缩放后几何体包围盒的左下角极值 [minX, minY]
     const origin &#x3D; getBottomLeft(outline.getExtent());
+    // 将几何体平移到 [offset, offset] 正坐标象限内，确保所有坐标均大于 0 且留有半线宽安全边距
     outline.translate(offset - origin[0], offset - origin[1]);
     return outline;
   };
 })();
 
+// 样式缓存字典：以震级数值为键，复用已生成的 Icon 样式实例
 const styleCache &#x3D; {};
 
+// 地震矢量点图层：从 KML 加载数据，并通过动态 style 函数配合 toContext 离屏绘制闪电图标
 const vector &#x3D; new VectorLayer({
   source: new VectorSource({
     url: &#x27;data/kml/2012_Earthquakes_Mag5.kml&#x27;,
     format: new KML({
+      // 禁用 KML 内置样式提取，完全由自定义 style 函数接管视觉表现
       extractStyles: false,
     }),
   }),
+  /**
+   * 动态样式回调函数
+   * @param {import(&#x27;ol/Feature.js&#x27;).default} feature 当前渲染的地震要素
+   * @return {Style} 匹配该地震震级的图标样式
+   */
   style: function (feature) {
     const magnitude &#x3D; feature.get(&#x27;magnitude&#x27;);
     let style &#x3D; styleCache[magnitude];
     if (!style) {
+      // 震级换算为缩放倍数：基准为 5 级地震（scale &#x3D; 1），每增加 1 级放大 4 倍
       const scale &#x3D; 1 + 4 * (magnitude - 5);
       const lineWidth &#x3D; 2;
+      // 生成平移归一化后的闪电几何轮廓，预留半线宽边距（1 像素）
       const outline &#x3D; getSymbolOutline(scale, Math.ceil(lineWidth / 2));
+      // 创建离屏 Canvas DOM 元素
       const canvas &#x3D; document.createElement(&#x27;canvas&#x27;);
+      // 将离屏 Canvas 上下文包装为 OpenLayers 立即渲染器（VectorContext）
       const vectorContext &#x3D; toContext(canvas.getContext(&#x27;2d&#x27;), {
+        // 画布尺寸：基于多边形包围盒右上角坐标（即最大 X 和最大 Y），加上半线宽预留
         size: getTopRight(outline.getExtent()).map((n) &#x3D;&gt;
           Math.ceil(n + lineWidth / 2),
         ),
+        // 设备像素比（高分屏适配）：按实际设备倍率超采样放大画布物理分辨率
         pixelRatio: DEVICE_PIXEL_RATIO,
       });
+      // 在离屏渲染器上设置多边形的填充与描边样式
       vectorContext.setStyle(
         new Style({
-          fill: new Fill({color: &#x27;rgba(255, 153, 0, 0.4)&#x27;}),
+          fill: new Fill({color: &#x27;rgba(255, 153, 0, 0.4)&#x27;}), // 半透明亮橙色填充
           stroke: new Stroke({
-            color: &#x27;rgba(255, 204, 0, 0.2)&#x27;,
+            color: &#x27;rgba(255, 204, 0, 0.2)&#x27;, // 柔和的金黄色描边
             width: 2,
           }),
         }),
       );
+      // 在离屏 Canvas 上直接绘制几何图形
       vectorContext.drawGeometry(outline);
+      // 将离屏 Canvas 包装为 Icon 样式，并将 scale 设为 1 / DEVICE_PIXEL_RATIO 缩回 CSS 逻辑尺寸
       style &#x3D; new Style({
         image: new Icon({
           img: canvas,
           scale: 1 / DEVICE_PIXEL_RATIO,
         }),
       });
+      // 缓存该震级对应的样式对象，避免相同震级重复创建 Canvas
       styleCache[magnitude] &#x3D; style;
     }
     return style;
   },
 });
+
 // 2012_Earthquakes_Mag5.kml stores the magnitude of each earthquake in a
 // standards-violating &lt;magnitude&gt; tag in each Placemark.  We extract it from
 // the Placemark&#x27;s name instead.
+// 注：该 KML 文件中的 &lt;magnitude&gt; 标签不符合官方规范，KML 解析器默认会忽略它。
+// 因此我们从要素的名称（Placemark name，格式如 &quot;M 5.9 - ...&quot;）中截取前缀并解析浮点数震级。
 function parseMagnitudeFromName(name) {
   return parseFloat(name.substr(2));
 }
+
+// 监听要素加载完成事件：一次性遍历并解析写入 magnitude 属性
 vector.getSource().on(&#x27;featuresloadend&#x27;, function (evt) {
   evt.features.forEach((f) &#x3D;&gt; {
+    // 第三个参数传入 true 表示静默模式（silent），不触发要素的 change 事件，避免批量更新时造成重复重绘
     f.set(&#x27;magnitude&#x27;, parseMagnitudeFromName(f.get(&#x27;name&#x27;)), true);
   });
 });
 
+// 底图图层：采用黑白单色调的 Stadia Maps (Stamen Toner) 瓦片图层
 const raster &#x3D; new TileLayer({
   source: new StadiaMaps({
     layer: &#x27;stamen_toner&#x27;,
   }),
 });
 
+// 创建地图实例
 const map &#x3D; new Map({
   layers: [raster, vector],
   target: &#x27;map&#x27;,
@@ -406,7 +534,7 @@ const map &#x3D; new Map({
 &lt;html lang="en"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Earthquakes with custom symbols&lt;/title&gt;
+    &lt;title&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -417,6 +545,7 @@ const map &#x3D; new Map({
   &lt;/head&gt;
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
+    
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
   &lt;/body&gt;

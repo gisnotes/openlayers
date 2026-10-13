@@ -3,6 +3,11 @@ import { t as StadiaMaps } from "./StadiaMaps.js";
 import { t as KML } from "./KML2.js";
 import { r as toContext } from "./render.js";
 //#region examples/earthquake-custom-symbol.js
+/**
+* 闭包函数：生成指定缩放比例和偏移量的不规则闪电多边形几何轮廓。
+* 通过 IIFE（立即执行函数表达式）预先定义基础图形并执行一次旋转，
+* 避免在渲染循环中重复创建和旋转多边形模板，提升运行效率。
+*/
 var getSymbolOutline = (function() {
 	const path = [
 		[0, 0],
@@ -15,6 +20,11 @@ var getSymbolOutline = (function() {
 	];
 	const symbolOutline = new Polygon([path]);
 	symbolOutline.rotate(1.2, path[0]);
+	/**
+	* @param {number} scale 几何体缩放倍数（与震级挂钩）
+	* @param {number} offset 坐标内边距偏移量（通常取描边宽度的一半），防止绘制时边缘描边被画布裁剪
+	* @return {Polygon} 缩放并平移归一化后的多边形几何对象
+	*/
 	return function(scale, offset) {
 		const outline = symbolOutline.clone();
 		outline.scale(scale, scale, path[0]);
@@ -29,6 +39,11 @@ var vector = new VectorLayer({
 		url: "data/kml/2012_Earthquakes_Mag5.kml",
 		format: new KML({ extractStyles: false })
 	}),
+	/**
+	* 动态样式回调函数
+	* @param {import('../src/ol/Feature.js').default} feature 当前渲染的地震要素
+	* @return {Style} 匹配该地震震级的图标样式
+	*/
 	style: function(feature) {
 		const magnitude = feature.get("magnitude");
 		let style = styleCache[magnitude];

@@ -28,6 +28,7 @@ var darkIcon = new Icon({ src: "data/icons/emoticon-cool.svg" });
 var lightIcon = new Icon({ src: "data/icons/emoticon-cool-outline.svg" });
 /**
 * Single feature style, users for clusters with 1 feature and cluster circles.
+* 单个要素的图标样式函数（同时服务于仅含 1 个要素的聚合点，以及环形蛛网展开后的每个子要素点）
 * @param {Feature} clusterMember A feature from a cluster.
 * @return {Style} An icon style for the cluster member's location.
 */
@@ -41,6 +42,7 @@ var clickFeature;
 var clickResolution;
 /**
 * Style for clusters with features that are too close to each other, activated on click.
+* 针对内部子要素距离过近（或同址重叠）的聚合点的环形展开样式函数（点击时激活）
 * @param {Feature} cluster A cluster with overlapping members.
 * @param {number} resolution The current view resolution.
 * @return {Array<Style>|null} A style to render an expanded view of the cluster members.
@@ -68,6 +70,7 @@ function clusterCircleStyle(cluster, resolution) {
 * https://github.com/Leaflet/Leaflet.markercluster/blob/31360f2/src/MarkerCluster.Spiderfier.js#L55-L72
 * Arranges points in a circle around the cluster center, with a line pointing from the center to
 * each point.
+* 借鉴自 Leaflet.markercluster 的蛛网展开算法：将聚合包内的所有子要素围绕聚合中心按圆周均匀排列
 * @param {number} count Number of cluster members.
 * @param {Array<number>} clusterCenter Center coordinate of the cluster.
 * @param {number} resolution Current view resolution.
@@ -88,6 +91,7 @@ function generatePointsCircle(count, clusterCenter, resolution) {
 var hoverFeature;
 /**
 * Style for convex hulls of clusters, activated on hover.
+* 聚合包的凸包（Convex Hull）多边形样式函数（鼠标悬停时激活）
 * @param {Feature} cluster The cluster feature.
 * @return {Style|null} Polygon style for the convex hull of the cluster.
 */
@@ -99,6 +103,11 @@ function clusterHullStyle(cluster) {
 		stroke: convexHullStroke
 	});
 }
+/**
+* 常规聚合图层样式函数：多要素显示为双层同心圆 + 数量文本，单要素直接显示光伏电站图标
+* @param {import("../src/ol/Feature.js").FeatureLike} feature 聚合要素
+* @return {Array<Style>|Style} 渲染样式
+*/
 function clusterStyle(feature) {
 	const size = feature.get("features").length;
 	if (size > 1) return [new Style({ image: outerCircle }), new Style({

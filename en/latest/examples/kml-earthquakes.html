@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Earthquakes in KML</title>
+    <title>Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -32,9 +32,11 @@
                 <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
                 <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
                 <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
-                <a class="dropdown-item" href="/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
             </div>
           </li>
           <li class="nav-item"><a class="nav-link" href="../examples/">Examples</a></li>
@@ -61,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Earthquakes in KML</h4>
+        <h4 id="title">Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,10 +77,10 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-custom-kmz.html&quot;&gt;Custom Drag-and-Drop (KMZ)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop.html&quot;&gt;Drag-and-Drop&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters / 地震点位聚合与悬停散开渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml.html&quot;&gt;KML&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -112,11 +114,11 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-modify-trace-snap.html&quot;&gt;Draw, modify, trace and snap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters / 地震点位聚合与悬停散开渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./equal-earth-geojson.html&quot;&gt;Equal Earth projection with dynamic center meridian&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
@@ -199,11 +201,11 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features-style.html&quot;&gt;Drawing Features Style / 绘制要素时的自定义样式&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters / 地震点位聚合与悬停散开渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
@@ -234,7 +236,7 @@
               data-title="tooltip"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./button-title.html&quot;&gt;Custom Tooltips&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -257,14 +259,92 @@
   <div id="info"></div>
 </div>
 
+
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
           <input id="codesandbox-params" type="hidden" name="parameters">
         </form>
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Demonstrates the use of a Shape symbolizer to render earthquake locations.</p>
+        <p id="shortdesc">Demonstrates the use of a Shape symbolizer to render earthquake locations. / 演示解析 KML 地震数据，利用样式缓存（Style Cache）按震级大小渲染圆形符号，并结合 Bootstrap Tooltip 实现鼠标跟随信息提示。</p>
         <div id="docs"><p>This example parses a KML file and renders the features as a vector layer.  The layer is given a <code>style</code> that renders earthquake locations with a size relative to their magnitude.</p>
+<p>本示例解析了一份 KML 地震数据文件并将其渲染为矢量图层。图层通过自定义动态样式函数（<code>styleFunction</code>），根据每次地震的震级（Magnitude）按比例动态渲染不同半径大小的半透明橙色圆圈符号，并在鼠标悬停或点击时通过 Bootstrap Tooltip 展示地震详情。</p>
+<hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心性能优化：为什么在 <code>styleFunction</code> 中必须使用 <code>styleCache</code>（享元模式）？</h4>
+<p>查看代码第 13~38 行：</p>
+<pre><code class="language-js">const styleCache = {};
+const styleFunction = function (feature) {
+  const name = feature.get(&#39;name&#39;);
+  const magnitude = parseFloat(name.substr(2));
+  const radius = 5 + 20 * (magnitude - 5);
+  let style = styleCache[radius];
+  if (!style) {
+    style = new Style({ ... });
+    styleCache[radius] = style;
+  }
+  return style;
+};
+</code></pre>
+<ul>
+<li><strong>问题背景</strong>：<code>2012_Earthquakes_Mag5.kml</code> 中包含 <strong>1,500 多个</strong> 5 级以上地震点要素，而震级一般精确到小数点后一位（如 <code>5.0</code>、<code>5.1</code>、...、<code>8.6</code>），这意味着实际上只有 <strong>30~40 种不同的半径（<code>radius</code>）</strong>。</li>
+<li><strong>如果不加 <code>styleCache</code> 会怎样？</strong><ul>
+<li>地图每次平移或缩放重绘时，<code>styleFunction</code> 会被调用 1,500 多次。如果每次都执行 <code>new Style({ image: new CircleStyle(...) })</code>，不仅会在内存中瞬间创建上千个重复对象，更致命的是：OpenLayers 的 <code>CircleStyle</code> 在底层会为每一个实例创建一个独立的<strong>离屏 Canvas 贴图缓存（Sprite Atlas）</strong>！1,500 个不同引用的 <code>CircleStyle</code> 会导致浏览器频繁创建离屏 Canvas，严重拖慢帧率。</li>
+</ul>
+</li>
+<li><strong>加入 <code>styleCache[radius]</code> 后</strong>：所有震级相同（例如同为 <code>5.2</code> 级）的几百个地震点，在内存中<strong>共享同一个 <code>Style</code> 与 <code>CircleStyle</code> 实例</strong>，离屏 Canvas 只绘制 30 余次即可复用上千次，内存与渲染开销直接降低 <strong>95% 以上</strong>！</li>
+</ul>
+<h4>2. 脱离 <code>ol/Overlay</code> 实现轻量级鼠标跟随 Tooltip 的五大细节</h4>
+<p>本示例没有使用 <code>ol/Overlay</code>，而是直接在 <code>#map</code> 容器内放了一个 <code>1px × 1px</code> 的绝对定位锚点 <code>&lt;div id=&quot;info&quot;&gt;&lt;/div&gt;</code>，配合 Bootstrap 5 的 <code>bootstrap.Tooltip</code> 实现了极速跟随提示框（第 65~115 行）：</p>
+<ol>
+<li><strong>防鼠标事件遮挡（<code>pointer-events: none</code>）</strong>：<ul>
+<li>同时设置了 <code>info.style.pointerEvents = &#39;none&#39;</code> 与 Bootstrap Tooltip 配置项 <code>customClass: &#39;pe-none&#39;</code>。这保证了悬浮在地图上方的提示框 DOM 永远不会拦截鼠标的移动、点击或滚轮缩放事件。</li>
+</ul>
+</li>
+<li><strong>过滤地图控件区域（<code>target.closest(&#39;.ol-control&#39;)</code>）</strong>：<ul>
+<li>当鼠标移动到左上角的缩放按钮（<code>+</code> / <code>-</code>）或右下角的版权折叠按钮上时，如果底部恰好压着一个地震圆圈，普通碰撞检测仍会触发弹窗。通过 <code>target.closest(&#39;.ol-control&#39;) ? undefined : map.forEachFeatureAtPixel(...)</code>，巧妙屏蔽了控件按钮区域上的要素拾取。</li>
+</ul>
+</li>
+<li><strong>拖拽地图时自动隐藏（<code>if (evt.dragging)</code>）</strong>：<ul>
+<li>在 <code>pointermove</code> 中优先判断 <code>evt.dragging</code>，一旦用户按住鼠标拖动地图，立即隐藏 Tooltip 并清空 <code>currentFeature</code>，防止拖拽过程中高频触发像素碰撞检测造成卡顿。</li>
+</ul>
+</li>
+<li><strong>按需更新内容与位置（<code>currentFeature</code> 状态缓存）</strong>：<ul>
+<li>只有当拾取到的要素发生变化（<code>feature !== currentFeature</code>）时，才调用 <code>tooltip.setContent(...)</code> 修改 DOM 文本。</li>
+<li>当鼠标在同一个大圆圈内部移动（<code>currentFeature</code> 已存在）时，只调用轻量的 <code>tooltip.update()</code> 更新位置，而不重复调用 <code>tooltip.show()</code>。</li>
+</ul>
+</li>
+<li><strong>鼠标移出地图容器时清理（<code>pointerleave</code>）</strong>：<ul>
+<li>监听 <code>map.getTargetElement().addEventListener(&#39;pointerleave&#39;, ...)</code>，确保鼠标移出地图画布边缘时提示框立即消失，不会残留在屏幕边缘。</li>
+</ul>
+</li>
+</ol>
+<h4>3. 同一份地震数据集（<code>2012_Earthquakes_Mag5.kml</code>）的三种可视化范式横向对比</h4>
+<p>OpenLayers 官方围绕同一份 2012 年全球地震 KML 数据提供了 3 个递进示例，代表了海量点位可视化的三种核心方案：</p>
+<table>
+<thead>
+<tr>
+<th align="left">示例名称</th>
+<th align="left">核心技术方案</th>
+<th align="left">适用场景与视觉特点</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>本示例（<code>kml-earthquakes</code>）</strong></td>
+<td align="left"><code>VectorLayer</code> + <code>CircleStyle</code> + <strong><code>styleCache</code> 样式缓存</strong> + Bootstrap Tooltip</td>
+<td align="left">适合需要直观查看<strong>每一个独立震中位置与精确震级大小</strong>，并通过鼠标悬停逐一查看单点详情的场景</td>
+</tr>
+<tr>
+<td align="left"><strong>地震点位聚合（<code>earthquake-clusters</code>）</strong></td>
+<td align="left"><code>ol/source/Cluster</code> + 动态包围盒半径 + <strong><code>Select</code> 悬停原地散开五角星</strong></td>
+<td align="left">适合在小比例尺下<strong>消除密集点位重叠杂乱</strong>，宏观展示各区域地震数量，同时保留悬停查看局部个体的能力</td>
+</tr>
+<tr>
+<td align="left"><strong>地震分布热力图（<code>heatmap-earthquakes</code>）</strong></td>
+<td align="left"><code>ol/layer/Heatmap</code>（<strong>WebGL 两阶段高斯核累加与色带映射</strong>）</td>
+<td align="left">适合宏观分析<strong>全球地震高发带（如环太平洋火山地震带）的能量密度分布</strong>，不关注单个点边界，渲染性能最高</td>
+</tr>
+</tbody></table>
 </div>
       </div>
 
@@ -283,13 +363,17 @@ import Fill from &#x27;ol/style/Fill.js&#x27;;
 import Stroke from &#x27;ol/style/Stroke.js&#x27;;
 import Style from &#x27;ol/style/Style.js&#x27;;
 
+// 样式缓存字典（享元模式）：以圆圈像素半径 radius 为键缓存 Style 实例，避免为相同震级的上千个地震点重复创建离屏 Canvas 贴图
 const styleCache &#x3D; {};
 const styleFunction &#x3D; function (feature) {
   // 2012_Earthquakes_Mag5.kml stores the magnitude of each earthquake in a
   // standards-violating &lt;magnitude&gt; tag in each Placemark.  We extract it from
   // the Placemark&#x27;s name instead.
+  // 2012_Earthquakes_Mag5.kml 将每次地震的震级保存在了不符合 KML 标准的 &lt;magnitude&gt; 标签中，
+  // 因此我们改为直接从 Placemark 的 name 属性（如 &quot;M 5.8 - ...&quot;）中截取解析震级数值。
   const name &#x3D; feature.get(&#x27;name&#x27;);
   const magnitude &#x3D; parseFloat(name.substr(2));
+  // 震级 M5.0 对应基础半径 5px，震级每增加 1 级半径放大 20px
   const radius &#x3D; 5 + 20 * (magnitude - 5);
   let style &#x3D; styleCache[radius];
   if (!style) {
@@ -310,6 +394,7 @@ const styleFunction &#x3D; function (feature) {
   return style;
 };
 
+// 创建地震矢量图层：加载 2012 年 5 级以上地震 KML 数据（关闭 KML 内置样式提取）
 const vector &#x3D; new VectorLayer({
   source: new VectorSource({
     url: &#x27;data/kml/2012_Earthquakes_Mag5.kml&#x27;,
@@ -320,6 +405,7 @@ const vector &#x3D; new VectorLayer({
   style: styleFunction,
 });
 
+// 创建 StadiaMaps (Stamen Toner 黑白底图) 瓦片图层
 const raster &#x3D; new TileLayer({
   source: new StadiaMaps({
     layer: &#x27;stamen_toner&#x27;,
@@ -335,32 +421,38 @@ const map &#x3D; new Map({
   }),
 });
 
+// 获取地图容器内的 1px × 1px 绝对定位锚点 DOM，并初始化手动控制的 Bootstrap Tooltip
 const info &#x3D; document.getElementById(&#x27;info&#x27;);
-info.style.pointerEvents &#x3D; &#x27;none&#x27;;
+info.style.pointerEvents &#x3D; &#x27;none&#x27;; // 禁止锚点拦截鼠标事件
 const tooltip &#x3D; new bootstrap.Tooltip(info, {
   animation: false,
-  customClass: &#x27;pe-none&#x27;,
+  customClass: &#x27;pe-none&#x27;, // 为弹出的 Tooltip DOM 添加 pointer-events: none 类，防止遮挡地图交互
   offset: [0, 5],
   title: &#x27;-&#x27;,
   trigger: &#x27;manual&#x27;,
 });
 
+// 缓存当前鼠标悬停/点击命中的要素引用，避免在同一要素内移动时重复设置文本内容
 let currentFeature;
 const displayFeatureInfo &#x3D; function (pixel, target) {
+  // 若鼠标当前位于地图控件按钮（.ol-control）上方，则跳过要素拾取
   const feature &#x3D; target.closest(&#x27;.ol-control&#x27;)
     ? undefined
     : map.forEachFeatureAtPixel(pixel, function (feature) {
         return feature;
       });
   if (feature) {
+    // 将 #info 锚点直接移动到当前鼠标像素坐标处
     info.style.left &#x3D; pixel[0] + &#x27;px&#x27;;
     info.style.top &#x3D; pixel[1] + &#x27;px&#x27;;
     if (feature !&#x3D;&#x3D; currentFeature) {
       tooltip.setContent({&#x27;.tooltip-inner&#x27;: feature.get(&#x27;name&#x27;)});
     }
     if (currentFeature) {
+      // 如果上一帧已经显示了 Tooltip，只需轻量更新其位置
       tooltip.update();
     } else {
+      // 否则首次弹出显示 Tooltip
       tooltip.show();
     }
   } else {
@@ -369,6 +461,7 @@ const displayFeatureInfo &#x3D; function (pixel, target) {
   currentFeature &#x3D; feature;
 };
 
+// 监听鼠标移动：拖拽地图时立即隐藏提示框，非拖拽状态下实时拾取并跟随显示地震信息
 map.on(&#x27;pointermove&#x27;, function (evt) {
   if (evt.dragging) {
     tooltip.hide();
@@ -378,10 +471,12 @@ map.on(&#x27;pointermove&#x27;, function (evt) {
   displayFeatureInfo(evt.pixel, evt.originalEvent.target);
 });
 
+// 监听地图点击（兼顾移动端触屏点击查看详情）
 map.on(&#x27;click&#x27;, function (evt) {
   displayFeatureInfo(evt.pixel, evt.originalEvent.target);
 });
 
+// 当鼠标移出地图容器边界时，立即隐藏提示框并清空选中状态
 map.getTargetElement().addEventListener(&#x27;pointerleave&#x27;, function () {
   tooltip.hide();
   currentFeature &#x3D; undefined;
@@ -397,7 +492,7 @@ map.getTargetElement().addEventListener(&#x27;pointerleave&#x27;, function () {
 &lt;html lang="en"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Earthquakes in KML&lt;/title&gt;
+    &lt;title&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/title&gt;
     &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
@@ -429,6 +524,7 @@ map.getTargetElement().addEventListener(&#x27;pointerleave&#x27;, function () {
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;
       &lt;div id&#x3D;&quot;info&quot;&gt;&lt;/div&gt;
     &lt;/div&gt;
+    
 
     &lt;script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"&gt;&lt;/script&gt;
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;

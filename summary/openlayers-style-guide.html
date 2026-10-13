@@ -1,0 +1,576 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - OpenLayers 样式（Style）体系全景指南与实战架构精要</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+    <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">Style 体系全景指南</li></ol></nav>
+
+<h1 id="openlayers-样式（style）体系全景指南与实战架构精要">OpenLayers 样式（Style）体系全景指南与实战架构精要</h1>
+<blockquote>
+<p>基于 27 个官方示例的场景解构、机制剖析与性能优化</p>
+</blockquote>
+<hr>
+<h2 id="引言：从视觉呈现到渲染架构">引言：从视觉呈现到渲染架构</h2>
+<p>在 WebGIS 开发中，样式（Style）决定了地理数据在屏幕上的最终表现形式。随着业务复杂度的提高，样式的职责已经超出简单的颜色填充与线条描边：</p>
+<ul>
+<li>在 2D 矢量图层中，样式需要处理要素符号化、专题制图、注记避让与交互反馈；</li>
+<li>在空间分析与聚合场景中，样式需要联动凸包计算与重叠点展开；</li>
+<li>在遥感与科学栅格场景中，样式深入到 GPU 片元着色器（Fragment Shader），用于执行波段代数（Band Math）、植被指数计算（NDVI）与直方图拉伸（Contrast Stretch）。</li>
+</ul>
+<p>OpenLayers 支持面向对象定义、声明式表达式、离屏 Canvas 绘制和 WebGL 着色器计算等多种机制。本文结合官方示例库中带有 <code>style</code> 标签的 27 个示例，梳理 OpenLayers 样式的核心实现方式、适用场景与性能优化准则。</p>
+<hr>
+<h2 id="第一部分：全景视盘27-个官方-style-示例矩阵">第一部分：全景视盘——27 个官方 Style 示例矩阵</h2>
+<p>下表将 27 个示例按技术流派与业务场景进行了分类整理：</p>
+<table>
+<thead>
+<tr>
+<th align="left">分类</th>
+<th align="left">示例标识</th>
+<th align="left">核心实现机制</th>
+<th align="left">解决的典型业务场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>基础点位与图标标绘</strong></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/icon.html"><code>icon</code></a></td>
+<td align="left"><code>ol/style/Icon</code> 静态贴图与锚点（<code>anchor</code>）配置</td>
+<td align="left">基础地标点位标记、点击弹窗联动</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/icon-color.html"><code>icon-color</code></a></td>
+<td align="left"><code>Icon.color</code> 动态着色通道（单色白模图片复用）</td>
+<td align="left">报警级别着色、多状态图标着色与纹理共享</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/icon-width.html"><code>icon-width</code></a></td>
+<td align="left"><code>Icon.width</code> / <code>height</code> 显式像素定宽定高</td>
+<td align="left">SVG / 异形图标自适应，解决跨端拉伸变形</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/icon-scale.html"><code>icon-scale</code></a></td>
+<td align="left"><code>Icon.scale</code> 与 <code>Text.scale</code> 联动变换</td>
+<td align="left">随缩放级别动态放大缩小的点位与注记</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/icon-negative.html"><code>icon-negative</code></a></td>
+<td align="left">内存离屏 Canvas 像素反色滤镜运算</td>
+<td align="left">纯前端图像处理、暗黑模式/夜景底图图标适配</td>
+</tr>
+<tr>
+<td align="left"><strong>几何轮廓与高阶矢量</strong></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/line-styles.html"><code>line-styles</code></a></td>
+<td align="left">多重 <code>Stroke</code> 复合渲染、<code>lineDash</code> 虚线、偏移描边</td>
+<td align="left">双线道路外轮廓、铁路线斑马线、航线动态虚线</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/polygon-styles.html"><code>polygon-styles</code></a></td>
+<td align="left">复合样式数组 + 自定义 <code>geometry</code> 函数提取顶点</td>
+<td align="left">多边形面要素填充同时绘制各顶点手柄（MultiPoint）</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/regularshape.html"><code>regularshape</code></a></td>
+<td align="left"><code>ol/style/RegularShape</code> 参数化生成正多边形/星形</td>
+<td align="left">无需切图的十字准星、五角星、三角形、X 形符号</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/canvas-gradient-pattern.html"><code>canvas-gradient-pattern</code></a></td>
+<td align="left"><code>CanvasGradient</code> 线性渐变 / <code>CanvasPattern</code> 纹理注入 <code>Fill</code></td>
+<td align="left">区域填充彩虹渐变、地质斜线阴影填充、草地贴图</td>
+</tr>
+<tr>
+<td align="left"><strong>专题制图与离屏绘制</strong></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/kml-earthquakes.html"><code>kml-earthquakes</code></a></td>
+<td align="left">动态 <code>style</code> 回调 + <code>CircleStyle</code> 映射震级 + 悬停 Tooltip</td>
+<td align="left">科学数据专题制图、气泡图（Bubble Map）、单点拾取</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/earthquake-custom-symbol.html"><code>earthquake-custom-symbol</code></a></td>
+<td align="left"><code>toContext</code> 离屏绘制复杂多边形 + 包装为 <code>Icon</code> + 高分屏倍率</td>
+<td align="left">复杂异形符号动态生成（闪电、风标）、避免静态切图</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/kml-timezones.html"><code>kml-timezones</code></a></td>
+<td align="left">太阳时角计算 + 动态计算多边形 <code>Fill</code> 透明度</td>
+<td align="left">全球时区昼夜交替光照模拟、时差动态可视化</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/wind-arrows.html"><code>wind-arrows</code></a></td>
+<td align="left"><code>RegularShape</code> 组合叠加 + 动态旋转角与偏移</td>
+<td align="left">气象风场风向风速标（风向标箭头与风翎组合）</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/topojson.html"><code>topojson</code></a></td>
+<td align="left">TopoJSON 数据拓扑共享边界与区域分级色彩填充</td>
+<td align="left">行政区划边界轻量化传输与分级统计图（Choropleth）</td>
+</tr>
+<tr>
+<td align="left"><strong>聚类降维与空间微交互</strong></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/earthquake-clusters.html"><code>earthquake-clusters</code></a></td>
+<td align="left"><code>Cluster</code> 数据源 + 动态分辨率统计缓存 + 鼠标悬停星形散开</td>
+<td align="left">地震点位密集聚合，悬停原地展开为真实震中五角星</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/clusters-dynamic.html"><code>clusters-dynamic</code></a></td>
+<td align="left">三图层架构（凸包层 + 聚合层 + 蛛网展开层）</td>
+<td align="left">聚合点鼠标悬停预览凸多边形包络、同址重叠点环形蛛网展开（Spiderfier）</td>
+</tr>
+<tr>
+<td align="left"><strong>GPU 密度与着色器连续场</strong></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/heatmap-earthquakes.html"><code>heatmap-earthquakes</code></a></td>
+<td align="left"><code>ol/layer/Heatmap</code> WebGL 离屏着色器累加 + 动态 weight 函数</td>
+<td align="left">地震震级权重热力图、人口密度场、高斯模糊核密度分析</td>
+</tr>
+<tr>
+<td align="left"><strong>交互与量算过程态反馈</strong></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/draw-features-style.html"><code>draw-features-style</code></a></td>
+<td align="left"><code>Draw</code> 交互的 <code>style</code> 配置（手绘过程草图样式）</td>
+<td align="left">绘制中虚线辅助线、吸附顶点高亮、首尾闭合指示</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/measure-style.html"><code>measure-style</code></a></td>
+<td align="left">动态样式函数中挂载分段长度与总距离 <code>Text</code> 标签</td>
+<td align="left">空间距离与面积量算工具、实时分段标注、图纸标尺</td>
+</tr>
+<tr>
+<td align="left"><strong>前沿声明式与底层扩展</strong></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/style-expressions.html"><code>style-expressions</code></a></td>
+<td align="left">扁平化规则对象（JSON Array 语法树：<code>[&#39;get&#39;]</code>, <code>[&#39;case&#39;]</code>）</td>
+<td align="left">WebGL 与 2D 统一的规则驱动样式、属性驱动半径/文本</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/style-renderer.html"><code>style-renderer</code></a></td>
+<td align="left"><code>Style.renderer</code> 低级 Canvas 上下文自绘钩子（Clip 剪裁）</td>
+<td align="left">国旗贴图裁剪注入多边形面内、高度定制的 Canvas 特效</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/animated-gif.html"><code>animated-gif</code></a></td>
+<td align="left"><code>postrender</code> 地图重绘循环 + 离屏逐帧解码 Canvas 贴图</td>
+<td align="left">雷达波纹、旋转地球、气象云图动效（GIF 逐帧播放）</td>
+</tr>
+<tr>
+<td align="left"><strong>遥感影像与 WebGL 栅格样式</strong></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/cog-style.html"><code>cog-style</code></a></td>
+<td align="left"><code>WebGLTile</code> 波段代数计算（<code>[&#39;band&#39;, n]</code>）与 NDVI 渐变插值</td>
+<td align="left">卫星影像真彩色、标准假彩色合成、植被指数实时渲染</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/cog-stretch.html"><code>cog-stretch</code></a></td>
+<td align="left">动态多波段反射率极值百分比拉伸（Contrast Stretch）</td>
+<td align="left">遥感遥测图像去雾、直方图拉伸增强显示</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/geozarr-stretch.html"><code>geozarr-stretch</code></a></td>
+<td align="left">多维数组（Zarr）波段选择与对比度拉伸</td>
+<td align="left">气象气候多维网格数据（NetCDF / Zarr）实时渲染</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/webgl-tile-style.html"><code>webgl-tile-style</code></a></td>
+<td align="left">WebGLTile 动态变量（<code>variables</code>）曝光度、对比度调色</td>
+<td align="left">栅格瓦片实时色彩滤镜滤镜（夜间模式、暗黑增强）</td>
+</tr>
+<tr>
+<td align="left"><strong>控件层 UI 纯 CSS 定制</strong></td>
+<td align="left"><a href="https://gisnotes.github.io/openlayers/en/latest/examples/zoomslider.html"><code>zoomslider</code></a></td>
+<td align="left">纯 CSS 伪元素与 SVG 背景图重写 <code>ol-zoomslider</code></td>
+<td align="left">地图缩放滑块视觉换肤、适配产品 UI 设计规范</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="第二部分：机制解构openlayers-样式的八大创建与实现范式">第二部分：机制解构——OpenLayers 样式的八大创建与实现范式</h2>
+<p>从底层实现来看，OpenLayers 支持以下 8 种样式创建方式：</p>
+<pre><code class="language-mermaid">flowchart TD
+    Data[&quot;地图数据 / 要素 / 像素&quot;] --&gt; Choice{&quot;根据场景选择样式机制&quot;}
+    
+    Choice --&gt;|&quot;静态固定视觉&quot;| M1[&quot;1. 经典面向对象 API\n(new Style / Fill / Stroke / Icon)&quot;]
+    Choice --&gt;|&quot;业务属性/视图变化&quot;| M2[&quot;2. 动态样式函数\n(styleFunction(feature, resolution))&quot;]
+    Choice --&gt;|&quot;数据驱动 / 跨平台规格&quot;| M3[&quot;3. 声明式表达式\n([&#39;get&#39;], [&#39;interpolate&#39;], Flat JSON)&quot;]
+    Choice --&gt;|&quot;复杂异形矢量符号&quot;| M4[&quot;4. 离屏 Canvas + toContext\n(ImmediateRenderer 矢量光栅化)&quot;]
+    Choice --&gt;|&quot;底层像素/画布直控&quot;| M5[&quot;5. 自定义 Renderer 钩子\n(Style.renderer / Context.clip)&quot;]
+    Choice --&gt;|&quot;渐变与纹理填充&quot;| M6[&quot;6. Canvas 原生材质\n(CanvasGradient / CanvasPattern)&quot;]
+    Choice --&gt;|&quot;海量连续场 / 卫星遥感&quot;| M7[&quot;7. WebGL 片元着色器\n(Heatmap / WebGLTile / Band Math)&quot;]
+    Choice --&gt;|&quot;地图控件视觉换肤&quot;| M8[&quot;8. 纯 CSS 规则覆盖\n(.ol-control / .ol-zoomslider)&quot;]
+</code></pre>
+<hr>
+<h3 id="1-经典面向对象-api（oop-style-instances）">1. 经典面向对象 API（OOP Style Instances）</h3>
+<p><strong>对应示例</strong>：<a href="https://gisnotes.github.io/openlayers/en/latest/examples/icon.html"><code>icon</code></a>、<a href="https://gisnotes.github.io/openlayers/en/latest/examples/regularshape.html"><code>regularshape</code></a>、<a href="https://gisnotes.github.io/openlayers/en/latest/examples/line-styles.html"><code>line-styles</code></a>、<a href="https://gisnotes.github.io/openlayers/en/latest/examples/polygon-styles.html"><code>polygon-styles</code></a></p>
+<p>通过组装 OpenLayers 提供的各类样式原子类构建静态样式：</p>
+<pre><code class="language-javascript">const style = new Style({
+  fill: new Fill({color: &#39;rgba(0, 102, 204, 0.6)&#39;}),
+  stroke: new Stroke({color: &#39;#ffffff&#39;, width: 2, lineDash: [4, 4]}),
+  image: new RegularShape({
+    points: 5,
+    radius: 10,
+    radius2: 4,
+    fill: new Fill({color: &#39;orange&#39;})
+  }),
+  text: new Text({text: &#39;标注名称&#39;, font: &#39;12px sans-serif&#39;})
+});
+</code></pre>
+<ul>
+<li><strong>结构特点</strong>：强类型结构清晰，适合样式固定的点线面图层。</li>
+<li><strong>复合叠加</strong>：图层或要素可接受样式数组（<code>Style[]</code>），OpenLayers 会按顺序依次绘制。例如在 <code>line-styles</code> 中用于实现带白色外边框（Casing）的双层道路线条，或在 <code>polygon-styles</code> 中同时绘制多边形面和顶点圆点。</li>
+</ul>
+<hr>
+<h3 id="2-动态样式函数（dynamic-style-function）">2. 动态样式函数（Dynamic Style Function）</h3>
+<p><strong>对应示例</strong>：<a href="https://gisnotes.github.io/openlayers/en/latest/examples/kml-earthquakes.html"><code>kml-earthquakes</code></a>、<a href="https://gisnotes.github.io/openlayers/en/latest/examples/earthquake-clusters.html"><code>earthquake-clusters</code></a>、<a href="https://gisnotes.github.io/openlayers/en/latest/examples/clusters-dynamic.html"><code>clusters-dynamic</code></a>、<a href="https://gisnotes.github.io/openlayers/en/latest/examples/measure-style.html"><code>measure-style</code></a>、<a href="https://gisnotes.github.io/openlayers/en/latest/examples/kml-timezones.html"><code>kml-timezones</code></a></p>
+<p>当要素的视觉表现需要根据要素属性（如震级、时区）、交互状态（悬停、选中）或当前地图分辨率（<code>resolution</code>）动态改变时使用：</p>
+<pre><code class="language-javascript">function styleFunction(feature, resolution) {
+  const magnitude = feature.get(&#39;magnitude&#39;);
+  let style = styleCache[magnitude];
+  if (!style) {
+    style = new Style({ ... });
+    styleCache[magnitude] = style;
+  }
+  return style;
+}
+</code></pre>
+<ul>
+<li><strong>核心价值</strong>：支持根据数据属性与视图状态动态调整样式。</li>
+<li><strong>复合几何绑定</strong>：样式函数返回的 <code>Style</code> 实例可通过 <code>geometry</code> 属性显式重定向几何对象。例如在 <code>earthquake-clusters</code> 选中时，聚合要素（点）返回一组样式，每个样式的 <code>geometry</code> 指向聚合包内子要素真实的震中坐标，从而实现在点击时将聚合点分散为原始位置的星形符号。</li>
+</ul>
+<hr>
+<h3 id="3-声明式表达式与规则过滤（flat-json--style-expressions）">3. 声明式表达式与规则过滤（Flat JSON &amp; Style Expressions）</h3>
+<p><strong>对应示例</strong>：<a href="https://gisnotes.github.io/openlayers/en/latest/examples/style-expressions.html"><code>style-expressions</code></a></p>
+<p>OpenLayers 引入了扁平化的 JSON 表达式规范，支持在 2D 矢量和 WebGL 图层中使用：</p>
+<pre><code class="language-javascript">const layer = new VectorLayer({
+  style: [
+    {
+      filter: [&#39;&gt;&#39;, [&#39;get&#39;, &#39;population&#39;], 1000000],
+      style: {
+        &#39;circle-radius&#39;: [&#39;interpolate&#39;, [&#39;linear&#39;], [&#39;get&#39;, &#39;population&#39;], 1000000, 4, 10000000, 16],
+        &#39;circle-fill-color&#39;: &#39;red&#39;
+      }
+    },
+    {
+      else: true,
+      style: {
+        &#39;circle-radius&#39;: 3,
+        &#39;circle-fill-color&#39;: &#39;gray&#39;
+      }
+    }
+  ]
+});
+</code></pre>
+<ul>
+<li><strong>核心价值</strong>：数据驱动，无需在 JS 中编写过程式逻辑；支持序列化传输与服务端统一下发配置，底层可直接映射为 WebGL 着色器指令。</li>
+</ul>
+<hr>
+<h3 id="4-立即渲染器与离屏画布（immediate-renderer--tocontext）">4. 立即渲染器与离屏画布（Immediate Renderer &amp; <code>toContext</code>）</h3>
+<p><strong>对应示例</strong>：<a href="https://gisnotes.github.io/openlayers/en/latest/examples/earthquake-custom-symbol.html"><code>earthquake-custom-symbol</code></a>、<a href="https://gisnotes.github.io/openlayers/en/latest/examples/animated-gif.html"><code>animated-gif</code></a></p>
+<p>内置的 <code>RegularShape</code> 仅支持对称正多边形，无法直接绘制倾斜折线闪电、非对称标头等复杂矢量。如果预制静态 PNG 图片，在尺寸随属性连续变化时需要过多图片资源。
+<code>toContext</code> 允许在离屏 Canvas 上将矢量几何直接光栅化为位图：</p>
+<pre><code class="language-javascript">// 1. 创建离屏画布并包装为立即渲染器
+const canvas = document.createElement(&#39;canvas&#39;);
+const vectorContext = toContext(canvas.getContext(&#39;2d&#39;), {
+  size: [width, height],
+  pixelRatio: DEVICE_PIXEL_RATIO // Retina 高分屏超采样
+});
+
+// 2. 复用 OpenLayers 样式与几何 API 直接绘制到离屏 Canvas
+vectorContext.setStyle(new Style({ fill, stroke }));
+vectorContext.drawGeometry(polygonOutline);
+
+// 3. 将离屏 Canvas 作为 Icon 图像使用
+const style = new Style({
+  image: new Icon({
+    img: canvas,
+    scale: 1 / DEVICE_PIXEL_RATIO // 缩回 CSS 逻辑像素，保证清晰度
+  })
+});
+</code></pre>
+<ul>
+<li><strong>核心价值</strong>：兼顾矢量几何根据属性自由缩放的灵活性，以及 <code>Icon</code> 符号批量渲染的吞吐量。</li>
+</ul>
+<hr>
+<h3 id="5-自定义底层-canvas-渲染器钩子（custom-stylerenderer）">5. 自定义底层 Canvas 渲染器钩子（Custom <code>Style.renderer</code>）</h3>
+<p><strong>对应示例</strong>：<a href="https://gisnotes.github.io/openlayers/en/latest/examples/style-renderer.html"><code>style-renderer</code></a></p>
+<p>当内置几何绘制方法无法满足复杂需求（例如：使用国旗图片对国家多边形进行蒙版裁剪填充，或调用原生 Canvas 的 <code>shadowBlur</code> 模糊效果）时，可以在 <code>Style</code> 中声明 <code>renderer</code> 回调：</p>
+<pre><code class="language-javascript">const style = new Style({
+  renderer: function (pixelCoordinates, state) {
+    const ctx = state.context; // 原生地图 Canvas 2D 上下文
+    ctx.save();
+    ctx.beginPath();
+    // 根据像素坐标构建路径并应用裁剪
+    ...
+    ctx.clip();
+    ctx.drawImage(flagImage, x, y, w, h);
+    ctx.restore();
+  }
+});
+</code></pre>
+<ul>
+<li><strong>核心价值</strong>：直接使用原生 Canvas 2D 绘图 API，支持自定义路径裁剪与像素操作。</li>
+</ul>
+<hr>
+<h3 id="6-原生-canvas-材质注入（canvasgradient--canvaspattern）">6. 原生 Canvas 材质注入（<code>CanvasGradient</code> &amp; <code>CanvasPattern</code>）</h3>
+<p><strong>对应示例</strong>：<a href="https://gisnotes.github.io/openlayers/en/latest/examples/canvas-gradient-pattern.html"><code>canvas-gradient-pattern</code></a></p>
+<p>OpenLayers 的 <code>Fill.color</code> 支持直接传入浏览器的 <code>CanvasGradient</code>（渐变对象）与 <code>CanvasPattern</code>（平铺图案对象）：</p>
+<pre><code class="language-javascript">// 创建跨越屏幕物理像素宽度的线性渐变
+const gradient = ctx.createLinearGradient(0, 0, 1024 * DEVICE_PIXEL_RATIO, 0);
+gradient.addColorStop(0, &#39;red&#39;);
+gradient.addColorStop(1, &#39;purple&#39;);
+
+// 直接作为 Fill 颜色传入
+const style = new Style({
+  fill: new Fill({ color: gradient })
+});
+</code></pre>
+<ul>
+<li><strong>核心价值</strong>：无需额外编写渲染循环，即可在多边形填充中实现渐变色或纹理贴图。</li>
+</ul>
+<hr>
+<h3 id="7-webgl-片元着色器样式（webgltile--heatmap-shader）">7. WebGL 片元着色器样式（WebGLTile &amp; Heatmap Shader）</h3>
+<p><strong>对应示例</strong>：<a href="https://gisnotes.github.io/openlayers/en/latest/examples/heatmap-earthquakes.html"><code>heatmap-earthquakes</code></a>、<a href="https://gisnotes.github.io/openlayers/en/latest/examples/cog-style.html"><code>cog-style</code></a>、<a href="https://gisnotes.github.io/openlayers/en/latest/examples/cog-stretch.html"><code>cog-stretch</code></a>、<a href="https://gisnotes.github.io/openlayers/en/latest/examples/geozarr-stretch.html"><code>geozarr-stretch</code></a>、<a href="https://gisnotes.github.io/openlayers/en/latest/examples/webgl-tile-style.html"><code>webgl-tile-style</code></a></p>
+<p>利用 WebGL 在 GPU 中完成像素着色与计算：</p>
+<ul>
+<li><strong>热力图（<code>HeatmapLayer</code>）</strong>：在 WebGL 中将点位累加到离屏纹理，根据模糊半径（<code>blur</code>）与热力半径（<code>radius</code>）进行卷积运算，最后根据色谱查找表着色。</li>
+<li><strong>遥感多波段栅格（<code>WebGLTile</code>）</strong>：通过表达式直接在 GPU 中对像元执行波段代数运算：<pre><code class="language-javascript">const ndvi = {
+  color: [
+    &#39;interpolate&#39;, [&#39;linear&#39;],
+    [&#39;/&#39;, [&#39;-&#39;, nir, red], [&#39;+&#39;, nir, red]], // (NIR - Red) / (NIR + Red)
+    -0.2, [191, 191, 191],
+    0.6, [46, 117, 34]
+  ]
+};
+</code></pre>
+</li>
+<li><strong>核心价值</strong>：在客户端利用 GPU 直接计算像元数据，拖动滑块调色时无需重新请求瓦片。</li>
+</ul>
+<hr>
+<h3 id="8-控件与-ui-层的纯-css-样式定制（css--control-skinning）">8. 控件与 UI 层的纯 CSS 样式定制（CSS &amp; Control Skinning）</h3>
+<p><strong>对应示例</strong>：<a href="https://gisnotes.github.io/openlayers/en/latest/examples/zoomslider.html"><code>zoomslider</code></a></p>
+<p>地图控件（ZoomSlider、ScaleLine、OverviewMap）使用标准 CSS 类控制外观。在 <code>zoomslider</code> 示例中，通过覆盖 <code>.ol-zoomslider</code> 和 <code>.ol-zoomslider-thumb</code> 等类选择器，可自定义滑块尺寸、背景图与滑块游标。</p>
+<hr>
+<h2 id="第三部分：实战场景大观从业务需求看-style-的设计模式">第三部分：实战场景大观——从业务需求看 Style 的设计模式</h2>
+<h3 id="场景-1：点位标绘单图多色复用与防畸变法则">场景 1：点位标绘——单图多色复用与防畸变法则</h3>
+<ul>
+<li><strong>颜色多态复用（<code>icon-color</code>）</strong>：在安防监控或物联网大屏中，若只需改变图标颜色（在线/离线/报警），无需为每种状态切单独图片。可准备一张白色剪影图，使用 <code>new Icon({ src: &#39;white-pin.png&#39;, color: [255, 0, 0, 1] })</code> 动态混色。</li>
+<li><strong>高分屏与异形图防变形（<code>icon-width</code> &amp; <code>icon-scale</code>）</strong>：对于非正方形的 SVG 图标，建议显式指定 <code>width</code> 和 <code>height</code>，或配合 <code>scale: 1 / DEVICE_PIXEL_RATIO</code> 防止拉伸失真。</li>
+</ul>
+<h3 id="场景-2：海量点数据聚合与空间微交互">场景 2：海量点数据聚合与空间微交互</h3>
+<p>面对密集点位时，不同数据量和交互要求对应不同方案：</p>
+<ul>
+<li><strong>静态气泡图（<code>kml-earthquakes</code>）</strong>：使用单个矢量图层 + 半径随震级缩放的圆圈 + 样式缓存，适合中小数据量的离散点展示。</li>
+<li><strong>连续核密度场（<code>heatmap-earthquakes</code>）</strong>：放弃离散几何体，借助 GPU 生成连续热力场，适合宏观空间密度趋势分析。</li>
+<li><strong>三层聚合交互体系（<code>clusters-dynamic</code>）</strong>：<pre><code class="language-mermaid">sequenceDiagram
+    autonumber
+    actor User as 用户交互
+    participant LayerTop as 顶层: clusterCircles (蛛网展开)
+    participant LayerMid as 中层: clusters (常规聚合圆/单图标)
+    participant LayerBot as 底层: clusterHulls (凸包多边形)
+
+    User-&gt;&gt;LayerMid: 鼠标悬停 (pointermove)
+    LayerMid-&gt;&gt;LayerBot: 计算包围点最小凸多边形 (monotoneChainConvexHull)
+    LayerBot--&gt;&gt;User: 渲染半透明浅灰色凸包多边形
+
+    User-&gt;&gt;LayerMid: 鼠标点击 (click)
+    alt 子要素范围较广
+        LayerMid--&gt;&gt;User: map.getView().fit(extent) 平滑缩放聚焦
+    else 已达最大缩放级或同址重叠点
+        LayerMid-&gt;&gt;LayerTop: 触发 Spiderfier 蛛网算法 (generatePointsCircle)
+        LayerTop--&gt;&gt;User: 原地以放射状圆周线缆展开各个子要素图标
+    end
+</code></pre>
+该架构通过底层凸包预览、中层聚合展示、顶层同址展开，解决了点位密集压盖与下钻查看问题。</li>
+</ul>
+<h3 id="场景-3：科学计算与动态时空推演">场景 3：科学计算与动态时空推演</h3>
+<ul>
+<li><strong>全球昼夜光照（<code>kml-timezones</code>）</strong>：根据当前 UTC 时间与各时区经度时角差，动态计算距当地正午的偏移量，实时更新多边形填充透明度（<code>opacity: 0 ~ 0.75</code>），模拟全球昼夜交替。</li>
+<li><strong>气象风场动向（<code>wind-arrows</code>）</strong>：将正三角形与短线段两个 <code>RegularShape</code> 组合为风向标符号，利用 <code>angle</code> 绑定风向，<code>scale</code> 绑定风速，直观表达流体矢量。</li>
+</ul>
+<hr>
+<h2 id="第四部分：工程化与性能治理准则（architecture--performance-rules）">第四部分：工程化与性能治理准则（Architecture &amp; Performance Rules）</h2>
+<p>在样式渲染中，以下四点对性能影响较大：</p>
+<h3 id="铁律-1：享元模式与样式缓存字典（stylecache）">铁律 1：享元模式与样式缓存字典（<code>styleCache</code>）</h3>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>避免在 <code>styleFunction</code> 中重复创建 <code>Style</code> 实例。</strong>
+地图平移、缩放与悬停交互时，<code>styleFunction</code> 会被高频调用。若每次都重新实例化 <code>Style</code>、<code>Fill</code>、<code>Stroke</code> 或绘制 <code>&lt;canvas&gt;</code>，会引起内存抖动和频繁的垃圾回收。</p>
+</blockquote>
+<ul>
+<li><strong>属性离散化缓存</strong>：针对震级、状态码等属性，建立 <code>styleCache[key]</code> 字典复用实例。</li>
+<li><strong>分辨率缓存</strong>：对于需要计算屏幕像素半径的聚合图层，增加 <code>if (resolution !== currentResolution)</code> 判断，仅在缩放级别变化时重新计算。</li>
+</ul>
+<h3 id="铁律-2：高分屏（retina--hidpi）像素适配">铁律 2：高分屏（Retina / HiDPI）像素适配</h3>
+<p>在 Mac、4K 屏或高分移动设备上，1 个 CSS 逻辑像素对应多个物理像素（<code>DEVICE_PIXEL_RATIO</code>）。</p>
+<ul>
+<li><strong>离屏绘制处理步骤</strong>（参考 <code>earthquake-custom-symbol</code>）：<ol>
+<li>调用 <code>toContext(ctx, { size: [w, h], pixelRatio: DEVICE_PIXEL_RATIO })</code>，按物理分辨率超采样绘制；</li>
+<li>构造 <code>new Icon({ img: canvas, scale: 1 / DEVICE_PIXEL_RATIO })</code>，缩回 CSS 逻辑尺寸，保证清晰度。</li>
+</ol>
+</li>
+<li><strong>CanvasGradient 跨度校准</strong>：渐变坐标定义在物理像素坐标系中，终点坐标需要乘以 <code>DEVICE_PIXEL_RATIO</code>，避免渐变区域缩小。</li>
+</ul>
+<h3 id="铁律-3：数据预处理中的静默写入（silent--true）">铁律 3：数据预处理中的静默写入（<code>silent = true</code>）</h3>
+<blockquote>
+<p>[!WARNING]
+从 KML 或 GeoJSON 提取属性并写入要素时，调用 <code>feature.set(&#39;key&#39;, value)</code> 默认会触发要素的 <code>change</code> 事件并通知图层重绘。</p>
+</blockquote>
+<p><code>earthquake-custom-symbol</code> 中提供了标准处理方式：</p>
+<pre><code class="language-javascript">vector.getSource().on(&#39;featuresloadend&#39;, function (evt) {
+  evt.features.forEach((f) =&gt; {
+    // 第三个参数传入 true（silent: true），静默更新属性，不派发 change 事件
+    f.set(&#39;magnitude&#39;, parseMagnitudeFromName(f.get(&#39;name&#39;)), true);
+  });
+});
+</code></pre>
+<p>在批量写入要素属性时，该参数可避免连续触发图层重绘，减少首屏加载卡顿。</p>
+<h3 id="铁律-4：标注碰撞避让（declutter-true）">铁律 4：标注碰撞避让（<code>declutter: true</code>）</h3>
+<p>在文本标注密集场景（如 <code>style-expressions</code> 中的地名标注），开启图层的 <code>declutter: true</code> 配置。OpenLayers 底层通过 R-Tree 空间索引在渲染阶段执行屏幕包围盒相交检测，自动隐藏冲突注记，避免文字重叠。</p>
+<hr>
+<h2 id="结语：openlayers-样式选型路线图">结语：OpenLayers 样式选型路线图</h2>
+<p>根据业务需求选择合适的样式机制：</p>
+<pre><code>面对业务需求：
+│
+├── 卫星遥感 / 多波段连续影像
+│   └── 选用 WebGLTile + Band Math Expressions (cog-style, cog-stretch)
+│
+├── 海量离散点宏观密度分布
+│   └── 选用 HeatmapLayer (heatmap-earthquakes)
+│
+├── 密集点位聚类与下钻微交互
+│   └── 选用 Cluster + 多图层联动架构 (clusters-dynamic, earthquake-clusters)
+│
+├── 复杂异形矢量符号（闪电、特殊风标）
+│   └── 选用 toContext 离屏 Canvas + styleCache 缓存 (earthquake-custom-symbol)
+│
+├── 常规点线面业务数据
+│   ├── 规则简单/静态：面向对象 Style 实例 (icon, regularshape, line-styles)
+│   ├── 属性驱动/状态变化：动态 styleFunction + styleCache 字典 (kml-earthquakes)
+│   └── 规则多样/跨端规范：声明式 Style Expressions (style-expressions)
+│
+└── 复杂自定义效果（图片蒙版裁剪、原生粒子）
+    └── 选用 Style.renderer 低级钩子直控 Canvas (style-renderer)
+</code></pre>
+<p>掌握这些样式机制与优化规则，有助于在视觉呈现与渲染性能之间取得平衡。</p>
+<hr>
+<h2 id="附录：27-个-style-官方示例相对地址汇总">附录：27 个 Style 官方示例相对地址汇总</h2>
+<p>以下为本文所涉及的全部 27 个包含 <code>style</code> 标签的 OpenLayers 官方示例线上运行与源码地址：</p>
+<ol>
+<li><a href="../en/latest/examples/icon.html">icon</a></li>
+<li><a href="../en/latest/examples/icon-color.html">icon-color</a></li>
+<li><a href="../en/latest/examples/icon-width.html">icon-width</a></li>
+<li><a href="../en/latest/examples/icon-scale.html">icon-scale</a></li>
+<li><a href="../en/latest/examples/icon-negative.html">icon-negative</a></li>
+<li><a href="../en/latest/examples/line-styles.html">line-styles</a></li>
+<li><a href="../en/latest/examples/polygon-styles.html">polygon-styles</a></li>
+<li><a href="../en/latest/examples/regularshape.html">regularshape</a></li>
+<li><a href="../en/latest/examples/canvas-gradient-pattern.html">canvas-gradient-pattern</a></li>
+<li><a href="../en/latest/examples/kml-earthquakes.html">kml-earthquakes</a></li>
+<li><a href="../en/latest/examples/earthquake-custom-symbol.html">earthquake-custom-symbol</a></li>
+<li><a href="../en/latest/examples/kml-timezones.html">kml-timezones</a></li>
+<li><a href="../en/latest/examples/wind-arrows.html">wind-arrows</a></li>
+<li><a href="../en/latest/examples/topojson.html">topojson</a></li>
+<li><a href="../en/latest/examples/earthquake-clusters.html">earthquake-clusters</a></li>
+<li><a href="../en/latest/examples/clusters-dynamic.html">clusters-dynamic</a></li>
+<li><a href="../en/latest/examples/heatmap-earthquakes.html">heatmap-earthquakes</a></li>
+<li><a href="../en/latest/examples/draw-features-style.html">draw-features-style</a></li>
+<li><a href="../en/latest/examples/measure-style.html">measure-style</a></li>
+<li><a href="../en/latest/examples/style-expressions.html">style-expressions</a></li>
+<li><a href="../en/latest/examples/style-renderer.html">style-renderer</a></li>
+<li><a href="../en/latest/examples/animated-gif.html">animated-gif</a></li>
+<li><a href="../en/latest/examples/cog-style.html">cog-style</a></li>
+<li><a href="../en/latest/examples/cog-stretch.html">cog-stretch</a></li>
+<li><a href="../en/latest/examples/geozarr-stretch.html">geozarr-stretch</a></li>
+<li><a href="../en/latest/examples/webgl-tile-style.html">webgl-tile-style</a></li>
+<li><a href="../en/latest/examples/zoomslider.html">zoomslider</a></li>
+</ol>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

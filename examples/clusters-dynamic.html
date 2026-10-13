@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Dynamic clusters</title>
+    <title>Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -31,9 +31,11 @@
                 <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
                 <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
                 <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
-                <a class="dropdown-item" href="/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
                 <div class="dropdown-divider"></div>
                 <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
             </div>
           </li>
           <li class="nav-item"><a class="nav-link" href="../examples/">Examples</a></li>
@@ -60,7 +62,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Dynamic clusters</h4>
+        <h4 id="title">Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -71,7 +73,7 @@
               data-bs-target="#tag-example-list"
               data-title="marker"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-icon.html&quot;&gt;Icon modification&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
@@ -91,8 +93,8 @@
               data-title="cluster"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cluster.html&quot;&gt;Clustered Features&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters / 地震点位聚合与悬停散开渲染&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -124,11 +126,11 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-modify-trace-snap.html&quot;&gt;Draw, modify, trace and snap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters / 地震点位聚合与悬停散开渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./equal-earth-geojson.html&quot;&gt;Equal Earth projection with dynamic center meridian&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
@@ -211,11 +213,11 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features-style.html&quot;&gt;Drawing Features Style / 绘制要素时的自定义样式&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters / 地震点位聚合与悬停散开渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
@@ -245,7 +247,7 @@
               data-bs-target="#tag-example-list"
               data-title="convexhull"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -266,19 +268,90 @@
         </div>
         <div id="map" class="map"></div>
 
+
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
           <input id="codesandbox-params" type="hidden" name="parameters">
         </form>
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Clusters with zoom-to-cluster, hull view, and uncluttering of overlapping features.</p>
+        <p id="shortdesc">Clusters with zoom-to-cluster, hull view, and uncluttering of overlapping features. / 支持点击缩放至聚合范围、悬停显示凸包（Convex Hull）边界以及重叠要素环形蛛网展开（Spiderfier）的高级聚合示例。</p>
         <div id="docs"><p>This example shows open data of subsidized photovoltaic installations in Vienna. Different style functions
   are used for cluster display, single feature display, convex hull of a cluster, and an expanded view of
   overlapping features. Hovering over a cluster shows its convex hull. Clicking on a cluster zooms to the
   extent of the contained features. Clicking on a cluster consisting of features that are very close to each other reveals an expanded view
   of the features, along a circle around the cluster.</p>
-<p>Features are styled differently depending on the power of the photovoltaic installation.</p>
+<p>Features are styled differently depending on the power of the photovoltaic installation.</p><p>本示例展示了维也纳市受补贴光伏发电设施的开放数据。代码中针对**聚合点显示**、**单要素显示**、**聚合包的凸包（Convex Hull）多边形**以及**重叠要素的环形散开视图（Spiderfier）**分别设计了独立的样式函数：当鼠标悬停在某个聚合点上时，会高亮显示该聚合包所涵盖点位的凸包范围；点击普通聚合点时，地图会平滑缩放至其内部所有子要素的边界范围（Extent）；而当点击一个由彼此距离极近（或完全同址重叠）的要素组成的聚合点时，则会围绕聚合中心沿圆周展开显示各个独立要素。</p>
+<p>此外，单个光伏设施要素会根据其装机功率（属性字段 <code>LEISTUNG</code>）的不同而渲染不同的图标样式。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构设计：为什么要用 3 个 <code>VectorLayer</code> 共享同一个 <code>Cluster</code> 数据源？</h4>
+<p>阅读代码第 191~215 行会发现一个非常巧妙的图层组织技巧：全局只创建了一个 <code>clusterSource</code>，却同时挂载给了<strong>三个独立的矢量图层</strong>（按从底到顶的渲染顺序排列）：</p>
+<table>
+<thead>
+<tr>
+<th align="left">图层变量名</th>
+<th align="left">渲染层级（Z-Order）</th>
+<th align="left">绑定的样式函数</th>
+<th align="left">职责与分离原因</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><code>clusterHulls</code></td>
+<td align="left"><strong>底层</strong>（最先绘制）</td>
+<td align="left"><code>clusterHullStyle</code></td>
+<td align="left">仅在鼠标悬停时绘制当前聚合包的橙色半透明<strong>凸包多边形（Convex Hull）</strong>。放在最底层可确保凸包多边形永远不会遮挡上方的聚合圆圈和数字</td>
+</tr>
+<tr>
+<td align="left"><code>clusters</code></td>
+<td align="left"><strong>中层</strong>（常规层）</td>
+<td align="left"><code>clusterStyle</code></td>
+<td align="left">绘制常规的双层同心圆聚合徽章（<code>size &gt; 1</code>）或单个光伏电站图标（<code>size === 1</code>，按功率 <code>LEISTUNG &gt; 5</code> 区分深色/浅色图标）</td>
+</tr>
+<tr>
+<td align="left"><code>clusterCircles</code></td>
+<td align="left"><strong>顶层</strong>（最后绘制）</td>
+<td align="left"><code>clusterCircleStyle</code></td>
+<td align="left">仅在点击同址重叠聚合点时，绘制<strong>环形蛛网展开线（Spider Legs）与散开后的子要素图标</strong>，确保展开后的图标浮在所有常规聚合点之上，不被遮挡</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p><strong>性能优势</strong>：当鼠标移动触发 <code>hoverFeature</code> 变化时，只需调用 <code>clusterHulls.setStyle(clusterHullStyle)</code> 局部重绘底层的凸包图层，而无需重新计算和重绘上千个常规聚合点！</p>
+</blockquote>
+<h4>2. 悬停凸包计算（<code>monotoneChainConvexHull</code>）</h4>
+<ul>
+<li><strong>什么是凸包（Convex Hull）？</strong> 就像用一根橡皮筋套住聚合包内的所有离散点位，橡皮筋收紧后形成的最外圈凸多边形边界。它能直观告诉用户：“这个聚合圆圈里的点到底分布在多大的地理区域内”。</li>
+<li><strong>实现方式</strong>：在 <code>clusterHullStyle(cluster)</code> 中，提取出聚合包内所有原始要素的坐标数组 <code>points</code>，直接传入轻量级算法库 <code>monotoneChainConvexHull(points)</code>（基于 Andrew 单调链算法，时间复杂度 <code>O(n log n)</code>），拿到按顺序排列的外环顶点坐标后构造 <code>new Polygon([ring])</code> 并赋给 <code>Style.geometry</code> 即可直接渲染。</li>
+</ul>
+<h4>3. 点击聚合点的智能分流策略：“缩放定位（<code>view.fit</code>）” vs. “蛛网展开（Spiderfier）”</h4>
+<p>在实际业务中，点击聚合点最怕遇到**“同址多点（如同一栋大楼安装了 10 个光伏电站，坐标完全相同）”**——如果一味执行 <code>view.fit(extent)</code> 放大，哪怕放到最大级别 <code>maxZoom: 19</code>，这 10 个点依然叠在一起无法分开！
+本示例在 <code>map.on(&#39;click&#39;)</code>（第 266~277 行）中给出了工业级标准解法：</p>
+<pre><code class="language-js">if (
+  view.getZoom() === view.getMaxZoom() ||
+  (getWidth(extent) &lt; resolution &amp;&amp; getHeight(extent) &lt; resolution)
+) {
+  // 分支 A：已达最大缩放级别，或所有子要素的地理跨度在当前分辨率下不足 1 个像素（同址重叠） -&gt; 触发环形蛛网展开！
+  clickFeature = features[0];
+  clickResolution = resolution;
+  clusterCircles.setStyle(clusterCircleStyle);
+} else {
+  // 分支 B：子要素在空间上可区分 -&gt; 平滑缩放至子要素包围盒，让聚合自然解开
+  view.fit(extent, {duration: 500, padding: [50, 50, 50, 50]});
+}
+</code></pre>
+<h4>4. 环形蛛网展开算法（<code>generatePointsCircle</code>）数学原理</h4>
+<p>借鉴自著名的 <code>Leaflet.markercluster</code>（Spiderfier）：</p>
+<ol>
+<li><strong>根据子要素个数 <code>count</code> 动态计算圆周长与半径</strong>：<ul>
+<li>设定相邻两个展开图标在圆周上的弧长间距 <code>circleFootSeparation = 28</code>（像素），计算总圆周长 <code>circumference = 1 * 28 * (2 + count)</code>。</li>
+<li>由圆周长公式反推像素半径 <code>legLength = circumference / (2 * Math.PI)</code>，并限制最小半径为 <code>35px</code>（确保展开后的图标一定落在聚合圆圈外部），再乘以当前分辨率 <code>resolution</code> 换算为地图投影坐标长度。</li>
+</ul>
+</li>
+<li><strong>按角度均匀分布并绘制牵引线</strong>：<ul>
+<li>将圆周 <code>2 * Math.PI</code> 等分为 <code>count</code> 份（<code>angleStep</code>），利用三角函数 <code>cos(angle)</code> 和 <code>sin(angle)</code> 算出每个子要素在圆周上的新坐标 <code>coordinates</code>。</li>
+<li>在 <code>reduce</code> 循环中，使用 <strong><code>styles.unshift(...)</code></strong> 将连接中心点与圆周点的牵引线（<code>LineString</code>）插入样式数组头部（先画线），再使用 <strong><code>styles.push(...)</code></strong> 将子要素图标追加到数组尾部（后画图标盖住线头），细节极其考究。</li>
+</ul>
+</li>
+</ol>
 </div>
       </div>
 
@@ -307,10 +380,13 @@ import Stroke from &#x27;ol/style/Stroke.js&#x27;;
 import Style from &#x27;ol/style/Style.js&#x27;;
 import Text from &#x27;ol/style/Text.js&#x27;;
 
+// 环形蛛网展开（Spiderfier）算法的几何常量：间距倍数、相邻图标圆周弧长间距（28px）、起始角度（90° 正上方）
 const circleDistanceMultiplier &#x3D; 1;
 const circleFootSeparation &#x3D; 28;
 const circleStartAngle &#x3D; Math.PI / 2;
 
+// 1. 预定义复用的填充、描边、同心圆与图标样式实例
+// 悬停凸包多边形（Convex Hull）的半透明橙色填充与深橙色描边（该描边也复用于蛛网展开牵引线）
 const convexHullFill &#x3D; new Fill({
   color: &#x27;rgba(255, 153, 0, 0.4)&#x27;,
 });
@@ -318,6 +394,7 @@ const convexHullStroke &#x3D; new Stroke({
   color: &#x27;rgba(204, 85, 0, 1)&#x27;,
   width: 1.5,
 });
+// 聚合点双层同心圆（外圈浅橙色半径 20px + 内圈深橙色半径 14px）与中心数字样式
 const outerCircleFill &#x3D; new Fill({
   color: &#x27;rgba(255, 153, 102, 0.3)&#x27;,
 });
@@ -339,6 +416,7 @@ const outerCircle &#x3D; new CircleStyle({
   radius: 20,
   fill: outerCircleFill,
 });
+// 单个光伏设施图标：装机功率 &gt; 5kW 使用深色实心笑脸图标，&lt;&#x3D; 5kW 使用浅色轮廓笑脸图标
 const darkIcon &#x3D; new Icon({
   src: &#x27;data/icons/emoticon-cool.svg&#x27;,
 });
@@ -348,6 +426,7 @@ const lightIcon &#x3D; new Icon({
 
 /**
  * Single feature style, users for clusters with 1 feature and cluster circles.
+ * 单个要素的图标样式函数（同时服务于仅含 1 个要素的聚合点，以及环形蛛网展开后的每个子要素点）
  * @param {Feature} clusterMember A feature from a cluster.
  * @return {Style} An icon style for the cluster member&#x27;s location.
  */
@@ -361,11 +440,13 @@ function clusterMemberStyle(clusterMember) {
 let clickFeature, clickResolution;
 /**
  * Style for clusters with features that are too close to each other, activated on click.
+ * 针对内部子要素距离过近（或同址重叠）的聚合点的环形展开样式函数（点击时激活）
  * @param {Feature} cluster A cluster with overlapping members.
  * @param {number} resolution The current view resolution.
  * @return {Array&lt;Style&gt;|null} A style to render an expanded view of the cluster members.
  */
 function clusterCircleStyle(cluster, resolution) {
+  // 仅对当前点击选中的那个聚合点生效；一旦点击其他要素或地图发生缩放（resolution 改变），立即收起展开视图
   if (cluster !&#x3D;&#x3D; clickFeature || resolution !&#x3D;&#x3D; clickResolution) {
     return null;
   }
@@ -378,12 +459,14 @@ function clusterCircleStyle(cluster, resolution) {
   ).reduce((styles, coordinates, i) &#x3D;&gt; {
     const point &#x3D; new Point(coordinates);
     const line &#x3D; new LineString([centerCoordinates, coordinates]);
+    // 使用 unshift 将牵引线（LineString）插入数组头部，确保牵引线先绘制在底层
     styles.unshift(
       new Style({
         geometry: line,
         stroke: convexHullStroke,
       }),
     );
+    // 使用 push 将展开到圆周上的子要素图标追加到数组尾部，确保图标后绘制并覆盖在牵引线末端之上
     styles.push(
       clusterMemberStyle(
         new Feature({
@@ -401,6 +484,7 @@ function clusterCircleStyle(cluster, resolution) {
  * https://github.com/Leaflet/Leaflet.markercluster/blob/31360f2/src/MarkerCluster.Spiderfier.js#L55-L72
  * Arranges points in a circle around the cluster center, with a line pointing from the center to
  * each point.
+ * 借鉴自 Leaflet.markercluster 的蛛网展开算法：将聚合包内的所有子要素围绕聚合中心按圆周均匀排列
  * @param {number} count Number of cluster members.
  * @param {Array&lt;number&gt;} clusterCenter Center coordinate of the cluster.
  * @param {number} resolution Current view resolution.
@@ -409,15 +493,15 @@ function clusterCircleStyle(cluster, resolution) {
 function generatePointsCircle(count, clusterCenter, resolution) {
   const circumference &#x3D;
     circleDistanceMultiplier * circleFootSeparation * (2 + count);
-  let legLength &#x3D; circumference / (Math.PI * 2); //radius from circumference
+  let legLength &#x3D; circumference / (Math.PI * 2); //radius from circumference（由圆周长反推像素半径）
   const angleStep &#x3D; (Math.PI * 2) / count;
   const res &#x3D; [];
   let angle;
 
-  legLength &#x3D; Math.max(legLength, 35) * resolution; // Minimum distance to get outside the cluster icon.
+  legLength &#x3D; Math.max(legLength, 35) * resolution; // Minimum distance to get outside the cluster icon.（最小半径 35px，确保展开点落在聚合圆外部，并乘以分辨率换算为地图坐标长度）
 
   for (let i &#x3D; 0; i &lt; count; ++i) {
-    // Clockwise, like spiral.
+    // Clockwise, like spiral.（按角度步长围绕中心均匀计算圆周坐标）
     angle &#x3D; circleStartAngle + i * angleStep;
     res.push([
       clusterCenter[0] + legLength * Math.cos(angle),
@@ -431,6 +515,7 @@ function generatePointsCircle(count, clusterCenter, resolution) {
 let hoverFeature;
 /**
  * Style for convex hulls of clusters, activated on hover.
+ * 聚合包的凸包（Convex Hull）多边形样式函数（鼠标悬停时激活）
  * @param {Feature} cluster The cluster feature.
  * @return {Style|null} Polygon style for the convex hull of the cluster.
  */
@@ -442,6 +527,7 @@ function clusterHullStyle(cluster) {
   const points &#x3D; originalFeatures.map((feature) &#x3D;&gt;
     feature.getGeometry().getCoordinates(),
   );
+  // 使用 monotoneChainConvexHull 计算包络所有子要素坐标的最小凸多边形外环顶点
   return new Style({
     geometry: new Polygon([monotoneChainConvexHull(points)]),
     fill: convexHullFill,
@@ -449,6 +535,11 @@ function clusterHullStyle(cluster) {
   });
 }
 
+/**
+ * 常规聚合图层样式函数：多要素显示为双层同心圆 + 数量文本，单要素直接显示光伏电站图标
+ * @param {import(&#x27;ol/Feature.js&#x27;).FeatureLike} feature 聚合要素
+ * @return {Array&lt;Style&gt;|Style} 渲染样式
+ */
 function clusterStyle(feature) {
   const size &#x3D; feature.get(&#x27;features&#x27;).length;
   if (size &gt; 1) {
@@ -470,11 +561,13 @@ function clusterStyle(feature) {
   return clusterMemberStyle(originalFeature);
 }
 
+// 原始光伏电站 GeoJSON 矢量数据源
 const vectorSource &#x3D; new VectorSource({
   format: new GeoJSON(),
   url: &#x27;data/geojson/photovoltaic.json&#x27;,
 });
 
+// 聚合数据源（聚合像素距离 35px），同时供给下方 3 个不同职责的 VectorLayer 共享使用
 const clusterSource &#x3D; new Cluster({
   attributions:
     &#x27;Data: &lt;a href&#x3D;&quot;https://www.data.gv.at/auftritte/?organisation&#x3D;stadt-wien&quot;&gt;Stadt Wien&lt;/a&gt;&#x27;,
@@ -483,23 +576,27 @@ const clusterSource &#x3D; new Cluster({
 });
 
 // Layer displaying the convex hull of the hovered cluster.
+// 第 1 层（底层）：用于渲染鼠标悬停聚合包的凸包（Convex Hull）多边形
 const clusterHulls &#x3D; new VectorLayer({
   source: clusterSource,
   style: clusterHullStyle,
 });
 
 // Layer displaying the clusters and individual features.
+// 第 2 层（中层）：用于渲染常规聚合同心圆徽章与单个光伏电站图标
 const clusters &#x3D; new VectorLayer({
   source: clusterSource,
   style: clusterStyle,
 });
 
 // Layer displaying the expanded view of overlapping cluster members.
+// 第 3 层（顶层）：用于渲染点击重叠聚合点时的环形蛛网展开视图（Spiderfier）
 const clusterCircles &#x3D; new VectorLayer({
   source: clusterSource,
   style: clusterCircleStyle,
 });
 
+// 维也纳官方灰色底图（basemap.at）
 const raster &#x3D; new TileLayer({
   source: new ImageTile({
     attributions:
@@ -515,6 +612,7 @@ const map &#x3D; new Map({
     center: [0, 0],
     zoom: 2,
     maxZoom: 19,
+    // 限制视图范围为维也纳市区，并允许查看完整范围
     extent: [
       ...fromLonLat([16.1793, 48.1124]),
       ...fromLonLat([16.5559, 48.313]),
@@ -523,6 +621,7 @@ const map &#x3D; new Map({
   }),
 });
 
+// 监听鼠标移动：异步碰撞检测当前像素下的聚合点，悬停时绘制底层凸包并切换手型光标
 map.on(&#x27;pointermove&#x27;, (event) &#x3D;&gt; {
   clusters.getFeatures(event.pixel).then((features) &#x3D;&gt; {
     if (features[0] !&#x3D;&#x3D; hoverFeature) {
@@ -538,12 +637,14 @@ map.on(&#x27;pointermove&#x27;, (event) &#x3D;&gt; {
   });
 });
 
+// 监听鼠标点击：智能判断是“平滑缩放至子要素范围”还是“原地触发环形蛛网展开”
 map.on(&#x27;click&#x27;, (event) &#x3D;&gt; {
   clusters.getFeatures(event.pixel).then((features) &#x3D;&gt; {
     if (features.length &gt; 0) {
       const clusterMembers &#x3D; features[0].get(&#x27;features&#x27;);
       if (clusterMembers.length &gt; 1) {
         // Calculate the extent of the cluster members.
+        // 计算该聚合包内所有子要素的地理包围盒（Extent）
         const extent &#x3D; createEmpty();
         clusterMembers.forEach((feature) &#x3D;&gt;
           extend(extent, feature.getGeometry().getExtent()),
@@ -555,11 +656,13 @@ map.on(&#x27;click&#x27;, (event) &#x3D;&gt; {
           (getWidth(extent) &lt; resolution &amp;&amp; getHeight(extent) &lt; resolution)
         ) {
           // Show an expanded view of the cluster members.
+          // 若已达最大缩放级别，或所有子要素间距不足 1 像素（同址重叠），则触发环形蛛网展开视图
           clickFeature &#x3D; features[0];
           clickResolution &#x3D; resolution;
           clusterCircles.setStyle(clusterCircleStyle);
         } else {
           // Zoom to the extent of the cluster members.
+          // 否则平滑缩放至子要素包围盒范围（500ms 动画，四周留白 50px）
           view.fit(extent, {duration: 500, padding: [50, 50, 50, 50]});
         }
       }
@@ -577,7 +680,7 @@ map.on(&#x27;click&#x27;, (event) &#x3D;&gt; {
 &lt;html lang="en"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Dynamic clusters&lt;/title&gt;
+    &lt;title&gt;Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -588,6 +691,7 @@ map.on(&#x27;click&#x27;, (event) &#x3D;&gt; {
   &lt;/head&gt;
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
+    
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
   &lt;/body&gt;
