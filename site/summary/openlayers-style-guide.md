@@ -28,33 +28,33 @@ OpenLayers 支持面向对象定义、声明式表达式、离屏 Canvas 绘制�
 
 | 分类 | 示例标识 | 核心实现机制 | 解决的典型业务场景 |
 | :--- | :--- | :--- | :--- |
-| **基础点位与图标标绘** | [`icon`](https://gisnotes.github.io/openlayers/en/latest/examples/icon.html) | `ol/style/Icon` 静态贴图与锚点（`anchor`）配置 | 基础地标点位标记、点击弹窗联动 |
-| | [`icon-color`](https://gisnotes.github.io/openlayers/en/latest/examples/icon-color.html) | `Icon.color` 动态着色通道（单色白模图片复用） | 报警级别着色、多状态图标着色与纹理共享 |
-| | [`icon-width`](https://gisnotes.github.io/openlayers/en/latest/examples/icon-width.html) | `Icon.width` / `height` 显式像素定宽定高 | SVG / 异形图标自适应，解决跨端拉伸变形 |
-| | [`icon-scale`](https://gisnotes.github.io/openlayers/en/latest/examples/icon-scale.html) | `Icon.scale` 与 `Text.scale` 联动变换 | 随缩放级别动态放大缩小的点位与注记 |
-| | [`icon-negative`](https://gisnotes.github.io/openlayers/en/latest/examples/icon-negative.html) | 内存离屏 Canvas 像素反色滤镜运算 | 纯前端图像处理、暗黑模式/夜景底图图标适配 |
-| **几何轮廓与高阶矢量** | [`line-styles`](https://gisnotes.github.io/openlayers/en/latest/examples/line-styles.html) | 多重 `Stroke` 复合渲染、`lineDash` 虚线、偏移描边 | 双线道路外轮廓、铁路线斑马线、航线动态虚线 |
-| | [`polygon-styles`](https://gisnotes.github.io/openlayers/en/latest/examples/polygon-styles.html) | 复合样式数组 + 自定义 `geometry` 函数提取顶点 | 多边形面要素填充同时绘制各顶点手柄（MultiPoint） |
-| | [`regularshape`](https://gisnotes.github.io/openlayers/en/latest/examples/regularshape.html) | `ol/style/RegularShape` 参数化生成正多边形/星形 | 无需切图的十字准星、五角星、三角形、X 形符号 |
-| | [`canvas-gradient-pattern`](https://gisnotes.github.io/openlayers/en/latest/examples/canvas-gradient-pattern.html) | `CanvasGradient` 线性渐变 / `CanvasPattern` 纹理注入 `Fill` | 区域填充彩虹渐变、地质斜线阴影填充、草地贴图 |
-| **专题制图与离屏绘制** | [`kml-earthquakes`](https://gisnotes.github.io/openlayers/en/latest/examples/kml-earthquakes.html) | 动态 `style` 回调 + `CircleStyle` 映射震级 + 悬停 Tooltip | 科学数据专题制图、气泡图（Bubble Map）、单点拾取 |
-| | [`earthquake-custom-symbol`](https://gisnotes.github.io/openlayers/en/latest/examples/earthquake-custom-symbol.html) | `toContext` 离屏绘制复杂多边形 + 包装为 `Icon` + 高分屏倍率 | 复杂异形符号动态生成（闪电、风标）、避免静态切图 |
-| | [`kml-timezones`](https://gisnotes.github.io/openlayers/en/latest/examples/kml-timezones.html) | 太阳时角计算 + 动态计算多边形 `Fill` 透明度 | 全球时区昼夜交替光照模拟、时差动态可视化 |
-| | [`wind-arrows`](https://gisnotes.github.io/openlayers/en/latest/examples/wind-arrows.html) | `RegularShape` 组合叠加 + 动态旋转角与偏移 | 气象风场风向风速标（风向标箭头与风翎组合） |
-| | [`topojson`](https://gisnotes.github.io/openlayers/en/latest/examples/topojson.html) | TopoJSON 数据拓扑共享边界与区域分级色彩填充 | 行政区划边界轻量化传输与分级统计图（Choropleth） |
-| **聚类降维与空间微交互** | [`earthquake-clusters`](https://gisnotes.github.io/openlayers/en/latest/examples/earthquake-clusters.html) | `Cluster` 数据源 + 动态分辨率统计缓存 + 鼠标悬停星形散开 | 地震点位密集聚合，悬停原地展开为真实震中五角星 |
-| | [`clusters-dynamic`](https://gisnotes.github.io/openlayers/en/latest/examples/clusters-dynamic.html) | 三图层架构（凸包层 + 聚合层 + 蛛网展开层） | 聚合点鼠标悬停预览凸多边形包络、同址重叠点环形蛛网展开（Spiderfier） |
-| **GPU 密度与着色器连续场** | [`heatmap-earthquakes`](https://gisnotes.github.io/openlayers/en/latest/examples/heatmap-earthquakes.html) | `ol/layer/Heatmap` WebGL 离屏着色器累加 + 动态 weight 函数 | 地震震级权重热力图、人口密度场、高斯模糊核密度分析 |
-| **交互与量算过程态反馈** | [`draw-features-style`](https://gisnotes.github.io/openlayers/en/latest/examples/draw-features-style.html) | `Draw` 交互的 `style` 配置（手绘过程草图样式） | 绘制中虚线辅助线、吸附顶点高亮、首尾闭合指示 |
-| | [`measure-style`](https://gisnotes.github.io/openlayers/en/latest/examples/measure-style.html) | 动态样式函数中挂载分段长度与总距离 `Text` 标签 | 空间距离与面积量算工具、实时分段标注、图纸标尺 |
-| **前沿声明式与底层扩展** | [`style-expressions`](https://gisnotes.github.io/openlayers/en/latest/examples/style-expressions.html) | 扁平化规则对象（JSON Array 语法树：`['get']`, `['case']`） | WebGL 与 2D 统一的规则驱动样式、属性驱动半径/文本 |
-| | [`style-renderer`](https://gisnotes.github.io/openlayers/en/latest/examples/style-renderer.html) | `Style.renderer` 低级 Canvas 上下文自绘钩子（Clip 剪裁） | 国旗贴图裁剪注入多边形面内、高度定制的 Canvas 特效 |
-| | [`animated-gif`](https://gisnotes.github.io/openlayers/en/latest/examples/animated-gif.html) | `postrender` 地图重绘循环 + 离屏逐帧解码 Canvas 贴图 | 雷达波纹、旋转地球、气象云图动效（GIF 逐帧播放） |
-| **遥感影像与 WebGL 栅格样式** | [`cog-style`](https://gisnotes.github.io/openlayers/en/latest/examples/cog-style.html) | `WebGLTile` 波段代数计算（`['band', n]`）与 NDVI 渐变插值 | 卫星影像真彩色、标准假彩色合成、植被指数实时渲染 |
-| | [`cog-stretch`](https://gisnotes.github.io/openlayers/en/latest/examples/cog-stretch.html) | 动态多波段反射率极值百分比拉伸（Contrast Stretch） | 遥感遥测图像去雾、直方图拉伸增强显示 |
-| | [`geozarr-stretch`](https://gisnotes.github.io/openlayers/en/latest/examples/geozarr-stretch.html) | 多维数组（Zarr）波段选择与对比度拉伸 | 气象气候多维网格数据（NetCDF / Zarr）实时渲染 |
-| | [`webgl-tile-style`](https://gisnotes.github.io/openlayers/en/latest/examples/webgl-tile-style.html) | WebGLTile 动态变量（`variables`）曝光度、对比度调色 | 栅格瓦片实时色彩滤镜滤镜（夜间模式、暗黑增强） |
-| **控件层 UI 纯 CSS 定制** | [`zoomslider`](https://gisnotes.github.io/openlayers/en/latest/examples/zoomslider.html) | 纯 CSS 伪元素与 SVG 背景图重写 `ol-zoomslider` | 地图缩放滑块视觉换肤、适配产品 UI 设计规范 |
+| **基础点位与图标标绘** | [`icon`](../en/latest/examples/icon.html) | `ol/style/Icon` 静态贴图与锚点（`anchor`）配置 | 基础地标点位标记、点击弹窗联动 |
+| | [`icon-color`](../en/latest/examples/icon-color.html) | `Icon.color` 动态着色通道（单色白模图片复用） | 报警级别着色、多状态图标着色与纹理共享 |
+| | [`icon-width`](../en/latest/examples/icon-width.html) | `Icon.width` / `height` 显式像素定宽定高 | SVG / 异形图标自适应，解决跨端拉伸变形 |
+| | [`icon-scale`](../en/latest/examples/icon-scale.html) | `Icon.scale` 与 `Text.scale` 联动变换 | 随缩放级别动态放大缩小的点位与注记 |
+| | [`icon-negative`](../en/latest/examples/icon-negative.html) | 内存离屏 Canvas 像素反色滤镜运算 | 纯前端图像处理、暗黑模式/夜景底图图标适配 |
+| **几何轮廓与高阶矢量** | [`line-styles`](../en/latest/examples/line-styles.html) | 多重 `Stroke` 复合渲染、`lineDash` 虚线、偏移描边 | 双线道路外轮廓、铁路线斑马线、航线动态虚线 |
+| | [`polygon-styles`](../en/latest/examples/polygon-styles.html) | 复合样式数组 + 自定义 `geometry` 函数提取顶点 | 多边形面要素填充同时绘制各顶点手柄（MultiPoint） |
+| | [`regularshape`](../en/latest/examples/regularshape.html) | `ol/style/RegularShape` 参数化生成正多边形/星形 | 无需切图的十字准星、五角星、三角形、X 形符号 |
+| | [`canvas-gradient-pattern`](../en/latest/examples/canvas-gradient-pattern.html) | `CanvasGradient` 线性渐变 / `CanvasPattern` 纹理注入 `Fill` | 区域填充彩虹渐变、地质斜线阴影填充、草地贴图 |
+| **专题制图与离屏绘制** | [`kml-earthquakes`](../en/latest/examples/kml-earthquakes.html) | 动态 `style` 回调 + `CircleStyle` 映射震级 + 悬停 Tooltip | 科学数据专题制图、气泡图（Bubble Map）、单点拾取 |
+| | [`earthquake-custom-symbol`](../en/latest/examples/earthquake-custom-symbol.html) | `toContext` 离屏绘制复杂多边形 + 包装为 `Icon` + 高分屏倍率 | 复杂异形符号动态生成（闪电、风标）、避免静态切图 |
+| | [`kml-timezones`](../en/latest/examples/kml-timezones.html) | 太阳时角计算 + 动态计算多边形 `Fill` 透明度 | 全球时区昼夜交替光照模拟、时差动态可视化 |
+| | [`wind-arrows`](../en/latest/examples/wind-arrows.html) | `RegularShape` 组合叠加 + 动态旋转角与偏移 | 气象风场风向风速标（风向标箭头与风翎组合） |
+| | [`topojson`](../en/latest/examples/topojson.html) | TopoJSON 数据拓扑共享边界与区域分级色彩填充 | 行政区划边界轻量化传输与分级统计图（Choropleth） |
+| **聚类降维与空间微交互** | [`earthquake-clusters`](../en/latest/examples/earthquake-clusters.html) | `Cluster` 数据源 + 动态分辨率统计缓存 + 鼠标悬停星形散开 | 地震点位密集聚合，悬停原地展开为真实震中五角星 |
+| | [`clusters-dynamic`](../en/latest/examples/clusters-dynamic.html) | 三图层架构（凸包层 + 聚合层 + 蛛网展开层） | 聚合点鼠标悬停预览凸多边形包络、同址重叠点环形蛛网展开（Spiderfier） |
+| **GPU 密度与着色器连续场** | [`heatmap-earthquakes`](../en/latest/examples/heatmap-earthquakes.html) | `ol/layer/Heatmap` WebGL 离屏着色器累加 + 动态 weight 函数 | 地震震级权重热力图、人口密度场、高斯模糊核密度分析 |
+| **交互与量算过程态反馈** | [`draw-features-style`](../en/latest/examples/draw-features-style.html) | `Draw` 交互的 `style` 配置（手绘过程草图样式） | 绘制中虚线辅助线、吸附顶点高亮、首尾闭合指示 |
+| | [`measure-style`](../en/latest/examples/measure-style.html) | 动态样式函数中挂载分段长度与总距离 `Text` 标签 | 空间距离与面积量算工具、实时分段标注、图纸标尺 |
+| **前沿声明式与底层扩展** | [`style-expressions`](../en/latest/examples/style-expressions.html) | 扁平化规则对象（JSON Array 语法树：`['get']`, `['case']`） | WebGL 与 2D 统一的规则驱动样式、属性驱动半径/文本 |
+| | [`style-renderer`](../en/latest/examples/style-renderer.html) | `Style.renderer` 低级 Canvas 上下文自绘钩子（Clip 剪裁） | 国旗贴图裁剪注入多边形面内、高度定制的 Canvas 特效 |
+| | [`animated-gif`](../en/latest/examples/animated-gif.html) | `postrender` 地图重绘循环 + 离屏逐帧解码 Canvas 贴图 | 雷达波纹、旋转地球、气象云图动效（GIF 逐帧播放） |
+| **遥感影像与 WebGL 栅格样式** | [`cog-style`](../en/latest/examples/cog-style.html) | `WebGLTile` 波段代数计算（`['band', n]`）与 NDVI 渐变插值 | 卫星影像真彩色、标准假彩色合成、植被指数实时渲染 |
+| | [`cog-stretch`](../en/latest/examples/cog-stretch.html) | 动态多波段反射率极值百分比拉伸（Contrast Stretch） | 遥感遥测图像去雾、直方图拉伸增强显示 |
+| | [`geozarr-stretch`](../en/latest/examples/geozarr-stretch.html) | 多维数组（Zarr）波段选择与对比度拉伸 | 气象气候多维网格数据（NetCDF / Zarr）实时渲染 |
+| | [`webgl-tile-style`](../en/latest/examples/webgl-tile-style.html) | WebGLTile 动态变量（`variables`）曝光度、对比度调色 | 栅格瓦片实时色彩滤镜滤镜（夜间模式、暗黑增强） |
+| **控件层 UI 纯 CSS 定制** | [`zoomslider`](../en/latest/examples/zoomslider.html) | 纯 CSS 伪元素与 SVG 背景图重写 `ol-zoomslider` | 地图缩放滑块视觉换肤、适配产品 UI 设计规范 |
 
 ---
 
