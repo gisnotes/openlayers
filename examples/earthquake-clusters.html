@@ -1,12 +1,58 @@
 ---
 layout: example.html
-title: Earthquake Clusters
-shortdesc: Demonstrates the use of style geometries to render source features of a cluster.
-docs: >
+title: Earthquake Clusters / 地震点位聚合与悬停散开渲染
+shortdesc: Demonstrates the use of style geometries to render source features of a cluster. / 演示如何利用样式几何属性（Style Geometry）在聚合点悬停或点击时直接渲染底层原始要素。
+docs: |
   <p>This example parses a KML file and renders the features as clusters on a vector layer.  The styling in this example is quite involved. Single earthquake locations
   (rendered as stars) have a size relative to their magnitude. Clusters have an opacity relative to the number of features in the cluster, and a size that represents
   the extent of the features that make up the cluster. When clicking or hovering on a cluster, the individual features that make up the cluster will be shown.</p>
   <p>To achieve this, we make heavy use of style functions.</p>
+
+  <p>本示例解析了一份 KML 地震数据文件，并在矢量图层上将其渲染为点聚合（Cluster）效果。本示例的样式逻辑非常精巧：单个地震点位（渲染为五角星）的尺寸与其震级（Magnitude）成正比；聚合圆圈的不透明度与该聚合包内包含的要素数量成正比，而聚合圆圈的半径则代表了构成该聚合包的所有要素的空间分布范围（Extent）。当鼠标点击或悬停在某个聚合圆圈上时，会自动散开并显示构成该聚合包的所有独立地震点位。</p>
+  <p>为了实现这一交互视觉效果，我们在代码中深度运用了动态样式函数（Style Functions）。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构概览：`KML` + `VectorSource` + `Cluster` 三层数据流水线
+  本示例的数据流采用了经典的三层包装结构：
+  1. **格式解析层（`new KML({ extractStyles: false })`）**：
+     - KML 文件内部通常自带 `<Style>` 图标定义。如果保留默认的 `extractStyles: true`，解析出的每个要素都会自带高优先级的要素级样式，从而屏蔽外层图层的自定义样式。
+     - 显式设置 `extractStyles: false` 可丢弃 KML 内置样式，完全交由外部图层的 `styleFunction` 接管。
+  2. **原始要素源（`new VectorSource({ url: ... })`）**：负责异步加载并存储所有真实的单个地震点要素（`originalFeature`）。
+  3. **聚合数据源（`new Cluster({ distance: 40, source: ... })`）**：
+     - 将屏幕像素距离在 `40px` 以内的原始点位聚合成一个新的聚合要素（`clusterFeature`）。
+     - 每个聚合要素通过 `clusterFeature.get('features')` 属性保存了一个数组，里面存放着它所包含的所有原始地震要素（`originalFeatures`）。
+
+  #### 2. 聚合圆圈的动态半径与透明度算法（`calculateClusterInfo`）
+  不同于固定半径的普通聚合圆圈，本示例让聚合圆圈的大小**真实反映内部要素的地理分布跨度**：
+
+  | 计算维度 | 核心代码公式 | 几何与视觉物理意义 |
+  | :--- | :--- | :--- |
+  | **按分辨率缓存重算** | `if (resolution != currentResolution) { calculateClusterInfo(resolution); }` | 仅在地图缩放（`resolution` 改变）时遍历一次全部聚合点，避免在每个要素渲染时重复执行全局统计 |
+  | **子要素包围盒（Extent）** | `extend(extent, originalFeatures[j].getGeometry().getExtent())` | 遍历聚合包内的所有原始地震点，合并计算出能包住它们的最小外接矩形 `extent` |
+  | **屏幕像素半径（`radius`）** | `radius = (0.25 * (getWidth(extent) + getHeight(extent))) / resolution` | `(宽 + 高) / 2` 是外接矩形的平均边长，再乘以 `0.5`（即系数 `0.25`）得到地图单位下的平均半跨度；除以当前分辨率 `resolution`（米/像素）即可精确换算为**屏幕像素半径** |
+  | **动态不透明度（`alpha`）** | `Math.min(0.8, 0.4 + size / maxFeatureCount)` | 聚合包内要素数量 `size` 占当前视图最大聚合数 `maxFeatureCount` 的比例越高，橙色填充越不透明（范围 `0.4 ~ 0.8`） |
+
+  #### 3. 核心黑科技：不解散 `Cluster`，如何用 `Style.geometry` 实现“悬停散开显示子要素”？
+  当鼠标悬停（`pointermove`）或点击（`singleclick`）某个聚合圆圈时，`Select` 交互选中的其实只是**单个聚合要素（`clusterFeature`）**。那为什么画面上能同时显示出几十颗位于不同真实经纬度上的五角星呢？
+  - **关键奥秘在于 `createEarthquakeStyle(originalFeature)` 中的第 46 行**：
+    ```js
+    return new Style({
+      geometry: feature.getGeometry(), // 显式将样式渲染位置重定向到原始子要素的真实坐标！
+      image: new RegularShape({ ... }),
+    });
+    ```
+  - 在 `selectStyleFunction(clusterFeature)` 中，我们遍历 `clusterFeature.get('features')` 数组，为每一个原始地震点生成一个带有 `geometry: originalFeature.getGeometry()` 的 `Style` 对象，并将它们装入同一个 `styles` 数组返回。
+  - OpenLayers 在渲染单个被选中的 `clusterFeature` 时，会依次绘制 `styles` 数组里的所有样式，并根据每个样式自带的 `geometry` 属性，把每一颗五角星精准画回它原本的震中位置！
+
+  #### 4. 为什么 `selectStyleFunction` 开头要放一个透明度为 `0.01` 的隐形圆（`invisibleFill`）？
+  注意看 `selectStyleFunction` 的第 108~115 行，返回的样式数组第一个元素是一个填充色为 `rgba(255, 255, 255, 0.01)`、半径仍为 `feature.get('radius')` 的大圆。**如果删掉这个隐形圆会发生什么？**
+  - 因为 `Select` 交互监听了 `pointermove`（鼠标悬停）：一旦鼠标移入聚合圆圈，聚合圆圈变成了一群分散的小五角星。
+  - 如果没有那个同半径的隐形圆垫底，当鼠标刚好处于两颗五角星之间的空白缝隙时，`pointermove` 碰撞检测就会判定“鼠标已离开选中要素”，导致五角星瞬间缩回成聚合圆圈；而缩回成圆圈后鼠标又在圆圈内，于是又散开——从而引发剧烈的**“闪烁抖动（Flickering）”**！
+  - 用 `rgba(255, 255, 255, 0.01)`（肉眼完全不可见，但 Alpha 不为 0，仍参与 Canvas 像素碰撞检测）维持原本聚合圆圈的碰撞热区面积，即可完美消除悬停闪烁。
 tags: "KML, vector, style, geometry, cluster"
 ---
 <div id="map" class="map"></div>
+

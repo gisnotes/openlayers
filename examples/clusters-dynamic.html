@@ -1,14 +1,64 @@
 ---
 layout: example.html
-title: Dynamic clusters
-shortdesc: Clusters with zoom-to-cluster, hull view, and uncluttering of overlapping features.
-docs: >
+title: Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）
+shortdesc: Clusters with zoom-to-cluster, hull view, and uncluttering of overlapping features. / 支持点击缩放至聚合范围、悬停显示凸包（Convex Hull）边界以及重叠要素环形蛛网展开（Spiderfier）的高级聚合示例。
+docs: |
   <p>This example shows open data of subsidized photovoltaic installations in Vienna. Different style functions
     are used for cluster display, single feature display, convex hull of a cluster, and an expanded view of
     overlapping features. Hovering over a cluster shows its convex hull. Clicking on a cluster zooms to the
     extent of the contained features. Clicking on a cluster consisting of features that are very close to each other reveals an expanded view
     of the features, along a circle around the cluster.</p>
   <p>Features are styled differently depending on the power of the photovoltaic installation.</p>
+
+  <p>本示例展示了维也纳市受补贴光伏发电设施的开放数据。代码中针对**聚合点显示**、**单要素显示**、**聚合包的凸包（Convex Hull）多边形**以及**重叠要素的环形散开视图（Spiderfier）**分别设计了独立的样式函数：当鼠标悬停在某个聚合点上时，会高亮显示该聚合包所涵盖点位的凸包范围；点击普通聚合点时，地图会平滑缩放至其内部所有子要素的边界范围（Extent）；而当点击一个由彼此距离极近（或完全同址重叠）的要素组成的聚合点时，则会围绕聚合中心沿圆周展开显示各个独立要素。</p>
+  <p>此外，单个光伏设施要素会根据其装机功率（属性字段 <code>LEISTUNG</code>）的不同而渲染不同的图标样式。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构设计：为什么要用 3 个 `VectorLayer` 共享同一个 `Cluster` 数据源？
+  阅读代码第 191~215 行会发现一个非常巧妙的图层组织技巧：全局只创建了一个 `clusterSource`，却同时挂载给了**三个独立的矢量图层**（按从底到顶的渲染顺序排列）：
+
+  | 图层变量名 | 渲染层级（Z-Order） | 绑定的样式函数 | 职责与分离原因 |
+  | :--- | :--- | :--- | :--- |
+  | `clusterHulls` | **底层**（最先绘制） | `clusterHullStyle` | 仅在鼠标悬停时绘制当前聚合包的橙色半透明**凸包多边形（Convex Hull）**。放在最底层可确保凸包多边形永远不会遮挡上方的聚合圆圈和数字 |
+  | `clusters` | **中层**（常规层） | `clusterStyle` | 绘制常规的双层同心圆聚合徽章（`size > 1`）或单个光伏电站图标（`size === 1`，按功率 `LEISTUNG > 5` 区分深色/浅色图标） |
+  | `clusterCircles` | **顶层**（最后绘制） | `clusterCircleStyle` | 仅在点击同址重叠聚合点时，绘制**环形蛛网展开线（Spider Legs）与散开后的子要素图标**，确保展开后的图标浮在所有常规聚合点之上，不被遮挡 |
+
+  > **性能优势**：当鼠标移动触发 `hoverFeature` 变化时，只需调用 `clusterHulls.setStyle(clusterHullStyle)` 局部重绘底层的凸包图层，而无需重新计算和重绘上千个常规聚合点！
+
+  #### 2. 悬停凸包计算（`monotoneChainConvexHull`）
+  - **什么是凸包（Convex Hull）？** 就像用一根橡皮筋套住聚合包内的所有离散点位，橡皮筋收紧后形成的最外圈凸多边形边界。它能直观告诉用户：“这个聚合圆圈里的点到底分布在多大的地理区域内”。
+  - **实现方式**：在 `clusterHullStyle(cluster)` 中，提取出聚合包内所有原始要素的坐标数组 `points`，直接传入轻量级算法库 `monotoneChainConvexHull(points)`（基于 Andrew 单调链算法，时间复杂度 `O(n log n)`），拿到按顺序排列的外环顶点坐标后构造 `new Polygon([ring])` 并赋给 `Style.geometry` 即可直接渲染。
+
+  #### 3. 点击聚合点的智能分流策略：“缩放定位（`view.fit`）” vs. “蛛网展开（Spiderfier）”
+  在实际业务中，点击聚合点最怕遇到**“同址多点（如同一栋大楼安装了 10 个光伏电站，坐标完全相同）”**——如果一味执行 `view.fit(extent)` 放大，哪怕放到最大级别 `maxZoom: 19`，这 10 个点依然叠在一起无法分开！
+  本示例在 `map.on('click')`（第 266~277 行）中给出了工业级标准解法：
+  ```js
+  if (
+    view.getZoom() === view.getMaxZoom() ||
+    (getWidth(extent) < resolution && getHeight(extent) < resolution)
+  ) {
+    // 分支 A：已达最大缩放级别，或所有子要素的地理跨度在当前分辨率下不足 1 个像素（同址重叠） -> 触发环形蛛网展开！
+    clickFeature = features[0];
+    clickResolution = resolution;
+    clusterCircles.setStyle(clusterCircleStyle);
+  } else {
+    // 分支 B：子要素在空间上可区分 -> 平滑缩放至子要素包围盒，让聚合自然解开
+    view.fit(extent, {duration: 500, padding: [50, 50, 50, 50]});
+  }
+  ```
+
+  #### 4. 环形蛛网展开算法（`generatePointsCircle`）数学原理
+  借鉴自著名的 `Leaflet.markercluster`（Spiderfier）：
+  1. **根据子要素个数 `count` 动态计算圆周长与半径**：
+     - 设定相邻两个展开图标在圆周上的弧长间距 `circleFootSeparation = 28`（像素），计算总圆周长 `circumference = 1 * 28 * (2 + count)`。
+     - 由圆周长公式反推像素半径 `legLength = circumference / (2 * Math.PI)`，并限制最小半径为 `35px`（确保展开后的图标一定落在聚合圆圈外部），再乘以当前分辨率 `resolution` 换算为地图投影坐标长度。
+  2. **按角度均匀分布并绘制牵引线**：
+     - 将圆周 `2 * Math.PI` 等分为 `count` 份（`angleStep`），利用三角函数 `cos(angle)` 和 `sin(angle)` 算出每个子要素在圆周上的新坐标 `coordinates`。
+     - 在 `reduce` 循环中，使用 **`styles.unshift(...)`** 将连接中心点与圆周点的牵引线（`LineString`）插入样式数组头部（先画线），再使用 **`styles.push(...)`** 将子要素图标追加到数组尾部（后画图标盖住线头），细节极其考究。
 tags: "marker, cluster, vector, style, convex hull"
 ---
 <div id="map" class="map"></div>
+

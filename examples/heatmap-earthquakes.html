@@ -1,15 +1,55 @@
 ---
 layout: example.html
-title: Earthquakes Heatmap
-shortdesc: Demonstrates the use of a heatmap layer.
-docs: >
+title: Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）
+shortdesc: Demonstrates the use of a heatmap layer. / 演示如何使用基于 WebGL 渲染的 ol/layer/Heatmap 热力图图层展示KML点位密度与权重。
+docs: |
   This example parses a KML file and renders the features as a <code>ol/layer/Heatmap</code> layer.
+
+  本示例解析了一份 KML 地震数据文件，并使用 <code>ol/layer/Heatmap</code> 热力图图层将地震点要素渲染为连续的密度与震级热力分布图。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么这个示例带有 `webgl` 标签？`ol/layer/Heatmap` 的底层渲染原理是什么？
+  翻看 OpenLayers 源码 [`src/ol/layer/Heatmap.js`](https://github.com/openlayers/openlayers/blob/main/src/ol/layer/Heatmap.js) 可以看到，`Heatmap` 图层底层直接基于 **`WebGLVectorLayerRenderer`（GPU 着色器管线）** 实现，并通过 **两阶段渲染（Two-Pass Rendering）** 合成热力图：
+  1. **第一阶段：离屏灰度/Alpha 能量累加（Additive Blending）**
+     - GPU 将每个点要素（也支持 `LineString` 线要素）绘制为一个中心最亮、向外平滑衰减的圆形高斯核（Radial Falloff Kernel）。
+     - 每个点的中心强度乘以该要素的权重 `weight`，并通过 WebGL 混合模式（Additive Blending）在离屏帧缓冲纹理（Framebuffer Texture）中累加——点位越密集、单个点权重越高，累加出的灰度能量值就越接近 `1.0`。
+  2. **第二阶段：后处理一维色带映射（1D Gradient Lookup）**
+     - 后处理片元着色器（Fragment Shader）读取离屏纹理中每个像素累加后的能量值（`0.0 ~ 1.0`），在一维渐变色带纹理（默认 `gradient: ['#00f', '#0ff', '#0f0', '#ff0', '#f00']`，即 **蓝 → 青 → 绿 → 黄 → 红**）中进行采样着色，最终输出炫酷的彩色热力图。
+
+  #### 2. 核心配置参数详解（`radius`、`blur`、`weight`、`gradient`）
+
+  | 配置项 | 类型与默认值 | 动态更新方法 | 物理意义与调参技巧 |
+  | :--- | :--- | :--- | :--- |
+  | **`radius`** | `number \| Expression`（默认 `8` px） | `layer.setRadius(val)` | 每个热力点核心区域的**像素半径**。调大 `radius` 会让单个点的影响范围变大，更容易与周围的点连成片 |
+  | **`blur`** | `number \| Expression`（默认 `15` px） | `layer.setBlur(val)` | 附加在 `radius` 外围的**羽化模糊像素宽度**。`blur` 越小，热力点边缘越锐利（呈现明显的独立圆斑）；`blur` 越大，点与点之间的过渡越柔和丝滑 |
+  | **`weight`** | `string \| Function \| Expression`（默认属性名 `'weight'`） | — | 决定每个要素对热力强度的贡献权重，**有效值域为 `[0, 1]`**（超出范围的值会被源码自动 `clamp(val, 0, 1)` 截断到 `0~1` 之间） |
+  | **`gradient`** | `Array<string>`（默认蓝青绿黄红五色） | `layer.setGradient(arr)` | 自定义热力图色带数组（支持任意 CSS 颜色字符串），从低密度（索引 0）向高密度（末尾索引）线性插值 |
+
+  #### 3. 本示例中的震级归一化权重计算（`weight` 函数）
+  在代码第 21~28 行中：
+  ```js
+  weight: function (feature) {
+    const name = feature.get('name');
+    const magnitude = parseFloat(name.substr(2));
+    return magnitude - 5;
+  },
+  ```
+  - 因为 `2012_Earthquakes_Mag5.kml` 数据集中记录的是 5 级以上地震，震级大多分布在 `5.0 ~ 6.0+` 之间。
+  - 用 `magnitude - 5` 计算后：`5.0` 级地震权重为 `0`（最微弱），`5.5` 级地震权重为 `0.5`（中等贡献），`6.0` 及以上强震权重达到或被截断为 `1.0`（满额热力贡献）。
+  - **实战注意**：在你自己的业务数据中（例如房价、人口、传感器数值），传入 `weight` 函数时一定要先做 **`(val - min) / (max - min)` 归一化到 `[0, 1]` 区间**；如果直接返回大于 `1` 的原始业务数值（如 `500`、`1000`），会被全部截断成 `1.0`，导致所有点权重完全一样、失去权重区分度！
+
+  #### 4. 为什么拖动滑块调用 `setBlur` / `setRadius` 性能极高？
+  在代码末尾，滑块的 `input` 事件直接调用了 `vector.setBlur(...)` 和 `vector.setRadius(...)`。由于 `HeatmapLayer` 基于 WebGL 渲染，修改 `blur` 和 `radius` **不需要重新解析 KML 或重建 GPU 顶点缓冲区（VBO）**，仅仅是更新了着色器中的两个 `uniform` 浮点变量并重绘一帧，因此在万级点位下拖动滑块依然能保持 60 FPS 满帧丝滑响应。
 tags: "heatmap, kml, vector, style, webgl"
 ---
 <div id="map" class="map"></div>
 <form>
-  <label for="radius">radius size</label>
+  <label for="radius">半径大小（radius size）</label>
   <input id="radius" type="range" min="1" max="50" step="1" value="5"/>
-  <label for="blur">blur size</label>
+  <label for="blur">模糊大小（blur size）</label>
   <input id="blur" type="range" min="1" max="50" step="1" value="15"/>
 </form>
+

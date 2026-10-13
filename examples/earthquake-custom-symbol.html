@@ -1,9 +1,51 @@
 ---
 layout: example.html
-title: Earthquakes with custom symbols
-shortdesc: Demonstrates the use of `toContext` to create custom icon symbols.
-docs: >
-  This example parses a KML file and renders the features as a vector layer.  The layer is given a <code>style</code> that renders earthquake locations with a custom lightning symbol and a size relative to their magnitude.
+title: Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）
+shortdesc: Demonstrates the use of `toContext` to create custom icon symbols. / 演示如何使用 `toContext` 在离屏 Canvas 上直接绘制矢量几何，以生成自定义图标符号。
+docs: |
+  This example parses a KML file and renders the features as a vector layer. The layer is given a `style` that renders earthquake locations with a custom lightning symbol and a size relative to their magnitude.
+
+  本示例解析一份 KML 文件并将要素渲染为矢量图层。图层配置了一个动态 `style` 函数，使用自定义的闪电矢量符号来渲染地震位置，并根据震级（Magnitude）大小动态缩放闪电符号的尺寸。
+
+  ---
+
+  ### 核心知识点与代码解析
+
+  #### 1. 离屏矢量渲染利器：`toContext` 与立即渲染器（Immediate Renderer）
+  - 当内置的 `CircleStyle`（圆形）和 `RegularShape`（正多边形/星形）无法满足复杂异形符号（如本例中的不规则闪电、自定义风向标、战术标绘符号）需求，且又不想引入外部静态图片时，`ol/render.js` 中的 `toContext` 是最佳解决方案。
+  - **工作原理**：`toContext(canvas.getContext('2d'), options)` 将一个标准的原生 HTML5 Canvas 2D 上下文包装为 OpenLayers 的 `CanvasImmediateRenderer`（即 `VectorContext` 立即渲染器）。
+  - **核心优势**：开发者无需编写繁琐的原生 Canvas 路径指令（如 `beginPath`、`moveTo`、`lineTo`、`stroke`），而是可以直接调用 `vectorContext.setStyle(style)` 和 `vectorContext.drawGeometry(geometry)`，复用 OpenLayers 完整的几何变换 API 与样式系统，在内存中的离屏 `<canvas>` 上把矢量多边形光栅化为位图，再将其直接传给 `new Icon({ img: canvas })` 作为点要素图标使用。
+
+  #### 2. 闪电多边形的几何变换与包围盒归一化（`getSymbolOutline`）
+  - **闭包预构造基础图形**：代码通过 IIFE（立即执行函数表达式）在初始化阶段创建了一个由 6 个顶点组成的闭合闪电多边形 `symbolOutline`，并调用 `symbolOutline.rotate(1.2, path[0])` 绕起点旋转 `1.2` 弧度（约 68.75°）。由于旋转操作只需执行一次，放在闭包外层避免了每次生成图标时重复计算三角函数。
+  - **克隆与按震级缩放**：在返回的函数中，先调用 `symbolOutline.clone()` 克隆基础几何体（防止污染原始模板），再调用 `outline.scale(scale, scale, path[0])` 按震级比例 `scale = 1 + 4 * (magnitude - 5)` 等比放大。
+  - **为什么必须执行 `translate` 平移归一化？**
+    - 经过旋转和缩放后，多边形的部分顶点坐标可能变为负数或偏离原点。如果直接绘制到 Canvas 上，位于负坐标象限的图形会被画布边界截断！
+    - 同时，图形具有 `lineWidth = 2` 的描边宽度，描边会向多边形轮廓外侧扩展 `lineWidth / 2`（即 1 像素）。
+    - 因此，代码先通过 `const origin = getBottomLeft(outline.getExtent())` 获取几何体包围盒的最小坐标 `[minX, minY]`，再调用 `outline.translate(offset - origin[0], offset - origin[1])`（其中 `offset = Math.ceil(lineWidth / 2)`），将整个闪电多边形严丝合缝地平移到 `[offset, offset]` 起点处，既消除了负坐标截断，又在左上角预留了描边安全边距。
+  - **画布尺寸精确计算**：平移完成后，`getTopRight(outline.getExtent())` 返回的 `[maxX, maxY]` 即为图形右下角极值，再加上右下侧的半个线宽 `Math.ceil(n + lineWidth / 2)`，就得到了能够完整包裹整个闪电及其描边的最小离屏 Canvas 逻辑宽高 `size`。
+
+  #### 3. 高分屏（Retina / HiDPI）无损抗锯齿范式（`DEVICE_PIXEL_RATIO`）
+  - 在 Mac Retina 屏或高分辨率移动设备上，直接将普通 Canvas 作为 `Icon` 渲染会出现明显的边缘模糊和锯齿。本示例展示了 OpenLayers 官方推荐的高分屏二步适配法：
+    1. **物理像素超采样绘制**：在 `toContext` 配置中传入 `pixelRatio: DEVICE_PIXEL_RATIO`（例如在 2 倍屏上为 `2`）。`toContext` 会自动将离屏 Canvas 的实际物理宽高（`canvas.width` / `canvas.height`）扩大 `DEVICE_PIXEL_RATIO` 倍，并在内部绘制 `outline` 和 `Stroke` 时自动按该倍率放大坐标与线宽。
+    2. **逻辑像素等比还原**：在构造 `new Icon({ img: canvas, scale: 1 / DEVICE_PIXEL_RATIO })` 时，通过将 `scale` 设为 `1 / DEVICE_PIXEL_RATIO`，把高分辨率的离屏画布缩回到原有的 CSS 逻辑像素尺寸，从而在高分屏上呈现出刀刻般锐利的矢量级画质。
+
+  #### 4. 性能优化双保险：`featuresloadend` 静默预处理 + `styleCache` 缓存
+  - **数据加载期一次性提取属性（`featuresloadend` + `silent: true`）**：
+    - KML 文件中的震级隐藏在 `<name>` 标签文本（如 `"M 5.8 - ..."`）中。本示例没有在高频触发的 `style` 渲染函数里反复截取字符串，而是监听 `vector.getSource().on('featuresloadend', ...)` 事件，在数据加载完毕时一次性解析并写入 `magnitude` 属性。
+    - **关键细节 `f.set('magnitude', val, true)`**：第三个参数 `true` 表示 `silent`（静默更新），即修改属性时不派发要素的 `change` 事件。如果省略该参数，遍历上千个要素调用 `set()` 会连续触发上千次图层重绘通知，造成不必要的首屏卡顿。
+  - **按震级缓存离屏 Canvas（`styleCache[magnitude]`）**：
+    - 创建 `<canvas>` DOM 节点并执行 2D 上下文光栅化属于重量级操作。由于震级数值通常保留一位小数（如 `5.0` ~ `9.0` 之间仅有几十种离散值），通过 `styleCache[magnitude]` 字典缓存生成的 `Style` 对象，使得成百上千个同震级地震要素直接共享同一个离屏 Canvas 纹理，渲染帧率与原生静态图片别无二致。
+
+  #### 5. OpenLayers 地震数据可视化四大示例横向对比
+
+  | 示例名称 | 核心技术方案 | 几何符号形态 | 性能优化手段 | 适用业务场景 |
+  | :--- | :--- | :--- | :--- | :--- |
+  | **`kml-earthquakes`** | `VectorLayer` + `CircleStyle` | 半透明圆形（半径与震级挂钩） + 悬停 Tooltip | `styleCache[radius]` 缓存 `Style` 实例 | 轻量级科学数据原貌展示与精确单体拾取 |
+  | **`earthquake-custom-symbol`**（本示例） | `toContext` 离屏 Canvas + `Icon` | 自定义旋转闪电多边形（按震级缩放） | `featuresloadend` 静默预处理 + `styleCache` 画布缓存 | 需要绘制复杂异形矢量符号且兼顾高帧率的专题图 |
+  | **`earthquake-clusters`** | `Cluster` 聚合源 + `RegularShape` | 单要素为星形，聚合点为渐变光晕圆 + 数字文本 | 视图分辨率缓存 + 单例微交互样式复用 | 海量点位防遮挡降维展示与多级下钻探索 |
+  | **`heatmap-earthquakes`** | `Heatmap` WebGL 热力图层 | 高斯核密度连续色彩渐变场 | GPU 着色器并行离屏帧缓冲累加 | 宏观空间分布密度、高频灾害带趋势分析 |
 tags: "KML, vector, style, canvas, symbol"
 ---
 <div id="map" class="map"></div>
+
