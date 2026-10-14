@@ -120,7 +120,7 @@ function addInteractions() {
 	map.addInteraction(snap);
 }
 /**
-* Handle change event.
+* 处理几何类型切换事件
 */
 typeSelect.onchange = function() {
 	map.removeInteraction(draw);

@@ -200,9 +200,21 @@
 </tr>
 <tr>
 <td align="left"></td>
+<td align="left"><a href="../en/latest/examples/modify-test.html"><code>modify-test</code></a></td>
+<td align="left"><code>Modify({insertVertexCondition: ...})</code></td>
+<td align="left">复杂几何测试：带洞多边形与禁止插入新顶点条件</td>
+</tr>
+<tr>
+<td align="left"></td>
 <td align="left"><a href="../en/latest/examples/translate-features.html"><code>translate-features</code></a></td>
 <td align="left"><code>ol/interaction/Translate</code></td>
 <td align="left">要素整体平移：按住指定要素拖动到新坐标，保持内部拓扑结构不变</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/vector-esri-edit.html"><code>vector-esri-edit</code></a></td>
+<td align="left"><code>Draw</code> + <code>Modify</code> + ArcGIS FeatureServer</td>
+<td align="left">在线空间编辑闭环：结合服务端 addFeatures 与 updateFeatures 事务提交</td>
 </tr>
 <tr>
 <td align="left"><strong>拓扑关系、吸附与自动描摹</strong></td>
@@ -336,8 +348,8 @@ for (let i = interactions.length - 1; i &gt;= 0; --i) {
   altKeyOnly,
   singleClick,
   never,
-  always
-} from &#39;ol/events/condition&#39;;
+  always,
+} from &quot;ol/events/condition&quot;;
 </code></pre>
 <table>
 <thead>
@@ -393,11 +405,11 @@ for (let i = interactions.length - 1; i &gt;= 0; --i) {
 <p><strong>有极其严格的顺序要求：<code>Modify</code> 和 <code>Draw</code> 必须先添加，<code>Snap</code> 必须最后添加到地图中！</strong></p>
 <pre><code class="language-javascript">// 方式 A：通过 map.addInteraction 顺序挂载
 map.addInteraction(modify); // 1. 先添加 Modify
-map.addInteraction(draw);   // 2. 再添加 Draw
-map.addInteraction(snap);   // 3. 必须最后添加 Snap！
+map.addInteraction(draw); // 2. 再添加 Draw
+map.addInteraction(snap); // 3. 必须最后添加 Snap！
 
 // 方式 B：在 Map 初始化配置项中合并默认交互数组
-import {defaults as defaultInteractions} from &#39;ol/interaction.js&#39;;
+import { defaults as defaultInteractions } from &quot;ol/interaction.js&quot;;
 
 const map = new Map({
   // ...
@@ -510,6 +522,8 @@ $$P&#39; = C + S \cdot (P - C)$$</li>
 <li><a href="../en/latest/examples/snap.html">snap (节点与边线高精度拓扑吸附引擎)</a></li>
 <li><a href="../en/latest/examples/tracing.html">tracing (基于最短路径搜索的公共边界拓扑描摹)</a></li>
 <li><a href="../en/latest/examples/translate-features.html">translate-features (要素整体拓扑结构无损平移)</a></li>
+<li><a href="../en/latest/examples/modify-test.html">modify-test (复杂多类型几何修改测试基准与顶点插入约束)</a></li>
+<li><a href="../en/latest/examples/vector-esri-edit.html">vector-esri-edit (ArcGIS REST 要素服务在线编辑与双向事务提交)</a></li>
 </ol>
 
     </div>

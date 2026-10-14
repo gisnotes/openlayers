@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Draw lines rendered with WebGL</title>
+    <title>Draw lines rendered with WebGL / WebGL 渲染绘制线条</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -69,7 +69,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Draw lines rendered with WebGL</h4>
+        <h4 id="title">Draw lines rendered with WebGL / WebGL 渲染绘制线条</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -80,22 +80,22 @@
               data-bs-target="#tag-example-list"
               data-title="draw"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-webgl-line.html&quot;&gt;Applying a filter along lines rendered with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-webgl-line.html&quot;&gt;Applying a filter along lines rendered with WebGL / WebGL 沿线过滤与时间序列渐变渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-features.html&quot;&gt;Draw and Modify Features / 绘制与修改要素&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-geodesic.html&quot;&gt;Draw and Modify Geodesic Circles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-geodesic.html&quot;&gt;Draw and Modify Geodesic Circles / 绘制与修改测地线圆&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features.html&quot;&gt;Draw Features / 绘制要素&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL / WebGL 渲染绘制线条&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes / 绘制规则图形&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-modify-trace-snap.html&quot;&gt;Draw, modify, trace and snap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-modify-trace-snap.html&quot;&gt;Draw, modify, trace and snap / 绘制、修改、追踪与吸附综合交互&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features-style.html&quot;&gt;Drawing Features Style / 绘制要素时的自定义样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing / 自由手绘绘制&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-arrows.html&quot;&gt;LineString Arrows&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-arrows.html&quot;&gt;LineString Arrows / 折线线段箭头指示&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure.html&quot;&gt;Measure / 空间长度与面积量算&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles / 使用矢量样式进行测量&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction / 使用 Modify 交互进行缩放与旋转&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap.html&quot;&gt;Snap Interaction / 捕捉吸附交互&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap-custom-segmenter.html&quot;&gt;Snap Interaction with Custom Segmenter / 带有自定义线段分割器的 Snap 捕捉吸附&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topolis.html&quot;&gt;topolis integration&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topolis.html&quot;&gt;topolis integration / topolis 拓扑库集成&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tracing.html&quot;&gt;Tracing around a polygon / 沿多边形边界自动追踪描摹&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
@@ -112,7 +112,7 @@
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles-advanced.html&quot;&gt;Advanced Mapbox Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-webgl-line.html&quot;&gt;Applying a filter along lines rendered with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-webgl-line.html&quot;&gt;Applying a filter along lines rendered with WebGL / WebGL 沿线过滤与时间序列渐变渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cluster.html&quot;&gt;Clustered Features&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation&lt;/a&gt;
@@ -123,17 +123,17 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./declutter-group.html&quot;&gt;Declutter Group&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector / 矢量图像图层拖拽加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-features.html&quot;&gt;Draw and Modify Features / 绘制与修改要素&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-geodesic.html&quot;&gt;Draw and Modify Geodesic Circles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-geodesic.html&quot;&gt;Draw and Modify Geodesic Circles / 绘制与修改测地线圆&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features.html&quot;&gt;Draw Features / 绘制要素&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL / WebGL 渲染绘制线条&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes / 绘制规则图形&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-modify-trace-snap.html&quot;&gt;Draw, modify, trace and snap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-modify-trace-snap.html&quot;&gt;Draw, modify, trace and snap / 绘制、修改、追踪与吸附综合交互&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters / 地震点位聚合与悬停散开渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service / 可编辑的 ArcGIS REST 要素服务&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./equal-earth-geojson.html&quot;&gt;Equal Earth projection with dynamic center meridian&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./fractal.html&quot;&gt;Fractal Rendering&lt;/a&gt;
@@ -148,7 +148,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./jsts.html&quot;&gt;JSTS Integration&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-arrows.html&quot;&gt;LineString Arrows&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-arrows.html&quot;&gt;LineString Arrows / 折线线段箭头指示&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-layer.html&quot;&gt;Mapbox Vector Layer&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles.html&quot;&gt;Mapbox Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
@@ -156,7 +156,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure.html&quot;&gt;Measure / 空间长度与面积量算&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles / 使用矢量样式进行测量&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-features.html&quot;&gt;Modify Features / 修改要素&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-test.html&quot;&gt;Modify Features Test&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-test.html&quot;&gt;Modify Features Test / 要素修改测试基准&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles.html&quot;&gt;OGC Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles-geographic.html&quot;&gt;OGC Vector Tiles (Geographic)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./osm-vector-tiles.html&quot;&gt;OSM Vector Tiles&lt;/a&gt;
@@ -178,7 +178,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tooltip-on-hover.html&quot;&gt;Tooltip on Hover&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topolis.html&quot;&gt;topolis integration&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topolis.html&quot;&gt;topolis integration / topolis 拓扑库集成&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tracing.html&quot;&gt;Tracing around a polygon / 沿多边形边界自动追踪描摹&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./translate-features.html&quot;&gt;Translate Features / 平移移动要素&lt;/a&gt;
@@ -209,10 +209,10 @@
               data-bs-target="#tag-example-list"
               data-title="webgl"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-webgl-line.html&quot;&gt;Applying a filter along lines rendered with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-webgl-line.html&quot;&gt;Applying a filter along lines rendered with WebGL / WebGL 沿线过滤与时间序列渐变渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-stretch.html&quot;&gt;Band Contrast Stretch / 遥感波段组合与对比度拉伸&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL / WebGL 渲染绘制线条&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering features with WebGL&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL&lt;/a&gt;
@@ -241,8 +241,8 @@
               data-bs-target="#tag-example-list"
               data-title="line"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-webgl-line.html&quot;&gt;Applying a filter along lines rendered with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-webgl-line.html&quot;&gt;Applying a filter along lines rendered with WebGL / WebGL 沿线过滤与时间序列渐变渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL / WebGL 渲染绘制线条&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
@@ -257,7 +257,7 @@
               data-bs-target="#tag-example-list"
               data-title="dash"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL / WebGL 渲染绘制线条&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -278,45 +278,45 @@
         </div>
         <div id="map" class="map"></div>
 <form>
-  <div class="form-group">Cap type &nbsp;
+  <div class="form-group">Cap type / 线端线帽 &nbsp;
     <label class="radio-inline">
-      <input type="radio" class="uniform" name="capType" value="butt" checked/> <code>butt</code>&nbsp;
+      <input type="radio" class="uniform" name="capType" value="butt" checked/> <code>butt / 平头</code>&nbsp;
     </label>
     <label class="radio-inline">
-      <input type="radio" class="uniform" name="capType" value="round"/> <code>round</code>&nbsp;
+      <input type="radio" class="uniform" name="capType" value="round"/> <code>round / 圆头</code>&nbsp;
     </label>
     <label class="radio-inline">
-      <input type="radio" class="uniform" name="capType" value="square"/> <code>square</code>&nbsp;
+      <input type="radio" class="uniform" name="capType" value="square"/> <code>square / 方头</code>&nbsp;
     </label>
   </div>
-  <div class="form-group">Join type &nbsp;
+  <div class="form-group">Join type / 拐角连接 &nbsp;
     <label class="radio-inline">
-      <input type="radio" class="uniform" name="joinType" value="miter" checked/> <code>miter</code>&nbsp;
+      <input type="radio" class="uniform" name="joinType" value="miter" checked/> <code>miter / 尖角斜接</code>&nbsp;
     </label>
     <label class="radio-inline">
-      <input type="radio" class="uniform" name="joinType" value="round"/> <code>round</code>&nbsp;
+      <input type="radio" class="uniform" name="joinType" value="round"/> <code>round / 圆角连接</code>&nbsp;
     </label>
     <label class="radio-inline">
-      <input type="radio" class="uniform" name="joinType" value="bevel"/> <code>bevel</code>&nbsp;
+      <input type="radio" class="uniform" name="joinType" value="bevel"/> <code>bevel / 平角斜切</code>&nbsp;
     </label>
   </div>
   <div class="form-group">
     <label>
-      Line width (pixels)
+      Line width (pixels) / 线宽（像素）
       <input type="range" class="uniform" name="width" min="1" max="40" value="8">
     </label>
     <span id="value-width">12</span>
   </div>
   <div class="form-group">
     <label>
-      Miter limit (ratio)
+      Miter limit (ratio) / 斜接限制比
       <input type="range" class="uniform" name="miterLimit" min="1" max="20" value="10" step="0.1">
     </label>
     <span id="value-miterLimit">10</span>
   </div>
   <div class="form-group">
     <label>
-      Line offset (pixels)
+      Line offset (pixels) / 线条平移偏移量（像素）
       <input type="range" class="uniform" name="offset" min="-40" max="40" value="0">
     </label>
     <span id="value-offset">0</span>
@@ -324,12 +324,12 @@
   <div class="form-group">
     <label>
       <input type="checkbox" class="rebuild" id="dashEnable">
-      Enable dashes
+      Enable dashes / 启用虚线（Dash）
     </label>
     </div>
   <div class="form-group" style="margin-left: 18px">
     <label>
-      Line dash pattern (px)
+      Line dash pattern (px) / 虚线线段与间隔（像素）
       <input type="number" class="uniform" name="dashLength1" min="0" max="100" value="25">
       <input type="number" class="uniform" name="dashLength2" min="0" max="100" value="15">
       <input type="number" class="uniform" name="dashLength3" min="0" max="100" value="15">
@@ -338,7 +338,7 @@
   </div>
   <div class="form-group" style="margin-left: 18px">
     <label>
-      Line dash offset (pixels)
+      Line dash offset (pixels) / 虚线相位偏移（像素）
       <input type="range" class="uniform" name="dashOffset" min="-200" max="200" value="0">
     </label>
     <span id="value-dashOffset">0</span>
@@ -346,19 +346,19 @@
   <div class="form-group">
     <label>
       <input type="checkbox" class="rebuild" id="patternEnable">
-      Enable image pattern
+      Enable image pattern / 启用点状纹理填充
     </label>
   </div>
   <div class="form-group" style="margin-left: 18px">
     <label>
-      Pattern spacing (pixels)
+      Pattern spacing (pixels) / 纹理间距（像素）
       <input type="range" class="uniform" name="patternSpacing" min="0" max="64" value="0">
     </label>
     <span id="value-patternSpacing">0</span>
   </div>
   <div class="form-group" style="margin-left: 18px">
     <label>
-      Pattern start offset (pixels)
+      Pattern start offset (pixels) / 纹理起始偏移（像素）
       <input type="range" class="uniform" name="patternOffset" min="0" max="64" value="0">
     </label>
     <span id="value-patternOffset">0</span>
@@ -371,8 +371,8 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example showing how stroke styling options are represented with the WebGL renderer</p>
-        <div id="docs"><p>This example lets you tweak the stroke styling options dynamically to see how they affect line rendering. The line string showing by default can be modified and new ones can be drawn by single-clicking on the map.</p>
+        <p id="shortdesc">Example showing how stroke styling options are represented with the WebGL renderer. / 演示如何使用 WebGL 矢量图层渲染线条描边与虚线样式选项。</p>
+        <div id="docs"><p>This example lets you tweak the stroke styling options dynamically to see how they affect line rendering. The line string showing by default can be modified and new ones can be drawn by single-clicking on the map.</p> <p>本示例支持动态调整线条描边样式参数，直观观察 WebGL 渲染器下线条的渲染表现。地图上默认展示的折线可直接通过 Modify 交互拖拽顶点修改，同时支持在地图上单机连续绘制新的折线。</p>
 </div>
       </div>
 
@@ -391,12 +391,14 @@ import {fromLonLat} from &#x27;ol/proj.js&#x27;;
 import OSM from &#x27;ol/source/OSM.js&#x27;;
 import VectorSource from &#x27;ol/source/Vector.js&#x27;;
 
+// WebGL 样式动态变量初始值字典
+
 const styleVariables &#x3D; {
   width: 12,
   offset: 0,
   capType: &#x27;butt&#x27;,
   joinType: &#x27;miter&#x27;,
-  miterLimit: 10, // ratio
+  miterLimit: 10, // 斜接比例
   dashLength1: 25,
   dashLength2: 15,
   dashLength3: 15,
@@ -412,9 +414,10 @@ const source &#x3D; new VectorSource({
 });
 
 /**
- * @param {boolean} dash Include line dash
- * @param {boolean} pattern Include image pattern
- * @return {import(&#x27;ol/style/flat.js&#x27;).FlatStyle} Generated style
+ * 根据虚线与纹理开关生成 WebGL FlatStyle 样式表达式
+ * @param {boolean} dash 是否包含虚线
+ * @param {boolean} pattern 是否包含图片纹理
+ * @return {import(&#x27;ol/style/flat.js&#x27;).FlatStyle} 生成的样式对象
  */
 const getStyle &#x3D; (dash, pattern) &#x3D;&gt; {
   let newStyle &#x3D; {
@@ -471,6 +474,7 @@ const map &#x3D; new Map({
   }),
 });
 
+// 重构着色器样式（当勾选虚线或纹理开关改变着色器输入结构时调用）
 const rebuildStyle &#x3D; () &#x3D;&gt; {
   const dash &#x3D; document.getElementById(&#x27;dashEnable&#x27;).checked;
   const pattern &#x3D; document.getElementById(&#x27;patternEnable&#x27;).checked;
@@ -487,7 +491,7 @@ const rebuildStyle &#x3D; () &#x3D;&gt; {
 const modify &#x3D; new Modify({source: source});
 map.addInteraction(modify);
 
-let draw, snap; // global so we can remove them later
+let draw, snap; // 全局变量，便于移除重建
 
 function addInteractions() {
   draw &#x3D; new Draw({
@@ -501,6 +505,7 @@ function addInteractions() {
 
 addInteractions();
 
+// 监听样式变量控件输入事件，通过 updateStyleVariables 实现微秒级 GPU Uniform 更新
 const inputListener &#x3D; (event) &#x3D;&gt; {
   const variableName &#x3D; event.target.name;
   if (event.target.type &#x3D;&#x3D;&#x3D; &#x27;radio&#x27;) {
@@ -532,7 +537,7 @@ document
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Draw lines rendered with WebGL&lt;/title&gt;
+    &lt;title&gt;Draw lines rendered with WebGL / WebGL 渲染绘制线条&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -555,45 +560,45 @@ document
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
     &lt;form&gt;
-      &lt;div class&#x3D;&quot;form-group&quot;&gt;Cap type &amp;nbsp;
+      &lt;div class&#x3D;&quot;form-group&quot;&gt;Cap type / 线端线帽 &amp;nbsp;
         &lt;label class&#x3D;&quot;radio-inline&quot;&gt;
-          &lt;input type&#x3D;&quot;radio&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;capType&quot; value&#x3D;&quot;butt&quot; checked/&gt; &lt;code&gt;butt&lt;/code&gt;&amp;nbsp;
+          &lt;input type&#x3D;&quot;radio&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;capType&quot; value&#x3D;&quot;butt&quot; checked/&gt; &lt;code&gt;butt / 平头&lt;/code&gt;&amp;nbsp;
         &lt;/label&gt;
         &lt;label class&#x3D;&quot;radio-inline&quot;&gt;
-          &lt;input type&#x3D;&quot;radio&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;capType&quot; value&#x3D;&quot;round&quot;/&gt; &lt;code&gt;round&lt;/code&gt;&amp;nbsp;
+          &lt;input type&#x3D;&quot;radio&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;capType&quot; value&#x3D;&quot;round&quot;/&gt; &lt;code&gt;round / 圆头&lt;/code&gt;&amp;nbsp;
         &lt;/label&gt;
         &lt;label class&#x3D;&quot;radio-inline&quot;&gt;
-          &lt;input type&#x3D;&quot;radio&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;capType&quot; value&#x3D;&quot;square&quot;/&gt; &lt;code&gt;square&lt;/code&gt;&amp;nbsp;
+          &lt;input type&#x3D;&quot;radio&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;capType&quot; value&#x3D;&quot;square&quot;/&gt; &lt;code&gt;square / 方头&lt;/code&gt;&amp;nbsp;
         &lt;/label&gt;
       &lt;/div&gt;
-      &lt;div class&#x3D;&quot;form-group&quot;&gt;Join type &amp;nbsp;
+      &lt;div class&#x3D;&quot;form-group&quot;&gt;Join type / 拐角连接 &amp;nbsp;
         &lt;label class&#x3D;&quot;radio-inline&quot;&gt;
-          &lt;input type&#x3D;&quot;radio&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;joinType&quot; value&#x3D;&quot;miter&quot; checked/&gt; &lt;code&gt;miter&lt;/code&gt;&amp;nbsp;
+          &lt;input type&#x3D;&quot;radio&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;joinType&quot; value&#x3D;&quot;miter&quot; checked/&gt; &lt;code&gt;miter / 尖角斜接&lt;/code&gt;&amp;nbsp;
         &lt;/label&gt;
         &lt;label class&#x3D;&quot;radio-inline&quot;&gt;
-          &lt;input type&#x3D;&quot;radio&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;joinType&quot; value&#x3D;&quot;round&quot;/&gt; &lt;code&gt;round&lt;/code&gt;&amp;nbsp;
+          &lt;input type&#x3D;&quot;radio&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;joinType&quot; value&#x3D;&quot;round&quot;/&gt; &lt;code&gt;round / 圆角连接&lt;/code&gt;&amp;nbsp;
         &lt;/label&gt;
         &lt;label class&#x3D;&quot;radio-inline&quot;&gt;
-          &lt;input type&#x3D;&quot;radio&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;joinType&quot; value&#x3D;&quot;bevel&quot;/&gt; &lt;code&gt;bevel&lt;/code&gt;&amp;nbsp;
+          &lt;input type&#x3D;&quot;radio&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;joinType&quot; value&#x3D;&quot;bevel&quot;/&gt; &lt;code&gt;bevel / 平角斜切&lt;/code&gt;&amp;nbsp;
         &lt;/label&gt;
       &lt;/div&gt;
       &lt;div class&#x3D;&quot;form-group&quot;&gt;
         &lt;label&gt;
-          Line width (pixels)
+          Line width (pixels) / 线宽（像素）
           &lt;input type&#x3D;&quot;range&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;width&quot; min&#x3D;&quot;1&quot; max&#x3D;&quot;40&quot; value&#x3D;&quot;8&quot;&gt;
         &lt;/label&gt;
         &lt;span id&#x3D;&quot;value-width&quot;&gt;12&lt;/span&gt;
       &lt;/div&gt;
       &lt;div class&#x3D;&quot;form-group&quot;&gt;
         &lt;label&gt;
-          Miter limit (ratio)
+          Miter limit (ratio) / 斜接限制比
           &lt;input type&#x3D;&quot;range&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;miterLimit&quot; min&#x3D;&quot;1&quot; max&#x3D;&quot;20&quot; value&#x3D;&quot;10&quot; step&#x3D;&quot;0.1&quot;&gt;
         &lt;/label&gt;
         &lt;span id&#x3D;&quot;value-miterLimit&quot;&gt;10&lt;/span&gt;
       &lt;/div&gt;
       &lt;div class&#x3D;&quot;form-group&quot;&gt;
         &lt;label&gt;
-          Line offset (pixels)
+          Line offset (pixels) / 线条平移偏移量（像素）
           &lt;input type&#x3D;&quot;range&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;offset&quot; min&#x3D;&quot;-40&quot; max&#x3D;&quot;40&quot; value&#x3D;&quot;0&quot;&gt;
         &lt;/label&gt;
         &lt;span id&#x3D;&quot;value-offset&quot;&gt;0&lt;/span&gt;
@@ -601,12 +606,12 @@ document
       &lt;div class&#x3D;&quot;form-group&quot;&gt;
         &lt;label&gt;
           &lt;input type&#x3D;&quot;checkbox&quot; class&#x3D;&quot;rebuild&quot; id&#x3D;&quot;dashEnable&quot;&gt;
-          Enable dashes
+          Enable dashes / 启用虚线（Dash）
         &lt;/label&gt;
         &lt;/div&gt;
       &lt;div class&#x3D;&quot;form-group&quot; style&#x3D;&quot;margin-left: 18px&quot;&gt;
         &lt;label&gt;
-          Line dash pattern (px)
+          Line dash pattern (px) / 虚线线段与间隔（像素）
           &lt;input type&#x3D;&quot;number&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;dashLength1&quot; min&#x3D;&quot;0&quot; max&#x3D;&quot;100&quot; value&#x3D;&quot;25&quot;&gt;
           &lt;input type&#x3D;&quot;number&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;dashLength2&quot; min&#x3D;&quot;0&quot; max&#x3D;&quot;100&quot; value&#x3D;&quot;15&quot;&gt;
           &lt;input type&#x3D;&quot;number&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;dashLength3&quot; min&#x3D;&quot;0&quot; max&#x3D;&quot;100&quot; value&#x3D;&quot;15&quot;&gt;
@@ -615,7 +620,7 @@ document
       &lt;/div&gt;
       &lt;div class&#x3D;&quot;form-group&quot; style&#x3D;&quot;margin-left: 18px&quot;&gt;
         &lt;label&gt;
-          Line dash offset (pixels)
+          Line dash offset (pixels) / 虚线相位偏移（像素）
           &lt;input type&#x3D;&quot;range&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;dashOffset&quot; min&#x3D;&quot;-200&quot; max&#x3D;&quot;200&quot; value&#x3D;&quot;0&quot;&gt;
         &lt;/label&gt;
         &lt;span id&#x3D;&quot;value-dashOffset&quot;&gt;0&lt;/span&gt;
@@ -623,19 +628,19 @@ document
       &lt;div class&#x3D;&quot;form-group&quot;&gt;
         &lt;label&gt;
           &lt;input type&#x3D;&quot;checkbox&quot; class&#x3D;&quot;rebuild&quot; id&#x3D;&quot;patternEnable&quot;&gt;
-          Enable image pattern
+          Enable image pattern / 启用点状纹理填充
         &lt;/label&gt;
       &lt;/div&gt;
       &lt;div class&#x3D;&quot;form-group&quot; style&#x3D;&quot;margin-left: 18px&quot;&gt;
         &lt;label&gt;
-          Pattern spacing (pixels)
+          Pattern spacing (pixels) / 纹理间距（像素）
           &lt;input type&#x3D;&quot;range&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;patternSpacing&quot; min&#x3D;&quot;0&quot; max&#x3D;&quot;64&quot; value&#x3D;&quot;0&quot;&gt;
         &lt;/label&gt;
         &lt;span id&#x3D;&quot;value-patternSpacing&quot;&gt;0&lt;/span&gt;
       &lt;/div&gt;
       &lt;div class&#x3D;&quot;form-group&quot; style&#x3D;&quot;margin-left: 18px&quot;&gt;
         &lt;label&gt;
-          Pattern start offset (pixels)
+          Pattern start offset (pixels) / 纹理起始偏移（像素）
           &lt;input type&#x3D;&quot;range&quot; class&#x3D;&quot;uniform&quot; name&#x3D;&quot;patternOffset&quot; min&#x3D;&quot;0&quot; max&#x3D;&quot;64&quot; value&#x3D;&quot;0&quot;&gt;
         &lt;/label&gt;
         &lt;span id&#x3D;&quot;value-patternOffset&quot;&gt;0&lt;/span&gt;

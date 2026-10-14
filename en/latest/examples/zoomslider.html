@@ -392,7 +392,7 @@ const map3 &#x3D; createMap(&#x27;map3&#x27;);
          */
         top: calc(0.5em + 2px + 1px + 1.14 * 1.375em);
       }
-
+      
       /* 针对移动触摸设备（.ol-touch 下按钮尺寸更大）的间距适配 */
       #map2 .ol-touch .ol-zoom .ol-zoom-out {
         margin-top: 212px;
@@ -400,18 +400,18 @@ const map3 &#x3D; createMap(&#x27;map3&#x27;);
       #map2 .ol-touch .ol-zoomslider {
         top: 2.75em;
       }
-
+      
       /* 修正按钮悬停/聚焦时的内置无障碍提示框（tooltip）垂直对齐位置 */
       #map2 .ol-zoom-in.ol-has-tooltip:hover [role&#x3D;tooltip],
       #map2 .ol-zoom-in.ol-has-tooltip:focus [role&#x3D;tooltip] {
         top: 3px;
       }
-
+      
       #map2 .ol-zoom-out.ol-has-tooltip:hover [role&#x3D;tooltip],
       #map2 .ol-zoom-out.ol-has-tooltip:focus [role&#x3D;tooltip] {
         top: 232px;
       }
-
+      
       /**
        * 样式三（#map3）：将缩放滑块移至地图右上角，改为橙色发光圆角外观，并切换为“水平滑动”模式
        * 核心机制：当 CSS 设置 width (200px) &gt; height (15px) 时，OpenLayers 的 ZoomSlider.prototype.initSlider_()
@@ -428,11 +428,11 @@ const map3 &#x3D; createMap(&#x27;map3&#x27;);
         box-shadow: 0 0 5px rgb(255,69,0);
         border-radius: 7.5px;
       }
-
+      
       #map3 .ol-zoomslider:hover {
         background-color: rgba(255,69,0,0.3);
       }
-
+      
       /* 自定义滑块拖拽手柄（.ol-zoomslider-thumb）为 15x15 的正圆形橙色按钮 */
       #map3 .ol-zoomslider-thumb {
         height: 15px;
@@ -450,10 +450,10 @@ const map3 &#x3D; createMap(&#x27;map3&#x27;);
   &lt;body&gt;
     &lt;h4&gt;Default style（1. 默认垂直样式）&lt;/h4&gt;
     &lt;div id&#x3D;&quot;map1&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
-
+    
     &lt;h4&gt;Placed between zoom controls（2. 嵌入在放大 &quot;+&quot; 与缩小 &quot;-&quot; 按钮之间）&lt;/h4&gt;
     &lt;div id&#x3D;&quot;map2&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
-
+    
     &lt;h4&gt;Horizontal and completely re-styled（3. 右上角水平滑动 + 纯 CSS 自定义橙色主题）&lt;/h4&gt;
     &lt;div id&#x3D;&quot;map3&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
 

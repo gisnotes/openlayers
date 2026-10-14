@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - OpenLayers 矢量绘制与图形数字化全景实战指南</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">Draw 绘制与几何数字化指南</li></ol></nav>
+
+<h1 id="openlayers-矢量绘制与图形数字化全景实战指南">OpenLayers 矢量绘制与图形数字化全景实战指南</h1>
+<blockquote>
+<p>基于 17 个核心绘制官方示例，全面解构几何采样本体、吸附捕捉网格、拓扑追踪描摹、动态量算与 WebGL 沿线着色渲染</p>
+</blockquote>
+<hr>
+<h2 id="引言：交互式矢量数字化的核心挑战">引言：交互式矢量数字化的核心挑战</h2>
+<p>地图矢量绘制（Vector Digitization）是地理信息系统采集空间数据、标记业务实体与交互量算的核心入口。</p>
+<p>在 OpenLayers 中，绘制不仅是捕捉鼠标点击并生成几何坐标，更涉及复杂的交互协同网络：</p>
+<ol>
+<li><strong>几何形态多样性</strong>：从常规点、线、面，到正多边形、星形等规则几何，再到在地球曲面上保持真实物理半径的大圆测地线（Geodesic Circle）；</li>
+<li><strong>交互链路闭环</strong>：绘制（Draw）、修改（Modify）、捕捉吸附（Snap）与拓扑边界自动追踪（Tracing）的无缝切换与事件传递；</li>
+<li><strong>实时计算与量算呈现</strong>：动态草绘过程中的距离与面积量算，以及基于 DOM Overlay 或矢量样式纯 Canvas 渲染的性能权衡；</li>
+<li><strong>拓扑一致性与大图元维护</strong>：共享边界的拓扑构建（如 Topolis 库集成）与自相交校验；</li>
+<li><strong>硬件加速渲染</strong>：利用 WebGL 矢量流水线实现高帧率动态沿线着色、虚线调节与时空轨迹（XYM 维度）过滤。</li>
+</ol>
+<p>本文立足官方示例库中带 <code>draw</code> 标签的 <strong>17 个核心示例</strong>，建立完整的矢量绘制知识图谱与工程架构体系。</p>
+<hr>
+<h2 id="第一部分：全景视盘17-个-draw-核心示例矩阵">第一部分：全景视盘——17 个 Draw 核心示例矩阵</h2>
+<table>
+<thead>
+<tr>
+<th align="left">分类体系</th>
+<th align="left">示例标识</th>
+<th align="left">核心机制 / 关键 API</th>
+<th align="left">解决的典型生产场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>基础绘制与规则图形</strong></td>
+<td align="left"><a href="../en/latest/examples/draw-features.html"><code>draw-features</code></a></td>
+<td align="left"><code>ol/interaction/Draw</code> 基础配置（Point/Line/Polygon/Circle）</td>
+<td align="left">基础图形采集与图层实时绑定</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/draw-freehand.html"><code>draw-freehand</code></a></td>
+<td align="left"><code>freehand: true</code> 自由轨迹手绘模式</td>
+<td align="left">涂鸦批注、电子围栏快速勾勒、触摸手写板录入</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/draw-shapes.html"><code>draw-shapes</code></a></td>
+<td align="left"><code>createRegularPolygon</code> / <code>createBox</code> 自定义几何函数</td>
+<td align="left">方位角矩形、正三角形、星形等多边形规则采集</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/draw-features-style.html"><code>draw-features-style</code></a></td>
+<td align="left"><code>style</code> 配置独立草绘图层样式（Sketch Style）</td>
+<td align="left">区分正在绘制的半透明预览状态与入库实体的样式</td>
+</tr>
+<tr>
+<td align="left"><strong>绘制与修改协同</strong></td>
+<td align="left"><a href="../en/latest/examples/draw-and-modify-features.html"><code>draw-and-modify-features</code></a></td>
+<td align="left"><code>Draw</code> 与 <code>Modify</code> 共享同一 <code>VectorSource</code></td>
+<td align="left">绘制完成即刻转为顶点拖拽，全流程闭环编辑</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/draw-and-modify-geodesic.html"><code>draw-and-modify-geodesic</code></a></td>
+<td align="left"><code>GeometryCollection</code> + <code>Polygon#circular</code> 球面大圆</td>
+<td align="left">消除墨卡托投影高纬拉伸，绘制球面真实物理半径圆</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/modify-scale-and-rotate.html"><code>modify-scale-and-rotate</code></a></td>
+<td align="left"><code>condition</code> 配合修饰键实现以几何质心旋转缩放</td>
+<td align="left">标绘符号整体平移旋转，免去单独重绘</td>
+</tr>
+<tr>
+<td align="left"><strong>捕捉、追踪与拓扑</strong></td>
+<td align="left"><a href="../en/latest/examples/snap.html"><code>snap</code></a></td>
+<td align="left"><code>ol/interaction/Snap</code> 顶点与边线吸附</td>
+<td align="left">消除空间接边缝隙，保证要素边界严密闭合</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/snap-custom-segmenter.html"><code>snap-custom-segmenter</code></a></td>
+<td align="left"><code>segmenter</code> 自定义折线分割器</td>
+<td align="left">沿折线中点、三分点或等分节点吸附定位</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/tracing.html"><code>tracing</code></a></td>
+<td align="left"><code>trace: true</code> 自动拓扑寻路描摹</td>
+<td align="left">沿复杂行政边界、河流岸线自动吸附并闭合多边形</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/draw-modify-trace-snap.html"><code>draw-modify-trace-snap</code></a></td>
+<td align="left"><code>traceSource</code> 跨图层追踪与动态状态机切换</td>
+<td align="left">复杂地块切分与边界共享数字化生产线</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/topolis.html"><code>topolis</code></a></td>
+<td align="left">Topolis 拓扑数据结构集成（Node/Edge/Face）</td>
+<td align="left">地籍地块共享边编辑、相交删边与自动构面</td>
+</tr>
+<tr>
+<td align="left"><strong>空间动态量算</strong></td>
+<td align="left"><a href="../en/latest/examples/measure.html"><code>measure</code></a></td>
+<td align="left"><code>getLength()</code> / <code>getArea()</code> + Overlay DOM 标签</td>
+<td align="left">绘制过程中动态跟随光标显示实时距离与面积气泡</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/measure-style.html"><code>measure-style</code></a></td>
+<td align="left">纯矢量样式函数（Style Function）输出动态标注</td>
+<td align="left">零 DOM 节点开销，百万级测量标记流畅平移缩放</td>
+</tr>
+<tr>
+<td align="left"><strong>线条样式与 WebGL</strong></td>
+<td align="left"><a href="../en/latest/examples/line-arrows.html"><code>line-arrows</code></a></td>
+<td align="left"><code>geometry.forEachSegment()</code> + 方位角图标旋转</td>
+<td align="left">航线、水流、单行道方向动态箭头装饰</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/webgl-draw-line.html"><code>webgl-draw-line</code></a></td>
+<td align="left"><code>WebGLVectorLayer</code> + 动态 Uniform 样式变量</td>
+<td align="left">GPU 级线条平滑线宽、虚线与纹理渲染</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/filter-webgl-line.html"><code>filter-webgl-line</code></a></td>
+<td align="left"><code>[&#39;line-metric&#39;]</code> 表达式 + <code>XYM</code> 测量维度</td>
+<td align="left">飞行滑翔航迹随时间戳动态演进与渐变着色</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="第二部分：架构全景olinteractiondraw-运行模型与生命周期">第二部分：架构全景——<code>ol/interaction/Draw</code> 运行模型与生命周期</h2>
+<p><code>ol/interaction/Draw</code> 继承自 <code>PointerInteraction</code>，通过处理 <code>pointerdown</code>、<code>pointermove</code> 和 <code>pointerup</code> 事件驱动几何对象的创建。</p>
+<h3 id="1-绘制生命周期与状态机">1. 绘制生命周期与状态机</h3>
+<pre><code class="language-mermaid">stateDiagram-v2
+    [*] --&gt; Idle: 初始化完成
+    Idle --&gt; Sketching: 首次点击 / 触摸按下 (drawstart)
+    Sketching --&gt; Sketching: pointermove (更新临时坐标点)
+    Sketching --&gt; Sketching: 点击添加中间拐点 (Point/Line/Polygon)
+    Sketching --&gt; Complete: 双击 / 闭合首尾点 / 单击满足终止条件 (drawend)
+    Complete --&gt; Idle: 要素注入目标 VectorSource
+    Sketching --&gt; Idle: 按 Escape 键 / 调用 abortDrawing() (drawabort)
+</code></pre>
+<h3 id="2-内部草绘图层与样式隔离">2. 内部草绘图层与样式隔离</h3>
+<p>当初始化 <code>new Draw({source, style})</code> 时：</p>
+<ul>
+<li><code>Draw</code> 内部自动维护一个专用的 <strong>Overlay 临时图层</strong>，当前正在绘制尚未落库的几何对象保存在 <code>sketchFeature_</code> 中；</li>
+<li>若显式配置了 <code>style</code>，该临时要素会应用自定义的草绘样式（例如半透明填充、高亮虚线描边等）；</li>
+<li>只有触发 <code>drawend</code> 事件后，该几何要素才会被真正添加到传入的业务 <code>source</code> 中，并应用业务图层的正式样式。</li>
+</ul>
+<h3 id="3-geometryfunction-自定义几何回调">3. <code>geometryFunction</code> 自定义几何回调</h3>
+<p>默认情况下，<code>Draw</code> 会依据 <code>type</code>（如 <code>Point</code>, <code>LineString</code>, <code>Polygon</code>, <code>Circle</code>）生成标准几何。如果需要绘制特殊几何形状，可通过 <code>geometryFunction</code> 拦截并重写几何生成过程：</p>
+<pre><code class="language-javascript">// 函数签名
+function(coordinates, opt_geometry, projection) {
+  // coordinates: 当前绘制已经记录的坐标数组（首点、中间点及当前光标预览点）
+  // opt_geometry: 内部可复用的几何实例，避免频繁 GC
+  // projection: 地图当前投影对象
+  return geometry; // 返回最终几何对象
+}
+</code></pre>
+<p>官方内置了两个开箱即用的快捷函数：</p>
+<ul>
+<li><code>createBox()</code>：利用两点（左上角与右下角）绘制轴对齐矩形多边形；</li>
+<li><code>createRegularPolygon(opt_sides, opt_angle)</code>：以首点为圆心、第二点为半径生成正 $N$ 边形或规则星形。</li>
+</ul>
+<hr>
+<h2 id="第三部分：协同编辑枢纽draw--modify--snap--tracing-四位一体">第三部分：协同编辑枢纽——Draw + Modify + Snap + Tracing 四位一体</h2>
+<h3 id="1-交互职责链与添加顺序律">1. 交互职责链与添加顺序律</h3>
+<p>在 OpenLayers 的事件分发管道中，交互（Interaction）按照<strong>后添加先响应（逆序分发）</strong>的规则执行。为了保证在数字化编辑时鼠标能够准确吸附到现有要素上，必须严格遵守以下注册顺序：</p>
+<pre><code class="language-javascript">// 1. 先添加 Modify 交互（处于底层，供拖拽编辑）
+map.addInteraction(modifyInteraction);
+
+// 2. 再添加 Draw 交互（供新要素数字化）
+map.addInteraction(drawInteraction);
+
+// 3. 最后添加 Snap 交互（最先捕获 pointermove，将光标坐标精准吸附到现有边界上）
+map.addInteraction(snapInteraction);
+</code></pre>
+<h3 id="2-snap-捕捉吸附与自定义分割器（custom-segmenter）">2. Snap 捕捉吸附与自定义分割器（Custom Segmenter）</h3>
+<p><code>ol/interaction/Snap</code> 监听鼠标位置，当距离现有要素小于设定的 <code>pixelTolerance</code>（默认 10 像素）时，自动将光标坐标修正为顶点或边线上的投影垂足。</p>
+<p>在 <a href="../en/latest/examples/snap-custom-segmenter.html"><code>snap-custom-segmenter</code></a> 中，通过配置 <code>segmenter</code> 回调函数，可以将折线切分为更细密的虚拟段，实现“线段中点吸附”或“等分点吸附”：</p>
+<pre><code class="language-javascript">const snap = new Snap({
+  source: source,
+  segmenter: function (flatCoordinates, offset, end, stride) {
+    // 获取当前线段起点与终点
+    const start = flatCoordinates.slice(offset, offset + stride);
+    const stop = flatCoordinates.slice(end - stride, end);
+    // 计算线段中点
+    const midpoint = [(start[0] + stop[0]) / 2, (start[1] + stop[1]) / 2];
+    // 返回包含起点、中点、终点的展平坐标数组，供 Snap 注册捕捉候选
+    return [...start, ...midpoint, ...stop];
+  },
+});
+</code></pre>
+<h3 id="3-tracing-拓扑追踪描摹机制">3. Tracing 拓扑追踪描摹机制</h3>
+<p>在水利红线、行政区划或地籍调查中，新画地块往往需要“紧贴”现有地块边界。传统人工逐点描摹极易留下缝隙或重叠自相交。</p>
+<p><a href="../en/latest/examples/tracing.html"><code>tracing</code></a> 与 <a href="../en/latest/examples/draw-modify-trace-snap.html"><code>draw-modify-trace-snap</code></a> 引入了拓扑寻路机制：</p>
+<ul>
+<li>配置 <code>trace: true</code> 与 <code>traceSource: targetSource</code>；</li>
+<li><strong>起点锁定</strong>：点击目标要素边界，自动捕捉为描摹起始点；</li>
+<li><strong>路径寻优</strong>：移动光标时，引擎沿目标要素多边形环自动寻找两点间拓扑距离最短的连续折线段；</li>
+<li><strong>终点闭合</strong>：再次点击边界上的点，自动将追踪段注入当前绘制的几何中，完成无缝贴边。</li>
+</ul>
+<hr>
+<h2 id="第四部分：数学与算法篇测地线、规则几何与方向矢量">第四部分：数学与算法篇——测地线、规则几何与方向矢量</h2>
+<h3 id="1-测地线圆（geodesic-circle）与投影变形矫正">1. 测地线圆（Geodesic Circle）与投影变形矫正</h3>
+<p>常规 <code>ol/geom/Circle</code> 是二维笛卡尔平面圆，其半径以投影单位（如米）计算。在 Web 墨卡托投影（EPSG:3857）下，纬度 $y$ 处的局部长度变形比为：</p>
+<p>$$k = \sec(\varphi) = \frac{1}{\cos(\varphi)}$$</p>
+<p>在高纬度地区（如高纬度极区或欧洲北部），一个标称半径 1000 公里的平面投影圆，在地图上看似正圆，但实际地面物理覆盖范围已严重失真萎缩。</p>
+<p>在 <a href="../en/latest/examples/draw-and-modify-geodesic.html"><code>draw-and-modify-geodesic</code></a> 中，核心采用 <code>ol/geom/Polygon#circular</code> 生成球面大圆：</p>
+<pre><code class="language-javascript">import { circular } from &quot;../src/ol/geom/Polygon.js&quot;;
+import { getDistance } from &quot;../src/ol/sphere.js&quot;;
+
+// 计算两点球面物理真实距离（哈弗辛公式 Haversine）
+const centerLonLat = transform(center, projection, &quot;EPSG:4326&quot;);
+const edgeLonLat = transform(edgeCoord, projection, &quot;EPSG:4326&quot;);
+const radiusInMeters = getDistance(centerLonLat, edgeLonLat);
+
+// 生成由 128 个顶点构成的球面大圆多边形，再重投影回视图坐标系
+const geodesicPolygon = circular(centerLonLat, radiusInMeters, 128);
+geodesicPolygon.transform(&quot;EPSG:4326&quot;, projection);
+</code></pre>
+<blockquote>
+<p>[!NOTE]
+在 Web 墨卡托视图下，真实的测地线圆会随着纬度升高而呈现上下扁平或类椭圆形，这正是保持地表真实距离一致的正确数学反映。</p>
+</blockquote>
+<h3 id="2-规则图形极坐标展开">2. 规则图形极坐标展开</h3>
+<p>在 <a href="../en/latest/examples/draw-shapes.html"><code>draw-shapes</code></a> 中，自定义正多边形与星形基于极坐标参数方程：</p>
+<p>$$x_i = x_0 + r \cdot \cos\left(\theta_0 + \frac{2\pi i}{N}\right), \quad y_i = y_0 + r \cdot \sin\left(\theta_0 + \frac{2\pi i}{N}\right)$$</p>
+<h3 id="3-折线子段航向角与箭头指示">3. 折线子段航向角与箭头指示</h3>
+<p>在 <a href="../en/latest/examples/line-arrows.html"><code>line-arrows</code></a> 中，沿线箭头的朝向通过相邻节点坐标差计算得出：</p>
+<p>$$\theta = \operatorname{atan2}(y_{\text{end}} - y_{\text{start}},, x_{\text{end}} - x_{\text{start}})$$</p>
+<pre><code class="language-javascript">geometry.forEachSegment(function (start, end) {
+  const dx = end[0] - start[0];
+  const dy = end[1] - start[1];
+  const rotation = Math.atan2(dy, dx); // 计算线段弧度角
+  styles.push(
+    new Style({
+      geometry: new Point(end),
+      image: new Icon({
+        src: &quot;data/arrow.png&quot;,
+        rotateWithView: true, // 随地图旋转保持相对方向
+        rotation: -rotation,
+      }),
+    }),
+  );
+});
+</code></pre>
+<hr>
+<h2 id="第五部分：空间量算与-webgl-硬件加速">第五部分：空间量算与 WebGL 硬件加速</h2>
+<h3 id="1-动态量算架构选型：dom-overlay-vs-纯矢量样式">1. 动态量算架构选型：DOM Overlay vs 纯矢量样式</h3>
+<pre><code class="language-mermaid">flowchart TD
+    DrawInteraction[&quot;Draw 绘制草绘交互&quot;] --&gt; ModeCheck{&quot;量算呈现方式&quot;}
+    ModeCheck -- &quot;方式 A: DOM Overlay (measure.html)&quot; --&gt; DOMTree[&quot;创建 HTML DIV 元素&quot;]
+    DOMTree --&gt; Overlay[&quot;ol/Overlay 绝对定位组件&quot;]
+    Overlay --&gt; RenderDOM[&quot;浏览器重排与重绘 (DOM Reflow)&quot;]
+
+    ModeCheck -- &quot;方式 B: 纯矢量样式 (measure-style.html)&quot; --&gt; StyleFn[&quot;矢量图层 StyleFunction&quot;]
+    StyleFn --&gt; CalcLabel[&quot;动态计算 length / area 字符串&quot;]
+    CalcLabel --&gt; CanvasText[&quot;Canvas 直接绘制 Text Style&quot;]
+    CanvasText --&gt; ZeroDOM[&quot;零额外 DOM 节点，极速渲染&quot;]
+</code></pre>
+<ul>
+<li><strong><a href="../en/latest/examples/measure.html"><code>measure</code></a>（DOM Overlay 方案）</strong>：<ul>
+<li>优势：支持任意 HTML/CSS 定制，可插入删除按钮或提示气泡；</li>
+<li>劣势：每段线或多边形均产生真实 DOM 节点，频繁缩放或成百上千个测量标记时产生性能瓶颈。</li>
+</ul>
+</li>
+<li><strong><a href="../en/latest/examples/measure-style.html"><code>measure-style</code></a>（纯矢量样式方案）</strong>：<ul>
+<li>优势：完全脱离 DOM，测量结果直接作为 Feature 的 <code>Text</code> 样式在 Canvas 上渲染，内存开销低，支持百万级平移缩放；</li>
+<li>劣势：样式表现受 Canvas 文本排版能力限制。</li>
+</ul>
+</li>
+</ul>
+<h3 id="2-webgl-矢量图层硬件加速">2. WebGL 矢量图层硬件加速</h3>
+<p>在 <a href="../en/latest/examples/webgl-draw-line.html"><code>webgl-draw-line</code></a> 与 <a href="../en/latest/examples/filter-webgl-line.html"><code>filter-webgl-line</code></a> 中，线条通过 GPU 着色器直接渲染：</p>
+<ul>
+<li>**<code>updateStyleVariables</code>**：动态修改线宽、虚线偏移或时间戳，直接更新 GPU Uniforms，耗时小于 1 毫秒，无须重刷顶点缓冲区；</li>
+<li><strong><code>[&#39;line-metric&#39;]</code> 操作符</strong>：读取几何坐标中的 M 维（如 GPS 时间戳、高程、里程桩号），在片元着色器中执行实时线性插值（<code>interpolate</code>）与阈值过滤（<code>filter: [&#39;&lt;=&#39;, [&#39;line-metric&#39;], [&#39;var&#39;, &#39;timestamp&#39;]]</code>）。</li>
+</ul>
+<hr>
+<h2 id="第六部分：工程避坑与最佳实践指南">第六部分：工程避坑与最佳实践指南</h2>
+<h3 id="1-移动端与自由手绘（freehand）防抖防误触">1. 移动端与自由手绘（Freehand）防抖防误触</h3>
+<p>在触屏或触控笔场景下，<code>freehand: true</code> 会以极高频率接收 <code>pointermove</code>。</p>
+<ul>
+<li><strong>问题</strong>：生成密集过量顶点，导致 GeoJSON 体积暴增且后续拓扑运算卡顿；</li>
+<li><strong>对策</strong>：在 <code>drawend</code> 事件中结合 Douglas-Peucker 算法（<code>geometry.simplify(tolerance)</code>）进行顶点抽取平滑。</li>
+</ul>
+<h3 id="2-避免绘制自相交多边形（polygon-self-intersection）">2. 避免绘制自相交多边形（Polygon Self-Intersection）</h3>
+<p>OpenLayers 默认 <code>Polygon</code> 并不校验自相交。如需构建地籍或拓扑图元：</p>
+<ul>
+<li>推荐使用 <a href="../en/latest/examples/topolis.html"><code>topolis</code></a> 维护平面拓扑图（Planar Graph），将相交线段自动打断为节点并计算独立拓扑面；</li>
+<li>或在 <code>drawend</code> 中结合 Turf.js 的 <code>kinks()</code> 进行自相交校验并拦截非法要素。</li>
+</ul>
+<h3 id="3-多世界循环（wrapx）下的几何跨度">3. 多世界循环（wrapX）下的几何跨度</h3>
+<p>如果地图视图开启了世界连续横向滚动，绘制多边形若跨越 180° 经线可能被切割成反向拉伸的大多边形：</p>
+<ul>
+<li>在 <code>VectorSource</code> 中配置 <code>wrapX: false</code>；</li>
+<li>或在 <code>Draw</code> 构造器中限制绘制在主世界范围之内。</li>
+</ul>
+<hr>
+<h2 id="附录：17-个-draw-核心示例直达索引">附录：17 个 Draw 核心示例直达索引</h2>
+<ol>
+<li><a href="../en/latest/examples/draw-features.html">draw-features</a> — 基础点、线、面、圆绘制</li>
+<li><a href="../en/latest/examples/draw-freehand.html">draw-freehand</a> — 自由手绘模式</li>
+<li><a href="../en/latest/examples/draw-shapes.html">draw-shapes</a> — 正多边形与规则几何生成</li>
+<li><a href="../en/latest/examples/draw-features-style.html">draw-features-style</a> — 自定义草绘样式隔离</li>
+<li><a href="../en/latest/examples/draw-and-modify-features.html">draw-and-modify-features</a> — 绘制与修改协同编辑</li>
+<li><a href="../en/latest/examples/draw-and-modify-geodesic.html">draw-and-modify-geodesic</a> — 测地线大圆高纬保真</li>
+<li><a href="../en/latest/examples/modify-scale-and-rotate.html">modify-scale-and-rotate</a> — 交互式缩放与旋转</li>
+<li><a href="../en/latest/examples/snap.html">snap</a> — 顶点与边界捕捉吸附</li>
+<li><a href="../en/latest/examples/snap-custom-segmenter.html">snap-custom-segmenter</a> — 自定义分割器与中点吸附</li>
+<li><a href="../en/latest/examples/tracing.html">tracing</a> — 边界自动拓扑寻路描摹</li>
+<li><a href="../en/latest/examples/draw-modify-trace-snap.html">draw-modify-trace-snap</a> — 数字化生产综合交互</li>
+<li><a href="../en/latest/examples/topolis.html">topolis</a> — Topolis 拓扑数据结构集成</li>
+<li><a href="../en/latest/examples/measure.html">measure</a> — 动态量算（DOM Overlay 模式）</li>
+<li><a href="../en/latest/examples/measure-style.html">measure-style</a> — 动态量算（矢量样式 Canvas 模式）</li>
+<li><a href="../en/latest/examples/line-arrows.html">line-arrows</a> — 折线分段箭头方向指示</li>
+<li><a href="../en/latest/examples/webgl-draw-line.html">webgl-draw-line</a> — WebGL 线条渲染与动态 Uniform</li>
+<li><a href="../en/latest/examples/filter-webgl-line.html">filter-webgl-line</a> — WebGL 沿线度量过滤与时间渐变</li>
+</ol>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

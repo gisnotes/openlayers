@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - OpenLayers 空间要素编辑与数字化修改全景实战指南</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">Edit 要素编辑与拓扑修改指南</li></ol></nav>
+
+<h1 id="openlayers-空间要素编辑与数字化修改全景实战指南">OpenLayers 空间要素编辑与数字化修改全景实战指南</h1>
+<blockquote>
+<p>基于 13 个核心编辑官方示例，深度解析要素顶点微调、几何形变变换、复杂多环拓扑控制与服务端 CUD 事务提交闭环</p>
+</blockquote>
+<hr>
+<h2 id="引言：从简单标绘到空间资产全生命周期维护">引言：从简单标绘到空间资产全生命周期维护</h2>
+<p>在地理信息系统（GIS）工程中，几何创建（Create）通常只是空间数据生命周期的第一步，而空间编辑（Edit: Update / Delete）才是业务资产日常运维的核心。</p>
+<p>与单纯的点击绘制相比，空间要素编辑面临更严苛的技术要求：</p>
+<ol>
+<li><strong>交互状态精确解耦</strong>：如何控制只有选中的要素才激活顶点控制器，避免全图要素同时处于可编辑状态造成误触；</li>
+<li><strong>顶点级精细控制</strong>：折点平移、线段中点插值、按键删点（<code>deleteCondition</code>）以及针对特殊几何类型禁止插入新顶点（<code>insertVertexCondition</code>）；</li>
+<li><strong>复合形变变换</strong>：不依赖重新绘制，围绕几何质心执行等比缩放与自由旋转，保持几何形态比例；</li>
+<li><strong>拓扑一致性保护</strong>：多边形公共接边顶点的联动同步、内环洞（Holes）的处理，以及结合平面拓扑引擎（Topolis）保证空间拓扑有效性；</li>
+<li><strong>前后端在线协同闭环</strong>：结合空间查询范围分块加载数据，客户端执行脏检查（Dirty Tracking），并将增删改操作可靠同步至服务端（如 ArcGIS FeatureServer、OGC WFS-T 等）。</li>
+</ol>
+<p>本文立足官方示例库中带 <code>edit</code> 标签的 <strong>13 个核心示例</strong>，全面解构 OpenLayers 的编辑交互体系、状态机控制与在线业务闭环。</p>
+<hr>
+<h2 id="第一部分：全景视盘13-个-edit-核心示例矩阵">第一部分：全景视盘——13 个 Edit 核心示例矩阵</h2>
+<table>
+<thead>
+<tr>
+<th align="left">分类体系</th>
+<th align="left">示例标识</th>
+<th align="left">核心机制 / 关键 API</th>
+<th align="left">解决的典型生产场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>经典顶点修改与选择</strong></td>
+<td align="left"><a href="../en/latest/examples/modify-features.html"><code>modify-features</code></a></td>
+<td align="left"><code>Select</code> + <code>Modify({features})</code></td>
+<td align="left">选中要素激活顶点编辑，Alt+点击删除折点，多选保持公共接边</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/modify-test.html"><code>modify-test</code></a></td>
+<td align="left"><code>insertVertexCondition</code> 条件函数</td>
+<td align="left">复杂几何测试（内环洞、多面、几何集合），限制禁止向多边形加点</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/modify-scale-and-rotate.html"><code>modify-scale-and-rotate</code></a></td>
+<td align="left"><code>condition</code> 配合修饰键进行仿射变换</td>
+<td align="left">基于不变质心执行要素缩放与旋转，免去单独重画标绘符号</td>
+</tr>
+<tr>
+<td align="left"><strong>绘制与修改闭环流水线</strong></td>
+<td align="left"><a href="../en/latest/examples/draw-and-modify-features.html"><code>draw-and-modify-features</code></a></td>
+<td align="left"><code>Draw</code> + <code>Modify</code> + <code>Snap</code> 协同</td>
+<td align="left">标绘三位一体闭环：一边绘制新图形，一边微调已有要素</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/draw-and-modify-geodesic.html"><code>draw-and-modify-geodesic</code></a></td>
+<td align="left"><code>GeometryCollection</code> + <code>Polygon#circular</code></td>
+<td align="left">消除墨卡托投影高纬拉伸，球面测地线大圆圆心与半径同步编辑</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/draw-features.html"><code>draw-features</code></a></td>
+<td align="left"><code>removeLastPoint()</code> 动态撤销顶点</td>
+<td align="left">绘制线或面时光标逐点回退，支持 Shift 快捷键切换手绘模式</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/draw-freehand.html"><code>draw-freehand</code></a></td>
+<td align="left"><code>freehand: true</code> 自由轨迹手绘</td>
+<td align="left">屏幕连续拖拽涂鸦批注、电子围栏勾勒</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/draw-shapes.html"><code>draw-shapes</code></a></td>
+<td align="left">自定义 <code>geometryFunction</code> 规则图形</td>
+<td align="left">两点框选生成正多边形、多角星形及轴对齐矩形</td>
+</tr>
+<tr>
+<td align="left"><strong>拓扑吸附与图元维护</strong></td>
+<td align="left"><a href="../en/latest/examples/snap.html"><code>snap</code></a></td>
+<td align="left"><code>ol/interaction/Snap</code> 顶点与边线捕捉</td>
+<td align="left">消除要素接缝与微小重叠，保证编辑时顶点严密重合</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/topolis.html"><code>topolis</code></a></td>
+<td align="left">Topolis 拓扑数据结构（Node/Edge/Face）</td>
+<td align="left">地籍地块共享边维护、绘制线段相交自动删边与合并邻接面</td>
+</tr>
+<tr>
+<td align="left"><strong>空间动态交互量算</strong></td>
+<td align="left"><a href="../en/latest/examples/measure.html"><code>measure</code></a></td>
+<td align="left"><code>getLength</code> / <code>getArea</code> + DOM Overlay</td>
+<td align="left">边绘制边跟随光标显示实时距离与面积浮动气泡</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/measure-style.html"><code>measure-style</code></a></td>
+<td align="left">纯矢量样式函数（Style Function）输出标注</td>
+<td align="left">零 DOM 开销，海量测量要素在 Canvas 上流畅缩放平移</td>
+</tr>
+<tr>
+<td align="left"><strong>服务端在线空间编辑</strong></td>
+<td align="left"><a href="../en/latest/examples/vector-esri-edit.html"><code>vector-esri-edit</code></a></td>
+<td align="left">ArcGIS REST <code>addFeatures</code> / <code>updateFeatures</code></td>
+<td align="left">瓦片化空间拉取、客户端脏检查，向服务端提交在线空间事务</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="第二部分：核心架构olinteractionmodify-运行机制与状态机">第二部分：核心架构——<code>ol/interaction/Modify</code> 运行机制与状态机</h2>
+<p><code>ol/interaction/Modify</code> 是 OpenLayers 要素编辑的中枢交互，专用于调整矢量要素的顶点坐标。</p>
+<h3 id="1-顶点编辑生命周期与状态流转">1. 顶点编辑生命周期与状态流转</h3>
+<pre><code class="language-mermaid">stateDiagram-v2
+    [*] --&gt; Idle: 监听地图 pointermove
+    Idle --&gt; HoverVertex: 光标进入已有顶点 pixelTolerance 范围 (显示调整光标)
+    Idle --&gt; HoverEdge: 光标悬停在线段中间 (显示虚拟插入点)
+    HoverVertex --&gt; Dragging: pointerdown 捕获顶点 (触发 modifystart)
+    HoverEdge --&gt; Dragging: pointerdown 点击插入新顶点并立即拖拽 (满足 insertVertexCondition)
+    HoverVertex --&gt; Idle: 按住 Alt 键单击顶点 (满足 deleteCondition，删除顶点)
+    Dragging --&gt; Dragging: pointerdrag 持续拖拽，实时更新 feature 几何
+    Dragging --&gt; Idle: pointerup 释放鼠标 (触发 modifyend，几何落库)
+</code></pre>
+<h3 id="2-要素绑定模式对比：绑定-source-vs-绑定-collection">2. 要素绑定模式对比：绑定 Source vs 绑定 Collection</h3>
+<p><code>Modify</code> 支持两种初始化数据绑定的方式，决定了编辑器的交互安全级别：</p>
+<table>
+<thead>
+<tr>
+<th align="left">绑定方式</th>
+<th align="left">初始化配置</th>
+<th align="left">运作特点</th>
+<th align="left">适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>全源绑定</strong></td>
+<td align="left"><code>new Modify({source: vectorSource})</code></td>
+<td align="left">地图上该图层内的<strong>所有要素均处于可编辑状态</strong>，鼠标悬停任意要素顶点都会出现手柄</td>
+<td align="left">纯单图层轻量标绘、简易草稿画布</td>
+</tr>
+<tr>
+<td align="left"><strong>动态集合绑定</strong></td>
+<td align="left"><code>new Modify({features: select.getFeatures()})</code></td>
+<td align="left">仅当要素被 <code>Select</code> 交互选中后才激活编辑控制器，未选中的要素保持静默</td>
+<td align="left"><strong>企业级 GIS 生产环境</strong>，彻底杜绝全图要素误触</td>
+</tr>
+</tbody></table>
+<h3 id="3-条件控制钩子（conditions）">3. 条件控制钩子（Conditions）</h3>
+<ul>
+<li>**<code>insertVertexCondition</code>**：控制何时允许在线段中间插入新顶点。在 <a href="../en/latest/examples/modify-test.html"><code>modify-test</code></a> 中，通过该条件函数可以禁止向多边形中插入新顶点（仅允许拖动已有顶点）：<pre><code class="language-javascript">const modify = new Modify({
+  features: select.getFeatures(),
+  insertVertexCondition: function () {
+    // 若当前选中的要素包含多边形，则拦截加点动作
+    return !select.getFeatures().getArray().every(function (feature) {
+      return /Polygon/.test(feature.getGeometry().getType());
+    });
+  },
+});
+</code></pre>
+</li>
+<li>**<code>deleteCondition</code>**：控制何时删除顶点，默认为 <code>altKeyOnly</code>（按住 <code>Alt</code> 键单击已有顶点即将其移除）。</li>
+</ul>
+<hr>
+<h2 id="第三部分：高级几何形变与复杂拓扑控制">第三部分：高级几何形变与复杂拓扑控制</h2>
+<h3 id="1-基于不变质心的等比缩放与旋转（scale--rotate）">1. 基于不变质心的等比缩放与旋转（Scale &amp; Rotate）</h3>
+<p>在 <a href="../en/latest/examples/modify-scale-and-rotate.html"><code>modify-scale-and-rotate</code></a> 中，无需重写复杂的编辑工具条，直接复用 <code>Modify</code> 交互即可实现几何要素的缩放与旋转变换。</p>
+<p>其数学本质是先计算多边形包围盒几何中心（质心）：</p>
+<p>$$C = \left(\frac{x_{\min} + x_{\max}}{2},, \frac{y_{\min} + y_{\max}}{2}\right)$$</p>
+<p>当按住特定快捷键（如 <code>Shift</code> 键）拖拽顶点时，计算当前拖拽点与质心连线的夹角变化量 $\Delta\theta$ 或距离缩放比 $s$，对所有顶点应用二维仿射变换矩阵：</p>
+<p>$$\begin{bmatrix} x&#39; \ y&#39; \end{bmatrix} = \begin{bmatrix} \cos\Delta\theta &amp; -\sin\Delta\theta \ \sin\Delta\theta &amp; \cos\Delta\theta \end{bmatrix} \begin{bmatrix} s(x - C_x) \ s(y - C_y) \end{bmatrix} + \begin{bmatrix} C_x \ C_y \end{bmatrix}$$</p>
+<h3 id="2-复杂多环（holes）与多重几何（multigeometries）编辑">2. 复杂多环（Holes）与多重几何（MultiGeometries）编辑</h3>
+<p>在 <a href="../en/latest/examples/modify-test.html"><code>modify-test</code></a> 中验证了 OpenLayers 底层算法对复杂几何的鲁棒性：</p>
+<ul>
+<li><strong>带岛洞多边形（Polygon with Interior Rings）</strong>：外环（Exterior Ring）顺时针存储，内环（Interior Ring / Hole）逆时针存储。<code>Modify</code> 能够准确命中内环顶点并独立拖拽，而不破坏多边形的嵌套拓扑关系；</li>
+<li><strong>复合几何集合（GeometryCollection）</strong>：在 <a href="../en/latest/examples/draw-and-modify-geodesic.html"><code>draw-and-modify-geodesic</code></a> 中，通过将测地线多边形与中心点封装为 <code>GeometryCollection</code>，使得拖拽中心点时同步平移整个大圆，拖拽外圈顶点时按球面大圆公式重算 128 个采样点。</li>
+</ul>
+<h3 id="3-多要素共享公共顶点的拓扑联动">3. 多要素共享公共顶点的拓扑联动</h3>
+<p>在 <a href="../en/latest/examples/modify-features.html"><code>modify-features</code></a> 中，当两个相邻多边形共享公共边界时，使用 <code>Shift+Click</code> 将两个要素同时置于选中状态：</p>
+<ul>
+<li>拖动公共接边上的某一个顶点，<code>Modify</code> 交互会自动检索处于相同坐标的所有顶点；</li>
+<li>两个要素的对应坐标会被<strong>同时修改同步位移</strong>，彻底避免手工分别编辑导致的狭缝裂隙（Sliver gaps）。</li>
+</ul>
+<hr>
+<h2 id="第四部分：企业级实战与服务端联动的在线空间编辑闭环">第四部分：企业级实战——与服务端联动的在线空间编辑闭环</h2>
+<p>在企业级 WebGIS 平台中，客户端编辑必须与服务端数据库建立事务提交闭环。<a href="../en/latest/examples/vector-esri-edit.html"><code>vector-esri-edit</code></a> 提供了工业标准的完整架构模型：</p>
+<pre><code class="language-mermaid">sequenceDiagram
+    autonumber
+    participant Client as OpenLayers 客户端
+    participant Source as VectorSource (Loader)
+    participant Server as ArcGIS FeatureServer
+
+    Note over Client,Server: 1. 按需空间拉取阶段 (Read)
+    Client-&gt;&gt;Source: 视图平移缩放 (BBOX 变化)
+    Source-&gt;&gt;Server: GET /query?geometry={BBOX}&amp;outFields=*
+    Server--&gt;&gt;Source: 返回 EsriJSON 要素集合
+    Source--&gt;&gt;Client: readFeatures() 渲染至地图
+
+    Note over Client,Server: 2. 在线绘制新增 (Create)
+    Client-&gt;&gt;Client: Draw 交互绘制完成 (drawend)
+    Client-&gt;&gt;Server: POST /addFeatures [features: EsriJSON]
+    Server--&gt;&gt;Client: 返回成功状态与分配的 objectId
+    Client-&gt;&gt;Client: feature.set(&#39;objectid&#39;, newId) 绑定主键
+
+    Note over Client,Server: 3. 在线顶点修改 (Update)
+    Client-&gt;&gt;Client: Select 选中要素并使用 Modify 拖动折点
+    Client-&gt;&gt;Client: feature.on(&#39;change&#39;) 标记 dirty[objectId] = true
+    Client-&gt;&gt;Client: 取消选中 (selected.on(&#39;remove&#39;))
+    Client-&gt;&gt;Server: POST /updateFeatures [features: EsriJSON]
+    Server--&gt;&gt;Client: 返回 updateResults (success: true)
+    Client-&gt;&gt;Client: delete dirty[objectId] 清除脏标记
+</code></pre>
+<h3 id="1-空间切片加载策略（tile-strategy）">1. 空间切片加载策略（Tile Strategy）</h3>
+<p>通过配置 <code>tileStrategy(createXYZ({tileSize: 512}))</code>，数据源仅向服务端请求当前屏幕瓦片格网覆盖的局部空间要素，避免一次性加载全库数据导致前端崩溃。</p>
+<h3 id="2-脏检查（dirty-tracking）与低频批量提交">2. 脏检查（Dirty Tracking）与低频批量提交</h3>
+<ul>
+<li><strong>为什么不在每次 <code>pointermove</code> 或 <code>change</code> 时提交？</strong> 拖拽一个顶点会高频触发数十次坐标微调，频繁发起 HTTP 请求会导致服务端雪崩和数据并发冲突；</li>
+<li><strong>最佳实践</strong>：在要素发生变化时仅在内存中打上 <code>dirty[id] = true</code> 标记，当用户<strong>结束编辑（取消选中要素或点击保存按钮）</strong>时，才执行单次 POST 提交。</li>
+</ul>
+<hr>
+<h2 id="第五部分：工程避坑与最佳实践指南">第五部分：工程避坑与最佳实践指南</h2>
+<h3 id="1-交互注册逆序律（order-of-interactions）">1. 交互注册逆序律（Order of Interactions）</h3>
+<p>在同时集成绘制、修改与吸附的页面中，必须严格控制 <code>map.addInteraction()</code> 的先后顺序：</p>
+<ol>
+<li><strong>底层</strong>：<code>map.addInteraction(modify)</code>（优先响应已有顶点的微调）；</li>
+<li><strong>中层</strong>：<code>map.addInteraction(draw)</code>（在空白区域响应绘制新要素）；</li>
+<li><strong>顶层</strong>：<code>map.addInteraction(snap)</code>（最先捕获光标移动，将屏幕坐标纠偏吸附到候选顶点上）。</li>
+</ol>
+<h3 id="2-内存泄漏防范与事件注销">2. 内存泄漏防范与事件注销</h3>
+<p>在长期运行的编辑系统中（如大屏监控或标绘系统），频繁向要素绑定 <code>change</code> 监听容易导致内存泄漏：</p>
+<ul>
+<li>在取消要素选中或销毁交互时，务必通过 <code>un(&#39;change&#39;, listener)</code> 解除监听；</li>
+<li>避免在 <code>Modify</code> 的循环样式函数中直接创建新的 <code>Style</code> 实例，应使用样式对象字典复用。</li>
+</ul>
+<h3 id="3-自相交多边形拦截与拓扑校验">3. 自相交多边形拦截与拓扑校验</h3>
+<p>OpenLayers 默认的 <code>Modify</code> 交互不强制阻止用户拖出“沙漏形”自相交多边形。在生产入库前：</p>
+<ul>
+<li>建议集成 <a href="../en/latest/examples/topolis.html"><code>topolis</code></a> 在拓扑边面图元层级进行约束；</li>
+<li>或在 <code>modifyend</code> 事件中使用 Turf.js 进行快速拓扑校验：<pre><code class="language-javascript">import kinks from &#39;@turf/kinks&#39;;
+modify.on(&#39;modifyend&#39;, (evt) =&gt; {
+  evt.features.forEach((feature) =&gt; {
+    const geojson = new GeoJSON().writeFeatureObject(feature);
+    const errors = kinks(geojson);
+    if (errors.features.length &gt; 0) {
+      alert(&#39;警告：当前多边形存在自相交，请重新调整顶点！&#39;);
+    }
+  });
+});
+</code></pre>
+</li>
+</ul>
+<hr>
+<h2 id="附录：13-个-edit-核心示例直达索引">附录：13 个 Edit 核心示例直达索引</h2>
+<ol>
+<li><a href="../en/latest/examples/modify-features.html">modify-features</a> — 经典要素折点拖拽修改与 Alt+点击删点</li>
+<li><a href="../en/latest/examples/modify-test.html">modify-test</a> — 复杂多环/带洞多边形修改与禁止插入新顶点</li>
+<li><a href="../en/latest/examples/modify-scale-and-rotate.html">modify-scale-and-rotate</a> — 基于不变质心的等比缩放与自由旋转</li>
+<li><a href="../en/latest/examples/draw-and-modify-features.html">draw-and-modify-features</a> — 绘制、修改与吸附三位一体闭环</li>
+<li><a href="../en/latest/examples/draw-and-modify-geodesic.html">draw-and-modify-geodesic</a> — 测地线大圆几何与圆心/半径修改</li>
+<li><a href="../en/latest/examples/draw-features.html">draw-features</a> — 基础要素绘制与最后顶点撤销 (<code>removeLastPoint</code>)</li>
+<li><a href="../en/latest/examples/draw-freehand.html">draw-freehand</a> — 自由手绘模式与涂鸦批注</li>
+<li><a href="../en/latest/examples/draw-shapes.html">draw-shapes</a> — 正多边形、星形与矩形规则几何绘制</li>
+<li><a href="../en/latest/examples/snap.html">snap</a> — 顶点与边界距离容差吸附</li>
+<li><a href="../en/latest/examples/topolis.html">topolis</a> — Topolis 平面拓扑数据结构维护与相交删边</li>
+<li><a href="../en/latest/examples/measure.html">measure</a> — 动态量算（DOM Overlay 模式）</li>
+<li><a href="../en/latest/examples/measure-style.html">measure-style</a> — 动态量算（纯 Canvas 矢量样式模式）</li>
+<li><a href="../en/latest/examples/vector-esri-edit.html">vector-esri-edit</a> — ArcGIS REST 要素服务在线增删改（CUD）提交</li>
+</ol>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>
