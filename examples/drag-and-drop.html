@@ -1,17 +1,31 @@
 ---
 layout: example.html
-title: Drag-and-Drop
-shortdesc: Example of using the drag-and-drop interaction.
-docs: >
+title: Drag-and-Drop / 拖拽加载文件
+shortdesc: Example of using the drag-and-drop interaction. / 演示使用 DragAndDrop 交互直接将本地矢量文件拖拽到地图上加载渲染。
+docs: |
   Example of using the drag-and-drop interaction. Drag and drop GPX, GeoJSON, IGC, KML, or TopoJSON files on to the map. There is no projection transform support, so this will only work with data in EPSG:4326 and EPSG:3857.
+
+  演示使用 `ol/interaction/DragAndDrop` 交互。用户可直接将 GPX、GeoJSON、IGC、KML 或 TopoJSON 格式的文件从本地电脑拖放到地图区域上进行解析并自动上图。本示例未启用坐标投影转换（Projection Transform），因此仅适用于 EPSG:4326 或 EPSG:3857 投影的数据。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 客户端零服务解析流水线
+  * **HTML5 Drag & Drop API 封装**：`DragAndDrop` 交互监听地图目标 DOM 容器的原生 `dragenter`、`dragover` 与 `drop` 事件。
+  * **多格式构造器队列（`formatConstructors`）**：传入格式类数组 `[GPX, GeoJSON, IGC, KML, TopoJSON]`。当文件被拖入释放时，交互会依次尝试调用各解析器的 `readFeatures()`，命中成功后触发 `addfeatures` 事件并返回标准要素数组 `event.features`。
+  * **自动视口适配**：通过 `map.getView().fit(vectorSource.getExtent())`，数据加载完毕瞬间自动平滑居中聚焦。
+
+  #### 2. KML 内嵌样式提取（`extractStyles`）
+  * KML 文件内部通常自带 `<Style>` 标签。通过配置 `new KML({ extractStyles: true })`，OpenLayers 会自动解析其线宽、填充色及注记样式；若关闭此开关，则回退由上层 VectorLayer 的统一样式管控。
 tags: "drag-and-drop, gpx, geojson, igc, kml, topojson, maptiler"
 ---
 <div id="map" class="map"></div>
-<div><label><input type="checkbox" id="extractstyles" checked /> Extract styles from KML</label></div>
+<div><label><input type="checkbox" id="extractstyles" checked /> Extract styles from KML / 从 KML 中提取样式</label></div>
 <br />
 <div>
   <a id="download" download></a>
-  Download samples:&nbsp;&nbsp;
+  Download samples / 下载测试样例文件:&nbsp;&nbsp;
   <button id="download-gpx">GPX</button>
   &nbsp;
   <button id="download-geojson">GeoJSON</button>

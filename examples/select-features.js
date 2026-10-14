@@ -42,7 +42,7 @@ const map = new Map({
   }),
 });
 
-let select = null; // ref to currently selected interaction
+let select = null; // ref to currently selected interaction / 当前激活的 Select 交互实例引用
 
 const selected = new Style({
   fill: new Fill({
@@ -61,21 +61,26 @@ function selectStyle(feature) {
 }
 
 // select interaction working on "singleclick"
+// 基于 "singleclick"（延时防抖单选）事件的 Select 交互
 const selectSingleClick = new Select({style: selectStyle});
 
 // select interaction working on "click"
+// 基于 "click"（即时响应点击）事件的 Select 交互
 const selectClick = new Select({
   condition: click,
   style: selectStyle,
 });
 
 // select interaction working on "pointermove"
+// 基于 "pointermove"（指针悬停移动）事件的 Select 交互
 const selectPointerMove = new Select({
   condition: pointerMove,
-  toggleCondition: never, // otherwise the move events cause the features to flicker when holding shift
+  toggleCondition: never, // otherwise the move events cause the features to flicker when holding shift / 禁用 Shift 切换，避免移动时要素反复闪烁
   style: selectStyle,
 });
 
+// select interaction working on "Alt+Click"
+// 基于 "Alt+Click" 复合按键事件的 Select 交互
 const selectAltClick = new Select({
   style: selectStyle,
   condition: function (mapBrowserEvent) {
@@ -111,13 +116,20 @@ const changeInteraction = function () {
         e.selected.length +
         ' and deselected ' +
         e.deselected.length +
-        ' features)';
+        ' features) / 已选中 ' +
+        e.target.getFeatures().getLength() +
+        ' 个要素 (本次新增 ' +
+        e.selected.length +
+        ' 个，取消 ' +
+        e.deselected.length +
+        ' 个)';
     });
   }
 };
 
 /**
  * onchange callback on the select element.
+ * 下拉选择框的 onchange 切换交互事件回调。
  */
 selectElement.onchange = changeInteraction;
 changeInteraction();

@@ -1,9 +1,22 @@
 ---
 layout: example.html
-title: Modify an extent
-shortdesc: Using the Extent interaction to modify an extent.
-docs: >
+title: Modify an extent / 修改既有范围矩形
+shortdesc: Using the Extent interaction to modify an extent. / 使用 Extent 交互修改既有范围矩形（通过拖拽角点、边缘或整体移动）。
+docs: |
   <p>This example shows how to use an <code>Extent</code> interaction to modify a given extent, by moving its corners or edges.</p>
+
+  <p>本示例演示如何使用 <code>ol/interaction/Extent</code> 交互修改给定的既有矩形范围。用户可以通过拖动矩形的 4 个角点或 4 条边来调整边界尺寸，或整体平移范围矩形。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 禁用新建与限制既有范围编辑（`createCondition: never`）
+  * **锁定模式**：默认情况下在空白处拖拽会销毁旧矩形并拉出新矩形。配置 `createCondition: never` 彻底禁止了新建行为，确保视口中只维护这一个由代码初始指定的范围框。
+  * **整体平移（`drag: true`）**：启用 `drag: true` 允许鼠标直接在矩形内部按住拖拽，整体移动矩形在地图上的位置，而无需分别挪动 4 个角点。
+
+  #### 2. 自定义范围样式（`boxStyle`）
+  * 默认 Extent 样式的半透明覆盖可能不符合特定设计规范。本例通过 `boxStyle` 自定义了蓝色边框（`#3399CC`）与浅白半透明填充（`rgba(255, 255, 255, 0.4)`），提供了清晰直观的视觉指示。
 tags: "Extent, interaction, box, bbox, modify, resize"
 ---
 <div id="map" class="map"></div>

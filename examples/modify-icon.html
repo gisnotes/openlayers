@@ -1,10 +1,25 @@
 ---
 layout: example.html
-title: Icon modification
-shortdesc: Example using a Modify interaction to edit an icon.
-docs: >
+title: Icon modification / 图标点位拖拽修改
+shortdesc: Example using a Modify interaction to edit an icon. / 演示使用 Modify 交互通过命中检测直接拖拽修改点标记图标位置。
+docs: |
   The icon on this map can be dragged to modify its location.
   <p>The Modify interaction can be configured with a `hitDetection` option. With this option, the modification candidate will not be determined by the `pixelTolerance`, but match the visual appearance of the geometry.</p>
+
+  地图上的标记图标可以直接通过鼠标或触控拖拽来修改其地理位置坐标。
+  <p>Modify 交互支持配置 <code>hitDetection</code>（命中检测）选项。启用此选项后，判定是否可以拖拽不再仅仅依赖抽象几何点位周围的固定像素容差（<code>pixelTolerance</code>），而是严格根据图标渲染出来的实际视觉轮廓（Visual Appearance）进行像素级命中测试。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么需要 `hitDetection: vectorLayer`？
+  * **图标锚点偏移痛点**：点要素的几何坐标通常对应于大头针底部针尖（例如 `anchor: [0.5, 46]`）。若不开启 `hitDetection`，Modify 交互仅以针尖几何点为中心按 `pixelTolerance`（默认 10px）探测，用户点击图标上部圆圈时无法触发修改！
+  * **像素级精确拾取**：配置 `hitDetection: vectorLayer` 让 OpenLayers 使用 Canvas 像素命中测试。只要点击落在图标非透明像素内，即可立即响应拖拽。
+
+  #### 2. 光标手势与 Overlay 内部事件感知
+  * **悬停反馈**：通过监听 Modify 内部覆盖层数据源（`modify.getOverlay().getSource()`）的 `addfeature` / `removefeature` 事件，在光标移入图标时呈现手型光标（`pointer`）；
+  * **拖拽反馈**：监听 `modifystart` 与 `modifyend` 事件，拖拽中呈现抓手光标（`grabbing`），提供清晰明确的物理操作反馈。
 tags: "vector, modify, icon, marker"
 ---
 <div id="map" class="map"></div>

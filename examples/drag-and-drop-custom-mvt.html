@@ -1,23 +1,40 @@
 ---
 layout: example.html
-title: Custom Drag-and-Drop (MVT preview)
-shortdesc: Example of using the drag-and-drop interaction with a custom format to preview MVT tiles.
-docs: >
+title: Custom Drag-and-Drop (MVT preview) / 自定义拖拽加载 (MVT 矢量切片预览)
+shortdesc: Example of using the drag-and-drop interaction with a custom format to preview MVT tiles. / 演示使用 DragAndDrop 交互配合自定义格式解析器在浏览器端拖拽预览单张 MVT/PBF 矢量切片。
+docs: |
   Example of using the drag-and-drop interaction with a custom format to preview MVT tiles.
   In addition to the formats used in the [Drag-and-Drop](drag-and-drop.html) example individual MVT tiles can be previewed.
   There is no projection transform support, so this will only work with data in EPSG:4326 and EPSG:3857.
+
+  演示使用 `ol/interaction/DragAndDrop` 交互配合自定义格式解析器来预览单个 MVT/PBF 矢量切片。
+  除常规的 [Drag-and-Drop](drag-and-drop.html) 格式外，通过继承 `ol/format/MVT` 并在解析时动态注入切片网格范围（Extent），实现单张 MVT 切片的独立解析与预览。
+  本示例未启用坐标投影转换，因此仅适用于 EPSG:4326 和 EPSG:3857 投影的数据。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么 MVT 无法脱离 Extent 单独解析？
+  * **切片内相对坐标系（0 ~ 4096）**：Mapbox 矢量切片协议（MVT）为节省体积，瓦片内部记录的都是相对于当前瓦片左上角的整型屏幕相对坐标（通常分辨率为 4096×4096），并不包含任何绝对经纬度。
+  * **必须提供当前瓦片的真实地理范围**：`ol/format/MVT.readFeatures()` 必须依赖传入的 `options.extent` 才能将 0~4096 的离散坐标线性映射还原回真实世界的 EPSG:3857 地理坐标。
+
+  #### 2. 自定义格式类与动态切片网格计算
+  * 通过从界面输入框获取当前的 `tileCoord: [z, x, y]`；
+  * 调用 `createXYZ().getTileCoordExtent([z, x, y])`，将切片行列号瞬间换算为对应的地理投影矩形范围；
+  * 将该 extent 自动注入到 `readFeatures` 的 options 中，巧妙突破了原生 MVT 格式类无法直接拖拽单切片的限制。
 tags: "drag-and-drop, mvt"
 ---
 <div id="map" class="map"></div>
 <br />
 <div class="tileCoord">
   <a id="download" download></a>
-  <span>Tile coordinate&nbsp;&nbsp;</span>
+  <span>Tile coordinate / 瓦片坐标:&nbsp;&nbsp;</span>
   <span>&nbsp;z: <input type="number" id="tileCoordZ" value="6" /></span>
   <span>&nbsp;x: <input type="number" id="tileCoordX" value="30" /></span>
   <span>&nbsp;y: <input type="number" id="tileCoordY" value="20" /></span>
   <span>&nbsp;&nbsp;</span>
-  <button id="download-mvt">Download sample</button>
+  <button id="download-mvt">Download sample / 下载 MVT 样例文件</button>
 </div>
 <br />
 <div id="info">&nbsp;</div>

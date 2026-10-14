@@ -1,9 +1,23 @@
 ---
 layout: example.html
-title: Drag-and-Drop Image Vector
-shortdesc: Example of using the drag-and-drop interaction with image vector rendering.
-docs: >
+title: Drag-and-Drop Image Vector / 矢量图像图层拖拽加载
+shortdesc: Example of using the drag-and-drop interaction with image vector rendering. / 演示使用 DragAndDrop 拖拽交互配合 VectorImage 矢量图像图层进行高性能离屏渲染。
+docs: |
   Example of using the drag-and-drop interaction with an `ol/layer/VectorImage` layer. Drag and drop GPX, GeoJSON, IGC, KML, or TopoJSON files on to the map. Each file is rendered to an image on the client.
+
+  演示将拖拽（`ol/interaction/DragAndDrop`）交互与矢量图像图层（`ol/layer/VectorImage`）结合使用。用户可将 GPX、GeoJSON、IGC、KML 或 TopoJSON 格式的文件拖入地图中，客户端在渲染时会将矢量数据栅格化为离屏图像统一输出，提升海量要素下的渲染与平移性能。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. `VectorLayer` 与 `VectorImageLayer` 的性能对决
+  * **常规 `VectorLayer`**：在地图每次移动、平移或动画帧刷新时，都需要重新遍历源中成千上万个几何要素并调用 Canvas 2D 指令进行重绘。当要素数量达到数千或上万时，平移地图会出现严重掉帧和顿挫感。
+  * **`VectorImageLayer` 机制**：将整个视口范围内的所有矢量要素预先绘制在一块不可见的离屏画布（Offscreen Canvas）上，生成单个图像切片。在后续用户平移地图时，浏览器只需像操作普通静态图片一样对整张位图执行毫秒级硬件位移（`drawImage`），帧率稳定维持在 60fps。
+
+  #### 2. 代价与适用场景
+  * **代价**：缩放时由于图像放大可能产生短暂的像素锯齿，直到下一张图像栅格化完成；
+  * **适用场景**：对于通过拖拽导入的大体量边界、全量地籍宗地或密集的航迹轨迹，使用 `VectorImageLayer` 是兼顾零服务本地拖拽与极致交互流畅度的最佳工程选择。
 tags: "drag-and-drop-image-vector, gpx, geojson, igc, kml, topojson, maptiler, vector, image"
 ---
 <div id="map" class="map"></div>

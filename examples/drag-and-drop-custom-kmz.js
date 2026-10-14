@@ -15,6 +15,7 @@ import VectorSource from '../src/ol/source/Vector.js';
 
 // Create functions to extract KML and icons from KMZ array buffer,
 // which must be done synchronously.
+// 创建用于从 KMZ ArrayBuffer 中同步提取 KML 文本和图标资源的辅助函数。
 
 let zip;
 
@@ -40,6 +41,7 @@ function getKMLImage(href) {
 }
 
 // Define a KMZ format class by subclassing ol/format/KML
+// 通过继承 ol/format/KML 自定义 KMZ 格式解析类
 
 class KMZ extends KML {
   constructor(opt_options) {
@@ -64,6 +66,7 @@ class KMZ extends KML {
 }
 
 // Set up map with Drag and Drop interaction
+// 配置带有 DragAndDrop 拖拽交互的地图实例
 
 const dragAndDropInteraction = new DragAndDrop({
   formatConstructors: [KMZ, GPX, GeoJSON, IGC, KML, TopoJSON],
@@ -127,6 +130,7 @@ map.on('click', function (evt) {
 });
 
 // Sample data download
+// 样例数据下载辅助函数
 
 const link = document.getElementById('download');
 

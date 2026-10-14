@@ -10,6 +10,18 @@ docs: >
 
 
   使用 Draw 交互绘制要素的示例。从上方的下拉列表中选择几何类型即可开始绘制。若要完成绘制，请双击或点击最后一个点。对于线、多边形和圆，按住 `Shift` 键可激活自由手绘模式（Freehand）。若要移除线或多边形的最后一个顶点，请点击“Undo”（撤销）按钮。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心绘制机制与要素生命周期
+  * **草绘与正式入库**：`ol/interaction/Draw` 内部维护一个轻量草绘覆盖图层。在绘制过程中实时渲染的是临时草绘要素（Sketch Feature）；当双击或点击最后一点完成闭合时，触发 `drawend` 事件，草绘要素正式转化为 `ol/Feature` 并写入绑定的 `VectorSource`。
+  * **顶点动态撤销 (`removeLastPoint()`)**：在绘制折线或多边形过程中，调用 `draw.removeLastPoint()` 可移除刚刚落下的最后一个顶点，无需取消整条要素重画。
+
+  #### 2. 自由手绘（Freehand）模式
+  * **`Shift` 快捷键**：默认即使未开启 `freehand: true`，在绘制线或面时按住 `Shift` 键即可即时切换为徒手手绘笔触，松开 `Shift` 恢复逐点点击模式。
+  * **`wrapX: false` 作用**：数据源设置 `wrapX: false` 可防止要素在跨越东/西经 180° 时跨世界重复绘制导致坐标混乱。
 tags: "draw, edit, freehand, vector"
 resources:
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css

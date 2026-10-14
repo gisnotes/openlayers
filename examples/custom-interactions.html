@@ -1,10 +1,34 @@
 ---
 layout: example.html
-title: Custom Interactions
-shortdesc: Example of a custom interaction.
-docs: >
+title: Custom Interactions / 自定义交互开发
+shortdesc: Example of a custom interaction. / 演示通过继承 ol/interaction/Pointer 开发自定义拖拽手势交互。
+docs: |
   This example demonstrates creating a custom interaction by subclassing `ol/interaction/Pointer`.
   Note that the built in interaction `ol/interaction/Translate` might be a better option for moving features.
+
+  本示例演示如何通过继承 `ol/interaction/Pointer` 类来编写自定义的指针手势交互。
+  （注：在实际生产项目中，如果仅仅是为了移动平移要素，使用官方内置的 `ol/interaction/Translate` 交互通常是更优、更高效的选择；本示例核心在于展示底层手势与交互扩展的标准骨架与状态机模式）。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 继承 `ol/interaction/Pointer` 的四大手势生命周期函数
+  * **`handleDownEvent(evt)`**：
+    * 当鼠标左键或触控手指按下时触发。
+    * **核心返回值机制**：返回 `true` 表示当前交互成功“捕获并认领”了该事件序列（例如命中要素），系统将自动锁定当前手势并将接下来的 Drag 事件全部派发给它；返回 `false` 则放弃接管，事件透传给底层的 `DragPan` 实现地图拖拽。
+  * **`handleDragEvent(evt)`**：
+    * 仅在 `handleDownEvent` 返回 `true` 且光标移动时被持续调用。
+    * 通过当前坐标减去上一次坐标计算增量位移（$\Delta x, \Delta y$），调用 `geometry.translate(deltaX, deltaY)` 实时移动要素。
+  * **`handleMoveEvent(evt)`**：
+    * 鼠标未按下时的自由悬停移动（Hover）。
+    * 调用 `map.forEachFeatureAtPixel` 探测目标，若悬停在可拖拽要素上方，动态将容器鼠标光标切换为手型（`pointer`），提供直观交互预备反馈。
+  * **`handleUpEvent(evt)`**：
+    * 鼠标抬起或手指离开屏幕时触发。
+    * 清理内部引用的 `coordinate_` 与 `feature_`，返回 `false` 宣告本次拖拽生命周期正式结束并释放事件锁定。
+
+  #### 2. 自定义交互的适用场景
+  * 当面对复杂工业业务逻辑（如要素引出连接线、三维倾斜视角旋转手柄、自定义角度旋转尺、量测标注二次微调）时，基于 `PointerInteraction` 派生是扩展 OpenLayers 能力最干净、最彻底的标准途径。
 tags: "drag, feature, vector, editing, custom, interaction"
 ---
 <div id="map" class="map"></div>

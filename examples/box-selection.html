@@ -1,13 +1,33 @@
 ---
 layout: example.html
-title: Box Selection
-shortdesc: Using a DragBox interaction to select features.
-docs: >
+title: Box Selection / 框选要素
+shortdesc: Using a DragBox interaction to select features. / 使用 DragBox（拉框）交互进行矩形范围多选要素。
+docs: |
   <p>This example shows how to use a <code>DragBox</code> interaction to select features. Features are
   selected using a select interaction (<code>ol/interaction/Select</code>), to recieve highlighting
   and apply filters (features with color <span style="background-color: #CC6767;">#CC6767</span> are not selectable)</p>
   <p>Use <code>Ctrl+Drag</code> (<code>Command+Drag</code> on Mac) to draw boxes.</p>
+
+  <p>本示例演示如何使用 <code>DragBox</code>（拉框）交互进行要素批量框选。所选要素由选择交互（<code>ol/interaction/Select</code>）进行统筹管理，提供选中高亮显示与业务过滤控制（颜色为 <span style="background-color: #CC6767;">#CC6767</span> 的要素被过滤为不可选择）。</p>
+  <p>按住 <code>Ctrl+拖拽</code>（Mac 上为 <code>Command+拖拽</code>）可在地图上拉出矩形框选要素。本例还特别处理了跨反子午线（180°）多世界投影范围拆分，以及视图处于斜向旋转角时的几何精确相交判定。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 跨反子午线（180° 日界线）的多世界拆解
+  * **现象**：Web 墨卡托投影世界在横向是无限循环平铺的（Multi-world Wrapping）。当用户横跨太平洋拉框时，拉出的矩形范围在单一世界坐标系下会跨出原始边界。
+  * **解决方案**：
+    1. 计算当前世界的物理宽度：`worldWidth = getWidth(worldExtent)`；
+    2. 计算拉框起始点与终止点分别处于第几个世界周期（`startWorld` 到 `endWorld`）；
+    3. 遍历每个世界周期，分别计算局部相交要素并合并入选中集合。
+
+  #### 2. 斜向旋转视图（Oblique View）下的几何旋转纠偏
+  * **为什么不能直接用 `intersectsExtent()`？**
+    当视图存在旋转角时（`rotation !== 0`），屏幕上拉出的矩形在真实地理坐标系下其实是一个倾斜的平行四边形。如果直接使用其外包矩形测试相交，四周空白角区的大量无关要素会被假阳性误选。
+  * **反向旋转算法**：
+    将拉框几何与候选要素几何均绕原点 `[0, 0]` 反向旋转 `-rotation`，使拉框几何在数学空间上回归为轴对齐的标准矩形，然后再进行 `intersectsExtent` 判定，保证框选结果与用户肉眼在屏幕上框出的边界完全一致。
 tags: "DragBox, feature, selection, box"
 ---
 <div id="map" class="map"></div>
-<div>Selected regions: <span id="info">None</span></div>
+<div>Selected regions / 已选生态区：<span id="info">None / 无</span></div>

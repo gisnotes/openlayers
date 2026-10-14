@@ -33,49 +33,50 @@ const vector = new VectorLayer({
 });
 
 /**
- * Currently drawn feature.
+ * Currently drawn feature. / 当前正在绘制的要素。
  * @type {import('../src/ol/Feature.js').default}
  */
 let sketch;
 
 /**
- * The help tooltip element.
+ * The help tooltip element. / 鼠标悬停操作引导提示框 DOM 元素。
  * @type {HTMLElement}
  */
 let helpTooltipElement;
 
 /**
- * Overlay to show the help messages.
+ * Overlay to show the help messages. / 展示操作引导提示的覆盖层。
  * @type {Overlay}
  */
 let helpTooltip;
 
 /**
- * The measure tooltip element.
+ * The measure tooltip element. / 测量数值提示框 DOM 元素。
  * @type {HTMLElement}
  */
 let measureTooltipElement;
 
 /**
- * Overlay to show the measurement.
+ * Overlay to show the measurement. / 展示测量结果数值的覆盖层。
  * @type {Overlay}
  */
 let measureTooltip;
 
 /**
- * Message to show when the user is drawing a polygon.
+ * Message to show when the user is drawing a polygon. / 正在绘制多边形时的引导消息。
  * @type {string}
  */
-const continuePolygonMsg = 'Click to continue drawing the polygon';
+const continuePolygonMsg =
+  'Click to continue drawing the polygon / 点击继续绘制多边形';
 
 /**
- * Message to show when the user is drawing a line.
+ * Message to show when the user is drawing a line. / 正在绘制折线时的引导消息。
  * @type {string}
  */
-const continueLineMsg = 'Click to continue drawing the line';
+const continueLineMsg = 'Click to continue drawing the line / 点击继续绘制折线';
 
 /**
- * Handle pointer move.
+ * Handle pointer move. / 处理鼠标指针移动事件。
  * @param {import('../src/ol/MapBrowserEvent').default} evt The event.
  */
 const pointerMoveHandler = function (evt) {
@@ -83,7 +84,7 @@ const pointerMoveHandler = function (evt) {
     return;
   }
   /** @type {string} */
-  let helpMsg = 'Click to start drawing';
+  let helpMsg = 'Click to start drawing / 点击开始绘制';
 
   if (sketch) {
     const geom = sketch.getGeometry();
@@ -117,10 +118,10 @@ map.getViewport().addEventListener('mouseout', function () {
 
 const typeSelect = document.getElementById('type');
 
-let draw; // global so we can remove it later
+let draw; // global so we can remove it later / 全局变量，便于后续动态解绑
 
 /**
- * Format length output.
+ * Format length output. / 格式化长度测量输出文本。
  * @param {LineString} line The line.
  * @return {string} The formatted length.
  */
@@ -136,7 +137,7 @@ const formatLength = function (line) {
 };
 
 /**
- * Format area output.
+ * Format area output. / 格式化面积测量输出文本。
  * @param {Polygon} polygon The polygon.
  * @return {string} Formatted area.
  */
@@ -190,7 +191,7 @@ function addInteraction() {
 
   let listener;
   draw.on('drawstart', function (evt) {
-    // set sketch
+    // set sketch / 记录当前正在绘制的要素
     sketch = evt.feature;
 
     /** @type {import('../src/ol/coordinate.js').Coordinate|undefined} */
@@ -214,9 +215,9 @@ function addInteraction() {
   draw.on('drawend', function () {
     measureTooltipElement.className = 'ol-tooltip ol-tooltip-static';
     measureTooltip.setOffset([0, -7]);
-    // unset sketch
+    // unset sketch / 清除当前草绘要素引用
     sketch = null;
-    // unset tooltip so that a new one can be created
+    // unset tooltip so that a new one can be created / 重置测量提示框引用，以便下一次绘制创建新气泡
     measureTooltipElement = null;
     createMeasureTooltip();
     unByKey(listener);
@@ -224,7 +225,7 @@ function addInteraction() {
 }
 
 /**
- * Creates a new help tooltip
+ * Creates a new help tooltip / 创建新的操作引导提示覆盖层
  */
 function createHelpTooltip() {
   if (helpTooltipElement) {
@@ -241,7 +242,7 @@ function createHelpTooltip() {
 }
 
 /**
- * Creates a new measure tooltip
+ * Creates a new measure tooltip / 创建新的测量数值提示覆盖层
  */
 function createMeasureTooltip() {
   if (measureTooltipElement) {
@@ -260,7 +261,7 @@ function createMeasureTooltip() {
 }
 
 /**
- * Let user change the geometry type.
+ * Let user change the geometry type. / 允许用户切换量算类型。
  */
 typeSelect.onchange = function () {
   map.removeInteraction(draw);

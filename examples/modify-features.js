@@ -17,8 +17,12 @@ const vector = new VectorLayer({
   }),
 });
 
+// Select interaction to handle feature clicking
+// 选择交互：负责要素点击拾取与高亮
 const select = new Select();
 
+// Modify interaction bound to the selected features collection
+// 修改交互：直接绑定选择交互的选中要素集合，仅对选中要素生效
 const modify = new Modify({
   features: select.getFeatures(),
 });

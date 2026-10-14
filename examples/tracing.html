@@ -1,21 +1,35 @@
 ---
 layout: example.html
-title: Tracing around a polygon
-shortdesc: Using the draw interaction to trace around features.
-docs: >
+title: Tracing around a polygon / 沿多边形边界自动追踪描摹
+shortdesc: Using the draw interaction to trace around features. / 使用 Draw 交互的 trace 选项沿现有要素拓扑边界自动追踪并吸附绘制。
+docs: |
   The draw interaction has a <code>trace</code> option to enable tracing
   around existing features.  This example uses the <code>traceSource</code> option
   to trace features from one source and add them to another source.  The first click
   on an edge of the target feature will start tracing.  The second click on the edge
   will stop tracing.
+
+  Draw 绘制交互提供了 <code>trace</code> 配置项，可开启沿现有要素边界的自动拓扑追踪描摹功能。本示例配置 <code>traceSource</code> 参数指定目标数据源，用户从一个数据源要素中追踪提取边界并生成新要素保存到另一个数据源中。在目标要素边线上点击第一点即可开始追踪；沿线移动鼠标，Draw 会自动沿几何最短拓扑路径点亮候选路径；点击第二点即可结束追踪并把该段所有中间顶点全部吸附接入当前新要素。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么需要自动描摹（Tracing）？
+  * **消除拓扑裂隙与重叠（Slivers & Overlaps）**：在 GIS 地籍、规划或林业宗地勾画中，相邻两个地块通常拥有公共边。人工逐点点击不仅繁重，而且极易由于坐标微小抖动造成裂隙或重叠；Tracing 能保证新地块边界与旧地块边界在坐标值上达到 100% 拓扑精准一致。
+  * **双向最短路径拓扑寻路**：光标在闭合环上移动时，系统会自动评估沿顺时针与逆时针两条路径，实时选择距离光标更近的最优路径高亮指示。
+
+  #### 2. 与 Snap 交互的联合使用规范
+  * **Snap 必不可少**：在代码中，`snapInteraction = new Snap({ source: baseVector.getSource() })` 必须同时挂载，且**必须在 `drawInteraction` 之后添加到地图**（后加先执行）。
+  * **协同逻辑**：Snap 负责将光标精确定位到基准要素的边界边线上；一旦吸附成功，Draw 的 `trace` 引擎便开始介入计算沿线路径，两者协同才能实现“碰线即吸、移动即追”的极致操作体验。
 tags: "draw, trace, vector, snap, topology"
 ---
 <div id="map" class="map"></div>
 <form>
-  <label for="type">Geometry type &nbsp;</label>
+  <label for="type">Geometry type / 几何类型 &nbsp;</label>
   <select id="type">
-    <option value="Polygon">Polygon</option>
-    <option value="LineString">LineString</option>
-    <option value="None">None</option>
+    <option value="Polygon">Polygon / 多边形</option>
+    <option value="LineString">LineString / 折线</option>
+    <option value="None">None / 无</option>
   </select>
 </form>

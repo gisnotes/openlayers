@@ -1,8 +1,8 @@
 ---
 layout: example.html
-title: Snap Interaction
-shortdesc: Example of using the snap interaction together with draw and modify interactions.
-docs: >
+title: Snap Interaction / 捕捉吸附交互
+shortdesc: Example of using the snap interaction together with draw and modify interactions. / 演示将 Snap 捕捉吸附交互与 Draw（绘制）和 Modify（修改）交互协同使用。
+docs: |
   Example of using the snap interaction together with
   draw and modify interactions. The snap interaction must be added
   last, as it needs to be the first to handle the
@@ -10,27 +10,42 @@ docs: >
   (<code>edge: true</code>) and vertices (<code>vertex: true</code>).
   It can also be configured to snap to intersections between edges, which is done here with the
   <code>intersection: true</code> option.
+
+  将 Snap（捕捉吸附）交互与绘制（Draw）及修改（Modify）交互结合使用的典型示例。**Snap 交互必须在 Draw 和 Modify 之后添加到地图中**，因为后添加的交互其 <code>pointermove</code> 事件监听器具有更高优先级（位于调用链顶层），只有这样它才能先一步将鼠标指针坐标吸附校正至目标点或边。</p>
+  默认情况下，Snap 交互支持捕捉到边（<code>edge: true</code>）和顶点（<code>vertex: true</code>）。此外还可配置吸附到多条边的交叉点，本例通过设置 <code>intersection: true</code> 启用了这一功能。当光标成功吸附时，状态文本会提示并切换抓手光标。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心铁律：为什么 Snap 交互必须最后添加到地图？
+  * **倒序事件分发机制**：OpenLayers 内部在分发地图浏览器事件（`mapBrowserEvent`）时，对 `map.getInteractions()` 数组实行**逆序（从末尾到开头）遍历**。
+  * **坐标预修正（Pre-modification）原理**：最后添加的 Snap 交互处于事件处理链的最前端。当鼠标在地图上滑动时，Snap 最先截获 `pointermove` 事件，计算出距离光标最近的顶点、边或交叉点，**直接重写 `mapBrowserEvent.coordinate`**，然后返回 `true` 让事件继续向下透传。后续的 Draw 或 Modify 接收到事件时，读取到的就已经是被吸附修正后的绝对坐标。
+
+  #### 2. 吸附事件生命周期：`snap` 与 `unsnap`
+  * **`snap.on('snap', callback)`**：光标进入要素吸附容差像素范围（默认为 10px）并成功捕捉吸附时触发，可用于改变光标为抓手形状或播放吸附音效/UI提示。
+  * **`snap.on('unsnap', callback)`**：光标脱离吸附范围时触发，及时恢复常规光标与界面状态。
 tags: "draw, edit, modify, vector, snap"
 ---
 <div id="map" class="map"></div>
-<span id="snapped">Snapped: false</span>
+<span id="snapped">Snapped / 吸附状态: false / 未吸附</span>
 <form id="options-form" autocomplete="off">
   <div class="radio">
     <label>
       <input type="radio" name="interaction" value="draw" id="draw" checked>
-      Draw &nbsp;
+      Draw / 绘制 &nbsp;
     </label>
     <select name="draw-type" id="draw-type">
-      <option value="Point">Point</option>
-      <option value="LineString">LineString</option>
-      <option value="Polygon">Polygon</option>
-      <option value="Circle">Circle</option>
+      <option value="Point">Point / 点</option>
+      <option value="LineString">LineString / 折线</option>
+      <option value="Polygon">Polygon / 多边形</option>
+      <option value="Circle">Circle / 圆</option>
     </select>
   </div>
   <div class="radio">
     <label>
       <input type="radio" name="interaction" value="modify">
-      Modify &nbsp;
+      Modify / 修改 &nbsp;
     </label>
   </div>
 </form>

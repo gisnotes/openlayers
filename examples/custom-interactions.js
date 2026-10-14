@@ -11,6 +11,8 @@ import VectorLayer from '../src/ol/layer/Vector.js';
 import OGCMapTile from '../src/ol/source/OGCMapTile.js';
 import VectorSource from '../src/ol/source/Vector.js';
 
+// Custom Drag interaction subclassing PointerInteraction
+// 通过继承 PointerInteraction 自定义实现的要素平移拖拽交互类
 class Drag extends PointerInteraction {
   constructor() {
     super({
@@ -47,6 +49,8 @@ class Drag extends PointerInteraction {
 }
 
 /**
+ * Handle pointer down event. Return true to claim the drag sequence.
+ * 处理指针按下事件。返回 true 声明接管后续的拖拽事件序列。
  * @param {import('../src/ol/MapBrowserEvent.js').default} evt Map browser event.
  * @return {boolean} `true` to start the drag sequence.
  */
@@ -66,6 +70,8 @@ function handleDownEvent(evt) {
 }
 
 /**
+ * Handle pointer drag event: calculate coordinate delta and translate the feature.
+ * 处理指针拖拽事件：计算坐标偏移量并实时平移要素几何。
  * @param {import('../src/ol/MapBrowserEvent.js').default} evt Map browser event.
  */
 function handleDragEvent(evt) {
@@ -80,6 +86,8 @@ function handleDragEvent(evt) {
 }
 
 /**
+ * Handle pointer move event: update cursor style on hover.
+ * 处理指针悬停移动事件：鼠标悬停在要素上方时动态更新光标样式为手型。
  * @param {import('../src/ol/MapBrowserEvent.js').default} evt Event.
  */
 function handleMoveEvent(evt) {
@@ -102,6 +110,8 @@ function handleMoveEvent(evt) {
 }
 
 /**
+ * Handle pointer up event: finish the drag sequence and release references.
+ * 处理指针抬起事件：结束当前拖拽手势生命周期并释放引用。
  * @return {boolean} `false` to stop the drag sequence.
  */
 function handleUpEvent() {

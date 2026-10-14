@@ -18,5 +18,7 @@ const map = new Map({
   }),
 });
 
+// Configure Extent interaction to draw and modify bbox only when Shift is pressed
+// 实例化 Extent 交互：设置仅在按下 Shift 键时触发范围矩形的绘制、尺寸缩放与平移调整
 const extent = new ExtentInteraction({condition: shiftKeyOnly});
 map.addInteraction(extent);

@@ -16,8 +16,12 @@ const vector = new VectorLayer({
   }),
 });
 
+// Select interaction to pick single or multiple features (with Shift key)
+// 选择交互：支持单选或按住 Shift 键复选要素
 const select = new Select();
 
+// Translate interaction bound to selected features
+// 平移交互：将其绑定至选择交互的选中要素集合，实现选中要素拖拽移动
 const translate = new Translate({
   features: select.getFeatures(),
 });

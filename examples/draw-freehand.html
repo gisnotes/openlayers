@@ -1,24 +1,37 @@
 ---
 layout: example.html
-title: Freehand Drawing
-shortdesc: Example using the ol/interaction/Draw interaction in freehand mode.
-docs: >
+title: Freehand Drawing / 自由手绘绘制
+shortdesc: Example using the ol/interaction/Draw interaction in freehand mode. / 使用 ol/interaction/Draw 交互在自由手绘模式下绘制矢量要素。
+docs: |
   This example demonstrates the `ol/interaction/Draw` in freehand mode.  During
   freehand drawing, points are added while dragging.  Set `freehand: true` to
   enable freehand mode.  Note that freehand mode can be conditionally enabled
   by using the `freehandCondition` option.  For example to toggle freehand mode
   with the `Shift` key, use `freehandCondition: shiftKeyOnly`.
+
+  本示例演示 `ol/interaction/Draw` 交互在自由手绘（Freehand）模式下的用法。在自由手绘模式下，用户按住鼠标拖拽（或在触控屏上滑动）即可连续采集记录坐标点，而无需逐个点击顶点。配置 `freehand: true` 可直接开启自由手绘。此外还可通过 `freehandCondition` 选项设置按键条件切换，例如配置 `freehandCondition: shiftKeyOnly` 即可实现仅在按住 `Shift` 键时切换为自由手绘。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 自由手绘与常规绘制的技术区别
+  * **采样频率与顶点密度**：常规绘制仅在鼠标发生明确的 `click` 事件时写入一个顶点；而自由手绘模式下，鼠标在拖拽（`pointerdrag`）过程中每一个微小像素移动都会被高频采样并作为连续点位推入几何坐标序列中。
+  * **绘制闭合时机**：常规多边形需要双击或点击起始点闭合；自由手绘在鼠标释放（`pointerup`）的一瞬间即自动连回首点完成要素闭合入库。
+
+  #### 2. 动态切换：`draw.setFreehand(boolean)`
+  * 当用户在 UI 界面上勾选或取消“Freehand”复选框时，无需反复调用 `map.removeInteraction()` 与 `map.addInteraction()` 重建交互实例，直接调用 `draw.setFreehand(boolean)` 即可在当前绘制会话中即时切换手势状态。
 tags: "draw, edit, freehand, vector"
 ---
 <div id="map" class="map"></div>
 <form>
-  <label for="type">Geometry type &nbsp;</label>
+  <label for="type">Geometry type / 几何类型 &nbsp;</label>
   <select id="type">
-    <option value="LineString">LineString</option>
-    <option value="Polygon">Polygon</option>
-    <option value="Circle">Circle</option>
-    <option value="None">None</option>
+    <option value="LineString">LineString / 折线</option>
+    <option value="Polygon">Polygon / 多边形</option>
+    <option value="Circle">Circle / 圆</option>
+    <option value="None">None / 无</option>
   </select>
-  <label for="freehand">Freehand Activated</label>
+  <label for="freehand">Freehand Activated / 激活自由手绘</label>
   <input type="checkbox" id="freehand" checked />
 </form>

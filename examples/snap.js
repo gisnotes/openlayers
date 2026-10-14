@@ -33,6 +33,8 @@ const map = new Map({
   }),
 });
 
+// Modify module encapsulation
+// 修改（Modify）与选择（Select）协同封装对象
 const ExampleModify = {
   init: function () {
     this.select = new Select();
@@ -63,6 +65,8 @@ ExampleModify.init();
 
 const optionsForm = document.getElementById('options-form');
 
+// Draw module encapsulation
+// 绘制（Draw）交互封装对象
 const ExampleDraw = {
   init: function () {
     map.addInteraction(this.Point);
@@ -107,6 +111,7 @@ ExampleDraw.init();
 
 /**
  * Let user change the geometry type.
+ * 允许用户切换几何类型或交互模式。
  * @param {Event} e Change event.
  */
 optionsForm.onchange = function (e) {
@@ -133,21 +138,24 @@ ExampleModify.setActive(false);
 // The snap interaction must be added after the Modify and Draw interactions
 // in order for its map browser event handlers to be fired first. Its handlers
 // are responsible of doing the snapping.
+// Snap 交互必须在 Modify 和 Draw 交互之后添加到地图，
+// 这样它的地图浏览器事件处理函数才会先于它们执行。
+// 其处理函数负责计算并执行坐标捕捉吸附。
 const snap = new Snap({
   source: vector.getSource(),
-  intersection: true,
+  intersection: true, // Snap to segment intersections / 允许吸附至线段交点
 });
 
 const snappedElement = document.getElementById('snapped');
 
 snap.on('snap', () => {
   document.getElementById('map').style.cursor = 'grabbing';
-  snappedElement.innerHTML = 'Snapped: true';
+  snappedElement.innerHTML = 'Snapped / 吸附状态: true / 已吸附';
 });
 
 snap.on('unsnap', () => {
   document.getElementById('map').style.cursor = 'default';
-  snappedElement.innerHTML = 'Snapped: false';
+  snappedElement.innerHTML = 'Snapped / 吸附状态: false / 未吸附';
 });
 
 map.addInteraction(snap);

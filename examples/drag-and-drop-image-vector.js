@@ -12,6 +12,8 @@ import VectorImageLayer from '../src/ol/layer/VectorImage.js';
 import ImageTile from '../src/ol/source/ImageTile.js';
 import VectorSource from '../src/ol/source/Vector.js';
 
+// Configure DragAndDrop interaction supporting standard GIS vector formats
+// 配置支持主流格式的 DragAndDrop 拖拽交互
 const dragAndDropInteraction = new DragAndDrop({
   formatConstructors: [GPX, GeoJSON, IGC, KML, TopoJSON],
 });
@@ -41,6 +43,8 @@ const map = new Map({
   }),
 });
 
+// Render dragged vector data using VectorImageLayer for 60fps pan performance
+// 使用 VectorImageLayer 承载拖拽要素，以离屏位图形式实现丝滑的 60fps 平移性能
 dragAndDropInteraction.on('addfeatures', function (event) {
   const vectorSource = new VectorSource({
     features: event.features,

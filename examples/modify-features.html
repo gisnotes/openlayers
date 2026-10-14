@@ -1,10 +1,25 @@
 ---
 layout: example.html
-title: Modify Features
-shortdesc: Editing features with the modify interaction.
-docs: >
+title: Modify Features / 修改要素
+shortdesc: Editing features with the modify interaction. / 使用 Modify 交互编辑修改要素的几何顶点。
+docs: |
   <p>This example demonstrates how the modify and select interactions can be used together.  Zoom in to an area of interest and select a feature for editing.
   Then drag points around to modify the feature.  You can preserve topology by selecting multiple features before editing (<code>Shift+Click</code> to select multiple features).</p>
+
+  <p>本示例演示如何将修改交互（<code>ol/interaction/Modify</code>）与选择交互（<code>ol/interaction/Select</code>）结合使用。放大到感兴趣区域并点击要素进行选择，然后拖拽顶点即可修改要素几何形状。在编辑前通过 <code>Shift+点击</code> 复选多个要素，可在拖动公共边界顶点时同时更新关联的多个多边形，保持拓扑一致性。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. Modify 与 Select 的无缝装配模式
+  * **共享要素集合（`features: select.getFeatures()`）**：
+    `Modify` 既可以直接绑定整个 `source`，也可以绑定一个动态集合（`ol/Collection`）。通过将 `select.getFeatures()` 传入 `Modify({ features })`，只有当前被选中的要素才会激活顶点编辑控制器，未选中的要素保持静态，避免误触。
+  * **按键删除顶点（`deleteCondition`）**：
+    Modify 交互默认内置了 `deleteCondition: altKeyOnly`。当光标悬停在已有顶点上并按住 `Alt` 键单击时，该顶点将被直接删除，折线或多边形会自动缩减段数并重新连接。
+
+  #### 2. 多要素共享公共顶点的拓扑联动
+  * 当使用 `Shift+Click` 选中两个相邻的地块（它们在公共边界上有重合顶点）时，拖动该重合顶点，Modify 交互会自动同时修改两个多边形在该位置的坐标，防止由于单边编辑造成的拓扑缝隙（Sliver gaps）。
 tags: "modify, edit, vector"
 ---
 <div id="map" class="map"></div>

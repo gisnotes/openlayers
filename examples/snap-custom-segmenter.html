@@ -1,10 +1,24 @@
 ---
 layout: example.html
-title: Snap Interaction with Custom Segmenter
-shortdesc: Example of using the snap interaction with a custom LineString segmenter.
-docs: >
+title: Snap Interaction with Custom Segmenter / 带有自定义线段分割器的 Snap 捕捉吸附
+shortdesc: Example of using the snap interaction with a custom LineString segmenter. / 演示结合自定义折线（LineString）线段分割器（segmenter）使用 Snap 捕捉吸附交互。
+docs: |
   The Snap interaction can be configured with a custom segmenter for each geometry type.
   In this example, a custom LineString segmenter adds snapping to the midpoint of each segment.
+
+  Snap 交互支持针对各类几何类型配置自定义线段分割器（`segmenters`）。在本例中，自定义的 LineString 分割器会在提取常规线段端点的同时，额外生成并注入每个线段的中点坐标 `[(c1+c2)/2]`，从而使得鼠标在移动绘制或修改时能够精确捕捉吸附到线段的正中心。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 什么是 `segmenters`（几何线段分割器）？
+  * **底层吸附索引构建**：当要素被加入 Snap 交互时，Snap 并非实时去遍历几何的原始坐标数组，而是通过对应的分割器（Segmenter）将几何拆解为可供吸附测试的**线段集合（Segments）与顶点集合（Vertices）**，并将其存入内部空间索引（R-Tree）。
+  * **默认行为**：默认情况下，LineString 分割器仅返回相邻坐标构成的线段 `[c1, c2]`，因此只能吸附在端点或线段边缘上。
+
+  #### 2. 自定义线段分割器注入吸附候选点
+  * **端点注入技巧**：在 `forEachSegment` 回调中，除了返回 `[c1, c2]`，还将单个坐标数组 `[midpoint]` 作为退化线段注入，Snap 会自动将其视作高优先级顶点吸附目标。
+  * **工业级应用场景**：在 CAD 建筑制图与管线拓扑中，中点吸附（Midpoint）、三分点吸附及高密度等距采样吸附均可通过定制 `segmenters` 优雅实现。
 tags: "draw, modify, vector, snap, midpoint"
 ---
 <div id="map" class="map"></div>

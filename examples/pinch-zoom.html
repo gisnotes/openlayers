@@ -1,11 +1,25 @@
 ---
 layout: example.html
-title: Pinch Zoom
-shortdesc: Restrict pinch zooming to integer zoom levels.
-docs: >
+title: Pinch Zoom / 移动端双指捏合缩放
+shortdesc: Restrict pinch zooming to integer zoom levels. / 将移动端双指捏合缩放约束限制为整数缩放级别。
+docs: |
   By default, the `ol/interaction/PinchZoom` can leave the map at fractional zoom levels.
   If instead you want to constrain pinch zooming to integer zoom levels, set
   <code>constrainResolution: true</code> when constructing the view.
+
+  默认情况下，`ol/interaction/PinchZoom` 交互在双指捏合缩放结束时会使地图停留在任意小数（分数）缩放级别（Fractional Zoom Levels）。如果希望在捏合缩放释放后将地图自动吸附约束至最接近的整数缩放层级（Integer Zoom Levels），只需在构造地图视图时配置 <code>constrainResolution: true</code> 即可。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么会有小数缩放级别（Fractional Zoom）？
+  * **手势连续性**：双指捏合是高度连续的物理手势，默认允许连续的小数层级（如 zoom = 14.37）可带来顺滑的指尖跟随感。
+  * **栅格瓦片模糊问题**：在小数层级下，传统的切片金字塔（TMS/XYZ）必须借助浏览器 Canvas 对上级或下级瓦片进行拉伸重采样，容易导致瓦片文字注记发虚模糊。
+
+  #### 2. `constrainResolution: true` 的作用机制
+  * **手势过程与释放时机分离**：在手指按在屏幕上捏合拉伸的瞬间，地图依然保持无级连续缩放以保证手势跟随；
+  * **弹性吸附动效（Snap to Nearest）**：一旦双指抬起离开屏幕，View 的动画系统会自动发起一段平滑的缓动过渡，将当前分辨率对齐至切片金字塔严格预设的最近整数层级，既兼顾了触控跟随，又确保了静止时切片注记 1:1 像素级锐利清晰。
 tags: "pinch, zoom, interaction"
 ---
 <div id="map" class="map"></div>

@@ -34,9 +34,13 @@ const draw = new Draw({
 });
 map.addInteraction(draw);
 
+// Snap interaction configured with custom segmenters
+// 配置带有自定义几何线段分割器的 Snap 交互
 const snap = new Snap({
   source: vector.getSource(),
   segmenters: {
+    // Custom LineString segmenter that injects segment midpoints as snap targets
+    // 自定义 LineString 分割器：不仅返回线段端点 [c1, c2]，还追加线段中点作为吸附目标
     LineString: (geometry) => {
       const segments = [];
       geometry.forEachSegment((c1, c2) => {

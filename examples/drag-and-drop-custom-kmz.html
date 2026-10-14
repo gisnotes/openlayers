@@ -1,17 +1,36 @@
 ---
 layout: example.html
-title: Custom Drag-and-Drop (KMZ)
-shortdesc: Example of using the drag-and-drop interaction with a custom format to handle KMZ files.
-docs: >
+title: Custom Drag-and-Drop (KMZ) / 自定义拖拽加载 (KMZ)
+shortdesc: Example of using the drag-and-drop interaction with a custom format to handle KMZ files. / 演示使用 DragAndDrop 交互配合自定义格式解析器在浏览器端解压并加载 KMZ 压缩文件。
+docs: |
   Example of using the drag-and-drop interaction with a custom format to handle KMZ files.
   In addition to the formats used in the [Drag-and-Drop](drag-and-drop.html) example a custom format (subclassing KML) is used to handle KMZ files.
   KML and icons must be extracted from the KMZ array buffer synchronously.
   There is no projection transform support, so this will only work with data in EPSG:4326 and EPSG:3857.
+
+  演示使用 `ol/interaction/DragAndDrop` 交互配合自定义格式解析器来处理 KMZ（压缩版 KML）文件。
+  除常规的 [Drag-and-Drop](drag-and-drop.html) 格式外，通过继承 `ol/format/KML` 实现了一个自定义的 `KMZ` 格式类。
+  KMZ 内包含的 KML 文本与图标资源必须以同步方式从 ArrayBuffer 解压提取。
+  本示例未启用坐标投影转换，因此仅适用于 EPSG:4326 和 EPSG:3857 投影的数据。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么不能直接用原生 KML 解析器加载 KMZ？
+  * **KMZ 的物理本质**：KMZ 本质是一个标准的 ZIP 归档包，内含 `doc.kml` 主文本文件以及 `images/` 或 `files/` 目录下的点位 PNG/JPG 图标。
+  * **同步解压与内存图片 Blob 映射**：
+    * 借助 `fflate` 库的 `unzipSync()` 实现纯前端同步解压；
+    * 通过重写 `iconUrlFunction: (href) => URL.createObjectURL(new Blob([zip[image]]))`，将 KML 中引用的本地相对路径图片动态转化为浏览器可访问的内存 Blob URL，实现零服务纯前端完整呈现。
+
+  #### 2. 自定义格式类的规范（Subclassing `ol/format/Feature`）
+  * **声明读取类型**：必须实现 `getType() { return 'arraybuffer'; }`，告知 `DragAndDrop` 交互在读取该扩展名文件时以二进制缓冲流（ArrayBuffer）而非普通文本传入；
+  * **委托父类解析**：在 `readFeatures(source, options)` 中先提取出 KML 字符串，再 `super.readFeatures(kmlData, options)`，代码高内聚且具备极佳复用性。
 tags: "drag-and-drop, kml, kmz"
 ---
 <div id="map" class="map"></div>
 <div>
   <a id="download" download></a>
-  <button id="download-kmz">Download sample</button>
+  <button id="download-kmz">Download sample / 下载 KMZ 样例文件</button>
 </div>
 <div id="info"></div>

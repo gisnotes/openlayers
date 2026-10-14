@@ -1,8 +1,8 @@
 ---
 layout: example.html
-title: Draw Shapes
-shortdesc: Using the ol/interaction/Draw to create regular shapes
-docs: >
+title: Draw Shapes / 绘制规则图形
+shortdesc: Using the ol/interaction/Draw to create regular shapes / 使用 ol/interaction/Draw 交互创建规则几何图形（正多边形、矩形、多角星）。
+docs: |
   This demonstrates the use of the `geometryFunction` option for the
   `ol/interaction/Draw`. Select a shape type from the dropdown above to start
   drawing. To activate freehand drawing, hold the `Shift` key. Square drawing is
@@ -11,6 +11,25 @@ docs: >
   with a `geometryFunction` that creates a box-shaped polygon instead of a
   circle. Star drawing uses a custom geometry function that converts a circle
   into a star using the center and radius provided by the draw interaction.
+
+  本示例演示如何利用 `ol/interaction/Draw` 的 `geometryFunction`（几何自定义转换函数）选项来绘制各类规则多边形。从下拉菜单中选择形状即可开始绘制；按住 `Shift` 键可激活自由手绘。
+  * **正方形（Square）**：基于 `type: 'Circle'`，配合 `createRegularPolygon(4)` 生成 4 条边的正多边形；
+  * **矩形边界框（Box）**：基于 `type: 'Circle'`，配合 `createBox()` 将起始点与当前点转换为轴对齐的矩形面；
+  * **多角星（Star）**：通过自定义几何函数，根据起始圆心与当前半径动态按角度计算交替长短径顶点，生成五角星/多角星面要素。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么“正方形/矩形/星形”的基础类型都是 `type: 'Circle'`？
+  * **双参数手势抽象**：圆（Circle）在交互本质上是由“**圆心点（Center）+ 拖拽边缘半径点（Radius Point）**”这两个离散坐标所唯一定义的。
+  * **规则几何的天然映射**：无论是正方形、正六边形还是拉框矩形，它们都完美匹配“中心-角点”或“对角两点”的双点交互模型。OpenLayers 巧妙复用了 Circle 交互的底层手势跟踪机制，省去了重新编写拖拽状态机的重复开销。
+
+  #### 2. `geometryFunction` 的函数签名与性能机制
+  * **签名**：`function(coordinates, geometry) => geometry`
+    * `coordinates`：当前正在绘制的临时点位数组（例如 `[center, currentPoint]`）；
+    * `geometry`：上一次调用返回的可重用几何对象实例。
+  * **避免 GC 抖动（内存优化）**：在鼠标移动的 60fps 渲染循环中，**优先原地调用 `geometry.setCoordinates(...)` 更新坐标**，而不是反复 `new Polygon()`，可大幅降低垃圾回收器（Garbage Collection）压力，保证绘制手势极为丝滑。
 tags: "draw, edit, freehand, vector"
 resources:
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css
@@ -19,15 +38,15 @@ resources:
 <div class="row">
   <div class="col-auto">
     <span class="input-group">
-      <label class="input-group-text" for="type">Shape type:</label>
+      <label class="input-group-text" for="type">Shape type / 形状类型:</label>
       <select class="form-select" id="type">
-        <option value="Circle">Circle</option>
-        <option value="Square">Square</option>
-        <option value="Box">Box</option>
-        <option value="Star">Star</option>
-        <option value="None">None</option>
+        <option value="Circle">Circle / 圆形</option>
+        <option value="Square">Square / 正方形</option>
+        <option value="Box">Box / 矩形框</option>
+        <option value="Star">Star / 星形</option>
+        <option value="None">None / 无</option>
       </select>
-      <input class="form-control" type="button" value="Undo" id="undo">
+      <input class="form-control" type="button" value="Undo / 撤销" id="undo">
     </span>
   </div>
 </div>

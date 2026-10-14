@@ -1,9 +1,24 @@
 ---
 layout: example.html
-title: Double click, Drag and Zoom
-shortdesc: A single interaction to zoom in/out by double clicking and dragging.
-docs: >
+title: Double click, Drag and Zoom / 双击拖拽缩放
+shortdesc: A single interaction to zoom in/out by double clicking and dragging. / 通过双击并按住拖拽实现单手连续平滑放大/缩小的交互示例。
+docs: |
   A single interaction to zoom in/out by double clicking and dragging. On the second click, hold the mouse left button down and drag up or down to zoom in or out. Works also with touch devices.
+
+  通过双击后按住拖拽来进行地图缩放的独立交互。在第二次点击（或触控点按）时不松开鼠标左键（或手指），直接向上或向下拖拽即可平滑放大或缩小地图视图。该交互在触控移动设备上同样原生支持单指缩放。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么需要 DblClickDragZoom？
+  * **单手操作交互范式**：在移动端或大屏触控场景下，传统的双指捏合（PinchZoom）需要双手或双指协同；而双击后不抬起手指直接上下滑动，即可实现极高精度的无级平滑缩放。
+  * **桌面端单键连续变焦**：对于缺乏平滑滚轮的鼠标设备，该手势提供了类似于专业 3D 建模软件（如 Blender、SketchUp）的视口推拉缩放体验。
+
+  #### 2. 底层实现机制
+  * **继承体系**：`DblClickDragZoom` 继承自 `ol/interaction/Interaction`。
+  * **手势捕获时序**：它内部监听 `pointerdown` 事件，记录首次点击的时间戳与屏幕坐标；若在设定的防抖时间窗口（通常约 250ms）内发生第二次点击且光标未大幅漂移，便进入“缩放准备”状态；当检测到后续的拖拽动作时，直接接管事件并按垂直位移比例计算并平滑调整视图 `resolution`。
+  * **与 DoubleClickZoom 的互斥/共存**：如果仅需单指双击拖拽，建议通过 `defaultInteractions().extend([new DblClickDragZoom()])` 引入；该类在检测到拖拽时会阻止默认的双击放大跳跃。
 tags: "one finger, double click, double tap, drag, zoom, interaction"
 ---
 <div id="map" class="map"></div>

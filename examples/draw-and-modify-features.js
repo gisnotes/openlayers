@@ -27,6 +27,8 @@ const vector = new VectorLayer({
 
 // Limit multi-world panning to one world east and west of the real world.
 // Geometry coordinates have to be within that range.
+// 将多世界平移限制在真实世界东西各一个世界范围内。
+// 几何要素坐标必须落在该区间内。
 const extent = get('EPSG:3857').getExtent().slice();
 extent[0] += extent[0];
 extent[2] += extent[2];
@@ -43,7 +45,7 @@ const map = new Map({
 const modify = new Modify({source: source});
 map.addInteraction(modify);
 
-let draw, snap; // global so we can remove them later
+let draw, snap; // global so we can remove them later / 全局变量，便于后续动态移除与重置
 const typeSelect = document.getElementById('type');
 
 function addInteractions() {
@@ -58,6 +60,7 @@ function addInteractions() {
 
 /**
  * Handle change event.
+ * 处理几何类型下拉切换事件。
  */
 typeSelect.onchange = function () {
   map.removeInteraction(draw);

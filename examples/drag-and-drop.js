@@ -42,16 +42,21 @@ function setInteraction() {
   if (dragAndDropInteraction) {
     map.removeInteraction(dragAndDropInteraction);
   }
+  // Initialize DragAndDrop interaction with multiple format constructors
+  // 初始化 DragAndDrop 交互，配置支持多格式自动嗅探解析器数组
   dragAndDropInteraction = new DragAndDrop({
     formatConstructors: [
       GPX,
       GeoJSON,
       IGC,
       // use constructed format to set options
+      // 使用实例化的格式解析器来配置个性化选项（如提取 KML 样式）
       new KML({extractStyles: extractStyles.checked}),
       TopoJSON,
     ],
   });
+  // When files are parsed, add them into a new vector layer and fit the view
+  // 文件拖入解析完成后，动态创建矢量图层并缩放聚焦至要素范围
   dragAndDropInteraction.on('addfeatures', function (event) {
     const vectorSource = new VectorSource({
       features: event.features,
@@ -98,6 +103,7 @@ map.on('click', function (evt) {
 });
 
 // Sample data downloads
+// 样例数据下载辅助函数
 
 const link = document.getElementById('download');
 

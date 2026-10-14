@@ -31,19 +31,26 @@ const map = new Map({
 
 const typeSelect = document.getElementById('type');
 
-let draw; // global so we can remove it later
+let draw; // global so we can remove it later / 全局变量，便于后续动态移除与重置
+
 function addInteraction() {
   let value = typeSelect.value;
   if (value !== 'None') {
     let geometryFunction;
     if (value === 'Square') {
       value = 'Circle';
+      // Generate 4-sided regular polygon (square)
+      // 生成 4 边正多边形（正方形）
       geometryFunction = createRegularPolygon(4);
     } else if (value === 'Box') {
       value = 'Circle';
+      // Generate axis-aligned bounding box from two points
+      // 将两点对角线转换为矩形面
       geometryFunction = createBox();
     } else if (value === 'Star') {
       value = 'Circle';
+      // Custom geometry function to construct a star polygon
+      // 自定义几何函数：根据圆心与半径推算多角星交替顶点
       geometryFunction = function (coordinates, geometry) {
         const center = coordinates[0];
         const last = coordinates[coordinates.length - 1];
@@ -79,7 +86,8 @@ function addInteraction() {
 }
 
 /**
- * Handle change event.
+ * Handle shape type change event.
+ * 处理形状类型下拉框切换事件。
  */
 typeSelect.onchange = function () {
   map.removeInteraction(draw);

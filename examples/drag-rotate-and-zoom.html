@@ -1,9 +1,21 @@
 ---
 layout: example.html
-title: Drag, Rotate, and Zoom
-shortdesc: A single interaction to drag, rotate, and zoom.
-docs: >
+title: Drag, Rotate, and Zoom / 拖拽同时旋转与缩放
+shortdesc: A single interaction to drag, rotate, and zoom. / 演示通过单一交互在拖拽时同时进行地图视图的旋转与缩放。
+docs: |
   <p><code>Shift+Drag</code> to rotate and zoom the map around its center.</p>
+
+  <p>按住 <code>Shift+拖拽</code> 鼠标，即可围绕地图中心点同时实现地图视图的自由旋转与平滑缩放。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心手势机制与数学原理
+  * **极坐标变换推导**：`DragRotateAndZoom` 在鼠标按下时记录相对于地图中心点的初始极角 $\theta_0$ 与初始半径距离 $r_0$；在拖拽过程中，根据当前光标位置计算新的角度 $\theta$ 与半径 $r$：
+    * **旋转角度（Rotation）**：$\Delta \theta = \theta - \theta_0$，实时更新视图旋转角；
+    * **缩放尺度（Resolution）**：缩放因子由当前距离与初始距离之比决定：$scale = r / r_0$，实现围绕中心的无级缩放。
+  * **按键修饰符隔离**：默认绑定 `condition: shiftKeyOnly`，仅在按下 `Shift` 键时触发，完全不干扰常规无按键状态下的鼠标左键平移（`DragPan`）。
 tags: "drag, rotate, zoom, interaction"
 ---
 <div id="map" class="map"></div>

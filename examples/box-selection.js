@@ -53,6 +53,7 @@ const selectedStyle = new Style({
 });
 
 // a normal select interaction to handle click
+// 常规 Select 交互用于处理点击选择与高亮样式过滤
 const select = new Select({
   filter: function (feature) {
     return !(feature.get('COLOR_BIO') === '#CC6767');
@@ -66,6 +67,7 @@ const select = new Select({
 map.addInteraction(select);
 
 // a DragBox interaction used to select features by drawing boxes
+// DragBox 交互：通过修饰键（Ctrl/Command+拖拽）拉框框选要素
 const dragBox = new DragBox({
   condition: platformModifierKeyOnly,
 });
@@ -76,6 +78,7 @@ dragBox.on('boxend', function () {
   const boxExtent = dragBox.getGeometry().getExtent();
 
   // if the extent crosses the antimeridian process each world separately
+  // 若外包矩形跨越了 180° 反子午线，则对每一个世界副本分别计算
   const worldExtent = map.getView().getProjection().getExtent();
   const worldWidth = getWidth(worldExtent);
   const startWorld = Math.floor((boxExtent[0] - worldExtent[0]) / worldWidth);
@@ -92,10 +95,12 @@ dragBox.on('boxend', function () {
 
     // features that intersect the box geometry are added to the
     // collection of selected features
+    // 与拉框几何相交的要素将被添加到选中要素集合中
 
     // if the view is not obliquely rotated the box geometry and
     // its extent are equalivalent so intersecting features can
     // be added directly to the collection
+    // 如果视图未旋转（或为直角旋转），拉框几何与其外包矩形等价，可直接将相交要素添加至选中集合
     const rotation = map.getView().getRotation();
     const oblique = rotation % (Math.PI / 2) !== 0;
 
@@ -104,6 +109,8 @@ dragBox.on('boxend', function () {
     // feature geometries are rotated around a common anchor
     // to confirm that, with the box geometry aligned with its
     // extent, the geometries intersect
+    // 当视图处于倾斜旋转时，拉框的外包矩形会大于几何本身，
+    // 需绕原点反向旋转拉框几何与候选要素几何，对齐后再判定相交
     if (oblique) {
       const anchor = [0, 0];
       const geometry = dragBox.getGeometry().clone();
@@ -124,6 +131,7 @@ dragBox.on('boxend', function () {
 });
 
 // clear selection when drawing a new box and when clicking on the map
+// 开始新拉框绘制时清空之前的选择
 dragBox.on('boxstart', function () {
   select.clearSelection();
 });
@@ -140,6 +148,6 @@ select.on('select', function () {
   if (names.length > 0) {
     infoBox.innerHTML = names.join(', ');
   } else {
-    infoBox.innerHTML = 'None';
+    infoBox.innerHTML = 'None / 无';
   }
 });

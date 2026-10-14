@@ -1,8 +1,8 @@
 ---
 layout: example.html
-title: Measure
-shortdesc: Using a draw interaction to measure lengths and areas.
-docs: >
+title: Measure / 空间长度与面积量算
+shortdesc: Using a draw interaction to measure lengths and areas. / 使用 Draw 绘制交互结合 Overlay 提示框实现空间距离与面积的动态量算。
+docs: |
   <p>The <code>getLength()</code> and <code>getArea()</code>
   functions calculate spherical lengths and areas for geometries.  Lengths are
   calculated by assuming great circle segments between geometry coordinates.
@@ -12,13 +12,32 @@ docs: >
   different than on-the-ground measures in certain situations — in northern
   and southern latitudes using Web Mercator for example.  For better results,
   use the functions in the <code>ol/sphere</code> module.</p>
+
+  <p><code>getLength()</code> 与 <code>getArea()</code> 函数用于计算几何要素在真实地球表面上的**大圆球面距离（Spherical Lengths）**与**球面面积（Spherical Areas）**。折线各段长度按坐标点之间的大圆弧段累加计算；多边形面积同样假定其各条边界为球面大圆弧进行球面多边形积分。</p>
+  <p>注意：直接调用 <code>geometry.getLength()</code> 与 <code>geometry.getArea()</code> 返回的是投影笛卡尔平面（Planar）上的几何测量值。在采用 Web 墨卡托投影的高纬度区域，平面测量值与地面真实物理值会有数倍的巨大差异。为了获得精确可靠的真实地面物理量测结果，必须使用 <code>ol/sphere</code> 模块中提供的测算函数。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么严禁使用 `geometry.getLength()` / `geometry.getArea()` 进行业务量测？
+  * **墨卡托投影的纬度形变**：Web 墨卡托（EPSG:3857）是正形投影，纬度越高面积拉伸越严重（在 60° 纬度处，平面长度拉伸 2 倍，面积拉伸达 4 倍！在 80° 纬度处面积拉伸达 33 倍！）。
+  * **球面测算（`ol/sphere`）的数学保障**：`ol/sphere.getLength()` 与 `ol/sphere.getArea()` 基于 WGS 84 旋转椭球体（Sphere 大圆航线算法）进行球面三角积分，彻底消除了地图投影造成的纬度形变，保证测量结果严格贴合真实地球物理尺度。
+
+  #### 2. 量算 Overlay 与事件侦听管理
+  * **两类动态提示框分工**：
+    * `helpTooltip`：跟随光标的引导提示（如“点击开始绘制”、“点击继续绘制折线”）；
+    * `measureTooltip`：跟随最后一个顶点（线）或面内部质心点（面）的测量数值气泡。
+  * **绘制中（动态更新） vs 绘制完成（静态持久化）**：
+    * 在 `drawstart` 时，监听正在绘制的几何对象的 `geom.on('change', ...)` 事件，每次光标移动即可微秒级重算长度/面积并更新气泡文本；
+    * 在 `drawend` 时，将当前 `measureTooltip` 固定在要素终点，断开动态监听器（`unByKey(listener)`），并新建一个全新的空 Tooltip 实例备用，从而实现绘制完的测量结果常驻显示在地图上。
 tags: "draw, edit, measure, vector"
 ---
 <div id="map" class="map"></div>
 <form>
-  <label for="type">Measurement type &nbsp;</label>
+  <label for="type">Measurement type / 量算类型 &nbsp;</label>
   <select id="type">
-    <option value="length">Length (LineString)</option>
-    <option value="area">Area (Polygon)</option>
+    <option value="length">Length (LineString) / 距离量算 (折线)</option>
+    <option value="area">Area (Polygon) / 面积量算 (多边形)</option>
   </select>
 </form>

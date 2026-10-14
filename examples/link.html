@@ -1,8 +1,8 @@
 ---
 layout: example.html
-title: Map Link
-shortdesc: Synchronizing map state with the URL.
-docs: >
+title: Map Link / 地图状态与 URL 参数双向同步
+shortdesc: Synchronizing map state with the URL. / 演示使用 Link 交互将地图视图状态（中心、层级、旋转角等）与浏览器 URL 查询参数实时双向同步。
+docs: |
   The `Link` interaction allows you to synchronize the map state with the URL.
   The view center, zoom level, and rotation will be reflected in the URL as you
   navigate around the map.  Layer visibility is also reflected in the URL.
@@ -11,10 +11,26 @@ docs: >
   The interaction can also be used to track other parts of your application state.
   For example, toggling the checkbox below updates the URL.  Navigating back through
   history will also update the state of the checkbox.
+
+  `Link` 交互可将地图状态与浏览器地址栏中的 URL 参数进行双向自动同步。当你在地图上平移漫游、缩放或旋转时，中心点坐标（x, y）、缩放级别（z）以及旋转角度（r）会即时更新到 URL 查询字符串中。同样，图层的显隐状态也可在 URL 中反映，刷新页面或将链接分享给他人即可完美复原当前的地图视角与状态。
+
+  此外，该交互还提供了强大的自定义状态追踪能力（`link.track()` 与 `link.update()`）。例如勾选下方的复选框会向 URL 写入 `example=checked` 参数；当通过浏览器后退/前进导航时，复选框的勾选状态也会自动同步更新。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么官方推出 `Link` 交互？
+  * **HTML5 History API 驱动**：传统自研方案往往需要开发者手动监听地图 `moveend` 事件拼接哈希字符串，极易产生循环触发或地址栏刷新抖动。
+  * **双向无缝响应**：`ol/interaction/Link` 既能主动监听 Map 状态更新 URL，也能响应浏览器的前进/后退（`popstate`）事件并驱动视图同步过渡。
+
+  #### 2. 自定义业务参数扩展机制
+  * **`link.update(key, value)`**：将业务状态写入 URL 参数；若值为 `null` 则自动从 URL 中清理移除该键。
+  * **`link.track(key, callback)`**：监听 URL 中该参数的变化并触发回调，使外部 UI 控件与 URL 历史保持一致。
 tags: "link, permalink, url, query, search, params"
 ---
 <div id="map" class="map"></div>
 <label>
   <input type="checkbox" id="example-checkbox">
-  See the <code>example</code> search parameter update when toggling this checkbox.
+  See the <code>example</code> search parameter update when toggling this checkbox. / 勾选/取消此复选框可观察 URL 中 <code>example</code> 查询参数的实时同步。
 </label>

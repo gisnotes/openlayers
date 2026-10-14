@@ -46,6 +46,8 @@ const style = new Style({
   }),
 });
 
+// Calculate fixed anchor relative to geometry (centroid for polygon, midpoint for linestring)
+// 计算相对于几何要素自身恒定的锚点（多边形计算质心，折线计算沿程中点）
 function calculateCenter(geometry) {
   let center, coordinates, minRadius;
   const type = geometry.getType();
@@ -100,6 +102,8 @@ const vector = new VectorLayer({
     const result = calculateCenter(geometry);
     const center = result.center;
     if (center) {
+      // Highlight anchor with red point
+      // 以红点高亮展示旋转与缩放的恒定锚点
       styles.push(
         new Style({
           geometry: new Point(center),
@@ -119,6 +123,8 @@ const vector = new VectorLayer({
         const points = coordinates.filter(function (coordinate, index) {
           return sqDistances[index] > rsq;
         });
+        // Highlight active outer vertices with green points
+        // 以绿点高亮展示允许参与缩放与旋转的外部有效顶点
         styles.push(
           new Style({
             geometry: new MultiPoint(points),
@@ -164,10 +170,12 @@ const modify = new Modify({
         let modifyPoint = modifyGeometry.point;
         if (!modifyPoint) {
           // save the initial geometry and vertex position
+          // 保存初始几何形状与顶点坐标位置
           modifyPoint = point;
           modifyGeometry.point = modifyPoint;
           modifyGeometry.geometry0 = modifyGeometry.geometry;
           // get anchor and minimum radius of vertices to be used
+          // 获取锚点及允许参与变换的顶点最小半径阈值
           const result = calculateCenter(modifyGeometry.geometry0);
           modifyGeometry.center = result.center;
           modifyGeometry.minRadius = result.minRadius;
@@ -219,6 +227,8 @@ modify.on('modifyend', function (event) {
 });
 
 map.addInteraction(modify);
+// Translate interaction configured with platform modifier key condition (Ctrl+Drag)
+// 平移交互配置修饰键条件（Ctrl+拖拽平移要素）
 map.addInteraction(
   new Translate({
     condition: function (event) {
@@ -228,7 +238,7 @@ map.addInteraction(
   }),
 );
 
-let draw; // global so we can remove it later
+let draw; // global so we can remove it later / 全局变量，便于后续动态移除与重置
 const typeSelect = document.getElementById('type');
 
 function addInteractions() {
@@ -241,6 +251,7 @@ function addInteractions() {
 
 /**
  * Handle change event.
+ * 处理几何类型下拉切换事件。
  */
 typeSelect.onchange = function () {
   map.removeInteraction(draw);

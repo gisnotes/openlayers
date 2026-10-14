@@ -19,10 +19,12 @@ const map = new Map({
   }),
 });
 
+// Configure Extent interaction with predefined extent, disabling new creation while enabling dragging
+// 配置 Extent 交互：预设初始范围，禁用新建矩形，启用已有范围的整体平移拖拽
 const extent = new ExtentInteraction({
   extent: transformExtent([-10, -10, 10, 10], 'EPSG:4326', 'EPSG:3857'),
-  createCondition: never, // do not create a new extent on pointer down
-  drag: true, // drag existing extent
+  createCondition: never, // do not create a new extent on pointer down / 禁止在鼠标按下时创建新的范围矩形
+  drag: true, // drag existing extent / 允许整体拖拽移动已有范围矩形
   boxStyle: {
     'fill-color': 'rgba(255, 255, 255, 0.4)',
     'stroke-color': '#3399CC',

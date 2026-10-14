@@ -1,22 +1,38 @@
 ---
 layout: example.html
-title: Select Features
-shortdesc: Example of using the Select interaction.
-docs: >
+title: Select Features / 选择要素
+shortdesc: Example of using the Select interaction. / 演示使用 Select 交互进行要素拾取与单选/复选。
+docs: |
   Choose between <code>Single-click</code>, <code>Click</code>, <code>Hover</code> and <code>Alt+Click</code> as the event type for selection in the combobox below. When using <code>Single-click</code> or <code>Click</code> you can hold the <code>Shift</code> key to toggle the feature in the selection.</p>
   <p>Note: when <code>Single-click</code> is used double-clicks won't select features. This in contrast to <code>Click</code>, where a double-click will both select the feature and zoom the map (because of the <code>DoubleClickZoom</code> interaction). Note that <code>Single-click</code> is less responsive than <code>Click</code> because of the delay it uses to detect double-clicks.</p>
   <p>In this example, a listener is registered for the Select interaction's <code>select</code> event in order to update the selection status above.
+
+  在下方下拉框中可选择不同的触发条件类型：<code>Click（单击）</code>、<code>Single-click（真单选/延时判定）</code>、<code>Hover（悬停）</code> 或 <code>Alt+Click（Alt+单击）</code>。当使用 <code>Single-click</code> 或 <code>Click</code> 时，按住 <code>Shift</code> 键可复选或反选要素。</p>
+  <p>注意：使用 <code>Single-click</code> 模式时，双击操作不会误触发要素选择；而 <code>Click</code> 模式下双击既会选中要素又会触发地图缩放（因为存在 <code>DoubleClickZoom</code> 交互）。此外，<code>Single-click</code> 因需要等待一段防抖延时来检测是否属于双击，响应灵敏度略低于 <code>Click</code>。</p>
+  <p>本示例注册了 Select 交互的 <code>select</code> 事件监听器，实时在界面展示当前选中的要素总数以及最新操作增删的要素详情。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. `click` vs `singleclick` 底层事件差异
+  * **`click`（即时响应）**：鼠标抬起（`pointerup`）且未发生拖拽时立即触发，零时延。但如果用户快速双击，系统会先后派发两次 `click` 事件外加一次 `dblclick` 事件，导致双击放大地图的同时误触发了要素选择。
+  * **`singleclick`（延时防抖）**：首次点击后启动约 250ms 的定时器，只有在超时且未侦测到第二次点击时才派发 `singleclick` 事件。彻底隔绝了双击缩放的误触，但代价是每次点击都有轻微感知时延。
+
+  #### 2. `toggleCondition` 与 Shift 闪烁防治
+  * 在悬停选择（`condition: pointerMove`）模式下，若使用默认的 `toggleCondition: shiftKeyOnly`，当用户按住 `Shift` 键并在要素上方晃动鼠标时，每次 `pointermove` 都会对要素进行“选中/取消”反复反转，造成视觉剧烈闪烁。
+  * **解决方案**：在悬停模式下显式配置 `toggleCondition: never`，禁止按键反转，从而保证鼠标悬停高亮平稳连贯。
 tags: "select, vector"
 ---
 <div id="map" class="map"></div>
 <form>
-  <label for="type">Action type &nbsp;</label>
+  <label for="type">Action type / 触发类型 &nbsp;</label>
   <select id="type">
-    <option value="click" selected>Click</option>
-    <option value="singleclick">Single-click</option>
-    <option value="pointermove">Hover</option>
-    <option value="altclick">Alt+Click</option>
-    <option value="none">None</option>
+    <option value="click" selected>Click / 单击</option>
+    <option value="singleclick">Single-click / 真单选</option>
+    <option value="pointermove">Hover / 悬停</option>
+    <option value="altclick">Alt+Click / Alt+单击</option>
+    <option value="none">None / 无交互</option>
   </select>
-  <span id="status">&nbsp;0 selected features</span>
+  <span id="status">&nbsp;0 selected features / 已选中 0 个要素</span>
 </form>

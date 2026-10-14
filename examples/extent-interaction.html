@@ -1,12 +1,27 @@
 ---
 layout: example.html
-title: Extent Interaction
-shortdesc: Using an Extent interaction to draw an extent.
-docs: >
+title: Extent Interaction / 空间范围矩形交互
+shortdesc: Using an Extent interaction to draw an extent. / 使用 Extent 交互绘制并调整空间范围矩形（BBOX）。
+docs: |
   <p>This example shows how to use an <code>Extent</code> interaction to draw a modifiable extent.</p>
   <p>Use <code>Shift+Drag</code> to draw an extent. 
     <code>Shift+Drag</code> on the corners or edges of the extent to resize it. <code>Shift+Click</code> off the extent to remove it.
   </p>
+
+  <p>本示例演示如何使用 <code>ol/interaction/Extent</code> 交互绘制一个可动态调整大小的矩形范围（Extent/BBOX）。</p>
+  <p>按住 <code>Shift+拖拽</code> 可在地图上拉框绘制新范围矩形；在矩形的 4 个角点或 4 条边上按住 <code>Shift+拖拽</code> 可以自由拉伸调整尺寸；在矩形外部按住 <code>Shift+点击</code> 可清除当前范围矩形。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. Extent 交互与 DragBox 的核心区别
+  * **DragBox（临时瞬态框选）**：鼠标松开时触发 `boxend`，随后框选视觉框自动销毁，主要用于触发一次性的空间相交查询；
+  * **ExtentInteraction（持久化编辑控制框）**：绘制完成后矩形框常驻显示，并自动在其角点和边缘生成交互手柄，支持二次拉伸缩放或平移。
+
+  #### 2. 核心 API 与工程应用
+  * **读取范围**：`extent.getExtent()` 获取当前的 `[minX, minY, maxX, maxY]` 坐标，常用于数据空间导出、局部下载、空间分析裁剪或视图居中（`view.fit`）。
+  * **按键条件约束**：通过 `condition: shiftKeyOnly` 避免与无按键状态下的常规鼠标平移（`DragPan`）发生冲突。
 tags: "Extent, interaction, box"
 ---
 <div id="map" class="map"></div>

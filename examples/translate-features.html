@@ -1,11 +1,26 @@
 ---
 layout: example.html
-title: Translate Features
-shortdesc: Example of a translate features interaction.
-docs: >
+title: Translate Features / 平移移动要素
+shortdesc: Example of a translate features interaction. / 演示使用要素平移（Translate）交互整体移动矢量要素。
+docs: |
   This example demonstrates how the translate and select interactions can be used together.
   Zoom in to an area of interest and click to select a feature or hold the <code>Shift</code> key and select multiple features.
   Then drag the features around to move them elsewhere on the map.
+
+  演示如何将要素平移交互（`ol/interaction/Translate`）与选择交互（`ol/interaction/Select`）结合使用。
+  放大至感兴趣区域，单选要素或按住 `Shift` 键复选多个要素，然后按住鼠标拖拽即可将所选要素整体平移移动到地图上的任意新位置。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. Translate 与 Modify 的核心本质区别
+  * **修改（Modify）**：改变要素几何的内部拓扑（改变顶点相对位置，改变要素的长宽、角度或形状）；
+  * **平移（Translate）**：保持要素内部拓扑与形状绝对不变，仅对要素全部顶点的 X、Y 坐标施加统一的平移向量偏移 $\vec{v} = (\Delta x, \Delta y)$。
+
+  #### 2. 与 Select 交互的深度协同机制
+  * **选定要素集约束（`features: select.getFeatures()`）**：
+    将 `Translate` 绑定到 `Select` 的当前选中要素集合。未被用户选中的要素，鼠标在其上方拖拽时直接触发底图漫游（`DragPan`），绝不会误挪动位置；仅当鼠标按下点命中已选要素时，平移交互才会截获拖拽事件并驱动所有已选要素同步位移。
 tags: "drag, translate, feature, vector, editing"
 ---
 <div id="map" class="map"></div>

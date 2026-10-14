@@ -16,6 +16,7 @@ const raster = new TileLayer({
 });
 
 // features in this layer will be snapped to
+// 基准矢量图层：提供供绘制交互吸附与追踪的已有边界要素
 const baseVector = new VectorLayer({
   source: new VectorSource({
     format: new GeoJSON(),
@@ -29,6 +30,7 @@ const baseVector = new VectorLayer({
 });
 
 // this is where the drawn features go
+// 绘制成果矢量图层：用于承载并展示用户新绘制并追踪生成的要素
 const drawVector = new VectorLayer({
   source: new VectorSource(),
   style: {
@@ -49,6 +51,8 @@ const map = new Map({
 
 let drawInteraction;
 
+// Snap interaction must snap to baseVector
+// 捕捉吸附交互：绑定到基准图层数据源
 const snapInteraction = new Snap({
   source: baseVector.getSource(),
 });
@@ -61,8 +65,8 @@ function addInteraction() {
     drawInteraction = new Draw({
       type: value,
       source: drawVector.getSource(),
-      trace: true,
-      traceSource: baseVector.getSource(),
+      trace: true, // Enable automatic topology tracing / 启用边界自动追踪描摹
+      traceSource: baseVector.getSource(), // Source to trace from / 指定待追踪要素来源数据源
       style: {
         'stroke-color': 'rgba(255, 255, 100, 0.5)',
         'stroke-width': 1.5,
@@ -71,6 +75,8 @@ function addInteraction() {
         'circle-fill-color': 'rgba(255, 255, 100, 0.5)',
       },
     });
+    // Add draw first, then snap last so snap handles pointermove first
+    // 先添加绘制交互，后添加吸附交互，确保吸附优先执行
     map.addInteraction(drawInteraction);
     map.addInteraction(snapInteraction);
   }

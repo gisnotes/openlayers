@@ -1,18 +1,34 @@
 ---
 layout: example.html
-title: Draw and Modify Features
-shortdesc: Example of using the ol/interaction/Draw interaction together with the ol/interaction/Modify interaction.
-docs: >
+title: Draw and Modify Features / 绘制与修改要素
+shortdesc: Example of using the ol/interaction/Draw interaction together with the ol/interaction/Modify interaction. / 演示同时使用 ol/interaction/Draw 绘制交互与 ol/interaction/Modify 修改交互。
+docs: |
   Example of using the ol/interaction/Draw interaction together with the ol/interaction/Modify interaction.
+
+  演示组合使用 `ol/interaction/Draw`（绘制）、`ol/interaction/Modify`（修改）以及 `ol/interaction/Snap`（捕捉吸附）交互。用户既可在图层上绘制新图形，也能通过鼠标拖拽已有要素的顶点进行拓扑微调，配合 Snap 交互可实现顶点和边缘的精确定位。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 绘制（Draw）、修改（Modify）与吸附（Snap）三位一体协同流水线
+  * **添加时序严格把控**：
+    1. 最先添加 `Modify({ source })`；
+    2. 其次添加 `Draw({ source, type })`；
+    3. 最后添加 `Snap({ source })`。
+  * **执行逻辑**：后添加的 Snap 最先截获事件并校正坐标；如果光标落在已有要素顶点上，Modify 优先响应顶点微调；如果用户在空白处点击，Draw 接管绘制新要素，三者和谐共存构建出一站式数字化编辑闭环。
+
+  #### 2. 多世界范围约束（`View({ extent })`）
+  * 代码中通过对 EPSG:3857 范围做切片拓展：`extent[0] += extent[0]; extent[2] += extent[2];`，将视口平移严格限制在真实世界东西各一个世界周期内，防止绘制跨越过多虚拟世界产生坐标数值溢出。
 tags: "draw, edit, modify, vector, featureoverlay"
 ---
 <div id="map" class="map"></div>
 <form>
-  <label for="type">Geometry type &nbsp;</label>
+  <label for="type">Geometry type / 几何类型 &nbsp;</label>
   <select id="type">
-    <option value="Point">Point</option>
-    <option value="LineString">LineString</option>
-    <option value="Polygon">Polygon</option>
-    <option value="Circle">Circle</option>
+    <option value="Point">Point / 点</option>
+    <option value="LineString">LineString / 折线</option>
+    <option value="Polygon">Polygon / 多边形</option>
+    <option value="Circle">Circle / 圆</option>
   </select>
 </form>

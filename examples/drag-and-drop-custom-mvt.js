@@ -16,6 +16,7 @@ import VectorSource from '../src/ol/source/Vector.js';
 import {createXYZ} from '../src/ol/tilegrid.js';
 
 // Define a custom MVT format as ol/format/MVT requires an extent
+// 自定义 MVT 格式类（因为 ol/format/MVT 解析要素时必须依赖切片对应的地理范围 extent）
 
 const tileCoordZ = document.getElementById('tileCoordZ');
 const tileCoordX = document.getElementById('tileCoordX');
@@ -36,6 +37,7 @@ class customMVT extends MVT {
 }
 
 // Set up map with Drag and Drop interaction
+// 配置带有 DragAndDrop 拖拽交互的地图实例
 
 const dragAndDropInteraction = new DragAndDrop({
   formatConstructors: [customMVT, GPX, GeoJSON, IGC, KML, TopoJSON],
@@ -102,6 +104,7 @@ map.on('click', function (evt) {
 });
 
 // Sample data download
+// 样例数据下载辅助函数
 
 const link = document.getElementById('download');
 
