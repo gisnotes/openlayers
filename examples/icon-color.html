@@ -41,7 +41,7 @@ docs: |
   * **为什么染色需要配置 `crossOrigin: 'anonymous'`？**
     * 普通不染色的图标直接绘制即可，但一旦配置了 `color` 属性，OpenLayers 内部需要在离屏 Canvas 上读取像素并执行颜色混合。
     * 如果图片来自第三方 CDN 或独立的对象存储域名，且没有声明 `crossOrigin: 'anonymous'`，浏览器的安全机制会将画布锁死为 **Tainted Canvas（受污染画布）**，导致像素操作抛出安全异常或图标无法显示。
-tags: "vector, style, icon, marker, 矢量, 样式, 图标, 染色, 颜色"
+tags: "vector, style, icon, marker"
 ---
 <div id="map" class="map"></div>
 

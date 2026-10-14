@@ -65,7 +65,7 @@ docs: |
     在 `displayFeatureInfo` 中，首先判断鼠标事件的目标 DOM 是否位于 `.ol-control`（如左上角缩放按钮 `+` / `-` 或右下角版权折叠按钮）内部。如果是，则直接返回 `undefined` 隐藏 Tooltip，避免鼠标移到地图控件按钮上时还弹出底层多边形的时区提示框。
   * **按需更新 DOM 内容（`feature !== currentFeature`）**：
     只有当鼠标跨越边界进入**另一个不同时区的多边形**时，才调用 `tooltip.setContent(...)` 修改文字；若在同一个时区内部移动，则仅更新坐标并调用 `tooltip.update()`，避免高频操作 DOM 文本。
-tags: "KML, vector, style, 时区, 矢量, 样式, 昼夜, 动态透明度, 提示框"
+tags: "KML, vector, style"
 resources:
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js

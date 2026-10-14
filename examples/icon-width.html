@@ -47,7 +47,7 @@ docs: |
   #### 4. 为什么在 `map.on('rendercomplete', ...)` 中读取 `getScale()`？
   * 当创建一个带有 `src: 'data/icon.png'` 的 `new Icon` 时，如果图片尚未完成解码或渲染管线尚未执行完当前帧，立即同步读取可能拿不到最新的渲染状态。
   * 监听地图的 `rendercomplete`（当前帧渲染完成）事件来更新界面上的 `Scale approx.` 读数，可以确保每次图标重绘落地后，展示出的 `iconStyle.getImage().getScale()` 始终是最新、最准确的实际缩放倍率。
-tags: "vector, style, icon, marker, width, height, 矢量, 样式, 图标, 宽度, 高度, 尺寸, 缩放"
+tags: "vector, style, icon, marker, width, height"
 resources:
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js

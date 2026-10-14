@@ -53,7 +53,7 @@ docs: |
   | **`#map1`（默认样式）** | 位于左上角 `+` / `-` 按钮正下方，白色半透明竖直轨道 | 直接使用 `ol.css` 内置的 `.ol-zoomslider` 与 `.ol-zoomslider-thumb` 默认样式 |
   | **`#map2`（嵌入 `+` 与 `-` 按钮之间）** | 将缩小按钮 `-` 向下推开 200px，把滑块轨道刚好嵌在 `+` 和 `-` 中间，宛如一体式控件 | 1. `#map2 .ol-zoom .ol-zoom-out { margin-top: 200px; }` 把 `-` 号按钮往下推；<br>2. `#map2 .ol-zoomslider` 设置 `background-color: transparent` 隐藏外框，并用 `top: calc(0.5em + 2px + 1px + 1.14 * 1.375em)` 精确对齐到 `+` 号按钮底边；<br>3. 针对触摸屏（`.ol-touch` 按钮更大）单独微调 `margin-top: 212px` 与 `top: 2.75em` |
   | **`#map3`（右上角水平胶囊滑块）** | 移至地图右上角，水平放置，橙色发光圆角胶囊外观 | 1. `left: auto; right: 8px; top: 8px;` 将定位从左上角移至右上角；<br>2. **`width: 200px; height: 15px;`** 触发 `宽 > 高` 水平滑动模式；<br>3. 将滑块手柄 `.ol-zoomslider-thumb` 设为 `15px × 15px`、`border-radius: 7.5px` 的圆形滑块 |
-tags: "zoom, zoomslider, slider, style, styling, css, control, 缩放, 滑块, 控件, 样式"
+tags: "zoom, zoomslider, slider, style, styling, css, control"
 ---
 <h4>Default style（1. 默认垂直样式）</h4>
 <div id="map1" class="map"></div>

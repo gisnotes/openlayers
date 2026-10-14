@@ -57,6 +57,6 @@ docs: |
      当只需要静态配置描边或填充时，FlatStyle 字面量比传统类实例写法更加简洁直观。
   2. **`ImageTile` 配合 `tileSize: 512`**：
      底图使用了 MapTiler 的深色数据可视化底图（`dataviz-dark`），其瓦片尺寸为 `512 × 512` 像素（传统 OSM 瓦片为 `256 × 256`），因此需在 `new ImageTile({...})` 中显式声明 `tileSize: 512`，以确保瓦片网格（TileGrid）层级与分辨率匹配正确。
-tags: "topojson, vector, style, 拓扑, 矢量, 样式, 行政区划, 性能优化"
+tags: "topojson, vector, style"
 ---
 <div id="map" class="map"></div>

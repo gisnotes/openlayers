@@ -1,18 +1,83 @@
 ---
 layout: example.html
-title: Projection and Scale
-shortdesc: Example of maintaining scale when changing projection.
-docs: >
+title: Projection and Scale / 投影切换与比例尺保持
+shortdesc: Example of maintaining scale when changing projection. / 演示在动态切换地图视图投影（如 EPSG:4326 与 EPSG:3857 互转）时，如何保持真实的地面物理比例尺与视口比例不变。
+docs: |
   Example of maintaining scale when changing projection.
   `getPointResolution()` is used to calculate the resolution for the
-  new projection which corresponds to that for the old projection. 
+  new projection which corresponds to that for the old projection.
+
+  本示例演示在动态切换地图投影坐标系时，如何保持地面物理比例尺的一致性。通过 `getPointResolution()` 计算新旧投影在视口中心点处的点分辨率换算关系，确保切换投影后地图的缩放比例尺视觉大小无缝对齐。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心痛点：为什么切换投影时地图缩放比例会失真？
+  * **坐标单位维度不同**：
+    * **`EPSG:4326`**（WGS 84 经纬度）：名义单位是**度（Degrees）**。在赤道处，经度 1° 对应的地表距离约为 111.32 千米；
+    * **`EPSG:3857`**（Web 墨卡托）：名义单位是**米（Meters）**。
+    * 如果在切换投影时直接沿用旧视图的 `resolution`（标称分辨率），地图尺寸会产生数十万倍的剧烈错位。
+  * **高纬度投影拉伸变形**：
+    * Web 墨卡托投影属于正形圆柱投影，具有纬度越高拉伸越严重的几何特性，其局部长度拉伸系数为 $\sec(\varphi) = 1 / \cos(\varphi)$（其中 $\varphi$ 为地理纬度）。
+    * 在北纬 60° 地区，墨卡托投影的经线拉伸系数达到赤道的 2 倍。如果仅靠简单的缩放级别（Zoom Level）对齐，不仅度与米无法精确转换，更无法补偿不同纬度处的投影变形。
+
+  #### 2. 数学原理：`getPointResolution()` 与真实地表分辨率推导
+  OpenLayers 的 `ol/proj` 模块提供了核心函数 `getPointResolution(projection, resolution, point, opt_units)`，用于求解指定坐标点在真实地球椭球体表面上的实际分辨率（单位：米/像素）。
+
+  换算与推导逻辑如下：
+  1. **读取投影的标称米系数（Meters Per Unit）**：
+     ```javascript
+     const currentMPU = currentProjection.getMetersPerUnit();
+     const newMPU = newProjection.getMetersPerUnit();
+     ```
+  2. **计算指定点处的真实地表点分辨率系数**：
+     传入 `1 / MPU` 计算单位标称分辨率在当前位置对应的地表真实米数：
+     ```javascript
+     const currentPointResolution =
+       getPointResolution(currentProjection, 1 / currentMPU, currentCenter, 'm') * currentMPU;
+     const newPointResolution =
+       getPointResolution(newProjection, 1 / newMPU, newCenter, 'm') * newMPU;
+     ```
+  3. **推导新标称分辨率**：
+     由于当前屏幕中心点的真实地表物理分辨率为：
+     $$R_{\text{ground}} = R_{\text{current}} \times \text{currentPointResolution}$$
+
+     若要使目标投影在屏幕上呈现相同的地面物理比例尺，新标称分辨率应满足：
+     $$R_{\text{new}} \times \text{newPointResolution} = R_{\text{current}} \times \text{currentPointResolution}$$
+
+     由此推导出计算公式：
+     $$R_{\text{new}} = \frac{R_{\text{current}} \times \text{currentPointResolution}}{\text{newPointResolution}}$$
+
+  #### 3. 控件联动：ScaleLine（比例尺控件）的高级参数
+  示例中挂载了专业的条形比例尺控件：
+  ```javascript
+  const scaleControl = new ScaleLine({
+    units: 'metric', // 公制单位 (m / km)
+    bar: true,       // 启用带分段刻度的标尺条外观
+    steps: 4,        // 划分为 4 个主要刻度区间
+    text: true,      // 在刻度上方直观显示距离文本
+    minWidth: 140,   // 控件最小宽度 (px)
+  });
+  ```
+  在切换投影时仔细观察左下角的比例尺：
+  * 无论是从 WGS 84（经纬度度数）切到 Web 墨卡托（米制投影），还是反向切换；
+  * 比例尺上显示的物理像素宽度与实际地理公里数均严密保持一致，证明视口地表比例尺实现了平滑无损过渡。
+
+  #### 4. 技术方案对比
+
+  | 切换策略 | 实现代码 | 视觉与测量表现 | 适用场景 |
+  | :--- | :--- | :--- | :--- |
+  | **直接复用 Zoom** | `new View({ zoom: oldView.getZoom(), ... })` | 比例尺剧烈跳变；度数与米制缩放级别无法对齐；高纬度失真严重 | 粗略定位，对比例精度无要求的场景 |
+  | **直接复用 Resolution** | `new View({ resolution: oldView.getResolution(), ... })` | 灾难性形变（度与米相差五到六个数量级，整图全黑或瞬间飞出地球） | 严禁跨单位使用 |
+  | **`getPointResolution` 动态换算（本示例）** | `newResolution = (currRes * currPointRes) / newPointRes` | **完美保持地表真实比例尺**；严谨抵消单位差异与纬度投影变形 | 专业 GIS、精准量测、多坐标系切换标准实现 |
 tags: "projection, scale"
 ---
 <div id="map" class="map"></div>
 <div>
-  <label for="view-projection">View projection</label>
+  <label for="view-projection">View projection / 视图投影：</label>
   <select id="view-projection">
-    <option value="EPSG:3857">Spherical Mercator (EPSG:3857)</option>
-    <option value="EPSG:4326" selected>WGS 84 (EPSG:4326)</option>
+    <option value="EPSG:3857">Spherical Mercator (EPSG:3857) / 球形墨卡托</option>
+    <option value="EPSG:4326" selected>WGS 84 (EPSG:4326) / 经纬度投影</option>
   </select>
 </div>

@@ -35,7 +35,7 @@ docs: |
     1. **投影不一致**：输入的 `wind.png` 是 `EPSG:4326`（等经纬度），而地图视口使用的是 `EPSG:3857`（Web Mercator 投影，纬度越高纵向拉伸越剧烈）。因此 `loader(z, x, y)` 中遍历 `256 × 256` 瓦片的每个像素时，必须先通过 `transform([mapX, mapY], 'EPSG:3857', 'EPSG:4326')` 反算出对应的经纬度 `[lon, lat]`。
     2. **消除马赛克锯齿（双线性插值）**：原图只有 `360 × 180` 个格点（每格跨度 `1°`）。当放大地图时，如果只取最近的格点（最近邻插值），风场会出现明显的方块突变。代码通过寻找周围 4 个格点 `[[x1, y1], [x2, y1], [x1, y2], [x2, y2]]` 并按小数偏移权重 `xAlong`、`yAlong` 执行**双线性插值（Bilinear Interpolation）**，确保了在任意缩放级别下风速场都是平滑连续过渡的！
 experimental: true
-tags: "wind, flow, webgl, datatile, 风场, 流场, 粒子动画, 双线性插值, 气象"
+tags: "wind"
 ---
 <!DOCTYPE html>
 <html lang="en">

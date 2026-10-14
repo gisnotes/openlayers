@@ -69,6 +69,6 @@ docs: |
   * **图形编辑交互（Edit Handles）**：在用户选中要素或者进行绘制/修改交互时，通过 `geometry` 提取所有端点展示蓝/白方块节点，供用户拖拽。
   * **线段箭头与方向标识（Line Arrows）**：通过 `geometry` 函数获取线要素的终点坐标（或中间点），并动态计算切线方位角，返回点几何来渲染带有旋转角度的箭头图标。
   * **多边形质心标注（Centroid Labels）**：通过 `geometry: (f) => f.getGeometry().getInteriorPoint()` 动态提取多边形内部中心点，用于呈现文本标注（`Text` 样式），确保文字精准居中在多边形内部。
-tags: "polygon, vector, style, GeometryFunction, 多边形, 矢量, 样式, 顶点"
+tags: "polygon, vector, style, GeometryFunction"
 ---
 <div id="map" class="map"></div>

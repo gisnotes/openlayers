@@ -4,11 +4,12 @@ description: >-
   OpenLayers 文档汉化、示例翻译、专题总结（Summary）编写、站点构建与 GitHub Pages 秒级增量部署全流程标准规范。
   当用户要求：翻译 OpenLayers 示例或页面、更新技术总结文档（如 Style/Interaction 指南）、构建网站、
   排查中文乱码、修改菜单导航、或将项目发布推送到 GitHub Pages (gisnotes.github.io/openlayers) 时使用此技能。
+  【开发节奏与元数据规范】：日常翻译阶段聚焦内容本身，严禁擅自自动执行全量构建与部署（必须等用户明确提示）；严禁在示例中自行追加或总结 tags，必须保持原始 tags 不变。
 ---
 
 # OpenLayers 中文翻译、专题总结与站点发布工作流指南
 
-本技能提炼了当前项目（OpenLayers 中文汉化与 GitHub Pages 发布）的核心工程规范、编译流程、避坑准则与自动化发布脚本。
+本技能提炼了当前项目（OpenLayers 中文汉化与 GitHub Pages 发布）的核心工程规范、编译流程、避坑准则、极速提速策略与自动化发布脚本。
 
 ---
 
@@ -49,7 +50,31 @@ openlayers/
 
 ---
 
-## 二、 翻译与文档规范（避坑核心准则）
+## 二、 极速开发节奏与提速准则（核心工作流规范）
+
+为了避免每次修改单个文件都需要漫长等待全量编译与检查，所有协助开发必须严格遵守以下提速与触发准则：
+
+### 1. 零构建原则（0 Build）：日常翻译阶段绝对不执行 build
+- **无需 build 即可本地实时生效**：
+  - 本地预览开发推荐运行：`npm run serve-examples`（或 `npm start`，访问 `http://localhost:5173/`）。
+  - **运作原理**：该命令启动的是 Vite 开发热服务器，内部通过 `examples/config/example-builder.js` 中间件动态解析 Handlebars 模板并监听 `examples/` 目录；当 Agent 修改保存 `.html` 或 `.js` 文件时，服务器自动清理缓存并通过 HMR（热模块替换）在浏览器端**毫秒级实时刷新**。
+  - **在开发服务器模式下，完全不需要执行任何 build 命令即可实时预览**！
+- **严禁擅自执行构建与部署**：
+  - Agent 在日常翻译或修改单个示例时，**绝对禁止自行执行 `npm run build-examples`、`prepare-gh-pages.js` 或任何打包部署命令**；
+  - 只有当用户明确指示（例如“全部翻译完成，开始构建部署”、“发版”、“推送到线上”等），才统一执行全量构建与秒级增量部署。
+
+### 2. 避免耗时操作的极速策略表
+
+| 操作维度 | 慢速做法（日常严禁） | 推荐极速做法（秒级响应） |
+| :--- | :--- | :--- |
+| **本地效果预览** | 每次修改都跑 `npm run build-examples` + 静态预览（每次等 16 秒+） | 运行 `npm run serve-examples`（访问 `localhost:5173`），**无需 build，保存文件毫秒级热刷新** |
+| **代码语法检查** | 每次跑全量 `npm run lint`（耗时 20 秒+） | 定向检查单个文件：`npx eslint examples/<name>.js`（**耗时 < 1 秒**） |
+| **代码提交与部署** | 改一个文件就 commit/push/deploy 一次（容易打断思路且耗时） | **连续批量翻译**，全过程不 build、不 commit，全部完成后由用户手动指示统一发版 |
+
+
+---
+
+## 三、 翻译与文档规范（避坑核心准则）
 
 ### 1. 严格防止中文乱码（编码红线）
 - **严禁使用 PowerShell 管道重定向（`>` 或 `>>`）** 以及未指定 UTF-8 的 `Set-Content` / `Get-Content` 读写中文文件。Windows 默认采用 GBK（代码页 936），会导致多字节 UTF-8 中文乱码。
@@ -57,7 +82,11 @@ openlayers/
   - 必须使用 Antigravity 的 `replace_file_content` / `write_to_file` 工具；
   - 或通过 Node.js 原生脚本执行：`fs.readFileSync(file, 'utf8')` / `fs.writeFileSync(file, content, 'utf8')`。
 
-### 2. 超链接与相对路径规范
+### 2. 标签保持原貌红线（严禁自行添加或总结 tags）
+- **保持原始 tags 绝对不变**：示例 HTML 顶部的 YAML frontmatter 中，`tags:` 字段定义了示例索引的分类徽章与筛选器标签（如 `tags: "cog, projection, proj4js, maptiler"`）。
+- **严禁追加中文标签或额外词汇**：不要自行总结添加任何中文或未在原版中存在的 tag（如追加 `英国国家格网, 遥感` 等）。多余的 tags 会生成孤立无用的分类标签，破坏站点统一的筛选索引。
+
+### 3. 超链接与相对路径规范
 - **禁止在专题文档中使用线上绝对域名**：不要硬编码 `https://gisnotes.github.io/openlayers/...`。
 - **统一使用相对路径**：
   - 在三级页面 `site/summary/openlayers-style-guide.md` 中引用示例：
@@ -65,15 +94,25 @@ openlayers/
     - 文末附录列表：`1. [icon](../en/latest/examples/icon.html)`
   - 相对路径优势：保证本地静态调试（`localhost:3000`）与 GitHub Pages 线上（`/openlayers/`）均能无缝正确跳转，无需做二次字符串替换。
 
-### 3. Markdown 语法与排版避坑
+### 4. Markdown 语法与排版避坑
 - **CommonMark 解析规范**：列表项加粗标志 `**` 避免直接贴紧中文全角冒号 `：`（如 ``**`name`**：`` 在某些解析器下会导致加粗失效）。推荐使用直接的链接格式：`1. [name](url)`。
 - **专业词汇标准**：
   - GIS 专用术语规范翻译（例如：`Vector` 矢量、`Feature` 要素、`Extent` 范围/包络、`Cluster` 聚类/聚合、`Projection` 投影、`Style Function` 动态样式函数）。
   - 保留英文类名与 API 原貌（如 `ol/style/Icon`、`CircleStyle`、`toContext`、`WebGLTile`）。
 
+### 5. 数学公式排版规范（已支持 LaTeX / KaTeX）
+- **公式支持现状**：示例全局模板（`examples/templates/example.html`）已集成轻量极速的 KaTeX 渲染引擎与自动渲染插件。
+- **书写规范**：
+  - 行内公式：使用 `$ ... $` 或 `\( ... \)` 包裹，例如：`$\sec(\varphi) = 1 / \cos(\varphi)$`；
+  - 块级独立公式：使用 `$$ ... $$` 或 `\[ ... \]` 包裹，例如：
+    ```latex
+    $$R_{\text{new}} = \frac{R_{\text{current}} \times \text{currentPointResolution}}{\text{newPointResolution}}$$
+    ```
+  - KaTeX 会自动忽略 `code` 和 `pre` 标签，代码块中的 `$` 变量符号不受干扰。
+
 ---
 
-## 三、 Summary 专题体系与页面联动
+## 四、 Summary 专题体系与页面联动
 
 项目现已支持三级页面架构：
 1. **顶部一级菜单**：`Docs -> Summary`（带 `<i class="fa fa-clipboard-list"></i>` 图标）。
@@ -95,7 +134,7 @@ openlayers/
 
 ---
 
-## 四、 标准构建与验证命令
+## 五、 标准构建与验证命令（仅在用户提示构建时执行）
 
 执行任何构建前，先确保环境变量包含 Node v24：
 ```powershell
@@ -104,7 +143,7 @@ $env:Path = "C:\Users\Lenovo\AppData\Roaming\nvm\v24.13.0;" + $env:Path;
 
 ### 1. 修改示例代码/翻译时
 ```powershell
-# 仅重新打包全部示例（耗时约 14 秒）
+# 仅重新打包全部示例（耗时约 14~16 秒）
 npm run build-examples
 ```
 
@@ -127,7 +166,7 @@ npx vite preview --outDir build/site-dist --port 3000
 
 ---
 
-## 五、 双分支提交与秒级增量部署
+## 六、 双分支提交与秒级增量部署（仅在用户提示发布时执行）
 
 ### 步骤 1：提交源码到 `zhcn` 分支
 ```powershell
@@ -153,11 +192,12 @@ node .agents/skills/openlayers-workflow/scripts/deploy-gh-pages.js "本次发布
 
 ---
 
-## 六、 常见问题与自查手册
+## 七、 常见问题与自查手册
 
 | 现象 / 报错 | 根本原因 | 解决方案 |
 | :--- | :--- | :--- |
 | Markdown 中文变成乱码 | 使用了 Windows 默认 GBK 编码重定向或保存 | 使用 Node.js 原生以 UTF-8 读取或用 Antigravity 工具从原版恢复 |
+| 示例标签出现多余中文分类 | 翻译时自行给 frontmatter 的 `tags:` 追加了中文 | 保持原始英文 `tags:` 不变，禁止自行总结标签 |
 | 列表加粗未渲染出效果 | `**` 与全角冒号 `：` 直接紧贴 | 将格式转为标准 `1. [name](url)` 超链接列表 |
 | 二级页面打不开三级页面 | 金属匠构建未包含 `site/summary/*.md` | 检查 `site/build.js` 是否已包含 `copySummaryFiles()` 逻辑，并执行 `npm run build-site` |
 | GitHub Pages 访问样式丢失或 404 | 静态文件链接未带 `/openlayers/` 前缀 | 运行 `node tasks/prepare-gh-pages.js`，该脚本会自动完成根路径补全 |

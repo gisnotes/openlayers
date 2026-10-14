@@ -71,6 +71,6 @@ docs: |
   #### 6. 跨域安全属性 `crossOrigin: 'anonymous'` 与样式缓存（`selectStyle[image.src]`）
   * **防止画布污染（Tainted Canvas）**：在 `createStyle` 中配置 `crossOrigin: 'anonymous'` 是调用 `context.getImageData()` 的前提。若跨域图片未携带 CORS 头就被绘制到 `<canvas>` 上，画布会被浏览器标记为“污染状态”，调用 `getImageData()` 会立即抛出 `SecurityError` 异常。
   * **样式字典缓存**：`Select` 的 `style` 函数在每次重绘时都会调用，而逐像素遍历属于同步 CPU 密集型操作。使用 `selectStyle[image.src]` 字典按图片地址缓存生成好的反色 `Style` 实例，确保每种图标 URL **仅在第一次被选中时计算一次像素反色**，后续重复选中直接复用缓存。
-tags: "vector, style, icon, marker, canvas, select, 矢量, 样式, 图标, 像素, 反色, 负片, 画布, 选中"
+tags: "vector, style, icon, marker, canvas, select"
 ---
 <div id="map" class="map"></div>

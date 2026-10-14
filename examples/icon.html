@@ -55,7 +55,7 @@ docs: |
     点击发生频率低，且我们需要**获取被点击的具体 `Feature` 实例**以读取其 `name` 属性，并在回调中 `return feature` 提前终止遍历（只取最顶层要素）。
   * **`pointermove` 鼠标移动事件 —— 使用 `map.hasFeatureAtPixel(e.pixel)`**：
     鼠标移动每毫秒都可能触发！此时我们只需要知道“鼠标下有没有要素”来切换手型指针（`cursor: 'pointer'`），不需要拿出要素对象。`hasFeatureAtPixel` 在底层一旦检测到命中像素就会立即返回布尔值 `true`，开销远小于构造要素回调。
-tags: "vector, style, icon, marker, popup, 矢量, 样式, 图标, 标注, 弹窗"
+tags: "vector, style, icon, marker, popup"
 resources:
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js

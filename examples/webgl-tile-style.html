@@ -63,7 +63,7 @@ docs: |
 
   #### 4. 代码工程技巧：基于 `for...in` 数据驱动的双向绑定
   看代码第 41~53 行，作者没有为 `exposure`、`contrast`、`saturation` 重复编写三遍完全相同的 DOM 读取与事件监听代码，而是利用 HTML 控件 `id`（如 `id="exposure"` 和 `id="exposure-value"`）与 `variables` 对象的键名严格一致的约定，通过一个 `for (variable in variables)` 循环一次性完成了初始值回填、数值格式化展示（`toFixed(2)`）以及 `input` 事件与 `updateStyleVariables({ [name]: value })` 的动态绑定。
-tags: "webgl, style, 瓦片, 样式, 曝光度, 对比度, 饱和度, 滤镜, 遥感"
+tags: "webgl, style"
 ---
 <div id="map" class="map"></div>
 <div id="controls">

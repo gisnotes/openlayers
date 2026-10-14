@@ -42,7 +42,7 @@ docs: |
   ```
   * **原因**：直接调用 `iconStyle.getImage().setScale(...)` 修改的是 `Style` 内部子对象的属性，OpenLayers 的 `Feature` 和 `VectorLayer` **不会自动深度监听 `Style` 内部属性的变化**。
   * **机制**：如果不调用 `iconFeature.changed()`（或 `vectorLayer.changed()`），要素的修订版本号（Revision）不会增加，矢量图层会认为数据没有变化而继续使用旧的渲染缓存。调用 `.changed()` 会触发 `change` 事件，通知图层立即重新生成渲染指令并重绘画面。
-tags: "vector, style, icon, label, scale, 矢量, 样式, 图标, 标注, 缩放, 锚点"
+tags: "vector, style, icon, label, scale"
 ---
 <div id="map" class="map"></div>
 <table class="controls">

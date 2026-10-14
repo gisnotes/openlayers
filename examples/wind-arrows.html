@@ -77,6 +77,6 @@ docs: |
      风向是真实的地理方位（真北方向）。当用户按住 `Alt + Shift + 鼠标拖拽` 旋转地图视口时，风向箭头必须跟随地图一起旋转（`rotateWithView: true`），才能继续指向正确的地理东南西北方向！
   2. **高性能样式对象复用**：
      `shaft`、`head` 和 `styles` 数组在文件顶部**只实例化了一次**。在 `VectorLayer` 的 `style` 函数中，遍历每个气象站要素时直接调用 `setScale()`、`setRotation()`、`setDisplacement()` 原地修改属性并返回同一个 `styles` 数组，实现了**零垃圾回收（Zero GC）开销**。
-tags: "vector, symbol, regularshape, style, arrow, 风向, 风场, 箭头, 气象, 矢量, 符号"
+tags: "vector, symbol, regularshape, style, arrow"
 ---
 <div id="map" class="map"></div>
