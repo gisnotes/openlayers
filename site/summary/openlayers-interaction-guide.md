@@ -160,26 +160,56 @@ import {
 
 在数字化作业和图斑绘制中，保证要素边界完全重合、消除公共缝隙是空间数据生产的核心诉求。
 
-### 1. 吸附引擎（`Snap`）的工作原理与装配顺序
+### 1. 经典三剑客共存：Draw、Modify 与 Snap 的装配顺序铁律
 
-`ol/interaction/Snap` 并不是一个绘制工具，而是一个**坐标变换修正器**。它截获当前的 `MapBrowserEvent`，将事件中的 `coordinate` 和 `pixel` 强制投影到最近的已有节点或边线上。
+在数字化采编作业中，用户常常需要“一边绘制新要素，一边调整已有要素，且绘制或拖拽时折点必须严密贴合相邻图形”。
+
+#### （1）26 个示例中是否存在三者同时存在的例子？
+**存在，而且是 OpenLayers 官方最推崇的经典标绘闭环：**
+- [`draw-and-modify-features`](../en/latest/examples/draw-and-modify-features.html)：**三者同时保持激活**（`active: true`）。鼠标点击空白处即可落笔绘制新多边形，悬停在已有图形折点上即可直接拖拽形变，同时整个过程全程保持顶点吸附。
+- [`snap`](../en/latest/examples/snap.html)：内部同时实例化了 Draw、Modify 与 Snap。界面提供单选切换（通过 `Draw.setActive()` 与 `Modify.setActive()` 互斥切换状态），而 Snap 作为底层拓扑基准始终保持激活。
+
+#### （2）三者共存时的装配先后顺序
+**有极其严格的顺序要求：`Modify` 和 `Draw` 必须先添加，`Snap` 必须最后添加到地图中！**
+
+```javascript
+// 方式 A：通过 map.addInteraction 顺序挂载
+map.addInteraction(modify); // 1. 先添加 Modify
+map.addInteraction(draw);   // 2. 再添加 Draw
+map.addInteraction(snap);   // 3. 必须最后添加 Snap！
+
+// 方式 B：在 Map 初始化配置项中合并默认交互数组
+import {defaults as defaultInteractions} from 'ol/interaction.js';
+
+const map = new Map({
+  // ...
+  // 注意数组末尾放置 snap
+  interactions: defaultInteractions().extend([modify, draw, snap]),
+});
+```
+
+#### （3）底层运行机制：为什么 Snap 必须排在最后？
 
 ```mermaid
 flowchart LR
-    Pointer["用户指针输入 (真实屏幕像素)"] --> Snap["Snap 交互 (逆序排在最外层)"]
-    Snap -->|"空间索引检索，吸附到节点/线段"| ModifiedCoord["修正后的吸附坐标"]
-    ModifiedCoord --> Draw["Draw / Modify 交互"]
-    Draw --> Geometry["生成无拓扑缝隙的要素几何"]
+    Event["原生指针事件 (PointerMove / Down)"] -->|"逆序遍历：最后添加的先执行"| Snap["3. Snap 交互 (最先截获事件)"]
+    Snap -->|"空间索引检索，就地改写 event.coordinate"| ModifiedCoord["已被吸附校准的坐标"]
+    ModifiedCoord -->|"返回 true 放行给前置交互"| Draw["2. Draw 交互 (落笔在吸附点)"]
+    ModifiedCoord -->|"返回 true 放行给前置交互"| Modify["1. Modify 交互 (吸附拖拽折点)"]
 ```
 
-> [!WARNING]
-> **装配顺序陷阱**：
-> 必须保证 `Snap` **后于** `Draw` 或 `Modify` 添加到地图中：
-> ```javascript
-> // 正确次序：
-> map.addInteraction(draw);
-> map.addInteraction(snap); // snap 位于数组末尾，事件逆序派发时最先执行，确保 draw 拿到的是吸附后的坐标！
-> ```
+1. **逆序遍历事件链**：如第二部分所述，`ol/Map` 派发事件时，采用 `for (let i = interactions.length - 1; i >= 0; --i)` 从后往前倒序调用。
+2. **坐标修正者（Mutator）与消费者（Consumer）的角色分工**：
+   - `Snap` 的本质不是绘制几何，而是**坐标就地拦截与修正器**。它截获事件后，搜索 R-Tree 树，直接改写 `mapBrowserEvent.coordinate` 与 `mapBrowserEvent.pixel`，然后 `return true` 放行事件。
+   - `Draw` 与 `Modify` 是**坐标消费者**。因为 `Snap` 后加入地图，所以在倒序遍历时最先拦截事件；当事件流转到 `Draw` 或 `Modify` 时，它们拿到的已经是被 `Snap` 修正并吸附后的坐标，落笔和顶点捕捉自然严丝合缝。
+3. **反向装配的致命后果**：
+   如果先添加 `Snap` 后添加 `Draw/Modify`，则 `Draw/Modify` 会在 `Snap` 之前接收事件。此时它们拿到的是原始鼠标像素坐标，`Snap` 的空间吸附计算对当前的绘制和编辑动作彻底失效，从而造成微小拓扑缝隙。
+
+> [!NOTE]
+> **官方源码注释佐证**：
+> 在官方示例 [`examples/snap.js`](../en/latest/examples/snap.html) 的源码中，官方开发者留下了强制性注释：
+> > *"The snap interaction must be added after the Modify and Draw interactions in order for its map browser event handlers to be fired first. Its handlers are responsible of doing the snapping."*
+> > （Snap 交互必须在 Modify 和 Draw 交互之后添加到地图，以便它的事件处理函数最先执行并负责完成坐标吸附。）
 
 ### 2. 自定义线段分割器（Custom Segmenter）
 
