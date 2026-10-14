@@ -1,9 +1,63 @@
 ---
 layout: example.html
-title: COG with automatic Projection Lookup
-shortdesc: Rendering a COG over another layer in a different projection.
-docs: >
+title: COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加
+shortdesc: Rendering a COG over another layer in a different projection. / 在不同投影底图（Web 墨卡托）之上自动查找未知投影定义并叠加渲染云优化 GeoTIFF（英国国家格网）。
+docs: |
   Example of automatically using `fromProjectionCode()` to enable a COG to be rendered over another layer in a different projection.
-tags: "cog, projection, proj4js, maptiler"
+
+  本示例演示如何通过 `loadMissingProjection: true` 配置，利用 `fromProjectionCode()` 自动网络查找并注册未知坐标系定义，将采用非标准投影（英国国家格网 EPSG:27700）的云优化 GeoTIFF（COG）与采用 Web 墨卡托投影（EPSG:3857）的卫星底图在同一视图中混合对齐渲染。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么需要自动投影查找？
+  * **OpenLayers 的内置投影边界**：
+    * 核心库出于轻量化考虑，默认仅内置了两个全球最通用投影：`EPSG:3857`（Web 墨卡托）与 `EPSG:4326`（WGS 84 经纬度）。
+    * 实际测绘与遥感数据常使用本地投影。例如本示例加载的英国地形测量局（Ordnance Survey）MiniScale 栅格地图，其坐标系为英国国家格网（British National Grid，代号 **`EPSG:27700`**）。
+  * **传统方式的局限**：
+    * 开发者必须手动引入 Proj4js，在代码中硬编码复制一长串 Proj4 投影定义字符串：
+      ```javascript
+      proj4.defs("EPSG:27700", "+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 +x_0=400000 +y_0=-100000 +ellps=airy +towgs84=446.448,-125.157,542.06,0.15,0.247,0.842,-20.489 +units=m +no_defs");
+      register(proj4);
+      ```
+    * 如果业务系统需要动态加载用户上传的未知 COG 文件，在代码里穷举预置所有 EPSG 定义显然不可行。
+
+  #### 2. `loadMissingProjection: true` 的内部执行流水线
+  当在 `ol/source/GeoTIFF` 中开启 `loadMissingProjection: true` 并完成 `register(proj4)` 后，加载未知投影 COG 数据的完整闭环如下：
+  1. **解析 GeoKey 标签**：GeoTIFF 解码器从 TIFF 头信息中提取 `ProjectedCSTypeGeoKey` 或 `GeographicTypeGeoKey`，得到投影代号 `EPSG:27700`；
+  2. **本地缓存比对**：查询 OpenLayers 内部投影缓存和 Proj4js 注册表。若未命中，自动调用内部的 `fromProjectionCode('EPSG:27700')`；
+  3. **远程拉取 WKT 定义**：`fromProjectionCode` 默认向 `https://spatialreference.org/ref/epsg/27700/ogcwkt/` 发起异步 HTTP 请求，拉取符合 OGC 规范的 WKT（Well-Known Text）投影定义文本；
+  4. **动态注册与转换管线激活**：将获取到的 WKT 通过 `proj4.defs(code, wkt)` 存入 Proj4js，再重新执行 `register(proj4)`。OpenLayers 随之获得该坐标系的单位（米）、有效投影范围以及与 Web 墨卡托/WGS 84 之间的双向坐标转换能力；
+  5. **异步解析 View**：`cogSource.getView()` 成功解析该 COG 的真实投影坐标系、范围（Extent）与多级分辨率，用于初始化地图视图。
+
+  #### 3. 多投影混合渲染与 GPU 硬件加速
+  本示例展示了多投影混合叠加的核心模式：
+
+  | 图层 / 组件 | 原始投影 | 运行时状态与渲染方式 |
+  | :--- | :--- | :--- |
+  | **底图 (MapTiler Satellite)** | `EPSG:3857` (Web 墨卡托) | **GPU 实时重投影**：视图设定为 `EPSG:27700` 后，`WebGLTile` 在片元着色器中将经纬度/墨卡托坐标实时换算为英国格网投影瓦片，动态纠正几何形变 |
+  | **覆盖层 (MiniScale COG)** | `EPSG:27700` (英国国家格网) | **原生无损渲染**：与地图 View 投影完全一致，无需重采样，保持像素级清晰度 |
+  | **地图视图 (`map.getView()`)** | `EPSG:27700` | 来源为 `cogSource.getView()` 解析出来的投影配置，中心点和缩放级别自动对齐英国本土 |
+
+  #### 4. 关键配置与样式调优
+  * **`nodata: 0` 剔除黑边**：
+    由于遥感正射校正或局部倾斜投影裁剪，TIFF 矩形四周通常填充有像元值为 0 的无效区。配置 `nodata: 0` 使其作为完全透明处理，避免遮挡底图。
+  * **`style: {exposure: 0.2}` 压暗卫星图**：
+    卫星遥感影像对比度高、细节密集，直接叠加浅色线划地图会导致视觉混乱。通过 WebGLTile 样式表达式的 `exposure` 属性将底图曝光调暗，衬托上方的数据专题。
+  * **`opacity: 0.7` 与 `gamma: 0.7`**：
+    对 COG 栅格图层设置 70% 半透明度，配合伽马校正微调对比度，使卫星地貌特征与上方的地形测量格网能够透光交融。
+  * **动态版权设置 (`cogSource.setAttributions`)**：
+    根据英国地形测量局要求，通过 JavaScript 动态拼接当前年份以呈现正确的皇家版权与数据库权利说明。
+
+  #### 5. 方案对比：手动注册 vs 自动查找
+
+  | 比较维度 | 手动硬编码注册 (`proj4.defs`) | 自动投影查找 (`loadMissingProjection: true`) |
+  | :--- | :--- | :--- |
+  | **核心机制** | 打包前将具体 EPSG 定义写入 JS 代码 | 运行时从 spatialreference.org 等服务动态请求 WKT |
+  | **网络依赖** | **完全离线可用**，不产生外部 HTTP 请求 | **依赖外网**或需自建内网投影服务（可用 `setProjectionCodeLookup` 替换服务源） |
+  | **通用灵活性** | 仅支持代码中预设的已知投影 | **支持任意标准 EPSG 编码**，适合通用 GIS 平台或支持用户上传 TIFF 的系统 |
+  | **首屏加载时延** | 零额外时延 | 首次加载未缓存投影时需要一次轻量的 WKT 请求（通常 < 5KB） |
+tags: "cog, projection, proj4js, maptiler, 动态投影, 自动投影查找, GeoTIFF, WebGLTile, 英国国家格网"
 ---
 <div id="map" class="map"></div>
