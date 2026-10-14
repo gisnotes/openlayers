@@ -16,8 +16,7 @@ docs: |
   ### 📚 学习记录与技术深度解读 (Learning Notes)
 
   #### 1. 核心绘制机制与要素生命周期
-  * **草绘与正式入库**：`ol/interaction/Draw` 内部维护一个轻量草绘覆盖图层。在绘制过程中实时渲染的是临时草绘要素（Sketch Feature）；当双击或点击最后一点完成闭合时，触发 `drawend`
-  事件，草绘要素正式转化为 `ol/Feature` 并写入绑定的 `VectorSource`。
+  * **草绘与正式入库**：`ol/interaction/Draw` 内部维护一个轻量草绘覆盖图层。在绘制过程中实时渲染的是临时草绘要素（Sketch Feature）；当双击或点击最后一点完成闭合时，触发 `drawend` 事件，草绘要素正式转化为 `ol/Feature` 并写入绑定的 `VectorSource`。
   * **顶点动态撤销 (`removeLastPoint()`)**：在绘制折线或多边形过程中，调用 `draw.removeLastPoint()` 可移除刚刚落下的最后一个顶点，无需取消整条要素重画。
 
   #### 2. 自由手绘（Freehand）模式
