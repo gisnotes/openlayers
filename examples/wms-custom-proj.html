@@ -1,9 +1,23 @@
 ---
 layout: example.html
-title: Custom Tiled WMS
-shortdesc: Example of using custom coordinate transform functions.
+title: 自定义投影转换的瓦片 WMS (Custom Tiled WMS)
+shortdesc: 演示通过注册自定义正反算坐标转换函数，使用非标准/自定义投影瓦片 WMS。
 docs: >
-  With `addCoordinateTransforms()`, custom coordinate transform functions can be added to configured projections.
+  通过 OpenLayers 提供的 `addCoordinateTransforms()` API，开发者可以直接向特定投影注册轻量级的**自定义正反算坐标转换函数**，无需引入完整的 Proj4js 库。
+
+  ### 核心机制与原理解析
+
+  1. **无需 Proj4js 的轻量级转换（`addCoordinateTransforms`）**：
+     - 通常注册非标准投影需要依赖 `proj4` 库及其定义字符串，但如果应用场景仅涉及特定坐标系之间的互转，引入整个 proj4 库会增加包体积。
+     - `addCoordinateTransforms(source, destination, forward, inverse)` 允许开发者直接传入纯 JavaScript 实现的正向与逆向数学公式函数。
+     - 注册完成后，OpenLayers 核心的 `transform()` 方法、要素重投影、以及 `ScaleLine` 比例尺计算等逻辑均会自动利用这两个转换函数进行精确坐标解算。
+
+  2. **瑞士旧国家坐标系（CH1903 / EPSG:21781）多项式拟合**：
+     - 本例使用的是瑞士联邦地形局（Swisstopo）公布的高精度三次多项式经验拟合算法。该算法无需计算复杂的贝塞尔旋转椭球积分，即可在微秒级时间内完成 WGS84 经纬度与瑞士平面直角坐标的高精度互转（瑞士全境内误差低于 0.1 米）。
+     - **注意轴向顺序**：瑞士测绘体系传统上将东坐标（Easting）记为 $y$，北坐标（Northing）记为 $x$（基准原点设在旧伯尔尼天文台，假东 600,000 米，假北 200,000 米）。在提供给 OpenLayers 时，必须将坐标数组组织为国际通用的 $[Easting, Northing]$ 笛卡尔顺序。
+
+  3. **投影合法范围（Validity Extent）的作用**：
+     - 在创建 `Projection` 实例时配置 `extent: [minx, miny, maxx, maxy]`，OpenLayers 的视图（`View`）才能据此计算出合理的缩放级别、切片网格与漫游边界。
 tags: "wms, tile, tilelayer, projection, mapserver"
 ---
 <div id="map" class="map"></div>

@@ -1,9 +1,27 @@
 ---
 layout: example.html
-title: Sphere Mollweide
-shortdesc: Example of a Sphere Mollweide map with a Graticule layer.
+title: 球形摩尔威特等面积投影 (Sphere Mollweide)
+shortdesc: 演示结合经纬网图层（Graticule）展示全球球形摩尔威特等面积伪圆柱投影（Sphere Mollweide / ESRI:53009）。
 docs: >
-  Example of a Sphere Mollweide map with a Graticule layer.
+  本例展示了如何配置并渲染全球**球形摩尔威特等面积伪圆柱投影（Sphere Mollweide / ESRI:53009）**，并叠加经纬网图层（`ol/layer/Graticule`）直观观察其几何等积特征与椭圆经纬线弧度。
+
+  ### 核心机制与原理解析
+
+  1. **摩尔威特等面积投影数学原理**：
+     - 摩尔威特投影是由德国数学家卡尔·摩尔威特（Karl Mollweide）于 1805 年设计的一种伪圆柱等面积投影，全球轮廓呈现为一个长宽比为 $2:1$ 的完整椭圆。
+     - 其经度方向展平为连续的对称半椭圆，纬线为平行直线。将球体半径设为 $R = 6,371,000\text{ m}$ 时，平面正算公式如下：
+       $$x = \frac{2\sqrt{2}}{\pi} R (\lambda - \lambda_0) \cos\theta$$
+       $$y = \sqrt{2} R \sin\theta$$
+       其中辅助参量角 $\theta$ 通过求解超越方程确定：$2\theta + \sin(2\theta) = \pi \sin\varphi$。
+     - 全球外包半长轴 $x_{\max} = 2\sqrt{2} R \approx 18,019,909.21\text{ m}$，半短轴 $y_{\max} = \sqrt{2} R \approx 9,009,954.61\text{ m}$，与代码中配置的 `extent` 完全吻合。
+
+  2. **`worldExtent` 与经纬网（Graticule）图层的协同**：
+     - `Graticule` 图层在非墨卡托投影下绘制等经线与等纬线时，必须依赖投影对象的 `worldExtent` 明确经纬度的起止绘制边界。
+     - 代码中配置了 `worldExtent: [-179, -89.99, 179, 89.99]`，适度内缩极点和日界线边缘，有效避免了极点投影在椭圆两极产生数学奇异与线段断裂。
+
+  3. **矢量要素客户端即时重投影**：
+     - 全球生态分区数据（`ecoregions.json`）源数据为标准 WGS84 经纬度（EPSG:4326）GeoJSON。
+     - OpenLayers 结合 Proj4js 规则，在数据加载解析时将成千上万个多边形顶点的球面经纬度即时正算转换为摩尔威特平面椭圆坐标，并利用声明式样式表达式 `['string', ['get', 'COLOR_BIO'], '#eee']` 依生物圈分类字段高效填充色彩。
 tags: "graticule, Mollweide, projection, proj4js"
 ---
 <div id="map" class="map"></div>

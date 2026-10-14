@@ -1,35 +1,27 @@
 ---
 layout: example.html
-title: GeoTIFF Reprojection
-shortdesc: Demonstrates how a GeoTIFF can be rendered in a different projection.
+title: GeoTIFF 客户端动态重投影 (GeoTIFF Reprojection)
+shortdesc: 演示如何将 GeoTIFF 影像在不同投影的地图视图中进行动态重投影渲染。
 docs: >
   <p>
-    This example demonstrates how data from a GeoTIFF in one projection can be displayed on a map with a
-    different projection. For other source types, it is necessary to specify the source projection when
-    it differs from the map view projection. In this example, information about the source projection is
-    included in the GeoTIFF metadata, so it doesn't need to be specified in the application code.
+    本示例演示如何将一种投影下的 GeoTIFF 数据动态展示在采用不同投影的地图视图中。对于其它类型的数据源，当源投影与地图视图投影不一致时，通常必须显式指定源投影；而在本示例中，投影信息已内嵌于 GeoTIFF 的元数据中，因此无需在业务代码中额外配置源投影。
   </p>
   <p>
-    The <code>source.getView()</code> method returns a promise that resolves after the GeoTIFF metadata has
-    been fetched. This can be used to get the image projection information along with the image extent and
-    center coordinates. The <code>transform()</code> function is used to transform the source imagery center
-    coordinate when updating the view.
+    调用 <code>source.getView()</code> 方法会返回一个 Promise，该 Promise 在成功获取并解析 GeoTIFF 元数据后完成兑现（resolve）。可借此获取影像投影、范围（extent）以及中心点坐标。在更新视图中心时，使用 <code>transform()</code> 函数将源影像中心点坐标转换为视图对应的坐标系。
   </p>
   <p>
-    OpenLayers has built-in reprojection support for sources in Universal Transverse Mercator (UTM)
-    projections. Since the source data shown here is in UTM Zone 36 N, no additional configuration is needed
-    to reproject the data to the map projection (Spherical Mercator).
+    OpenLayers 内置支持通用横轴墨卡托（Universal Transverse Mercator, UTM）投影源的客户端动态重投影。由于本示例加载的卫星影像数据源位于 UTM Zone 36N，因此无需任何额外配置（无需注册 Proj4js），即可直接动态重投影至地图视图所采用的球面墨卡托投影（EPSG:3857）。
   </p>
   <p>
-    See these other examples for details on the following:
+    更多关联投影技术示例：
     <ul>
       <li>
-        <a href="./reprojection.html">Reprojection with Proj4js</a>
-        &mdash; using the Proj4js library to reproject raster sources between a variety of projections.
+        <a href="./reprojection.html">基于 Proj4js 的重投影</a>
+        &mdash; 使用 Proj4js 库在多样化的自定义地理与投影坐标系之间重投影栅格数据源。
       </li>
       <li>
-        <a href="./cog-projection.html">Projection Lookup</a>
-        &mdash; using an external service to look up projection configuration information.
+        <a href="./cog-projection.html">投影定义在线检索与解析</a>
+        &mdash; 演示借助外部服务（epsg.io）动态查询并注册投影配置信息。
       </li>
     </ul>
   </p>
@@ -37,3 +29,4 @@ docs: >
 tags: "cog, geotiff, reprojection, utm"
 ---
 <div id="map" class="map"></div>
+

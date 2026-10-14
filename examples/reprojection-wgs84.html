@@ -1,9 +1,24 @@
 ---
 layout: example.html
-title: OpenStreetMap Reprojection
-shortdesc: Demonstrates client-side reprojection of OpenStreetMap in WGS84.
+title: OpenStreetMap 客户端 WGS84 重投影 (OpenStreetMap Reprojection)
+shortdesc: 演示在客户端将标准 Web 墨卡托投影的 OpenStreetMap 瓦片实时重投影至 WGS84 经纬度投影 (EPSG:4326)。
 docs: >
-  This example shows client-side reprojection of OpenStreetMap in WGS84.
+  本例展示了 OpenLayers 最基础且强大的**客户端栅格实时重投影（Client-side Raster Reprojection）**机制：直接将原生的 Web 墨卡托切片（`EPSG:3857`）在浏览器前端实时重投影至等经纬度投影（`EPSG:4326`）。
+
+  ### 核心机制与原理解析
+
+  1. **零配置内置重投影（无需 Proj4js）**：
+     - OpenLayers 核心库默认内置了 `EPSG:3857`（Web 墨卡托）与 `EPSG:4326`（WGS84 经纬度）之间的精密正反解数学公式。
+     - 开发者无需引入额外的 Proj4js 库，只需在 `View` 中指定 `projection: 'EPSG:4326'`，图层中使用默认的 `new OSM()`（其源投影为 `EPSG:3857`）。
+     - OpenLayers 检测到视图投影与瓦片源投影不一致时，会自动在底层透明激活 `ol/reproj/Tile` 栅格重投影管线。
+
+  2. **从 1:1 到 2:1 的几何重采样**：
+     - **Web 墨卡托（EPSG:3857）**：将全球地表投影为一个正方形（长宽比 1:1），纬度范围被截断在约 $\pm 85.051129^\circ$ 以内，赤道到两极存在显著的面积膨胀。
+     - **等经纬度投影（EPSG:4326 / Plate Carrée）**：横轴经度跨度 $360^\circ$（$-180^\circ \sim 180^\circ$），纵轴纬度跨度 $180^\circ$（$-90^\circ \sim 90^\circ$），长宽比为 $2:1$。
+     - OpenLayers 客户端重投影引擎会根据当前视图动态计算所需的原始 3857 瓦片，拉取切片后通过自适应三角网（Triangulated Mesh）与 Canvas 双线性插值，实时将切片像元“压扁并拉伸”至 4326 经纬网格中。
+
+  3. **极地区域留白现象**：
+     - 在 4326 投影下完整显示全球时，南北极边缘会出现未覆盖区域。这是因为墨卡托投影在 $\pm 90^\circ$ 极点处数学趋于无穷大，故 OSM 切片只生产到约 $\pm 85.05^\circ$，属于投影数学定义决定的正常物理现象。
 tags: "reprojection, projection, openstreetmap, wgs84, tile"
 ---
 <div id="map" class="map"></div>

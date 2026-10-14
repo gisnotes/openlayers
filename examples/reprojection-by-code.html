@@ -1,12 +1,31 @@
 ---
 layout: example.html
-title: Reprojection with coordinate system search
-shortdesc: Demonstrates client-side raster reprojection of OSM to arbitrary projection
+title: 坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)
+shortdesc: 演示通过检索任意投影坐标系，在客户端将 OSM (EPSG:3857) 栅格瓦片实时重投影显示。
 docs: >
-  This example shows client-side raster reprojection capabilities from
-  OSM (EPSG:3857) to arbitrary projection by searching
-  in <a href="https://docs.maptiler.com/cloud/api/coordinates/">MapTiler Cloud Coordinates API</a>.
-  **Note**: Make sure to get your own API key at https://www.maptiler.com/cloud/ when using this example.
+  本例展示了 OpenLayers 强大的**客户端栅格重投影（Client-side Raster Reprojection）**能力。用户通过检索 [MapTiler Cloud Coordinates API](https://docs.maptiler.com/cloud/api/coordinates/) 动态获取任意坐标系的 WKT/Proj4 定义并注册到前端，底图（EPSG:3857 Web 墨卡托）将自动在浏览器画布上实时解算、重采样并扭曲适配为目标投影。
+
+  **注意**：在您自己的生产项目中使用本功能时，请前往 [https://www.maptiler.com/cloud/](https://www.maptiler.com/cloud/) 申请并替换为您自己的 API Key。
+
+  ### 核心机制与原理解析
+
+  1. **动态投影获取与 Proj4js 注册流程**：
+     - 用户输入 EPSG 代号或区域名称（如 `27700`、`3031`、`Swiss`）后，通过 API 获取该坐标系的 `WKT` 字符串及有效地理范围 `bbox`（经纬度形式）。
+     - 通过 `proj4.defs(code, proj4def)` 动态注入投影定义，并执行 `register(proj4)` 将转换规则同步至 OpenLayers 投影表。
+     - 调用 `getProjection(code)` 获取刚刚注册的 `Projection` 对象，并生成从 `EPSG:4326` 到目标投影的坐标转换函数 `getTransform('EPSG:4326', newProj)`。
+
+  2. **弧形边界采样与投影范围计算（`applyTransform` 的采样点机制）**：
+     - 大多数非墨卡托投影（如极射赤平投影、兰勃特等角圆锥投影）在平面上的地理边界并不是简单的直线，而是呈现明显的弧形或双曲率。
+     - 若仅转换经纬度包围盒的 4 个角点，计算出的平面范围会严重失真或裁剪内容。代码中通过 `applyTransform(bbox, fromLonLat, undefined, 8)`，在包围盒每条边上密集均匀插入 8 个插值采样点（Subdivision Stops），确保算出的目标投影平面外接矩形（Extent）精准包裹有效区域。
+     - 同时考虑了跨越国际日界线（Dateline Crossing，`bbox[0] > bbox[2]`）的经度补偿逻辑（`bbox[2] += 360`）。
+
+  3. **重投影引擎与三角剖分网格（Reprojection Edges）**：
+     - 开启“渲染重投影三角网边缘”后，`osmSource.setRenderReprojectionEdges(true)` 会把栅格像素重采样所构建的三角形网格线直观绘制在地图上。
+     - OpenLayers 采用自适应三角网（Adaptive Triangulated Mesh）算法，在变形剧烈区域自动细分网格，在变形平缓区域粗化网格，从而在渲染性能与投影精度间取得最佳平衡。
+
+  4. **经纬网（Graticule）与瓦片调试（TileDebug）**：
+     - `Graticule` 图层在任意复杂投影下均可精准绘制出真实的经纬线弧线及标注，便于直观观察不同投影的变形特点（如等角性、等面积性与极地拉伸）。
+     - `TileDebug` 揭示了重投影的底层真相：无论视图切换为何种异构投影，OpenLayers 都在后台按需并发请求原始标准的 EPSG:3857 瓦片，并完成即时贴图拼合。
 tags: "reprojection, projection, proj4js, epsg, maptiler, graticule"
 resources:
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css
@@ -15,9 +34,9 @@ resources:
 <form class="row">
   <span class="col-auto">
     <span class="input-group">
-      <label class="input-group-text" for="epsg-query">Search projection:&nbsp</label>
-      <input type="text" id="epsg-query" placeholder="4326, 27700, 3031, US National Atlas, Swiss, France, ..." class="form-control" size="50" />
-      <button class="btn btn-outline-secondary" id="epsg-search">Search</button>
+      <label class="input-group-text" for="epsg-query">检索坐标系/投影：&nbsp;</label>
+      <input type="text" id="epsg-query" placeholder="输入 4326, 27700, 3031, US National Atlas, Swiss, France 等..." class="form-control" size="50" />
+      <button class="btn btn-outline-secondary" id="epsg-search">搜索</button>
     </span>
   </span>
   <span class="mt-2" id="epsg-result">&nbsp;</span>
@@ -25,14 +44,14 @@ resources:
 <form>
   <div class="form-check mt-2">
     <input class="form-check-input" type="checkbox" id="render-edges" />
-    <label class="form-check-label" for="render-edges">Render reprojection edges</label><br>
+    <label class="form-check-label" for="render-edges">渲染重投影三角网边缘 (Render reprojection edges)</label><br>
   </div>
   <div class="form-check">
     <input class="form-check-input" type="checkbox" id="show-tiles" />
-    <label class="form-check-label" for="show-tiles">Show tile coordinates</label><br>
+    <label class="form-check-label" for="show-tiles">显示瓦片坐标网格 (Show tile coordinates)</label><br>
   </div>
   <div class="form-check">
     <input class="form-check-input" type="checkbox" id="show-graticule" />
-    <label class="form-check-label" for="show-graticule">Show graticule</label>
+    <label class="form-check-label" for="show-graticule">显示经纬网 (Show graticule)</label>
   </div>
 </form>

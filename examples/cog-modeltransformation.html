@@ -1,18 +1,31 @@
 ---
 layout: example.html
-title: COG with ModelTransformation
-shortdesc: COG with ModelTransformation.
+title: 包含模型仿射变换矩阵的 COG (COG with ModelTransformation)
+shortdesc: 展示包含 ModelTransformation 仿射变换矩阵（旋转/倾斜）的云原生 GeoTIFF (COG) 在客户端的重投影与渲染。
 docs: >
-  Example of using a COG with ModelTransformation.
-  A ModelTransformation may rotate or skew the tile grid relative to the reported projection.
-  This can be reprojected to that or any other supported projection.
-  To apply the ModelTransformation to `ol/source/TileDebug` use the `source` option.
+  本例展示了如何加载和渲染带有 **`ModelTransformation`（模型变换矩阵）** 的云原生 GeoTIFF（COG）影像。
+
+  ### 核心机制与原理解析
+
+  1. **什么是 `ModelTransformation` 标签？**
+     - 标准的 GeoTIFF 文件通常使用 `ModelPixelScaleTag`（像元比例）和 `ModelTiepointTag`（控制点）来定位图像，这种方式假定像元网格与地图投影坐标轴完全正交（无旋转）。
+     - 然而，合成孔径雷达（SAR，如本例中 Umbra 卫星拍摄的瓦努阿图塔纳岛影像）或遥感卫星沿轨道倾斜扫描成像时，图像坐标系相对于地表投影存在明显的**旋转角（Rotation）或剪切（Skew）**。
+     - GeoTIFF 规范使用 Tag 34264（`ModelTransformationTag`）定义一个完整的仿射变换矩阵，将栅格像元坐标 $(\text{col}, \text{row})$ 映射至地理模型坐标 $(X, Y)$：
+       $$\begin{bmatrix} X \\ Y \\ 1 \end{bmatrix} = \begin{bmatrix} a & b & c \\ d & e & f \\ 0 & 0 & 1 \end{bmatrix} \begin{bmatrix} \text{col} \\ \text{row} \\ 1 \end{bmatrix}$$
+       其中非对角线系数 $b$ 和 $d$ 描述了旋转与剪切变形。
+
+  2. **OpenLayers 客户端动态重投影**：
+     - `ol/source/GeoTIFF` 能够自动解析 `ModelTransformation` 矩阵并构建非正交倾斜瓦片网格。
+     - 结合 WebGL 瓦片渲染管线（`ol/layer/WebGLTile`），OpenLayers 能在 GPU 中实时将具有仿射旋转的 COG 切片重投影到标准 Web 墨卡托（EPSG:3857）或其他任意投影中，与 OSM 底图无缝精确重叠。
+
+  3. **倾斜瓦片调试（TileDebug with `source`）**：
+     - 勾选“显示数据源瓦片坐标”时，`new TileDebug({source: cogSource})` 会直接继承数据源的变换矩阵，从而在地图上直观勾勒出带有旋转角度的原始 COG 瓦片边界与编号。
 tags: "cog, projection, ModelTransformation"
 ---
 <div id="map" class="map"></div>
 <form>
   <div class="form-check">
     <input class="form-check-input" type="checkbox" id="show-tiles" checked />
-    <label class="form-check-label" for="show-tiles">Show source tile coordinates</label><br>
+    <label class="form-check-label" for="show-tiles">显示数据源瓦片坐标 (Show source tile coordinates)</label><br>
   </div>
 </form>

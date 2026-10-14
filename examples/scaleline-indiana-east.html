@@ -1,9 +1,24 @@
 ---
 layout: example.html
-title: OpenStreetMap Reprojection with ScaleLine Control
-shortdesc: Demonstrates client-side reprojection of OpenStreetMap to NAD83 Indiana East.
+title: 带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)
+shortdesc: 演示在客户端将 OpenStreetMap (EPSG:3857) 实时重投影至 NAD83 印第安纳州东部投影坐标系，并配合美制单位比例尺控件显示。
 docs: >
-  This example shows client-side reprojection of OpenStreetMap to NAD83 Indiana East, including a ScaleLine control with US units.
+  本例展示了 OpenLayers 在客户端将标准 Web 墨卡托投影的 OpenStreetMap 瓦片实时重投影至**美国州平面坐标系（State Plane Coordinate System）**中的 **NAD83 Indiana East（印第安纳州东区）**，并演示了美制单位比例尺控件（`ScaleLine`）的动态适配机制。
+
+  ### 核心机制与原理解析
+
+  1. **自定义州平面投影与非公制单位注册**：
+     - 许多地区性测绘工程采用定制的州平面投影（SPCS），本例使用 WKT 字符串向 Proj4js 注册命名为 `'Indiana-East'` 的坐标系（对应 EPSG:2965）。
+     - 该坐标系基于 GRS 1980 椭球体的横轴墨卡托投影（Transverse Mercator），其名义长度单位为**美国测量英尺（US Survey Foot，1 英尺 $\approx 0.3048006$ 米）**，而非国际标准公制米。
+     - OpenLayers 结合 Proj4js 注册表，不仅能处理不同曲率椭球体间的几何转换，更能自动解析并处理跨非米制单位（米制 $\leftrightarrow$ 美制英尺）的像元比例重采样。
+
+  2. **美制比例尺控件（`ScaleLine({units: 'us'})`）**：
+     - 控件配置 `units: 'us'` 后，OpenLayers 会自动将视口底部的地表距离标注格式化为**英里（miles）或英尺（ft）**。
+     - 比例尺底层自动调用新投影与 WGS84 之间的点分辨率（Point Resolution）反解函数，确保在局部投影长度变形与美制单位缩放下，比例尺数值依然严格反映真实地面物理跨度。
+
+  3. **投影合法范围（Extent）约束**：
+     - 横轴墨卡托属于局部等角投影，超出其有效经度范围（远离中央经线 $-85.667^\circ$）时会产生剧烈的几何畸变与数学奇点。
+     - 代码通过 `transformExtent([-172.54, 23.81, -47.74, 86.46], 'EPSG:4326', 'Indiana-East')` 将经纬度有效范围转换为目标投影坐标，并赋予 `View` 的 `extent` 与 `minZoom`，有效约束了用户平移漫游和缩放边界。
 tags: "reprojection, projection, openstreetmap, nad83, tile, scaleline"
 ---
 <div id="map" class="map"></div>

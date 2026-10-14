@@ -4,6 +4,7 @@ import TileLayer from '../src/ol/layer/WebGLTile.js';
 import {transform} from '../src/ol/proj.js';
 import GeoTIFF from '../src/ol/source/GeoTIFF.js';
 
+// 初始化 GeoTIFF 数据源（影像内嵌 UTM Zone 36N 投影元数据）
 const source = new GeoTIFF({
   sources: [
     {
@@ -12,6 +13,7 @@ const source = new GeoTIFF({
   ],
 });
 
+// 创建地图实例，默认采用 EPSG:3857（球面墨卡托）视图
 const map = new Map({
   target: 'map',
   layers: [new TileLayer({source})],
@@ -21,17 +23,17 @@ const map = new Map({
   }),
 });
 
-// after GeoTIFF metadata has been read, recenter the map to show the image
+// 读取解析 GeoTIFF 元数据后，平移重置地图中心以展示影像
 source.getView().then((sourceView) => {
   const view = map.getView();
 
-  // transform the image center to view coorindates
+  // 将影像中心坐标从源数据投影（UTM Zone 36N）转换为视图投影（EPSG:3857）
   const center = transform(
     sourceView.center,
     sourceView.projection,
     view.getProjection(),
   );
 
-  // update the view to show the image
+  // 更新视图中心以准确定位并呈现影像
   view.setCenter(center);
 });

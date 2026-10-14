@@ -1,9 +1,23 @@
 ---
 layout: example.html
-title: WMS without Projection
-shortdesc: Example of two WMS layers using the projection EPSG:21781, which is unknown to the client.
+title: 无投影转换定义的 WMS (WMS without Projection)
+shortdesc: 本例展示了两个使用 EPSG:21781 投影的 WMS 图层，该投影在客户端未定义任何 Proj4js 转换参数。
 docs: >
-  As long as no coordinate transformations are required, OpenLayers works fine with projections that are only configured with a `code` and `units`.
+  只要**不需要在客户端进行坐标转换**（Coordinate Transformation），OpenLayers 即可直接使用仅配置了 `code`（投影代号）和 `units`（距离单位）的轻量级投影对象正常工作。
+
+  ### 核心机制与原理解析
+
+  1. **纯平面直角坐标直传机制**：
+     - 在本例中，无论是瓦片 WMS（`TileWMS`）还是单图像 WMS（`ImageWMS`），服务端与客户端视图（`View`）均统一使用瑞士国家投影坐标系 `EPSG:21781`（CH1903 / LV03）。
+     - OpenLayers 发起 WMS 请求时，仅需将当前视口的平面矩形边界拼接为 `BBOX=minx,miny,maxx,maxy` 并携带 `CRS=EPSG:21781` 发给服务端。切片裁剪与图片渲染全由 WMS 地图服务器在服务端完成，客户端仅需充当“平面视口与瓦片网格计算器”，完全不需要客户端具备经纬度正逆投影能力。
+
+  2. **比例尺（ScaleLine）与地表真实距离近似**：
+     - 在缺乏经纬度椭球体模型与重投影正反算函数时，OpenLayers 会假定投影单位（此处为 `'m'` 米）即代表地表的真实物理距离。
+     - 对于局部国家或城市级投影（如瑞士高斯-克吕格变种等角投影，在瑞士全境内的投影长度变形系数极小），直接依据平面米制单位计算比例尺已具备极高工程参考价值。
+
+  3. **极简定义 vs 引入 Proj4js 的选型边界**：
+     - **使用极简定义即可**：所有图层坐标系统一、CAD 施工平面图、园区/厂区独立相对坐标系、无需叠加 GPS 经纬度航迹或 OSM 外部底图的场景。
+     - **必须引入 Proj4js 的场景**：需要在该地图上直接打点经纬度数据（`[lng, lat]` 来自 GPS/WGS84）、需要多源异构跨投影图层混合叠加、或需要精确球面测地线几何计算。
 tags: "wms, projection"
 ---
 <div id="map" class="map"></div>

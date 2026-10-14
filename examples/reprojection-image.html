@@ -1,13 +1,24 @@
 ---
 layout: example.html
-title: Image Reprojection
-shortdesc: Demonstrates client-side reprojection of single image source.
+title: 单幅静态图像客户端重投影 (Image Reprojection)
+shortdesc: 演示单幅静态图像（ImageStatic）在客户端由特定投影实时重投影到地图视图投影。
 docs: >
-  This example shows client-side reprojection of single image source.
+  本例展示了 OpenLayers 在客户端对**单幅静态图像数据源（`ol/source/ImageStatic`）**进行实时栅格重投影（Raster Reprojection）的能力。
+
+  ### 核心机制与原理解析
+
+  1. **静态图像源的跨投影贴合**：
+     - 示例中的静态图片是维基共享资源中以**英国国家格网坐标系（EPSG:27700 / British National Grid）**绘制的英国全境网格图。
+     - 地图视图采用主流的 Web 墨卡托投影（`EPSG:3857`）。
+     - 通过在 `ol/source/ImageStatic` 中明确声明 `projection: 'EPSG:27700'` 和其在源投影下的几何范围 `imageExtent: [0, 0, 700000, 1300000]`，OpenLayers 结合 Proj4js 的坐标转换参数，自动在客户端 Canvas 画布上构建非线性三角形映射网格，将原本为横轴墨卡托投影（Airy 椭球）的图像实时扭曲变形并精确叠加到全球 OSM 底图上。
+
+  2. **双线性插值平滑控制（`interpolate` 参数）**：
+     - 勾选 **双线性插值平滑（Interpolate）** 时，OpenLayers 在重投影像素重采样时采用双线性插值算法，有效消除倾斜拉伸带来的马赛克锯齿，使文字、地貌线条过渡更柔和。
+     - 取消勾选时，采用最近邻采样（Nearest Neighbor），像元保持原始像素块形态。在遥感土地利用分类图或离散数值栅格等场景中，关闭插值可避免分类边界混合出不存在的过渡伪值。
 tags: "reprojection, projection, proj4js, image, imagestatic"
 ---
 <div id="map" class="map"></div>
 <div>
   <input type="checkbox" id="interpolate" checked />
-  <label for="interpolate">Interpolate</label>
+  <label for="interpolate">双线性插值平滑 (Interpolate)</label>
 </div>

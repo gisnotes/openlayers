@@ -31,10 +31,14 @@ function getPackageInfo() {
   return fse.readJSON(path.resolve(repoRoot, 'package.json'));
 }
 
-handlebars.registerHelper(
-  'md',
-  (str) => new handlebars.SafeString(marked(str, {async: false})),
-);
+handlebars.registerHelper('md', (str) => {
+  if (!str) {
+    return '';
+  }
+  // 解决中文与 ** 无空格相邻时，CommonMark 词内分隔符规则导致加粗解析失效的问题
+  const processed = str.replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>');
+  return new handlebars.SafeString(marked(processed, {async: false}));
+});
 
 handlebars.registerHelper('escape', (text) => {
   return handlebars.Utils.escapeExpression(text);

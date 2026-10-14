@@ -1,14 +1,15 @@
 ---
 layout: example.html
-title: Vector tiles reprojected
+title: 矢量切片动态重投影 (Vector tiles reprojected)
 
-shortdesc: Example showing vector tiles in EPSG:4326, reprojected to a polar projection.
+shortdesc: 演示将 EPSG:4326 地理坐标系的矢量切片动态重投影为极地投影渲染。
 docs: >
-  Vector tile layers can be reprojected to other projections. This example shows vector tiles in geographic coordinates (EPSG:4326) reprojected to North Pole Lambert Azimuthal Equal Area (ESRI:102017).
-  For polar regions, vector tiles in geographic coordinates are recommended, because Web Mercator tiles do not work beyond 85° North and South.
+  矢量切片图层（VectorTileLayer）支持动态重投影到其他投影坐标系。本示例演示如何将地理坐标系（EPSG:4326）下的矢量切片动态重投影为北极朗伯等面积方位投影（ESRI:102017，North Pole Lambert Azimuthal Equal Area）。
+  对于极地高纬度区域，推荐使用基于地理坐标系的矢量切片，因为常规 Web 墨卡托切片（EPSG:3857）在纬度超过南北纬 85° 后会发生极端形变乃至失效。
   <br>
   <br>
-  **Note**: Make sure to get your own API key at https://www.maptiler.com/cloud/ when using this example. No map will be visible when the API key has expired.
+  **提示**：在实际项目中使用本示例时，请务必前往 https://www.maptiler.com/cloud/ 申请并配置专属 API Key。若 API Key 过期或无效，底图将无法加载显示。
 tags: "vector tiles, tile, mapbox, maplibre, ol-mapbox-style, reprojection"
 ---
 <div id="map" class="map" style="background:none;"></div>
+

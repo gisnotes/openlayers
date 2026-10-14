@@ -1,9 +1,24 @@
 ---
 layout: example.html
-title: Single Image WMS with Proj4js
-shortdesc: Example of integrating Proj4js for coordinate transforms.
+title: 集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)
+shortdesc: 演示通过集成 Proj4js 注册自定义投影定义，实现非内置投影下的单图像 WMS (ImageWMS) 渲染与坐标转换。
 docs: >
-  With [Proj4js](http://proj4js.org/) integration, OpenLayers can transform coordinates between arbitrary projections.
+  本例展示了 OpenLayers 与 [Proj4js](http://proj4js.org/) 的深度透明集成机制：通过注册自定义投影定义，在**单图像 WMS（`ol/source/ImageWMS`）**图层中无缝实现任意投影间的坐标正反算。
+
+  ### 核心机制与原理解析
+
+  1. **单图像 WMS（ImageWMS）的工作机制**：
+     - 与将地图切分为 256x256 固定网格的瓦片式 `TileWMS` 不同，`ImageWMS` 会在每次地图视口平移、缩放或窗口尺寸变化后，发起单次 HTTP 请求索要一幅与当前视口像素尺寸完全对应的全屏大图（参数中携带动态的 `BBOX`、`WIDTH`、`HEIGHT` 与 `CRS`）。
+     - **适用场景**：对于注记密集、水系复杂的专题业务图（如本例中瑞士环境局的全国洪水警戒图），单图像模式能完美避免瓦片接缝处的文字被截断、图标断裂或重复绘制的问题。
+
+  2. **透明的 Proj4js 注册与绑定（`register(proj4)`）**：
+     - 调用 `proj4.defs('EPSG:21781', '+proj=somerc ...')` 声明瑞士旧国家投影（CH1903 / LV03，斜轴等角圆柱投影 / 贝塞尔椭球）；
+     - 执行 `register(proj4)` 后，OpenLayers 的核心投影系统会自动与 Proj4js 建立双向函数查找映射。
+     - 随后无论是创建 `new Projection(...)`，还是直接调用 `fromLonLat([8.23, 46.86], projection)`，OpenLayers 都能自动拾取底层正逆解算函数，实现经纬度到目标平面英制/米制坐标的即时计算。
+
+  3. **投影合法范围（Extent）对视图分辨率的决定性作用**：
+     - 在创建 `Projection` 实例时配置 `extent: [minx, miny, maxx, maxy]`；
+     - OpenLayers 视图（`View`）依据此包围盒计算 Zoom 0 级别的初始点分辨率与世界漫游约束，避免因未定义空间范围导致缩放级别错乱。
 tags: "wms, single image, proj4js, projection, mapserver"
 ---
 <div id="map" class="map"></div>
