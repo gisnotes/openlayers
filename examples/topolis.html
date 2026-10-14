@@ -1,10 +1,16 @@
 ---
 layout: example.html
-title: topolis integration
-shortdesc: Example on how to use topolis with OpenLayers.
+title: topolis integration / topolis 拓扑库集成
+shortdesc: Example on how to use topolis with OpenLayers. / 演示如何在 OpenLayers 中集成 topolis 拓扑数据结构。
 docs: >
-  Example showing the integration of <a href="https://github.com/bjornharrtell/topolis">topolis</a>
-  with OpenLayers, enabling creating and editing topological geometry. Standard interaction draws edges, snapping to existing edges. Delete an edge by drawing a new edge crossing the one to delete.
+  <p>Example showing the integration of <a href="https://github.com/bjornharrtell/topolis">topolis</a> with OpenLayers, enabling creating and editing topological geometry. Standard interaction draws edges, snapping to existing edges. Delete an edge by drawing a new edge crossing the one to delete.</p>
+  <p>本示例演示了 <a href="https://github.com/bjornharrtell/topolis">topolis</a> 拓扑数据结构库与 OpenLayers 的集成，实现了拓扑几何（节点 Node、边 Edge、面 Face）的动态构建与编辑。</p>
+  <p><strong>操作说明</strong>：</p>
+  <ul>
+    <li>使用鼠标在地图上绘制线段（Edge），绘制时光标会自动吸附到现有边和节点上；</li>
+    <li>当边围成闭合区域时，拓扑引擎会自动计算并生成拓扑面（Face）；</li>
+    <li><strong>删除边</strong>：绘制一条与现有某条边横穿相交的新线段，即可触发将该被跨越的边删除并自动合并相邻拓扑面。</li>
+  </ul>
 tags: "draw, edit, vector, topology, topolis"
 resources:
   - https://cdn.jsdelivr.net/npm/topolis@0.2.5/dist/topolis.js

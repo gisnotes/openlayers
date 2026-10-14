@@ -21,6 +21,7 @@ const raster = new TileLayer({
   source: new OSM(),
 });
 
+// 节点（Node）数据源与矢量图层
 const nodes = new VectorSource({wrapX: false});
 const nodesLayer = new VectorLayer({
   source: nodes,
@@ -44,6 +45,7 @@ const nodesLayer = new VectorLayer({
   },
 });
 
+// 边（Edge）数据源与矢量图层
 const edges = new VectorSource({wrapX: false});
 const edgesLayer = new VectorLayer({
   source: edges,
@@ -66,6 +68,7 @@ const edgesLayer = new VectorLayer({
   },
 });
 
+// 面（Face）数据源与矢量图层
 const faces = new VectorSource({wrapX: false});
 const facesLayer = new VectorLayer({
   source: faces,
@@ -101,6 +104,7 @@ const map = new Map({
   }),
 });
 
+// 初始化 topolis 拓扑实例并注册拓扑事件监听
 const topo = topolis.createTopology();
 
 topo.on('addnode', nodeToFeature);
@@ -120,11 +124,13 @@ topo.on('removeface', function (e) {
   removeElementFeature(faces, e);
 });
 
+// 辅助函数：根据元素 ID 从图层中删除对应要素
 function removeElementFeature(source, element) {
   const feature = source.getFeatureById(element.id);
   source.removeFeature(feature);
 }
 
+// 辅助函数：将拓扑节点转换为 OpenLayers 要素
 function nodeToFeature(node) {
   const feature = new Feature({
     geometry: new Point(node.coordinate),
@@ -134,6 +140,7 @@ function nodeToFeature(node) {
   nodes.addFeature(feature);
 }
 
+// 辅助函数：将拓扑边转换为 OpenLayers 要素
 function edgeToFeature(edge) {
   const feature = new Feature({
     geometry: new LineString(edge.coordinates),
@@ -143,6 +150,7 @@ function edgeToFeature(edge) {
   edges.addFeature(feature);
 }
 
+// 辅助函数：将拓扑面转换为 OpenLayers 要素
 function faceToFeature(face) {
   const coordinates = topo.getFaceGeometry(face);
   const feature = new Feature({
@@ -153,6 +161,7 @@ function faceToFeature(face) {
   faces.addFeature(feature);
 }
 
+// 辅助函数：获取或分割拓扑节点
 function createNode(topo, coord) {
   let node;
   const existingEdge = topo.getEdgeByPoint(coord, 5)[0];
@@ -164,6 +173,7 @@ function createNode(topo, coord) {
   return node;
 }
 
+// 绘制完成回调：根据绘制的折线更新拓扑（加边、构面或相交删边）
 function onDrawend(e) {
   const edgeGeom = e.feature.getGeometry().getCoordinates();
   const startCoord = edgeGeom[0];
@@ -175,6 +185,7 @@ function onDrawend(e) {
     const edgesAtStart = topo.getEdgeByPoint(startCoord, 5);
     const edgesAtEnd = topo.getEdgeByPoint(endCoord, 5);
     const crossing = topo.getEdgesByLine(edgeGeom);
+    // 若绘制线仅横穿相交了一条边且两端未连接任何节点，则触发删边并合并面
     if (
       crossing.length === 1 &&
       !start &&
@@ -193,6 +204,7 @@ function onDrawend(e) {
       }
       return;
     }
+    // 确保起点与终点节点已创建
     if (!start) {
       start = createNode(topo, startCoord);
       edgeGeom[0] = start.coordinate;
@@ -201,6 +213,7 @@ function onDrawend(e) {
       end = createNode(topo, endCoord);
       edgeGeom[edgeGeom.length - 1] = end.coordinate;
     }
+    // 添加新边并自动计算生成新面
     topo.addEdgeNewFaces(start, end, edgeGeom);
   } catch (e) {
     alert(e.toString());

@@ -1,9 +1,10 @@
 ---
 layout: example.html
-title: LineString Arrows
-shortdesc: Example of drawing arrows for each line string segment.
+title: LineString Arrows / 折线线段箭头指示
+shortdesc: Example of drawing arrows for each line string segment. / 演示如何利用动态样式函数为折线的每个线段按走向绘制箭头指示符号。
 docs: >
-  Example of drawing arrows for each line string segment.
+  <p>Example of drawing arrows for each line string segment.</p>
+  <p>本示例演示了如何通过 <code>geometry.forEachSegment()</code> 遍历折线的各个子线段，利用两点坐标差值计算线段方位角，并动态生成带有旋转角度的箭头图标（<code>ol/style/Icon</code>），实现沿折线流动方向的箭头指示效果。在地图上点击即可实时绘制折线查看箭头动态生成。</p>
 tags: "draw, vector, arrow"
 ---
 <div id="map" class="map"></div>

@@ -92,8 +92,7 @@ const modify = new Modify({
         const projection = map.getView().getProjection();
         let first, last, radius;
         if (modifyPoint[0] === center[0] && modifyPoint[1] === center[1]) {
-          // center is being modified
-          // get unchanged radius from diameter between polygon vertices
+          // 修改圆心：根据多边形对角顶点距离推算保持不变的球面半径
           first = transform(polygon[0], projection, 'EPSG:4326');
           last = transform(
             polygon[(polygon.length - 1) / 2],
@@ -102,12 +101,12 @@ const modify = new Modify({
           );
           radius = getDistance(first, last) / 2;
         } else {
-          // radius is being modified
+          // 修改半径：根据当前拖拽顶点与圆心计算新的大圆距离
           first = transform(center, projection, 'EPSG:4326');
           last = transform(modifyPoint, projection, 'EPSG:4326');
           radius = getDistance(first, last);
         }
-        // update the polygon using new center or radius
+        // 基于更新后的圆心或半径重新生成测地线圆（大圆多边形，采样128个顶点）
         const circle = circular(
           transform(center, projection, 'EPSG:4326'),
           radius,
@@ -115,7 +114,7 @@ const modify = new Modify({
         );
         circle.transform('EPSG:4326', projection);
         geometries[0].setCoordinates(circle.getCoordinates());
-        // save changes to be applied at the end of the interaction
+        // 保存临时修改状态，在交互结束时应用
         modifyGeometry.setGeometries(geometries);
       }
     });
@@ -144,7 +143,7 @@ modify.on('modifyend', function (event) {
 
 map.addInteraction(modify);
 
-let draw, snap; // global so we can remove them later
+let draw, snap; // 全局变量，便于切换类型时移除重建
 const typeSelect = document.getElementById('type');
 
 function addInteractions() {
@@ -181,7 +180,7 @@ function addInteractions() {
 }
 
 /**
- * Handle change event.
+ * 处理几何类型切换事件
  */
 typeSelect.onchange = function () {
   map.removeInteraction(draw);

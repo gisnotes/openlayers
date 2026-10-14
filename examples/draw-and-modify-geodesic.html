@@ -1,25 +1,26 @@
 ---
 layout: example.html
-title: Draw and Modify Geodesic Circles
-shortdesc: Example of using Draw and Modify interactions for geodesic circles.
+title: Draw and Modify Geodesic Circles / 绘制与修改测地线圆
+shortdesc: Example of using Draw and Modify interactions for geodesic circles. / 演示使用 Draw（绘制）和 Modify（修改）交互协同创建与编辑测地线圆。
 docs: >
-  Example of using the `ol/interaction/Draw` interaction with a custom geometry function together with the `ol/interaction/Modify` interaction
-  to draw and modify geodesic circles (a `ol/geom/Polygon#circular` polygon representing a circle on the surface of the Earth's sphere).
-  The polygon is placed in a `ol/geom/GeometryCollection` together with a `ol/geom/Point` which allows the Modify interaction to adjust the
-  circle center as well as the radius. Custom style functions ensure the correct final geometry is displayed throughout.
-  `ol/geom/Circle` projected (planar) geometries can also be drawn and modified. The difference between geodesic and projected circles can be
-  seen when their centers are moved between northern and southern latitudes in the Web Mercator projection.
-  The `ol/interaction/Snap` interaction can be used to create concentric circles.
+  <p>Example of using the <code>ol/interaction/Draw</code> interaction with a custom geometry function together with the <code>ol/interaction/Modify</code> interaction to draw and modify geodesic circles (a <code>ol/geom/Polygon#circular</code> polygon representing a circle on the surface of the Earth's sphere).</p>
+  <p>The polygon is placed in a <code>ol/geom/GeometryCollection</code> together with a <code>ol/geom/Point</code> which allows the Modify interaction to adjust the circle center as well as the radius. Custom style functions ensure the correct final geometry is displayed throughout.</p>
+  <p><code>ol/geom/Circle</code> projected (planar) geometries can also be drawn and modified. The difference between geodesic and projected circles can be seen when their centers are moved between northern and southern latitudes in the Web Mercator projection.</p>
+  <p>The <code>ol/interaction/Snap</code> interaction can be used to create concentric circles.</p>
+  <p>本示例演示了结合自定义几何函数使用 <code>ol/interaction/Draw</code> 绘制交互与 <code>ol/interaction/Modify</code> 修改交互，来绘制和编辑测地线圆（通过 <code>ol/geom/Polygon#circular</code> 生成代表地球球面上真实恒定距离的圆）。</p>
+  <p>该多边形与一个 <code>ol/geom/Point</code> 中心点共同封装在一个 <code>ol/geom/GeometryCollection</code>（几何集合）中，从而允许 Modify 交互既能拖拽调整圆心位置，也能拖拽外圈顶点调整半径大小。自定义样式函数保证了在修改过程中始终正确呈现最终几何图形。</p>
+  <p>示例还支持绘制与修改常规投影（平面）<code>ol/geom/Circle</code> 圆几何。在 Web 墨卡托投影下，当圆心在高纬度与赤道之间移动时，可以直观观察到测地线圆（大圆，随纬度变形为椭圆形以保证真实物理半径）与投影平面圆（图上保持正圆但真实地表面积剧烈膨胀）的本质区别。</p>
+  <p>此外，还集成了 <code>ol/interaction/Snap</code> 捕捉吸附交互，可轻松绘制同心圆。</p>
 tags: "draw, edit, modify, vector, circle, sphere, geodesic"
 ---
 <div id="map" class="map"></div>
 <form>
   <label for="type">Geometry type &nbsp;</label>
   <select id="type">
-    <option value="Point">Point</option>
-    <option value="LineString">LineString</option>
-    <option value="Polygon">Polygon</option>
-    <option value="Circle">Circle Geometry</option>
-    <option value="Geodesic" selected>Geodesic Circle</option>
+    <option value="Point">Point / 点</option>
+    <option value="LineString">LineString / 线</option>
+    <option value="Polygon">Polygon / 面</option>
+    <option value="Circle">Circle Geometry / 投影平面圆</option>
+    <option value="Geodesic" selected>Geodesic Circle / 测地线圆</option>
   </select>
 </form>

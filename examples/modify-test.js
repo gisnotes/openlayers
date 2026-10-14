@@ -11,6 +11,7 @@ import Fill from '../src/ol/style/Fill.js';
 import Stroke from '../src/ol/style/Stroke.js';
 import Style from '../src/ol/style/Style.js';
 
+// 根据几何类型返回不同的静态样式映射
 const styleFunction = (function () {
   const styles = {};
   const image = new CircleStyle({
@@ -58,6 +59,7 @@ const styleFunction = (function () {
   };
 })();
 
+// 测试数据集：包含单点、多点、折线、带洞多边形、复合折线、复合面以及几何集合
 const geojsonObject = {
   'type': 'FeatureCollection',
   'features': [
@@ -240,6 +242,7 @@ const layer = new VectorLayer({
   style: styleFunction,
 });
 
+// 选中与修改过程中的高亮草绘样式
 const overlayStyle = (function () {
   const styles = {};
   styles['Polygon'] = [
@@ -303,15 +306,17 @@ const overlayStyle = (function () {
   };
 })();
 
+// 选择交互：选中要素时应用 overlayStyle
 const select = new Select({
   style: overlayStyle,
 });
 
+// 修改交互：通过 insertVertexCondition 限制禁止向多边形中插入新顶点
 const modify = new Modify({
   features: select.getFeatures(),
   style: overlayStyle,
   insertVertexCondition: function () {
-    // prevent new vertices to be added to the polygons
+    // 禁止向多边形要素中添加新顶点（仅允许拖动已有顶点）
     return !select
       .getFeatures()
       .getArray()

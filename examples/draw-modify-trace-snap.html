@@ -1,23 +1,20 @@
 ---
 layout: example.html
-title: Draw, modify, trace and snap
-shortdesc: Using the draw, modify, and snap interactions to edit existing geometries with tracing enabled.
+title: Draw, modify, trace and snap / 绘制、修改、追踪与吸附综合交互
+shortdesc: Using the draw, modify, and snap interactions to edit existing geometries with tracing enabled. / 演示在开启追踪（tracing）模式下，协同使用 Draw（绘制）、Modify（修改）和 Snap（捕捉）交互数字化编辑要素。
 docs: >
-  The Draw and Modify interactions have a <code>trace</code> option to enable tracing
-  around existing features.  This example uses the <code>traceSource</code> option
-  to trace features from one source and add them to another source.  When drawing, the first click
-  on an edge of the target feature will start tracing. The second click on the edge
-  will stop tracing.  When modifying, dragging a vertex onto an edge of the target feature will activate
-  tracing for the next drag. Now when an adjacent vertex is dragged onto the edge, the segment between the two vertices
-  will be traced along the target feature. If a different vertex is dragged, no tracing will occur.
+  <p>The Draw and Modify interactions have a <code>trace</code> option to enable tracing around existing features. This example uses the <code>traceSource</code> option to trace features from one source and add them to another source. When drawing, the first click on an edge of the target feature will start tracing. The second click on the edge will stop tracing. When modifying, dragging a vertex onto an edge of the target feature will activate tracing for the next drag. Now when an adjacent vertex is dragged onto the edge, the segment between the two vertices will be traced along the target feature. If a different vertex is dragged, no tracing will occur.</p>
+  <p><code>Draw</code> 和 <code>Modify</code> 交互均内置了 <code>trace</code> 选项，用于沿现有要素的边界拓扑进行自动追踪描摹。本示例配置了 <code>traceSource</code> 选项，实现从底图目标图层追踪要素轮廓，并将绘制结果存入独立的绘制图层中。</p>
+  <p><strong>绘制模式（Drawing）</strong>：点击目标要素边缘上的某一点开始追踪，随后点击边缘上的第二点即可自动沿两点间最短拓扑边界完成描摹并结束追踪。</p>
+  <p><strong>修改模式（Modifying）</strong>：将多边形的某一个顶点拖拽吸附到目标要素边界上，即可为下一次拖拽激活追踪状态；此时拖拽其相邻顶点到同一边界上，两顶点之间的整段线段便会自动吸附并紧贴目标边界进行拓扑追踪重合；若拖拽非相邻顶点，则不会触发追踪。</p>
 tags: "draw, modify, trace, vector, snap, topology"
 ---
 <div id="map" class="map"></div>
 <form>
-  <label for="type">Draw geometry mode &nbsp;</label>
+  <label for="type">Draw geometry mode / 绘制几何模式 &nbsp;</label>
   <select id="type">
-    <option value="Polygon">Polygon</option>
-    <option value="LineString">LineString</option>
-    <option value="None">Modify only</option>
+    <option value="Polygon">Polygon / 面</option>
+    <option value="LineString">LineString / 线</option>
+    <option value="None">Modify only / 仅修改</option>
   </select>
 </form>

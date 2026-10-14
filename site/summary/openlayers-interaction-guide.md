@@ -4,9 +4,11 @@ layout: default.hbs
 head:
   - '<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: ''$$'', right: ''$$'', display: true},{left: ''$'', right: ''$'', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>'
 ---
+
 <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">Interaction 交互机制指南</li></ol></nav>
 
 # OpenLayers 交互机制与实战架构精要指南
+
 > 基于 26 个官方核心交互示例，深度解析事件调度管线、手势冲突仲裁、拓扑吸附描摹与客户端交互架构
 
 ---
@@ -16,6 +18,7 @@ head:
 在 WebGIS 应用中，地图不仅仅是静态的数据渲染底图，更是用户与地理空间信息交互的媒介。用户通过鼠标、触控屏、快捷键对要素进行选取、拖拽编辑、精准拓扑标绘，乃至将本地文件直接拖放加载到视图中。
 
 这些行为在底层都由 OpenLayers 的 **Interaction（交互）** 体系驱动。在实际工程落地中，开发者经常遇到以下典型难题：
+
 1. **事件冒泡与手势冲突**：为什么添加了要素拖拽（`Translate`）或框选（`DragBox`）后，地图原有的平移（`DragPan`）会相互抢占导致界面卡死或误触发？
 2. **逆序拦截机制理解偏差**：为什么交互列表的注册顺序直接决定了谁先拿到事件？`handleEvent` 返回 `true` 和 `false` 的实质影响是什么？
 3. **高精度拓扑与吸附性能**：绘制边界时如何自动贴合已有要素（`Snap`）？面对数万级节点，拓扑吸附为什么容易引起帧率下跌？如何通过自定义线段分割器支持大圆航线或密集采样？
@@ -30,34 +33,36 @@ OpenLayers 设计了一套清晰解耦的事件响应管道。本文基于官方
 
 下表将官方示例库中涉及 Interaction 的 26 个示例按技术流派与业务场景进行了分类整理：
 
-| 业务分类 | 示例标识 | 核心类 / 关键 API | 解决的典型生产场景 |
-| :--- | :--- | :--- | :--- |
-| **视图漫游与手势控制** | [`double-click-drag-zoom`](../en/latest/examples/double-click-drag-zoom.html) | `ol/interaction/DblClickDragZoom` | 单手缩放支持：双击后不松开按键直接上下拖拽实现连续平滑缩放 |
-| | [`drag-rotate-and-zoom`](../en/latest/examples/drag-rotate-and-zoom.html) | `ol/interaction/DragRotateAndZoom` | Shift + 鼠标拖拽同时调整地图视口旋转角与缩放级别 |
-| | [`pinch-zoom`](../en/latest/examples/pinch-zoom.html) | `ol/interaction/PinchZoom` | 移动端与触摸屏双指捏合缩放视口手势 |
-| | [`link`](../en/latest/examples/link.html) | `ol/interaction/Link` | 地图视图中心点、层级、旋转角与浏览器 URL 参数实时双向响应式同步 |
-| **要素标绘与手绘输入** | [`draw-features`](../en/latest/examples/draw-features.html) | `ol/interaction/Draw` | 基础几何标绘：点、折线、多边形与圆形的交互式录入 |
-| | [`draw-features-style`](../en/latest/examples/draw-features-style.html) | `Draw({style: ...})` | 绘制过程态视觉反馈：自定义橡皮筋线、顶点指示器与辅助高亮 |
-| | [`draw-freehand`](../en/latest/examples/draw-freehand.html) | `Draw({freehand: true})` | 徒手流式手写涂鸦标绘，指针移动自动生成密集流式折线/面 |
-| | [`draw-shapes`](../en/latest/examples/draw-shapes.html) | `Draw({geometryFunction: ...})` | 参数化几何构造：两点外接正方形、矩形包围盒、正多角星形交互生成 |
-| | [`measure`](../en/latest/examples/measure.html) | `Draw` + `Overlay` + `getLength/getArea` | 空间量算：动态生成跟随指针的 Tooltip 实时展示测距测面数值 |
-| **要素拾取与边界操作** | [`select-features`](../en/latest/examples/select-features.html) | `ol/interaction/Select` | 单击、双击、悬停（Hover）拾取要素，支持多选、反选与条件过滤 |
-| | [`box-selection`](../en/latest/examples/box-selection.html) | `ol/interaction/DragBox` | 鼠标拉框多选：利用包围盒相交算法批量拾取空间要素 |
-| | [`extent-interaction`](../en/latest/examples/extent-interaction.html) | `ol/interaction/Extent` | 地理范围框选器：通过八个角点与边手柄拖拉缩放修改范围矩形 |
-| | [`extent-interaction-modify`](../en/latest/examples/extent-interaction-modify.html) | `Extent` + `condition: shiftKeyOnly` | 键盘按键协同：配合 Shift 键规避普通平移，微调特定区域范围 |
-| **要素编辑与形变变换** | [`modify-features`](../en/latest/examples/modify-features.html) | `ol/interaction/Modify` | 经典顶点编辑：增加顶点、拖拽折点、Alt+点击删除顶点 |
-| | [`modify-icon`](../en/latest/examples/modify-icon.html) | `Modify({hitDetection: ...})` | 图标要素修改：精确探测图元锚点与边框，实现带注记点要素的位置移动 |
-| | [`modify-scale-and-rotate`](../en/latest/examples/modify-scale-and-rotate.html) | `Modify` + 旋转缩放条件修饰符 | 等比缩放与旋转：基于不变质心（Invariant Centroid）执行几何变换 |
-| | [`translate-features`](../en/latest/examples/translate-features.html) | `ol/interaction/Translate` | 要素整体平移：按住指定要素拖动到新坐标，保持内部拓扑结构不变 |
-| **拓扑关系、吸附与自动描摹** | [`snap`](../en/latest/examples/snap.html) | `ol/interaction/Snap` | 拓扑吸附：将输入指针吸附到最近的已有要素节点（vertex）与线段（edge） |
-| | [`snap-custom-segmenter`](../en/latest/examples/snap-custom-segmenter.html) | `Snap({segmenter: ...})` | 自定义线段分割器：支持沿大圆航线（Great Circle）或密集插值吸附 |
-| | [`tracing`](../en/latest/examples/tracing.html) | `Draw({trace: true})` + `Snap` | 自动拓扑描摹：沿已有复杂多边形或道路线自动追踪公共边界路径 |
-| | [`draw-and-modify-features`](../en/latest/examples/draw-and-modify-features.html) | `Draw` + `Modify` + `Snap` 协同 | 标绘三剑客闭环：一边新增要素、一边编辑旧要素、全局保持拓扑重合 |
-| **客户端文件零服务拖拽加载** | [`drag-and-drop`](../en/latest/examples/drag-and-drop.html) | `ol/interaction/DragAndDrop` | 拖放本地文件直读：GeoJSON、GPX、IGC、KML、TopoJSON 自动探测 |
-| | [`drag-and-drop-image-vector`](../en/latest/examples/drag-and-drop-image-vector.html) | `DragAndDrop` + `VectorImage` | 高性能图像栅格化渲染：千万级顶点拖拽加载免卡顿 |
-| | [`drag-and-drop-custom-kmz`](../en/latest/examples/drag-and-drop-custom-kmz.html) | `DragAndDrop` + 自定义解包函数 | 二进制压缩格式直读：在客户端解压 KMZ（JSZip）读取内置 `doc.kml` |
-| | [`drag-and-drop-custom-mvt`](../en/latest/examples/drag-and-drop-custom-mvt.html) | `DragAndDrop` + `MVT` 切片解析器 | 矢量切片直接预览：拖拽单个 PBF/MVT 瓦片文件解析并在指定视图中渲染 |
-| **底层扩展与自定义开发** | [`custom-interactions`](../en/latest/examples/custom-interactions.html) | 继承 `ol/interaction/Pointer` | 自定义交互基类开发：重写 `handleDownEvent`、`handleDragEvent`、`handleUpEvent` |
+| 业务分类                     | 示例标识                                                                              | 核心类 / 关键 API                        | 解决的典型生产场景                                                             |
+| :--------------------------- | :------------------------------------------------------------------------------------ | :--------------------------------------- | :----------------------------------------------------------------------------- |
+| **视图漫游与手势控制**       | [`double-click-drag-zoom`](../en/latest/examples/double-click-drag-zoom.html)         | `ol/interaction/DblClickDragZoom`        | 单手缩放支持：双击后不松开按键直接上下拖拽实现连续平滑缩放                     |
+|                              | [`drag-rotate-and-zoom`](../en/latest/examples/drag-rotate-and-zoom.html)             | `ol/interaction/DragRotateAndZoom`       | Shift + 鼠标拖拽同时调整地图视口旋转角与缩放级别                               |
+|                              | [`pinch-zoom`](../en/latest/examples/pinch-zoom.html)                                 | `ol/interaction/PinchZoom`               | 移动端与触摸屏双指捏合缩放视口手势                                             |
+|                              | [`link`](../en/latest/examples/link.html)                                             | `ol/interaction/Link`                    | 地图视图中心点、层级、旋转角与浏览器 URL 参数实时双向响应式同步                |
+| **要素标绘与手绘输入**       | [`draw-features`](../en/latest/examples/draw-features.html)                           | `ol/interaction/Draw`                    | 基础几何标绘：点、折线、多边形与圆形的交互式录入                               |
+|                              | [`draw-features-style`](../en/latest/examples/draw-features-style.html)               | `Draw({style: ...})`                     | 绘制过程态视觉反馈：自定义橡皮筋线、顶点指示器与辅助高亮                       |
+|                              | [`draw-freehand`](../en/latest/examples/draw-freehand.html)                           | `Draw({freehand: true})`                 | 徒手流式手写涂鸦标绘，指针移动自动生成密集流式折线/面                          |
+|                              | [`draw-shapes`](../en/latest/examples/draw-shapes.html)                               | `Draw({geometryFunction: ...})`          | 参数化几何构造：两点外接正方形、矩形包围盒、正多角星形交互生成                 |
+|                              | [`measure`](../en/latest/examples/measure.html)                                       | `Draw` + `Overlay` + `getLength/getArea` | 空间量算：动态生成跟随指针的 Tooltip 实时展示测距测面数值                      |
+| **要素拾取与边界操作**       | [`select-features`](../en/latest/examples/select-features.html)                       | `ol/interaction/Select`                  | 单击、双击、悬停（Hover）拾取要素，支持多选、反选与条件过滤                    |
+|                              | [`box-selection`](../en/latest/examples/box-selection.html)                           | `ol/interaction/DragBox`                 | 鼠标拉框多选：利用包围盒相交算法批量拾取空间要素                               |
+|                              | [`extent-interaction`](../en/latest/examples/extent-interaction.html)                 | `ol/interaction/Extent`                  | 地理范围框选器：通过八个角点与边手柄拖拉缩放修改范围矩形                       |
+|                              | [`extent-interaction-modify`](../en/latest/examples/extent-interaction-modify.html)   | `Extent` + `condition: shiftKeyOnly`     | 键盘按键协同：配合 Shift 键规避普通平移，微调特定区域范围                      |
+| **要素编辑与形变变换**       | [`modify-features`](../en/latest/examples/modify-features.html)                       | `ol/interaction/Modify`                  | 经典顶点编辑：增加顶点、拖拽折点、Alt+点击删除顶点                             |
+|                              | [`modify-icon`](../en/latest/examples/modify-icon.html)                               | `Modify({hitDetection: ...})`            | 图标要素修改：精确探测图元锚点与边框，实现带注记点要素的位置移动               |
+|                              | [`modify-scale-and-rotate`](../en/latest/examples/modify-scale-and-rotate.html)       | `Modify` + 旋转缩放条件修饰符            | 等比缩放与旋转：基于不变质心（Invariant Centroid）执行几何变换                 |
+|                              | [`modify-test`](../en/latest/examples/modify-test.html)                               | `Modify({insertVertexCondition: ...})`   | 复杂几何测试：带洞多边形与禁止插入新顶点条件                                   |
+|                              | [`translate-features`](../en/latest/examples/translate-features.html)                 | `ol/interaction/Translate`               | 要素整体平移：按住指定要素拖动到新坐标，保持内部拓扑结构不变                   |
+|                              | [`vector-esri-edit`](../en/latest/examples/vector-esri-edit.html)                     | `Draw` + `Modify` + ArcGIS FeatureServer | 在线空间编辑闭环：结合服务端 addFeatures 与 updateFeatures 事务提交            |
+| **拓扑关系、吸附与自动描摹** | [`snap`](../en/latest/examples/snap.html)                                             | `ol/interaction/Snap`                    | 拓扑吸附：将输入指针吸附到最近的已有要素节点（vertex）与线段（edge）           |
+|                              | [`snap-custom-segmenter`](../en/latest/examples/snap-custom-segmenter.html)           | `Snap({segmenter: ...})`                 | 自定义线段分割器：支持沿大圆航线（Great Circle）或密集插值吸附                 |
+|                              | [`tracing`](../en/latest/examples/tracing.html)                                       | `Draw({trace: true})` + `Snap`           | 自动拓扑描摹：沿已有复杂多边形或道路线自动追踪公共边界路径                     |
+|                              | [`draw-and-modify-features`](../en/latest/examples/draw-and-modify-features.html)     | `Draw` + `Modify` + `Snap` 协同          | 标绘三剑客闭环：一边新增要素、一边编辑旧要素、全局保持拓扑重合                 |
+| **客户端文件零服务拖拽加载** | [`drag-and-drop`](../en/latest/examples/drag-and-drop.html)                           | `ol/interaction/DragAndDrop`             | 拖放本地文件直读：GeoJSON、GPX、IGC、KML、TopoJSON 自动探测                    |
+|                              | [`drag-and-drop-image-vector`](../en/latest/examples/drag-and-drop-image-vector.html) | `DragAndDrop` + `VectorImage`            | 高性能图像栅格化渲染：千万级顶点拖拽加载免卡顿                                 |
+|                              | [`drag-and-drop-custom-kmz`](../en/latest/examples/drag-and-drop-custom-kmz.html)     | `DragAndDrop` + 自定义解包函数           | 二进制压缩格式直读：在客户端解压 KMZ（JSZip）读取内置 `doc.kml`                |
+|                              | [`drag-and-drop-custom-mvt`](../en/latest/examples/drag-and-drop-custom-mvt.html)     | `DragAndDrop` + `MVT` 切片解析器         | 矢量切片直接预览：拖拽单个 PBF/MVT 瓦片文件解析并在指定视图中渲染              |
+| **底层扩展与自定义开发**     | [`custom-interactions`](../en/latest/examples/custom-interactions.html)               | 继承 `ol/interaction/Pointer`            | 自定义交互基类开发：重写 `handleDownEvent`、`handleDragEvent`、`handleUpEvent` |
 
 ---
 
@@ -94,6 +99,7 @@ sequenceDiagram
 ### 2. 核心铁律：逆序分发规则（Reverse Dispatch Rule）
 
 在 `ol/Map.js` 内部，交互集合保存在一个数组中：
+
 ```javascript
 // OpenLayers 源码调度逻辑简要体现
 const interactions = this.getInteractions().getArray();
@@ -111,6 +117,7 @@ for (let i = interactions.length - 1; i >= 0; --i) {
 
 > [!IMPORTANT]
 > **交互事件调度的黄金法则**：
+>
 > 1. **后加入的交互优先获得执行权**：`map.addInteraction(interaction)` 将实例追加到数组末尾。由于采用逆序遍历，最后添加的交互位于责任链最前端。
 > 2. **布尔返回值的语义**：
 >    - `return true`：表示“放行此事件”，允许后续（即更早添加的）交互继续处理该事件；
@@ -141,18 +148,18 @@ import {
   altKeyOnly,
   singleClick,
   never,
-  always
-} from 'ol/events/condition';
+  always,
+} from "ol/events/condition";
 ```
 
-| 条件函数 | 判定准则 | 常用协同交互示例 |
-| :--- | :--- | :--- |
-| `shiftKeyOnly` | 仅按下 Shift 键的同时触发指针动作 | `drag-rotate-and-zoom`, `extent-interaction-modify` |
-| `platformModifierKeyOnly` | 仅按下系统修饰键（Win: Ctrl / Mac: Command） | `box-selection` (防止与普通平移冲突) |
-| `altKeyOnly` | 仅按下 Alt / Option 键 | `modify-scale-and-rotate` (启动质心等比缩放) |
-| `singleClick` | 判定为独立单次点击（过滤双击事件） | `select-features` (避免与双击缩放冲突) |
-| `pointerMove` | 仅当鼠标悬停移动时触发 | `select-features` (实现 Hover 悬停高亮效果) |
-| `never` | 永久不触发默认快捷动作 | 禁用某种内置手势时传入 |
+| 条件函数                  | 判定准则                                     | 常用协同交互示例                                    |
+| :------------------------ | :------------------------------------------- | :-------------------------------------------------- |
+| `shiftKeyOnly`            | 仅按下 Shift 键的同时触发指针动作            | `drag-rotate-and-zoom`, `extent-interaction-modify` |
+| `platformModifierKeyOnly` | 仅按下系统修饰键（Win: Ctrl / Mac: Command） | `box-selection` (防止与普通平移冲突)                |
+| `altKeyOnly`              | 仅按下 Alt / Option 键                       | `modify-scale-and-rotate` (启动质心等比缩放)        |
+| `singleClick`             | 判定为独立单次点击（过滤双击事件）           | `select-features` (避免与双击缩放冲突)              |
+| `pointerMove`             | 仅当鼠标悬停移动时触发                       | `select-features` (实现 Hover 悬停高亮效果)         |
+| `never`                   | 永久不触发默认快捷动作                       | 禁用某种内置手势时传入                              |
 
 ---
 
@@ -165,21 +172,24 @@ import {
 在数字化采编作业中，用户常常需要“一边绘制新要素，一边调整已有要素，且绘制或拖拽时折点必须严密贴合相邻图形”。
 
 #### （1）26 个示例中是否存在三者同时存在的例子？
+
 **存在，而且是 OpenLayers 官方最推崇的经典标绘闭环：**
+
 - [`draw-and-modify-features`](../en/latest/examples/draw-and-modify-features.html)：**三者同时保持激活**（`active: true`）。鼠标点击空白处即可落笔绘制新多边形，悬停在已有图形折点上即可直接拖拽形变，同时整个过程全程保持顶点吸附。
 - [`snap`](../en/latest/examples/snap.html)：内部同时实例化了 Draw、Modify 与 Snap。界面提供单选切换（通过 `Draw.setActive()` 与 `Modify.setActive()` 互斥切换状态），而 Snap 作为底层拓扑基准始终保持激活。
 
 #### （2）三者共存时的装配先后顺序
+
 **有极其严格的顺序要求：`Modify` 和 `Draw` 必须先添加，`Snap` 必须最后添加到地图中！**
 
 ```javascript
 // 方式 A：通过 map.addInteraction 顺序挂载
 map.addInteraction(modify); // 1. 先添加 Modify
-map.addInteraction(draw);   // 2. 再添加 Draw
-map.addInteraction(snap);   // 3. 必须最后添加 Snap！
+map.addInteraction(draw); // 2. 再添加 Draw
+map.addInteraction(snap); // 3. 必须最后添加 Snap！
 
 // 方式 B：在 Map 初始化配置项中合并默认交互数组
-import {defaults as defaultInteractions} from 'ol/interaction.js';
+import { defaults as defaultInteractions } from "ol/interaction.js";
 
 const map = new Map({
   // ...
@@ -208,7 +218,8 @@ flowchart LR
 > [!NOTE]
 > **官方源码注释佐证**：
 > 在官方示例 [`examples/snap.js`](../en/latest/examples/snap.html) 的源码中，官方开发者留下了强制性注释：
-> > *"The snap interaction must be added after the Modify and Draw interactions in order for its map browser event handlers to be fired first. Its handlers are responsible of doing the snapping."*
+>
+> > _"The snap interaction must be added after the Modify and Draw interactions in order for its map browser event handlers to be fired first. Its handlers are responsible of doing the snapping."_
 > > （Snap 交互必须在 Modify 和 Draw 交互之后添加到地图，以便它的事件处理函数最先执行并负责完成坐标吸附。）
 
 ### 2. 自定义线段分割器（Custom Segmenter）
@@ -219,6 +230,7 @@ flowchart LR
 ### 3. 自动拓扑描摹（Tracing）
 
 示例 [`tracing`](../en/latest/examples/tracing.html) 展示了现代 CAD/GIS 的高级交互能力：
+
 - 配置 `Draw({trace: true})`；
 - 配合 `Snap` 交互；
 - 当用户在已有要素边界上连续点击时，OpenLayers 内部利用 Dijkstra 最短路径算法，沿已有几何线自动搜索并描摹出两点之间的公共边界线，大幅减少手工打点工作量。
@@ -301,3 +313,5 @@ flowchart TD
 24. [snap (节点与边线高精度拓扑吸附引擎)](../en/latest/examples/snap.html)
 25. [tracing (基于最短路径搜索的公共边界拓扑描摹)](../en/latest/examples/tracing.html)
 26. [translate-features (要素整体拓扑结构无损平移)](../en/latest/examples/translate-features.html)
+27. [modify-test (复杂多类型几何修改测试基准与顶点插入约束)](../en/latest/examples/modify-test.html)
+28. [vector-esri-edit (ArcGIS REST 要素服务在线编辑与双向事务提交)](../en/latest/examples/vector-esri-edit.html)

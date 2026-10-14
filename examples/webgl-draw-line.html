@@ -1,53 +1,54 @@
 ---
 layout: example.html
-title: Draw lines rendered with WebGL
-shortdesc: Example showing how stroke styling options are represented with the WebGL renderer
+title: Draw lines rendered with WebGL / WebGL 渲染绘制线条
+shortdesc: Example showing how stroke styling options are represented with the WebGL renderer. / 演示如何使用 WebGL 矢量图层渲染线条描边与虚线样式选项。
 docs: >
-  This example lets you tweak the stroke styling options dynamically to see how they affect line rendering. The line string showing by default can be modified and new ones can be drawn by single-clicking on the map.
+  <p>This example lets you tweak the stroke styling options dynamically to see how they affect line rendering. The line string showing by default can be modified and new ones can be drawn by single-clicking on the map.</p>
+  <p>本示例支持动态调整线条描边样式参数，直观观察 WebGL 渲染器下线条的渲染表现。地图上默认展示的折线可直接通过 Modify 交互拖拽顶点修改，同时支持在地图上单机连续绘制新的折线。</p>
 experimental: true
 tags: "draw, vector, webgl, line, dash"
 ---
 <div id="map" class="map"></div>
 <form>
-  <div class="form-group">Cap type &nbsp;
+  <div class="form-group">Cap type / 线端线帽 &nbsp;
     <label class="radio-inline">
-      <input type="radio" class="uniform" name="capType" value="butt" checked/> <code>butt</code>&nbsp;
+      <input type="radio" class="uniform" name="capType" value="butt" checked/> <code>butt / 平头</code>&nbsp;
     </label>
     <label class="radio-inline">
-      <input type="radio" class="uniform" name="capType" value="round"/> <code>round</code>&nbsp;
+      <input type="radio" class="uniform" name="capType" value="round"/> <code>round / 圆头</code>&nbsp;
     </label>
     <label class="radio-inline">
-      <input type="radio" class="uniform" name="capType" value="square"/> <code>square</code>&nbsp;
+      <input type="radio" class="uniform" name="capType" value="square"/> <code>square / 方头</code>&nbsp;
     </label>
   </div>
-  <div class="form-group">Join type &nbsp;
+  <div class="form-group">Join type / 拐角连接 &nbsp;
     <label class="radio-inline">
-      <input type="radio" class="uniform" name="joinType" value="miter" checked/> <code>miter</code>&nbsp;
+      <input type="radio" class="uniform" name="joinType" value="miter" checked/> <code>miter / 尖角斜接</code>&nbsp;
     </label>
     <label class="radio-inline">
-      <input type="radio" class="uniform" name="joinType" value="round"/> <code>round</code>&nbsp;
+      <input type="radio" class="uniform" name="joinType" value="round"/> <code>round / 圆角连接</code>&nbsp;
     </label>
     <label class="radio-inline">
-      <input type="radio" class="uniform" name="joinType" value="bevel"/> <code>bevel</code>&nbsp;
+      <input type="radio" class="uniform" name="joinType" value="bevel"/> <code>bevel / 平角斜切</code>&nbsp;
     </label>
   </div>
   <div class="form-group">
     <label>
-      Line width (pixels)
+      Line width (pixels) / 线宽（像素）
       <input type="range" class="uniform" name="width" min="1" max="40" value="8">
     </label>
     <span id="value-width">12</span>
   </div>
   <div class="form-group">
     <label>
-      Miter limit (ratio)
+      Miter limit (ratio) / 斜接限制比
       <input type="range" class="uniform" name="miterLimit" min="1" max="20" value="10" step="0.1">
     </label>
     <span id="value-miterLimit">10</span>
   </div>
   <div class="form-group">
     <label>
-      Line offset (pixels)
+      Line offset (pixels) / 线条平移偏移量（像素）
       <input type="range" class="uniform" name="offset" min="-40" max="40" value="0">
     </label>
     <span id="value-offset">0</span>
@@ -55,12 +56,12 @@ tags: "draw, vector, webgl, line, dash"
   <div class="form-group">
     <label>
       <input type="checkbox" class="rebuild" id="dashEnable">
-      Enable dashes
+      Enable dashes / 启用虚线（Dash）
     </label>
     </div>
   <div class="form-group" style="margin-left: 18px">
     <label>
-      Line dash pattern (px)
+      Line dash pattern (px) / 虚线线段与间隔（像素）
       <input type="number" class="uniform" name="dashLength1" min="0" max="100" value="25">
       <input type="number" class="uniform" name="dashLength2" min="0" max="100" value="15">
       <input type="number" class="uniform" name="dashLength3" min="0" max="100" value="15">
@@ -69,7 +70,7 @@ tags: "draw, vector, webgl, line, dash"
   </div>
   <div class="form-group" style="margin-left: 18px">
     <label>
-      Line dash offset (pixels)
+      Line dash offset (pixels) / 虚线相位偏移（像素）
       <input type="range" class="uniform" name="dashOffset" min="-200" max="200" value="0">
     </label>
     <span id="value-dashOffset">0</span>
@@ -77,19 +78,19 @@ tags: "draw, vector, webgl, line, dash"
   <div class="form-group">
     <label>
       <input type="checkbox" class="rebuild" id="patternEnable">
-      Enable image pattern
+      Enable image pattern / 启用点状纹理填充
     </label>
   </div>
   <div class="form-group" style="margin-left: 18px">
     <label>
-      Pattern spacing (pixels)
+      Pattern spacing (pixels) / 纹理间距（像素）
       <input type="range" class="uniform" name="patternSpacing" min="0" max="64" value="0">
     </label>
     <span id="value-patternSpacing">0</span>
   </div>
   <div class="form-group" style="margin-left: 18px">
     <label>
-      Pattern start offset (pixels)
+      Pattern start offset (pixels) / 纹理起始偏移（像素）
       <input type="range" class="uniform" name="patternOffset" min="0" max="64" value="0">
     </label>
     <span id="value-patternOffset">0</span>

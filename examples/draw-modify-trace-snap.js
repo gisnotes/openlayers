@@ -16,7 +16,7 @@ const raster = new TileLayer({
   }),
 });
 
-// features in this layer will be snapped to
+// 底图要素图层：绘制时将吸附并追踪此图层的要素边缘
 const baseVector = new VectorLayer({
   source: new VectorSource({
     format: new GeoJSON(),
@@ -29,7 +29,7 @@ const baseVector = new VectorLayer({
   },
 });
 
-// this is where the drawn features go
+// 绘制产物图层：用户新绘制和修改的要素保存在此
 const drawVector = new VectorLayer({
   source: new VectorSource(),
   style: {
@@ -81,6 +81,7 @@ function addInteraction() {
       },
     });
     drawInteraction.once('drawend', () => {
+      // 绘制完成后自动切换为“仅修改”模式
       typeSelect.value = 'None';
       setTimeout(changeDrawMode, 0);
     });

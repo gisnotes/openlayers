@@ -1,9 +1,11 @@
 ---
 layout: example.html
-title: Modify Features Test
-shortdesc: Example for testing feature modification.
-docs: >
-  Example for testing feature modification.
+title: Modify Features Test / 要素修改测试基准
+shortdesc: Example for testing feature modification. / 针对各类复杂几何图形（含内环洞多边形、复合多几何、几何集合）的要素修改测试示例。
+docs: |
+  <p>Example for testing feature modification across various geometry types, including Polygons with interior rings (holes), MultiPolygons, MultiLineStrings, and GeometryCollections.</p>
+  <p>本示例用于测试各类复杂几何要素的顶点修改能力。测试数据涵盖了带内环洞（Hole）的多边形、复合多点（MultiPoint）、多折线（MultiLineString）、多多边形（MultiPolygon）以及复合几何集合（GeometryCollection）。</p>
+  <p>示例还配置了 <code>insertVertexCondition</code> 条件函数，演示了如何禁止向多边形中插入新顶点（仅允许拖动已有顶点），而其他几何类型仍可正常插入新顶点。</p>
 tags: "modify, edit, vector"
 ---
 <div id="map" class="map"></div>

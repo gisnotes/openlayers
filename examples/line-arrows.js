@@ -17,10 +17,11 @@ const raster = new TileLayer({
 
 const source = new VectorSource();
 
+// 动态样式函数：为折线本身配置描边样式，并遍历每个子线段在其终点放置按航向角旋转的箭头
 const styleFunction = function (feature) {
   const geometry = feature.getGeometry();
   const styles = [
-    // linestring
+    // 折线基础描边样式
     new Style({
       stroke: new Stroke({
         color: '#ffcc33',
@@ -29,11 +30,12 @@ const styleFunction = function (feature) {
     }),
   ];
 
+  // 遍历折线的每个子线段，计算两点夹角并在终点生成旋转箭头图标
   geometry.forEachSegment(function (start, end) {
     const dx = end[0] - start[0];
     const dy = end[1] - start[1];
     const rotation = Math.atan2(dy, dx);
-    // arrows
+    // 箭头指示样式
     styles.push(
       new Style({
         geometry: new Point(end),
@@ -54,8 +56,7 @@ const vector = new VectorLayer({
   style: styleFunction,
 });
 
-// Limit multi-world panning to one world east and west of the real world.
-// Geometry coordinates have to be within that range.
+// 限制多世界循环平移范围在真实世界东西各延伸一个世界副本内
 const extent = get('EPSG:3857').getExtent().slice();
 extent[0] += extent[0];
 extent[2] += extent[2];

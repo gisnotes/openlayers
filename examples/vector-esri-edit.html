@@ -1,16 +1,21 @@
 ---
 layout: example.html
-title: Editable ArcGIS REST Feature Service
-shortdesc: Example of using an ArcGIS REST Feature Service in an editing application.
-docs: >
-  This example loads features from ArcGIS REST Feature Service and allows to add new features or update existing features.
+title: Editable ArcGIS REST Feature Service / 可编辑的 ArcGIS REST 要素服务
+shortdesc: Example of using an ArcGIS REST Feature Service in an editing application. / 演示如何连接 ArcGIS REST FeatureServer 服务端实现要素的在线绘制新增与修改更新。
+docs: |
+  <p>This example loads features from ArcGIS REST Feature Service and allows to add new features or update existing features.</p>
+  <p>本示例演示了如何从 ArcGIS REST FeatureServer（要素服务）瓦片化分块加载矢量数据，并实现前后端联动的在线编辑应用：</p>
+  <ul>
+    <li><strong>绘制新增（Draw / Add）</strong>：选择 <code>Draw</code> 模式在地图上绘制多边形，在 <code>drawend</code> 事件中通过 <code>EsriJSON</code> 序列化，向服务端的 <code>addFeatures</code> 接口发送 POST 请求完成入库，并自动获取服务端分配的 <code>objectId</code>；</li>
+    <li><strong>在线修改（Modify / Update）</strong>：选择 <code>Modify</code> 模式，先点击选中要素，拖拽顶点微调；通过脏检查（Dirty Check）机制，当要素取消选中时，自动将修改后的几何通过 <code>updateFeatures</code> 接口回写同步至远程服务。</li>
+  </ul>
 tags: "vector, esri, ArcGIS, REST, Feature, Service, loading, server, edit, updateFeature, addFeature"
 ---
 <div id="map" class="map"></div>
 <form>
-  <label for="type">Draw or modify &nbsp;</label>
+  <label for="type">Draw or modify / 绘制或修改 &nbsp;</label>
   <select id="type">
-    <option value="DRAW">Draw</option>
-    <option value="MODIFY">Modify</option>
+    <option value="DRAW">Draw / 绘制新增</option>
+    <option value="MODIFY">Modify / 修改更新</option>
   </select>
 </form>
