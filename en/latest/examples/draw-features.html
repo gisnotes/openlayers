@@ -284,8 +284,7 @@ the <code>Shift</code> key. To remove the last point of a line or polygon, press
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
 <h4>1. 核心绘制机制与要素生命周期</h4>
 <ul>
-<li><strong>草绘与正式入库</strong>：<code>ol/interaction/Draw</code> 内部维护一个轻量草绘覆盖图层。在绘制过程中实时渲染的是临时草绘要素（Sketch Feature）；当双击或点击最后一点完成闭合时，触发 <code>drawend</code>
-事件，草绘要素正式转化为 <code>ol/Feature</code> 并写入绑定的 <code>VectorSource</code>。</li>
+<li><strong>草绘与正式入库</strong>：<code>ol/interaction/Draw</code> 内部维护一个轻量草绘覆盖图层。在绘制过程中实时渲染的是临时草绘要素（Sketch Feature）；当双击或点击最后一点完成闭合时，触发 <code>drawend</code> 事件，草绘要素正式转化为 <code>ol/Feature</code> 并写入绑定的 <code>VectorSource</code>。</li>
 <li><strong>顶点动态撤销 (<code>removeLastPoint()</code>)</strong>：在绘制折线或多边形过程中，调用 <code>draw.removeLastPoint()</code> 可移除刚刚落下的最后一个顶点，无需取消整条要素重画。</li>
 </ul>
 <h4>2. 自由手绘（Freehand）模式</h4>
