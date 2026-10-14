@@ -41,9 +41,16 @@ var resultSpan = document.getElementById("epsg-result");
 var renderEdgesCheckbox = document.getElementById("render-edges");
 var showTilesCheckbox = document.getElementById("show-tiles");
 var showGraticuleCheckbox = document.getElementById("show-graticule");
+/**
+* 动态配置并切换地图的目标投影
+* @param {string|null} code 投影代号 (例如 'EPSG:27700')
+* @param {string|null} name 投影名称 (例如 'OSGB36 / British National Grid')
+* @param {string|null} proj4def WKT 格式或 Proj4 格式的坐标系定义字符串
+* @param {Array<number>|null} bbox 经纬度地理范围 [minLon, minLat, maxLon, maxLat]
+*/
 function setProjection(code, name, proj4def, bbox) {
 	if (code === null || name === null || proj4def === null || bbox === null) {
-		resultSpan.innerHTML = "Nothing usable found, using EPSG:3857...";
+		resultSpan.innerHTML = "未检索到有效坐标系定义，恢复使用 EPSG:3857...";
 		map.setView(new View({
 			projection: "EPSG:3857",
 			center: [0, 0],
@@ -64,8 +71,12 @@ function setProjection(code, name, proj4def, bbox) {
 	map.setView(newView);
 	newView.fit(extent);
 }
+/**
+* 请求 MapTiler Cloud Coordinates API 检索坐标系定义
+* @param {string} query 用户输入的查询关键词
+*/
 function search(query) {
-	resultSpan.innerHTML = "Searching ...";
+	resultSpan.innerHTML = "正在检索坐标系 ...";
 	fetch(`https://api.maptiler.com/coordinates/search/${query}.json?exports=true&key=${key}`).then(function(response) {
 		return response.json();
 	}).then(function(json) {
@@ -88,15 +99,15 @@ function search(query) {
 	});
 }
 /**
-* Handle click event.
-* @param {Event} event The event.
+* 处理搜索按钮点击事件
+* @param {Event} event 事件对象
 */
 searchButton.onclick = function(event) {
 	search(queryInput.value);
 	event.preventDefault();
 };
 /**
-* Handle checkbox change events.
+* 处理调试选项的勾选切换事件
 */
 function onReprojectionChange() {
 	osmSource.setRenderReprojectionEdges(renderEdgesCheckbox.checked);

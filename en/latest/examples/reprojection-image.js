@@ -19,6 +19,10 @@ new Map({
 	})
 });
 var interpolate = document.getElementById("interpolate");
+/**
+* 重新构建并设置静态图像源
+* 当切换 interpolate 状态时，重新创建 ImageStatic 数据源并更新图层
+*/
 function setSource() {
 	const source = new Static({
 		url: "https://upload.wikimedia.org/wikipedia/commons/thumb/1/18/British_National_Grid.svg/2000px-British_National_Grid.svg.png",

@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Pinch Zoom</title>
+    <title>Pinch Zoom / 移动端双指捏合缩放</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="./theme/ol.css">
     <link rel="stylesheet" type="text/css" href="./theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
   </head>
@@ -62,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Pinch Zoom</h4>
+        <h4 id="title">Pinch Zoom / 移动端双指捏合缩放</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -73,7 +74,7 @@
               data-bs-target="#tag-example-list"
               data-title="pinch"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./pinch-zoom.html&quot;&gt;Pinch Zoom&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./pinch-zoom.html&quot;&gt;Pinch Zoom / 移动端双指捏合缩放&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -88,12 +89,12 @@
               data-title="zoom"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./double-click-drag-zoom.html&quot;&gt;Double click, Drag and Zoom&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-rotate-and-zoom.html&quot;&gt;Drag, Rotate, and Zoom&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./double-click-drag-zoom.html&quot;&gt;Double click, Drag and Zoom / 双击拖拽缩放&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-rotate-and-zoom.html&quot;&gt;Drag, Rotate, and Zoom / 拖拽同时旋转与缩放&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./page-scroll.html&quot;&gt;Page Scrolling&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./two-finger-pan-scroll.html&quot;&gt;Panning and page scrolling&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./pinch-zoom.html&quot;&gt;Pinch Zoom&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./pinch-zoom.html&quot;&gt;Pinch Zoom / 移动端双指捏合缩放&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./min-zoom.html&quot;&gt;View Min-Zoom&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders / 缩放滑块控件与纯 CSS 样式定制（ZoomSlider）&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -109,12 +110,12 @@
               data-bs-target="#tag-example-list"
               data-title="interaction"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-interactions.html&quot;&gt;Custom Interactions&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./double-click-drag-zoom.html&quot;&gt;Double click, Drag and Zoom&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-rotate-and-zoom.html&quot;&gt;Drag, Rotate, and Zoom&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./extent-interaction.html&quot;&gt;Extent Interaction&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./extent-interaction-modify.html&quot;&gt;Modify an extent&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./pinch-zoom.html&quot;&gt;Pinch Zoom&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-interactions.html&quot;&gt;Custom Interactions / 自定义交互开发&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./double-click-drag-zoom.html&quot;&gt;Double click, Drag and Zoom / 双击拖拽缩放&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-rotate-and-zoom.html&quot;&gt;Drag, Rotate, and Zoom / 拖拽同时旋转与缩放&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./extent-interaction.html&quot;&gt;Extent Interaction / 空间范围矩形交互&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./extent-interaction-modify.html&quot;&gt;Modify an extent / 修改既有范围矩形&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./pinch-zoom.html&quot;&gt;Pinch Zoom / 移动端双指捏合缩放&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >6</a>
@@ -141,8 +142,23 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Restrict pinch zooming to integer zoom levels.</p>
-        <div id="docs"><p>By default, the <code>ol/interaction/PinchZoom</code> can leave the map at fractional zoom levels. If instead you want to constrain pinch zooming to integer zoom levels, set <code>constrainResolution: true</code> when constructing the view.</p>
+        <p id="shortdesc">Restrict pinch zooming to integer zoom levels. / 将移动端双指捏合缩放约束限制为整数缩放级别。</p>
+        <div id="docs"><p>By default, the <code>ol/interaction/PinchZoom</code> can leave the map at fractional zoom levels.
+If instead you want to constrain pinch zooming to integer zoom levels, set
+<code>constrainResolution: true</code> when constructing the view.</p>
+<p>默认情况下，<code>ol/interaction/PinchZoom</code> 交互在双指捏合缩放结束时会使地图停留在任意小数（分数）缩放级别（Fractional Zoom Levels）。如果希望在捏合缩放释放后将地图自动吸附约束至最接近的整数缩放层级（Integer Zoom Levels），只需在构造地图视图时配置 <code>constrainResolution: true</code> 即可。</p>
+<hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 为什么会有小数缩放级别（Fractional Zoom）？</h4>
+<ul>
+<li><strong>手势连续性</strong>：双指捏合是高度连续的物理手势，默认允许连续的小数层级（如 zoom = 14.37）可带来顺滑的指尖跟随感。</li>
+<li><strong>栅格瓦片模糊问题</strong>：在小数层级下，传统的切片金字塔（TMS/XYZ）必须借助浏览器 Canvas 对上级或下级瓦片进行拉伸重采样，容易导致瓦片文字注记发虚模糊。</li>
+</ul>
+<h4>2. <code>constrainResolution: true</code> 的作用机制</h4>
+<ul>
+<li><strong>手势过程与释放时机分离</strong>：在手指按在屏幕上捏合拉伸的瞬间，地图依然保持无级连续缩放以保证手势跟随；</li>
+<li><strong>弹性吸附动效（Snap to Nearest）</strong>：一旦双指抬起离开屏幕，View 的动画系统会自动发起一段平滑的缓动过渡，将当前分辨率对齐至切片金字塔严格预设的最近整数层级，既兼顾了触控跟随，又确保了静止时切片注记 1:1 像素级锐利清晰。</li>
+</ul>
 </div>
       </div>
 
@@ -154,6 +170,8 @@ import View from &#x27;ol/View.js&#x27;;
 import TileLayer from &#x27;ol/layer/Tile.js&#x27;;
 import OSM from &#x27;ol/source/OSM.js&#x27;;
 
+// Initialize map with constrainResolution enabled to snap pinch zoom to integers
+// 初始化地图实例，配置 constrainResolution: true 以便在双指捏合缩放结束后自动吸附到整数缩放级别
 const map &#x3D; new Map({
   layers: [
     new TileLayer({
@@ -164,7 +182,7 @@ const map &#x3D; new Map({
   view: new View({
     center: [0, 0],
     zoom: 2,
-    constrainResolution: true,
+    constrainResolution: true, // Snap to integer zoom levels / 约束至整数层级
   }),
 });
 </code></pre>
@@ -175,10 +193,10 @@ const map &#x3D; new Map({
         <summary class="source-heading">index.html</summary>
         <div class="row-fluid">
           <pre><code id="example-html-source" class="language-markup">&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
+&lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Pinch Zoom&lt;/title&gt;
+    &lt;title&gt;Pinch Zoom / 移动端双指捏合缩放&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -223,6 +241,17 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+      onload="renderMathInElement(document.getElementById('docs') || document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false
+      });"></script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

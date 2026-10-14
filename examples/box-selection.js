@@ -83,7 +83,7 @@ select.on("select", function() {
 		return feature.get("ECO_NAME");
 	});
 	if (names.length > 0) infoBox.innerHTML = names.join(", ");
-	else infoBox.innerHTML = "None";
+	else infoBox.innerHTML = "None / 无";
 });
 //#endregion
 

@@ -2,6 +2,11 @@ import { B as TileWMS, Dr as Map, Ni as View, Vn as ImageLayer, bi as defaults, 
 import { t as ImageWMS } from "./ImageWMS.js";
 import { t as ScaleLine } from "./ScaleLine.js";
 //#region examples/wms-no-proj.js
+/**
+* 图层列表定义
+* 包含一个瓦片式 WMS（TileWMS）底图和一个单图像 WMS（ImageWMS）业务专题图层。
+* 两者均采用瑞士国家坐标系 EPSG:21781 (CH1903 / LV03)。
+*/
 var layers = [new TileLayer({ source: new TileWMS({
 	attributions: "© <a href=\"https://shop.swisstopo.admin.ch/en/products/maps/national/lk1000\"target=\"_blank\">Pixelmap 1:1000000 / geo.admin.ch</a>",
 	crossOrigin: "anonymous",

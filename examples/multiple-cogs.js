@@ -9,6 +9,10 @@ var channels = [
 	"blue"
 ];
 for (const channel of channels) document.getElementById(channel).addEventListener("change", update);
+/**
+* 读取当前下拉框所选取的波段通道映射变量
+* @return {Object<string, number>} 包含 red、green、blue 对应波段索引的对象
+*/
 function getVariables() {
 	const variables = {};
 	for (const channel of channels) {
@@ -47,6 +51,9 @@ var layer = new WebGLTileLayer({
 		]
 	}
 });
+/**
+* 当用户更改波段选择时，更新 WebGL 图层样式变量，触发 GPU 实时重绘
+*/
 function update() {
 	layer.updateStyleVariables(getVariables());
 }

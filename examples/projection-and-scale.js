@@ -21,6 +21,10 @@ var map = new Map({
 		projection
 	})
 });
+/**
+* Handle projection change while keeping the physical ground scale identical
+* 监听投影切换事件，在转换视图坐标系的同时精准维持地表真实比例尺不变
+*/
 function onChangeProjection() {
 	const currentView = map.getView();
 	const currentProjection = currentView.getProjection();

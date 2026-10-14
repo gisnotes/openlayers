@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="./theme/ol.css">
     <link rel="stylesheet" type="text/css" href="./theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
   </head>
@@ -74,22 +75,22 @@
               data-title="draw"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-webgl-line.html&quot;&gt;Applying a filter along lines rendered with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-features.html&quot;&gt;Draw and Modify Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-features.html&quot;&gt;Draw and Modify Features / 绘制与修改要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-geodesic.html&quot;&gt;Draw and Modify Geodesic Circles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features.html&quot;&gt;Draw Features / 绘制要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes / 绘制规则图形&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-modify-trace-snap.html&quot;&gt;Draw, modify, trace and snap&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./draw-features-style.html&quot;&gt;Drawing Features Style / 绘制要素时的自定义样式&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing / 自由手绘绘制&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-arrows.html&quot;&gt;LineString Arrows&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure.html&quot;&gt;Measure&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure.html&quot;&gt;Measure / 空间长度与面积量算&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles / 使用矢量样式进行测量&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap.html&quot;&gt;Snap Interaction&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap-custom-segmenter.html&quot;&gt;Snap Interaction with Custom Segmenter&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction / 使用 Modify 交互进行缩放与旋转&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap.html&quot;&gt;Snap Interaction / 捕捉吸附交互&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap-custom-segmenter.html&quot;&gt;Snap Interaction with Custom Segmenter / 带有自定义线段分割器的 Snap 捕捉吸附&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topolis.html&quot;&gt;topolis integration&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tracing.html&quot;&gt;Tracing around a polygon&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tracing.html&quot;&gt;Tracing around a polygon / 沿多边形边界自动追踪描摹&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >17</a>
@@ -306,7 +307,7 @@ addInteraction();
         <summary class="source-heading">index.html</summary>
         <div class="row-fluid">
           <pre><code id="example-html-source" class="language-markup">&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
+&lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
     &lt;title&gt;Drawing Features Style / 绘制要素时的自定义样式&lt;/title&gt;
@@ -369,6 +370,17 @@ addInteraction();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+      onload="renderMathInElement(document.getElementById('docs') || document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false
+      });"></script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

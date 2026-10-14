@@ -144,6 +144,10 @@ var overlayLayerSelect = document.getElementById("overlay-layer");
 var viewProjSelect = document.getElementById("view-projection");
 var renderEdgesCheckbox = document.getElementById("render-edges");
 var renderEdges = false;
+/**
+* 动态更新地图视图的目标投影
+* 根据用户选取的投影创建全新的 View，并对局域图层设置范围裁剪以防全球视角下产生重影
+*/
 function updateViewProjection() {
 	const newProj = get(viewProjSelect.value);
 	const newProjExtent = newProj.getExtent();
@@ -162,22 +166,20 @@ function updateViewProjection() {
 	if (newProj.isGlobal()) layers["bng"].setExtent(transformExtent(proj27700.getExtent(), proj27700, newProj, 2));
 	else layers["bng"].setExtent(void 0);
 }
-/**
-* Handle change event.
-*/
 viewProjSelect.onchange = function() {
 	updateViewProjection();
 };
 updateViewProjection();
+/**
+* 同步更新图层上的重投影三角网边缘渲染开关
+* @param {TileLayer} layer 瓦片图层对象
+*/
 var updateRenderEdgesOnLayer = function(layer) {
 	if (layer instanceof WebGLTileLayer) {
 		const source = layer.getSource();
 		if (source instanceof TileImage) source.setRenderReprojectionEdges(renderEdges);
 	}
 };
-/**
-* Handle change event.
-*/
 baseLayerSelect.onchange = function() {
 	const layer = layers[baseLayerSelect.value];
 	if (layer) {
@@ -186,9 +188,6 @@ baseLayerSelect.onchange = function() {
 		map.getLayers().setAt(0, layer);
 	}
 };
-/**
-* Handle change event.
-*/
 overlayLayerSelect.onchange = function() {
 	const layer = layers[overlayLayerSelect.value];
 	if (layer) {
@@ -197,9 +196,6 @@ overlayLayerSelect.onchange = function() {
 		map.getLayers().setAt(1, layer);
 	}
 };
-/**
-* Handle change event.
-*/
 renderEdgesCheckbox.onchange = function() {
 	renderEdges = renderEdgesCheckbox.checked;
 	map.getLayers().forEach(function(layer) {

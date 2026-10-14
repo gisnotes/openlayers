@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="./theme/ol.css">
     <link rel="stylesheet" type="text/css" href="./theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
   </head>
@@ -79,16 +80,16 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-blob.html&quot;&gt;Cloud Optimized GeoTIFF (COG) from a Blob&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-custom-client.html&quot;&gt;Cloud Optimized GeoTIFF (COG) with Custom Loader&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;COG with ModelTransformation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF Reprojection&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-pyramid.html&quot;&gt;GeoTIFF tile pyramid&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-overviews.html&quot;&gt;GeoTIFF with Overviews&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG sources&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF 客户端动态重投影 (GeoTIFF Reprojection)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math.html&quot;&gt;NDVI from a Sentinel 2 COG&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-colors.html&quot;&gt;NDVI with a Dynamic Color Ramp&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC support&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;包含模型仿射变换矩阵的 COG (COG with ModelTransformation)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;多 COG 数据源重投影与波段合成 (Multiple COG sources)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >16</a>
@@ -103,19 +104,19 @@
               data-title="projection"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;COG with ModelTransformation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;Custom Tiled WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;Image Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG sources&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;OpenStreetMap Reprojection with ScaleLine Control&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./projection-and-scale.html&quot;&gt;Projection and Scale&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection with coordinate system search&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sphere-mollweide.html&quot;&gt;Sphere Mollweide&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-no-proj.html&quot;&gt;WMS without Projection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap 客户端 WGS84 重投影 (OpenStreetMap Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./projection-and-scale.html&quot;&gt;Projection and Scale / 投影切换与比例尺保持&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify 亿级超大图像金字塔 (Zoomify)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;包含模型仿射变换矩阵的 COG (COG with ModelTransformation)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;单幅静态图像客户端重投影 (Image Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;多 COG 数据源重投影与波段合成 (Multiple COG sources)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;多投影栅格数据动态重投影 (Raster Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-no-proj.html&quot;&gt;无投影转换定义的 WMS (WMS without Projection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sphere-mollweide.html&quot;&gt;球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;自定义投影转换的瓦片 WMS (Custom Tiled WMS)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >14</a>
@@ -130,11 +131,11 @@
               data-title="proj4js"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;Image Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection with coordinate system search&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sphere-mollweide.html&quot;&gt;Sphere Mollweide&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;单幅静态图像客户端重投影 (Image Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;多投影栅格数据动态重投影 (Raster Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sphere-mollweide.html&quot;&gt;球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >6</a>
@@ -150,8 +151,8 @@
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop.html&quot;&gt;Drag-and-Drop&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop.html&quot;&gt;Drag-and-Drop / 拖拽加载文件&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector / 矢量图像图层拖拽加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen.html&quot;&gt;Full Screen Control&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./gpx.html&quot;&gt;GPX Data&lt;/a&gt;
@@ -165,7 +166,6 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection with coordinate system search&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./side-by-side.html&quot;&gt;Shared Views&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-style.html&quot;&gt;Vector tiles created from a Mapbox Style object / 使用 Mapbox 样式对象创建矢量切片地图&lt;/a&gt;
@@ -174,84 +174,10 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-retina.html&quot;&gt;XYZ Retina Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >26</a>
-          </span>
-          <span class="badge-group">
-            <a
-              href="./index.html?q=动态投影" class="badge badge-info">动态投影</a
-            ><a
-              class="badge badge-info tag-modal-toggle"
-              data-bs-toggle="modal"
-              data-bs-target="#tag-example-list"
-              data-title="动态投影"
-              data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;/ul&gt;"
-              tabindex="0"
-              >1</a>
-          </span>
-          <span class="badge-group">
-            <a
-              href="./index.html?q=自动投影查找" class="badge badge-info">自动投影查找</a
-            ><a
-              class="badge badge-info tag-modal-toggle"
-              data-bs-toggle="modal"
-              data-bs-target="#tag-example-list"
-              data-title="自动投影查找"
-              data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;/ul&gt;"
-              tabindex="0"
-              >1</a>
-          </span>
-          <span class="badge-group">
-            <a
-              href="./index.html?q=GeoTIFF" class="badge badge-info">GeoTIFF</a
-            ><a
-              class="badge badge-info tag-modal-toggle"
-              data-bs-toggle="modal"
-              data-bs-target="#tag-example-list"
-              data-title="GeoTIFF"
-              data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-per-band-stats.html&quot;&gt;GeoTIFF per band statistics&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./export-map.html&quot;&gt;Map Export&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC support&lt;/a&gt;
-                &lt;/ul&gt;"
-              tabindex="0"
-              >6</a>
-          </span>
-          <span class="badge-group">
-            <a
-              href="./index.html?q=WebGLTile" class="badge badge-info">WebGLTile</a
-            ><a
-              class="badge badge-info tag-modal-toggle"
-              data-bs-toggle="modal"
-              data-bs-target="#tag-example-list"
-              data-title="WebGLTile"
-              data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;/ul&gt;"
-              tabindex="0"
-              >1</a>
-          </span>
-          <span class="badge-group">
-            <a
-              href="./index.html?q=英国国家格网" class="badge badge-info">英国国家格网</a
-            ><a
-              class="badge badge-info tag-modal-toggle"
-              data-bs-toggle="modal"
-              data-bs-target="#tag-example-list"
-              data-title="英国国家格网"
-              data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;/ul&gt;"
-              tabindex="0"
-              >1</a>
           </span>
         </p>
         <div class="modal modal-tag-example" id="tag-example-list" tabindex="-1" role="dialog" aria-labelledby="tag-example-title" aria-hidden="true">
@@ -466,7 +392,7 @@ const map &#x3D; new Map({
         <summary class="source-heading">index.html</summary>
         <div class="row-fluid">
           <pre><code id="example-html-source" class="language-markup">&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
+&lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
     &lt;title&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/title&gt;
@@ -515,6 +441,17 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+      onload="renderMathInElement(document.getElementById('docs') || document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false
+      });"></script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

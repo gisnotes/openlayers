@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Draw Shapes</title>
+    <title>Draw Shapes / 绘制规则图形</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="./theme/ol.css">
     <link rel="stylesheet" type="text/css" href="./theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
   </head>
@@ -62,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Draw Shapes</h4>
+        <h4 id="title">Draw Shapes / 绘制规则图形</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,22 +75,22 @@
               data-title="draw"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-webgl-line.html&quot;&gt;Applying a filter along lines rendered with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-features.html&quot;&gt;Draw and Modify Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-features.html&quot;&gt;Draw and Modify Features / 绘制与修改要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-geodesic.html&quot;&gt;Draw and Modify Geodesic Circles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features.html&quot;&gt;Draw Features / 绘制要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes / 绘制规则图形&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-modify-trace-snap.html&quot;&gt;Draw, modify, trace and snap&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features-style.html&quot;&gt;Drawing Features Style / 绘制要素时的自定义样式&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing / 自由手绘绘制&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-arrows.html&quot;&gt;LineString Arrows&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure.html&quot;&gt;Measure&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure.html&quot;&gt;Measure / 空间长度与面积量算&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles / 使用矢量样式进行测量&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap.html&quot;&gt;Snap Interaction&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap-custom-segmenter.html&quot;&gt;Snap Interaction with Custom Segmenter&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction / 使用 Modify 交互进行缩放与旋转&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap.html&quot;&gt;Snap Interaction / 捕捉吸附交互&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap-custom-segmenter.html&quot;&gt;Snap Interaction with Custom Segmenter / 带有自定义线段分割器的 Snap 捕捉吸附&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topolis.html&quot;&gt;topolis integration&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tracing.html&quot;&gt;Tracing around a polygon&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tracing.html&quot;&gt;Tracing around a polygon / 沿多边形边界自动追踪描摹&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >17</a>
@@ -103,18 +104,18 @@
               data-bs-target="#tag-example-list"
               data-title="edit"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-features.html&quot;&gt;Draw and Modify Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-features.html&quot;&gt;Draw and Modify Features / 绘制与修改要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-geodesic.html&quot;&gt;Draw and Modify Geodesic Circles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features.html&quot;&gt;Draw Features / 绘制要素&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes / 绘制规则图形&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure.html&quot;&gt;Measure&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing / 自由手绘绘制&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure.html&quot;&gt;Measure / 空间长度与面积量算&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles / 使用矢量样式进行测量&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-features.html&quot;&gt;Modify Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-features.html&quot;&gt;Modify Features / 修改要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-test.html&quot;&gt;Modify Features Test&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap.html&quot;&gt;Snap Interaction&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction / 使用 Modify 交互进行缩放与旋转&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap.html&quot;&gt;Snap Interaction / 捕捉吸附交互&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topolis.html&quot;&gt;topolis integration&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
@@ -130,8 +131,8 @@
               data-title="freehand"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features.html&quot;&gt;Draw Features / 绘制要素&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes / 绘制规则图形&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing / 自由手绘绘制&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -153,15 +154,15 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-circle-render.html&quot;&gt;Custom Circle Render&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-hit-detection-renderer.html&quot;&gt;Custom Hit Detection Render&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-interactions.html&quot;&gt;Custom Interactions&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-interactions.html&quot;&gt;Custom Interactions / 自定义交互开发&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./declutter-group.html&quot;&gt;Declutter Group&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-features.html&quot;&gt;Draw and Modify Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector / 矢量图像图层拖拽加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-features.html&quot;&gt;Draw and Modify Features / 绘制与修改要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-geodesic.html&quot;&gt;Draw and Modify Geodesic Circles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features.html&quot;&gt;Draw Features / 绘制要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes / 绘制规则图形&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-modify-trace-snap.html&quot;&gt;Draw, modify, trace and snap&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters / 地震点位聚合与悬停散开渲染&lt;/a&gt;
@@ -172,12 +173,12 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./equal-earth-geojson.html&quot;&gt;Equal Earth projection with dynamic center meridian&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./fractal.html&quot;&gt;Fractal Rendering&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing / 自由手绘绘制&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson.html&quot;&gt;GeoJSON&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson-vt.html&quot;&gt;geojson-vt integration&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-icon.html&quot;&gt;Icon modification&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-icon.html&quot;&gt;Icon modification / 图标点位拖拽修改&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
@@ -188,9 +189,9 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles.html&quot;&gt;Mapbox Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-ogc-features.html&quot;&gt;MapServer OGC Features&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure.html&quot;&gt;Measure&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure.html&quot;&gt;Measure / 空间长度与面积量算&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles / 使用矢量样式进行测量&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-features.html&quot;&gt;Modify Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-features.html&quot;&gt;Modify Features / 修改要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-test.html&quot;&gt;Modify Features Test&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles.html&quot;&gt;OGC Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles-geographic.html&quot;&gt;OGC Vector Tiles (Geographic)&lt;/a&gt;
@@ -199,12 +200,12 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./populated-places.html&quot;&gt;Populated Places&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes / 正多边形与星形矢量符号（RegularShape 全解）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rich-text-labels.html&quot;&gt;Rich Text Labels&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-features.html&quot;&gt;Select Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction / 使用 Modify 交互进行缩放与旋转&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-features.html&quot;&gt;Select Features / 选择要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-hover-features.html&quot;&gt;Select Features by Hover&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-multiple-features.html&quot;&gt;Select multiple Features&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap.html&quot;&gt;Snap Interaction&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap-custom-segmenter.html&quot;&gt;Snap Interaction with Custom Segmenter&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap.html&quot;&gt;Snap Interaction / 捕捉吸附交互&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap-custom-segmenter.html&quot;&gt;Snap Interaction with Custom Segmenter / 带有自定义线段分割器的 Snap 捕捉吸附&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-renderer.html&quot;&gt;Style renderer / 样式渲染器（自定义渲染函数）&lt;/a&gt;
@@ -214,9 +215,9 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tooltip-on-hover.html&quot;&gt;Tooltip on Hover&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topolis.html&quot;&gt;topolis integration&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tracing.html&quot;&gt;Tracing around a polygon&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tracing.html&quot;&gt;Tracing around a polygon / 沿多边形边界自动追踪描摹&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./translate-features.html&quot;&gt;Translate Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./translate-features.html&quot;&gt;Translate Features / 平移移动要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./turf.html&quot;&gt;turf.js&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-vector-layer.html&quot;&gt;Vector Image Layer&lt;/a&gt;
@@ -253,15 +254,15 @@
 <div class="row">
   <div class="col-auto">
     <span class="input-group">
-      <label class="input-group-text" for="type">Shape type:</label>
+      <label class="input-group-text" for="type">Shape type / 形状类型:</label>
       <select class="form-select" id="type">
-        <option value="Circle">Circle</option>
-        <option value="Square">Square</option>
-        <option value="Box">Box</option>
-        <option value="Star">Star</option>
-        <option value="None">None</option>
+        <option value="Circle">Circle / 圆形</option>
+        <option value="Square">Square / 正方形</option>
+        <option value="Box">Box / 矩形框</option>
+        <option value="Star">Star / 星形</option>
+        <option value="None">None / 无</option>
       </select>
-      <input class="form-control" type="button" value="Undo" id="undo">
+      <input class="form-control" type="button" value="Undo / 撤销" id="undo">
     </span>
   </div>
 </div>
@@ -272,8 +273,37 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Using the ol/interaction/Draw to create regular shapes</p>
-        <div id="docs"><p>This demonstrates the use of the <code>geometryFunction</code> option for the <code>ol/interaction/Draw</code>. Select a shape type from the dropdown above to start drawing. To activate freehand drawing, hold the <code>Shift</code> key. Square drawing is achieved by using <code>type: &#39;Circle&#39;</code> type with a <code>geometryFunction</code> that creates a 4-sided regular polygon instead of a circle. Box drawing uses <code>type: &#39;Circle&#39;</code> with a <code>geometryFunction</code> that creates a box-shaped polygon instead of a circle. Star drawing uses a custom geometry function that converts a circle into a star using the center and radius provided by the draw interaction.</p>
+        <p id="shortdesc">Using the ol/interaction/Draw to create regular shapes / 使用 ol/interaction/Draw 交互创建规则几何图形（正多边形、矩形、多角星）。</p>
+        <div id="docs"><p>This demonstrates the use of the <code>geometryFunction</code> option for the
+<code>ol/interaction/Draw</code>. Select a shape type from the dropdown above to start
+drawing. To activate freehand drawing, hold the <code>Shift</code> key. Square drawing is
+achieved by using <code>type: &#39;Circle&#39;</code> type with a <code>geometryFunction</code> that creates
+a 4-sided regular polygon instead of a circle. Box drawing uses <code>type: &#39;Circle&#39;</code>
+with a <code>geometryFunction</code> that creates a box-shaped polygon instead of a
+circle. Star drawing uses a custom geometry function that converts a circle
+into a star using the center and radius provided by the draw interaction.</p>
+<p>本示例演示如何利用 <code>ol/interaction/Draw</code> 的 <code>geometryFunction</code>（几何自定义转换函数）选项来绘制各类规则多边形。从下拉菜单中选择形状即可开始绘制；按住 <code>Shift</code> 键可激活自由手绘。</p>
+<ul>
+<li><strong>正方形（Square）</strong>：基于 <code>type: &#39;Circle&#39;</code>，配合 <code>createRegularPolygon(4)</code> 生成 4 条边的正多边形；</li>
+<li><strong>矩形边界框（Box）</strong>：基于 <code>type: &#39;Circle&#39;</code>，配合 <code>createBox()</code> 将起始点与当前点转换为轴对齐的矩形面；</li>
+<li><strong>多角星（Star）</strong>：通过自定义几何函数，根据起始圆心与当前半径动态按角度计算交替长短径顶点，生成五角星/多角星面要素。</li>
+</ul>
+<hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 为什么“正方形/矩形/星形”的基础类型都是 <code>type: &#39;Circle&#39;</code>？</h4>
+<ul>
+<li><strong>双参数手势抽象</strong>：圆（Circle）在交互本质上是由“<strong>圆心点（Center）+ 拖拽边缘半径点（Radius Point）</strong>”这两个离散坐标所唯一定义的。</li>
+<li><strong>规则几何的天然映射</strong>：无论是正方形、正六边形还是拉框矩形，它们都完美匹配“中心-角点”或“对角两点”的双点交互模型。OpenLayers 巧妙复用了 Circle 交互的底层手势跟踪机制，省去了重新编写拖拽状态机的重复开销。</li>
+</ul>
+<h4>2. <code>geometryFunction</code> 的函数签名与性能机制</h4>
+<ul>
+<li><strong>签名</strong>：<code>function(coordinates, geometry) =&gt; geometry</code><ul>
+<li><code>coordinates</code>：当前正在绘制的临时点位数组（例如 <code>[center, currentPoint]</code>）；</li>
+<li><code>geometry</code>：上一次调用返回的可重用几何对象实例。</li>
+</ul>
+</li>
+<li><strong>避免 GC 抖动（内存优化）</strong>：在鼠标移动的 60fps 渲染循环中，<strong>优先原地调用 <code>geometry.setCoordinates(...)</code> 更新坐标</strong>，而不是反复 <code>new Polygon()</code>，可大幅降低垃圾回收器（Garbage Collection）压力，保证绘制手势极为丝滑。</li>
+</ul>
 </div>
       </div>
 
@@ -310,19 +340,26 @@ const map &#x3D; new Map({
 
 const typeSelect &#x3D; document.getElementById(&#x27;type&#x27;);
 
-let draw; // global so we can remove it later
+let draw; // global so we can remove it later / 全局变量，便于后续动态移除与重置
+
 function addInteraction() {
   let value &#x3D; typeSelect.value;
   if (value !&#x3D;&#x3D; &#x27;None&#x27;) {
     let geometryFunction;
     if (value &#x3D;&#x3D;&#x3D; &#x27;Square&#x27;) {
       value &#x3D; &#x27;Circle&#x27;;
+      // Generate 4-sided regular polygon (square)
+      // 生成 4 边正多边形（正方形）
       geometryFunction &#x3D; createRegularPolygon(4);
     } else if (value &#x3D;&#x3D;&#x3D; &#x27;Box&#x27;) {
       value &#x3D; &#x27;Circle&#x27;;
+      // Generate axis-aligned bounding box from two points
+      // 将两点对角线转换为矩形面
       geometryFunction &#x3D; createBox();
     } else if (value &#x3D;&#x3D;&#x3D; &#x27;Star&#x27;) {
       value &#x3D; &#x27;Circle&#x27;;
+      // Custom geometry function to construct a star polygon
+      // 自定义几何函数：根据圆心与半径推算多角星交替顶点
       geometryFunction &#x3D; function (coordinates, geometry) {
         const center &#x3D; coordinates[0];
         const last &#x3D; coordinates[coordinates.length - 1];
@@ -358,7 +395,8 @@ function addInteraction() {
 }
 
 /**
- * Handle change event.
+ * Handle shape type change event.
+ * 处理形状类型下拉框切换事件。
  */
 typeSelect.onchange &#x3D; function () {
   map.removeInteraction(draw);
@@ -378,10 +416,10 @@ addInteraction();
         <summary class="source-heading">index.html</summary>
         <div class="row-fluid">
           <pre><code id="example-html-source" class="language-markup">&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
+&lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Draw Shapes&lt;/title&gt;
+    &lt;title&gt;Draw Shapes / 绘制规则图形&lt;/title&gt;
     &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
@@ -396,15 +434,15 @@ addInteraction();
     &lt;div class&#x3D;&quot;row&quot;&gt;
       &lt;div class&#x3D;&quot;col-auto&quot;&gt;
         &lt;span class&#x3D;&quot;input-group&quot;&gt;
-          &lt;label class&#x3D;&quot;input-group-text&quot; for&#x3D;&quot;type&quot;&gt;Shape type:&lt;/label&gt;
+          &lt;label class&#x3D;&quot;input-group-text&quot; for&#x3D;&quot;type&quot;&gt;Shape type / 形状类型:&lt;/label&gt;
           &lt;select class&#x3D;&quot;form-select&quot; id&#x3D;&quot;type&quot;&gt;
-            &lt;option value&#x3D;&quot;Circle&quot;&gt;Circle&lt;/option&gt;
-            &lt;option value&#x3D;&quot;Square&quot;&gt;Square&lt;/option&gt;
-            &lt;option value&#x3D;&quot;Box&quot;&gt;Box&lt;/option&gt;
-            &lt;option value&#x3D;&quot;Star&quot;&gt;Star&lt;/option&gt;
-            &lt;option value&#x3D;&quot;None&quot;&gt;None&lt;/option&gt;
+            &lt;option value&#x3D;&quot;Circle&quot;&gt;Circle / 圆形&lt;/option&gt;
+            &lt;option value&#x3D;&quot;Square&quot;&gt;Square / 正方形&lt;/option&gt;
+            &lt;option value&#x3D;&quot;Box&quot;&gt;Box / 矩形框&lt;/option&gt;
+            &lt;option value&#x3D;&quot;Star&quot;&gt;Star / 星形&lt;/option&gt;
+            &lt;option value&#x3D;&quot;None&quot;&gt;None / 无&lt;/option&gt;
           &lt;/select&gt;
-          &lt;input class&#x3D;&quot;form-control&quot; type&#x3D;&quot;button&quot; value&#x3D;&quot;Undo&quot; id&#x3D;&quot;undo&quot;&gt;
+          &lt;input class&#x3D;&quot;form-control&quot; type&#x3D;&quot;button&quot; value&#x3D;&quot;Undo / 撤销&quot; id&#x3D;&quot;undo&quot;&gt;
         &lt;/span&gt;
       &lt;/div&gt;
     &lt;/div&gt;
@@ -442,6 +480,17 @@ addInteraction();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+      onload="renderMathInElement(document.getElementById('docs') || document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false
+      });"></script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

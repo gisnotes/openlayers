@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>OpenStreetMap Reprojection with ScaleLine Control</title>
+    <title>带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="./theme/ol.css">
     <link rel="stylesheet" type="text/css" href="./theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
   </head>
@@ -62,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">OpenStreetMap Reprojection with ScaleLine Control</h4>
+        <h4 id="title">带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -73,14 +74,14 @@
               data-bs-target="#tag-example-list"
               data-title="reprojection"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;Image Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG sources&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;OpenStreetMap Reprojection with ScaleLine Control&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection with coordinate system search&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-reprojected.html&quot;&gt;Vector tiles reprojected&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF 客户端动态重投影 (GeoTIFF Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap 客户端 WGS84 重投影 (OpenStreetMap Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;单幅静态图像客户端重投影 (Image Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;多 COG 数据源重投影与波段合成 (Multiple COG sources)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;多投影栅格数据动态重投影 (Raster Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-reprojected.html&quot;&gt;矢量切片动态重投影 (Vector tiles reprojected)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >8</a>
@@ -95,19 +96,19 @@
               data-title="projection"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;COG with ModelTransformation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;Custom Tiled WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;Image Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG sources&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;OpenStreetMap Reprojection with ScaleLine Control&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./projection-and-scale.html&quot;&gt;Projection and Scale&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection with coordinate system search&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sphere-mollweide.html&quot;&gt;Sphere Mollweide&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-no-proj.html&quot;&gt;WMS without Projection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap 客户端 WGS84 重投影 (OpenStreetMap Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./projection-and-scale.html&quot;&gt;Projection and Scale / 投影切换与比例尺保持&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify 亿级超大图像金字塔 (Zoomify)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;包含模型仿射变换矩阵的 COG (COG with ModelTransformation)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;单幅静态图像客户端重投影 (Image Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;多 COG 数据源重投影与波段合成 (Multiple COG sources)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;多投影栅格数据动态重投影 (Raster Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-no-proj.html&quot;&gt;无投影转换定义的 WMS (WMS without Projection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sphere-mollweide.html&quot;&gt;球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;自定义投影转换的瓦片 WMS (Custom Tiled WMS)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >14</a>
@@ -132,8 +133,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./localized-openstreetmap.html&quot;&gt;Localized OpenStreetMap&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mouse-position.html&quot;&gt;Mouse Position&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;OpenStreetMap Reprojection with ScaleLine Control&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap 客户端 WGS84 重投影 (OpenStreetMap Reprojection)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./permalink.html&quot;&gt;Permalink&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scale-line.html&quot;&gt;Scale Line&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./simple.html&quot;&gt;Simple Map&lt;/a&gt;
@@ -143,6 +143,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels.html&quot;&gt;Vector Labels&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels-justify-text.html&quot;&gt;Vector Labels - Justify Text&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rotation.html&quot;&gt;View Rotation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >22</a>
@@ -156,7 +157,7 @@
               data-bs-target="#tag-example-list"
               data-title="nad83"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;OpenStreetMap Reprojection with ScaleLine Control&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -170,16 +171,16 @@
               data-bs-target="#tag-example-list"
               data-title="tile"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;Custom Tiled WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;OpenStreetMap Reprojection with ScaleLine Control&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap 客户端 WGS84 重投影 (OpenStreetMap Reprojection)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tile-load-events.html&quot;&gt;Tile Load Events&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./arcgis-tiled.html&quot;&gt;Tiled ArcGIS MapServer&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-tiled.html&quot;&gt;Tiled WMS&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-tiled-wrap-180.html&quot;&gt;Tiled WMS Wrapping&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-reprojected.html&quot;&gt;Vector tiles reprojected&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-tilegrid-512x256.html&quot;&gt;WMS 512x256 Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-reprojected.html&quot;&gt;矢量切片动态重投影 (Vector tiles reprojected)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;自定义投影转换的瓦片 WMS (Custom Tiled WMS)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >10</a>
@@ -193,8 +194,8 @@
               data-bs-target="#tag-example-list"
               data-title="scaleline"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;OpenStreetMap Reprojection with ScaleLine Control&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./print-to-scale.html&quot;&gt;Print to scale example&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -221,8 +222,30 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Demonstrates client-side reprojection of OpenStreetMap to NAD83 Indiana East.</p>
-        <div id="docs"><p>This example shows client-side reprojection of OpenStreetMap to NAD83 Indiana East, including a ScaleLine control with US units.</p>
+        <p id="shortdesc">演示在客户端将 OpenStreetMap (EPSG:3857) 实时重投影至 NAD83 印第安纳州东部投影坐标系，并配合美制单位比例尺控件显示。</p>
+        <div id="docs"><p>本例展示了 OpenLayers 在客户端将标准 Web 墨卡托投影的 OpenStreetMap 瓦片实时重投影至<strong>美国州平面坐标系（State Plane Coordinate System）</strong>中的 <strong>NAD83 Indiana East（印第安纳州东区）</strong>，并演示了美制单位比例尺控件（<code>ScaleLine</code>）的动态适配机制。</p>
+<h3>核心机制与原理解析</h3>
+<ol>
+<li><p><strong>自定义州平面投影与非公制单位注册</strong>：</p>
+<ul>
+<li>许多地区性测绘工程采用定制的州平面投影（SPCS），本例使用 WKT 字符串向 Proj4js 注册命名为 <code>&#39;Indiana-East&#39;</code> 的坐标系（对应 EPSG:2965）。</li>
+<li>该坐标系基于 GRS 1980 椭球体的横轴墨卡托投影（Transverse Mercator），其名义长度单位为<strong>美国测量英尺（US Survey Foot，1 英尺 $\approx 0.3048006$ 米）</strong>，而非国际标准公制米。</li>
+<li>OpenLayers 结合 Proj4js 注册表，不仅能处理不同曲率椭球体间的几何转换，更能自动解析并处理跨非米制单位（米制 $\leftrightarrow$ 美制英尺）的像元比例重采样。</li>
+</ul>
+</li>
+<li><p><strong>美制比例尺控件（<code>ScaleLine({units: &#39;us&#39;})</code>）</strong>：</p>
+<ul>
+<li>控件配置 <code>units: &#39;us&#39;</code> 后，OpenLayers 会自动将视口底部的地表距离标注格式化为<strong>英里（miles）或英尺（ft）</strong>。</li>
+<li>比例尺底层自动调用新投影与 WGS84 之间的点分辨率（Point Resolution）反解函数，确保在局部投影长度变形与美制单位缩放下，比例尺数值依然严格反映真实地面物理跨度。</li>
+</ul>
+</li>
+<li><p><strong>投影合法范围（Extent）约束</strong>：</p>
+<ul>
+<li>横轴墨卡托属于局部等角投影，超出其有效经度范围（远离中央经线 $-85.667^\circ$）时会产生剧烈的几何畸变与数学奇点。</li>
+<li>代码通过 <code>transformExtent([-172.54, 23.81, -47.74, 86.46], &#39;EPSG:4326&#39;, &#39;Indiana-East&#39;)</code> 将经纬度有效范围转换为目标投影坐标，并赋予 <code>View</code> 的 <code>extent</code> 与 <code>minZoom</code>，有效约束了用户平移漫游和缩放边界。</li>
+</ul>
+</li>
+</ol>
 </div>
       </div>
 
@@ -238,6 +261,13 @@ import {register} from &#x27;ol/proj/proj4.js&#x27;;
 import OSM from &#x27;ol/source/OSM.js&#x27;;
 import proj4 from &#x27;proj4&#x27;;
 
+// 向 Proj4js 注册美国北美 1983 大地基准印第安纳州东区投影坐标系 (NAD83 Indiana East)
+// 投影特性：
+// - 椭球体：GRS 1980
+// - 投影类型：横轴墨卡托 (Transverse Mercator)
+// - 中央子午线：-85°40&#x27; (-85.666667°)
+// - 原点纬度：37°30&#x27; (37.5°)
+// - 长度单位：美国测量英尺 (Foot_US，1 英尺 ≈ 0.3048006 米)
 proj4.defs(
   &#x27;Indiana-East&#x27;,
   &#x27;PROJCS[&quot;IN83-EF&quot;,GEOGCS[&quot;LL83&quot;,DATUM[&quot;NAD83&quot;,&#x27; +
@@ -250,19 +280,25 @@ proj4.defs(
     &#x27;PARAMETER[&quot;latitude_of_origin&quot;,37.50000000000000],&#x27; +
     &#x27;UNIT[&quot;Foot_US&quot;,0.30480060960122]]&#x27;,
 );
+// 将 Proj4js 投影定义同步注册到 OpenLayers 投影表
 register(proj4);
 
+// 初始化地图实例
 const map &#x3D; new Map({
   layers: [
+    // 基础 OSM 瓦片图层（原生投影为 EPSG:3857 Web 墨卡托，米制单位）
     new TileLayer({
       source: new OSM(),
     }),
   ],
   target: &#x27;map&#x27;,
   view: new View({
+    // 将视图设置为刚注册的 Indiana-East 投影（美国测量英尺单位）
     projection: &#x27;Indiana-East&#x27;,
+    // 将经纬度点 [-85.685°W, 39.891°N]（印第安纳州首府印第安纳波利斯以东）转换为目标投影平面英尺坐标
     center: fromLonLat([-85.685, 39.891], &#x27;Indiana-East&#x27;),
     zoom: 7,
+    // 限制视图有效平移漫游范围，防止超出横轴墨卡托投影的定义域产生数学奇异
     extent: transformExtent(
       [-172.54, 23.81, -47.74, 86.46],
       &#x27;EPSG:4326&#x27;,
@@ -272,6 +308,7 @@ const map &#x3D; new Map({
   }),
 });
 
+// 添加比例尺控件，并配置美制单位（units: &#x27;us&#x27;，自动显示英里 miles 或英尺 ft）
 map.addControl(new ScaleLine({units: &#x27;us&#x27;}));
 </code></pre>
         </div>
@@ -281,10 +318,10 @@ map.addControl(new ScaleLine({units: &#x27;us&#x27;}));
         <summary class="source-heading">index.html</summary>
         <div class="row-fluid">
           <pre><code id="example-html-source" class="language-markup">&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
+&lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;OpenStreetMap Reprojection with ScaleLine Control&lt;/title&gt;
+    &lt;title&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -330,6 +367,17 @@ map.addControl(new ScaleLine({units: &#x27;us&#x27;}));
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+      onload="renderMathInElement(document.getElementById('docs') || document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false
+      });"></script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

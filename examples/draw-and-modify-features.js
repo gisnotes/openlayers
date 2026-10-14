@@ -44,6 +44,7 @@ function addInteractions() {
 }
 /**
 * Handle change event.
+* 处理几何类型下拉切换事件。
 */
 typeSelect.onchange = function() {
 	map.removeInteraction(draw);

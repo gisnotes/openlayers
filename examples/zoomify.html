@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Zoomify</title>
+    <title>Zoomify 亿级超大图像金字塔 (Zoomify)</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="./theme/ol.css">
     <link rel="stylesheet" type="text/css" href="./theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
   </head>
@@ -62,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Zoomify</h4>
+        <h4 id="title">Zoomify 亿级超大图像金字塔 (Zoomify)</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -73,7 +74,7 @@
               data-bs-target="#tag-example-list"
               data-title="zoomify"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify 亿级超大图像金字塔 (Zoomify)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -87,7 +88,7 @@
               data-bs-target="#tag-example-list"
               data-title="deepzoom"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify 亿级超大图像金字塔 (Zoomify)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -101,7 +102,7 @@
               data-bs-target="#tag-example-list"
               data-title="IIP"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify 亿级超大图像金字塔 (Zoomify)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -116,7 +117,7 @@
               data-title="pixel"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify 亿级超大图像金字塔 (Zoomify)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -131,19 +132,19 @@
               data-title="projection"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;COG with ModelTransformation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;Custom Tiled WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;Image Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG sources&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;OpenStreetMap Reprojection with ScaleLine Control&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./projection-and-scale.html&quot;&gt;Projection and Scale&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection with coordinate system search&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sphere-mollweide.html&quot;&gt;Sphere Mollweide&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-no-proj.html&quot;&gt;WMS without Projection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap 客户端 WGS84 重投影 (OpenStreetMap Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./projection-and-scale.html&quot;&gt;Projection and Scale / 投影切换与比例尺保持&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify 亿级超大图像金字塔 (Zoomify)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;包含模型仿射变换矩阵的 COG (COG with ModelTransformation)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;单幅静态图像客户端重投影 (Image Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;多 COG 数据源重投影与波段合成 (Multiple COG sources)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;多投影栅格数据动态重投影 (Raster Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-no-proj.html&quot;&gt;无投影转换定义的 WMS (WMS without Projection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sphere-mollweide.html&quot;&gt;球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;自定义投影转换的瓦片 WMS (Custom Tiled WMS)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >14</a>
@@ -165,8 +166,8 @@
         <div id="map" class="map"></div>
 <div class="controls">
   <select id="zoomifyProtocol">
-    <option value="zoomify">Zoomify</option>
-    <option value="zoomifyretina">Zoomify Retina</option>
+    <option value="zoomify">标准 Zoomify (Standard)</option>
+    <option value="zoomifyretina">高清 Zoomify (Retina 2x)</option>
   </select>
 </div>
 
@@ -176,8 +177,30 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of a Zoomify source.</p>
-        <div id="docs"><p>Zoomify is a format for deep-zooming into high resolution images. This example shows how to use the Zoomify source with a pixel projection. Internet Imaging Protocol (IIP) with JTL extension is also handled.</p>
+        <p id="shortdesc">演示使用 Zoomify 数据源以像素笛卡尔坐标系展示超高分辨率大图的金字塔深度缩放（Deep Zoom），并支持 Retina 高清屏自适应。</p>
+        <div id="docs"><p><strong>Zoomify</strong> 是一种经典的超高分辨率图像深度切片金字塔（Deep Zoom）格式，广泛应用于数字病理病理切片扫描、博物馆高精度艺术品数字化鉴赏以及深空天文图库。本例展示了如何在 OpenLayers 中通过像素笛卡尔坐标系加载 Zoomify 图像源，并支持 Retina 高清屏渲染。</p>
+<h3>核心机制与原理解析</h3>
+<ol>
+<li><p><strong>纯像素空间坐标系（Pixel Projection）</strong>：</p>
+<ul>
+<li>数字化绘画、医学病理或工业扫描图并非真实的地理地球表面，其空间坐标系统是基于<strong>像素网格（Pixel Coordinates）</strong>建立的。</li>
+<li><code>ol/source/Zoomify</code> 仅需传入图像原始宽高 <code>size: [width, height]</code>，即可自动构建从 <code>[0, -height]</code> 到 <code>[width, 0]</code> 的无缝像素切片网格（TileGrid），无需任何地理椭球体或投影定义。</li>
+</ul>
+</li>
+<li><p><strong>视口缩放与平移约束（<code>resolutions</code> 与 <code>constrainOnlyCenter</code>）</strong>：</p>
+<ul>
+<li><strong>锁定金字塔分辨率</strong>：通过 <code>resolutions: layer.getSource().getTileGrid().getResolutions()</code> 将视图缩放级别精准约束在 Zoomify 切片金字塔原生生成的各级物理分辨率上，防止非整数缩放带来的像元插值虚化。</li>
+<li><strong>中心点约束</strong>：设置 <code>constrainOnlyCenter: true</code> 配合 <code>extent</code>，仅限制视口中心点不超出图像边界，用户可以自由拖拽至图片边缘，交互体验平滑自然。</li>
+<li><strong>采样层级导向（<code>zDirection: -1</code>）</strong>：强制选取等于或高于当前屏幕分辨率的切片层级，杜绝模糊。</li>
+</ul>
+</li>
+<li><p><strong>Retina 视网膜高清屏优化（<code>tilePixelRatio</code> &amp; <code>tileSize</code>）</strong>：</p>
+<ul>
+<li>切换至 <strong>高清 Zoomify (Retina 2x)</strong> 模式时，数据源配置了 <code>tilePixelRatio: 2</code> 和 <code>tileSize: 256 / 2 = 128</code>。</li>
+<li>OpenLayers 会从更高一级的金字塔层级拉取 256 像素的高清切片，但在画布上将其压缩至 128 设备独立像素（CSS 像素）进行物理渲染，从而在高 DPI 屏幕上实现纤毫毕现的微观细节展示。</li>
+</ul>
+</li>
+</ol>
 </div>
       </div>
 
@@ -189,46 +212,59 @@ import View from &#x27;ol/View.js&#x27;;
 import TileLayer from &#x27;ol/layer/Tile.js&#x27;;
 import Zoomify from &#x27;ol/source/Zoomify.js&#x27;;
 
+// 超高分辨率图像原始像素尺寸（宽度 4000px，高度 3000px）
 const imgWidth &#x3D; 4000;
 const imgHeight &#x3D; 3000;
 
+// Zoomify 瓦片金字塔服务根路径
 const zoomifyUrl &#x3D; &#x27;https://ol-zoomify.surge.sh/zoomify/&#x27;;
 
+// 1. 标准 Zoomify 数据源（针对 1x 普通屏幕）
 const source &#x3D; new Zoomify({
   url: zoomifyUrl,
   size: [imgWidth, imgHeight],
   crossOrigin: &#x27;anonymous&#x27;,
-  zDirection: -1, // Ensure we get a tile with the screen resolution or higher
+  // zDirection: -1 确保在缩放过渡中优先选取分辨率等于或高于当前屏幕像素的瓦片层级，避免模糊
+  zDirection: -1,
 });
+// 提取切片网格对应的像素有效外包范围
 const extent &#x3D; source.getTileGrid().getExtent();
 
+// 2. 高清 Retina 数据源（针对 2x 视网膜高清屏）
 const retinaPixelRatio &#x3D; 2;
 const retinaSource &#x3D; new Zoomify({
   url: zoomifyUrl,
   size: [imgWidth, imgHeight],
   crossOrigin: &#x27;anonymous&#x27;,
-  zDirection: -1, // Ensure we get a tile with the screen resolution or higher
-  tilePixelRatio: retinaPixelRatio, // Display retina tiles
-  tileSize: 256 / retinaPixelRatio, // from a higher zoom level
+  zDirection: -1,
+  // 指定瓦片像素比为 2x，并让逻辑瓦片尺寸减半为 128px，
+  // 这样 OpenLayers 会从更高一级的金字塔拉取 256px 图像并在 128px 空间内渲染，呈现极佳细节
+  tilePixelRatio: retinaPixelRatio,
+  tileSize: 256 / retinaPixelRatio,
 });
 
+// 创建瓦片图层并挂载标准数据源
 const layer &#x3D; new TileLayer({
   source: source,
 });
 
+// 初始化地图实例
 const map &#x3D; new Map({
   layers: [layer],
   target: &#x27;map&#x27;,
   view: new View({
-    // adjust zoom levels to those provided by the source
+    // 将视图的缩放级别精准对齐到 Zoomify 切片金字塔提供的物理分辨率阶梯
     resolutions: layer.getSource().getTileGrid().getResolutions(),
-    // constrain the center: center cannot be set outside this extent
+    // 约束范围：将漫游限制在整幅图像有效像素外包盒内
     extent: extent,
+    // 仅限制中心点不移出范围，允许图片边角移至屏幕视口边缘
     constrainOnlyCenter: true,
   }),
 });
+// 自动缩放自适应整个图像视野
 map.getView().fit(extent);
 
+// 监听高清模式切换下拉菜单
 const control &#x3D; document.getElementById(&#x27;zoomifyProtocol&#x27;);
 control.addEventListener(&#x27;change&#x27;, function (event) {
   const value &#x3D; event.currentTarget.value;
@@ -246,10 +282,10 @@ control.addEventListener(&#x27;change&#x27;, function (event) {
         <summary class="source-heading">index.html</summary>
         <div class="row-fluid">
           <pre><code id="example-html-source" class="language-markup">&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
+&lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Zoomify&lt;/title&gt;
+    &lt;title&gt;Zoomify 亿级超大图像金字塔 (Zoomify)&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -262,8 +298,8 @@ control.addEventListener(&#x27;change&#x27;, function (event) {
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
     &lt;div class&#x3D;&quot;controls&quot;&gt;
       &lt;select id&#x3D;&quot;zoomifyProtocol&quot;&gt;
-        &lt;option value&#x3D;&quot;zoomify&quot;&gt;Zoomify&lt;/option&gt;
-        &lt;option value&#x3D;&quot;zoomifyretina&quot;&gt;Zoomify Retina&lt;/option&gt;
+        &lt;option value&#x3D;&quot;zoomify&quot;&gt;标准 Zoomify (Standard)&lt;/option&gt;
+        &lt;option value&#x3D;&quot;zoomifyretina&quot;&gt;高清 Zoomify (Retina 2x)&lt;/option&gt;
       &lt;/select&gt;
     &lt;/div&gt;
 
@@ -300,6 +336,17 @@ control.addEventListener(&#x27;change&#x27;, function (event) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+      onload="renderMathInElement(document.getElementById('docs') || document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false
+      });"></script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

@@ -62,12 +62,13 @@ var changeInteraction = function() {
 	if (select !== null) {
 		map.addInteraction(select);
 		select.on("select", function(e) {
-			document.getElementById("status").innerHTML = "&nbsp;" + e.target.getFeatures().getLength() + " selected features (last operation selected " + e.selected.length + " and deselected " + e.deselected.length + " features)";
+			document.getElementById("status").innerHTML = "&nbsp;" + e.target.getFeatures().getLength() + " selected features (last operation selected " + e.selected.length + " and deselected " + e.deselected.length + " features) / 已选中 " + e.target.getFeatures().getLength() + " 个要素 (本次新增 " + e.selected.length + " 个，取消 " + e.deselected.length + " 个)";
 		});
 	}
 };
 /**
 * onchange callback on the select element.
+* 下拉选择框的 onchange 切换交互事件回调。
 */
 selectElement.onchange = changeInteraction;
 changeInteraction();

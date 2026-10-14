@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Projection and Scale</title>
+    <title>Projection and Scale / 投影切换与比例尺保持</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="./theme/ol.css">
     <link rel="stylesheet" type="text/css" href="./theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
   </head>
@@ -62,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Projection and Scale</h4>
+        <h4 id="title">Projection and Scale / 投影切换与比例尺保持</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,19 +75,19 @@
               data-title="projection"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;COG with ModelTransformation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;Custom Tiled WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;Image Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG sources&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;OpenStreetMap Reprojection with ScaleLine Control&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./projection-and-scale.html&quot;&gt;Projection and Scale&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection with coordinate system search&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sphere-mollweide.html&quot;&gt;Sphere Mollweide&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-no-proj.html&quot;&gt;WMS without Projection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap 客户端 WGS84 重投影 (OpenStreetMap Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./projection-and-scale.html&quot;&gt;Projection and Scale / 投影切换与比例尺保持&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify 亿级超大图像金字塔 (Zoomify)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;包含模型仿射变换矩阵的 COG (COG with ModelTransformation)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;单幅静态图像客户端重投影 (Image Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;多 COG 数据源重投影与波段合成 (Multiple COG sources)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;多投影栅格数据动态重投影 (Raster Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-no-proj.html&quot;&gt;无投影转换定义的 WMS (WMS without Projection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sphere-mollweide.html&quot;&gt;球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;自定义投影转换的瓦片 WMS (Custom Tiled WMS)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >14</a>
@@ -102,8 +103,8 @@
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./print-to-scale.html&quot;&gt;Print to scale example&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./projection-and-scale.html&quot;&gt;Projection and Scale&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./projection-and-scale.html&quot;&gt;Projection and Scale / 投影切换与比例尺保持&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction / 使用 Modify 交互进行缩放与旋转&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >4</a>
@@ -124,10 +125,10 @@
         </div>
         <div id="map" class="map"></div>
 <div>
-  <label for="view-projection">View projection</label>
+  <label for="view-projection">View projection / 视图投影：</label>
   <select id="view-projection">
-    <option value="EPSG:3857">Spherical Mercator (EPSG:3857)</option>
-    <option value="EPSG:4326" selected>WGS 84 (EPSG:4326)</option>
+    <option value="EPSG:3857">Spherical Mercator (EPSG:3857) / 球形墨卡托</option>
+    <option value="EPSG:4326" selected>WGS 84 (EPSG:4326) / 经纬度投影</option>
   </select>
 </div>
 
@@ -137,8 +138,97 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of maintaining scale when changing projection.</p>
-        <div id="docs"><p>Example of maintaining scale when changing projection. <code>getPointResolution()</code> is used to calculate the resolution for the new projection which corresponds to that for the old projection. </p>
+        <p id="shortdesc">Example of maintaining scale when changing projection. / 演示在动态切换地图视图投影（如 EPSG:4326 与 EPSG:3857 互转）时，如何保持真实的地面物理比例尺与视口比例不变。</p>
+        <div id="docs"><p>Example of maintaining scale when changing projection.
+<code>getPointResolution()</code> is used to calculate the resolution for the
+new projection which corresponds to that for the old projection.</p>
+<p>本示例演示在动态切换地图投影坐标系时，如何保持地面物理比例尺的一致性。通过 <code>getPointResolution()</code> 计算新旧投影在视口中心点处的点分辨率换算关系，确保切换投影后地图的缩放比例尺视觉大小无缝对齐。</p>
+<hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心痛点：为什么切换投影时地图缩放比例会失真？</h4>
+<ul>
+<li><strong>坐标单位维度不同</strong>：<ul>
+<li><strong><code>EPSG:4326</code></strong>（WGS 84 经纬度）：名义单位是<strong>度（Degrees）</strong>。在赤道处，经度 1° 对应的地表距离约为 111.32 千米；</li>
+<li><strong><code>EPSG:3857</code></strong>（Web 墨卡托）：名义单位是<strong>米（Meters）</strong>。</li>
+<li>如果在切换投影时直接沿用旧视图的 <code>resolution</code>（标称分辨率），地图尺寸会产生数十万倍的剧烈错位。</li>
+</ul>
+</li>
+<li><strong>高纬度投影拉伸变形</strong>：<ul>
+<li>Web 墨卡托投影属于正形圆柱投影，具有纬度越高拉伸越严重的几何特性，其局部长度拉伸系数为 $\sec(\varphi) = 1 / \cos(\varphi)$（其中 $\varphi$ 为地理纬度）。</li>
+<li>在北纬 60° 地区，墨卡托投影的经线拉伸系数达到赤道的 2 倍。如果仅靠简单的缩放级别（Zoom Level）对齐，不仅度与米无法精确转换，更无法补偿不同纬度处的投影变形。</li>
+</ul>
+</li>
+</ul>
+<h4>2. 数学原理：<code>getPointResolution()</code> 与真实地表分辨率推导</h4>
+<p>OpenLayers 的 <code>ol/proj</code> 模块提供了核心函数 <code>getPointResolution(projection, resolution, point, opt_units)</code>，用于求解指定坐标点在真实地球椭球体表面上的实际分辨率（单位：米/像素）。</p>
+<p>换算与推导逻辑如下：</p>
+<ol>
+<li><p><strong>读取投影的标称米系数（Meters Per Unit）</strong>：</p>
+<pre><code class="language-javascript">const currentMPU = currentProjection.getMetersPerUnit();
+const newMPU = newProjection.getMetersPerUnit();
+</code></pre>
+</li>
+<li><p><strong>计算指定点处的真实地表点分辨率系数</strong>：
+传入 <code>1 / MPU</code> 计算单位标称分辨率在当前位置对应的地表真实米数：</p>
+<pre><code class="language-javascript">const currentPointResolution =
+  getPointResolution(currentProjection, 1 / currentMPU, currentCenter, &#39;m&#39;) * currentMPU;
+const newPointResolution =
+  getPointResolution(newProjection, 1 / newMPU, newCenter, &#39;m&#39;) * newMPU;
+</code></pre>
+</li>
+<li><p><strong>推导新标称分辨率</strong>：
+由于当前屏幕中心点的真实地表物理分辨率为：
+$$R_{\text{ground}} = R_{\text{current}} \times \text{currentPointResolution}$$</p>
+<p>若要使目标投影在屏幕上呈现相同的地面物理比例尺，新标称分辨率应满足：
+$$R_{\text{new}} \times \text{newPointResolution} = R_{\text{current}} \times \text{currentPointResolution}$$</p>
+<p>由此推导出计算公式：
+$$R_{\text{new}} = \frac{R_{\text{current}} \times \text{currentPointResolution}}{\text{newPointResolution}}$$</p>
+</li>
+</ol>
+<h4>3. 控件联动：ScaleLine（比例尺控件）的高级参数</h4>
+<p>示例中挂载了专业的条形比例尺控件：</p>
+<pre><code class="language-javascript">const scaleControl = new ScaleLine({
+  units: &#39;metric&#39;, // 公制单位 (m / km)
+  bar: true,       // 启用带分段刻度的标尺条外观
+  steps: 4,        // 划分为 4 个主要刻度区间
+  text: true,      // 在刻度上方直观显示距离文本
+  minWidth: 140,   // 控件最小宽度 (px)
+});
+</code></pre>
+<p>在切换投影时仔细观察左下角的比例尺：</p>
+<ul>
+<li>无论是从 WGS 84（经纬度度数）切到 Web 墨卡托（米制投影），还是反向切换；</li>
+<li>比例尺上显示的物理像素宽度与实际地理公里数均严密保持一致，证明视口地表比例尺实现了平滑无损过渡。</li>
+</ul>
+<h4>4. 技术方案对比</h4>
+<table>
+<thead>
+<tr>
+<th align="left">切换策略</th>
+<th align="left">实现代码</th>
+<th align="left">视觉与测量表现</th>
+<th align="left">适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>直接复用 Zoom</strong></td>
+<td align="left"><code>new View({ zoom: oldView.getZoom(), ... })</code></td>
+<td align="left">比例尺剧烈跳变；度数与米制缩放级别无法对齐；高纬度失真严重</td>
+<td align="left">粗略定位，对比例精度无要求的场景</td>
+</tr>
+<tr>
+<td align="left"><strong>直接复用 Resolution</strong></td>
+<td align="left"><code>new View({ resolution: oldView.getResolution(), ... })</code></td>
+<td align="left">灾难性形变（度与米相差五到六个数量级，整图全黑或瞬间飞出地球）</td>
+<td align="left">严禁跨单位使用</td>
+</tr>
+<tr>
+<td align="left"><strong><code>getPointResolution</code> 动态换算（本示例）</strong></td>
+<td align="left"><code>newResolution = (currRes * currPointRes) / newPointRes</code></td>
+<td align="left"><strong>完美保持地表真实比例尺</strong>；严谨抵消单位差异与纬度投影变形</td>
+<td align="left">专业 GIS、精准量测、多坐标系切换标准实现</td>
+</tr>
+</tbody></table>
 </div>
       </div>
 
@@ -153,9 +243,13 @@ import TileLayer from &#x27;ol/layer/Tile.js&#x27;;
 import {getPointResolution, get as getProjection, transform} from &#x27;ol/proj.js&#x27;;
 import OSM from &#x27;ol/source/OSM.js&#x27;;
 
+// Get projection selector element and initial projection
+// 获取页面上的投影下拉选择框元素以及初始选中的投影对象
 const viewProjSelect &#x3D; document.getElementById(&#x27;view-projection&#x27;);
 const projection &#x3D; getProjection(viewProjSelect.value);
 
+// Configure a segmented metric scale bar control with text labels
+// 配置带分段刻度和距离数值标注的公制比例尺控件
 const scaleControl &#x3D; new ScaleLine({
   units: &#x27;metric&#x27;,
   bar: true,
@@ -164,6 +258,8 @@ const scaleControl &#x3D; new ScaleLine({
   minWidth: 140,
 });
 
+// Initialize the map with default controls + ScaleLine and OpenStreetMap base layer
+// 初始化地图实例，配置默认控件并挂载比例尺控件，底图使用标准 OSM 瓦片
 const map &#x3D; new Map({
   controls: defaultControls().extend([scaleControl]),
   layers: [
@@ -173,12 +269,18 @@ const map &#x3D; new Map({
   ],
   target: &#x27;map&#x27;,
   view: new View({
+    // Transform coordinates [0, 52] from EPSG:4326 to the initial projection
+    // 将坐标点 [0, 52] 从 EPSG:4326 转换为当前视图初始投影下的坐标
     center: transform([0, 52], &#x27;EPSG:4326&#x27;, projection),
     zoom: 6,
     projection: projection,
   }),
 });
 
+/**
+ * Handle projection change while keeping the physical ground scale identical
+ * 监听投影切换事件，在转换视图坐标系的同时精准维持地表真实比例尺不变
+ */
 function onChangeProjection() {
   const currentView &#x3D; map.getView();
   const currentProjection &#x3D; currentView.getProjection();
@@ -186,16 +288,31 @@ function onChangeProjection() {
   const currentResolution &#x3D; currentView.getResolution();
   const currentCenter &#x3D; currentView.getCenter();
   const currentRotation &#x3D; currentView.getRotation();
+
+  // 1. Transform view center coordinates to the target projection
+  // 1. 将当前视图中心点坐标转换到目标投影坐标系
   const newCenter &#x3D; transform(currentCenter, currentProjection, newProjection);
+
+  // 2. Read meters per nominal projection unit (e.g., 1 for EPSG:3857, ~111319.49 for EPSG:4326)
+  // 2. 获取新旧投影每个标称单位对应的米数（例如 EPSG:3857 为 1，EPSG:4326 赤道处约为 111319.49）
   const currentMPU &#x3D; currentProjection.getMetersPerUnit();
   const newMPU &#x3D; newProjection.getMetersPerUnit();
+
+  // 3. Compute real-world ground meters per nominal map unit at the respective center latitudes
+  // 3. 分别计算当前中心点与目标中心点在真实地表处的点分辨率（消除投影纬度形变影响）
   const currentPointResolution &#x3D;
     getPointResolution(currentProjection, 1 / currentMPU, currentCenter, &#x27;m&#x27;) *
     currentMPU;
   const newPointResolution &#x3D;
     getPointResolution(newProjection, 1 / newMPU, newCenter, &#x27;m&#x27;) * newMPU;
+
+  // 4. Derive new nominal resolution to maintain the exact same ground scale on screen
+  // 4. 计算使屏幕上物理比例尺保持不变的新标称分辨率：(旧标称分辨率 × 旧点分辨率系数) / 新点分辨率系数
   const newResolution &#x3D;
     (currentResolution * currentPointResolution) / newPointResolution;
+
+  // 5. Construct and apply the new View instance
+  // 5. 构造新的 View 实例并替换地图当前视图
   const newView &#x3D; new View({
     center: newCenter,
     resolution: newResolution,
@@ -204,6 +321,9 @@ function onChangeProjection() {
   });
   map.setView(newView);
 }
+
+// Bind change event to the projection dropdown
+// 为投影下拉选择框绑定切换事件
 viewProjSelect.addEventListener(&#x27;change&#x27;, onChangeProjection);
 </code></pre>
         </div>
@@ -213,10 +333,10 @@ viewProjSelect.addEventListener(&#x27;change&#x27;, onChangeProjection);
         <summary class="source-heading">index.html</summary>
         <div class="row-fluid">
           <pre><code id="example-html-source" class="language-markup">&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
+&lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Projection and Scale&lt;/title&gt;
+    &lt;title&gt;Projection and Scale / 投影切换与比例尺保持&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -228,10 +348,10 @@ viewProjSelect.addEventListener(&#x27;change&#x27;, onChangeProjection);
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
     &lt;div&gt;
-      &lt;label for&#x3D;&quot;view-projection&quot;&gt;View projection&lt;/label&gt;
+      &lt;label for&#x3D;&quot;view-projection&quot;&gt;View projection / 视图投影：&lt;/label&gt;
       &lt;select id&#x3D;&quot;view-projection&quot;&gt;
-        &lt;option value&#x3D;&quot;EPSG:3857&quot;&gt;Spherical Mercator (EPSG:3857)&lt;/option&gt;
-        &lt;option value&#x3D;&quot;EPSG:4326&quot; selected&gt;WGS 84 (EPSG:4326)&lt;/option&gt;
+        &lt;option value&#x3D;&quot;EPSG:3857&quot;&gt;Spherical Mercator (EPSG:3857) / 球形墨卡托&lt;/option&gt;
+        &lt;option value&#x3D;&quot;EPSG:4326&quot; selected&gt;WGS 84 (EPSG:4326) / 经纬度投影&lt;/option&gt;
       &lt;/select&gt;
     &lt;/div&gt;
 
@@ -268,6 +388,17 @@ viewProjSelect.addEventListener(&#x27;change&#x27;, onChangeProjection);
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+      onload="renderMathInElement(document.getElementById('docs') || document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false
+      });"></script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

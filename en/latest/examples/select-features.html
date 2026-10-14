@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Select Features</title>
+    <title>Select Features / 选择要素</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="./theme/ol.css">
     <link rel="stylesheet" type="text/css" href="./theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
   </head>
@@ -62,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Select Features</h4>
+        <h4 id="title">Select Features / 选择要素</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,7 +75,7 @@
               data-title="select"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./select-features.html&quot;&gt;Select Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./select-features.html&quot;&gt;Select Features / 选择要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-hover-features.html&quot;&gt;Select Features by Hover&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-multiple-features.html&quot;&gt;Select multiple Features&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -98,15 +99,15 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-circle-render.html&quot;&gt;Custom Circle Render&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-hit-detection-renderer.html&quot;&gt;Custom Hit Detection Render&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-interactions.html&quot;&gt;Custom Interactions&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-interactions.html&quot;&gt;Custom Interactions / 自定义交互开发&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./declutter-group.html&quot;&gt;Declutter Group&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-features.html&quot;&gt;Draw and Modify Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector / 矢量图像图层拖拽加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-features.html&quot;&gt;Draw and Modify Features / 绘制与修改要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-geodesic.html&quot;&gt;Draw and Modify Geodesic Circles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-features.html&quot;&gt;Draw Features / 绘制要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-shapes.html&quot;&gt;Draw Shapes / 绘制规则图形&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-modify-trace-snap.html&quot;&gt;Draw, modify, trace and snap&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./clusters-dynamic.html&quot;&gt;Dynamic clusters / 动态交互聚合（凸包预览、点击缩放与重叠点蛛网展开）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters / 地震点位聚合与悬停散开渲染&lt;/a&gt;
@@ -117,12 +118,12 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./equal-earth-geojson.html&quot;&gt;Equal Earth projection with dynamic center meridian&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./fractal.html&quot;&gt;Fractal Rendering&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing / 自由手绘绘制&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson.html&quot;&gt;GeoJSON&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson-vt.html&quot;&gt;geojson-vt integration&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-icon.html&quot;&gt;Icon modification&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-icon.html&quot;&gt;Icon modification / 图标点位拖拽修改&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
@@ -133,9 +134,9 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles.html&quot;&gt;Mapbox Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-ogc-features.html&quot;&gt;MapServer OGC Features&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure.html&quot;&gt;Measure&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure.html&quot;&gt;Measure / 空间长度与面积量算&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./measure-style.html&quot;&gt;Measure using vector styles / 使用矢量样式进行测量&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-features.html&quot;&gt;Modify Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-features.html&quot;&gt;Modify Features / 修改要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-test.html&quot;&gt;Modify Features Test&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles.html&quot;&gt;OGC Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles-geographic.html&quot;&gt;OGC Vector Tiles (Geographic)&lt;/a&gt;
@@ -144,12 +145,12 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./populated-places.html&quot;&gt;Populated Places&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes / 正多边形与星形矢量符号（RegularShape 全解）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rich-text-labels.html&quot;&gt;Rich Text Labels&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./select-features.html&quot;&gt;Select Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction / 使用 Modify 交互进行缩放与旋转&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./select-features.html&quot;&gt;Select Features / 选择要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-hover-features.html&quot;&gt;Select Features by Hover&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-multiple-features.html&quot;&gt;Select multiple Features&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap.html&quot;&gt;Snap Interaction&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap-custom-segmenter.html&quot;&gt;Snap Interaction with Custom Segmenter&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap.html&quot;&gt;Snap Interaction / 捕捉吸附交互&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap-custom-segmenter.html&quot;&gt;Snap Interaction with Custom Segmenter / 带有自定义线段分割器的 Snap 捕捉吸附&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-renderer.html&quot;&gt;Style renderer / 样式渲染器（自定义渲染函数）&lt;/a&gt;
@@ -159,9 +160,9 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tooltip-on-hover.html&quot;&gt;Tooltip on Hover&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topolis.html&quot;&gt;topolis integration&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tracing.html&quot;&gt;Tracing around a polygon&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tracing.html&quot;&gt;Tracing around a polygon / 沿多边形边界自动追踪描摹&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./translate-features.html&quot;&gt;Translate Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./translate-features.html&quot;&gt;Translate Features / 平移移动要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./turf.html&quot;&gt;turf.js&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-vector-layer.html&quot;&gt;Vector Image Layer&lt;/a&gt;
@@ -196,15 +197,15 @@
         </div>
         <div id="map" class="map"></div>
 <form>
-  <label for="type">Action type &nbsp;</label>
+  <label for="type">Action type / 触发类型 &nbsp;</label>
   <select id="type">
-    <option value="click" selected>Click</option>
-    <option value="singleclick">Single-click</option>
-    <option value="pointermove">Hover</option>
-    <option value="altclick">Alt+Click</option>
-    <option value="none">None</option>
+    <option value="click" selected>Click / 单击</option>
+    <option value="singleclick">Single-click / 真单选</option>
+    <option value="pointermove">Hover / 悬停</option>
+    <option value="altclick">Alt+Click / Alt+单击</option>
+    <option value="none">None / 无交互</option>
   </select>
-  <span id="status">&nbsp;0 selected features</span>
+  <span id="status">&nbsp;0 selected features / 已选中 0 个要素</span>
 </form>
 
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
@@ -213,8 +214,23 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of using the Select interaction.</p>
-        <div id="docs"><p>Choose between <code>Single-click</code>, <code>Click</code>, <code>Hover</code> and <code>Alt+Click</code> as the event type for selection in the combobox below. When using <code>Single-click</code> or <code>Click</code> you can hold the <code>Shift</code> key to toggle the feature in the selection.</p> <p>Note: when <code>Single-click</code> is used double-clicks won&#39;t select features. This in contrast to <code>Click</code>, where a double-click will both select the feature and zoom the map (because of the <code>DoubleClickZoom</code> interaction). Note that <code>Single-click</code> is less responsive than <code>Click</code> because of the delay it uses to detect double-clicks.</p> <p>In this example, a listener is registered for the Select interaction&#39;s <code>select</code> event in order to update the selection status above.</p>
+        <p id="shortdesc">Example of using the Select interaction. / 演示使用 Select 交互进行要素拾取与单选/复选。</p>
+        <div id="docs"><p>Choose between <code>Single-click</code>, <code>Click</code>, <code>Hover</code> and <code>Alt+Click</code> as the event type for selection in the combobox below. When using <code>Single-click</code> or <code>Click</code> you can hold the <code>Shift</code> key to toggle the feature in the selection.</p></p>
+<p>Note: when <code>Single-click</code> is used double-clicks won't select features. This in contrast to <code>Click</code>, where a double-click will both select the feature and zoom the map (because of the <code>DoubleClickZoom</code> interaction). Note that <code>Single-click</code> is less responsive than <code>Click</code> because of the delay it uses to detect double-clicks.</p>
+<p>In this example, a listener is registered for the Select interaction's <code>select</code> event in order to update the selection status above.<p>在下方下拉框中可选择不同的触发条件类型：<code>Click（单击）</code>、<code>Single-click（真单选/延时判定）</code>、<code>Hover（悬停）</code> 或 <code>Alt+Click（Alt+单击）</code>。当使用 <code>Single-click</code> 或 <code>Click</code> 时，按住 <code>Shift</code> 键可复选或反选要素。</p></p>
+<p>注意：使用 <code>Single-click</code> 模式时，双击操作不会误触发要素选择；而 <code>Click</code> 模式下双击既会选中要素又会触发地图缩放（因为存在 <code>DoubleClickZoom</code> 交互）。此外，<code>Single-click</code> 因需要等待一段防抖延时来检测是否属于双击，响应灵敏度略低于 <code>Click</code>。</p>
+<p>本示例注册了 Select 交互的 <code>select</code> 事件监听器，实时在界面展示当前选中的要素总数以及最新操作增删的要素详情。<hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. <code>click</code> vs <code>singleclick</code> 底层事件差异</h4>
+<ul>
+<li><strong><code>click</code>（即时响应）</strong>：鼠标抬起（<code>pointerup</code>）且未发生拖拽时立即触发，零时延。但如果用户快速双击，系统会先后派发两次 <code>click</code> 事件外加一次 <code>dblclick</code> 事件，导致双击放大地图的同时误触发了要素选择。</li>
+<li><strong><code>singleclick</code>（延时防抖）</strong>：首次点击后启动约 250ms 的定时器，只有在超时且未侦测到第二次点击时才派发 <code>singleclick</code> 事件。彻底隔绝了双击缩放的误触，但代价是每次点击都有轻微感知时延。</li>
+</ul>
+<h4>2. <code>toggleCondition</code> 与 Shift 闪烁防治</h4>
+<ul>
+<li>在悬停选择（<code>condition: pointerMove</code>）模式下，若使用默认的 <code>toggleCondition: shiftKeyOnly</code>，当用户按住 <code>Shift</code> 键并在要素上方晃动鼠标时，每次 <code>pointermove</code> 都会对要素进行“选中/取消”反复反转，造成视觉剧烈闪烁。</li>
+<li><strong>解决方案</strong>：在悬停模式下显式配置 <code>toggleCondition: never</code>，禁止按键反转，从而保证鼠标悬停高亮平稳连贯。</li>
+</ul>
 </div>
       </div>
 
@@ -260,7 +276,7 @@ const map &#x3D; new Map({
   }),
 });
 
-let select &#x3D; null; // ref to currently selected interaction
+let select &#x3D; null; // ref to currently selected interaction / 当前激活的 Select 交互实例引用
 
 const selected &#x3D; new Style({
   fill: new Fill({
@@ -279,21 +295,26 @@ function selectStyle(feature) {
 }
 
 // select interaction working on &quot;singleclick&quot;
+// 基于 &quot;singleclick&quot;（延时防抖单选）事件的 Select 交互
 const selectSingleClick &#x3D; new Select({style: selectStyle});
 
 // select interaction working on &quot;click&quot;
+// 基于 &quot;click&quot;（即时响应点击）事件的 Select 交互
 const selectClick &#x3D; new Select({
   condition: click,
   style: selectStyle,
 });
 
 // select interaction working on &quot;pointermove&quot;
+// 基于 &quot;pointermove&quot;（指针悬停移动）事件的 Select 交互
 const selectPointerMove &#x3D; new Select({
   condition: pointerMove,
-  toggleCondition: never, // otherwise the move events cause the features to flicker when holding shift
+  toggleCondition: never, // otherwise the move events cause the features to flicker when holding shift / 禁用 Shift 切换，避免移动时要素反复闪烁
   style: selectStyle,
 });
 
+// select interaction working on &quot;Alt+Click&quot;
+// 基于 &quot;Alt+Click&quot; 复合按键事件的 Select 交互
 const selectAltClick &#x3D; new Select({
   style: selectStyle,
   condition: function (mapBrowserEvent) {
@@ -329,13 +350,20 @@ const changeInteraction &#x3D; function () {
         e.selected.length +
         &#x27; and deselected &#x27; +
         e.deselected.length +
-        &#x27; features)&#x27;;
+        &#x27; features) / 已选中 &#x27; +
+        e.target.getFeatures().getLength() +
+        &#x27; 个要素 (本次新增 &#x27; +
+        e.selected.length +
+        &#x27; 个，取消 &#x27; +
+        e.deselected.length +
+        &#x27; 个)&#x27;;
     });
   }
 };
 
 /**
  * onchange callback on the select element.
+ * 下拉选择框的 onchange 切换交互事件回调。
  */
 selectElement.onchange &#x3D; changeInteraction;
 changeInteraction();
@@ -347,10 +375,10 @@ changeInteraction();
         <summary class="source-heading">index.html</summary>
         <div class="row-fluid">
           <pre><code id="example-html-source" class="language-markup">&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
+&lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Select Features&lt;/title&gt;
+    &lt;title&gt;Select Features / 选择要素&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -362,15 +390,15 @@ changeInteraction();
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
     &lt;form&gt;
-      &lt;label for&#x3D;&quot;type&quot;&gt;Action type &amp;nbsp;&lt;/label&gt;
+      &lt;label for&#x3D;&quot;type&quot;&gt;Action type / 触发类型 &amp;nbsp;&lt;/label&gt;
       &lt;select id&#x3D;&quot;type&quot;&gt;
-        &lt;option value&#x3D;&quot;click&quot; selected&gt;Click&lt;/option&gt;
-        &lt;option value&#x3D;&quot;singleclick&quot;&gt;Single-click&lt;/option&gt;
-        &lt;option value&#x3D;&quot;pointermove&quot;&gt;Hover&lt;/option&gt;
-        &lt;option value&#x3D;&quot;altclick&quot;&gt;Alt+Click&lt;/option&gt;
-        &lt;option value&#x3D;&quot;none&quot;&gt;None&lt;/option&gt;
+        &lt;option value&#x3D;&quot;click&quot; selected&gt;Click / 单击&lt;/option&gt;
+        &lt;option value&#x3D;&quot;singleclick&quot;&gt;Single-click / 真单选&lt;/option&gt;
+        &lt;option value&#x3D;&quot;pointermove&quot;&gt;Hover / 悬停&lt;/option&gt;
+        &lt;option value&#x3D;&quot;altclick&quot;&gt;Alt+Click / Alt+单击&lt;/option&gt;
+        &lt;option value&#x3D;&quot;none&quot;&gt;None / 无交互&lt;/option&gt;
       &lt;/select&gt;
-      &lt;span id&#x3D;&quot;status&quot;&gt;&amp;nbsp;0 selected features&lt;/span&gt;
+      &lt;span id&#x3D;&quot;status&quot;&gt;&amp;nbsp;0 selected features / 已选中 0 个要素&lt;/span&gt;
     &lt;/form&gt;
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
@@ -406,6 +434,17 @@ changeInteraction();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+      onload="renderMathInElement(document.getElementById('docs') || document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false
+      });"></script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

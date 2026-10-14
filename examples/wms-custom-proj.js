@@ -56,6 +56,12 @@ new Map({
 		zoom: 2
 	})
 });
+/**
+* 将 WGS84 纬度/经度（十进制度）转换为瑞士东坐标 y (Easting)
+* @param {number} lat 纬度（十进制度）
+* @param {number} lng 经度（十进制度）
+* @return {number} 瑞士东坐标 y（米）
+*/
 function WGStoCHy(lat, lng) {
 	lat = DECtoSEX(lat);
 	lng = DECtoSEX(lng);
@@ -65,6 +71,12 @@ function WGStoCHy(lat, lng) {
 	const lng_aux = (lng - 26782.5) / 1e4;
 	return 600072.37 + 211455.93 * lng_aux - 10938.51 * lng_aux * lat_aux - .36 * lng_aux * Math.pow(lat_aux, 2) - 44.54 * Math.pow(lng_aux, 3);
 }
+/**
+* 将 WGS84 纬度/经度（十进制度）转换为瑞士北坐标 x (Northing)
+* @param {number} lat 纬度（十进制度）
+* @param {number} lng 经度（十进制度）
+* @return {number} 瑞士北坐标 x（米）
+*/
 function WGStoCHx(lat, lng) {
 	lat = DECtoSEX(lat);
 	lng = DECtoSEX(lng);
@@ -74,6 +86,12 @@ function WGStoCHx(lat, lng) {
 	const lng_aux = (lng - 26782.5) / 1e4;
 	return 200147.07 + 308807.95 * lat_aux + 3745.25 * Math.pow(lng_aux, 2) + 76.63 * Math.pow(lat_aux, 2) - 194.56 * Math.pow(lng_aux, 2) * lat_aux + 119.79 * Math.pow(lat_aux, 3);
 }
+/**
+* 将瑞士平面坐标 (y东, x北) 反算为 WGS84 纬度 (十进制度)
+* @param {number} y 瑞士东坐标（米）
+* @param {number} x 瑞士北坐标（米）
+* @return {number} WGS84 纬度（十进制度）
+*/
 function CHtoWGSlat(y, x) {
 	const y_aux = (y - 6e5) / 1e6;
 	const x_aux = (x - 2e5) / 1e6;
@@ -81,6 +99,12 @@ function CHtoWGSlat(y, x) {
 	lat = lat * 100 / 36;
 	return lat;
 }
+/**
+* 将瑞士平面坐标 (y东, x北) 反算为 WGS84 经度 (十进制度)
+* @param {number} y 瑞士东坐标（米）
+* @param {number} x 瑞士北坐标（米）
+* @return {number} WGS84 经度（十进制度）
+*/
 function CHtoWGSlng(y, x) {
 	const y_aux = (y - 6e5) / 1e6;
 	const x_aux = (x - 2e5) / 1e6;
@@ -88,12 +112,22 @@ function CHtoWGSlng(y, x) {
 	lng = lng * 100 / 36;
 	return lng;
 }
+/**
+* 将十进制度转换为度分秒格式 (Sexagesimal DMS, dd.mmss)
+* @param {number} angle 十进制度角度
+* @return {number} 度分秒表示形式 (例如 46.5708 代表 46度57分08秒)
+*/
 function DECtoSEX(angle) {
 	const deg = parseInt(angle, 10);
 	const min = parseInt((angle - deg) * 60, 10);
 	const sec = ((angle - deg) * 60 - min) * 60;
 	return deg + min / 100 + sec / 1e4;
 }
+/**
+* 将度分秒格式角度转换为总角秒数
+* @param {number} angle 度分秒格式角度 (dd.mmss)
+* @return {number} 总角秒数 (Seconds)
+*/
 function DEGtoSEC(angle) {
 	const deg = parseInt(angle, 10);
 	let min = parseInt((angle - deg) * 100, 10);

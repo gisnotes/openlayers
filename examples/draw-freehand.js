@@ -26,14 +26,16 @@ function addInteraction() {
 	}
 }
 /**
-* Handle change event.
+* Handle geometry type change event.
+* 处理几何类型下拉切换事件。
 */
 typeSelect.onchange = function() {
 	map.removeInteraction(draw);
 	addInteraction();
 };
 /**
-* Handle change event.
+* Handle freehand checkbox change event.
+* 处理自由手绘复选框勾选切换事件。
 */
 freehandCheckbox.onchange = function() {
 	if (draw) draw.setFreehand(freehandCheckbox.checked);

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - OpenLayers 客户端动态重投影（Reprojection）全景实战指南</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">Reprojection 动态重投影指南</li></ol></nav>
+
+<h1 id="openlayers-客户端动态重投影（reprojection）全景实战指南">OpenLayers 客户端动态重投影（Reprojection）全景实战指南</h1>
+<blockquote>
+<p>基于 9 个核心重投影官方示例，深度解析跨坐标系转换、栅格自适应三角网、极地矢量切片重投影与 WebGL 硬件加速</p>
+</blockquote>
+<hr>
+<h2 id="引言：打破多源异构数据的坐标系壁垒">引言：打破多源异构数据的“坐标系壁垒”</h2>
+<p>在实际 WebGIS 系统搭建中，数据源往往来自不同的部门、历史测绘项目或第三方供应商：</p>
+<ul>
+<li><strong>公共底图</strong>：来自 OpenStreetMap 或 Google Map，采用标准 Web 墨卡托（<code>EPSG:3857</code>）；</li>
+<li><strong>遥感卫星底图</strong>：来自 Sentinel、Landsat 或机载雷达，采用各分带通用横轴墨卡托（UTM）；</li>
+<li><strong>业务专题数据</strong>：气象海流数据采用 WGS84 经纬度（<code>EPSG:4326</code>），统计制图采用全球等面积摩尔威特（Mollweide），极地科考采用北极朗伯等面积方位投影（LAEA）。</li>
+</ul>
+<p>传统方案必须在 GIS 服务器端预先切片或进行代价高昂的二次切片渲染。<strong>OpenLayers 客户端动态重投影（Reprojection）引擎</strong>彻底打破了这一桎梏：允许浏览器在接收到原始栅格瓦片或矢量切片后，<strong>在客户端毫秒级动态拉伸、旋转、剖分并无缝叠合在同一个目标视图中</strong>。</p>
+<blockquote>
+<p>[!NOTE]
+如果你的诉求是“理解单坐标系的定义、注册独立坐标系、计算比例尺点分辨率或非地理像素空间”，请参阅基础篇：<a href="./openlayers-projection-guide.html">《OpenLayers 投影系统与坐标基准全景实战指南》</a>。</p>
+</blockquote>
+<hr>
+<h2 id="第一部分：全景视盘9-个核心-reprojection-示例矩阵">第一部分：全景视盘——9 个核心 Reprojection 示例矩阵</h2>
+<p>下表系统梳理了聚焦于“跨系动态转换、三角剖分网格与 GPU 硬件加速”的 9 个核心官方示例：</p>
+<table>
+<thead>
+<tr>
+<th align="left">分类</th>
+<th align="left">示例标识</th>
+<th align="left">核心机制 / 关键 API</th>
+<th align="left">解决的典型生产场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>经典栅格重采样</strong></td>
+<td align="left"><a href="../en/latest/examples/reprojection-wgs84.html"><code>reprojection-wgs84</code></a> <span class="badge bg-warning text-dark"><i class="fa fa-link me-1"></i> 双核复合</span></td>
+<td align="left">内置 <code>EPSG:3857</code> $\to$ <code>EPSG:4326</code> 零配置重投影</td>
+<td align="left">浏览器端将方形墨卡托瓦片拉伸为 2:1 等经纬度全景底图</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/reprojection.html"><code>reprojection</code></a> <span class="badge bg-warning text-dark"><i class="fa fa-link me-1"></i> 双核复合</span></td>
+<td align="left">混合 OSM、WMS、WMTS + 8 种目标投影 + <code>isGlobal()</code> 防重影</td>
+<td align="left">复杂异构 GIS 底图统一接入，调节误差阈值平衡帧率</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/reprojection-image.html"><code>reprojection-image</code></a> <span class="badge bg-warning text-dark"><i class="fa fa-link me-1"></i> 双核复合</span></td>
+<td align="left"><code>ImageStatic</code> 单张高分辨率静态图重投影 + <code>interpolate</code></td>
+<td align="left">历史纸质地图、扫描倾斜大图跨投影叠加，双线性插值防锯齿</td>
+</tr>
+<tr>
+<td align="left"><strong>自适应边界与动态代码</strong></td>
+<td align="left"><a href="../en/latest/examples/reprojection-by-code.html"><code>reprojection-by-code</code></a> <span class="badge bg-warning text-dark"><i class="fa fa-link me-1"></i> 双核复合</span></td>
+<td align="left">在线检索 EPSG + <code>applyTransform</code> 8 点采样 + 日界线补偿</td>
+<td align="left">在线检索全球任意 EPSG 代号，自适应曲线边界并重投影瓦片</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/sphere-mollweide.html"><code>sphere-mollweide</code></a></td>
+<td align="left">摩尔威特等面积伪圆柱投影（ESRI:53009）+ <code>worldExtent</code></td>
+<td align="left">统计专题制图、经纬网（Graticule）弧线渲染与局域图层范围裁剪</td>
+</tr>
+<tr>
+<td align="left"><strong>矢量切片与极地突破</strong></td>
+<td align="left"><a href="../en/latest/examples/vector-tiles-reprojected.html"><code>vector-tiles-reprojected</code></a></td>
+<td align="left"><code>VectorTileLayer</code> 客户端几何坐标变换 + 极地 LAEA 投影</td>
+<td align="left">突破墨卡托 $85^\circ$ 极地失效极限，EPSG:4326 矢量切片无损转北极视图</td>
+</tr>
+<tr>
+<td align="left"><strong>云原生遥感 (COG)</strong></td>
+<td align="left"><a href="../en/latest/examples/geotiff-reprojection.html"><code>geotiff-reprojection</code></a></td>
+<td align="left">内置 UTM 投影元数据自动探测 + WebGL 栅格重投影</td>
+<td align="left">自动读取 GeoTIFF 内嵌 UTM 投影，免 Proj4js 配置实时转换至墨卡托</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/cog-modeltransformation.html"><code>cog-modeltransformation</code></a></td>
+<td align="left">解析 GeoTIFF Tag 34264 模型仿射矩阵（包含旋转与剪切）</td>
+<td align="left">机载雷达 / 合成孔径雷达（SAR）斜视倾斜成像实时校正重投影</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/multiple-cogs.html"><code>multiple-cogs</code></a> <span class="badge bg-warning text-dark"><i class="fa fa-link me-1"></i> 双核复合</span></td>
+<td align="left">单图层跨 UTM 31N/32N 相邻分带拼接 + 多波段假彩色合成</td>
+<td align="left">哨兵 2 号跨带卫星遥感影像无缝拼接与实时 NDVI 植被分析</td>
+</tr>
+</tbody></table>
+<blockquote>
+<p>[!TIP]</p>
+<h3 id="🔗-双核全链路枢纽提示（dual-core-hybrid-hub）">🔗 双核全链路枢纽提示（Dual-Core Hybrid Hub）</h3>
+<p>动态重投影的前提是“引擎必须首先认识源投影与目标投影的数学基准”。上述示例中，<code>reprojection</code>、<code>reprojection-by-code</code>、<code>reprojection-image</code>、<code>reprojection-wgs84</code>、<code>multiple-cogs</code> 以及 <a href="../en/latest/examples/scaleline-indiana-east.html"><code>scaleline-indiana-east</code></a> 均被打上 <strong><code>projection</code></strong> 与 <strong><code>reprojection</code></strong> 双标签。</p>
+<p>💡 <strong>基准指引</strong>：若要深入掌握这些示例中涉及的<strong>坐标系类模型属性（<code>extent</code>/<code>worldExtent</code>）、Proj4 桥接注册底层、多项式正反算展开与地表真实点分辨率保真</strong>，请跳转研读基准篇：<a href="./openlayers-projection-guide.html">《OpenLayers 投影系统与坐标基准全景实战指南》</a>。</p>
+</blockquote>
+<hr>
+<h2 id="第二部分：架构全景双通道重投影流水线">第二部分：架构全景——双通道重投影流水线</h2>
+<p>OpenLayers 将重投影流水线划分为两大截然不同的计算通道：<strong>栅格像元重采样网格（Raster Triangulated Mesh）</strong> 与 <strong>矢量几何顶点变换（Vector Geometry Transform）</strong>。</p>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph InputSources[&quot;异构源数据输入 (Source CRS)&quot;]
+        R_Tile[&quot;栅格切片 (TileLayer / OSM / XYZ in 3857)&quot;]
+        R_Img[&quot;单张静态大图 (ImageStatic in 4326/UTM)&quot;]
+        V_Tile[&quot;矢量切片 (VectorTileLayer in 4326)&quot;]
+        C_Tiff[&quot;云原生遥感 (GeoTIFF with Affine Matrix)&quot;]
+    end
+
+    subgraph ReprojPipeline[&quot;OpenLayers 客户端重投影引擎 (ol/reproj)&quot;]
+        subgraph RasterChannel[&quot;栅格重采样通道 (Raster Path)&quot;]
+            M1[&quot;自适应三角网格剖分 (Adaptive Triangulated Mesh)&quot;]
+            M2[&quot;双线性/最近邻像素重采样 (Interpolation)&quot;]
+            M3[&quot;误差阈值控制 (reprojectionErrorThreshold)&quot;]
+        end
+
+        subgraph VectorChannel[&quot;矢量顶点转换通道 (Vector Path)&quot;]
+            V1[&quot;几何要素顶点实时解算 (ol/proj.transform)&quot;]
+            V2[&quot;文本注记正向排版与防畸变 (Declutter &amp; Layout)&quot;]
+        end
+
+        subgraph GPUChannel[&quot;GPU 硬件加速通道 (WebGLTile Path)&quot;]
+            G1[&quot;片元着色器实时逆向坐标寻址 (Fragment Shader)&quot;]
+            G2[&quot;仿射模型矩阵逆映射 (ModelTransformation)&quot;]
+        end
+    end
+
+    subgraph OutputView[&quot;目标视图呈现 (Target View CRS)&quot;]
+        TargetView[&quot;统一目标视图 View\n(如 ESRI:102017 北极 / EPSG:4326 经纬度 / 瑞士平面)&quot;]
+    end
+
+    R_Tile &amp; R_Img --&gt; RasterChannel
+    V_Tile --&gt; VectorChannel
+    C_Tiff --&gt; GPUChannel
+    RasterChannel &amp; VectorChannel &amp; GPUChannel --&gt; TargetView
+</code></pre>
+<hr>
+<h2 id="第三部分：五大重投影核心范式深入剖析">第三部分：五大重投影核心范式深入剖析</h2>
+<h3 id="1-经典栅格重采样与自适应三角网调优">1. 经典栅格重采样与自适应三角网调优</h3>
+<p><strong>对应示例</strong>：<a href="../en/latest/examples/reprojection-wgs84.html"><code>reprojection-wgs84</code></a>、<a href="../en/latest/examples/reprojection.html"><code>reprojection</code></a></p>
+<h4 id="运行原理">运行原理</h4>
+<p>当我们将 OSM（Web 墨卡托）图层放入一个 WGS84（<code>EPSG:4326</code>）视图中时，墨卡托切片不能简单地整体贴上去，因为墨卡托纬线间距随纬度非线性增加，而 WGS84 经纬度网格是均匀分布的。</p>
+<p>OpenLayers 内部采用<strong>自适应三角形剖分网格（Adaptive Triangulated Mesh）</strong>：</p>
+<ol>
+<li>将目标视口反向细分为三角形网络；</li>
+<li>反算各三角形顶点在源切片上的坐标；</li>
+<li>如果三角形中心点的重投影偏差超过允许误差，则将其四等分递归细分；</li>
+<li>利用 Canvas 2D 绘图上下文的 <code>ctx.drawImage</code> 仿射变换渲染每个微小三角形。</li>
+</ol>
+<pre><code class="language-mermaid">graph LR
+    A[&quot;平坦低变形区域\n(赤道附近)&quot;] --&gt;|&quot;粗网格 (仅需 2~4 个三角形)&quot;| R[&quot;极低计算开销&quot;]
+    B[&quot;高曲率急剧变形区\n(高纬度或投影边缘)&quot;] --&gt;|&quot;细网格 (自适应递归细分)&quot;| D[&quot;高度保真，杜绝折角&quot;]
+</code></pre>
+<h4 id="生产性能调优（reprojectionerrorthreshold）">生产性能调优（<code>reprojectionErrorThreshold</code>）</h4>
+<ul>
+<li><strong>默认值</strong>：<code>0.5</code> 像素（极端苛刻的高保真度，三角形数量多）；</li>
+<li><strong>工业调优建议</strong>：对于大范围背景卫星底图或地形晕渲图，将 <code>reprojectionErrorThreshold</code> 提高至 <code>2.0</code> 或 <code>3.0</code>：<pre><code class="language-javascript">new TileWMS({
+  url: &#39;https://...&#39;,
+  reprojectionErrorThreshold: 2.5, // 减少约 70% 的三角面细分与重绘制开销，低端设备帧率立升
+});
+</code></pre>
+</li>
+</ul>
+<hr>
+<h3 id="2-单幅静态影像重投影与抗锯齿控制">2. 单幅静态影像重投影与抗锯齿控制</h3>
+<p><strong>对应示例</strong>：<a href="../en/latest/examples/reprojection-image.html"><code>reprojection-image</code></a></p>
+<p><strong>业务痛点</strong>：对于历史数字化古地图扫描件、局部建筑规划总图等单幅大型栅格图（<code>ImageStatic</code>），在跨投影变换时极易产生锯齿和阶梯走样。</p>
+<pre><code class="language-javascript">import Static from &#39;ol/source/ImageStatic.js&#39;;
+
+const imageSource = new Static({
+  url: &#39;data/historical-map.jpg&#39;,
+  imageExtent: [-123, 37, -122, 38], // 源投影地理范围 (EPSG:4326)
+  projection: &#39;EPSG:4326&#39;,
+  interpolate: true, // 核心属性：启用双线性插值平滑滤波
+});
+</code></pre>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>插值开关黄金准则</strong>：</p>
+<ul>
+<li><strong><code>interpolate: true</code>（双线性插值）</strong>：适用于照片、遥感影像、晕渲图，消除马赛克与折痕；</li>
+<li><strong><code>interpolate: false</code>（最近邻采样）</strong>：适用于土地利用分类、气象预警等级图，严格防止在像元交界处插值出不存在的中间伪分类值。</li>
+</ul>
+</blockquote>
+<hr>
+<h3 id="3-弧形弯曲边界与自适应-8-点采样">3. 弧形弯曲边界与自适应 8 点采样</h3>
+<p><strong>对应示例</strong>：<a href="../en/latest/examples/reprojection-by-code.html"><code>reprojection-by-code</code></a>、<a href="../en/latest/examples/sphere-mollweide.html"><code>sphere-mollweide</code></a></p>
+<p>在兰勃特等角圆锥（LCC）或极射赤平投影中，原本在经纬度下的矩形包围盒 $[minLon, minLat, maxLon, maxLat]$ 投影到平面后并不是直线矩形，而是弯曲的扇环或月牙弧线：</p>
+<pre><code>[minLon, maxLat] -----------&gt; (向上弧形隆起) -----------&gt; [maxLon, maxLat]
+      |                                                        |
+      v                                                        v
+[minLon, minLat] -----------&gt; (向下弧形弯曲) -----------&gt; [maxLon, minLat]
+</code></pre>
+<p>如果仅仅转换矩形的 4 个角点，计算出的外接矩形会将弯曲隆起的部分裁切截断。</p>
+<p><strong>OpenLayers 解决方案</strong>：</p>
+<pre><code class="language-javascript">import {applyTransform} from &#39;ol/extent.js&#39;;
+import {getTransform} from &#39;ol/proj.js&#39;;
+
+// 第 4 个参数 8 表示在每条直角边上密集插入 8 个插值采样点 (Stops)
+const transformFn = getTransform(&#39;EPSG:4326&#39;, targetProjection);
+const safeExtent = applyTransform(sourceBbox, transformFn, undefined, 8);
+</code></pre>
+<p>此外，当包围盒跨越 180° 国际日界线时（<code>bbox[0] &gt; bbox[2]</code>），算法自动执行 <code>bbox[2] += 360</code> 经度补偿，确保投影外包矩形万无一失。</p>
+<hr>
+<h3 id="4-矢量切片客户端几何重投影（极地等面积破局）">4. 矢量切片客户端几何重投影（极地等面积破局）</h3>
+<p><strong>对应示例</strong>：<a href="../en/latest/examples/vector-tiles-reprojected.html"><code>vector-tiles-reprojected</code></a></p>
+<p>与传统栅格瓦片必须重采样像素不同，OpenLayers 的 <code>VectorTileLayer</code> 实现了直接对切片内部矢量几何（Point、LineString、Polygon）顶点的客户端投影转换。</p>
+<h4 id="栅格重投影-vs-矢量切片重投影本质对比">栅格重投影 vs. 矢量切片重投影本质对比</h4>
+<table>
+<thead>
+<tr>
+<th align="left">维度</th>
+<th align="left">传统栅格切片重投影 (Raster)</th>
+<th align="left">矢量切片重投影 (Vector Tile)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>变换对象</strong></td>
+<td align="left">像素（Pixels）/ 三角剖分网格</td>
+<td align="left">几何要素顶点（Vertices）</td>
+</tr>
+<tr>
+<td align="left"><strong>渲染清晰度</strong></td>
+<td align="left">存在插值模糊或阶梯伪影</td>
+<td align="left"><strong>100% 矢量无损</strong>，任意缩放极速超清</td>
+</tr>
+<tr>
+<td align="left"><strong>文字与注记</strong></td>
+<td align="left">注记随同像素被拉伸旋转畸变</td>
+<td align="left">文本始终沿变换后的几何线<strong>正向清晰排版</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>样式与交互</strong></td>
+<td align="left">像素颜色固定不可变</td>
+<td align="left">配合 <code>ol-mapbox-style</code> 实时换肤与要素过滤</td>
+</tr>
+</tbody></table>
+<h4 id="极地高纬度破局与北极投影（laea）">极地高纬度破局与北极投影（LAEA）</h4>
+<p>Web 墨卡托投影（<code>EPSG:3857</code>）公式为：
+$$y = R \ln \left( \tan \left( \frac{\pi}{4} + \frac{\varphi}{2} \right) \right)$$
+当纬度 $\varphi \to \pm 90^\circ$ 时，$\tan(...) \to \infty$，导致 $\pm 85.051129^\circ$ 以上无法渲染。</p>
+<p><strong>极地方案</strong>：
+采用全球全纬度覆盖（$[-180, -90, 180, 90]$）的 <code>EPSG:4326</code> 矢量切片，通过 Proj4js 注册北极朗伯等面积方位投影（North Pole Lambert Azimuthal Equal Area, <code>ESRI:102017</code>），OpenLayers 矢量渲染器直接在北极视角下重投影渲染：</p>
+<pre><code class="language-javascript">proj4.defs(
+  &#39;ESRI:102017&#39;,
+  &#39;+proj=laea +lat_0=90 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs&#39;
+);
+register(proj4);
+
+const layer = new VectorTileLayer({
+  declutter: true,
+  source: new VectorTileSource({
+    projection: &#39;EPSG:4326&#39;,
+    tileGrid: createXYZ({ extent: [-180, -90, 180, 90], tileSize: 512, maxResolution: 180 / 512, maxZoom: 13 }),
+  }),
+});
+applyStyle(layer, &#39;https://api.maptiler.com/maps/basic-4326/style.json?key=...&#39;);
+
+const map = new Map({
+  target: &#39;map&#39;,
+  layers: [layer],
+  view: new View({
+    projection: &#39;ESRI:102017&#39;,
+    center: fromLonLat([0, 90], &#39;ESRI:102017&#39;),
+    zoom: 4,
+  }),
+});
+</code></pre>
+<hr>
+<h3 id="5-云原生遥感-webgl-硬件级重投影与仿射矩阵校正">5. 云原生遥感 WebGL 硬件级重投影与仿射矩阵校正</h3>
+<p><strong>对应示例</strong>：<a href="../en/latest/examples/geotiff-reprojection.html"><code>geotiff-reprojection</code></a>、<a href="../en/latest/examples/cog-modeltransformation.html"><code>cog-modeltransformation</code></a>、<a href="../en/latest/examples/multiple-cogs.html"><code>multiple-cogs</code></a></p>
+<p>在海量遥感卫星影像（COG）重投影中，若继续依赖 CPU 三角剖分会导致主线程完全卡死。OpenLayers 提供了基于 WebGL 的全硬件加速管道：</p>
+<h4 id="①-内置-utm-投影零配置嗅探">① 内置 UTM 投影零配置嗅探</h4>
+<p>OpenLayers 内置所有标准 UTM 分带（如 UTM Zone 36N，即 <code>EPSG:32636</code>），无需 Proj4js：</p>
+<pre><code class="language-javascript">const source = new GeoTIFF({
+  sources: [{url: &#39;https://.../sentinel-s2-l2a-cogs/.../TCI.tif&#39;}],
+});
+
+// 异步读取 IFD 头信息后直接定位，着色器自动硬件重采样至墨卡托视图
+source.getView().then((sourceView) =&gt; {
+  const center = transform(sourceView.center, sourceView.projection, map.getView().getProjection());
+  map.getView().setCenter(center);
+});
+</code></pre>
+<h4 id="②-sar-倾斜雷达-tag-34264-仿射矩阵校正">② SAR 倾斜雷达 Tag 34264 仿射矩阵校正</h4>
+<p>合成孔径雷达（SAR）卫星沿轨道倾斜扫描成像时，图像坐标系相对于地面存在明显的<strong>旋转角（Rotation）与剪切（Skew）</strong>。
+GeoTIFF Tag 34264（<code>ModelTransformationTag</code>）定义了仿射矩阵：
+$$\begin{bmatrix} X \ Y \ 1 \end{bmatrix} = \begin{bmatrix} a &amp; b &amp; c \ d &amp; e &amp; f \ 0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} \text{col} \ \text{row} \ 1 \end{bmatrix}$$
+OpenLayers 的 <code>WebGLTile</code> 在片元着色器中执行该矩阵的逆运算，实现雷达斜视图像与地理底图的微秒级亚像素贴合。</p>
+<h4 id="③-跨相邻-utm-分带无缝合成">③ 跨相邻 UTM 分带无缝合成</h4>
+<p>在 <code>multiple-cogs</code> 中，相邻两景哨兵卫星影像分别位于 UTM 31N 与 UTM 32N。OpenLayers 仅用一个 <code>WebGLTile</code> 图层同时加载两个源，显卡自动将两景异构投影拼接并实时计算 NDVI 植被指数。</p>
+<hr>
+<h2 id="第四部分：生产避坑与排错-checklist">第四部分：生产避坑与排错 Checklist</h2>
+<h3 id="1-避免全球全景下的局域图层重影（ghost-prevention）">1. 避免全球全景下的局域图层重影（Ghost Prevention）</h3>
+<p>当全局投影（如摩尔威特 <code>ESRI:54009</code>、WGS84 <code>EPSG:4326</code>）开启世界环绕（<code>wrapX: true</code>）时，局域图层（如英国国家格网 <code>EPSG:27700</code>）可能会在球面展开周期中产生多个虚假重影副本。</p>
+<p><strong>标准工程实践</strong>：</p>
+<pre><code class="language-javascript">function updateViewProjection(newProj) {
+  map.setView(new View({ projection: newProj, ... }));
+
+  // 如果目标视图是全球投影，必须为局域图层显式限制裁剪范围
+  if (newProj.isGlobal()) {
+    layerBNG.setExtent(
+      transformExtent(proj27700.getExtent(), proj27700, newProj, 2)
+    );
+  } else {
+    layerBNG.setExtent(undefined);
+  }
+}
+</code></pre>
+<h3 id="2-重投影性能瓶颈排查表">2. 重投影性能瓶颈排查表</h3>
+<table>
+<thead>
+<tr>
+<th align="left">现象</th>
+<th align="left">根本诱因</th>
+<th align="left">解决方案</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left">地图平移卡顿、掉帧严重</td>
+<td align="left">大量栅格图层使用了默认 <code>0.5</code> 像素阈值，三角面超数万个</td>
+<td align="left">提高 <code>reprojectionErrorThreshold: 2.0</code></td>
+</tr>
+<tr>
+<td align="left">边界处瓦片缺失或截断</td>
+<td align="left">弧形投影下仅转换了 4 个角点包围盒</td>
+<td align="left">使用 <code>applyTransform(bbox, transform, undefined, 8)</code> 增加采样点</td>
+</tr>
+<tr>
+<td align="left">遥感多波段影像加载缓慢</td>
+<td align="left">采用了 CPU Canvas 传统图层重投影</td>
+<td align="left">换用 <code>ol/layer/WebGLTile</code>，由显卡并行计算</td>
+</tr>
+<tr>
+<td align="left">分类栅格图边缘颜色混淆</td>
+<td align="left">误开启了双线性插值</td>
+<td align="left">设置 <code>interpolate: false</code> 保持像元纯净</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="附录：9-个官方-reprojection-核心示例源码导航">附录：9 个官方 Reprojection 核心示例源码导航</h2>
+<ol>
+<li><a href="../en/latest/examples/reprojection-wgs84.html"><code>reprojection-wgs84</code></a> &mdash; OpenStreetMap 客户端 WGS84 重投影</li>
+<li><a href="../en/latest/examples/reprojection.html"><code>reprojection</code></a> &mdash; 多源异构底图栅格重投影与自适应三角网调优</li>
+<li><a href="../en/latest/examples/reprojection-image.html"><code>reprojection-image</code></a> &mdash; 单幅高分辨率静态扫描图像重投影与抗锯齿插值</li>
+<li><a href="../en/latest/examples/reprojection-by-code.html"><code>reprojection-by-code</code></a> &mdash; 动态 EPSG 代码在线检索与自适应 8 点边界重投影</li>
+<li><a href="../en/latest/examples/sphere-mollweide.html"><code>sphere-mollweide</code></a> &mdash; 摩尔威特伪圆柱等面积投影与全球经纬网</li>
+<li><a href="../en/latest/examples/vector-tiles-reprojected.html"><code>vector-tiles-reprojected</code></a> &mdash; 矢量切片客户端几何动态重投影与北极朗伯投影</li>
+<li><a href="../en/latest/examples/geotiff-reprojection.html"><code>geotiff-reprojection</code></a> &mdash; GeoTIFF 内置 UTM 投影自动嗅探与客户端动态重投影</li>
+<li><a href="../en/latest/examples/cog-modeltransformation.html"><code>cog-modeltransformation</code></a> &mdash; SAR 倾斜雷达成像模型仿射矩阵实时校正</li>
+<li><a href="../en/latest/examples/multiple-cogs.html"><code>multiple-cogs</code></a> &mdash; 多 COG 跨相邻分带拼接与波段多光谱合成</li>
+</ol>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

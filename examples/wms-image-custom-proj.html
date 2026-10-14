@@ -1,15 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Single Image WMS with Proj4js</title>
+    <title>集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="./theme/ol.css">
     <link rel="stylesheet" type="text/css" href="./theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
   </head>
@@ -62,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Single Image WMS with Proj4js</h4>
+        <h4 id="title">集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -73,11 +74,8 @@
               data-bs-target="#tag-example-list"
               data-title="wms"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;Custom Tiled WMS&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-wms.html&quot;&gt;MapServer WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image.html&quot;&gt;Single Image WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-tiled.html&quot;&gt;Tiled WMS&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-tiled-wrap-180.html&quot;&gt;Tiled WMS Wrapping&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-tilegrid-512x256.html&quot;&gt;WMS 512x256 Tiles&lt;/a&gt;
@@ -86,7 +84,10 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-svg.html&quot;&gt;WMS loader with SVG format&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time.html&quot;&gt;WMS Time&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time-webgl.html&quot;&gt;WMS Time (WebGL)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-no-proj.html&quot;&gt;WMS without Projection&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;多投影栅格数据动态重投影 (Raster Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-no-proj.html&quot;&gt;无投影转换定义的 WMS (WMS without Projection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;自定义投影转换的瓦片 WMS (Custom Tiled WMS)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >14</a>
@@ -100,7 +101,7 @@
               data-bs-target="#tag-example-list"
               data-title="singleimage"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -115,11 +116,11 @@
               data-title="proj4js"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;Image Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection with coordinate system search&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sphere-mollweide.html&quot;&gt;Sphere Mollweide&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;单幅静态图像客户端重投影 (Image Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;多投影栅格数据动态重投影 (Raster Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sphere-mollweide.html&quot;&gt;球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >6</a>
@@ -134,19 +135,19 @@
               data-title="projection"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;COG with ModelTransformation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;Custom Tiled WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;Image Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG sources&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;OpenStreetMap Reprojection with ScaleLine Control&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./projection-and-scale.html&quot;&gt;Projection and Scale&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection with coordinate system search&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sphere-mollweide.html&quot;&gt;Sphere Mollweide&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-no-proj.html&quot;&gt;WMS without Projection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap 客户端 WGS84 重投影 (OpenStreetMap Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./projection-and-scale.html&quot;&gt;Projection and Scale / 投影切换与比例尺保持&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify 亿级超大图像金字塔 (Zoomify)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;包含模型仿射变换矩阵的 COG (COG with ModelTransformation)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;单幅静态图像客户端重投影 (Image Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;多 COG 数据源重投影与波段合成 (Multiple COG sources)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;多投影栅格数据动态重投影 (Raster Reprojection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-no-proj.html&quot;&gt;无投影转换定义的 WMS (WMS without Projection)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sphere-mollweide.html&quot;&gt;球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;自定义投影转换的瓦片 WMS (Custom Tiled WMS)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >14</a>
@@ -160,11 +161,11 @@
               data-bs-target="#tag-example-list"
               data-title="mapserver"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;Custom Tiled WMS&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-cgi.html&quot;&gt;MapServer CGI&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-ogc-features.html&quot;&gt;MapServer OGC Features&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-wms.html&quot;&gt;MapServer WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;自定义投影转换的瓦片 WMS (Custom Tiled WMS)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >5</a>
@@ -191,8 +192,30 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of integrating Proj4js for coordinate transforms.</p>
-        <div id="docs"><p>With <a href="http://proj4js.org/">Proj4js</a> integration, OpenLayers can transform coordinates between arbitrary projections.</p>
+        <p id="shortdesc">演示通过集成 Proj4js 注册自定义投影定义，实现非内置投影下的单图像 WMS (ImageWMS) 渲染与坐标转换。</p>
+        <div id="docs"><p>本例展示了 OpenLayers 与 <a href="http://proj4js.org/">Proj4js</a> 的深度透明集成机制：通过注册自定义投影定义，在<strong>单图像 WMS（<code>ol/source/ImageWMS</code>）</strong>图层中无缝实现任意投影间的坐标正反算。</p>
+<h3>核心机制与原理解析</h3>
+<ol>
+<li><p><strong>单图像 WMS（ImageWMS）的工作机制</strong>：</p>
+<ul>
+<li>与将地图切分为 256x256 固定网格的瓦片式 <code>TileWMS</code> 不同，<code>ImageWMS</code> 会在每次地图视口平移、缩放或窗口尺寸变化后，发起单次 HTTP 请求索要一幅与当前视口像素尺寸完全对应的全屏大图（参数中携带动态的 <code>BBOX</code>、<code>WIDTH</code>、<code>HEIGHT</code> 与 <code>CRS</code>）。</li>
+<li><strong>适用场景</strong>：对于注记密集、水系复杂的专题业务图（如本例中瑞士环境局的全国洪水警戒图），单图像模式能完美避免瓦片接缝处的文字被截断、图标断裂或重复绘制的问题。</li>
+</ul>
+</li>
+<li><p><strong>透明的 Proj4js 注册与绑定（<code>register(proj4)</code>）</strong>：</p>
+<ul>
+<li>调用 <code>proj4.defs(&#39;EPSG:21781&#39;, &#39;+proj=somerc ...&#39;)</code> 声明瑞士旧国家投影（CH1903 / LV03，斜轴等角圆柱投影 / 贝塞尔椭球）；</li>
+<li>执行 <code>register(proj4)</code> 后，OpenLayers 的核心投影系统会自动与 Proj4js 建立双向函数查找映射。</li>
+<li>随后无论是创建 <code>new Projection(...)</code>，还是直接调用 <code>fromLonLat([8.23, 46.86], projection)</code>，OpenLayers 都能自动拾取底层正逆解算函数，实现经纬度到目标平面英制/米制坐标的即时计算。</li>
+</ul>
+</li>
+<li><p><strong>投影合法范围（Extent）对视图分辨率的决定性作用</strong>：</p>
+<ul>
+<li>在创建 <code>Projection</code> 实例时配置 <code>extent: [minx, miny, maxx, maxy]</code>；</li>
+<li>OpenLayers 视图（<code>View</code>）依据此包围盒计算 Zoom 0 级别的初始点分辨率与世界漫游约束，避免因未定义空间范围导致缩放级别错乱。</li>
+</ul>
+</li>
+</ol>
 </div>
       </div>
 
@@ -210,34 +233,39 @@ import {register} from &#x27;ol/proj/proj4.js&#x27;;
 import ImageWMS from &#x27;ol/source/ImageWMS.js&#x27;;
 import proj4 from &#x27;proj4&#x27;;
 
-// Transparent Proj4js support:
-//
-// EPSG:21781 is known to Proj4js because its definition is registered by
-// calling proj4.defs(). Now when we create an ol/proj/Projection instance with
-// the &#x27;EPSG:21781&#x27; code, OpenLayers will pick up the transform functions from
-// Proj4js. To get the registered ol/proj/Projection instance with other
-// parameters like units and axis orientation applied from Proj4js, use
-// &#x60;ol/proj#get(&#x27;EPSG:21781&#x27;)&#x60;.
-//
-// Note that we are setting the projection&#x27;s extent here, which is used to
-// determine the view resolution for zoom level 0. Recommended values for a
-// projection&#x27;s validity extent can be found at https://spatialreference.org/.
+/**
+ * Proj4js 透明集成机制说明：
+ *
+ * 1. 通过 proj4.defs() 注册 EPSG:21781 (瑞士国家投影 CH1903 / LV03) 的 Proj 字符串定义；
+ * 2. 调用 register(proj4) 将 Proj4js 内部已注册的所有投影转换规则同步至 OpenLayers 全局投影表；
+ * 3. 当我们通过 new Projection({code: &#x27;EPSG:21781&#x27;, ...}) 创建投影实例时，OpenLayers 会自动绑定 Proj4js 提供的正反算函数；
+ *    若需直接获取带有单位、轴向等完整元数据的已注册投影对象，也可以直接调用 ol/proj#get(&#x27;EPSG:21781&#x27;)；
+ * 4. 为投影配置的 extent 包围盒范围非常关键，OpenLayers 视图（View）依据该范围计算 Zoom 级别 0 时的默认初始分辨率。
+ *    各投影的推荐有效范围可在 https://spatialreference.org/ 检索获取。
+ */
 
+// 注册瑞士国家投影定义（基于贝塞尔 1841 椭球体的斜轴等角圆柱投影 / 瑞士斜轴墨卡托）
 proj4.defs(
   &#x27;EPSG:21781&#x27;,
   &#x27;+proj&#x3D;somerc +lat_0&#x3D;46.95240555555556 +lon_0&#x3D;7.439583333333333 +k_0&#x3D;1 &#x27; +
     &#x27;+x_0&#x3D;600000 +y_0&#x3D;200000 +ellps&#x3D;bessel &#x27; +
     &#x27;+towgs84&#x3D;660.077,13.551,369.344,2.484,1.783,2.939,5.66 +units&#x3D;m +no_defs&#x27;,
 );
+// 同步注册至 OpenLayers
 register(proj4);
 
+// 创建带有合法有效范围的投影实例
 const projection &#x3D; new Projection({
   code: &#x27;EPSG:21781&#x27;,
   extent: [485869.5728, 76443.1884, 837076.5648, 299941.7864],
 });
 
+// 瑞士区域适用的显示范围 [minX, minY, maxX, maxY]（米）
 const extent &#x3D; [420000, 30000, 900000, 350000];
+
+// 业务图层列表（均采用单图像 ImageLayer + ImageWMS）
 const layers &#x3D; [
+  // 底图：瑞士联邦地形局 1:1,000,000 彩色像元地图（单图像 WMS）
   new ImageLayer({
     extent: extent,
     source: new ImageWMS({
@@ -253,6 +281,7 @@ const layers &#x3D; [
       serverType: &#x27;mapserver&#x27;,
     }),
   }),
+  // 专题图层：瑞士环境局全国洪水警戒分布图
   new ImageLayer({
     extent: extent,
     source: new ImageWMS({
@@ -267,12 +296,14 @@ const layers &#x3D; [
   }),
 ];
 
+// 初始化地图实例
 const map &#x3D; new Map({
   controls: defaultControls().extend([new ScaleLine()]),
   layers: layers,
   target: &#x27;map&#x27;,
   view: new View({
     projection: projection,
+    // 通过 fromLonLat 自动利用 Proj4js 将经纬度中心点 [8.23°E, 46.86°N] 转换为 EPSG:21781 平面米制坐标
     center: fromLonLat([8.23, 46.86], projection),
     extent: extent,
     zoom: 2,
@@ -286,10 +317,10 @@ const map &#x3D; new Map({
         <summary class="source-heading">index.html</summary>
         <div class="row-fluid">
           <pre><code id="example-html-source" class="language-markup">&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
+&lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Single Image WMS with Proj4js&lt;/title&gt;
+    &lt;title&gt;集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -335,6 +366,17 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+      onload="renderMathInElement(document.getElementById('docs') || document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false
+      });"></script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

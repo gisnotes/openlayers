@@ -90,6 +90,7 @@ var ExampleDraw = {
 ExampleDraw.init();
 /**
 * Let user change the geometry type.
+* 允许用户切换几何类型或交互模式。
 * @param {Event} e Change event.
 */
 optionsForm.onchange = function(e) {
@@ -118,11 +119,11 @@ var snap = new Snap({
 var snappedElement = document.getElementById("snapped");
 snap.on("snap", () => {
 	document.getElementById("map").style.cursor = "grabbing";
-	snappedElement.innerHTML = "Snapped: true";
+	snappedElement.innerHTML = "Snapped / 吸附状态: true / 已吸附";
 });
 snap.on("unsnap", () => {
 	document.getElementById("map").style.cursor = "default";
-	snappedElement.innerHTML = "Snapped: false";
+	snappedElement.innerHTML = "Snapped / 吸附状态: false / 未吸附";
 });
 map.addInteraction(snap);
 //#endregion

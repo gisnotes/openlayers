@@ -32,6 +32,8 @@ var Drag = class extends PointerInteraction {
 	}
 };
 /**
+* Handle pointer down event. Return true to claim the drag sequence.
+* 处理指针按下事件。返回 true 声明接管后续的拖拽事件序列。
 * @param {import('../src/ol/MapBrowserEvent.js').default} evt Map browser event.
 * @return {boolean} `true` to start the drag sequence.
 */
@@ -46,6 +48,8 @@ function handleDownEvent(evt) {
 	return !!feature;
 }
 /**
+* Handle pointer drag event: calculate coordinate delta and translate the feature.
+* 处理指针拖拽事件：计算坐标偏移量并实时平移要素几何。
 * @param {import('../src/ol/MapBrowserEvent.js').default} evt Map browser event.
 */
 function handleDragEvent(evt) {
@@ -56,6 +60,8 @@ function handleDragEvent(evt) {
 	this.coordinate_[1] = evt.coordinate[1];
 }
 /**
+* Handle pointer move event: update cursor style on hover.
+* 处理指针悬停移动事件：鼠标悬停在要素上方时动态更新光标样式为手型。
 * @param {import('../src/ol/MapBrowserEvent.js').default} evt Event.
 */
 function handleMoveEvent(evt) {
@@ -76,6 +82,8 @@ function handleMoveEvent(evt) {
 	}
 }
 /**
+* Handle pointer up event: finish the drag sequence and release references.
+* 处理指针抬起事件：结束当前拖拽手势生命周期并释放引用。
 * @return {boolean} `false` to stop the drag sequence.
 */
 function handleUpEvent() {

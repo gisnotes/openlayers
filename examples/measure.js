@@ -16,48 +16,48 @@ var vector = new VectorLayer({
 	}
 });
 /**
-* Currently drawn feature.
+* Currently drawn feature. / 当前正在绘制的要素。
 * @type {import('../src/ol/Feature.js').default}
 */
 var sketch;
 /**
-* The help tooltip element.
+* The help tooltip element. / 鼠标悬停操作引导提示框 DOM 元素。
 * @type {HTMLElement}
 */
 var helpTooltipElement;
 /**
-* Overlay to show the help messages.
+* Overlay to show the help messages. / 展示操作引导提示的覆盖层。
 * @type {Overlay}
 */
 var helpTooltip;
 /**
-* The measure tooltip element.
+* The measure tooltip element. / 测量数值提示框 DOM 元素。
 * @type {HTMLElement}
 */
 var measureTooltipElement;
 /**
-* Overlay to show the measurement.
+* Overlay to show the measurement. / 展示测量结果数值的覆盖层。
 * @type {Overlay}
 */
 var measureTooltip;
 /**
-* Message to show when the user is drawing a polygon.
+* Message to show when the user is drawing a polygon. / 正在绘制多边形时的引导消息。
 * @type {string}
 */
-var continuePolygonMsg = "Click to continue drawing the polygon";
+var continuePolygonMsg = "Click to continue drawing the polygon / 点击继续绘制多边形";
 /**
-* Message to show when the user is drawing a line.
+* Message to show when the user is drawing a line. / 正在绘制折线时的引导消息。
 * @type {string}
 */
-var continueLineMsg = "Click to continue drawing the line";
+var continueLineMsg = "Click to continue drawing the line / 点击继续绘制折线";
 /**
-* Handle pointer move.
+* Handle pointer move. / 处理鼠标指针移动事件。
 * @param {import('../src/ol/MapBrowserEvent').default} evt The event.
 */
 var pointerMoveHandler = function(evt) {
 	if (evt.dragging) return;
 	/** @type {string} */
-	let helpMsg = "Click to start drawing";
+	let helpMsg = "Click to start drawing / 点击开始绘制";
 	if (sketch) {
 		const geom = sketch.getGeometry();
 		if (geom instanceof Polygon) helpMsg = continuePolygonMsg;
@@ -82,7 +82,7 @@ map.getViewport().addEventListener("mouseout", function() {
 var typeSelect = document.getElementById("type");
 var draw;
 /**
-* Format length output.
+* Format length output. / 格式化长度测量输出文本。
 * @param {LineString} line The line.
 * @return {string} The formatted length.
 */
@@ -94,7 +94,7 @@ var formatLength = function(line) {
 	return output;
 };
 /**
-* Format area output.
+* Format area output. / 格式化面积测量输出文本。
 * @param {Polygon} polygon The polygon.
 * @return {string} Formatted area.
 */
@@ -160,7 +160,7 @@ function addInteraction() {
 	});
 }
 /**
-* Creates a new help tooltip
+* Creates a new help tooltip / 创建新的操作引导提示覆盖层
 */
 function createHelpTooltip() {
 	if (helpTooltipElement) helpTooltipElement.remove();
@@ -174,7 +174,7 @@ function createHelpTooltip() {
 	map.addOverlay(helpTooltip);
 }
 /**
-* Creates a new measure tooltip
+* Creates a new measure tooltip / 创建新的测量数值提示覆盖层
 */
 function createMeasureTooltip() {
 	if (measureTooltipElement) measureTooltipElement.remove();
@@ -190,7 +190,7 @@ function createMeasureTooltip() {
 	map.addOverlay(measureTooltip);
 }
 /**
-* Let user change the geometry type.
+* Let user change the geometry type. / 允许用户切换量算类型。
 */
 typeSelect.onchange = function() {
 	map.removeInteraction(draw);

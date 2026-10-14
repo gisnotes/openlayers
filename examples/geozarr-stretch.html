@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
@@ -10,6 +10,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="./theme/ol.css">
     <link rel="stylesheet" type="text/css" href="./theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="geozarr-stretch.css">
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="./theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
@@ -150,66 +151,6 @@
               tabindex="0"
               >27</a>
           </span>
-          <span class="badge-group">
-            <a
-              href="./index.html?q=遥感" class="badge badge-info">遥感</a
-            ><a
-              class="badge badge-info tag-modal-toggle"
-              data-bs-toggle="modal"
-              data-bs-target="#tag-example-list"
-              data-title="遥感"
-              data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-stretch.html&quot;&gt;Band Contrast Stretch / 遥感波段组合与对比度拉伸&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./geozarr-stretch.html&quot;&gt;Band Selection and Contrast Stretch / GeoZarr 波段选择与对比度拉伸&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
-                &lt;/ul&gt;"
-              tabindex="0"
-              >3</a>
-          </span>
-          <span class="badge-group">
-            <a
-              href="./index.html?q=多维数组" class="badge badge-info">多维数组</a
-            ><a
-              class="badge badge-info tag-modal-toggle"
-              data-bs-toggle="modal"
-              data-bs-target="#tag-example-list"
-              data-title="多维数组"
-              data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./geozarr-stretch.html&quot;&gt;Band Selection and Contrast Stretch / GeoZarr 波段选择与对比度拉伸&lt;/a&gt;
-                &lt;/ul&gt;"
-              tabindex="0"
-              >1</a>
-          </span>
-          <span class="badge-group">
-            <a
-              href="./index.html?q=波段" class="badge badge-info">波段</a
-            ><a
-              class="badge badge-info tag-modal-toggle"
-              data-bs-toggle="modal"
-              data-bs-target="#tag-example-list"
-              data-title="波段"
-              data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-stretch.html&quot;&gt;Band Contrast Stretch / 遥感波段组合与对比度拉伸&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./geozarr-stretch.html&quot;&gt;Band Selection and Contrast Stretch / GeoZarr 波段选择与对比度拉伸&lt;/a&gt;
-                &lt;/ul&gt;"
-              tabindex="0"
-              >2</a>
-          </span>
-          <span class="badge-group">
-            <a
-              href="./index.html?q=对比度拉伸" class="badge badge-info">对比度拉伸</a
-            ><a
-              class="badge badge-info tag-modal-toggle"
-              data-bs-toggle="modal"
-              data-bs-target="#tag-example-list"
-              data-title="对比度拉伸"
-              data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-stretch.html&quot;&gt;Band Contrast Stretch / 遥感波段组合与对比度拉伸&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./geozarr-stretch.html&quot;&gt;Band Selection and Contrast Stretch / GeoZarr 波段选择与对比度拉伸&lt;/a&gt;
-                &lt;/ul&gt;"
-              tabindex="0"
-              >2</a>
-          </span>
         </p>
         <div class="modal modal-tag-example" id="tag-example-list" tabindex="-1" role="dialog" aria-labelledby="tag-example-title" aria-hidden="true">
           <div class="modal-dialog modal-dialog-scrollable" role="document">
@@ -277,7 +218,7 @@ method to update the rendering based on user selected bands and contrast stretch
 <p>在云原生地球科学（Cloud-Native Geospatial）领域，<strong>COG</strong> 和 <strong>GeoZarr</strong> 是两大核心标准：</p>
 <ul>
 <li><strong>COG（Cloud Optimized GeoTIFF）</strong>：适合传统的 <strong>2D 平面栅格影像</strong>。</li>
-<li><strong>GeoZarr（基于 Zarr 规范的空间多维数组）</strong>：专为**多维科学数据立方体（N-Dimensional Data Cubes，如 <code>时间 × 波段 × 高程 × 纬度 × 经度</code>）**设计。它将庞大的多维数组切分为独立压缩的小数据块（Chunks）直接存放在对象存储（如 S3）中。</li>
+<li><strong>GeoZarr（基于 Zarr 规范的空间多维数组）</strong>：专为<strong>多维科学数据立方体（N-Dimensional Data Cubes，如 <code>时间 × 波段 × 高程 × 纬度 × 经度</code>）</strong>设计。它将庞大的多维数组切分为独立压缩的小数据块（Chunks）直接存放在对象存储（如 S3）中。</li>
 <li><strong>生态背景</strong>：欧洲航天局（ESA）新一代哨兵卫星数据处理框架（EOPF）已全面采用 Zarr 格式发布 Sentinel-2 L2A 地表反射率产品。OpenLayers 底层通过 <code>zarrita</code> 库实现纯前端按需拉取 Zarr 分块并在 WebGL 中实时渲染。</li>
 </ul>
 <h4>2. 哨兵 2 号（Sentinel-2）波段映射与短波红外（SWIR）</h4>
@@ -316,7 +257,7 @@ method to update the rendering based on user selected bands and contrast stretch
 </li>
 </ul>
 <h4>5. 深度对比：本示例 (<code>geozarr-stretch</code>) vs 上一示例 (<code>cog-stretch</code>)</h4>
-<p><strong>为什么两个示例的 <code>WebGLTile</code> 样式配置看起来几乎一样？</strong><br>这是因为 OpenLayers 实现了**“数据源（Source）与 GPU 渲染层（WebGLTile）彻底解耦”**。无论底层是传统的 <code>GeoTIFF</code> 还是新一代的 <code>GeoZarr</code>，进入渲染管线后都会被抽象为标准的 <strong><code>DataTile</code>（多波段数据瓦片）</strong>，因此上层的着色器表达式 <code>[&#39;band&#39;, N]</code> 和 <code>updateStyleVariables()</code> 可以 100% 复用！</p>
+<p><strong>为什么两个示例的 <code>WebGLTile</code> 样式配置看起来几乎一样？</strong><br>这是因为 OpenLayers 实现了<strong>“数据源（Source）与 GPU 渲染层（WebGLTile）彻底解耦”</strong>。无论底层是传统的 <code>GeoTIFF</code> 还是新一代的 <code>GeoZarr</code>，进入渲染管线后都会被抽象为标准的 <strong><code>DataTile</code>（多波段数据瓦片）</strong>，因此上层的着色器表达式 <code>[&#39;band&#39;, N]</code> 和 <code>updateStyleVariables()</code> 可以 100% 复用！</p>
 <table>
 <thead>
 <tr>
@@ -356,7 +297,7 @@ method to update the rendering based on user selected bands and contrast stretch
 <td align="left"><strong>全自动函数式管道</strong>：<code>getView(source, withHigherResolutions(2), withExtentCenter())</code>，自动从远程元数据解析投影与中心点</td>
 </tr>
 </tbody></table>
-<p>** 💡 架构选型建议 —— 与 COG（Cloud Optimized GeoTIFF）的互补关系**：</p>
+<p><strong> 💡 架构选型建议 —— 与 COG（Cloud Optimized GeoTIFF）的互补关系</strong>：</p>
 <ul>
 <li>如果数据是<strong>单纯的 2D/3D 单期遥感影像</strong>（如 Landsat、Sentinel-2 正射影像），目前 <strong>COG</strong> 依然是最成熟、生态支持最广的标准。</li>
 <li>如果数据是<strong>高维时空数据</strong>（如逐小时气象预报、多年长时间序列卫星立方体、海洋三维洋流模型），COG 表达能力受限，<strong>GeoZarr (Zarr)</strong> 是目前公认的最优解。</li>
@@ -452,7 +393,7 @@ const map &#x3D; new Map({
         <summary class="source-heading">index.html</summary>
         <div class="row-fluid">
           <pre><code id="example-html-source" class="language-markup">&lt;!DOCTYPE html&gt;
-&lt;html lang="en"&gt;
+&lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
     &lt;title&gt;Band Selection and Contrast Stretch / GeoZarr 波段选择与对比度拉伸&lt;/title&gt;
@@ -541,6 +482,17 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
+      onload="renderMathInElement(document.getElementById('docs') || document.body, {
+        delimiters: [
+          {left: '$$', right: '$$', display: true},
+          {left: '$', right: '$', display: false},
+          {left: '\\(', right: '\\)', display: false},
+          {left: '\\[', right: '\\]', display: true}
+        ],
+        throwOnError: false
+      });"></script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

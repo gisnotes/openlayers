@@ -57,7 +57,8 @@ function addInteraction() {
 	}
 }
 /**
-* Handle change event.
+* Handle shape type change event.
+* 处理形状类型下拉框切换事件。
 */
 typeSelect.onchange = function() {
 	map.removeInteraction(draw);
