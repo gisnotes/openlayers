@@ -1,9 +1,41 @@
 ---
 layout: example.html
-title: TileJSON
-shortdesc: Example of a TileJSON layer.
+title: TileJSON / TileJSON 瓦片元数据规范与自动解析
+shortdesc: Example of a TileJSON layer. / 展示如何加载符合 TileJSON 规范的切片服务，自动解析瓦片模板 URL、边界与缩放级别。
 docs: >
   Example of a TileJSON layer.
+
+  本示例展示如何通过 `ol/source/TileJSON` 直接接入符合 TileJSON 标准协议的切片服务（此处使用 Gnosis Map Server 的 Natural Earth 栅格切片）。OpenLayers 会自动解析服务元数据中的切片 URL 模板、空间范围（Bounds）、最小与最大缩放级别以及版权归属（Attributions），无需开发者手动拼接切片网格与投影参数。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构原理 (Core Architecture)
+  在传统的切片配置中，开发者需手动指定 `url: '.../{z}/{x}/{y}.png'`、`minZoom`、`maxZoom`、`attributions` 以及复杂的 `tileGrid`。
+  - **TileJSON 规范使命**：由 Mapbox 发起的 TileJSON 是一种基于 JSON 的轻量级切片地图元数据开放规范。它将地图服务的全部要素（切片 URL 数组、缩放范围、边界范围、矢量图层定义与版权说明）打包为一个统一清单。
+  - **异步自配置管道**：`ol/source/TileJSON` 接收到一个配置 URL（如 `.../WebMercatorQuad?f=tilejson`）后，在后台发起异步 HTTP 请求获取元数据，随后**自动配置底层的 `TileUrlFunction`、`TileGrid`、版权归属与有效范围**，大幅降低前端接入第三方瓦片服务的代码量与维护复杂度。
+
+  #### 2. 关键实现与代码拆解 (Code Deep Dive)
+  ```javascript
+  const map = new Map({
+    layers: [
+      new TileLayer({
+        source: new TileJSON({
+          // 指向支持 TileJSON 的服务端清单端点
+          url: 'https://maps.gnosis.earth/ogcapi/collections/NaturalEarth:raster:HYP_HR_SR_OB_DR/map/tiles/WebMercatorQuad?f=tilejson',
+          crossOrigin: 'anonymous',
+        }),
+      }),
+    ],
+    target: 'map',
+    view: new View({ center: [0, 0], zoom: 2 }),
+  });
+  ```
+
+  #### 3. 生产实战避坑与考量 (Production Pitfalls)
+  - **CORS 跨域必须声明**：由于 TileJSON 首先需要通过 <code>fetch</code> / <code>XMLHttpRequest</code> 请求远程 JSON 文本，随后瓦片图片又由 <code>Image</code> 标签加载，服务端必须同时对 JSON 响应和切片图片开启 <code>Access-Control-Allow-Origin: *</code>，且前端源需声明 <code>crossOrigin: 'anonymous'</code>。
+  - **异步加载中的视口初始化**：TileJSON 元数据是异步加载的。在元数据尚未返回前，<code>tileSource.getState()</code> 为 <code>loading</code>，此时不要依赖 <code>source.getTileGrid()</code> 进行同步计算；若需获取其定义的默认范围或中心点，应监听 <code>source.on('change', ...)</code> 等待状态变为 <code>ready</code>。
 tags: "tilejson"
 ---
 <div id="map" class="map"></div>

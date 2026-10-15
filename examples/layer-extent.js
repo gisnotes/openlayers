@@ -4,10 +4,18 @@ import TileLayer from '../src/ol/layer/Tile.js';
 import {transformExtent} from '../src/ol/proj.js';
 import TileJSON from '../src/ol/source/TileJSON.js';
 
+/**
+ * Transform extent from WGS84 (EPSG:4326) to Web Mercator (EPSG:3857).
+ * 将 WGS84 经纬度包围盒转换为 Web 墨卡托投影坐标系包围盒。
+ * @param {import("../src/ol/extent.js").Extent} extent WGS84 extent.
+ * @return {import("../src/ol/extent.js").Extent} Projected extent.
+ */
 function transform(extent) {
   return transformExtent(extent, 'EPSG:4326', 'EPSG:3857');
 }
 
+// Approximate country bounding boxes in EPSG:3857
+// 各国近似空间包围盒范围定义
 const extents = {
   India: transform([68.17665, 7.96553, 97.40256, 35.49401]),
   Argentina: transform([-73.41544, -55.25, -53.62835, -21.83231]),
@@ -18,6 +26,8 @@ const extents = {
 const key =
   'pk.eyJ1IjoiYWhvY2V2YXIiLCJhIjoiY2t0cGdwMHVnMGdlbzMxbDhwazBic2xrNSJ9.WbcTL9uj8JPAsnT9mgb7oQ';
 
+// Base map layer with full global extent
+// 全球范围浅色底图
 const base = new TileLayer({
   source: new TileJSON({
     url:
@@ -27,6 +37,8 @@ const base = new TileLayer({
   }),
 });
 
+// Overlay layer restricted by spatial extent
+// 叠加层：限制仅在特定国家范围内部渲染黑色主题瓦片
 const overlay = new TileLayer({
   extent: extents.India,
   source: new TileJSON({
@@ -46,8 +58,10 @@ const map = new Map({
   }),
 });
 
-for (const key in extents) {
-  document.getElementById(key).onclick = function (event) {
+// Bind buttons to dynamically update overlay extent
+// 绑定国家按钮点击事件，动态更新叠加图层的裁剪空间包围盒
+for (const countryKey in extents) {
+  document.getElementById(countryKey).onclick = function (event) {
     overlay.setExtent(extents[event.target.id]);
   };
 }

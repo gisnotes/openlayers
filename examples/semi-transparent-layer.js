@@ -8,10 +8,12 @@ import TileJSON from '../src/ol/source/TileJSON.js';
 const key =
   'pk.eyJ1IjoiYWhvY2V2YXIiLCJhIjoiY2t0cGdwMHVnMGdlbzMxbDhwazBic2xrNSJ9.WbcTL9uj8JPAsnT9mgb7oQ';
 
+// Initialize map with a grayscale OSM basemap and a semi-transparent TileJSON layer
+// 初始化地图实例：OSM 基础底图通过 CSS 类名应用黑白灰度滤镜，上层叠加半透明地震灾情专题瓦片
 const map = new Map({
   layers: [
     new TileLayer({
-      className: 'bw',
+      className: 'bw', // Styled via CSS filter: grayscale(100%) / 由 CSS 滤镜定义为灰度黑白
       source: new OSM(),
     }),
     new TileLayer({
@@ -20,7 +22,8 @@ const map = new Map({
           'https://api.tiles.mapbox.com/v4/mapbox.va-quake-aug.json?secure&access_token=' +
           key,
         crossOrigin: 'anonymous',
-        // this layer has transparency, so do not fade tiles:
+        // This layer has transparency, so do not fade tiles to avoid dark halo flicker
+        // 该图层自身具有半透明通道，必须设置 transition: 0 禁用淡入重叠暗影
         transition: 0,
       }),
     }),

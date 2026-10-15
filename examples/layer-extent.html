@@ -1,17 +1,47 @@
 ---
 layout: example.html
-title: Limited Layer Extent
-shortdesc: Restricting layer rendering to a limited extent.
+title: Limited Layer Extent / 限制图层渲染空间范围（layer.setExtent）
+shortdesc: Restricting layer rendering to a limited extent. / 演示如何使用 layer.setExtent() 动态裁剪并限制图层仅在特定空间边界内渲染。
 docs: >
   This example uses the <code>layer.setExtent()</code> method to
   modify the extent of the overlay layer.  Use the controls above
   to limit rendering based on an extent (approximate country bounds).
+
+  本示例展示如何利用 <code>layer.setExtent()</code> 方法动态裁剪并限制图层在特定空间范围（Extent）内呈现。点击下方按钮可动态切换上层黑色主题世界地图的显示包围盒（印度、阿根廷、尼日利亚、瑞典国界范围），包围盒外部的区域将自动停止切片请求并进行像素级裁切遮罩。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构原理 (Core Architecture)
+  在多图层叠加应用中，通常只需在特定国家、行政区划或项目红线内叠加特定专题图层（如高分辨率暗黑主题图、专题热力图、遥感正射切片）：
+  - **图层级边界裁剪（Layer Extent Masking）**：`TileLayer` 的 <code>extent: [minX, minY, maxX, maxY]</code> 会通知底层渲染引擎：只有与该空间包围盒发生相交（Intersect）的切片才会被下载。在 Canvas 绘制阶段，OpenLayers 会利用 <code>ctx.clip()</code> 沿着当前视口下计算出的包围盒矩形进行硬件级画布裁剪，盒外的多余瓦片直接丢弃。
+  - **坐标投影统一**：<code>extent</code> 的单位必须严格与当前地图的投影坐标系保持一致。若原始经纬度坐标为 WGS84（EPSG:4326），在默认地图（EPSG:3857）中使用前必须通过 <code>transformExtent(extent, 'EPSG:4326', 'EPSG:3857')</code> 进行投影转换。
+
+  #### 2. 关键实现与代码拆解 (Code Deep Dive)
+  ```javascript
+  // 1. 将 WGS84 经纬度包围盒转换为 Web 墨卡托投影米制坐标
+  function transform(extent) {
+    return transformExtent(extent, 'EPSG:4326', 'EPSG:3857');
+  }
+
+  // 2. 按钮点击动态重置图层裁剪范围
+  for (const key in extents) {
+    document.getElementById(key).onclick = function (event) {
+      overlay.setExtent(extents[event.target.id]);
+    };
+  }
+  ```
+
+  #### 3. 生产实战避坑与考量 (Production Pitfalls)
+  - **坐标投影不一致导致的图层彻底消失**：若直接将 `[68.1, 7.9, 97.4, 35.4]` 赋值给使用 EPSG:3857 的图层，由于该范围在米制坐标系中被当做大西洋几内亚湾附近仅数十米大的微小区域，在视口中将完全不可见。务必牢记坐标系转换。
+  - **不规则多边形裁剪需求**：<code>extent</code> 仅支持正向轴对齐的矩形包围盒（Bounding Box）。若业务需求为沿真实的国界、省界等不规则复杂多边形进行精准裁切，需结合图层的 <code>prerender</code> 事件配合 Canvas 的 <code>clip()</code> 进行矢量路径抠图。
 tags: "extent, tilejson"
 resources:
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css
 ---
 <div id="map" class="map"></div>
-<button type="button" class="btn btn-light" id="India">India</button>
-<button type="button" class="btn btn-light" id="Argentina">Argentina</button>
-<button type="button" class="btn btn-light" id="Nigeria">Nigeria</button>
-<button type="button" class="btn btn-light" id="Sweden">Sweden</button>
+<button type="button" class="btn btn-light" id="India">India / 印度</button>
+<button type="button" class="btn btn-light" id="Argentina">Argentina / 阿根廷</button>
+<button type="button" class="btn btn-light" id="Nigeria">Nigeria / 尼日利亚</button>
+<button type="button" class="btn btn-light" id="Sweden">Sweden / 瑞典</button>

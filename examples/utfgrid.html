@@ -1,17 +1,60 @@
 ---
 layout: example.html
-title: UTFGrid
-shortdesc: This example shows how to read data from a UTFGrid source.
+title: UTFGrid / UTFGrid 栅格交互探测与瓦片属性离线拾取
+shortdesc: This example shows how to read data from a UTFGrid source. / 演示如何使用 UTFGrid 数据源以极高性能在客户端根据鼠标坐标即时拾取地理属性与国旗图标。
 docs: >
   <p>Point to a country to see its name and flag.</p>
   Tiles made with <a href="https://tilemill-project.github.io/tilemill/">TileMill</a>. Hosting on <a href="https://www.mapbox.com/">mapbox.com</a> or with open-source <a href="https://github.com/maptiler/tileserver-php">TileServer</a>.
+
+  <p>将鼠标指针移动到地图上的国家区域即可实时查看该国国名与国旗图标。</p>
+  <p>本示例展示如何利用 <code>ol/source/UTFGrid</code> 实现零服务端查询请求的超轻量客户端属性拾取（Hit-Testing）。切片通过 <a href="https://tilemill-project.github.io/tilemill/">TileMill</a> 烘焙导出，由 Mapbox 托管。通过将矢量属性数据直接栅格化为基于 UTF-8 字符编码的紧凑矩阵瓦片，前端可在毫秒级根据屏幕坐标定位到要素实体与 Base64 国旗图片，彻底解决海量多边形交互查询时的网络与 GPU 性能瓶颈。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构原理 (Core Architecture)
+  在 WebGIS 演进史中，当需要对数十万个复杂多边形进行鼠标悬停（Hover）提示时，直接渲染全量矢量会导致浏览器崩溃，而每次发送 WMS GetFeatureInfo 请求又会造成高延迟与服务器高负载：
+  - **UTFGrid 字符编码栅格规范**：Mapbox 提出的 UTFGrid 规范将空间多边形在服务端栅格化为一个微型字符矩阵（通常为 $64 \times 64$ 个字符，每个字符由 UTF-8 编码表示该像素所属要素的 ID 索引），并配以一个轻量的属性查找字典（JSON）。
+  - **`ol/source/UTFGrid` 缓存与就地解算**：OpenLayers 的 <code>UTFGrid</code> 数据源会与视觉瓦片同步下载对应的 UTFGrid JSON 瓦片。当鼠标移动时，调用 <code>gridSource.forDataAtCoordinateAndResolution(coordinate, resolution, callback)</code>，系统根据地理坐标计算出所在的切片与内部矩阵偏移，直接从内存中常数时间 $O(1)$ 检索出绑定的属性对象（包含国名 <code>admin</code> 与 Base64 编码的国旗 <code>flag_png</code>），实现完全离线的极速无卡顿交互！
+
+  #### 2. 关键实现与代码拆解 (Code Deep Dive)
+  ```javascript
+  const displayCountryInfo = function (coordinate) {
+    const viewResolution = view.getResolution();
+    // 毫秒级空间坐标反查 UTFGrid 属性字典
+    gridSource.forDataAtCoordinateAndResolution(
+      coordinate,
+      viewResolution,
+      function (data) {
+        mapElement.style.cursor = data ? 'pointer' : '';
+        if (data) {
+          flagElement.src = 'data:image/png;base64,' + data['flag_png'];
+          nameElement.innerHTML = data['admin'];
+        }
+        infoOverlay.setPosition(data ? coordinate : undefined);
+      },
+    );
+  };
+
+  // 鼠标悬停实时跟随探测
+  map.on('pointermove', function (evt) {
+    if (evt.dragging) return;
+    const coordinate = map.getEventCoordinate(evt.originalEvent);
+    displayCountryInfo(coordinate);
+  });
+  ```
+
+  #### 3. 生产实战避坑与考量 (Production Pitfalls)
+  - **视口分辨率精度同步**：<code>forDataAtCoordinateAndResolution</code> 必须传入当前视图的实际 <code>resolution</code>，以便内部算法精确定位到当前缩放级别对应的 UTFGrid 瓦片层级。
+  - **矢量切片（MVT）时代的演进**：尽管 UTFGrid 在栅格切片时代是无与伦比的属性拾取神器，但在现代 Mapbox Vector Tile（MVT）广泛普及后，矢量切片原生自带要素几何与属性，支持直接调用 <code>map.forEachFeatureAtPixel()</code>。然而在纯栅格卫星图或历史切片归档系统中，UTFGrid 依然是极具性价比的轻量属性交互首选。
 tags: "utfgrid, tilejson"
 ---
 <div id="map" class="map"></div>
 <div style="display: none;">
-  <!-- Overlay with the country info -->
+  <!-- Overlay with the country info / 国家浮层提示组件 -->
   <div id="country-info">
     <div id="country-name">&nbsp;</div>
-    <img id="country-flag" />
+    <img id="country-flag" alt="Country Flag / 国旗" />
   </div>
 </div>

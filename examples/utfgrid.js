@@ -8,6 +8,8 @@ import UTFGrid from '../src/ol/source/UTFGrid.js';
 const key =
   'pk.eyJ1IjoiYWhvY2V2YXIiLCJhIjoiY2t0cGdwMHVnMGdlbzMxbDhwazBic2xrNSJ9.WbcTL9uj8JPAsnT9mgb7oQ';
 
+// Visual tile layer loading rendered map tiles
+// 可视化切片图层：加载渲染好的地理底图
 const mapLayer = new TileLayer({
   source: new TileJSON({
     url:
@@ -16,6 +18,8 @@ const mapLayer = new TileLayer({
   }),
 });
 
+// UTFGrid source loading compact attribute character matrix tiles
+// UTFGrid 数据源：同步加载紧凑的字符编码要素属性矩阵切片
 const gridSource = new UTFGrid({
   url:
     'https://api.tiles.mapbox.com/v4/mapbox.geography-class.json?secure&access_token=' +
@@ -40,6 +44,8 @@ const infoElement = document.getElementById('country-info');
 const flagElement = document.getElementById('country-flag');
 const nameElement = document.getElementById('country-name');
 
+// Overlay displaying hovered country name and flag icon
+// 悬停浮层：展示鼠标悬停处的国家名称与国旗图标
 const infoOverlay = new Overlay({
   element: infoElement,
   offset: [15, 15],
@@ -47,15 +53,17 @@ const infoOverlay = new Overlay({
 });
 map.addOverlay(infoOverlay);
 
+/**
+ * Query UTFGrid attribute dictionary by coordinate and update overlay.
+ * 根据空间地理坐标与分辨率向 UTFGrid 检索属性数据并更新提示浮层。
+ * @param {import("../src/ol/coordinate.js").Coordinate} coordinate Map coordinate.
+ */
 const displayCountryInfo = function (coordinate) {
   const viewResolution = /** @type {number} */ (view.getResolution());
   gridSource.forDataAtCoordinateAndResolution(
     coordinate,
     viewResolution,
     function (data) {
-      // If you want to use the template from the TileJSON,
-      //  load the mustache.js library separately and call
-      //  info.innerHTML = Mustache.render(gridSource.getTemplate(), data);
       mapElement.style.cursor = data ? 'pointer' : '';
       if (data) {
         flagElement.src = 'data:image/png;base64,' + data['flag_png'];
@@ -66,6 +74,8 @@ const displayCountryInfo = function (coordinate) {
   );
 };
 
+// Pointermove listener for instant hover inspection
+// 指针移动监听：实现毫秒级属性跟随探测
 map.on('pointermove', function (evt) {
   if (evt.dragging) {
     return;
@@ -74,6 +84,8 @@ map.on('pointermove', function (evt) {
   displayCountryInfo(coordinate);
 });
 
+// Click listener to pin or inspect attributes
+// 点击事件：同理反查要素属性
 map.on('click', function (evt) {
   displayCountryInfo(evt.coordinate);
 });

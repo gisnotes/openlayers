@@ -1,55 +1,87 @@
 ---
 layout: example.html
-title: Layer Groups
-shortdesc: Example of a map with layer group.
+title: Layer Groups / 图层组树级分层组织与双向数据绑定（LayerGroup）
+shortdesc: Example of a map with layer group. / 演示如何使用 ol/layer/Group 构建树状图层目录并实现可见性与透明度的双向控制绑定。
 docs: >
   Example of a map with layer group.
+
+  本示例展示如何利用 <code>ol/layer/Group</code> 构建多层次的图层树状管理体系。示例将底图与若干 TileJSON 专题图层分层归类，并通过轻量级递归算法，自动为树形结构中的每个叶子图层与父图层组生成联动控件，实现**图层组整体可见性开关**、**各图层独立不透明度（Opacity）动态调节**与**双向数据同步绑定**。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构原理 (Core Architecture)
+  在复杂 GIS 项目中，图层动辄数十上百个，扁平化管理会导致图层顺序混乱、批量显隐难以控制。
+  - **`ol/layer/Group` 复合设计模式（Composite Pattern）**：<code>LayerGroup</code> 自身继承自 <code>BaseLayer</code>，因此它拥有与单一图层完全一致的 API（如 <code>getVisible()</code>、<code>setVisible()</code>、<code>getOpacity()</code>、<code>setOpacity()</code>）。当隐藏一个图层组时，其子图层数组中的所有图层**在渲染流程中均会被整体跳过**；当调节图层组的不透明度时，子图层的不透明度会与父级产生相乘效应：$\text{FinalOpacity} = \text{ParentOpacity} \times \text{ChildOpacity}$。
+  - **图层集合递归绑定（Recursive Tree Walk）**：通过对 <code>map.getLayerGroup()</code> 执行深度优先遍历，若遇到 <code>LayerGroup</code> 实例则递归进入，自动为 DOM 树映射出唯一的层级 ID（如 <code>#layer0</code>, <code>#layer10</code>, <code>#layer11</code>），大幅简化动态图层目录（Layer Tree）的构建。
+
+  #### 2. 关键实现与代码拆解 (Code Deep Dive)
+  ```javascript
+  // 1. 递归构建树级绑定
+  function setup(id, group) {
+    group.getLayers().forEach(function (layer, i) {
+      const layerid = id + i;
+      bindInputs(layerid, layer);
+      // 若当前图层是图层组，则递归向下遍历子图层
+      if (layer instanceof LayerGroup) {
+        setup(layerid, layer);
+      }
+    });
+  }
+  // 从地图根图层组发起全局递归扫描
+  setup('#layer', map.getLayerGroup());
+  ```
+
+  #### 3. 生产实战避坑与考量 (Production Pitfalls)
+  - **父子透明度叠加**：牢记 <code>LayerGroup</code> 的透明度会级联作用于所有子图层。若父级透明度设为 0.5，子级即使设为 1.0，屏幕最终呈现依然是 0.5。
+  - **动态增删图层监听**：对于支持动态加载图层的业务系统，建议监听 <code>group.getLayers().on('add' / 'remove')</code>，保持 DOM 树节点与地图运行时内核完全同步。
 tags: "tilejson, input, bind, group, layergroup"
 ---
 <div id="map" class="map"></div>
 <div id="layertree">
-  <h5>Click on layer nodes below to change their properties.</h5>
+  <h5>Click on layer nodes below to change their properties / 点击展开图层节点调节属性:</h5>
   <ul>
-    <li><span>OSM layer</span>
+    <li><span>OSM layer / OSM 基础底图</span>
       <fieldset id="layer0">
         <label class="checkbox" for="visible0">
-          visible <input id="visible0" class="visible" type="checkbox"/>
+          visible / 可见 <input id="visible0" class="visible" type="checkbox"/>
         </label>
         <label>
-          opacity <input class="opacity" type="range" min="0" max="1" step="0.01"/>
+          opacity / 不透明度 <input class="opacity" type="range" min="0" max="1" step="0.01"/>
         </label>
       </fieldset>
     </li>
     <li>
-      <span>Layer group</span>
+      <span>Layer group / 专题图层组 (父级)</span>
       <fieldset id="layer1">
         <label class="checkbox" for="visible1">
-          visible <input id="visible1" class="visible" type="checkbox"/>
+          visible / 可见 <input id="visible1" class="visible" type="checkbox"/>
         </label>
         <label>
-          opacity <input class="opacity" type="range" min="0" max="1" step="0.01"/>
+          opacity / 不透明度 <input class="opacity" type="range" min="0" max="1" step="0.01"/>
         </label>
       </fieldset>
       <ul>
         <li>
-          <span>Food insecurity layer</span>
+          <span>Food insecurity layer / 粮食安全分布专题</span>
           <fieldset id="layer10">
             <label class="checkbox" for="visible10">
-              visible <input id="visible10" class="visible" type="checkbox"/>
+              visible / 可见 <input id="visible10" class="visible" type="checkbox"/>
             </label>
             <label>
-              opacity <input class="opacity" type="range" min="0" max="1" step="0.01"/>
+              opacity / 不透明度 <input class="opacity" type="range" min="0" max="1" step="0.01"/>
             </label>
           </fieldset>
         </li>
         <li>
-          <span>World borders layer</span>
+          <span>World borders layer / 全球国界轮廓专题</span>
           <fieldset id="layer11">
             <label class="checkbox" for="visible11">
-              visible <input id="visible11" class="visible" type="checkbox"/>
+              visible / 可见 <input id="visible11" class="visible" type="checkbox"/>
             </label>
             <label>
-              opacity <input class="opacity" type="range" min="0" max="1" step="0.01"/>
+              opacity / 不透明度 <input class="opacity" type="range" min="0" max="1" step="0.01"/>
             </label>
           </fieldset>
         </li>

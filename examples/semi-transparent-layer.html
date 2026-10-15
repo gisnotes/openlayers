@@ -1,9 +1,52 @@
 ---
 layout: example.html
-title: Semi-Transparent Layer
-shortdesc: Example of a map with a semi-transparent layer.
+title: Semi-Transparent Layer / 半透明专题图层叠加与 CSS 黑白滤镜
+shortdesc: Example of a map with a semi-transparent layer. / 演示如何将半透明 TileJSON 专题图层叠加在 OSM 底图上，并使用 CSS 滤镜将底图转为灰度黑白。
 docs: >
   This example will display a tiled MaxBox layer semi-transparently over an OSM background. The OSM layer is changed to black and white by using a CSS filter.
+
+  本示例展示如何将带有半透明属性的 TileJSON 专题切片图层（维吉尼亚地震灾情热力图）叠加在 OpenStreetMap 底图之上。通过为底图图层配置 <code>className: 'bw'</code> 并结合纯 CSS 的 <code>filter: grayscale(100%)</code> 滤镜，将原本色彩斑斓的道路底图降级为低调的黑白基调，从而凸显上层专题数据的色彩对比；同时配置 <code>transition: 0</code> 彻底消除半透明切片在加载淡入时的频闪重影。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构原理 (Core Architecture)
+  在制图美学与数据可视化中，“图底关系（Figure-Ground Relationship）”至关重要：
+  - **CSS Filter 图层后处理管线**：OpenLayers 允许为图层指定 <code>className</code>（例如 <code>className: 'bw'</code>）。渲染引擎会将该图层的所有 DOM 元素或独立 Canvas 容器附加该 class。通过定义简洁的 CSS 样式：
+    ```css
+    .bw {
+      filter: grayscale(100%); /* 转为灰度黑白，突出上层彩色要素 */
+    }
+    ```
+    无需耗费 CPU 逐像素运算即可让底图褪色，使上层彩色专题热力图一目了然。
+  - **半透明图层的淡入动画陷阱（`transition: 0`）**：默认情况下，OpenLayers 切片图层在瓦片加载完毕后会执行 250ms 的淡入动画（<code>transition: 250</code>）。对于全不透明瓦片，淡入可让过渡柔和；但对于**自身带有透明度通道的专题切片**，淡入期间旧瓦片与新瓦片同时处于半透明叠加状态，会导致重叠处颜色加深甚至产生严重的“黑晕闪烁”。因此对透明专题图层，**必须配置 `transition: 0` 禁用淡入过渡**。
+
+  #### 2. 关键实现与代码拆解 (Code Deep Dive)
+  ```javascript
+  const map = new Map({
+    layers: [
+      // 1. 挂载带类名的底图，CSS 驱动灰度滤镜
+      new TileLayer({
+        className: 'bw',
+        source: new OSM(),
+      }),
+      // 2. 叠加半透明专题图层，关键：设置 transition: 0
+      new TileLayer({
+        source: new TileJSON({
+          url: 'https://api.tiles.mapbox.com/v4/mapbox.va-quake-aug.json?...',
+          crossOrigin: 'anonymous',
+          transition: 0, // 杜绝半透明瓦片淡入叠加产生暗影频闪
+        }),
+      }),
+    ],
+    target: 'map',
+    view: new View({ center: fromLonLat([-77.93255, 37.9555]), zoom: 7 }),
+  });
+  ```
+
+  #### 3. 生产实战避坑与考量 (Production Pitfalls)
+  - **CSS 滤镜的 GPU 开销**：<code>filter: grayscale()</code> 在现代浏览器中均有良好的 GPU 硬件加速支持。但若同时叠加多个图层且每个都使用复合重度滤镜（如高斯模糊），在移动端低端设备上可能引起合成掉帧，建议仅在底图容器上使用单一黑白滤镜。
 tags: "transparent, osm, tilejson, css"
 ---
 <div id="map" class="map"></div>
