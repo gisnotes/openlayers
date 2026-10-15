@@ -1,9 +1,32 @@
 ---
 layout: example.html
-title: Rectangle
-shortdesc: Renders a rectangle on a map.
+title: Rectangle / 矩形几何（fromExtent）
+shortdesc: Renders a rectangle on a map. / 在地图上渲染基于包围盒范围构建的矩形多边形要素。
 docs: >
-  A simple map with an OSM basemap and a rectangular polygon feature (e.g. a bounding box).
+  <p>A simple map with an OSM basemap and a rectangular polygon feature (e.g. a bounding box).</p>
+  <p>本示例演示在 OpenStreetMap 底图上，如何借助 <code>fromExtent</code> 工具函数将空间四至包围盒（Bounding Box）便捷转换为矩形多边形（Polygon）要素并渲染。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **为什么 OpenLayers 没有独立的 `ol/geom/Rectangle` 类？**：
+    在 OGC（开放地理空间信息联盟）标准与 ISO 19107 空间几何规范中，二维面状要素的基础类型统一抽象为 `Polygon` 与 `MultiPolygon`。矩形在数学与拓扑本质上是一个外环由 4 条正交线段构成的闭合多边形（共 5 个坐标点，首尾闭合）。若单独设计 Rectangle 类，会导致空间关系断言（Intersects、Contains）、缓冲区计算以及格式序列化（GeoJSON、WKT）产生不必要的多态分支与代码冗余。
+  - **`Polygon.fromExtent` 的轻量封装模式**：
+    OpenLayers 提供了静态工厂函数 `fromExtent([minX, minY, maxX, maxY])`，自动按照逆时针顺序构造顶点数组：
+    `[[minX, minY], [minX, maxY], [maxX, maxY], [maxX, minY], [minX, minY]]`。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - `fromExtent(extent)`：
+    - 入参：标准四元组数字数组 `[minX, minY, maxX, maxY]`。
+    - 返回值：标准 `ol/geom/Polygon` 实例。支持直接调用多边形的全部原生方法（如 `transform`、`getArea`、`getCoordinates`、`scale`）。
+  - 与 `ol/geom/Polygon` 构造器的性能对比：
+    直接传入原始坐标数组需要开发者手动计算首尾闭合点，极易发生点位顺序颠倒（顺时针/逆时针在某些三维或 GIS 计算中代表洞环内孔）。使用 `fromExtent` 具有严格的逆时针保证与极简语法。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **经纬度范围坐标转换时机**：
+    若从后端接口获取的经纬度 BBOX 为 `[116.3, 39.9, 116.5, 40.1]`，切勿直接传入 `fromExtent`，否则矩形会落在非洲几内亚湾（原点附近几百米内）。必须先调用 `transformExtent(bbox, 'EPSG:4326', 'EPSG:3857')` 转换为墨卡托米制坐标，或在地图使用 `useGeographic()` 模式下直接使用经纬度。
 tags: "simple, geometry, rectangle, box, bbox, polygon"
 ---
 <div id="map" class="map"></div>

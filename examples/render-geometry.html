@@ -1,9 +1,36 @@
 ---
 layout: example.html
-title: Render geometries to a canvas
-shortdesc: Example of rendering geometries to an arbitrary canvas.
+title: Render geometries to a canvas / 即时渲染：将几何直接绘制到独立 Canvas
+shortdesc: Example of rendering geometries to an arbitrary canvas. / 演示如何脱离 Map 实例，利用 toContext 将点、线、面几何直接绘制到任意 HTML5 Canvas 画布上。
 docs: >
-  This example shows how to render geometries to an arbitrary canvas.
+  <p>This example shows how to render geometries to an arbitrary canvas.</p>
+  <p>本示例演示如何脱离完整的 <code>Map</code> 与 <code>VectorLayer</code> 图层体系，借助 <code>ol/render.toContext</code> 即时渲染引擎，将点、线、面几何以及样式直接光栅化绘制到任意独立的 HTML5 <code>&lt;canvas&gt;</code> 画布上。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **即时渲染架构（Immediate Rendering API）**：
+    在大多数应用场景中，OpenLayers 的几何通过 `Map` $\to$ `Layer` $\to$ `Source` $\to$ `Feature` 保留在内存中（保留模式 Retained Mode）。但在某些特定业务中，例如**图例色块生成（Legend Swatches）**、**动态图标生成器（Dynamic Icon Generator）**、**PDF 缩略图导出** 或 **离屏 Web Worker 渲染**，我们并不需要完整的地图事件监听、视口交互和投影系统，仅仅需要借用 OpenLayers 强大的矢量样式排版能力。
+  - **`toContext` 桥接器**：
+    `toContext(canvas2dContext, [options])` 返回一个 `VectorContext` 实例。它抹平了底层 Canvas 原生复杂繁琐的 `beginPath`、`arc`、`lineWidth`、`setLineDash` 指令，让开发者能够直接使用高阶的 `ol/style/Style` 与 `ol/geom/*` 几何对象。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - `toContext(context, { size, pixelRatio })`：
+    - `context`：目标 Canvas 的 2D 绘图上下文（`canvas.getContext('2d')`）。
+    - `size`：目标画布的逻辑宽高（如 `[100, 100]`）。
+    - `pixelRatio`：设备物理像素比（HiDPI / Retina 支持），默认为 `1`。
+  - `vectorContext.setStyle(style)`：
+    注入 OpenLayers 标准样式对象。支持 `Fill`、`Stroke` 以及带有 `CircleStyle` / `Icon` 的图片样式。
+  - `vectorContext.drawGeometry(geometry)`：
+    直接接收 `Point`、`LineString`、`Polygon` 或 `Multi*` 几何实例。坐标直接映射为 Canvas 物理像素坐标系（左上角为 `[0, 0]`，向右为 X，向下为 Y）。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **像素坐标系与地理坐标系的脱钩**：
+    传给 `drawGeometry` 的几何坐标必须是 Canvas 像素坐标（例如 `[10, 10]`），而不是墨卡托或经纬度。若需在 Canvas 上绘制真实地理要素，需先通过 `getTransformFromProjections` 计算仿射变换矩阵，将地理坐标缩放平移至 Canvas 尺寸范围。
+  - **Canvas 清空重绘**：
+    `VectorContext` 是无状态的即时绘制器，连续调用 `drawGeometry` 会在 Canvas 上持续叠加图元。如需刷新重绘，需手动调用 `ctx.clearRect(0, 0, width, height)`。
 tags: "render, geometry, canvas"
 ---
 <canvas id="canvas"></canvas>

@@ -7,6 +7,8 @@ import VectorLayer from '../src/ol/layer/Vector.js';
 import OSM from '../src/ol/source/OSM.js';
 import VectorSource from '../src/ol/source/Vector.js';
 
+// Initialize map with OSM basemap and a rectangular polygon feature
+// 初始化包含 OSM 底图与矩形多边形要素的地图实例
 const map = new Map({
   layers: [
     new TileLayer({
@@ -16,8 +18,9 @@ const map = new Map({
       source: new VectorSource({
         features: [
           new Feature(
-            // Here a `Geometry` is expected, e.g. a `Polygon`, which has a handy function to create a rectangle from bbox coordinates
-            fromExtent([-1000000, 5000000, 3000000, 7000000]), // minX, minY, maxX, maxY
+            // Create a rectangular polygon geometry directly from bounding box extent [minX, minY, maxX, maxY]
+            // 利用 fromExtent 便捷函数直接从四至包围盒坐标 [minX, minY, maxX, maxY] 构建矩形多边形
+            fromExtent([-1000000, 5000000, 3000000, 7000000]),
           ),
         ],
       }),

@@ -1,10 +1,35 @@
 ---
 layout: example.html
-title: Polygon map wrapping
-shortdesc: Renders polygons correctly across the antimeridian
+title: Polygon map wrapping / 多边形跨日界线循环环绕渲染
+shortdesc: Renders polygons correctly across the antimeridian / 在跨越 180 度日界线（Antimeridian）时正确渲染多边形几何。
 docs: >
-  A simple map with an OSM basemap and a couple rectangular polygon features (e.g. a bounding box)
-  on either side (and crossing over) the antimeridian.
+  <p>
+    A simple map with an OSM basemap and a couple rectangular polygon features (e.g. a bounding box)
+    on either side (and crossing over) the antimeridian.
+  </p>
+  <p>
+    本示例演示在 OpenStreetMap 底图上，如何正确渲染分布在 180° 日界线（对向子午线 / 反子午线，Antimeridian）两侧以及直接跨越日界线的矩形包围盒多边形要素。
+  </p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **日界线（Antimeridian / 180° 经线）与墨卡托世界连续环绕（World Wrapping）**：
+    在标准 Web 墨卡托投影（EPSG:3857）中，全球范围为 $X \in [-20037508.34, 20037508.34]$。但现代 Web 地图允许用户向左或向右无限水平平移视口（连续世界环绕）。当空间几何跨越东经 180° / 西经 -180°（即墨卡托极值边界）时，传统 GIS 若直接将坐标折回，会导致多边形横跨整个地球形成一整道横向拉伸的“蝴蝶结撕裂畸形”。
+  - **坐标外推与跨世界投影**：
+    OpenLayers 允许坐标直接超越世界边界范围（例如 $leftX - 2000000$ 或 $rightX + 2000000$）。矢量渲染引擎在绘制时，能够根据当前视口的世界索引（World Index: $0, \pm 1, \pm 2$），将几何副本正确投影映射并无缝渲染到相邻的连续地球副本中。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - `Polygon.fromExtent(extent)`：
+    将 `[minX, minY, maxX, maxY]` 包围盒矩形快速生成逆时针闭合的 5 顶点多边形（左下 $\to$ 右下 $\to$ 右上 $\to$ 左上 $\to$ 闭合起点）。
+  - `updateWhileAnimating: true` 与 `updateWhileInteracting: true`：
+    在 `VectorLayer` 上启用这两个参数，使得当地图进行平移动画或惯性交互时，矢量几何始终在每一帧都重新计算并执行视口裁剪和世界环绕对齐，消除快速平移视口时的闪烁或滞后现象。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **跨日界线 BBOX 空间查询与剪裁陷阱**：
+    跨越日界线的地理要素（如跨越阿留申群岛、斐济的多边形），在 GeoJSON 规范中若直接存为 `minX: 179, maxX: -179` 会导致空间索引（R-Tree）计算为几乎覆盖全球的大矩形。工业级实践通常在入库前采用“切分成两个跨经线独立多边形（MultiPolygon）”或在前端利用坐标平移（$+360^\circ$）外推处理。
 tags: "simple, geometry, rectangle, box, bbox, polygon, dateline, wrap, 180"
 ---
 <div id="map" class="map"></div>
