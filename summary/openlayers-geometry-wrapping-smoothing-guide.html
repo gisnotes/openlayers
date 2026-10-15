@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-空间几何数学、跨日界线环绕与曲线平滑实战指南">OpenLayers 空间几何数学、跨日界线环绕与曲线平滑实战指南</h1>
+<blockquote>
+<p><strong>专题标识</strong>：<code>geometry-wrapping-smoothing</code><br><strong>核心标签</strong>：<code>geometry</code>、<code>smooth</code>、<code>chaikin</code>、<code>rectangle</code>、<code>wrap</code>、<code>render</code><br><strong>涉及示例</strong>：</p>
+<ul>
+<li><a href="../examples/polygon-wrapping.html"><code>polygon-wrapping</code></a> - 多边形跨日界线循环环绕渲染</li>
+<li><a href="../examples/rectangle.html"><code>rectangle</code></a> - 矩形几何与四至包围盒构建（fromExtent）</li>
+<li><a href="../examples/render-geometry.html"><code>render-geometry</code></a> - 即时渲染：将几何直接绘制到独立 Canvas</li>
+<li><a href="../examples/chaikin.html"><code>chaikin</code></a> - 基于 Chaikin 算法的折线平滑化</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：openlayers-空间几何核心模型">1. 架构总览：OpenLayers 空间几何核心模型</h2>
+<p>OpenLayers 拥有高度数学化且遵循 OGC Simple Features 规范的空间几何引擎（<code>ol/geom/*</code>）。从最基础的点（<code>Point</code>）、折线（<code>LineString</code>）、多边形（<code>Polygon</code>），到复杂的多几何体（<code>Multi*</code>）与集合（<code>GeometryCollection</code>），所有几何均以连续扁平化的数值浮点数组（Flat Coordinates）在底层存储，实现极致的内存紧凑性与遍历速度。</p>
+<p>在实际工业级项目中，除了常规的矢量绘制，开发者经常会遭遇一系列深水区难题：</p>
+<ol>
+<li><strong>跨日界线撕裂</strong>：太平洋岛国、极地航线跨越 180° 经线时，如何避免图形横跨全球产生横向“拉丝撕裂”？</li>
+<li><strong>矩形对象抽象</strong>：为什么标准库没有 <code>Rectangle</code> 类？如何从 BBOX 高效构造正交多边形？</li>
+<li><strong>脱离地图的纯几何渲染</strong>：在图例生成、离屏 Canvas 导出或微组件中，如何无需创建 <code>Map</code> 实例直接使用 OpenLayers 的矢量样式排版？</li>
+<li><strong>手绘平滑度提升</strong>：人工手绘轨迹曲折生硬，如何利用计算机图形学经典割角算法（Chaikin）实时生成圆润的样条曲线？</li>
+</ol>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph GeomEngine[&quot;OpenLayers 几何引擎内核 (ol/geom)&quot;]
+        FlatCoords[&quot;扁平浮点数组 (Flat Coordinates)&lt;br/&gt;[x1, y1, x2, y2, ...]&quot;]
+        SpatialIndex[&quot;动态空间索引 R-Tree / RBush&quot;]
+        Transform[&quot;坐标矩阵变换 (Transform &amp; Scale)&quot;]
+    end
+
+    subgraph Problem1[&quot;1. 跨日界线连续环绕&quot;]
+        ExtX[&quot;墨卡托极值外推坐标&lt;br/&gt;leftX - Δx / rightX + Δx&quot;]
+        WrapMgr[&quot;多世界副本视口映射 (World Wrapping)&quot;]
+    end
+
+    subgraph Problem2[&quot;2. 包围盒正交矩形&quot;]
+        FromExtent[&quot;Polygon.fromExtent(extent)&lt;br/&gt;自动逆时针 5 顶点闭合生成&quot;]
+    end
+
+    subgraph Problem3[&quot;3. 脱机即时渲染 API&quot;]
+        ToCtx[&quot;ol/render.toContext(ctx2d, size)&lt;br/&gt;脱离 Map 实例的即时 VectorContext&quot;]
+        CanvasDirect[&quot;Canvas 2D 直接光栅化输出 (图例/图标)&quot;]
+    end
+
+    subgraph Problem4[&quot;4. 曲线细分平滑&quot;]
+        Chaikin[&quot;Chaikin 割角切角算法 (Corner-Cutting)&lt;br/&gt;1/4 与 3/4 逐段顶点细分逼近 B-Spline&quot;]
+        DrawIntercept[&quot;draw.on(&#39;drawend&#39;) 坐标拦截替换&quot;]
+    end
+
+    FlatCoords --&gt; SpatialIndex &amp; Transform
+    Transform --&gt; ExtX --&gt; WrapMgr
+    FromExtent --&gt; FlatCoords
+    ToCtx --&gt; CanvasDirect
+    DrawIntercept --&gt; Chaikin --&gt; FlatCoords
+</code></pre>
+<hr>
+<h2 id="2-核心技术对比与方案选型">2. 核心技术对比与方案选型</h2>
+<table>
+<thead>
+<tr>
+<th align="left">几何处理场景</th>
+<th align="left">传统纯手工实现方式</th>
+<th align="left">OpenLayers 官方标准解决方案</th>
+<th align="left">架构优势与收益</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>矩形/包围盒生成</strong></td>
+<td align="left">手动拼接 5 个点并计算首尾相同坐标</td>
+<td align="left"><code>Polygon.fromExtent([minX, minY, maxX, maxY])</code></td>
+<td align="left">100% 保证逆时针拓扑外环，杜绝点位顺序混乱导致的渲染异常</td>
+</tr>
+<tr>
+<td align="left"><strong>跨日界线显示</strong></td>
+<td align="left">强行将正经度截断折回负经度</td>
+<td align="left">坐标允许外推至世界边界之外（$\pm \Delta x$），配置 <code>updateWhileAnimating: true</code></td>
+<td align="left">彻底消除跨越 180° 经线时横跨整个地球的几何拉扯变形</td>
+</tr>
+<tr>
+<td align="left"><strong>图例/小图标绘制</strong></td>
+<td align="left">实例化不可见的新 <code>Map</code> 挂载 DOM 渲染</td>
+<td align="left"><code>toContext(canvas.getContext(&#39;2d&#39;), { size })</code></td>
+<td align="left">无需 DOM 挂载、无需事件监听与投影系统，内存开销减少 95%</td>
+</tr>
+<tr>
+<td align="left"><strong>折线平滑圆角</strong></td>
+<td align="left">CSS <code>stroke-linejoin: round</code>（仅拐角微圆）</td>
+<td align="left"><code>chaikin-smooth</code> 多轮割角迭代逼近二次 B 样条</td>
+<td align="left">真实的几何拓扑坐标重计算，支持后续测量、空间相交与导出</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="3-关键机制深入剖析">3. 关键机制深入剖析</h2>
+<h3 id="31-跨日界线（antimeridian）的多世界连续渲染机制">3.1 跨日界线（Antimeridian）的多世界连续渲染机制</h3>
+<p>在 Web 墨卡托投影（EPSG:3857）中，全球经度范围被压缩在 $[-20037508.34, 20037508.34]$ 之间。</p>
+<pre><code>                    反子午线 / 日界线
+西侧极值边界 (-180°)        |        东侧极值边界 (+180°)
+leftX = -20037508.34        |        rightX = +20037508.34
+       &lt;---|----------------|----------------|---&gt;
+  世界副本 -1    |     主世界 (World 0)    |   世界副本 +1
+</code></pre>
+<p>如果一个要素跨越东经 180°（如某条航线从东京 $140^\circ\text{E}$ 飞往旧金山 $122^\circ\text{W}$），若旧金山坐标依然记作负数，几何连线就会被迫向西“倒着穿过亚欧非大陆”，形成横跨全球的巨型错误线条。</p>
+<h4 id="openlayers-的外推坐标解析机制">OpenLayers 的外推坐标解析机制</h4>
+<pre><code class="language-javascript">// examples/polygon-wrapping.js
+const proj = getProjection(&#39;EPSG:3857&#39;);
+const extent = proj.getExtent();
+const leftX = extent[0];
+const rightX = extent[2];
+
+// 允许 X 坐标超越极值边界：
+// leftX - 2000000 意味着多边形延伸到了左侧连续环绕的世界副本中
+new Feature(fromExtent([leftX - 2000000, 4500000, leftX + 4000000, 6500000]));
+</code></pre>
+<p>在图层配置中：</p>
+<pre><code class="language-javascript">new VectorLayer({
+  updateWhileAnimating: true,   // 平移动画时持续实时计算环绕映射
+  updateWhileInteracting: true, // 鼠标按住拖拽时实时更新
+  source: vectorSource,
+});
+</code></pre>
+<p>OpenLayers 的渲染器根据当前视口的中心经度，自动计算当前视口跨越了哪些“世界切片”，并将这些跨越边界的几何无缝映射到相邻视图中，从而呈现完美连续的环球视角。</p>
+<hr>
+<h3 id="32-矩形几何与-polygonfromextent-的规范化">3.2 矩形几何与 <code>Polygon.fromExtent</code> 的规范化</h3>
+<p>OpenLayers 遵循 OGC 标准，<strong>未设计独立的 <code>Rectangle</code> 几何类</strong>。所有矩形均作为标准 <code>ol/geom/Polygon</code> 运行。</p>
+<pre><code class="language-javascript">// examples/rectangle.js
+import {fromExtent} from &#39;../src/ol/geom/Polygon.js&#39;;
+
+const rectangleGeom = fromExtent([-1000000, 5000000, 3000000, 7000000]);
+</code></pre>
+<p>其内部构造等价于：</p>
+<pre><code class="language-javascript">new Polygon([[
+  [-1000000, 5000000], // 左下
+  [-1000000, 7000000], // 左上
+  [3000000, 7000000],  // 右上
+  [3000000, 5000000],  // 右下
+  [-1000000, 5000000], // 闭合起点
+]]);
+</code></pre>
+<ul>
+<li><strong>逆时针拓扑外环保证</strong>：<code>fromExtent</code> 生成的外环点序严格符合 OGC 外环规范，直接与空间分析库（JSTS、Turf.js）互通，杜绝由于手写顺时针导致的面积取负或拓扑无效错误。</li>
+</ul>
+<hr>
+<h3 id="33-即时渲染引擎：tocontext-独立-canvas-绘制">3.3 即时渲染引擎：<code>toContext</code> 独立 Canvas 绘制</h3>
+<p>在地图之外的业务中（例如制作<strong>动态图例、标绘符号预览面板、PDF 导出中的微型指北针</strong>），完全不需要庞大的 <code>new Map()</code> 实例。</p>
+<pre><code class="language-javascript">// examples/render-geometry.js
+import {toContext} from &#39;../src/ol/render.js&#39;;
+import LineString from &#39;../src/ol/geom/LineString.js&#39;;
+import Polygon from &#39;../src/ol/geom/Polygon.js&#39;;
+import Point from &#39;../src/ol/geom/Point.js&#39;;
+
+const canvas = document.getElementById(&#39;canvas&#39;);
+// 1. 创建即时模式渲染上下文
+const vectorContext = toContext(canvas.getContext(&#39;2d&#39;), {size: [100, 100]});
+
+// 2. 注入 OpenLayers 标准样式
+vectorContext.setStyle(style);
+
+// 3. 在 Canvas 物理像素空间直接绘制几何
+vectorContext.drawGeometry(new LineString([[10, 10], [90, 90]]));
+vectorContext.drawGeometry(new Polygon([[[2, 2], [98, 2], [2, 98], [2, 2]]]));
+vectorContext.drawGeometry(new Point([88, 88]));
+</code></pre>
+<pre><code class="language-mermaid">sequenceDiagram
+    autonumber
+    participant App as 业务调用方
+    participant Render as toContext(ctx2d, {size})
+    participant VC as VectorContext
+    participant Canvas as HTML5 Canvas 2D
+
+    App-&gt;&gt;Render: 传入 Canvas Context 与逻辑尺寸
+    Render--&gt;&gt;App: 返回 VectorContext 实例
+    App-&gt;&gt;VC: vectorContext.setStyle(olStyle)
+    Note over VC: 解析 Fill / Stroke / Image 样式并同步到 Canvas 状态
+    App-&gt;&gt;VC: vectorContext.drawGeometry(Point / Line / Polygon)
+    VC-&gt;&gt;Canvas: 转换为 Canvas beginPath / stroke / fill 指令
+    Canvas--&gt;&gt;App: 像素级直接呈现（耗时 &lt; 1ms）
+</code></pre>
+<hr>
+<h3 id="34-几何曲线平滑：chaikin-割角切角细分算法">3.4 几何曲线平滑：Chaikin 割角切角细分算法</h3>
+<p>在交互标绘（<code>Draw</code>）中，用户用鼠标或手写板绘制的线条通常充满硬折角。Chaikin 算法能够在不借助三阶贝塞尔曲线控制点的情况下，纯粹基于折线已有顶点实现自适应光滑逼近。</p>
+<h4 id="数学递推公式">数学递推公式</h4>
+<p>对折线上的任意一条线段 $P_i P_{i+1}$，在每次迭代中切掉原来的拐角，并在 $1/4$ 和 $3/4$ 处插入两个新点：
+$$Q_i = \frac{3}{4}P_i + \frac{1}{4}P_{i+1}$$
+$$R_i = \frac{1}{4}P_i + \frac{3}{4}P_{i+1}$$</p>
+<pre><code>原折角:             P2
+                   /  \
+                  /    \
+                 /      \
+               P1        P3
+
+Chaikin 割角:       Q1--R1
+                   /      \
+                  /        \
+                P1          P3
+</code></pre>
+<p>随着迭代进行，折线急速收敛于均匀二次 B 样条（Quadratic B-Spline）曲线。</p>
+<h4 id="与-openlayers-draw-交互无缝集成">与 OpenLayers Draw 交互无缝集成</h4>
+<pre><code class="language-javascript">// examples/chaikin.js
+draw.on(&#39;drawend&#39;, function (event) {
+  if (!shallSmoothen.checked) return;
+
+  const feat = event.feature;
+  const geometry = feat.getGeometry();
+  const coords = geometry.getCoordinates();
+
+  // 迭代平滑（建议轮次 3~5 轮）
+  const smoothened = makeSmooth(coords, parseInt(numIterations.value, 10) || 5);
+  geometry.setCoordinates(smoothened);
+});
+</code></pre>
+<hr>
+<h2 id="4-生产实践踩坑与性能调优指南">4. 生产实践踩坑与性能调优指南</h2>
+<h3 id="41-chaikin-算法的顶点爆炸防御">4.1 Chaikin 算法的顶点爆炸防御</h3>
+<ul>
+<li><strong>隐患</strong>：每经过一轮 Chaikin 细分，折线的顶点数量几乎翻倍（$V_{n} \approx 2 V_{n-1}$）。若用户输入 10 轮迭代，一个原本 20 个点的线条将激增至上万个顶点，导致序列化为 GeoJSON 时体积膨胀上百倍，并拖垮渲染。</li>
+<li><strong>治理规范</strong>：<ol>
+<li>迭代轮次强制夹紧在 $1 \sim 7$ 轮之间（视觉效果在 5 轮时已达到人眼平滑极限）；</li>
+<li>平滑后若点数过密，在入库前可结合 <code>geometry.simplify(tolerance)</code>（Douglas-Peucker 算法）剔除共线多余点。</li>
+</ol>
+</li>
+</ul>
+<h3 id="42-跨日界线-geojson-存储与后端查询陷阱">4.2 跨日界线 GeoJSON 存储与后端查询陷阱</h3>
+<ul>
+<li><strong>隐患</strong>：如果直接将 $leftX - 2000000$ 的外推坐标存储进 PostGIS，在 <code>ST_GeomFromGeoJSON</code> 时可能会报 <code>Coordinate out of range (-180 to 180)</code>。</li>
+<li><strong>解决策</strong>：在与数据库交互时，若跨越日界线，应在入库前将其分割为位于经度范围内的两个有效多边形构成的 <code>MultiPolygon</code>；在前端仅作为展示层时才使用连续环绕坐标。</li>
+</ul>
+<hr>
+<h2 id="5-总结与延伸阅读">5. 总结与延伸阅读</h2>
+<p>本专题梳理了 OpenLayers 底层几何引擎的高级应用范式：</p>
+<ol>
+<li><strong>多世界连续环绕</strong>：理解投影边界外推坐标与视口映射机制；</li>
+<li><strong>包围盒规范化</strong>：熟练运用 <code>Polygon.fromExtent</code> 构建严谨正交几何；</li>
+<li><strong>即时渲染</strong>：脱离地图直接基于 <code>toContext</code> 实现毫秒级 Canvas 几何自绘制；</li>
+<li><strong>曲线平滑细分</strong>：运用 Chaikin 割角算法优化手绘折线的美学与数学表现。</li>
+</ol>
+<p>建议结合以下专题交叉进阶学习：</p>
+<ul>
+<li><a href="./openlayers-topology-analysis-guide.html">OpenLayers 高级矢量拓扑编辑与空间分析指南</a></li>
+<li><a href="./openlayers-vector-tiles-grid-reprojected-guide.html">OpenLayers 矢量切片高级架构与重投影实战指南</a></li>
+<li><a href="./openlayers-style-guide.html">OpenLayers 样式系统与富文本注记全景指南</a></li>
+</ul>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

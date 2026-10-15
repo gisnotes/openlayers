@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Immediate Rendering (Geographic)</title>
+    <title>Immediate Rendering (Geographic) / 即时渲染（地理坐标模式）</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Immediate Rendering (Geographic)</h4>
+        <h4 id="title">Immediate Rendering (Geographic) / 即时渲染（地理坐标模式）</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,7 +74,7 @@
               data-bs-target="#tag-example-list"
               data-title="immediate"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./immediate-geographic.html&quot;&gt;Immediate Rendering (Geographic)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./immediate-geographic.html&quot;&gt;Immediate Rendering (Geographic) / 即时渲染（地理坐标模式）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -88,10 +88,10 @@
               data-bs-target="#tag-example-list"
               data-title="geographic"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geographic.html&quot;&gt;Geographic Coordinates&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./edit-geographic.html&quot;&gt;Geographic Editing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./immediate-geographic.html&quot;&gt;Immediate Rendering (Geographic)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geographic.html&quot;&gt;Geographic Coordinates / 地理坐标模式（useGeographic 全局经纬度透明映射）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./edit-geographic.html&quot;&gt;Geographic Editing / 地理坐标编辑&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./immediate-geographic.html&quot;&gt;Immediate Rendering (Geographic) / 即时渲染（地理坐标模式）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates / 地理坐标系下的 WFS 瓦片化加载与 useGeographic&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >4</a>
@@ -118,8 +118,14 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Using the immediate rendering API with geometries in geographic coordinates.</p>
-        <div id="docs"><p>This example uses the &quot;immediate&quot; rendering API with geometries in geographic coordinates. The immediate rendering API lets you draw styled geometries without adding them to a layer first. Use the <code>getVectorContext</code> function to create a rendering context from a render event.  Using the <code>context.drawGeometry()</code> and <code>context.setStyle()</code> methods on this rendering context, you can draw any geometry on each render frame.  The <code>useGeographic</code> function is used in this example so that geometries can be in geographic coordinates.</p>
+        <p id="shortdesc">Using the immediate rendering API with geometries in geographic coordinates. / 在地理坐标系（经纬度）下使用即时渲染 API（Immediate Rendering）。</p>
+        <div id="docs"><h2>This example uses the &quot;immediate&quot; rendering API with geometries in geographic coordinates. The immediate rendering API lets you draw styled geometries without adding them to a layer first. Use the <code>getVectorContext</code> function to create a rendering context from a render event.  Using the <code>context.drawGeometry()</code> and <code>context.setStyle()</code> methods on this rendering context, you can draw any geometry on each render frame.  The <code>useGeographic</code> function is used in this example so that geometries can be in geographic coordinates.
+本示例演示了在地理坐标系（经纬度）下结合使用即时渲染（Immediate Rendering）API。即时渲染 API 允许开发者绕过矢量图层与要素生命周期管理，直接在画布渲染事件中绘制带有样式的几何体。通过在渲染帧事件中调用 <code>getVectorContext(event)</code> 创建矢量绘制上下文，利用其 <code>context.setStyle()</code> 和 <code>context.drawGeometry()</code> 方法，可以在每一帧以极高性能直接绘制几何图形。配合 <code>useGeographic()</code> 函数，所有传入的几何形体均可直接使用经纬度 <code>[lon, lat]</code> 坐标。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 即时渲染底层架构 (Immediate Rendering Architecture) - <strong>绕过要素生命周期的高性能管线</strong>: OpenLayers 常规矢量渲染体系遵循 <code>VectorSource -&gt; VectorLayer -&gt; Renderer -&gt; Canvas</code>，底层需要维护要素（Feature）的属性字典、几何变更事件监听、空间 R 树索引（RBush）以及脏矩形计算。即时渲染（Immediate Rendering）机制通过监听图层或地图的 <code>postrender</code> 渲染事件，直接使用 <code>getVectorContext(event)</code> 获取 Canvas 矢量上下文，跳过所有抽象层直接把几何形体光栅化到离屏画布上。 - <strong>极致帧率与轻量开销</strong>: 适用于高频粒子系统、气象雷达回波、实时 GPS 车辆拖尾、地震波扩散动画等需要每秒刷新数十次且无需长期要素状态管理的场景。</h4>
+<h4>2. 与 <code>useGeographic()</code> 的无缝结合 - 即使直接调用 <code>vectorContext.drawGeometry(geometry)</code>，底层渲染引擎依然会借助全局用户投影（User Projection）自动将地理经纬度 <code>[lon, lat]</code> 点坐标投影至当前视图的屏幕像素坐标系。 - 开发者无需在每一帧渲染循环中调用 <code>fromLonLat</code>，极大简化了数学计算与动态粒子生成的复杂度。</h4>
+<h4>3. 动画流与单例样式复用设计 - <strong>单例样式避免 GC 抖动 (Garbage Collection)</strong>: 在每帧遍历绘制 1000 个动态几何体的循环中，绝对不能在循环体内部反复调用 <code>new Style()</code> 或 <code>new Circle()</code>。示例中将 <code>image</code> 与 <code>style</code> 声明为模块级单例，仅在循环中动态更新其 <code>image.setOpacity(importance)</code> 与 <code>image.setScale(importance)</code>，避免产生大量短生命周期对象触发浏览器垃圾回收卡顿。 - <strong>滑动队列与连续重绘</strong>: 采用固定容量数组作为滑动窗口队列（通过 <code>geometries.push(...)</code> 添加新点、<code>geometries.shift()</code> 剔除陈旧点），并在 <code>postrender</code> 结尾调用 <code>map.render()</code> 调度下一帧重绘，形成流畅的粒子衰减尾迹效果。</h4>
+<h4>4. 生产实践陷阱与避坑指南 (Production Pitfalls &amp; Best Practices) - <strong>重绘风暴与 CPU 占用</strong>: 在 <code>postrender</code> 内部无条件调用 <code>map.render()</code> 会触发恒定不间断的渲染循环（相当于 <code>requestAnimationFrame</code> 驱动全量地图重绘）。在生产环境中，当地图移出视口、容器不可见或用户暂停动画时，必须停用 <code>map.render()</code> 或注销事件监听器，否则会导致移动端设备电量迅速耗尽与 CPU/GPU 负载偏高。 - <strong>缺少命中检测 (Hit Detection)</strong>: 即时渲染绘制的内容不会注册到矢量图层的要素树中，因此无法通过 <code>map.forEachFeatureAtPixel</code> 进行鼠标悬浮、点击查询等交互。如果场景中需要交互，必须自行构建轻量数学包围盒索引或将关键节点作为实体 Feature 托管。</h4>
 </div>
       </div>
 
@@ -138,14 +144,20 @@ import Circle from &#x27;ol/style/Circle.js&#x27;;
 import Fill from &#x27;ol/style/Fill.js&#x27;;
 import Style from &#x27;ol/style/Style.js&#x27;;
 
+// Enable geographic coordinates (longitude/latitude) for all inputs and rendering
+// 全局启用地理坐标（经纬度 [lon, lat]）模式，几何体与视图直接使用地理坐标
 useGeographic();
 
+// Basemap tile layer using Stadia Maps (Stamen Toner style)
+// 底图切片图层：采用 Stadia Maps（经典 Stamen Toner 黑白极简风格）
 const layer &#x3D; new TileLayer({
   source: new StadiaMaps({
     layer: &#x27;stamen_toner&#x27;,
   }),
 });
 
+// Map instance configuration
+// 地图实例配置：挂载图层与中心位于 [0, 0] 的全景视图
 const map &#x3D; new Map({
   layers: [layer],
   target: &#x27;map&#x27;,
@@ -155,6 +167,8 @@ const map &#x3D; new Map({
   }),
 });
 
+// Shared circle image style (reused across all particles to avoid GC overhead)
+// 共享圆形点样式单例（跨所有粒子复用，避免在每帧渲染循环中频繁创建对象导致 GC 抖动）
 const image &#x3D; new Circle({
   radius: 8,
   fill: new Fill({color: &#x27;rgb(255, 153, 0)&#x27;}),
@@ -164,33 +178,52 @@ const style &#x3D; new Style({
   image: image,
 });
 
+// Particle collection size (sliding window of 1000 geographic points)
+// 粒子集合容量（维护包含 1000 个经纬度几何点的滑动窗口队列）
 const n &#x3D; 1000;
 const geometries &#x3D; new Array(n);
 
+// Initialize random points across the globe: lon [-180, 180], lat [-90, 90]
+// 初始化全球随机经纬度点：经度 [-180, 180]，纬度 [-90, 90]
 for (let i &#x3D; 0; i &lt; n; ++i) {
   const lon &#x3D; 360 * Math.random() - 180;
   const lat &#x3D; 180 * Math.random() - 90;
   geometries[i] &#x3D; new Point([lon, lat]);
 }
 
+// Hook into the tile layer&#x27;s postrender event for immediate vector drawing
+// 监听底图切片图层的 postrender 渲染完成事件，执行即时矢量绘制
 layer.on(&#x27;postrender&#x27;, function (event) {
+  // Obtain the vector rendering context directly from the render event
+  // 直接从渲染事件中获取轻量级矢量渲染上下文
   const vectorContext &#x3D; getVectorContext(event);
 
   for (let i &#x3D; 0; i &lt; n; ++i) {
+    // Calculate importance based on point age in the sliding window
+    // 根据点在滑动窗口中的生存周期计算重要性权重（衰减与呼吸缓动曲线）
     const importance &#x3D; upAndDown(Math.pow((n - i) / n, 0.15));
     if (importance &lt; 0.1) {
       continue;
     }
+    // Update style properties dynamically on the singleton
+    // 动态更新单例样式的透明度与缩放倍率
     image.setOpacity(importance);
     image.setScale(importance);
     vectorContext.setStyle(style);
+    // Draw geometry immediately into the canvas context
+    // 将几何图形直接光栅化绘制到当前画布上下文中
     vectorContext.drawGeometry(geometries[i]);
   }
 
+  // Generate a new random point and slide the queue (FIFO)
+  // 生成新的随机地理坐标点，并通过队列先进先出（FIFO）机制更新数组
   const lon &#x3D; 360 * Math.random() - 180;
   const lat &#x3D; 180 * Math.random() - 90;
   geometries.push(new Point([lon, lat]));
   geometries.shift();
+
+  // Request next frame render to sustain continuous animation
+  // 调度下一帧地图渲染，保持连续平滑动画
   map.render();
 });
 </code></pre>
@@ -204,7 +237,7 @@ layer.on(&#x27;postrender&#x27;, function (event) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Immediate Rendering (Geographic)&lt;/title&gt;
+    &lt;title&gt;Immediate Rendering (Geographic) / 即时渲染（地理坐标模式）&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

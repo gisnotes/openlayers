@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-矢量文本注记渲染、富文本排版与智能避让实战架构指南">OpenLayers 矢量文本注记渲染、富文本排版与智能避让实战架构指南</h1>
+<blockquote>
+<p>在地图制图学（Cartography）与现代 WebGIS 应用中，<strong>地名与属性注记（Labels）</strong>是承载地图可读性与信息传达的最核心要素。然而，随着地理要素密度的增加，文字互相重叠、小面积多边形注记丢失、图层之间文字遮挡冲突、样式单一无法突出层级、以及道路弯曲无法贴合等问题，往往成为困扰开发者的工程痛点。</p>
+<p>OpenLayers 拥有业内领先的矢量文字排版引擎与空间冲突检测机制。通过 <strong>R-Tree 空间避让树（Decluttering）</strong>、<strong>命名隔离避让组（Declutter Groups）</strong>、<strong>数组化富文本排版（Rich Text）</strong>、<strong>几何锚点与段落对齐二维解耦（<code>textAlign</code> + <code>justify</code>）</strong>以及<strong>沿线弯曲切线排版（<code>placement: &#39;line&#39;</code>）</strong>，开发者能够构建出媲美专业出版级制图品质的高性能动态注记系统。本文基于 5 个核心官方示例，深度解构注记管线的实现原理与工程实践。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：openlayers-文本渲染与避让冲突检测管线">1. 架构总览：OpenLayers 文本渲染与避让冲突检测管线</h2>
+<h3 id="11-文本光栅化与避让仲裁拓扑">1.1 文本光栅化与避让仲裁拓扑</h3>
+<p>在 OpenLayers 中，文本注记并不是简单的 HTML DOM 覆盖物，而是由矢量构建器（<code>TextBuilder</code>）计算排版后直接光栅化到 Canvas 纹理图集中：</p>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph FeaturePipeline [矢量要素与注记输入]
+        direction TB
+        F[矢量要素 Feature] --&gt; StyleFunc[样式计算 style / text]
+        StyleFunc --&gt; TextDef[&quot;Text 样式对象 (font, placement, overflow)&quot;]
+    end
+
+    subgraph DeclutterEngine [空间避让引擎 RBush]
+        direction TB
+        TextDef --&gt; CheckOverflow{是否面要素 &amp; 超出边界?}
+        CheckOverflow --&gt;|是且 overflow:false| Drop[丢弃注记]
+        CheckOverflow --&gt;|否或 overflow:true| CalcBox[计算屏幕像素包围盒 AABB / OBB]
+        CalcBox --&gt; DeclutterGroup{declutter 模式}
+        DeclutterGroup --&gt;|true| SharedTree[全局共享 R 树碰撞检测]
+        DeclutterGroup --&gt;|&#39;separate&#39; / 组名| IsolatedTree[专属命名 R 树碰撞检测]
+        SharedTree --&gt; Collide{是否与已有包围盒相交?}
+        IsolatedTree --&gt; Collide
+        Collide --&gt;|是 (低优先级)| Suppress[抑制隐藏当前文字]
+        Collide --&gt;|否 (成功占位)| Accept[注册包围盒并准予绘制]
+    end
+
+    subgraph CanvasOutput [Canvas 光栅化输出]
+        Accept --&gt; RenderEngine[Canvas 2D TextBuilder / GPU 纹理]
+    end
+</code></pre>
+<h3 id="12-关键配置维度全景矩阵">1.2 关键配置维度全景矩阵</h3>
+<table>
+<thead>
+<tr>
+<th align="left">控制维度</th>
+<th align="left">核心配置项</th>
+<th align="left">典型取值</th>
+<th align="left">职责与效果</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>避让模式</strong></td>
+<td align="left"><code>VectorLayer.declutter</code></td>
+<td align="left"><code>true</code> | <code>&#39;separate&#39;</code> | <code>&#39;group-name&#39;</code></td>
+<td align="left">控制是否防重叠碰撞，以及是否跨图层共享避让树</td>
+</tr>
+<tr>
+<td align="left"><strong>边界溢出</strong></td>
+<td align="left"><code>Text.overflow</code></td>
+<td align="left"><code>true</code> | <code>false</code>（默认）</td>
+<td align="left">决定当文字长于多边形自身轮廓时，是否允许溢出显示并参与避让</td>
+</tr>
+<tr>
+<td align="left"><strong>空间排布</strong></td>
+<td align="left"><code>Text.placement</code></td>
+<td align="left"><code>&#39;point&#39;</code>（默认） | <code>&#39;line&#39;</code></td>
+<td align="left">水平点状锚接或沿折线道路弯曲跟随排布</td>
+</tr>
+<tr>
+<td align="left"><strong>几何锚点</strong></td>
+<td align="left"><code>Text.textAlign</code></td>
+<td align="left"><code>&#39;left&#39;</code> | <code>&#39;center&#39;</code> | <code>&#39;right&#39;</code></td>
+<td align="left">控制注记框整体相对于点几何坐标的连接锚接位置</td>
+</tr>
+<tr>
+<td align="left"><strong>段落排版</strong></td>
+<td align="left"><code>Text.justify</code></td>
+<td align="left"><code>&#39;left&#39;</code> | <code>&#39;center&#39;</code> | <code>&#39;right&#39;</code></td>
+<td align="left">控制多行段落文本在背景气泡框内部的行间水平对齐</td>
+</tr>
+<tr>
+<td align="left"><strong>富文本语法</strong></td>
+<td align="left"><code>Text.setText</code></td>
+<td align="left"><code>string</code> | <code>Array&lt;string&gt;</code></td>
+<td align="left">单一纯文本或交替式多字号、多字重富文本片段数组</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-空间避让树（decluttering）与命名分组隔离机制">2. 空间避让树（Decluttering）与命名分组隔离机制</h2>
+<h3 id="21-全局避让-declutter-true-的工作原理">2.1 全局避让 (<code>declutter: true</code>) 的工作原理</h3>
+<p>当矢量图层配置 <code>declutter: true</code> 时，OpenLayers 在渲染通道启动一个基于二维 R-Tree（RBush）的空间索引：</p>
+<ol>
+<li>按照图层渲染顺序，先绘制的文字被量化为屏幕像素包围盒（Bounding Box）；</li>
+<li>引擎在 R 树中查询该包围盒是否与之前已注册的包围盒相交；</li>
+<li>若无碰撞，则将当前包围盒插入 R 树，并将文字光栅化；若发生碰撞，直接跳过当前文字绘制。</li>
+</ol>
+<h3 id="22-命名分组隔离-declutter-separate-解决业务冲突">2.2 命名分组隔离 (<code>declutter: &#39;separate&#39;</code>) 解决业务冲突</h3>
+<p>在复杂 WebGIS 中，经常面临“业务标记（如警情点）必须优先展示，但底图矢量瓦片（如 Mapbox/MapTiler Streets）也有自己的文字避让”的情况。若盲目使用全局 <code>declutter: true</code>，业务图层的大面积文字可能直接把底图的关键路名或地名全部剔除。</p>
+<p>在 <code>declutter-group.html</code> 中，通过赋予自定义字符串值实现命名分组隔离：</p>
+<pre><code class="language-javascript">const overlay = new VectorLayer({
+  // 使用命名分组 &#39;separate&#39;，创建专有的避让通道
+  declutter: &#39;separate&#39;,
+  source: vectorSource,
+  style: {
+    &#39;text-value&#39;: [&#39;get&#39;, &#39;text&#39;],
+    &#39;text-overflow&#39;: true,
+  },
+});
+</code></pre>
+<ul>
+<li><strong>隔离效果</strong>：<code>overlay</code> 图层内部的文字之间依然遵守防重叠避让，但<strong>绝不与下方的 Mapbox 底图共享同一个碰撞池</strong>，下层道路注记能够穿透上层多边形正常显示，避免了全局误吞。</li>
+</ul>
+<hr>
+<h2 id="3-面要素注记容纳与-overflow-true-溢出放行机制">3. 面要素注记容纳与 <code>overflow: true</code> 溢出放行机制</h2>
+<p>在默认情况下，OpenLayers 对 <code>Polygon</code> 和 <code>MultiPolygon</code> 要素执行保守的“几何容纳判定（Geometric Fit Test）”：若文字在当前视图层级下的外接矩形超出了多边形本体边界，引擎将直接弃用该文字。</p>
+<p>在 <code>vector-label-decluttering.html</code> 示例中：</p>
+<ul>
+<li>像美国东部面积极其狭小的特拉华州（Delaware）、罗德岛州（Rhode Island），若保持默认设置，其州名在全国缩放级别（Zoom 4）下完全不可见；</li>
+<li>通过开启 <code>overflow: true</code>：<pre><code class="language-javascript">const labelStyle = new Style({
+  text: new Text({
+    font: &#39;12px Calibri,sans-serif&#39;,
+    overflow: true, // 强制放行超出多边形几何边界的长文字
+    stroke: new Stroke({color: &#39;#fff&#39;, width: 3}), // 白色光晕保证跨底色可读性
+  }),
+});
+</code></pre>
+</li>
+<li><strong>换行压缩包围盒技巧</strong>：配合 <code>name.split(&#39; &#39;).join(&#39;\n&#39;)</code> 将横向冗长的地名转换为近似正方形的多行文本，不仅大幅缩小水平 AABB 碰撞面积，更大幅提高了相邻多边形之间注记的容纳率。</li>
+</ul>
+<hr>
+<h2 id="4-数组化富文本排版（rich-text-labels）">4. 数组化富文本排版（Rich Text Labels）</h2>
+<p>常规注记往往全行单一字体，难以体现层次。OpenLayers 提供了开箱即用的<strong>交替式富文本数组规范</strong>，无需引入任何 HTML 覆盖物即可在 Canvas 上直接呈现混合排版。</p>
+<h3 id="41-语法规则与代码范式">4.1 语法规则与代码范式</h3>
+<p>在 <code>rich-text-labels.html</code> 中：</p>
+<pre><code class="language-javascript">labelStyle.getText().setText([
+  feature.getId(), &#39;bold 13px Calibri,sans-serif&#39;, // 粗体前缀排序代号
+  ` ${feature.get(&#39;name&#39;)}`, &#39;&#39;,                  // 继承默认字体的州名
+  &#39;\n&#39;, &#39;&#39;,                                       // 显式换行符
+  `${feature.get(&#39;density&#39;)} people/mi²`, &#39;italic 11px Calibri,sans-serif&#39;, // 较小字号的斜体统计数据
+]);
+</code></pre>
+<pre><code class="language-mermaid">classDiagram
+    class RichTextArray {
+      +String [0] 文本片段 1: &quot;US-CA&quot;
+      +String [1] 字体描述 1: &quot;bold 13px Calibri&quot;
+      +String [2] 文本片段 2: &quot; California&quot;
+      +String [3] 字体描述 2: &quot;&quot; (继承默认字体)
+      +String [4] 文本片段 3: &quot;\n&quot;
+      +String [5] 字体描述 3: &quot;&quot;
+      +String [6] 文本片段 4: &quot;253 people/mi²&quot;
+      +String [7] 字体描述 4: &quot;italic 11px Calibri&quot;
+    }
+</code></pre>
+<h3 id="42-性能设计与单例复用">4.2 性能设计与单例复用</h3>
+<p>在矢量要素样式函数 <code>style: function(feature)</code> 中，切忌频繁 <code>new Style()</code>。通过操作外层单例 <code>labelStyle.getText().setText(...)</code> 并返回统一的静态数组引用，有效规避了海量要素渲染时的 GC 停顿。</p>
+<hr>
+<h2 id="5-几何锚点（textalign）与段落对齐（justify）的二维解耦">5. 几何锚点（<code>textAlign</code>）与段落对齐（<code>justify</code>）的二维解耦</h2>
+<p>在 <code>vector-labels-justify-text.html</code> 示例中，清晰展示了 OpenLayers 对注记排版学的重要重构：</p>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph SpatialAnchor [空间几何锚点 textAlign]
+        direction TB
+        L[textAlign: &#39;left&#39; - 注记偏右]
+        C[textAlign: &#39;center&#39; - 注记居中]
+        R[textAlign: &#39;right&#39; - 注记偏左]
+    end
+
+    subgraph ParagraphJustify [框内段落对齐 justify]
+        direction TB
+        JL[justify: &#39;left&#39; - 行首左齐]
+        JC[justify: &#39;center&#39; - 居中对称]
+        JR[justify: &#39;right&#39; - 行尾右齐]
+    end
+
+    SpatialAnchor &lt;==&gt;|正交组合 3x3 = 9 种排版变体| ParagraphJustify
+</code></pre>
+<h3 id="51-纯样式气泡卡片-backgroundfill--padding">5.1 纯样式气泡卡片 (<code>backgroundFill</code> + <code>padding</code>)</h3>
+<p>无需制作背景图片，通过配置：</p>
+<pre><code class="language-javascript">new Text({
+  textAlign: &#39;left&#39;,
+  justify: &#39;center&#39;,
+  backgroundFill: new Fill({color: &#39;rgba(168, 50, 153, 0.6)&#39;}),
+  padding: [4, 8, 4, 8], // 上、右、下、左内边距
+})
+</code></pre>
+<p>OpenLayers 会根据多行文本的实际计算外框，自动生成带有留白的纯矢量背景卡片。</p>
+<hr>
+<h2 id="6-沿线弯曲道路注记（placement-line）">6. 沿线弯曲道路注记（<code>placement: &#39;line&#39;</code>）</h2>
+<p>在城市路网与航海航线制图中，文字必须贴合道路弯曲延伸。在 <code>street-labels.html</code> 中：</p>
+<pre><code class="language-javascript">const style = new Style({
+  text: new Text({
+    font: &#39;bold 11px &quot;Open Sans&quot;, sans-serif&#39;,
+    placement: &#39;line&#39;, // 沿线折线路径排布
+    fill: new Fill({color: &#39;white&#39;}),
+  }),
+});
+</code></pre>
+<h3 id="61-核心机制深入">6.1 核心机制深入</h3>
+<ul>
+<li><strong>切线参数化与逐字仿射旋转</strong>：引擎沿着道路线状几何分段采样切线矢量，计算各字符中心在路径上的投影并独立施加局部旋转角；</li>
+<li><strong>防倒悬自动翻转（Keep Upright）</strong>：当道路流向反转导致文字可能倒立时，内置算法自动翻转采样方向，确保始终正向符合阅读习惯；</li>
+<li><strong>曲率折角保护（<code>maxAngle</code>）</strong>：默认限制锐角折弯，避免文字在转角处严重形变重叠。</li>
+</ul>
+<hr>
+<h2 id="7-生产环境避坑指南与最佳实践">7. 生产环境避坑指南与最佳实践</h2>
+<h3 id="71-空白空格丢失陷阱">7.1 空白空格丢失陷阱</h3>
+<ul>
+<li><strong>现象</strong>：富文本数组拼接后，州代号与地名紧挨在一起（如 <code>US-CANew York</code>）。</li>
+<li><strong>根因</strong>：数组项紧邻时光栅化引擎不会自动注入空格。</li>
+<li><strong>解决</strong>：在后续片段首位显式加空格：<code>&#39; &#39; + name</code>。</li>
+</ul>
+<h3 id="72-矢量要素线段碎片化导致的注记缺失">7.2 矢量要素线段碎片化导致的注记缺失</h3>
+<ul>
+<li><strong>现象</strong>：明明整条大道很长，但地图上完全不显示路名。</li>
+<li><strong>根因</strong>：道路被交叉路口打散成了几十个数十像素的微小 LineString，单段线长无法容纳整个文字，被 <code>placement: &#39;line&#39;</code> 自动静默隐藏。</li>
+<li><strong>解决</strong>：在 GIS 数据加工阶段（如 QGIS/PostGIS）使用 <code>ST_LineMerge</code> 进行同名拓扑线段合并，或在前端按道路名称进行要素聚类合并。</li>
+</ul>
+<h3 id="73-全局-declutter-true-导致的注记离奇失踪">7.3 全局 <code>declutter: true</code> 导致的注记“离奇失踪”</h3>
+<ul>
+<li><strong>现象</strong>：打开一个新业务图层后，底图上的省会城市名字突然全没了。</li>
+<li><strong>解决</strong>：业务矢量图层应显式指定独立的组名，如 <code>declutter: &#39;business-poi&#39;</code>，实现碰撞域隔离。</li>
+</ul>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

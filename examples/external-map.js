@@ -7,7 +7,7 @@ var UnusableMask = class extends Control {
 		super({ element: document.createElement("div") });
 		this.element.setAttribute("hidden", "hidden");
 		this.element.className = "ol-mask";
-		this.element.innerHTML = "<div>Map not usable</div>";
+		this.element.innerHTML = "<div>Map in external window / 地图正在外部窗口运行</div>";
 	}
 };
 var localMapTarget = document.getElementById("map");

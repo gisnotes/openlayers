@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Constrained Zoom</title>
+    <title>Constrained Zoom / 视图缩放级别区间约束（minZoom 与 maxZoom）</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Constrained Zoom</h4>
+        <h4 id="title">Constrained Zoom / 视图缩放级别区间约束（minZoom 与 maxZoom）</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,31 +75,31 @@
               data-title="maptiler"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom / 视图缩放级别区间约束（minZoom 与 maxZoom）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop.html&quot;&gt;Drag-and-Drop / 拖拽加载文件&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector / 矢量图像图层拖拽加载&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen.html&quot;&gt;Full Screen Control&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./gpx.html&quot;&gt;GPX Data&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-filter.html&quot;&gt;Image Filters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml.html&quot;&gt;KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-spy.html&quot;&gt;Layer Spy&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./magnify.html&quot;&gt;Magnify&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen.html&quot;&gt;Full Screen Control / 全屏显示控件 (FullScreen)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom / 全屏联动拖拽旋转与复合缩放&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./gpx.html&quot;&gt;GPX Data / GPX 户外轨迹数据解析与多几何类型着色 (GPX Data)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-filter.html&quot;&gt;Image Filters / 图像滤镜&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml.html&quot;&gt;KML / KML 矢量图层加载与要素拾取 (KML Data)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-spy.html&quot;&gt;Layer Spy / 图层探照灯（透镜探查）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe / 图层卷帘对比&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./magnify.html&quot;&gt;Magnify / 局部放大镜（像素插值放大）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./side-by-side.html&quot;&gt;Shared Views&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing / 种子点区域生长与交互式影像分割&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection by Code / 坐标系搜索与栅格动态重投影 (Reprojection by Code)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./side-by-side.html&quot;&gt;Shared Views / 共享视图多屏联动 (Shared Views)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels / 沿线道路注记（线型文本跟随）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-style.html&quot;&gt;Vector tiles created from a Mapbox Style object / 使用 Mapbox 样式对象创建矢量切片地图&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-4326.html&quot;&gt;Vector tiles in EPSG:4326&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-retina.html&quot;&gt;XYZ Retina Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-4326.html&quot;&gt;Vector tiles in EPSG:4326 / EPSG:4326 坐标系矢量切片&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature / WFS 空间矢量要素过滤查询与叠加&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS / GeoServer WFS 视口 BBOX 动态要素加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates / 地理坐标系下的 WFS 瓦片化加载与 useGeographic&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-retina.html&quot;&gt;XYZ Retina Tiles / XYZ 视网膜高清切片 (@2x)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >26</a>
@@ -113,14 +113,14 @@
               data-bs-target="#tag-example-list"
               data-title="zoom"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom / 视图缩放级别区间约束（minZoom 与 maxZoom）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./double-click-drag-zoom.html&quot;&gt;Double click, Drag and Zoom / 双击拖拽缩放&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-rotate-and-zoom.html&quot;&gt;Drag, Rotate, and Zoom / 拖拽同时旋转与缩放&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./page-scroll.html&quot;&gt;Page Scrolling&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./two-finger-pan-scroll.html&quot;&gt;Panning and page scrolling&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom / 全屏联动拖拽旋转与复合缩放&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./page-scroll.html&quot;&gt;Page Scrolling / 页面滚动与焦点隔离（tabindex 缩放陷阱防御）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./two-finger-pan-scroll.html&quot;&gt;Panning and page scrolling / 双指平移与页面协作滚动（Cooperative Gesture）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./pinch-zoom.html&quot;&gt;Pinch Zoom / 移动端双指捏合缩放&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./min-zoom.html&quot;&gt;View Min-Zoom&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./min-zoom.html&quot;&gt;View Min-Zoom / 视图最小缩放级别动态限制（单世界自适应）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders / 缩放滑块控件与纯 CSS 样式定制（ZoomSlider）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
@@ -135,8 +135,8 @@
               data-bs-target="#tag-example-list"
               data-title="minZoom"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-zoom-limits.html&quot;&gt;Layer Zoom Limits&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom / 视图缩放级别区间约束（minZoom 与 maxZoom）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-zoom-limits.html&quot;&gt;Layer Zoom Limits / 图层缩放级别可见性区间（minZoom 与 maxZoom）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -150,8 +150,8 @@
               data-bs-target="#tag-example-list"
               data-title="maxZoom"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-zoom-limits.html&quot;&gt;Layer Zoom Limits&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom / 视图缩放级别区间约束（minZoom 与 maxZoom）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-zoom-limits.html&quot;&gt;Layer Zoom Limits / 图层缩放级别可见性区间（minZoom 与 maxZoom）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -178,8 +178,23 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of a zoom constrained view.</p>
-        <div id="docs"><p>This map has a view that is constrained between zoom levels 9 and 13.  This is done using the <code>minZoom</code> and <code>maxZoom</code> view options.</p>
+        <p id="shortdesc">Example of a zoom constrained view. / 示例展示如何使用 minZoom 与 maxZoom 限制视图缩放区间。</p>
+        <div id="docs"><h2>This map has a view that is constrained between zoom levels 9 and 13.  This is done using the <code>minZoom</code> and <code>maxZoom</code> view options.
+本示例展示如何为视图配置静态的缩放级别区间约束。通过在 <code>ol/View</code> 中配置 <code>minZoom: 9</code> 与 <code>maxZoom: 13</code>，将用户的缩放交互严格钳制在 9 级（区域概览）到 13 级（街区细节）之间，禁止无意义的过大视野与超出瓦片分辨率的过度放大。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构原理 (Core Architecture) 在 WebGIS 项目中，底图数据源（如特定区域无人机正射影像、限定比例尺规划图）往往只在特定缩放级别范围内有效： - <strong>View 缩放约束器（Zoom Constraints）</strong>：OpenLayers 内部通过 <code>createResolutionConstraint</code> 生成约束闭包函数。无论用户是通过滚轮、双击、双指捏合还是调用 <code>view.setZoom()</code> / <code>view.animate()</code>，所有目标缩放级别均会通过约束函数被硬性钳制在 $[ \text{minZoom}, \text{maxZoom} ]$ 的闭区间内。 - <strong><code>minZoom</code> / <code>maxZoom</code> vs <code>minResolution</code> / <code>maxResolution</code></strong>：</h4>
+<ul>
+<li><code>zoom</code> 是金字塔切片层级的索引（数字越大视野越精细）。</li>
+<li><code>resolution</code> 是每个屏幕像素代表的实际空间地理距离（单位：投影单位/像素，数值越大视野越宏观）。</li>
+<li>两者互为反比映射：$\text{resolution} = \text{maxResolution} / 2^{\text{zoom}}$。设置 <code>minZoom</code> 即限制最大分辨率，设置 <code>maxZoom</code> 即限制最小分辨率。在 <code>View</code> 中直接使用 <code>minZoom</code> / <code>maxZoom</code> 语义更加直观清晰。</li>
+</ul>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript const view = new View({</h4>
+<p>  center: [-13553864, 5918250],
+  zoom: 11,     // 初始进入层级
+  minZoom: 9,   // 最小允许缩放级别（最大概览视野）
+  maxZoom: 13,  // 最大允许缩放级别（最大精细深度）
+}); ```</p>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>切片 404 彻底杜绝</strong>：若底图切片服务最大仅预先切片至 14 级，若未在 <code>View</code> 中限制 <code>maxZoom: 14</code>，用户连续滚动滚轮会导致浏览器批量发起无效的 404 HTTP 请求，产生网络异常并破坏体验。 - <strong>平滑弹性回弹体验</strong>：当用户使用触控板连续快速缩放触碰 <code>maxZoom</code> 或 <code>minZoom</code> 边界时，OpenLayers 会自动触发自然的阻尼反馈并平滑回弹锁定在边界。</h4>
 </div>
       </div>
 
@@ -196,6 +211,8 @@ const attributions &#x3D;
   &#x27;&lt;a href&#x3D;&quot;https://www.maptiler.com/copyright/&quot; target&#x3D;&quot;_blank&quot;&gt;&amp;copy; MapTiler&lt;/a&gt; &#x27; +
   &#x27;&lt;a href&#x3D;&quot;https://www.openstreetmap.org/copyright&quot; target&#x3D;&quot;_blank&quot;&gt;&amp;copy; OpenStreetMap contributors&lt;/a&gt;&#x27;;
 
+// Instantiate map with constrained zoom range (minZoom: 9, maxZoom: 13)
+// 初始化带有缩放级别硬约束（minZoom: 9, maxZoom: 13）的地图与视图
 const map &#x3D; new Map({
   target: &#x27;map&#x27;,
   layers: [
@@ -211,8 +228,8 @@ const map &#x3D; new Map({
   view: new View({
     center: [-13553864, 5918250],
     zoom: 11,
-    minZoom: 9,
-    maxZoom: 13,
+    minZoom: 9, // Clamped minimum zoom level (broadest view) / 允许缩放的最小级别（最宽视野）
+    maxZoom: 13, // Clamped maximum zoom level (most detailed view) / 允许缩放的最大级别（最高精细度）
   }),
 });
 </code></pre>
@@ -226,7 +243,7 @@ const map &#x3D; new Map({
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Constrained Zoom&lt;/title&gt;
+    &lt;title&gt;Constrained Zoom / 视图缩放级别区间约束（minZoom 与 maxZoom）&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

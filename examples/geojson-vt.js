@@ -1,5 +1,12 @@
 import { C as geojsonvt, Cn as GeoJSON, Dr as Map, Ni as View, Rt as VectorTile, ja as Projection, zt as VectorTileLayer } from "./common.js";
 //#region examples/geojson-vt.js
+/**
+* Converts geojson-vt internal data structure to GeoJSON standard format.
+* 将 geojson-vt 内部切片几何结构转换为标准 GeoJSON 格式的 JSON 替换器
+* @param {string} key Property key / 属性键名
+* @param {*} value Property value / 属性值
+* @return {*} Transformed value / 转换后的值
+*/
 var replacer = function(key, value) {
 	if (!value || !value.geometry) return value;
 	let type;
@@ -7,13 +14,13 @@ var replacer = function(key, value) {
 	let geometry = value.geometry;
 	if (rawType === 1) {
 		type = "MultiPoint";
-		if (geometry.length == 1) {
+		if (geometry.length === 1) {
 			type = "Point";
 			geometry = geometry[0];
 		}
 	} else if (rawType === 2) {
 		type = "MultiLineString";
-		if (geometry.length == 1) {
+		if (geometry.length === 1) {
 			type = "LineString";
 			geometry = geometry[0];
 		}

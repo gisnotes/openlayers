@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Shaded Relief</title>
+    <title>Shaded Relief / 动态日照山体阴影（Hillshade）实时渲染</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Shaded Relief</h4>
+        <h4 id="title">Shaded Relief / 动态日照山体阴影（Hillshade）实时渲染</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,13 +75,13 @@
               data-bs-target="#tag-example-list"
               data-title="raster"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./contour-interpolation.html&quot;&gt;Interpolating Contours from a DEM&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./pmtiles-image.html&quot;&gt;PMTiles Image Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sea-level.html&quot;&gt;Sea Level&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./shaded-relief.html&quot;&gt;Shaded Relief&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./contour-interpolation.html&quot;&gt;Interpolating Contours from a DEM / DEM 高程插值与动态等高线生成&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source / 使用 Raster 数据源计算 COG 的 NDVI&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./pmtiles-image.html&quot;&gt;PMTiles Image Tiles / PMTiles 单文件云原生切片归档读取&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing / 种子点区域生长与交互式影像分割&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sea-level.html&quot;&gt;Sea Level / MapTiler Terrain-RGB 动态海平面上升模拟&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./shaded-relief.html&quot;&gt;Shaded Relief / 动态日照山体阴影（Hillshade）实时渲染&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >7</a>
@@ -95,8 +95,8 @@
               data-bs-target="#tag-example-list"
               data-title="shadedrelief"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./shaded-relief.html&quot;&gt;Shaded Relief&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-shaded-relief.html&quot;&gt;Shaded Relief (with WebGL)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-shaded-relief.html&quot;&gt;Shaded Relief (with WebGL) / WebGL 动态山体阴影（地貌日照晕渲与邻域采样）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./shaded-relief.html&quot;&gt;Shaded Relief / 动态日照山体阴影（Hillshade）实时渲染&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -118,17 +118,17 @@
         <div id="map" class="map"></div>
 <table class="controls">
   <tr>
-    <td><label for="vert">vertical exaggeration:</label></td>
+    <td><label for="vert">Vertical exaggeration / 垂直夸大系数:</label></td>
     <td><input id="vert" type="range" min="1" max="5" value="1"/></td>
     <td><span id="vertOut"></span> x</td>
   </tr>
   <tr>
-    <td><label for="sunEl">sun elevation:</label></td>
+    <td><label for="sunEl">Sun elevation / 太阳高度角:</label></td>
     <td><input id="sunEl" type="range" min="0" max="90" value="45"/></td>
     <td><span id="sunElOut"></span> °</td>
   </tr>
   <tr>
-    <td><label for="sunAz">sun azimuth:</label></td>
+    <td><label for="sunAz">Sun azimuth / 太阳方位角:</label></td>
     <td><input id="sunAz" type="range" min="0" max="360" value="45"/></td>
     <td><span id="sunAzOut"></span> °</td>
   </tr>
@@ -140,7 +140,7 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Calculate shaded relief from elevation data</p>
+        <p id="shortdesc">Calculate shaded relief from elevation data. / 演示如何使用 ol/source/Raster 在 Web Worker 中通过 3x3 邻域梯度计算坡度与坡向，结合太阳高度角与方位角实时解算朗伯日照山体阴影。</p>
         <div id="docs"><p>
   This example uses a <code>ol/source/Raster</code> to generate data
   based on another source.  The raster source accepts any number of
@@ -160,6 +160,45 @@
   <code>ImageData</code> object returned by the last operation in the pipeline
   is used for rendering.
 </p>
+<p>
+  本示例演示了如何利用 <code>ol/source/Raster</code> 的整图（<code>operationType: 'image'</code>）运算模式，根据数字高程切片（DEM）在后台 Web Worker 中实时计算并渲染出具有立体三维质感的日照山体阴影（Shaded Relief / Hillshade）。
+</p> <p>
+  算法采用 $3 \times 3$ 邻域有限差分算子解算每个像素点的坡度（Slope）与坡向（Aspect），并依据朗伯漫反射光学模型（Lambertian Reflectance），结合用户实时调节的垂直夸大系数（Vertical Exaggeration）、太阳高度角（Sun Elevation）与太阳方位角（Sun Azimuth）进行光照强度解算，生成半透明地形光影覆盖层叠于 OSM 底图之上。
+</p>
+---
+### 📚 学习记录与技术深度解读 (Learning Notes)
+#### 1. 核心架构与设计机制 (Core Architecture & Mechanics) - <strong>朗伯漫反射日照阴影模型 (Lambertian Shaded Relief Model)</strong>：
+  山体阴影根据太阳入射角与地表微元法线向量的夹角计算光照照度。其核心物理公式为：
+  $$\cos(\theta_{\text{incidence}}) = \sin(\text{SunEl}) \cdot \cos(\text{Slope}) + \cos(\text{SunEl}) \cdot \sin(\text{Slope}) \cdot \cos(\text{SunAz} - \text{Aspect})$$
+  - $\theta_{\text{incidence}}$：太阳光线与地表法线的入射角；
+  - $\text{SunEl}$：太阳高度角（从地平线向上仰角，弧度制）；
+  - $\text{SunAz}$：太阳方位角（自地理正北顺时针旋转，弧度制）；
+  - $\text{Slope}$：当前地表的坡度斜角；
+  - $\text{Aspect}$：当前地表下坡方向的坡向角。
+- <strong>$3 \times 3$ 邻域有限差分梯度解算</strong>：
+  为了在离散光栅网格中计算地表法向量，算法在 $X$（东西）和 $Y$（南北）方向进行中心有限差分近似求偏导：
+  $$\frac{\partial z}{\partial x} = \frac{z(x+1, y) - z(x-1, y)}{2 \times \text{Resolution}}$$
+  $$\frac{\partial z}{\partial y} = \frac{z(x, y+1) - z(x, y-1)}{2 \times \text{Resolution}}$$
+  坡度为梯度幅值：$\text{Slope} = \arctan\left(\sqrt{(\frac{\partial z}{\partial x})^2 + (\frac{\partial z}{\partial y})^2}\right)$；坡向为方位角：$\text{Aspect} = \text{atan2}(\frac{\partial z}{\partial y}, -\frac{\partial z}{\partial x})$。<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns) - <strong>整图级切片参数传递与分辨率感知</strong>：</h4>
+<pre><code class="language-javascript">raster.on(&#39;beforeoperations&#39;, function (event) {
+  const data = event.data;
+  data.resolution = event.resolution; // 传入当前视口真实物理分辨率 (米/像素)
+  data.vert = Number(controls.vert.value);   // 垂直夸大系数
+  data.sunEl = Number(controls.sunEl.value); // 太阳高度角
+  data.sunAz = Number(controls.sunAz.value); // 太阳方位角
+});
+</code></pre>
+<p>  导数计算必须依赖 <code>event.resolution</code>。若不考虑地图分辨率（例如固定按像素距离算导数），则地图在缩放层级变化时阴影对比度会失真崩溃；绑定 <code>event.resolution</code> 能保证山体阴影在任意缩放级别下均保持严格一致的物理光影对比度。</p>
+<ul>
+<li><strong>象限规整与角度变换</strong>：
+标准数学 <code>atan2(y, x)</code> 以正 X 轴为 0 度且逆时针旋转。算法中经过象限转换（<code>halfPi - aspect</code>），将坡向角校准为地理标准（正北为 0 度，顺时针旋转），以与标准的太阳方位角（<code>sunAz</code>）保持同构对齐。</li>
+</ul>
+<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices) - <strong>视觉凹凸反转倒错错觉（Pseudoscopic Inversion Illusion）</strong>：</h4>
+<p>  人类视觉大脑对光影的认知存在强烈的“顶光假定（Light from Above）”。在地图制图中，如果太阳方位角设为正南方（如 $180^\circ$），山脊在视觉上会被大脑误判为深陷的峡谷，而峡谷反被误看为山脊。因此，<strong>行业制图标准始终将太阳方位角设定在西北方向（$315^\circ$ 附近）或偏北方向</strong>，本示例默认提供的 $45^\circ$ 或 $315^\circ$ 均能有效防止视错觉。</p>
+<ul>
+<li><strong>垂直夸大（Vertical Exaggeration）的平衡度</strong>：
+在宏观平原或低矮丘陵地区，微弱的高程起伏无法形成明显阴影，需要通过 <code>vert</code>（如 $2 \times \sim 5 \times$）进行适度夸大；但在安第斯山脉或喜马拉雅等极端陡峭地区，过高的夸大会导致斜率溢出为全黑深影，此时应回退至 $1 \times$ 以保留山体背光面的纹理细节。</li>
+</ul>
 </div>
       </div>
 
@@ -175,11 +214,12 @@ import OSM from &#x27;ol/source/OSM.js&#x27;;
 import Raster from &#x27;ol/source/Raster.js&#x27;;
 
 /**
- * Generates a shaded relief image given elevation data.  Uses a 3x3
- * neighborhood for determining slope and aspect.
- * @param {Array&lt;ImageData&gt;} inputs Array of input images.
- * @param {Object} data Data added in the &quot;beforeoperations&quot; event.
- * @return {ImageData} Output image.
+ * Generates a shaded relief image given elevation data.
+ * Uses a 3x3 neighborhood for determining slope and aspect.
+ * 基于数字高程切片使用 3x3 邻域解算坡度与坡向，生成日照山体阴影图像
+ * @param {Array&lt;ImageData&gt;} inputs Array of input images. / 输入图像数组
+ * @param {Object} data Data added in the &quot;beforeoperations&quot; event. / 外部上下文参数
+ * @return {ImageData|Object} Output image. / 计算生成的山体阴影图像
  */
 function shade(inputs, data) {
   const elevationImage &#x3D; inputs[0];
@@ -212,16 +252,20 @@ function shade(inputs, data) {
     aspect,
     cosIncidence,
     scaled;
+
+  /**
+   * Extract elevation in meters from Terrarium DEM format.
+   * 从 Terrarium 格式像素解码真实高程（米）
+   * @param {Array&lt;number&gt;} pixel RGBA values / 像素数组
+   * @return {number} Elevation in meters / 高程（米）
+   */
   function calculateElevation(pixel) {
-    // The method used to extract elevations from the DEM.
-    // In this case the format used is Terrarium
-    // red * 256 + green + blue / 256 - 32768
-    //
-    // Other frequently used methods include the Mapbox format
-    // (red * 256 * 256 + green * 256 + blue) * 0.1 - 10000
-    //
+    // Terrarium encoding: red * 256 + green + blue / 256 - 32768
+    // Mapbox format alternative: (red * 256 * 256 + green * 256 + blue) * 0.1 - 10000
     return pixel[0] * 256 + pixel[1] + pixel[2] / 256 - 32768;
   }
+
+  // Iterate over all pixels calculating gradients in X and Y / 遍历视口像素计算 X 与 Y 方向有限差分梯度
   for (pixelY &#x3D; 0; pixelY &lt;&#x3D; maxY; ++pixelY) {
     y0 &#x3D; pixelY &#x3D;&#x3D;&#x3D; 0 ? 0 : pixelY - 1;
     y1 &#x3D; pixelY &#x3D;&#x3D;&#x3D; maxY ? maxY : pixelY + 1;
@@ -229,7 +273,7 @@ function shade(inputs, data) {
       x0 &#x3D; pixelX &#x3D;&#x3D;&#x3D; 0 ? 0 : pixelX - 1;
       x1 &#x3D; pixelX &#x3D;&#x3D;&#x3D; maxX ? maxX : pixelX + 1;
 
-      // determine elevation for (x0, pixelY)
+      // Determine elevation for (x0, pixelY) / 计算西侧邻域高程
       offset &#x3D; (pixelY * width + x0) * 4;
       pixel[0] &#x3D; elevationData[offset];
       pixel[1] &#x3D; elevationData[offset + 1];
@@ -237,7 +281,7 @@ function shade(inputs, data) {
       pixel[3] &#x3D; elevationData[offset + 3];
       z0 &#x3D; data.vert * calculateElevation(pixel);
 
-      // determine elevation for (x1, pixelY)
+      // Determine elevation for (x1, pixelY) / 计算东侧邻域高程
       offset &#x3D; (pixelY * width + x1) * 4;
       pixel[0] &#x3D; elevationData[offset];
       pixel[1] &#x3D; elevationData[offset + 1];
@@ -245,9 +289,10 @@ function shade(inputs, data) {
       pixel[3] &#x3D; elevationData[offset + 3];
       z1 &#x3D; data.vert * calculateElevation(pixel);
 
+      // Partial derivative dz/dx / X 方向偏导数
       dzdx &#x3D; (z1 - z0) / dp;
 
-      // determine elevation for (pixelX, y0)
+      // Determine elevation for (pixelX, y0) / 计算北侧邻域高程
       offset &#x3D; (y0 * width + pixelX) * 4;
       pixel[0] &#x3D; elevationData[offset];
       pixel[1] &#x3D; elevationData[offset + 1];
@@ -255,7 +300,7 @@ function shade(inputs, data) {
       pixel[3] &#x3D; elevationData[offset + 3];
       z0 &#x3D; data.vert * calculateElevation(pixel);
 
-      // determine elevation for (pixelX, y1)
+      // Determine elevation for (pixelX, y1) / 计算南侧邻域高程
       offset &#x3D; (y1 * width + pixelX) * 4;
       pixel[0] &#x3D; elevationData[offset];
       pixel[1] &#x3D; elevationData[offset + 1];
@@ -263,10 +308,13 @@ function shade(inputs, data) {
       pixel[3] &#x3D; elevationData[offset + 3];
       z1 &#x3D; data.vert * calculateElevation(pixel);
 
+      // Partial derivative dz/dy / Y 方向偏导数
       dzdy &#x3D; (z1 - z0) / dp;
 
+      // Slope calculation / 计算坡度角
       slope &#x3D; Math.atan(Math.sqrt(dzdx * dzdx + dzdy * dzdy));
 
+      // Aspect calculation aligned to compass azimuth / 计算坡向角并对齐罗盘方位角
       aspect &#x3D; Math.atan2(dzdy, -dzdx);
       if (aspect &lt; 0) {
         aspect &#x3D; halfPi - aspect;
@@ -276,6 +324,7 @@ function shade(inputs, data) {
         aspect &#x3D; halfPi - aspect;
       }
 
+      // Lambertian diffuse reflectance illumination / 朗伯漫反射光照余弦值解算
       cosIncidence &#x3D;
         sinSunEl * Math.cos(slope) +
         cosSunEl * Math.sin(slope) * Math.cos(sunAz - aspect);
@@ -297,6 +346,7 @@ function shade(inputs, data) {
   };
 }
 
+// AWS Mapzen Terrarium DEM tile source / AWS 托管的 Mapzen Terrarium 高程数据源
 const elevation &#x3D; new ImageTile({
   url: &#x27;https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png&#x27;,
   maxZoom: 15,
@@ -304,12 +354,14 @@ const elevation &#x3D; new ImageTile({
     &#x27;&lt;a href&#x3D;&quot;https://github.com/tilezen/joerd/blob/master/docs/attribution.md&quot; target&#x3D;&quot;_blank&quot;&gt;Data sources and attribution&lt;/a&gt;&#x27;,
 });
 
+// Raster source with image operation running in worker / 在 Worker 中执行光照运算的光栅数据源
 const raster &#x3D; new Raster({
   sources: [elevation],
   operationType: &#x27;image&#x27;,
   operation: shade,
 });
 
+// Map instance with OSM basemap and shaded relief overlay / 初始化地图与半透明山体阴影层
 const map &#x3D; new Map({
   target: &#x27;map&#x27;,
   layers: [
@@ -327,6 +379,7 @@ const map &#x3D; new Map({
   }),
 });
 
+// Interactive controls for vertical exaggeration and sun angles / 垂直夸大与太阳入射角交互控件
 const controlIds &#x3D; [&#x27;vert&#x27;, &#x27;sunEl&#x27;, &#x27;sunAz&#x27;];
 const controls &#x3D; {};
 controlIds.forEach(function (id) {
@@ -340,8 +393,8 @@ controlIds.forEach(function (id) {
   controls[id] &#x3D; control;
 });
 
+// Pass parameters and resolution before operations start / 运算前注入真实分辨率与光照参数
 raster.on(&#x27;beforeoperations&#x27;, function (event) {
-  // the event.data object will be passed to operations
   const data &#x3D; event.data;
   data.resolution &#x3D; event.resolution;
   for (const id in controls) {
@@ -359,7 +412,7 @@ raster.on(&#x27;beforeoperations&#x27;, function (event) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Shaded Relief&lt;/title&gt;
+    &lt;title&gt;Shaded Relief / 动态日照山体阴影（Hillshade）实时渲染&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -379,17 +432,17 @@ raster.on(&#x27;beforeoperations&#x27;, function (event) {
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
     &lt;table class&#x3D;&quot;controls&quot;&gt;
       &lt;tr&gt;
-        &lt;td&gt;&lt;label for&#x3D;&quot;vert&quot;&gt;vertical exaggeration:&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;vert&quot;&gt;Vertical exaggeration / 垂直夸大系数:&lt;/label&gt;&lt;/td&gt;
         &lt;td&gt;&lt;input id&#x3D;&quot;vert&quot; type&#x3D;&quot;range&quot; min&#x3D;&quot;1&quot; max&#x3D;&quot;5&quot; value&#x3D;&quot;1&quot;/&gt;&lt;/td&gt;
         &lt;td&gt;&lt;span id&#x3D;&quot;vertOut&quot;&gt;&lt;/span&gt; x&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
-        &lt;td&gt;&lt;label for&#x3D;&quot;sunEl&quot;&gt;sun elevation:&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;sunEl&quot;&gt;Sun elevation / 太阳高度角:&lt;/label&gt;&lt;/td&gt;
         &lt;td&gt;&lt;input id&#x3D;&quot;sunEl&quot; type&#x3D;&quot;range&quot; min&#x3D;&quot;0&quot; max&#x3D;&quot;90&quot; value&#x3D;&quot;45&quot;/&gt;&lt;/td&gt;
         &lt;td&gt;&lt;span id&#x3D;&quot;sunElOut&quot;&gt;&lt;/span&gt; °&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
-        &lt;td&gt;&lt;label for&#x3D;&quot;sunAz&quot;&gt;sun azimuth:&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;sunAz&quot;&gt;Sun azimuth / 太阳方位角:&lt;/label&gt;&lt;/td&gt;
         &lt;td&gt;&lt;input id&#x3D;&quot;sunAz&quot; type&#x3D;&quot;range&quot; min&#x3D;&quot;0&quot; max&#x3D;&quot;360&quot; value&#x3D;&quot;45&quot;/&gt;&lt;/td&gt;
         &lt;td&gt;&lt;span id&#x3D;&quot;sunAzOut&quot;&gt;&lt;/span&gt; °&lt;/td&gt;
       &lt;/tr&gt;

@@ -46,6 +46,10 @@ document.getElementById("auth-form").addEventListener("submit", (event) => {
 	});
 });
 var format = document.getElementById("format");
+/**
+* Update image format on the Sentinel Hub source dynamically.
+* 动态调用 source.setFormat() 切换目标切片压缩格式。
+*/
 function updateInputData() {
 	source.setFormat(format.value);
 }

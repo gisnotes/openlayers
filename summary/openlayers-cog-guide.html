@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - OpenLayers 云原生遥感与多维科学数据全景实战指南 (COG, GeoZarr, STAC)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">云原生遥感与多维数据指南</li></ol></nav>
+
+<h1 id="openlayers-云原生遥感与多维科学数据全景实战指南">OpenLayers 云原生遥感与多维科学数据全景实战指南</h1>
+<blockquote>
+<p>基于 25 个官方核心示例，深度解构云优化 GeoTIFF (COG)、GeoZarr 多维科学数据立方体、STAC 时空资产目录与 GPU 着色器波段代数</p>
+</blockquote>
+<hr>
+<h2 id="引言：云原生地理空间（cloud-native-geospatial）的范式转移">引言：云原生地理空间（Cloud-Native Geospatial）的范式转移</h2>
+<p>过去二十年间，WebGIS 呈现卫星遥感影像与多维栅格数据的传统技术路线始终遵循<strong>“切片服务端预处理”</strong>模式：</p>
+<ol>
+<li><strong>预渲染与死板切片</strong>：原始数十吉字节的 GeoTIFF 或 NetCDF 文件必须在服务端经由 MapServer、GeoServer 等地图引擎离线切片为数百万张 256×256 的 8 位 RGB PNG/JPEG 瓦片；</li>
+<li><strong>科学真值彻底丢失</strong>：一旦烘焙为 PNG，原始卫星传感器记录的 16 位/32 位物理辐射度、表观反射率、地表高程或风速气压真值全部被截断压缩为 0~255 的无量纲颜色，前端无法进行任何二次科学解译与动态阈值交互；</li>
+<li><strong>运维与存储成本高昂</strong>：全球多期影像与多波段组合产生海量切片文件碎片，云存储管理与分发链路极其繁琐。</li>
+</ol>
+<p>随着 <strong>云优化 GeoTIFF (Cloud Optimized GeoTIFF, COG)<strong>、</strong>GeoZarr / Zarr 多维数组规范</strong> 以及 <strong>STAC (SpatioTemporal Asset Catalog, 时空资产目录)</strong> 国际标准的成熟，WebGIS 迎来了根本性的范式变革——<strong>“客户端流式直读与 GPU 实时着色”</strong>：
+数据以原生精度常驻云端对象存储（如 AWS S3、Google Cloud Storage、Azure Blob），前端 OpenLayers 通过 <strong>HTTP Range 请求（字节范围请求）</strong> 按需仅拉取当前视口所需的瓦片字节，并在浏览器利用 <strong>WebGL 硬件加速片元着色器</strong> 实时完成波段代数计算（如 NDVI、NDWI、双极化雷达解算）、动态对比度拉伸与重投影！</p>
+<p>本文基于官方示例库中的 <strong>25 个核心技术示例</strong>，全景剖析 OpenLayers 在云原生遥感影像与多维科学数据体系下的架构设计、数学模型与生产落地实践。</p>
+<hr>
+<h2 id="第一部分：全景视盘25-个核心遥感与多维数据示例矩阵">第一部分：全景视盘——25 个核心遥感与多维数据示例矩阵</h2>
+<table>
+<thead>
+<tr>
+<th align="left">技术分类</th>
+<th align="left">示例标识</th>
+<th align="left">核心类 / 关键 API</th>
+<th align="left">解决的典型生产场景与技术精要</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>COG 核心加载与流式访问</strong></td>
+<td align="left"><a href="../en/latest/examples/cog.html"><code>cog</code></a></td>
+<td align="left"><code>ol/source/GeoTIFF</code> + <code>WebGLTile</code></td>
+<td align="left">单文件云优化 GeoTIFF 基于 HTTP Range 局部按需流式加载</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/cog-blob.html"><code>cog-blob</code></a></td>
+<td align="left"><code>sources: [{blob: blob}]</code></td>
+<td align="left">浏览器本地文件离线直读：无需上传服务器直接从内存 Blob 解析渲染</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/cog-custom-client.html"><code>cog-custom-client</code></a></td>
+<td align="left"><code>sources: [{loader: fn}]</code></td>
+<td align="left">商业私有云存储鉴权：注入 Bearer Token 认证头与 AbortSignal 中止控制</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/cog-overviews.html"><code>cog-overviews</code></a></td>
+<td align="left"><code>overviews: [&#39;...ovr.tif&#39;]</code></td>
+<td align="left">挂载外部 GDAL 金字塔概览文件，规避宏观尺度下 OOM 性能崩溃</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/cog-modeltransformation.html"><code>cog-modeltransformation</code></a></td>
+<td align="left">Tag 34264 仿射矩阵 + <code>TileDebug</code></td>
+<td align="left">倾斜轨道成像：解析 SAR 卫星非正交旋转矩阵并在 GPU 动态重投影</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/cog-projection.html"><code>cog-projection</code></a></td>
+<td align="left"><code>epsg.io</code> + <code>proj4</code> 在线注册</td>
+<td align="left">从 TIFF 头部动态查询稀有地方独立坐标系并完成跨系对齐</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/geotiff-reprojection.html"><code>geotiff-reprojection</code></a></td>
+<td align="left">内置 UTM 引擎</td>
+<td align="left">零 Proj4 依赖完成高精度 UTM 卫星影像至 Web 墨卡托的硬件级重投影</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/multiple-cogs.html"><code>multiple-cogs</code></a></td>
+<td align="left"><code>sources: [...]</code> 跨分带拼接</td>
+<td align="left">跨 UTM 分带多幅高分辨率 COG 边缘无缝几何拼合与透明边缘遮罩</td>
+</tr>
+<tr>
+<td align="left"><strong>遥感波段代数与 GPU 实时着色</strong></td>
+<td align="left"><a href="../en/latest/examples/cog-math.html"><code>cog-math</code></a></td>
+<td align="left"><code>[&#39;interpolate&#39;, [&#39;/&#39;, ...]]</code></td>
+<td align="left">多源单波段 COG 融合，GPU 逐像素计算 NDVI 植被健康指数</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/cog-math-multisource.html"><code>cog-math-multisource</code></a></td>
+<td align="left">异构分辨率 (10m + 60m)</td>
+<td align="left">跨空间尺度自适应插值，同时计算 NDVI 植被指数与 NDWI 水体指数</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/cog-math-raster.html"><code>cog-math-raster</code></a></td>
+<td align="left"><code>ol/source/Raster</code> + Web Worker</td>
+<td align="left">CPU 多线程像素算子：在后台 Worker 中执行通用复杂遥感反演算法</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/cog-colors.html"><code>cog-colors</code></a></td>
+<td align="left">Chroma.js + <code>updateStyleVariables</code></td>
+<td align="left">在 Lab 感知均匀色彩空间中根据阈值滑块 60 FPS 无感刷新伪彩色带</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/cog-stretch.html"><code>cog-stretch</code></a></td>
+<td align="left">16 位整数 + <code>normalize: false</code></td>
+<td align="left">卫星原始高动态反射率保留与真彩色/标准假彩色（NIR）通道动态重构</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/cog-style.html"><code>cog-style</code></a></td>
+<td align="left">AST 声明式着色器样式</td>
+<td align="left">基于数学表达式对 COG 多波段像元执行标准化与动态着色</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/geotiff-per-band-stats.html"><code>geotiff-per-band-stats</code></a></td>
+<td align="left"><code>min: [...]</code>, <code>max: [...]</code> 数组</td>
+<td align="left">无需编写着色器代码，直接为每个光谱通道配置独立的极值拉伸区间</td>
+</tr>
+<tr>
+<td align="left"><strong>金字塔目录、导出与 STAC 生态</strong></td>
+<td align="left"><a href="../en/latest/examples/cog-pyramid.html"><code>cog-pyramid</code></a></td>
+<td align="left"><code>sourcesFromTileGrid</code> + STACTA</td>
+<td align="left">大范围海量独立小 COG 构成的瓦片金字塔目录按需动态懒加载</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/stac-item.html"><code>stac-item</code></a></td>
+<td align="left"><code>ol-stac</code> 扩展库</td>
+<td align="left">自动化解析 STAC Item JSON，同步构建矢量外包足迹与 COG 图层组</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/export-map.html"><code>export-map</code></a></td>
+<td align="left"><code>geotiff.writeArrayBuffer</code></td>
+<td align="left">离屏 Canvas 重定向渲染，纯客户端生成带地理参考的 GeoTIFF 与 Worldfile</td>
+</tr>
+<tr>
+<td align="left"><strong>GeoZarr 多维科学数据立方体</strong></td>
+<td align="left"><a href="../en/latest/examples/geozarr.html"><code>geozarr</code></a></td>
+<td align="left"><code>ol/source/GeoZarr</code> (Sentinel-2)</td>
+<td align="left">遵循 Multiscales 约定的云原生分块多维数组流式加载与伽马校正</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/geozarr-stretch.html"><code>geozarr-stretch</code></a></td>
+<td align="left">物理反射率浮点数拉伸</td>
+<td align="left">短波红外 (SWIR) 与可见光多波段拉伸，自动解析坐标与视口参数</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/geozarr-datacube.html"><code>geozarr-datacube</code></a></td>
+<td align="left">N 维数据立方体 + <code>dimensions</code> 锁轴</td>
+<td align="left">科学张量切片：ERA5 气压、南极风速、冰川流速、碳通量与 CMIP6 气候模型</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/geozarr-dimensions.html"><code>geozarr-dimensions</code></a></td>
+<td align="left"><code>updateDimensions({time: idx})</code></td>
+<td align="left">时间轴滑块动态漫游：哨兵 1 号火山爆发雷达双极化时序原地热重载</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/geozarr-groups.html"><code>geozarr-groups</code></a></td>
+<td align="left">跨 Zarr 树状群组提取波段</td>
+<td align="left">跨组融合反射率与云质量概率，在 GPU 实现动态容差去云遮罩</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/geozarr-sparse.html"><code>geozarr-sparse</code></a></td>
+<td align="left">稀疏多尺度金字塔重采样</td>
+<td align="left">传感器异构分辨率适配：20m SWIR 波段在放大时自动跨层级升采样</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/geozarr-storytelling.html"><code>geozarr-storytelling</code></a></td>
+<td align="left">升降轨群组探测 + CF 时间解码</td>
+<td align="left">综合地球观测故事线引擎：覆盖洪灾、火山造陆、油轮锚地与极地海冰</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="第二部分：数据底座cog-与-geozarr-核心存储架构解析">第二部分：数据底座——COG 与 GeoZarr 核心存储架构解析</h2>
+<h3 id="1-云优化-geotiff-cog-的内部物理结构">1. 云优化 GeoTIFF (COG) 的内部物理结构</h3>
+<p>传统 TIFF 将整幅图像的像元连续平铺，而 COG 通过 GDAL 驱动将文件组织为<strong>高度自描述且支持局部字节寻址</strong>的格式：</p>
+<pre><code class="language-mermaid">flowchart TD
+  subgraph Client[&quot;浏览器前端 (OpenLayers)&quot;]
+    HTTP[&quot;HTTP Range: bytes=0-4096 (读取头部)&quot;]
+    HTTP_Tile[&quot;HTTP Range: bytes=1048576-1114112 (按需读取瓦片)&quot;]
+  end
+
+  subgraph COG_File[&quot;云端单一 COG 文件 (.tif)&quot;]
+    Header[&quot;TIFF Header &amp; IFD 标签目录 (集中位于文件头部)&lt;br/&gt;- 像元分块大小 (TileWidth / TileLength)&lt;br/&gt;- 各级金字塔字节偏移量 (TileOffsets)&lt;br/&gt;- 各瓦片字节长度 (TileByteCounts)&lt;br/&gt;- 空间坐标参考 (GeoKeyDirectoryTag)&quot;]
+    Overview_3[&quot;Overview 3 (1/8 缩放概览瓦片集)&quot;]
+    Overview_2[&quot;Overview 2 (1/4 缩放概览瓦片集)&quot;]
+    Overview_1[&quot;Overview 1 (1/2 缩放概览瓦片集)&quot;]
+    RawData[&quot;Full Resolution (原始全分辨率 256x256 像元分块)&quot;]
+  end
+
+  HTTP --&gt;|解析偏移量元数据| Header
+  HTTP_Tile --&gt;|直接定位下载局部像素| Overview_2
+</code></pre>
+<ul>
+<li><strong>HTTP Range 请求（字节范围协议）</strong>：
+OpenLayers 底层通过 <code>geotiff.js</code>，首先向服务器发送 <code>Range: bytes=0-16383</code> 仅下载文件头部。解析出所有分块的偏移量表（<code>TileOffsets</code>）后，每当视口发生漫游或缩放，仅下载当前视野内所需的几十个切片块。</li>
+<li><strong>外部概览文件支持（<code>.ovr</code> / <code>.ovr.tif</code>）</strong>：
+对于未内置金字塔的传统 TIFF，可通过 <code>overviews: [&#39;path.ovr.tif&#39;]</code> 挂载外部金字塔文件（<a href="../en/latest/examples/cog-overviews.html"><code>cog-overviews</code></a>），彻底杜绝由于小比例尺全图加载导致浏览器内存溢出（OOM）。</li>
+</ul>
+<hr>
+<h3 id="2-geozarr-多维科学数据立方体架构">2. GeoZarr 多维科学数据立方体架构</h3>
+<p>与专注于 2D/3D 平面影像的 COG 不同，<strong>Zarr</strong> 是一种面向海量 N 维张量（N-dimensional Arrays）的云原生分块压缩格式，广泛应用于气候科学、气象预报、地球物理与流体力学。</p>
+<pre><code class="language-mermaid">flowchart LR
+  subgraph ZarrStore[&quot;Zarr 存储目录树 (.zarr)&quot;]
+    RootMeta[&quot;.zmetadata / zarr.json&lt;br/&gt;(存储全局元数据)&quot;]
+    subgraph Group1[&quot;measurements/reflectance/ (测量组)&quot;]
+      B04[&quot;b04/ (红光 10m)&lt;br/&gt;0/0/0&lt;br/&gt;0/0/1&quot;]
+      B03[&quot;b03/ (绿光 10m)&quot;]
+      B02[&quot;b02/ (蓝光 10m)&quot;]
+      B11[&quot;b11/ (短波红外 20m)&quot;]
+    end
+    subgraph Group2[&quot;quality/probability/ (质检组)&quot;]
+      CLD[&quot;cld/ (云概率 20m)&quot;]
+    end
+  end
+
+  OpenLayers[&quot;OpenLayers ol/source/GeoZarr&quot;] --&gt;|1. 读元数据| RootMeta
+  OpenLayers --&gt;|2. 按需只请求特定分块| B04
+  OpenLayers --&gt;|3. 跨组组合| CLD
+</code></pre>
+<h4 id="cog-vs-geozarr-核心技术特性选型矩阵">COG vs GeoZarr 核心技术特性选型矩阵</h4>
+<table>
+<thead>
+<tr>
+<th align="left">对比维度</th>
+<th align="left">云优化 GeoTIFF (<code>ol/source/GeoTIFF</code>)</th>
+<th align="left">多维科学数组 (<code>ol/source/GeoZarr</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>存储组织形态</strong></td>
+<td align="left"><strong>单文件</strong>（所有波段与金字塔打包在一个 <code>.tif</code> 内）</td>
+<td align="left"><strong>目录分块/对象键值对</strong>（每个波段为独立子路径，像元切片为独立对象）</td>
+</tr>
+<tr>
+<td align="left"><strong>数据维度支持</strong></td>
+<td align="left">原生支持 2D 空间与有限波段数（$X, Y, \text{Bands}$）</td>
+<td align="left"><strong>任意 N 维张量</strong>：支持 $(T, C, Z, Y, X)$（时间、高度层、集合成员等）</td>
+</tr>
+<tr>
+<td align="left"><strong>波段按需加载</strong></td>
+<td align="left">需从同一文件内根据字节偏移跳跃读取</td>
+<td align="left"><strong>按名称独立按需拉取</strong>：如 <code>bands: [&#39;b04&#39;, &#39;b02&#39;]</code>，未选中的波段零流量下载</td>
+</tr>
+<tr>
+<td align="left"><strong>多尺度组织规范</strong></td>
+<td align="left">TIFF 内部标准 IFD Sub-Directories</td>
+<td align="left">OME-NGFF / OGC TileMatrixSet / GeoZarr Multiscales 约定</td>
+</tr>
+<tr>
+<td align="left"><strong>典型适用场景</strong></td>
+<td align="left">遥感正射卫星底图（Landsat, Sentinel-2 TCI）、无人机航拍、高分辨率 DEM</td>
+<td align="left">全球气象预报（ERA5）、长时间序列监测、全球气候模式（CMIP6）、海洋三维洋流</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="第三部分：核心数学模型与遥感波段代数">第三部分：核心数学模型与遥感波段代数</h2>
+<p>在 OpenLayers WebGL 渲染管线中，所有的物理波段计算均被实时编译为显卡 GLSL 着色器程序执行。</p>
+<h3 id="1-归一化植被指数-ndvi-normalized-difference-vegetation-index">1. 归一化植被指数 (NDVI, Normalized Difference Vegetation Index)</h3>
+<p>植被叶肉细胞对可见光红光（Red）具有强烈吸收，而对近红外（NIR）具有极强的高反射特性：</p>
+<p>$$\text{NDVI} = \frac{\text{NIR} - \text{Red}}{\text{NIR} + \text{Red}}$$</p>
+<ul>
+<li><strong>取值范围</strong>：$[-1.0, +1.0]$。</li>
+<li><strong>OpenLayers AST 表达式实现</strong>（<a href="../en/latest/examples/cog-math.html"><code>cog-math</code></a>）：</li>
+</ul>
+<pre><code class="language-javascript">const ndvi = [
+  &#39;/&#39;,
+  [&#39;-&#39;, [&#39;band&#39;, 2], [&#39;band&#39;, 1]], // NIR 为 Band 2, Red 为 Band 1
+  [&#39;+&#39;, [&#39;band&#39;, 2], [&#39;band&#39;, 1]],
+];
+</code></pre>
+<hr>
+<h3 id="2-归一化水体指数-ndwi-与三色复合显示">2. 归一化水体指数 (NDWI) 与三色复合显示</h3>
+<p>利用短波红外（SWIR）与红光通道反差提取水体（<a href="../en/latest/examples/cog-math-multisource.html"><code>cog-math-multisource</code></a>）：</p>
+<p>$$\text{NDWI} = \frac{\text{SWIR} - \text{Red}}{\text{SWIR} + \text{Red}}$$</p>
+<p>在三通道复合着色器中，同时赋予三种物理含义：</p>
+<ul>
+<li><strong>Red 通道</strong>：$255 \times |\text{NDVI} - \text{NDWI}|$（突出陆面与水体的过渡带）；</li>
+<li><strong>Green 通道</strong>：$255 \times \text{NDVI}$（健康植被显高亮绿色）；</li>
+<li><strong>Blue 通道</strong>：$255 \times \text{NDWI}$（水体显高亮蓝色）。</li>
+</ul>
+<hr>
+<h3 id="3-雷达（sar）双极化特征与地表粗糙度解算">3. 雷达（SAR）双极化特征与地表粗糙度解算</h3>
+<p>在哨兵 1 号合成孔径雷达（C-Band SAR）中，微波信号不受昼夜和云雾阻碍（<a href="../en/latest/examples/geozarr-dimensions.html"><code>geozarr-dimensions</code></a>, <a href="../en/latest/examples/geozarr-storytelling.html"><code>geozarr-storytelling</code></a>）：</p>
+<p>$$\text{Ratio} = \frac{\sigma^0_{\text{VV}}}{\sigma^0_{\text{VH}}}$$</p>
+<ul>
+<li><strong>VV（同向极化）</strong>：反映地表镜面反射与面散射强度，映射至 Red 通道；</li>
+<li><strong>VH（交叉极化）</strong>：反映冠层与破碎乱石的体散射强度，映射至 Green 通道；</li>
+<li><strong>VV / VH 比值</strong>：对熔岩流表面粗糙度、海冰脊与船舶钢铁边缘极其敏感，映射至 Blue 通道。在平静海面上，移动船舶与新生熔岩呈现强烈的亮点。</li>
+</ul>
+<hr>
+<h3 id="4-伽马校正（gamma-correction）与线性对比度拉伸">4. 伽马校正（Gamma Correction）与线性对比度拉伸</h3>
+<p>卫星原始辐射反射率普遍偏低（通常集中在 $0.0 \sim 0.3$），直接线性显示会导致图像全黑或对比度极低。OpenLayers 引入了伽马非线性校正：</p>
+<p>$$V_{\text{display}} = \left( \frac{V_{\text{raw}} - \text{min}}{\text{max} - \text{min}} \right)^{1 / \gamma} \times 255$$</p>
+<p>在 <a href="../en/latest/examples/geozarr.html"><code>geozarr</code></a> 与 <a href="../en/latest/examples/cog-stretch.html"><code>cog-stretch</code></a> 中设置 <code>gamma: 1.5</code>，能够大幅提升暗部和中间调的视觉动态范围。</p>
+<hr>
+<h3 id="5-模型仿射变换矩阵（modeltransformation）">5. 模型仿射变换矩阵（ModelTransformation）</h3>
+<p>对于具有航天倾斜视角的雷达影像（如 Umbra SAR），像元网格与地图坐标轴存在明显的旋转与剪切角（<a href="../en/latest/examples/cog-modeltransformation.html"><code>cog-modeltransformation</code></a>）。GeoTIFF Tag 34264 定义了仿射变换矩阵：</p>
+<p>$$\begin{bmatrix} X \ Y \ 1 \end{bmatrix} = \begin{bmatrix} a &amp; b &amp; c \ d &amp; e &amp; f \ 0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} \text{col} \ \text{row} \ 1 \end{bmatrix}$$</p>
+<p>OpenLayers 在 GPU 贴图阶段直接进行反向仿射重投影，即使带有 30° 倾斜旋转的瓦片也能与 Web 墨卡托底图严密贴合！</p>
+<hr>
+<h2 id="第四部分：现代前端实现模式与核心-api-架构">第四部分：现代前端实现模式与核心 API 架构</h2>
+<h3 id="1-函数式-view-工厂：getviewsource-modifiers">1. 函数式 View 工厂：<code>getView(source, ...modifiers)</code></h3>
+<p>传统开发中必须在 <code>source</code> 加载回调中手动计算中心点与层级。现代 OpenLayers 提供了链式、声明式的函数式 View 构造器：</p>
+<pre><code class="language-javascript">import {getView, withExtentCenter, withHigherResolutions, withLowerResolutions, withZoom} from &#39;ol/View.js&#39;;
+
+const map = new Map({
+  target: &#39;map&#39;,
+  layers: [new TileLayer({source: cogSource})],
+  view: getView(
+    cogSource,
+    withLowerResolutions(1),    // 允许缩小浏览大范围全景
+    withHigherResolutions(2),   // 允许放大超过原始分辨率 2 级，看清像元细节
+    withExtentCenter(),         // 自动以影像的几何外包矩形中心作为初始地图视口
+    withZoom(2),                // 初始相对缩放偏移
+  ),
+});
+</code></pre>
+<hr>
+<h3 id="2-60-fps-丝滑调参：layerupdatestylevariables">2. 60 FPS 丝滑调参：<code>layer.updateStyleVariables()</code></h3>
+<p>在动态遥感解译应用中，用户经常拖动阈值滑块（如云量阈值、对比度上下限、色相饱和度）：</p>
+<pre><code class="language-mermaid">sequenceDiagram
+  autonumber
+  actor User as 用户交互 (拖动滑块)
+  participant DOM as DOM 事件监听器
+  participant Layer as ol/layer/WebGLTile
+  participant GPU as 显卡片元着色器 (Uniform 缓冲区)
+
+  User-&gt;&gt;DOM: 拖动阈值滑块 (如 threshold = 60)
+  Note over DOM,Layer: 严禁调用 layer.setStyle() (会触发昂贵的 GLSL 重新编译)
+  DOM-&gt;&gt;Layer: layer.updateStyleVariables({threshold: 60})
+  Layer-&gt;&gt;GPU: gl.uniform1f(loc, 60.0) 更新显存
+  GPU--&gt;&gt;User: 下一帧 (16.6ms 内) 百万像元瞬时完成重着色
+</code></pre>
+<ul>
+<li><strong>铁律</strong>：永远不要在滑块 <code>input</code> 事件中调用 <code>layer.setStyle()</code>；必须在样式中声明 <code>[&#39;var&#39;, &#39;varName&#39;]</code>，并在交互中仅调用 <code>updateStyleVariables()</code>，实现真正的显卡级零编译刷新。</li>
+</ul>
+<hr>
+<h3 id="3-多维科学数组原地热切片：sourceupdatedimensions">3. 多维科学数组原地热切片：<code>source.updateDimensions()</code></h3>
+<p>在处理时间序列与多维数据立方体时（<a href="../en/latest/examples/geozarr-dimensions.html"><code>geozarr-dimensions</code></a>, <a href="../en/latest/examples/geozarr-storytelling.html"><code>geozarr-storytelling</code></a>）：</p>
+<pre><code class="language-javascript">// 1. 获取时间轴长度与单位
+const {time} = await source.getDimensions();
+
+// 2. 异步读取标量时间值并格式化
+const date = await source.getValue(&#39;time&#39;, sliceIndex);
+
+// 3. 原地重载切片 (保留当前地图中心与缩放，无需销毁重建图层)
+source.updateDimensions({time: sliceIndex});
+</code></pre>
+<hr>
+<h3 id="4-离屏重定向地图导出-geotiff-与-worldfile">4. 离屏重定向地图导出 GeoTIFF 与 Worldfile</h3>
+<p>在 <a href="../en/latest/examples/export-map.html"><code>export-map</code></a> 示例中，展示了无需任何后端辅助、纯客户端生成地理参考 GeoTIFF 的工业级方案：</p>
+<pre><code class="language-javascript">// 1. 临时将渲染目标重定向至离屏画布
+map.setTarget(offscreenCanvas);
+
+map.once(&#39;rendercomplete&#39;, () =&gt; {
+  const context = offscreenCanvas.getContext(&#39;2d&#39;);
+  const imageData = context.getImageData(0, 0, width, height);
+
+  // 2. 利用 geotiff 库组装 GeoTIFF 标签目录
+  const tiffBuffer = writeGeotiff(imageData.data, {
+    width, height,
+    ModelPixelScale: [resolution, resolution, 0],
+    ModelTiepoint: [0, 0, 0, extent[0], extent[3], 0],
+    GTRasterTypeGeoKey: 1, // RasterPixelIsArea
+    ProjectedCSTypeGeoKey: 3857,
+  });
+
+  // 3. 触发浏览器二进制下载
+  downloadBlob(new Blob([tiffBuffer], {type: &#39;image/tiff&#39;}));
+
+  // 4. 恢复屏幕 DOM 挂载
+  map.setTarget(&#39;map&#39;);
+});
+</code></pre>
+<hr>
+<h2 id="第五部分：生产环境工程化避坑与部署规范">第五部分：生产环境工程化避坑与部署规范</h2>
+<h3 id="1-云端对象存储-cors-与-http-range-头部铁律">1. 云端对象存储 CORS 与 HTTP Range 头部铁律</h3>
+<p>云原生遥感依赖按需拉取局部字节，对象存储（S3 / OSS / GCS / CDN）必须正确配置响应头：</p>
+<ul>
+<li>**<code>Access-Control-Allow-Origin: *</code>**：允许前端跨域访问；</li>
+<li>**<code>Accept-Ranges: bytes</code>**：必须显式声明支持字节范围请求（否则浏览器会自动退化为全量下载整张 TIFF）；</li>
+<li>**<code>Access-Control-Expose-Headers: Content-Range, Content-Length</code>**：允许客户端 JavaScript 读取返回的字节范围信息。</li>
+</ul>
+<blockquote>
+<p>[!WARNING]
+若 CDN 开启了 Gzip 或 Brotli 压缩，可能会破坏 <code>Content-Range</code> 的字节对齐计算，导致解压瓦片失败。必须配置针对 <code>.tif</code> 与 <code>.zarr</code> 资源关闭二次压缩传输！</p>
+</blockquote>
+<hr>
+<h3 id="2-缺失-overviews-金字塔导致-oom-的防御策略">2. 缺失 Overviews 金字塔导致 OOM 的防御策略</h3>
+<p>若用户尝试加载未经 COG 标准化的普通 TIFF（单层分辨率，文件达数吉字节）：</p>
+<ul>
+<li><strong>直接加载的风险</strong>：在全图比例尺下，前端需要发起数万个瓦片请求或下载整张大图，直接导致浏览器崩溃（Out of Memory）；</li>
+<li><strong>防御机制</strong>：<ol>
+<li>通过 <code>source.getView().then(...)</code> 读取元数据，校验金字塔层级数；</li>
+<li>若缺失金字塔，利用 <code>overviews</code> 属性指定外部生成的 <code>.ovr.tif</code> 文件；</li>
+<li>或在 View 中配置 <code>minResolution</code>，限制用户不能过度缩小地图。</li>
+</ol>
+</li>
+</ul>
+<hr>
+<h3 id="3-数据源异构分辨率自适应融合">3. 数据源异构分辨率自适应融合</h3>
+<p>当融合 10m 与 60m 的波段时（如 Sentinel-2 B04 与 B09）：</p>
+<ul>
+<li>OpenLayers 的 WebGL 瓦片采样器会在后台将低分辨率分块自动按当前视口分辨率进行<strong>双线性插值升采样</strong>；</li>
+<li>开发者无需在服务端手动对齐网格，直接在 <code>sources</code> 列表中混用异构分辨率数据即可。</li>
+</ul>
+<hr>
+<h2 id="总结与技术演变全景">总结与技术演变全景</h2>
+<p>从单一的切片底图（XYZ/TMS），到单文件流式加载的 <strong>COG</strong>，再到面向全地球系统科学的高维 <strong>GeoZarr 数据立方体</strong>，OpenLayers 构建了目前 Web 前端最完整、最高性能的云原生遥感可视化全栈体系：</p>
+<pre><code class="language-mermaid">flowchart TD
+  Legacy[&quot;传统 WebGIS (2005-2018)&lt;br/&gt;- 离线全量切片成 PNG/JPEG 瓦片&lt;br/&gt;- 8 位色彩截断，科学真值丢失&lt;br/&gt;- 服务端渲染，无前端交互能力&quot;]
+  --&gt; ModernCOG[&quot;现代云原生遥感 (2019-2023)&lt;br/&gt;- COG 单文件 HTTP Range 局部寻址&lt;br/&gt;- 16 位反射率真值保留&lt;br/&gt;- ol/layer/WebGLTile GPU 实时着色与 NDVI 计算&quot;]
+  --&gt; ModernZarr[&quot;多维科学数据立方体 (2024-未来)&lt;br/&gt;- GeoZarr (Zarr v2/v3) 多维张量切片 (Time, Depth, Band)&lt;br/&gt;- 跨组多波段按需按名抽取&lt;br/&gt;- 原地热切片与全天候雷达时空漫游&quot;]
+</code></pre>
+<p>掌握本文梳理的 25 个核心技术示例及其背后的底层架构，将为构建现代化云原生卫星遥感中台、智慧农业长势监测、海洋与气象实时数字孪生系统提供极其坚实的基础设施支撑。</p>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

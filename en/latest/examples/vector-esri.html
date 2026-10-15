@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>ArcGIS REST Feature Service</title>
+    <title>ArcGIS REST Feature Service / ArcGIS REST 矢量要素服务瓦片化动态加载</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">ArcGIS REST Feature Service</h4>
+        <h4 id="title">ArcGIS REST Feature Service / ArcGIS REST 矢量要素服务瓦片化动态加载</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -77,14 +77,14 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles-advanced.html&quot;&gt;Advanced Mapbox Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-webgl-line.html&quot;&gt;Applying a filter along lines rendered with WebGL / WebGL 沿线过滤与时间序列渐变渲染&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service / ArcGIS REST 矢量要素服务瓦片化动态加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cluster.html&quot;&gt;Clustered Features&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-circle-render.html&quot;&gt;Custom Circle Render&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-hit-detection-renderer.html&quot;&gt;Custom Hit Detection Render&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation / 要素雷达光晕扩散动画（postrender 与 VectorContext）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-circle-render.html&quot;&gt;Custom Circle Render / 自定义圆渲染（Canvas 径向渐变）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-hit-detection-renderer.html&quot;&gt;Custom Hit Detection Render / 自定义命中检测渲染器&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-interactions.html&quot;&gt;Custom Interactions / 自定义交互开发&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./declutter-group.html&quot;&gt;Declutter Group&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./declutter-group.html&quot;&gt;Declutter Group / 避让分组（独立避让组）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector / 矢量图像图层拖拽加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-features.html&quot;&gt;Draw and Modify Features / 绘制与修改要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-geodesic.html&quot;&gt;Draw and Modify Geodesic Circles / 绘制与修改测地线圆&lt;/a&gt;
@@ -98,19 +98,20 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service / 可编辑的 ArcGIS REST 要素服务&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./equal-earth-geojson.html&quot;&gt;Equal Earth projection with dynamic center meridian&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./fractal.html&quot;&gt;Fractal Rendering&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./equal-earth-geojson.html&quot;&gt;Equal Earth projection with dynamic center meridian / 动态中央子午线 Equal Earth 投影与 GeoJSON 多边形裁剪&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation / 大圆航线生成与全球航班飞行轨迹动效&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./fractal.html&quot;&gt;Fractal Rendering / 分形几何（科赫雪花）高密度图元极限渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing / 自由手绘绘制&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson.html&quot;&gt;GeoJSON&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson-vt.html&quot;&gt;geojson-vt integration&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson.html&quot;&gt;GeoJSON / GeoJSON 多几何类型标准解析与多态样式映射&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson-vt.html&quot;&gt;geojson-vt integration / geojson-vt 浏览器端实时切片矢量瓦片&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-icon.html&quot;&gt;Icon modification / 图标点位拖拽修改&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-repeat.html&quot;&gt;Icon Repeat&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./jsts.html&quot;&gt;JSTS Integration&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./jsts.html&quot;&gt;JSTS Integration / JSTS 拓扑套件与空间缓冲区分析 (JSTS Buffer Analysis)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-arrows.html&quot;&gt;LineString Arrows / 折线线段箭头指示&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-layer.html&quot;&gt;Mapbox Vector Layer&lt;/a&gt;
@@ -124,45 +125,45 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles.html&quot;&gt;OGC Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles-geographic.html&quot;&gt;OGC Vector Tiles (Geographic)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./osm-vector-tiles.html&quot;&gt;OSM Vector Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./populated-places.html&quot;&gt;Populated Places&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes / 正多边形与星形矢量符号（RegularShape 全解）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rich-text-labels.html&quot;&gt;Rich Text Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rich-text-labels.html&quot;&gt;Rich Text Labels / 富文本排版注记&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction / 使用 Modify 交互进行缩放与旋转&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-features.html&quot;&gt;Select Features / 选择要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-hover-features.html&quot;&gt;Select Features by Hover&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-multiple-features.html&quot;&gt;Select multiple Features&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap.html&quot;&gt;Snap Interaction / 捕捉吸附交互&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap-custom-segmenter.html&quot;&gt;Snap Interaction with Custom Segmenter / 带有自定义线段分割器的 Snap 捕捉吸附&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels / 沿线道路注记（线型文本跟随）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-renderer.html&quot;&gt;Style renderer / 样式渲染器（自定义渲染函数）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./synthetic-lines.html&quot;&gt;Synthetic Lines&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./synthetic-points.html&quot;&gt;Synthetic Points&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tooltip-on-hover.html&quot;&gt;Tooltip on Hover&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tooltip-on-hover.html&quot;&gt;Tooltip on Hover / 悬浮提示框 (Tooltip)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topolis.html&quot;&gt;topolis integration / topolis 拓扑库集成&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tracing.html&quot;&gt;Tracing around a polygon / 沿多边形边界自动追踪描摹&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap / 航迹热力图（折线要素 WebGL 热力场渲染）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./translate-features.html&quot;&gt;Translate Features / 平移移动要素&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./turf.html&quot;&gt;turf.js&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./turf.html&quot;&gt;turf.js / Turf.js 空间分析集成与等间距里程桩标注 (Turf.js Integration)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer / 矢量边界裁切图层&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-vector-layer.html&quot;&gt;Vector Image Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-label-decluttering.html&quot;&gt;Vector Label Decluttering&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels.html&quot;&gt;Vector Labels&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels-justify-text.html&quot;&gt;Vector Labels - Justify Text&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-layer.html&quot;&gt;Vector Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./hitdetect-vector.html&quot;&gt;Vector Layer Hit Detection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-layer.html&quot;&gt;WebGL Vector Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-label-decluttering.html&quot;&gt;Vector Label Decluttering / 矢量注记智能避让&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels-justify-text.html&quot;&gt;Vector Labels - Justify Text / 矢量注记文本对齐与段落对齐解耦&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels.html&quot;&gt;Vector Labels / 矢量文本标注与全要素排版实战工作台&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-layer.html&quot;&gt;Vector Layer / 声明式矢量图层与属性驱动注记避让&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./hitdetect-vector.html&quot;&gt;Vector Layer Hit Detection / 矢量图层拾取检测与高性能 getFeatures 算法&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-layer.html&quot;&gt;WebGL Vector Layer / WebGL 矢量多边形面图层与悬停高亮&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer / WebGL 矢量切片图层（MVT 硬件加速渲染）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature / WFS 空间矢量要素过滤查询与叠加&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS / GeoServer WFS 视口 BBOX 动态要素加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates / 地理坐标系下的 WFS 瓦片化加载与 useGeographic&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows / 气象风向标箭头（RegularShape 组合与动态缩放位移）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
-              >86</a>
+              >87</a>
           </span>
           <span class="badge-group">
             <a
@@ -173,9 +174,9 @@
               data-bs-target="#tag-example-list"
               data-title="esri"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service / ArcGIS REST 矢量要素服务瓦片化动态加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service / 可编辑的 ArcGIS REST 要素服务&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-esri.html&quot;&gt;XYZ Esri&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-esri.html&quot;&gt;XYZ Esri / ArcGIS REST 静态切片服务（XYZ / WebGLTile）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -189,11 +190,11 @@
               data-bs-target="#tag-example-list"
               data-title="ArcGIS"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service / ArcGIS REST 矢量要素服务瓦片化动态加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service / 可编辑的 ArcGIS REST 要素服务&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./arcgis-image.html&quot;&gt;Image ArcGIS MapServer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./arcgis-tiled.html&quot;&gt;Tiled ArcGIS MapServer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-esri.html&quot;&gt;XYZ Esri&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./arcgis-image.html&quot;&gt;Image ArcGIS MapServer / ArcGIS 动态图像服务（ImageArcGISRest）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./arcgis-tiled.html&quot;&gt;Tiled ArcGIS MapServer / ArcGIS 瓦片化地图服务（TileArcGISRest）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-esri.html&quot;&gt;XYZ Esri / ArcGIS REST 静态切片服务（XYZ / WebGLTile）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >5</a>
@@ -207,9 +208,9 @@
               data-bs-target="#tag-example-list"
               data-title="REST"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service / ArcGIS REST 矢量要素服务瓦片化动态加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service / 可编辑的 ArcGIS REST 要素服务&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-esri.html&quot;&gt;XYZ Esri&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-esri.html&quot;&gt;XYZ Esri / ArcGIS REST 静态切片服务（XYZ / WebGLTile）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -223,18 +224,18 @@
               data-bs-target="#tag-example-list"
               data-title="Feature"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service / ArcGIS REST 矢量要素服务瓦片化动态加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./box-selection.html&quot;&gt;Box Selection / 框选要素&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-circle-render.html&quot;&gt;Custom Circle Render&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-hit-detection-renderer.html&quot;&gt;Custom Hit Detection Render&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation / 要素雷达光晕扩散动画（postrender 与 VectorContext）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-circle-render.html&quot;&gt;Custom Circle Render / 自定义圆渲染（Canvas 径向渐变）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-hit-detection-renderer.html&quot;&gt;Custom Hit Detection Render / 自定义命中检测渲染器&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-interactions.html&quot;&gt;Custom Interactions / 自定义交互开发&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service / 可编辑的 ArcGIS REST 要素服务&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering features with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering Features with WebGL / WebGL 海量要素动态过滤与着色器动画&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation / 大圆航线生成与全球航班飞行轨迹动效&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./translate-features.html&quot;&gt;Translate Features / 平移移动要素&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL points layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL Points Layer / WebGL 点要素高性能图层与声明式着色器样式编辑器&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >12</a>
@@ -248,7 +249,7 @@
               data-bs-target="#tag-example-list"
               data-title="Service"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service / ArcGIS REST 矢量要素服务瓦片化动态加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service / 可编辑的 ArcGIS REST 要素服务&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
@@ -263,14 +264,14 @@
               data-bs-target="#tag-example-list"
               data-title="loading"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service / ArcGIS REST 矢量要素服务瓦片化动态加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service / 可编辑的 ArcGIS REST 要素服务&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-load-events.html&quot;&gt;Image Load Events&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./load-events.html&quot;&gt;Loading Spinner&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tile-load-events.html&quot;&gt;Tile Load Events&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-load-events.html&quot;&gt;Image Load Events / 单张图像加载事件与进度指示&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./load-events.html&quot;&gt;Loading Spinner / 地图加载微动效旋转器&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tile-load-events.html&quot;&gt;Tile Load Events / 瓦片加载事件与精细进度监控&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS / GeoServer WFS 视口 BBOX 动态要素加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates / 地理坐标系下的 WFS 瓦片化加载与 useGeographic&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >8</a>
@@ -284,11 +285,11 @@
               data-bs-target="#tag-example-list"
               data-title="server"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service / ArcGIS REST 矢量要素服务瓦片化动态加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service / 可编辑的 ArcGIS REST 要素服务&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS / GeoServer WFS 视口 BBOX 动态要素加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates / 地理坐标系下的 WFS 瓦片化加载与 useGeographic&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >5</a>
@@ -316,8 +317,42 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of using an ArcGIS REST Feature Service with a Tile strategy.</p>
-        <div id="docs"><p>This example loads new features from ArcGIS REST Feature Service when the view extent changes.</p>
+        <p id="shortdesc">Example of using an ArcGIS REST Feature Service with a Tile strategy. / 演示如何结合 Tile 空间切片策略与 EsriJSON 格式流式加载 ArcGIS REST FeatureServer 矢量图斑并进行交互属性拾取。</p>
+        <div id="docs"><h2>This example loads new features from ArcGIS REST Feature Service when the view extent changes.
+本示例演示了如何在视图范围变化时，从 ArcGIS REST FeatureServer（要素服务）按需动态拉取新的矢量要素。
+通过将 <code>VectorSource</code> 的数据加载策略配置为基于空间瓦片切片的 <code>tileStrategy</code>，数据源会根据屏幕当前分辨率将视口切分为 512 像素网格。仅当视口漫游至未被加载覆盖的切片网格时，才向服务端发起 <code>query</code> 空间范围过滤请求，配合 <code>EsriJSON</code> 格式解析实现海量土地利用多边形的高效流式呈现与鼠标悬停属性探测。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计机制 (Core Architecture &amp; Mechanics) - <strong>Tile 瓦片化空间分块策略（Tile Loading Strategy）</strong>：</h4>
+<p>  与整屏一次性拉取整个视口 BBOX 的 <code>bboxStrategy</code> 相比，<code>tileStrategy(createXYZ({tileSize: 512}))</code> 引入了标准金字塔网格：</p>
+<ul>
+<li>地图视口平移数个像素时，由于大部分切片已存在于已加载索引中，完全不会触发网络请求；</li>
+<li>仅在视口边缘滑入新的 512px 网格单元时，才发起针对该网格 BBOX 的轻量级查询；</li>
+<li>结合浏览器的 HTTP 缓存与 OpenLayers 内部的 <code>loadedExtentsRtree_</code> 空间缓存，大幅节省服务器算力与网络带宽。</li>
+<li><strong>动态 URL 函数与空间求交契约</strong>：
+<code>VectorSource</code> 的 <code>url</code> 属性被配置为一个动态函数：
+<code>url: function (extent, resolution, projection) { ... }</code>
+函数内部负责拼接 ArcGIS REST API 规范所要求的 <code>geometry</code>（JSON 格式包络线矩形）、<code>spatialRel=esriSpatialRelIntersects</code> 以及 <code>geometryType=esriGeometryEnvelope</code>。</li>
+</ul>
+<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns) - <strong>投影代码 SRID 动态清洗</strong>：</h4>
+<pre><code class="language-javascript">// ArcGIS Server 仅接收纯数字的投影 ID（例如 3857 或 102100），需剥离 &#39;EPSG:&#39; 前缀
+const srid = projection.getCode().split(/:(?=\d+$)/).pop();
+</code></pre>
+<p>  通过正则匹配最后一个冒号后的数字部分，兼容 <code>EPSG:3857</code>、<code>urn:ogc:def:crs:EPSG::3857</code> 等多种不同标准的投影标识符。</p>
+<ul>
+<li><strong>EsriJSON 数据解析与样式工厂</strong>：<pre><code class="language-javascript">const vectorSource = new VectorSource({
+  format: new EsriJSON(),
+  url: function (extent, resolution, projection) { ... },
+  strategy: tileStrategy(createXYZ({tileSize: 512})),
+});
+</code></pre>
+<code>format: new EsriJSON()</code> 使得 OpenLayers 能够自动反序列化 ArcGIS 服务返回的特有 JSON 几何结构（如 <code>rings</code> 多边形、<code>paths</code> 多线），无缝转换为内置的 <code>ol/Feature</code> 对象。</li>
+</ul>
+<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices) - <strong>跨切片要素去重（Feature Deduplication）</strong>：</h4>
+<p>  由于多边形图斑可能跨越多个 512px 瓦片网格，服务端在响应不同瓦片请求时可能返回同一个图斑要素。OpenLayers 的 <code>VectorSource</code> 内部通过要素的唯一 <code>id</code> 进行去重管理。因此在配置 ArcGIS 图层时，必须确保 <code>outFields</code> 包含 <code>OBJECTID</code> 或主键字段，使 <code>readFeatures</code> 能正确设置 <code>feature.setId()</code>。</p>
+<ul>
+<li><strong>高并发请求风暴防护</strong>：
+当用户极速连续滚动缩放时，可能会瞬间激发出几十个切片请求。在生产环境中，ArcGIS Server 通常具有最大并发连接限制。建议在数据源层面或网关层配合并发节流，或根据视口分辨率设置最小可见层级（<code>minZoom</code>），防止在超宏观缩放时因请求全图海量要素导致服务崩溃。</li>
+</ul>
 </div>
       </div>
 
@@ -338,11 +373,13 @@ import Stroke from &#x27;ol/style/Stroke.js&#x27;;
 import Style from &#x27;ol/style/Style.js&#x27;;
 import {createXYZ} from &#x27;ol/tilegrid.js&#x27;;
 
+// ArcGIS Online Land Use feature service URL / ArcGIS Online 土地利用要素服务地址
 const serviceUrl &#x3D;
   &#x27;https://services-eu1.arcgis.com/NPIbx47lsIiu2pqz/ArcGIS/rest/services/&#x27; +
   &#x27;Neptune_Coastline_Campaign_Open_Data_Land_Use_2014/FeatureServer/&#x27;;
 const layer &#x3D; &#x27;0&#x27;;
 
+// Land use classification color map / 土地利用分类颜色映射表
 const fillColors &#x3D; {
   &#x27;Lost To Sea Since 1965&#x27;: [0, 0, 0, 1],
   &#x27;Urban/Built-up&#x27;: [104, 104, 104, 1],
@@ -359,6 +396,7 @@ const fillColors &#x3D; {
   &#x27;Inland Water&#x27;: [0, 38, 115, 1],
 };
 
+// Base style object reused across features / 可复用的多边形基础样式对象
 const style &#x3D; new Style({
   fill: new Fill(),
   stroke: new Stroke({
@@ -367,10 +405,11 @@ const style &#x3D; new Style({
   }),
 });
 
+// Vector source configured with EsriJSON and tile strategy / 配置 EsriJSON 格式与空间切片加载策略的矢量数据源
 const vectorSource &#x3D; new VectorSource({
   format: new EsriJSON(),
   url: function (extent, resolution, projection) {
-    // ArcGIS Server only wants the numeric portion of the projection ID.
+    // ArcGIS Server only wants the numeric portion of the projection ID. / ArcGIS Server 仅接收纯数字投影标识符
     const srid &#x3D; projection
       .getCode()
       .split(/:(?&#x3D;\d+$)/)
@@ -413,6 +452,7 @@ const vectorSource &#x3D; new VectorSource({
     &#x27;d5f05b1dc3dd4d76906c421bc1727805&quot;&gt;National Trust&lt;/a&gt;)&#x27;,
 });
 
+// Vector layer with dynamic style function / 采用动态样式函数的矢量图层
 const vector &#x3D; new VectorLayer({
   source: vectorSource,
   style: function (feature) {
@@ -424,6 +464,7 @@ const vector &#x3D; new VectorLayer({
   opacity: 0.7,
 });
 
+// ArcGIS Topographic basemap layer / ArcGIS 世界地形底图瓦片图层
 const raster &#x3D; new TileLayer({
   source: new ImageTile({
     attributions:
@@ -435,6 +476,7 @@ const raster &#x3D; new TileLayer({
   }),
 });
 
+// Initialize map centered on UK coastline / 初始化地图实例并定位至英国东部海岸
 const map &#x3D; new Map({
   layers: [raster, vector],
   target: document.getElementById(&#x27;map&#x27;),
@@ -444,6 +486,10 @@ const map &#x3D; new Map({
   }),
 });
 
+/**
+ * Display feature attributes under the mouse cursor. / 探测并展示光标所在要素的属性信息
+ * @param {import(&#x27;ol/pixel.js&#x27;).Pixel} pixel Screen coordinates / 屏幕像素坐标
+ */
 const displayFeatureInfo &#x3D; function (pixel) {
   const feature &#x3D; map.forEachFeatureAtPixel(pixel, function (feature) {
     return feature;
@@ -462,6 +508,7 @@ const displayFeatureInfo &#x3D; function (pixel) {
   }
 };
 
+// Pointer move and click listener for hit detection / 监听光标移动与点击事件执行像素拾取
 map.on([&#x27;click&#x27;, &#x27;pointermove&#x27;], function (evt) {
   if (evt.dragging) {
     return;
@@ -479,7 +526,7 @@ map.on([&#x27;click&#x27;, &#x27;pointermove&#x27;], function (evt) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;ArcGIS REST Feature Service&lt;/title&gt;
+    &lt;title&gt;ArcGIS REST Feature Service / ArcGIS REST 矢量要素服务瓦片化动态加载&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

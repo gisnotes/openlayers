@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Rendering 16-bit NumpyTiles</title>
+    <title>Rendering 16-bit NumpyTiles / WebGL 渲染 16 位科学栅格切片（NumpyTile）</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Rendering 16-bit NumpyTiles</h4>
+        <h4 id="title">Rendering 16-bit NumpyTiles / WebGL 渲染 16 位科学栅格切片（NumpyTile）</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,7 +75,7 @@
               data-bs-target="#tag-example-list"
               data-title="numpytiles"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./numpytile.html&quot;&gt;Rendering 16-bit NumpyTiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./numpytile.html&quot;&gt;Rendering 16-bit NumpyTiles / WebGL 渲染 16 位科学栅格切片（NumpyTile）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -94,20 +94,20 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL / WebGL 渲染绘制线条&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering features with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-layer-swipe.html&quot;&gt;Layer Swipe (WebGL)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./numpytile.html&quot;&gt;Rendering 16-bit NumpyTiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-sea-level.html&quot;&gt;Sea Level (with WebGL)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-shaded-relief.html&quot;&gt;Shaded Relief (with WebGL)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL points layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering Features with WebGL / WebGL 海量要素动态过滤与着色器动画&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL / WebGL 图标精灵图（Sprite Atlas）海量点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-layer-swipe.html&quot;&gt;Layer Swipe (WebGL) / WebGL 卷帘对比（硬件级 Scissor 视口剪裁）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG Sources / 多 COG 数据源重投影与波段合成&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./numpytile.html&quot;&gt;Rendering 16-bit NumpyTiles / WebGL 渲染 16 位科学栅格切片（NumpyTile）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-sea-level.html&quot;&gt;Sea Level (with WebGL) / WebGL 海平面上升淹没模拟与 DEM 高程着色器计算&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-shaded-relief.html&quot;&gt;Shaded Relief (with WebGL) / WebGL 动态山体阴影（地貌日照晕渲与邻域采样）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap / 航迹热力图（折线要素 WebGL 热力场渲染）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL Points Layer / WebGL 点要素高性能图层与声明式着色器样式编辑器&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tiles.html&quot;&gt;WebGL Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-layer.html&quot;&gt;WebGL Vector Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time-webgl.html&quot;&gt;WMS Time (WebGL)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;多 COG 数据源重投影与波段合成 (Multiple COG sources)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tiles.html&quot;&gt;WebGL Tiles / WebGL 基础栅格瓦片渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-layer.html&quot;&gt;WebGL Vector Layer / WebGL 矢量多边形面图层与悬停高亮&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer / WebGL 矢量切片图层（MVT 硬件加速渲染）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time-webgl.html&quot;&gt;WMS Time (WebGL) / WebGL WMS 时序动态瓦片平滑过渡渲染&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >19</a>
@@ -129,10 +129,10 @@
         <div id="map" class="map"></div>
 
 <div>
-  <h5>Contrast stretch</h5>
+  <h5>Contrast stretch / 动态对比度拉伸</h5>
   <ul>
-    <li>Min <input type="range" min="1000" max="10000" id="input-min"/> <span id="output-min"></span></li>
-    <li>Max <input type="range" min="10000" max="50000" id="input-max"/> <span id="output-max"></span></li>
+    <li>Min / 最小截断值 <input type="range" min="1000" max="10000" id="input-min"/> <span id="output-min"></span></li>
+    <li>Max / 最大截断值 <input type="range" min="10000" max="50000" id="input-max"/> <span id="output-max"></span></li>
   </ul>
 </div>
 
@@ -142,8 +142,26 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Renders a multi-byte depth source image directly using WebGL.</p>
-        <div id="docs"><p>This example uses a <code>ol/source/DataTile</code> source to load multi-byte raster data in the <a href="https://github.com/planetlabs/numpytiles-spec/">NumpyTile</a> format. The source is rendered with a <code>ol/layer/WebGLTile</code> layer.  Adjusting the sliders above performs a contrast stretch by adjusting the style variables set on the layer.</p>
+        <p id="shortdesc">Renders a multi-byte depth source image directly using WebGL. / 使用 WebGLTile 图层直接渲染多字节深度的 16 位 NumpyTile 遥感影像并实现直方图对比度拉伸。</p>
+        <div id="docs"><p>This example uses a <code>ol/source/DataTile</code> source to load multi-byte raster data in the
+<a href="https://github.com/planetlabs/numpytiles-spec/">NumpyTile</a> format.
+The source is rendered with a <code>ol/layer/WebGLTile</code> layer. Adjusting the sliders above
+performs a contrast stretch by adjusting the style variables set on the layer.</p><p>本示例演示使用 <code>ol/source/DataTile</code> 数据源加载以 <a href="https://github.com/planetlabs/numpytiles-spec/">NumpyTile</a> 格式封装的多字节科学遥感栅格数据。
+数据直接交由 <code>ol/layer/WebGLTile</code> 图层在 GPU 中渲染。通过拖动上方的滑块调整图层样式变量（Style Variables），可在客户端对 16 位原始地表反射率数据执行毫秒级直方图对比度拉伸（Contrast Stretch）。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 突破 8 位图像限制：高动态范围科学数据（HDR Raster）</h4>
+<ul>
+<li><strong>8 位与 16 位的核心差异</strong>：标准 Web 图像格式（PNG/JPEG）每个颜色通道仅有 8 位深度（取值 0<del>255），无法保留卫星传感器测得的真实地表反射率（通常为 12 位或 16 位高动态浮点/整数，如 0</del>65535）。如果直接转码为 PNG 会损失大量暗部与亮部地物科学信息。</li>
+<li><strong>NumpyTile 协议</strong>：将瓦片以 NumPy <code>.npy</code> 二进制多维数组格式进行传输。客户端通过 <code>@planet/ol-numpytiles</code> 解析出包含 5 个波段原始数值的 <code>Float32Array</code> 类型化数组。</li>
+</ul>
+<h4>2. <code>ol/source/DataTile</code> 与原生 GPU 纹理管线</h4>
+<ul>
+<li><strong>原始字节直接绑定</strong>：<code>DataTile</code> 数据源允许通过自定义 <code>loader(z, x, y)</code> 直接返回类型化数组（TypedArray），OpenLayers 内部将其作为 <code>gl.R32F</code> 或 <code>gl.RGBA</code> 浮点纹理上传给 GPU 显存。</li>
+<li><strong>GPU 着色器插值对比度拉伸</strong>：
+利用样式表达式对红绿蓝通道进行归一化拉伸：
+<code>interpolateBand = (idx) =&gt; [&#39;interpolate&#39;, [&#39;linear&#39;], [&#39;band&#39;, idx], [&#39;var&#39;, &#39;bMin&#39;], 0, [&#39;var&#39;, &#39;bMax&#39;], 1]</code>
+动态调整 <code>bMin</code> 与 <code>bMax</code> 时，着色器仅根据 Uniform 变量重映射像素强度，无需向服务端重新请求拉伸后的图片，完全做到了客户端无损科学分析与渲染。</li>
+</ul>
 </div>
       </div>
 
@@ -157,11 +175,13 @@ import TileLayer from &#x27;ol/layer/WebGLTile.js&#x27;;
 import {fromLonLat} from &#x27;ol/proj.js&#x27;;
 import DataTileSource from &#x27;ol/source/DataTile.js&#x27;;
 
-// 16-bit COG
-// Which will be served as NumpyTiles.
+// 16-bit Cloud Optimized GeoTIFF (COG) served as NumpyTiles
+// 作为 NumpyTiles 瓦片进行分发的 16 位云原生 GeoTIFF
 const COG &#x3D;
   &#x27;https://storage.googleapis.com/open-cogs/stac-examples/20201211_223832_CS2_analytic.tif&#x27;;
 
+// Custom data tile loader fetching .npy binary array buffers
+// 自定义瓦片加载器：拉取 .npy 二进制数组并解包为 Float32Array
 function numpyTileLoader(z, x, y) {
   const url &#x3D; &#x60;https://titiler.xyz/cog/tiles/WebMercatorQuad/${z}/${x}/${y}?format&#x3D;npy&amp;url&#x3D;${encodeURIComponent(
     COG,
@@ -171,7 +191,8 @@ function numpyTileLoader(z, x, y) {
     .then((r) &#x3D;&gt; r.arrayBuffer())
     .then((buffer) &#x3D;&gt; NumpyLoader.fromArrayBuffer(buffer))
     .then((numpyData) &#x3D;&gt; {
-      // flatten the numpy data
+      // Flatten multi-band numpy data into interleaved array
+      // 将多波段 numpy 多维数组展平为适合 WebGL 纹理上传的交错数组
       const dataTile &#x3D; new Float32Array(256 * 256 * 5);
       const bandSize &#x3D; 256 * 256;
       for (let x &#x3D; 0; x &lt; 256; x++) {
@@ -189,6 +210,8 @@ function numpyTileLoader(z, x, y) {
     });
 }
 
+// Linear contrast stretch interpolation expression for band
+// 单波段线性对比度拉伸插值表达式
 const interpolateBand &#x3D; (bandIdx) &#x3D;&gt; [
   &#x27;interpolate&#x27;,
   [&#x27;linear&#x27;],
@@ -202,6 +225,8 @@ const interpolateBand &#x3D; (bandIdx) &#x3D;&gt; [
 const initialMin &#x3D; 3000;
 const initialMax &#x3D; 18000;
 
+// WebGL tile layer with dynamic variables for real-time contrast stretching
+// WebGL 瓦片图层：配置动态样式变量以实现 GPU 级对比度实时拉伸
 const numpyLayer &#x3D; new TileLayer({
   style: {
     color: [
@@ -231,6 +256,7 @@ const map &#x3D; new Map({
   }),
 });
 
+// Slider controls for min and max stretch values / 最小/最大拉伸值滑块监听
 const inputMin &#x3D; document.getElementById(&#x27;input-min&#x27;);
 const inputMax &#x3D; document.getElementById(&#x27;input-max&#x27;);
 const outputMin &#x3D; document.getElementById(&#x27;output-min&#x27;);
@@ -267,7 +293,7 @@ outputMax.innerText &#x3D; String(initialMax);
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Rendering 16-bit NumpyTiles&lt;/title&gt;
+    &lt;title&gt;Rendering 16-bit NumpyTiles / WebGL 渲染 16 位科学栅格切片（NumpyTile）&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -281,12 +307,12 @@ outputMax.innerText &#x3D; String(initialMax);
   &lt;/head&gt;
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
-    
+
     &lt;div&gt;
-      &lt;h5&gt;Contrast stretch&lt;/h5&gt;
+      &lt;h5&gt;Contrast stretch / 动态对比度拉伸&lt;/h5&gt;
       &lt;ul&gt;
-        &lt;li&gt;Min &lt;input type&#x3D;&quot;range&quot; min&#x3D;&quot;1000&quot; max&#x3D;&quot;10000&quot; id&#x3D;&quot;input-min&quot;/&gt; &lt;span id&#x3D;&quot;output-min&quot;&gt;&lt;/span&gt;&lt;/li&gt;
-        &lt;li&gt;Max &lt;input type&#x3D;&quot;range&quot; min&#x3D;&quot;10000&quot; max&#x3D;&quot;50000&quot; id&#x3D;&quot;input-max&quot;/&gt; &lt;span id&#x3D;&quot;output-max&quot;&gt;&lt;/span&gt;&lt;/li&gt;
+        &lt;li&gt;Min / 最小截断值 &lt;input type&#x3D;&quot;range&quot; min&#x3D;&quot;1000&quot; max&#x3D;&quot;10000&quot; id&#x3D;&quot;input-min&quot;/&gt; &lt;span id&#x3D;&quot;output-min&quot;&gt;&lt;/span&gt;&lt;/li&gt;
+        &lt;li&gt;Max / 最大截断值 &lt;input type&#x3D;&quot;range&quot; min&#x3D;&quot;10000&quot; max&#x3D;&quot;50000&quot; id&#x3D;&quot;input-max&quot;/&gt; &lt;span id&#x3D;&quot;output-max&quot;&gt;&lt;/span&gt;&lt;/li&gt;
       &lt;/ul&gt;
     &lt;/div&gt;
 

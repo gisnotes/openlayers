@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Map Export</title>
+    <title>Map Export / 地图导出 (GeoTIFF / PNG / Worldfile)</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Map Export</h4>
+        <h4 id="title">Map Export / 地图导出 (GeoTIFF / PNG / Worldfile)</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,12 +74,13 @@
               data-bs-target="#tag-example-list"
               data-title="export"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./export-pdf.html&quot;&gt;Export PDF example&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./export-map.html&quot;&gt;Map Export&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./print-to-scale.html&quot;&gt;Print to scale example&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./export-pdf.html&quot;&gt;Export PDF example / 导出 PDF 地图示例&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./export-map.html&quot;&gt;Map Export / 地图导出 (GeoTIFF / PNG / Worldfile)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./print-to-scale.html&quot;&gt;Print to scale example / 按指定比例尺高精打印导出 PDF&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./screen-capture.html&quot;&gt;Screen Capture Control / 屏幕截屏控件（地图 Canvas 导出）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
-              >3</a>
+              >4</a>
           </span>
           <span class="badge-group">
             <a
@@ -90,10 +91,11 @@
               data-bs-target="#tag-example-list"
               data-title="png"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./export-map.html&quot;&gt;Map Export&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./export-map.html&quot;&gt;Map Export / 地图导出 (GeoTIFF / PNG / Worldfile)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./screen-capture.html&quot;&gt;Screen Capture Control / 屏幕截屏控件（地图 Canvas 导出）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
-              >1</a>
+              >2</a>
           </span>
           <span class="badge-group">
             <a
@@ -104,11 +106,11 @@
               data-bs-target="#tag-example-list"
               data-title="geotiff"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-per-band-stats.html&quot;&gt;GeoTIFF per band statistics&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF 客户端动态重投影 (GeoTIFF Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./export-map.html&quot;&gt;Map Export&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC support&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-per-band-stats.html&quot;&gt;GeoTIFF per band statistics / GeoTIFF 单波段统计拉伸&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF Reprojection / GeoTIFF 客户端动态重投影&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./export-map.html&quot;&gt;Map Export / 地图导出 (GeoTIFF / PNG / Worldfile)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs / 基于两个 16 位 COG 同时计算 NDVI 与 NDWI&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC support / STAC 时空资产目录支持&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >5</a>
@@ -122,7 +124,7 @@
               data-bs-target="#tag-example-list"
               data-title="worldfile"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./export-map.html&quot;&gt;Map Export&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./export-map.html&quot;&gt;Map Export / 地图导出 (GeoTIFF / PNG / Worldfile)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -143,11 +145,11 @@
         </div>
         <div id="map" class="map"></div>
 <div class="btn-group">
-  <a id="export-map" class="btn btn-outline-dark" role="button"><i class="fa fa-download"></i> Download</a>
-  <select id="export-format" class="form-select" style="max-width: 180px;">
-    <option value="geotiff">GeoTIFF</option>
-    <option value="png">PNG</option>
-    <option value="png-world">PNG + Worldfile (ZIP)</option>
+  <a id="export-map" class="btn btn-outline-dark" role="button"><i class="fa fa-download"></i> Download / 下载地图</a>
+  <select id="export-format" class="form-select" style="max-width: 260px;">
+    <option value="geotiff">GeoTIFF (内嵌坐标参考)</option>
+    <option value="png">PNG (标准位图)</option>
+    <option value="png-world">PNG + Worldfile (ZIP 压缩包)</option>
   </select>
 </div>
 <a id="image-download" download="map.png"></a>
@@ -158,8 +160,31 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Export a map as a GeoTIFF or PNG image.</p>
-        <div id="docs"><p>Example of exporting a map, using a HTMLCanvasElement as temporary map target. PNG is easy to export, without using an external library. The GeoTIFF export is georeferenced with the correct projection. The PNG + <a href="https://web.archive.org/web/20230304183331/https://support.esri.com/en/technical-article/000002860">worldfile</a> ZIP is also georeferenced, but users of the image will have to know (or guess) the projection.</p>
+        <p id="shortdesc">Export a map as a GeoTIFF or PNG image. / 将当前地图视口导出为带有地理参考的 GeoTIFF 文件、普通 PNG 图片或带有 Worldfile 坐标定位文件的 ZIP 压缩包。</p>
+        <div id="docs"><h2>Example of exporting a map, using a HTMLCanvasElement as temporary map target. PNG is easy to export, without using an external library. The GeoTIFF export is georeferenced with the correct projection. The PNG + <a href="https://web.archive.org/web/20230304183331/https://support.esri.com/en/technical-article/000002860">worldfile</a> ZIP is also georeferenced, but users of the image will have to know (or guess) the projection.
+本示例演示如何通过将临时 <code>HTMLCanvasElement</code> 设定为地图渲染目标来导出地图。 导出普通 PNG 非常直接，无需依赖任何第三方外部库； 导出 GeoTIFF 则会内嵌完整的投影坐标系和地理参考参数（Tiepoint 与 PixelScale）； 导出 PNG + <a href="https://web.archive.org/web/20230304183331/https://support.esri.com/en/technical-article/000002860">Worldfile</a>（.pgw 坐标定标文件）打包为 ZIP，同样具备地理参考能力，但使用者需要自行知晓对应的投影坐标系。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 离屏 Canvas 重定向渲染架构 * <strong>传统 DOM 截图的痛点</strong>：直接截取屏幕地图可能会受到 CSS 变换、视网膜屏幕 DPR 缩放、HTML 控件（按钮、缩放滑块）遮挡等干扰。 * <strong><code>map.setTarget(mapCanvas)</code> 临时重定向模式</strong>：</h4>
+<ol>
+<li>动态创建一个与地图当前像素尺寸相同的离屏 <code>&lt;canvas&gt;</code> 元素；</li>
+<li>执行 <code>map.setTarget(mapCanvas)</code> 将渲染管线切换至离屏画布；</li>
+<li>监听 <code>map.once(&#39;rendercomplete&#39;, ...)</code> 事件，确保所有矢量图层与热力图层完全重绘完成；</li>
+<li>提取像素字节并生成下载，最后调用 <code>map.setTarget(&#39;map&#39;)</code> 恢复屏幕正常展示。整个过程在几十毫秒内完成，用户视觉几乎无感知。</li>
+</ol>
+<h4>2. 前端纯 JavaScript 生成 GeoTIFF：<code>geotiff.js</code> 规范 * 通过 <code>geotiff</code> 库的 <code>writeArrayBuffer</code> 函数，直接将 Canvas 的 RGBA 像素矩阵编码为符合 TIFF/GeoTIFF 标准的二进制字节数组：</h4>
+<pre><code class="language-javascript">const tiff = writeGeotiff(imageData.data, {
+  width: size[0],
+  height: size[1],
+  ModelPixelScale: [resolution, resolution, 0], // X 与 Y 方向的像元地面分辨率
+  ModelTiepoint: [0, 0, 0, extent[0], extent[3], 0], // 左上角像元 (0,0) 对应的真实地图投影坐标 (Xmin, Ymax)
+  GTRasterTypeGeoKey: 1, // 像元定位类型：RasterPixelIsArea (像元表示面积区域)
+  ProjectedCSTypeGeoKey: parseInt(epsgCode), // 投影代码（如 3857）
+});
+</code></pre>
+<ul>
+<li>导出的 <code>.tiff</code> 文件可以直接拖入 QGIS、ArcGIS 或任何专业遥感软件，位置分毫不差！</li>
+</ul>
+<h4>3. Worldfile 定标文件原理 (.pgw / .tfw) Worldfile 是一种历史悠久但兼容性极广的栅格定位文本文件（例如 <code>map.png</code> 对应 <code>map.pgw</code>）。它由 6 行纯文本数字构成： 1. 行 1：$X$ 方向的像素分辨率； 2. 行 2：$Y$ 轴旋转项（通常为 0）； 3. 行 3：$X$ 轴旋转项（通常为 0）； 4. 行 4：$Y$ 方向的像素分辨率（通常为负数，因为图像 Y 轴向下，而地理坐标 Y 轴向上）； 5. 行 5：左上角中心像元的 $X$ 地理坐标； 6. 行 6：左上角中心像元的 $Y$ 地理坐标。</h4>
 </div>
       </div>
 
@@ -219,6 +244,8 @@ const map &#x3D; new Map({
   }),
 });
 
+// Handle export button click by redirecting map rendering to an offscreen canvas
+// 点击导出按钮时，将地图渲染重定向到离屏 Canvas 画布中
 document.getElementById(&#x27;export-map&#x27;).addEventListener(&#x27;click&#x27;, () &#x3D;&gt; {
   const format &#x3D; document.getElementById(&#x27;export-format&#x27;).value;
   const mapCanvas &#x3D; document.createElement(&#x27;canvas&#x27;);
@@ -241,10 +268,14 @@ document.getElementById(&#x27;export-map&#x27;).addEventListener(&#x27;click&#x2
       exportPNGWithWorldfile(mapCanvas, extent, resolution);
     }
 
+    // Restore map rendering back to DOM element
+    // 将地图重新挂载回 DOM 元素
     map.setTarget(&#x27;map&#x27;);
   });
 });
 
+// Export canvas as georeferenced GeoTIFF with projection and tiepoint metadata
+// 将 Canvas 画布导出为内嵌投影和控制点元数据的 GeoTIFF 文件
 function exportGeoTIFF(canvas, size, extent, resolution, projection) {
   const context &#x3D; canvas.getContext(&#x27;2d&#x27;);
   const imageData &#x3D; context.getImageData(0, 0, size[0], size[1]);
@@ -263,6 +294,8 @@ function exportGeoTIFF(canvas, size, extent, resolution, projection) {
   downloadFile(blob, &#x27;map-export.tiff&#x27;);
 }
 
+// Export canvas as standard PNG image
+// 将 Canvas 画布导出为标准 PNG 图片
 function exportPNG(canvas) {
   const link &#x3D; document.createElement(&#x27;a&#x27;);
   link.href &#x3D; canvas.toDataURL(&#x27;image/png&#x27;);
@@ -272,18 +305,22 @@ function exportPNG(canvas) {
   document.body.removeChild(link);
 }
 
+// Export canvas as PNG along with a 6-parameter Worldfile (.pgw) compressed into ZIP
+// 将 Canvas 导出为 PNG 并附加包含 6 参数的 Worldfile (.pgw)，打包为 ZIP
 function exportPNGWithWorldfile(canvas, extent, resolution) {
-  // Create worldfile content
+  // Create worldfile content (A, D, B, E, C, F affine parameters)
+  // 创建 Worldfile 纯文本定标内容（A, D, B, E, C, F 仿射六参数）
   const worldfileContent &#x3D; [
-    resolution.toFixed(6), // pixel width
-    &#x27;0.000000&#x27;, // rotation
-    &#x27;0.000000&#x27;, // rotation
-    (-resolution).toFixed(6), // pixel height (negative)
-    extent[0].toFixed(6), // upper-left X
-    extent[3].toFixed(6), // upper-left Y
+    resolution.toFixed(6), // pixel width / X 方向像素宽度
+    &#x27;0.000000&#x27;, // rotation / 旋转项
+    &#x27;0.000000&#x27;, // rotation / 旋转项
+    (-resolution).toFixed(6), // pixel height (negative) / Y 方向像素高度（负值）
+    extent[0].toFixed(6), // upper-left X / 左上角 X 坐标
+    extent[3].toFixed(6), // upper-left Y / 左上角 Y 坐标
   ].join(&#x27;\n&#x27;);
 
   // Convert canvas to blob and create zip
+  // 将 Canvas 转换为 Blob 并构建 ZIP 压缩文件
   canvas.toBlob((pngBlob) &#x3D;&gt; {
     pngBlob.arrayBuffer().then((pngBuffer) &#x3D;&gt; {
       const files &#x3D; {
@@ -306,6 +343,8 @@ function exportPNGWithWorldfile(canvas, extent, resolution) {
   });
 }
 
+// Helper to trigger browser file download from Blob
+// 辅助函数：触发浏览器从 Blob 下载文件
 function downloadFile(blob, filename) {
   const link &#x3D; document.createElement(&#x27;a&#x27;);
   link.href &#x3D; URL.createObjectURL(blob);
@@ -325,7 +364,7 @@ function downloadFile(blob, filename) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Map Export&lt;/title&gt;
+    &lt;title&gt;Map Export / 地图导出 (GeoTIFF / PNG / Worldfile)&lt;/title&gt;
     &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"&gt;
     &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css"&gt;
     &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css"&gt;
@@ -340,11 +379,11 @@ function downloadFile(blob, filename) {
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
     &lt;div class&#x3D;&quot;btn-group&quot;&gt;
-      &lt;a id&#x3D;&quot;export-map&quot; class&#x3D;&quot;btn btn-outline-dark&quot; role&#x3D;&quot;button&quot;&gt;&lt;i class&#x3D;&quot;fa fa-download&quot;&gt;&lt;/i&gt; Download&lt;/a&gt;
-      &lt;select id&#x3D;&quot;export-format&quot; class&#x3D;&quot;form-select&quot; style&#x3D;&quot;max-width: 180px;&quot;&gt;
-        &lt;option value&#x3D;&quot;geotiff&quot;&gt;GeoTIFF&lt;/option&gt;
-        &lt;option value&#x3D;&quot;png&quot;&gt;PNG&lt;/option&gt;
-        &lt;option value&#x3D;&quot;png-world&quot;&gt;PNG + Worldfile (ZIP)&lt;/option&gt;
+      &lt;a id&#x3D;&quot;export-map&quot; class&#x3D;&quot;btn btn-outline-dark&quot; role&#x3D;&quot;button&quot;&gt;&lt;i class&#x3D;&quot;fa fa-download&quot;&gt;&lt;/i&gt; Download / 下载地图&lt;/a&gt;
+      &lt;select id&#x3D;&quot;export-format&quot; class&#x3D;&quot;form-select&quot; style&#x3D;&quot;max-width: 260px;&quot;&gt;
+        &lt;option value&#x3D;&quot;geotiff&quot;&gt;GeoTIFF (内嵌坐标参考)&lt;/option&gt;
+        &lt;option value&#x3D;&quot;png&quot;&gt;PNG (标准位图)&lt;/option&gt;
+        &lt;option value&#x3D;&quot;png-world&quot;&gt;PNG + Worldfile (ZIP 压缩包)&lt;/option&gt;
       &lt;/select&gt;
     &lt;/div&gt;
     &lt;a id&#x3D;&quot;image-download&quot; download&#x3D;&quot;map.png&quot;&gt;&lt;/a&gt;

@@ -333,7 +333,7 @@ var ScaleLine = class extends Control {
 		return `<div class="ol-scale-step-marker" style="position: ${position}; top: ${position === "absolute" ? 3 : -10}px;"></div>`;
 	}
 	/**
-	* Creates the label for a marker marker at given position
+	* Creates the label for a marker at given position
 	* @param {number} i The iterator
 	* @param {number} width The width the scalebar will currently use
 	* @param {boolean} isLast Flag indicating if we add the last step text

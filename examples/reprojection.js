@@ -145,6 +145,8 @@ var viewProjSelect = document.getElementById("view-projection");
 var renderEdgesCheckbox = document.getElementById("render-edges");
 var renderEdges = false;
 /**
+* Dynamically update map view target projection.
+* Creates a new View and bounds local overlays when switching to global projections to avoid wrapping artifacts.
 * 动态更新地图视图的目标投影
 * 根据用户选取的投影创建全新的 View，并对局域图层设置范围裁剪以防全球视角下产生重影
 */
@@ -171,8 +173,9 @@ viewProjSelect.onchange = function() {
 };
 updateViewProjection();
 /**
+* Synchronize renderReprojectionEdges setting on a tile layer
 * 同步更新图层上的重投影三角网边缘渲染开关
-* @param {TileLayer} layer 瓦片图层对象
+* @param {TileLayer} layer Tile layer instance / 瓦片图层对象
 */
 var updateRenderEdgesOnLayer = function(layer) {
 	if (layer instanceof WebGLTileLayer) {

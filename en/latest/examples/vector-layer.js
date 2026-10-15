@@ -42,6 +42,11 @@ var featureOverlay = new VectorLayer({
 	}
 });
 var highlight;
+/**
+* Display feature attribute information and update hover overlay.
+* 检测像素位置的要素属性信息并更新高亮图层状态
+* @param {import('../src/ol/pixel.js').Pixel} pixel Screen coordinates / 屏幕像素坐标
+*/
 var displayFeatureInfo = function(pixel) {
 	const feature = map.forEachFeatureAtPixel(pixel, function(feature) {
 		return feature;

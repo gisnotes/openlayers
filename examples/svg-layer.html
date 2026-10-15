@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>SVG Layer</title>
+    <title>SVG Layer / 交互式 SVG 图层与仿射矩阵同步</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">SVG Layer</h4>
+        <h4 id="title">SVG Layer / 交互式 SVG 图层与仿射矩阵同步</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,12 +75,13 @@
               data-bs-target="#tag-example-list"
               data-title="svg"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-controls.html&quot;&gt;Custom Controls&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./svg-layer.html&quot;&gt;SVG Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-svg.html&quot;&gt;WMS loader with SVG format&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-controls.html&quot;&gt;Custom Controls / 自定义地图控件（指北针）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./screen-capture.html&quot;&gt;Screen Capture Control / 屏幕截屏控件（地图 Canvas 导出）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./svg-layer.html&quot;&gt;SVG Layer / 交互式 SVG 图层与仿射矩阵同步&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-svg.html&quot;&gt;WMS loader with SVG format / 采用 SVG 矢量格式的 WMS 加载器&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
-              >3</a>
+              >4</a>
           </span>
           <span class="badge-group">
             <a
@@ -91,10 +92,10 @@
               data-bs-target="#tag-example-list"
               data-title="layer"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-z-index.html&quot;&gt;Layer Z-Index&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-zoom-limits.html&quot;&gt;Layer Zoom Limits&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./svg-layer.html&quot;&gt;SVG Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL points layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-z-index.html&quot;&gt;Layer Z-Index / 图层层级顺序与托管/非托管图层 (Layer Z-Index &amp;amp; Stacking Context)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-zoom-limits.html&quot;&gt;Layer Zoom Limits / 图层缩放级别可见性区间（minZoom 与 maxZoom）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./svg-layer.html&quot;&gt;SVG Layer / 交互式 SVG 图层与仿射矩阵同步&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL Points Layer / WebGL 点要素高性能图层与声明式着色器样式编辑器&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >4</a>
@@ -108,10 +109,10 @@
               data-bs-target="#tag-example-list"
               data-title="render"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-circle-render.html&quot;&gt;Custom Circle Render&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-hit-detection-renderer.html&quot;&gt;Custom Hit Detection Render&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./render-geometry.html&quot;&gt;Render geometries to a canvas&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./svg-layer.html&quot;&gt;SVG Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-circle-render.html&quot;&gt;Custom Circle Render / 自定义圆渲染（Canvas 径向渐变）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-hit-detection-renderer.html&quot;&gt;Custom Hit Detection Render / 自定义命中检测渲染器&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./render-geometry.html&quot;&gt;Render geometries to a canvas / 即时渲染：将几何直接绘制到独立 Canvas&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./svg-layer.html&quot;&gt;SVG Layer / 交互式 SVG 图层与仿射矩阵同步&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >4</a>
@@ -125,7 +126,7 @@
               data-bs-target="#tag-example-list"
               data-title="transform"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./svg-layer.html&quot;&gt;SVG Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./svg-layer.html&quot;&gt;SVG Layer / 交互式 SVG 图层与仿射矩阵同步&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -152,8 +153,27 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of a map with an interactive svg layer.</p>
-        <div id="docs"><p>With a plain <code>ol/Layer</code> and a <code>render</code> function, we can use an interactive svg as layer. Hover over countries to see the interactivity that is defined purely with a css <code>:hover</code> pseudo-class. Other layers can be added to the same map. The blue circle is a vector feature on a separate layer.</p>
+        <p id="shortdesc">Example of a map with an interactive svg layer. / 演示如何使用自定义 Layer 渲染函数结合 CSS 仿射变换矩阵加载并交互联动 SVG 矢量图层。</p>
+        <div id="docs"><p>With a plain `ol/Layer` and a `render` function, we can use an interactive svg as layer. Hover over countries to see the interactivity that is defined purely with a css `:hover` pseudo-class. Other layers can be added to the same map. The blue circle is a vector feature on a separate layer.</p> <p>借助基础 <code>ol/layer/Layer</code> 以及自定义 <code>render</code> 渲染函数，我们可以直接将交互式 SVG 矢量图元挂载为 OpenLayers 地图图层。移动鼠标指针悬停在各国轮廓上方，即可观察到纯 CSS <code>:hover</code> 伪类驱动的高性能悬浮交互动画。地图中亦可同时叠加常规矢量与瓦片图层（例如本例中心位于 [0, 0] 的蓝色圆点即为独立矢量图层要素）。</p>
+---
+### 📚 学习记录与技术深度解读 (Learning Notes)
+#### 1. 核心架构与设计思想 (Core Architecture & Design) - <strong>基于基础 `ol/layer/Layer` 的自定义渲染器机制</strong>：
+  OpenLayers 的图层体系具有高度开放性。继承或实例化 `Layer` 并提供自定义 `render(frameState)` 方法，允许开发者跳过 Canvas 或 WebGL 内部渲染管线，直接将<strong>任意外部 DOM 树（如富交互 SVG、Three.js 画布、D3 节点）</strong>深度挂载到地图的图层堆叠树中。
+- <strong>`composeCssTransform` 视口矩阵投影对齐</strong>：
+  SVG 是基于自身矢量画布像素构建的静态 DOM。为了让它随地图平移、缩放、旋转而精准锁定在地理坐标系上，OpenLayers 提供了 `composeCssTransform(dx, dy, sx, sy, angle, ox, oy)`。它根据每帧渲染状态 `frameState` 的视口尺寸（`size`）、分辨率（`resolution`）、中心坐标（`center`）与旋转弧度（`rotation`），实时解算出标准的 CSS `matrix(...)` 矩阵，直接施加到外部 SVG 容器上。<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis) - <code>svgResolution = 360 / width</code>：</h4>
+<p>  在 EPSG:4326 地理经纬度投影下，全球经度范围是 360°。若 SVG 底图的宽度是 2560 像素，则该 SVG 图像在 1:1 物理比例下的原生分辨率为 <code>360 / 2560 = 0.140625 度/像素</code>。</p>
+<ul>
+<li>缩放比解算 <code>scale = svgResolution / frameState.viewState.resolution</code>：
+当视口分辨率缩放变小时（地图放大），<code>scale</code> 成比例增大，驱动 CSS 矩阵等比缩放 SVG。</li>
+<li>偏移量定位：
+将地图中心坐标投影变换为 SVG 内的原生像素偏移：<code>-center[0] / svgResolution - width / 2</code> 与 <code>center[1] / svgResolution - height / 2</code>，确保地图旋转和缩放的锚点精准对齐视口几何中心。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization) - <strong>SVG 超大视口 GPU 纹理显存暴涨</strong>：</h4>
+<p>  当用户连续放大地图至高层级（如 Zoom 15）时，<code>scale</code> 可能达到几千倍。浏览器若尝试为尺寸数万像素的缩放 SVG 建立硬件加速合成层（Compositing Layer），可能导致显存耗尽甚至页面崩溃。生产方案中，对于高层级局部，建议切换为分块切片矢量（MVT）或限制图层的 <code>maxResolution</code>。</p>
+<ul>
+<li><strong>事件冒泡与平移穿透</strong>：
+由于 SVG 容器作为 DOM 挂载在地图内，其内部路径的鼠标事件可能会阻断 OpenLayers 原生的拖拽平移。通常可在 CSS 中针对不需要拦截事件的 SVG 元素设置 <code>pointer-events: none;</code>，仅对需要交互的高亮面设置 <code>pointer-events: auto;</code>。</li>
+</ul>
 </div>
       </div>
 
@@ -169,6 +189,8 @@ import Vector from &#x27;ol/layer/Vector.js&#x27;;
 import VectorSource from &#x27;ol/source/Vector.js&#x27;;
 import {composeCssTransform} from &#x27;ol/transform.js&#x27;;
 
+// Initialize map with EPSG:4326 projection matching the world SVG extent
+// 初始化采用 EPSG:4326 投影坐标系的地图实例，契合全球 SVG 的经纬度范围
 const map &#x3D; new Map({
   target: &#x27;map&#x27;,
   view: new View({
@@ -179,6 +201,8 @@ const map &#x3D; new Map({
   }),
 });
 
+// Container element for holding the interactive SVG DOM
+// 存放交互式 SVG DOM 节点的容器元素
 const svgContainer &#x3D; document.createElement(&#x27;div&#x27;);
 const xhr &#x3D; new XMLHttpRequest();
 xhr.open(&#x27;GET&#x27;, &#x27;data/world.svg&#x27;);
@@ -189,6 +213,8 @@ xhr.addEventListener(&#x27;load&#x27;, function () {
 });
 xhr.send();
 
+// Native SVG dimensions and base geographic resolution (360 degrees / width)
+// SVG 原始物理像素尺寸以及基准地理分辨率（360度 / 像素宽度）
 const width &#x3D; 2560;
 const height &#x3D; 1280;
 const svgResolution &#x3D; 360 / width;
@@ -198,6 +224,8 @@ svgContainer.style.transformOrigin &#x3D; &#x27;top left&#x27;;
 svgContainer.className &#x3D; &#x27;svg-layer&#x27;;
 svgContainer.style.position &#x3D; &#x27;absolute&#x27;;
 
+// Add custom Layer with render function computing CSS transform matrix every frame
+// 添加自定义 Layer 图层，每帧根据 frameState 动态解算 CSS 仿射变换矩阵
 map.addLayer(
   new Layer({
     render: function (frameState) {
@@ -220,6 +248,8 @@ map.addLayer(
   }),
 );
 
+// Overlay a standard vector layer on top of the SVG layer
+// 在 SVG 图层上方叠加常规 OpenLayers 矢量图层以验证多层对齐
 map.addLayer(
   new Vector({
     source: new VectorSource({
@@ -243,7 +273,7 @@ map.addLayer(
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;SVG Layer&lt;/title&gt;
+    &lt;title&gt;SVG Layer / 交互式 SVG 图层与仿射矩阵同步&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

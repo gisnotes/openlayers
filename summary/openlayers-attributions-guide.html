@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-版权署名合规控制与云端空间数据服务实战架构指南">OpenLayers 版权署名合规控制与云端空间数据服务实战架构指南</h1>
+<blockquote>
+<p>在企业级 WebGIS 与地理空间中台落地中，数据安全合规与空间大数据的高性能渲染是两个极其关键的核心议题：</p>
+<ol>
+<li><strong>法律合规与移动端有限视口的平衡（Attribution Collapsing）</strong>：无论是开源数据（OpenStreetMap）还是商业供应商（Mapbox、Google、ESRI），协议均强制要求标注版权。如何在桌面端充分展示完整法律信息，而在小屏移动端优雅收拢为极简图标，避免遮挡业务视口？</li>
+<li><strong>平台主权与常驻版权解耦（Static Attribution）</strong>：如何将企业自身的平台版权、免责声明或 ICP 备案号注入地图，使其独立于业务图层的加载、隐藏与切换，实现永不消失的合规常驻？</li>
+<li><strong>云原生空间数据库动态切片（Cloud CartoDB &amp; Maps API）</strong>：面对数百万级海量空间多边形，直接向前端拉取 GeoJSON 会导致浏览器崩溃。如何借助云端 PostGIS 引擎完成动态 SQL 空间过滤与 CartoCSS 服务端渲染，并在前端以毫秒级热更新切片？</li>
+</ol>
+<p>本文基于 3 个核心官方示例（<code>attributions.html</code>、<code>static-attribution.html</code>、<code>cartodb.html</code>），深度剖析版权控件的响应式状态机、静态合规声明以及云端动态切片服务的核心架构。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：版权归属体系与云端渲染管线">1. 架构总览：版权归属体系与云端渲染管线</h2>
+<p>OpenLayers 设计了高度解耦的版权收集渲染机制与空间数据驱动源：</p>
+<pre><code class="language-mermaid">graph TD
+    subgraph DataSources[&quot;空间数据源图层 (Sources)&quot;]
+        OSMSource[&quot;OSM Source&lt;br/&gt;(动态提供 &amp;copy; OpenStreetMap)&quot;]
+        CartoSource[&quot;CartoDB Source&lt;br/&gt;(云端 Maps API 切片 + 版权)&quot;]
+        BusinessSource[&quot;业务要素图层&lt;br/&gt;(动态可见性 visible)&quot;]
+    end
+
+    subgraph AttributionEngine[&quot;版权归属合规引擎 (ol/control/Attribution)&quot;]
+        DynamicCollector[&quot;动态图层版权收集器&lt;br/&gt;(仅收集当前可见图层的版权)&quot;]
+        StaticConfig[&quot;静态常驻版权&lt;br/&gt;(attributions 选项，独立于图层)&quot;]
+        ResponsiveState[&quot;响应式状态机&lt;br/&gt;(setCollapsible / setCollapsed)&quot;]
+    end
+
+    subgraph CloudEngine[&quot;云原生空间数据库服务 (CARTO / PostGIS)&quot;]
+        Config[&quot;mapConfig (CartoCSS + SQL 查询)&quot;]
+        CloudPostGIS[&quot;云端 PostGIS 空间过滤与光栅化切片&quot;]
+        Token[&quot;匿名地图会话协商 (Instantiation Token)&quot;]
+    end
+
+    OSMSource --&gt;|可见时贡献版权| DynamicCollector
+    CartoSource --&gt;|动态切片流| DynamicCollector
+    DynamicCollector --&gt; ResponsiveState
+    StaticConfig --&gt; ResponsiveState
+    ResponsiveState --&gt;|视口宽度 &lt; 600px 折叠为 &#39;i&#39;| MapView[&quot;地图视口 UI (右下角)&quot;]
+
+    Config --&gt;|setConfig(mapConfig)| CartoSource
+    CartoSource &lt;--&gt;|HTTP POST 协商 Token| CloudEngine
+    CloudPostGIS --&gt;|生成 WebP/PNG 瓦片流| CartoSource
+</code></pre>
+<h3 id="11-三大核心技术模式对比">1.1 三大核心技术模式对比</h3>
+<table>
+<thead>
+<tr>
+<th align="left">模式 / 维度</th>
+<th align="left">响应式自适应折叠</th>
+<th align="left">静态常驻版权声明</th>
+<th align="left">云端空间数据切片</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>典型示例</strong></td>
+<td align="left"><code>attributions.html</code></td>
+<td align="left"><code>static-attribution.html</code></td>
+<td align="left"><code>cartodb.html</code></td>
+</tr>
+<tr>
+<td align="left"><strong>核心 API</strong></td>
+<td align="left"><code>attribution.setCollapsible()</code>, <code>change:size</code></td>
+<td align="left"><code>new Attribution({ attributions })</code></td>
+<td align="left"><code>new CartoDB()</code>, <code>setConfig()</code></td>
+</tr>
+<tr>
+<td align="left"><strong>生命周期依赖</strong></td>
+<td align="left">依赖地图 DOM 容器像素尺寸</td>
+<td align="left">绑定控件自身，完全与图层显隐解耦</td>
+<td align="left">依赖云端 Maps API 实例协商生命周期</td>
+</tr>
+<tr>
+<td align="left"><strong>渲染形态</strong></td>
+<td align="left">桌面端文本展开 / 移动端 &quot;i&quot; 图标</td>
+<td align="left">常驻在原生控件内，与图层版权合并</td>
+<td align="left">透明 PNG/WebP 光栅切片覆盖层</td>
+</tr>
+<tr>
+<td align="left"><strong>核心业务价值</strong></td>
+<td align="left">满足商用底图法律合规同时优化移动端体验</td>
+<td align="left">统一平台 ICP 备案与法律资质，零冗余 DOM</td>
+<td align="left">海量多边形服务端渲染，毫秒级 SQL 过滤</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-响应式版权折叠状态机（attributionshtml）">2. 响应式版权折叠状态机（<code>attributions.html</code>）</h2>
+<h3 id="21-移动端断点与动态折叠原理">2.1 移动端断点与动态折叠原理</h3>
+<p>商业地图协议（如 OSM ODbL 协议）要求必须显式声明数据提供方。如果在移动设备上直接平铺文字，会遮挡比例尺与大量地图要素。
+<code>ol/control/Attribution</code> 内置了折叠器状态机，通过对外暴露的 <code>setCollapsible</code> 和 <code>setCollapsed</code> 方法，开发者可以在任意时刻按需控制：</p>
+<pre><code class="language-mermaid">stateDiagram-v2
+    [*] --&gt; LargeScreen: 地图初始化 (宽度 &amp;ge; 600px)
+    LargeScreen --&gt; SmallScreen: 窗口缩放 / 设备竖屏 (宽度 &lt; 600px)
+    SmallScreen --&gt; LargeScreen: 窗口拉伸 / 设备横屏 (宽度 &amp;ge; 600px)
+
+    state LargeScreen {
+        [*] --&gt; ExpandedState: collapsible = false
+        ExpandedState --&gt; ExpandedState: 完整平铺版权文本，常驻展示
+    }
+
+    state SmallScreen {
+        [*] --&gt; CollapsedState: collapsible = true, collapsed = true
+        CollapsedState --&gt; UserExpanded: 用户点击 &#39;i&#39; 图标
+        UserExpanded --&gt; CollapsedState: 再次点击或失焦自动回折
+    }
+</code></pre>
+<h3 id="22-核心代码实现">2.2 核心代码实现</h3>
+<p>为了防止与 OpenLayers 默认自带的 Attribution 控件发生冲突，必须先在 <code>defaultControls({ attribution: false })</code> 中显式关闭默认项，再注入自定义控件：</p>
+<pre><code class="language-javascript">// 1. 初始化自定义版权控件
+const attribution = new Attribution({
+  collapsible: false,
+});
+
+// 2. 禁用默认版权控件并接入自定义实例
+const map = new Map({
+  layers: [new TileLayer({ source: new OSM() })],
+  controls: defaultControls({ attribution: false }).extend([attribution]),
+  target: &#39;map&#39;,
+  view: new View({ center: [0, 0], zoom: 2 }),
+});
+
+// 3. 响应式断点检测器
+function checkSize() {
+  const small = map.getSize()[0] &lt; 600;
+  attribution.setCollapsible(small);
+  attribution.setCollapsed(small);
+}
+
+// 4. 监听视口尺寸变更
+map.on(&#39;change:size&#39;, checkSize);
+checkSize();
+</code></pre>
+<hr>
+<h2 id="3-静态常驻版权与图层解耦（static-attributionhtml）">3. 静态常驻版权与图层解耦（<code>static-attribution.html</code>）</h2>
+<h3 id="31-为什么需要与图层解耦的常驻版权？">3.1 为什么需要与图层解耦的常驻版权？</h3>
+<p>默认情况下，<code>Attribution</code> 控件内的版权说明是<strong>动态收集</strong>的：
+$$\text{RenderedAttributions} = \bigcup_{layer \in \text{VisibleLayers}} \text{layer.getSource().getAttributions()}$$
+当用户在图层管理器中隐藏所有图层（例如执行底图切换或进入纯白白板标绘模式）时，动态收集到的版权为空，导致右下角的版权栏彻底消失。</p>
+<p>如果系统需要展示<strong>平台自身的运营主体信息、ICP 备案号或免责提示</strong>，就必须将版权从图层中剥离。</p>
+<h3 id="32-静态-html-注入与验证">3.2 静态 HTML 注入与验证</h3>
+<p>通过直接向 <code>Attribution</code> 构造函数传递 <code>attributions</code> 属性，声明一个全局静态条目：</p>
+<pre><code class="language-javascript">// 注入不受任何图层显隐影响的常驻版权
+const attribution = new Attribution({
+  collapsible: false,
+  attributions: `&lt;a href=&quot;https://openlayers.org&quot;&gt;I&#39;m a static attribution. I never disappear&lt;/a&gt;`,
+});
+
+// 即使隐藏全部图层，静态版权依然牢固渲染在 DOM 中
+document.getElementById(&#39;toggleLayerButton&#39;).addEventListener(&#39;click&#39;, () =&gt; {
+  map.getLayers().forEach((l) =&gt; {
+    l.setVisible(!l.getVisible());
+  });
+});
+</code></pre>
+<hr>
+<h2 id="4-云原生-cartodb-空间数据源与动态-sql-过滤（cartodbhtml）">4. 云原生 CartoDB 空间数据源与动态 SQL 过滤（<code>cartodb.html</code>）</h2>
+<h3 id="41-空间大数据切片渲染流水线">4.1 空间大数据切片渲染流水线</h3>
+<p>在处理大规模矢量数据（如全欧洲所有行政区划多边形）时，前端若加载完整的 GeoJSON，网络包体积往往数十兆，解析与 Canvas 绘制极易引起主线程崩溃。
+CARTO（原 CartoDB）提供了服务端矢量动态光栅化方案：</p>
+<pre><code class="language-mermaid">sequenceDiagram
+    autonumber
+    actor User as 用户交互 (下拉框)
+    participant Client as OpenLayers (CartoDB Source)
+    participant MapsAPI as CartoDB Maps API 云服务
+    participant PostGIS as 云端 PostgreSQL/PostGIS
+
+    User-&gt;&gt;Client: 选择面积阈值: &quot;area &gt; 50000&quot;
+    Client-&gt;&gt;Client: 动态拼接 SQL 与 CartoCSS
+    Client-&gt;&gt;MapsAPI: POST /api/v1/map (提交 mapConfig)
+    Note over MapsAPI: 创建匿名地图实例 (Anonymous Map)
+    MapsAPI-&gt;&gt;PostGIS: 执行 SELECT ... WHERE area &gt; 50000
+    PostGIS--&gt;&gt;MapsAPI: 返回过滤后的空间要素
+    MapsAPI--&gt;&gt;Client: 返回图层会话 layergroup_id 与瓦片 URL 模板
+    Client-&gt;&gt;MapsAPI: GET /tiles/{z}/{x}/{y}.png (带透明通道光栅切片)
+    MapsAPI--&gt;&gt;Client: 高速下发预渲染切片，完成 60FPS 平滑上屏
+</code></pre>
+<h3 id="42-配置热重载模式（setconfig）">4.2 配置热重载模式（<code>setConfig</code>）</h3>
+<p>当用户切换过滤条件时，无需销毁图层，直接调用 <code>setConfig()</code> 即可触发静默热更新：</p>
+<pre><code class="language-javascript">// CartoDB 声明式配置
+const mapConfig = {
+  layers: [
+    {
+      type: &#39;cartodb&#39;,
+      options: {
+        cartocss_version: &#39;2.1.1&#39;,
+        cartocss: &#39;#layer { polygon-fill: #F00; }&#39;, // 红色填充
+      },
+    },
+  ],
+};
+
+function setArea(n) {
+  mapConfig.layers[0].options.sql =
+    &#39;select * from european_countries_e where area &gt; &#39; + n;
+}
+
+const cartoDBSource = new CartoDB({
+  account: &#39;documentation&#39;,
+  config: mapConfig,
+});
+
+// 监听下拉菜单，更新 SQL 并热更切片
+areaSelect.addEventListener(&#39;change&#39;, function () {
+  setArea(this.value);
+  cartoDBSource.setConfig(mapConfig); // 触发与云端重新协商切片
+});
+</code></pre>
+<hr>
+<h2 id="5-生产实践踩坑与性能调优指南">5. 生产实践踩坑与性能调优指南</h2>
+<h3 id="51-xss-跨站脚本防御与-html-转义">5.1 XSS 跨站脚本防御与 HTML 转义</h3>
+<p><code>Attribution</code> 控件原生支持渲染 HTML 字符串（包括超链接 <code>&lt;a&gt;</code>、商标图标 <code>&lt;img&gt;</code> 等）。如果版权信息来源于不可信的第三方 WMS/WMTS GetCapabilities XML 描述，或者由后端管理系统动态配置下发，攻击者可能通过构造恶意的 <code>&lt;script&gt;</code> 或 <code>&lt;img onerror=...&gt;</code> 进行 XSS 攻击。
+<strong>防御准则</strong>：</p>
+<ul>
+<li>在向 <code>attributions</code> 属性传值前，必须经过 DOMPurify 或白名单过滤，只允许包含 <code>target=&quot;_blank&quot;</code> 的安全锚点标签；</li>
+<li>禁止向其中注入未经转义的动态查询参数。</li>
+</ul>
+<h3 id="52-默认控件重复注入的幽灵双版权问题">5.2 默认控件重复注入的“幽灵双版权”问题</h3>
+<p>新手最容易犯的错误是在添加自定义 Attribution 控件时，忘记在 <code>defaultControls</code> 中关闭默认控件：</p>
+<pre><code class="language-javascript">// ❌ 错误做法：导致地图右下角同时挂载两个版权控件，样式重叠错乱
+controls: defaultControls().extend([myAttribution])
+
+// ✅ 正确做法：显式关闭默认项，由自定义实例接管
+controls: defaultControls({ attribution: false }).extend([myAttribution])
+</code></pre>
+<h3 id="53-匿名地图（anonymous-maps）的-sql-防注入与配额限制">5.3 匿名地图（Anonymous Maps）的 SQL 防注入与配额限制</h3>
+<p>在前端拼接 CartoDB SQL 查询时：</p>
+<ul>
+<li><strong>参数强类型校验</strong>：必须通过 <code>Number(n)</code> 或 <code>parseInt(n, 10)</code> 进行数字转换，严禁直接拼接未经校验的用户输入字符串；</li>
+<li><strong>只读权限约束</strong>：云端数据库租户空间必须设定严格的只读角色（<code>SELECT</code> 权限），禁用任何 <code>UPDATE</code>、<code>DELETE</code> 或 DDL 操作；</li>
+<li><strong>切片缓存控制</strong>：利用 <code>TileLayer</code> 的 <code>transition: 200</code> 配置，确保在 <code>setConfig()</code> 热重载期间新旧切片平滑过渡，避免白屏闪烁。</li>
+</ul>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

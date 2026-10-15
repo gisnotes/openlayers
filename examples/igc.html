@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>IGC Data</title>
+    <title>IGC Data / IGC 4D时空飞行航迹与时序动态回放 (IGC Glider Tracks &amp; 4D Scrubbing)</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">IGC Data</h4>
+        <h4 id="title">IGC Data / IGC 4D时空飞行航迹与时序动态回放 (IGC Glider Tracks &amp; 4D Scrubbing)</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,7 +74,7 @@
               data-bs-target="#tag-example-list"
               data-title="complex-geometry"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./igc.html&quot;&gt;IGC Data&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./igc.html&quot;&gt;IGC Data / IGC 4D时空飞行航迹与时序动态回放 (IGC Glider Tracks &amp;amp; 4D Scrubbing)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -88,7 +88,7 @@
               data-bs-target="#tag-example-list"
               data-title="closest-feature"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./igc.html&quot;&gt;IGC Data&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./igc.html&quot;&gt;IGC Data / IGC 4D时空飞行航迹与时序动态回放 (IGC Glider Tracks &amp;amp; 4D Scrubbing)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -104,7 +104,7 @@
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop.html&quot;&gt;Drag-and-Drop / 拖拽加载文件&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector / 矢量图像图层拖拽加载&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./igc.html&quot;&gt;IGC Data&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./igc.html&quot;&gt;IGC Data / IGC 4D时空飞行航迹与时序动态回放 (IGC Glider Tracks &amp;amp; 4D Scrubbing)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -118,7 +118,7 @@
               data-bs-target="#tag-example-list"
               data-title="opencyclemap"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./igc.html&quot;&gt;IGC Data&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./igc.html&quot;&gt;IGC Data / IGC 4D时空飞行航迹与时序动态回放 (IGC Glider Tracks &amp;amp; 4D Scrubbing)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -147,8 +147,40 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of tracks recorded from multiple paraglider flights on the same day, read from an IGC file.</p>
-        <div id="docs"><p>The five tracks contain a total of 49,707 unique coordinates. Zoom in to see more detail. The background layer is from <a href="https://www.opencyclemap.org/">OpenCycleMap</a>.</p>
+        <p id="shortdesc">Example of tracks recorded from multiple paraglider flights on the same day, read from an IGC file. / 演示使用 ol/format/IGC 加载多架滑翔伞飞行航迹（近5万个时空坐标点），实现时间轴动态拖拽回放与最近几何要素吸附（Closest Feature）。</p>
+        <div id="docs"><p>
+  The five tracks contain a total of 49,707 unique coordinates. Zoom in to see more detail. The background layer is from <a href="https://www.opencyclemap.org/">OpenCycleMap</a>.
+</p> <p>
+  此示例演示了如何通过 <code>ol/format/IGC</code> 数据格式加载国际滑翔委员会（IGC）记录的多架滑翔伞飞行轨迹。
+  这 5 条复杂航迹共包含 49,707 个带有时间戳（$M$ 维度）的三维空间坐标点。
+  拖动下方的<strong>时间滑块</strong>，可在地图上动态回放所有飞行器在对应历史时刻的实时空中位置；
+  鼠标在地图上滑动时，系统会自动执行<strong>空间垂足吸附计算（Closest Point）</strong>，动态绘制红色吸附辅助线并反查该轨迹点的精确飞越时间。
+</p> <hr> <h3>📚 学习记录与技术深度解读</h3>
+<h4>1. 核心架构与设计思想</h4> <ul>
+  <li><strong>IGC 航空运动记录格式与 XYM 四维时空几何：</strong>
+    IGC 格式是国际航空联合会专用于记录无动力滑翔机、滑翔伞越野飞行的加密防作弊数据规范。
+    <code>ol/format/IGC</code> 在解析时将地理经纬度转化为投影坐标，并将 GPS 记录时刻（秒级时间戳）无损存入第三个维度（$M$ 维度），构建出高阶的 <code>[x, y, m]</code> 连续时空轨迹几何体。
+  </li>
+  <li><strong>时空轨迹插值回放算法（<code>getCoordinateAtM</code>）：</strong>
+    实现平滑轨迹回放通常需要大量的插值计算。OpenLayers 的 <code>LineString</code> 内置了高效的 <code>geometry.getCoordinateAtM(m, extrapolate)</code> 算法：
+    给定任意时间戳 $m$，底层通过二分查找快速定位前后相邻的两个离散 GPS 记录点，并根据时间差完成高精度的线性插值运算，返回该瞬间的精确平面坐标 <code>[x, y]</code>，无需手动遍历数十万数组。
+  </li>
+  <li><strong>空间最近要素吸附与即时矢量渲染（Immediate VectorContext）：</strong>
+    - <code>vectorSource.getClosestFeatureToCoordinate(coord)</code>：利用空间 R 树拓扑索引，在毫秒级时间内定位离鼠标光标最近的飞行航线；
+    - <code>geometry.getClosestPoint(coord)</code>：计算鼠标到空间多段线的正交垂足点，并取出该点携带的插值时间；
+    - 在图层的 <code>postrender</code> 事件中调用 <code>getVectorContext(evt).drawGeometry()</code> 直接在当前绘制上下文画出红色引导线，彻底避免向 VectorSource 中反复执行 <code>addFeature</code> / <code>removeFeature</code> 引起的重排抖动与垃圾回收（GC）丢帧。
+  </li>
+</ul>
+<h4>2. 源码与关键 API 剖析</h4> <ul>
+  <li><code>new IGC().readFeatures(data, { featureProjection: 'EPSG:3857' })</code>：批量解析 IGC 纯文本。</li>
+  <li><code>geometry.getFirstCoordinate()[2]</code> 与 <code>getLastCoordinate()[2]</code>：提取飞行起止全局时间区间。</li>
+  <li><code>geometry.getCoordinateAtM(m, true)</code>：基于时间戳插值定位轨迹点。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优</h4> <ul>
+  <li><strong>超大规模线段的样式缓存（Style Cache）：</strong>
+    近 5 万个顶点在渲染时会产生高昂计算。示例中设计了 <code>styleCache[color]</code> 字典，确保相同颜色的飞行员轨迹共享同一个 <code>Style</code> 单例对象，极大降低了显存与内存分配压力。
+  </li>
+</ul>
 </div>
       </div>
 
@@ -171,6 +203,8 @@ import Fill from &#x27;ol/style/Fill.js&#x27;;
 import Stroke from &#x27;ol/style/Stroke.js&#x27;;
 import Style from &#x27;ol/style/Style.js&#x27;;
 
+// Distinct line colors assigned to each paraglider pilot
+// 为每位滑翔伞飞行员分配的专属半透明轨迹线条颜色
 const colors &#x3D; {
   &#x27;Clement Latour&#x27;: &#x27;rgba(0, 0, 255, 0.7)&#x27;,
   &#x27;Damien de Baesnt&#x27;: &#x27;rgba(0, 215, 255, 0.7)&#x27;,
@@ -179,6 +213,8 @@ const colors &#x3D; {
   &#x27;Ulrich Prinz&#x27;: &#x27;rgba(0, 215, 255, 0.7)&#x27;,
 };
 
+// Style cache to ensure track styles are reused as singletons
+// 样式单例缓存字典，避免近 5 万个顶点重复创建 Style 实例造成内存抖动
 const styleCache &#x3D; {};
 const styleFunction &#x3D; function (feature) {
   const color &#x3D; colors[feature.get(&#x27;PLT&#x27;)];
@@ -195,8 +231,12 @@ const styleFunction &#x3D; function (feature) {
   return style;
 };
 
+// Vector source for paraglider track features
+// 存储所有滑翔伞飞行轨迹要素的矢量数据源
 const vectorSource &#x3D; new VectorSource();
 
+// IGC flight recording files for five pilots
+// 5 位飞行员同一天的 IGC 航迹原始数据文件列表
 const igcUrls &#x3D; [
   &#x27;data/igc/Clement-Latour.igc&#x27;,
   &#x27;data/igc/Damien-de-Baenst.igc&#x27;,
@@ -205,6 +245,8 @@ const igcUrls &#x3D; [
   &#x27;data/igc/Ulrich-Prinz.igc&#x27;,
 ];
 
+// Helper function to fetch text data via XMLHttpRequest
+// 辅助函数：通过原生 XMLHttpRequest 异步拉取纯文本文件
 function get(url, callback) {
   const client &#x3D; new XMLHttpRequest();
   client.open(&#x27;GET&#x27;, url);
@@ -214,6 +256,8 @@ function get(url, callback) {
   client.send();
 }
 
+// Parse IGC flight tracks and add features into the vector source
+// 实例化 IGC 格式解析器，将三维经纬度+时间戳文本解析为 Web 墨卡托要素
 const igcFormat &#x3D; new IGC();
 for (let i &#x3D; 0; i &lt; igcUrls.length; ++i) {
   get(igcUrls[i], function (data) {
@@ -224,11 +268,16 @@ for (let i &#x3D; 0; i &lt; igcUrls.length; ++i) {
   });
 }
 
+// Object tracking global start time, stop time, and total flight duration (in seconds)
+// 全局时空状态对象：记录所有航线中最早起飞时刻、最晚降落时刻与总时间跨度
 const time &#x3D; {
   start: Infinity,
   stop: -Infinity,
   duration: 0,
 };
+
+// Update global time bounds on every feature added
+// 监听要素添加事件，从坐标第三维度 (M) 动态提取起止时间戳
 vectorSource.on(&#x27;addfeature&#x27;, function (event) {
   const geometry &#x3D; event.feature.getGeometry();
   time.start &#x3D; Math.min(time.start, geometry.getFirstCoordinate()[2]);
@@ -236,6 +285,8 @@ vectorSource.on(&#x27;addfeature&#x27;, function (event) {
   time.duration &#x3D; time.stop - time.start;
 });
 
+// Vector layer applying the pilot style function
+// 绑定飞行员轨迹样式函数的矢量图层
 const vectorLayer &#x3D; new VectorLayer({
   source: vectorSource,
   style: styleFunction,
@@ -263,8 +314,13 @@ const map &#x3D; new Map({
   }),
 });
 
+// Geometric elements for closest point and snap connector line
+// 用于表示最近垂足点和吸附连线的动态几何对象
 let point &#x3D; null;
 let line &#x3D; null;
+
+// Find closest feature and calculate orthogonal projection point on track
+// 计算离鼠标最近的飞行轨迹，并求取线段上的空间正交垂足点与经过时刻
 const displaySnap &#x3D; function (coordinate) {
   const closestFeature &#x3D; vectorSource.getClosestFeatureToCoordinate(coordinate);
   const info &#x3D; document.getElementById(&#x27;info&#x27;);
@@ -280,6 +336,8 @@ const displaySnap &#x3D; function (coordinate) {
     } else {
       point.setCoordinates(closestPoint);
     }
+    // Extract timestamp from the 3rd coordinate dimension (M) and format as UTC date
+    // 从坐标第三维度 (M) 提取经过秒数并转换为格式化的 UTC 时间文本
     const date &#x3D; new Date(closestPoint[2] * 1000);
     info.innerHTML &#x3D;
       closestFeature.get(&#x27;PLT&#x27;) + &#x27; (&#x27; + date.toUTCString() + &#x27;)&#x27;;
@@ -293,6 +351,8 @@ const displaySnap &#x3D; function (coordinate) {
   map.render();
 };
 
+// Pointermove listener for continuous snap line updating
+// 鼠标悬停漫游事件：动态更新吸附垂足与引导线
 map.on(&#x27;pointermove&#x27;, function (evt) {
   if (evt.dragging) {
     return;
@@ -301,10 +361,14 @@ map.on(&#x27;pointermove&#x27;, function (evt) {
   displaySnap(coordinate);
 });
 
+// Click event listener
+// 点击事件：吸附至点击坐标
 map.on(&#x27;click&#x27;, function (evt) {
   displaySnap(evt.coordinate);
 });
 
+// Style for the temporary snap target and dashed connector line
+// 临时吸附引导线与垂足靶心的红色样式
 const stroke &#x3D; new Stroke({
   color: &#x27;rgba(255,0,0,0.9)&#x27;,
   width: 1,
@@ -317,6 +381,9 @@ const style &#x3D; new Style({
     stroke: stroke,
   }),
 });
+
+// Immediate rendering on vector layer postrender: draws snap point and line directly onto canvas
+// 在矢量图层 postrender 周期中利用 VectorContext 即时绘制吸附图形，避免频繁修改数据源
 vectorLayer.on(&#x27;postrender&#x27;, function (evt) {
   const vectorContext &#x3D; getVectorContext(evt);
   vectorContext.setStyle(style);
@@ -328,6 +395,8 @@ vectorLayer.on(&#x27;postrender&#x27;, function (evt) {
   }
 });
 
+// Unmanaged overlay layer for time-scrubbed glider position markers
+// 用于展示时间滑块拖拽时各滑翔伞当前位置标记的浮层
 const featureOverlay &#x3D; new VectorLayer({
   source: new VectorSource(),
   map: map,
@@ -341,12 +410,16 @@ const featureOverlay &#x3D; new VectorLayer({
   }),
 });
 
+// Time slider control: interpolate paraglider coordinates along 4D tracks using getCoordinateAtM
+// 时间轴滑块控制：通过 getCoordinateAtM 在四维时空航迹上高效二分插值计算各滑翔伞位置
 const control &#x3D; document.getElementById(&#x27;time&#x27;);
 control.addEventListener(&#x27;input&#x27;, function () {
   const value &#x3D; parseInt(control.value, 10) / 100;
   const m &#x3D; time.start + time.duration * value;
   vectorSource.forEachFeature(function (feature) {
     const geometry &#x3D; feature.getGeometry();
+    // Interpolate coordinate at time M
+    // 依据时刻 M 插值计算当前经纬度坐标
     const coordinate &#x3D; geometry.getCoordinateAtM(m, true);
     let highlight &#x3D; feature.get(&#x27;highlight&#x27;);
     if (highlight &#x3D;&#x3D;&#x3D; undefined) {
@@ -370,7 +443,7 @@ control.addEventListener(&#x27;input&#x27;, function () {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;IGC Data&lt;/title&gt;
+    &lt;title&gt;IGC Data / IGC 4D时空飞行航迹与时序动态回放 (IGC Glider Tracks &amp; 4D Scrubbing)&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

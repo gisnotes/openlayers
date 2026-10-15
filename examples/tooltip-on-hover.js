@@ -21,6 +21,12 @@ var map = new Map({
 });
 var info = document.getElementById("info");
 var currentFeature;
+/**
+* Display feature info at pixel position
+* 在指定像素位置显示要素信息
+* @param {import('../src/ol/pixel.js').Pixel} pixel Pixel coordinates. / 像素坐标。
+* @param {EventTarget} target Event target element. / 事件目标元素。
+*/
 var displayFeatureInfo = function(pixel, target) {
 	const feature = target.closest(".ol-control") ? void 0 : map.forEachFeatureAtPixel(pixel, function(feature) {
 		return feature;

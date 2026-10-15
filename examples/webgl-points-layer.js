@@ -229,7 +229,7 @@ function onSelectChange() {
 	editor.value = JSON.stringify(newLiteralStyle, null, 2);
 	try {
 		refreshLayer(newLiteralStyle);
-		setStyleStatus();
+		setStyleStatus(null);
 	} catch (e) {
 		setStyleStatus(e.message);
 	}

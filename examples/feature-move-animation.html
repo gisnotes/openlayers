@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Marker Animation</title>
+    <title>Marker Animation / 折线轨迹沿线运动与车辆巡航动效</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Marker Animation</h4>
+        <h4 id="title">Marker Animation / 折线轨迹沿线运动与车辆巡航动效</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,10 +75,10 @@
               data-title="animation"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animation.html&quot;&gt;View Animation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation / 要素雷达光晕扩散动画（postrender 与 VectorContext）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation / 大圆航线生成与全球航班飞行轨迹动效&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animation.html&quot;&gt;View Animation / 视图动画（平移、缩放、旋转与飞行巡检）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >5</a>
@@ -92,18 +92,18 @@
               data-bs-target="#tag-example-list"
               data-title="feature"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service / ArcGIS REST 矢量要素服务瓦片化动态加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./box-selection.html&quot;&gt;Box Selection / 框选要素&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-circle-render.html&quot;&gt;Custom Circle Render&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-hit-detection-renderer.html&quot;&gt;Custom Hit Detection Render&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation / 要素雷达光晕扩散动画（postrender 与 VectorContext）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-circle-render.html&quot;&gt;Custom Circle Render / 自定义圆渲染（Canvas 径向渐变）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-hit-detection-renderer.html&quot;&gt;Custom Hit Detection Render / 自定义命中检测渲染器&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-interactions.html&quot;&gt;Custom Interactions / 自定义交互开发&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service / 可编辑的 ArcGIS REST 要素服务&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering features with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering Features with WebGL / WebGL 海量要素动态过滤与着色器动画&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation / 大圆航线生成与全球航班飞行轨迹动效&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./translate-features.html&quot;&gt;Translate Features / 平移移动要素&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL points layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL Points Layer / WebGL 点要素高性能图层与声明式着色器样式编辑器&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >12</a>
@@ -117,7 +117,7 @@
               data-bs-target="#tag-example-list"
               data-title="postrender"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -131,7 +131,7 @@
               data-bs-target="#tag-example-list"
               data-title="polyline"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -146,31 +146,31 @@
               data-title="maptiler"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom / 视图缩放级别区间约束（minZoom 与 maxZoom）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop.html&quot;&gt;Drag-and-Drop / 拖拽加载文件&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector / 矢量图像图层拖拽加载&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen.html&quot;&gt;Full Screen Control&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./gpx.html&quot;&gt;GPX Data&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-filter.html&quot;&gt;Image Filters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml.html&quot;&gt;KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-spy.html&quot;&gt;Layer Spy&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./magnify.html&quot;&gt;Magnify&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen.html&quot;&gt;Full Screen Control / 全屏显示控件 (FullScreen)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom / 全屏联动拖拽旋转与复合缩放&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./gpx.html&quot;&gt;GPX Data / GPX 户外轨迹数据解析与多几何类型着色 (GPX Data)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-filter.html&quot;&gt;Image Filters / 图像滤镜&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml.html&quot;&gt;KML / KML 矢量图层加载与要素拾取 (KML Data)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-spy.html&quot;&gt;Layer Spy / 图层探照灯（透镜探查）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe / 图层卷帘对比&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./magnify.html&quot;&gt;Magnify / 局部放大镜（像素插值放大）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./side-by-side.html&quot;&gt;Shared Views&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing / 种子点区域生长与交互式影像分割&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection by Code / 坐标系搜索与栅格动态重投影 (Reprojection by Code)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./side-by-side.html&quot;&gt;Shared Views / 共享视图多屏联动 (Shared Views)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels / 沿线道路注记（线型文本跟随）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-style.html&quot;&gt;Vector tiles created from a Mapbox Style object / 使用 Mapbox 样式对象创建矢量切片地图&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-4326.html&quot;&gt;Vector tiles in EPSG:4326&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-retina.html&quot;&gt;XYZ Retina Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-4326.html&quot;&gt;Vector tiles in EPSG:4326 / EPSG:4326 坐标系矢量切片&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature / WFS 空间矢量要素过滤查询与叠加&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS / GeoServer WFS 视口 BBOX 动态要素加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates / 地理坐标系下的 WFS 瓦片化加载与 useGeographic&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-retina.html&quot;&gt;XYZ Retina Tiles / XYZ 视网膜高清切片 (@2x)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >26</a>
@@ -191,10 +191,10 @@
         </div>
         <div id="map" class="map"></div>
 <label for="speed">
-  speed:&nbsp;
+  speed / 速度:&nbsp;
   <input id="speed" type="range" min="10" max="999" step="10" value="60">
 </label>
-<button id="start-animation">Start Animation</button>
+<button id="start-animation">Start Animation / 开始动画</button>
 
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
           <input id="codesandbox-params" type="hidden" name="parameters">
@@ -202,8 +202,36 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Demonstrates how to move a feature along a line.</p>
-        <div id="docs"><p>This example shows how to use <b>postrender</b> events and a <b>vector context</b> to animate a marker feature along a line. In this example an encoded polyline is being used.</p>
+        <p id="shortdesc">Demonstrates how to move a feature along a line. / 演示如何使用 postrender 与 VectorContext 实现标记要素沿 Polyline 路径平滑移动与倍速调节。</p>
+        <div id="docs"><h2>This example shows how to use <b>postrender</b> events and a <b>vector context</b> to animate a marker feature along a line. In this example an encoded polyline is being used.
+本示例展示如何利用 <b>postrender</b> 渲染完成事件与 <b>VectorContext</b> 矢量管线，驱动点标记沿着高压缩编码折线（Polyline）路径进行平滑连续的动态巡航。支持通过滑块实时调节运动速度倍率，且在动画进行期间将要素几何临时剥离出数据源，利用即时帧上下文绘制，实现极高帧率下的低 CPU 开销渲染。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构原理 (Core Architecture) 在智慧交通、车辆监控与物流路径回放系统中，车辆需要沿着数千个转折点的复杂线路行进： - <strong>路径插值与高精度距离比例 (<code>route.getCoordinateAt(fraction)</code>)</strong>：OpenLayers 的 <code>LineString.prototype.getCoordinateAt(fraction)</code> 提供了沿折线全长按百分比（$0.0 \sim 1.0$）线性插值空间坐标的能力，内部自动进行各分段欧几里得距离累加，避免了手动逐段解算复杂向量插值的繁琐。 - <strong>时间增量积分与往返巡航模运算</strong>：</h4>
+<p>  $$\text{distance} = \left(\text{distance} + \frac{\text{speed} \times \Delta t}{10^6}\right) \bmod 2$$
+  通过对 2 取模，巧妙实现 $0 \to 1$（正向出发）与 $1 \to 2$（逆向折返，对应实际比例 $2 - \text{distance}$）的无缝连续往复巡航。</p>
+<ul>
+<li><strong>“临时隐藏 + 帧代理”黄金性能范式</strong>：启动动画时执行 <code>geoMarker.setGeometry(null)</code>，将要素实体从数据源空间索引中临时卸载；在每帧 <code>postrender</code> 中仅通过 <code>vectorContext.drawGeometry(position)</code> 将临时点绘制在视口上。停止时再通过 <code>geoMarker.setGeometry(position)</code> 还原。这彻底消除了每帧频繁更新 Feature 几何引发的数据源 R-Tree 空间索引重构开销！</li>
+</ul>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript function moveFeature(event) {</h4>
+<p>  const speed = Number(speedInput.value);
+  const time = event.frameState.time;
+  const elapsedTime = time - lastTime;
+  // 依据真实帧耗时增量累加位移，杜绝掉帧跳跃
+  distance = (distance + (speed * elapsedTime) / 1e6) % 2;
+  lastTime = time;</p>
+<p>  // 获取当前折返位置的空间投影坐标
+  const currentCoordinate = route.getCoordinateAt(
+    distance &gt; 1 ? 2 - distance : distance,
+  );
+  position.setCoordinates(currentCoordinate);</p>
+<p>  // 利用帧上下文即时绘制
+  const vectorContext = getVectorContext(event);
+  vectorContext.setStyle(styles.geoMarker);
+  vectorContext.drawGeometry(position);</p>
+<p>  // 持续驱动下一帧重绘
+  map.render();
+} ```</p>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>车辆转向角（Heading Rotation）同步</strong>：实际车联网应用中，不仅需要更新坐标，还需要根据相邻两点差值向量计算航向角：$\theta = \operatorname{atan2}(\Delta x, \Delta y)$，并将车辆图标（Icon）的 <code>rotation</code> 设为 $\theta$，使车辆在拐弯时自然顺滑转向。 - <strong>基于帧时间增量（$\Delta t$）计算</strong>：严禁在动画中基于固定步长叠加坐标，必须使用 <code>event.frameState.time - lastTime</code>。当用户切换标签页或设备卡顿导致帧率波动时，基于真实时间差的积分能保证位移物理速度始终恒定。</h4>
 </div>
       </div>
 
@@ -253,10 +281,13 @@ const map &#x3D; new Map({
 
 // The polyline string is read from a JSON similar to those returned
 // by directions APIs such as Openrouteservice and Mapbox.
+// 从类似 Openrouteservice 或 Mapbox 路径规划 API 返回的 JSON 中读取折线编码字符串
 fetch(&#x27;data/polyline/route.json&#x27;).then(function (response) {
   response.json().then(function (result) {
     const polyline &#x3D; result.routes[0].geometry;
 
+    // Decode polyline to geometry (factor 1e6 for 6-decimal precision)
+    // 解码 Google/Mapbox 算法压缩的折线几何
     const route &#x3D; new Polyline({
       factor: 1e6,
     }).readGeometry(polyline, {
@@ -324,10 +355,17 @@ fetch(&#x27;data/polyline/route.json&#x27;).then(function (response) {
     let distance &#x3D; 0;
     let lastTime;
 
+    /**
+     * Postrender animation loop: interpolate position and draw with VectorContext.
+     * 渲染后帧回调：基于时间差积分计算折线插值坐标，使用 VectorContext 瞬态绘制。
+     * @param {import(&#x27;ol/render/Event.js&#x27;).default} event Render event.
+     */
     function moveFeature(event) {
       const speed &#x3D; Number(speedInput.value);
       const time &#x3D; event.frameState.time;
       const elapsedTime &#x3D; time - lastTime;
+      // Modulo 2 allows round-trip movement (0-&gt;1 forward, 1-&gt;2 backward)
+      // 对 2 取模实现沿线往返往复运动（0~1 为正向，1~2 为反向折返）
       distance &#x3D; (distance + (speed * elapsedTime) / 1e6) % 2;
       lastTime &#x3D; time;
 
@@ -339,23 +377,34 @@ fetch(&#x27;data/polyline/route.json&#x27;).then(function (response) {
       vectorContext.setStyle(styles.geoMarker);
       vectorContext.drawGeometry(position);
       // tell OpenLayers to continue the postrender animation
+      // 请求下一帧重绘继续推进动画
       map.render();
     }
 
+    /**
+     * Start animation: detach geometry from source and subscribe to postrender.
+     * 启动动画：临时将 geoMarker 几何置空以优化性能，挂载 postrender 监听。
+     */
     function startAnimation() {
       animating &#x3D; true;
       lastTime &#x3D; Date.now();
-      startButton.textContent &#x3D; &#x27;Stop Animation&#x27;;
+      startButton.textContent &#x3D; &#x27;Stop Animation / 停止动画&#x27;;
       vectorLayer.on(&#x27;postrender&#x27;, moveFeature);
       // hide geoMarker and trigger map render through change event
+      // 临时隐藏数据源中的要素，避免每帧触发 R-Tree 空间索引重构
       geoMarker.setGeometry(null);
     }
 
+    /**
+     * Stop animation: restore geometry to source and unsubscribe from postrender.
+     * 停止动画：将最终位置赋回 geoMarker 并注销 postrender 监听。
+     */
     function stopAnimation() {
       animating &#x3D; false;
-      startButton.textContent &#x3D; &#x27;Start Animation&#x27;;
+      startButton.textContent &#x3D; &#x27;Start Animation / 开始动画&#x27;;
 
       // Keep marker at current animation position
+      // 在当前动画停止位置还原要素几何
       geoMarker.setGeometry(position);
       vectorLayer.un(&#x27;postrender&#x27;, moveFeature);
     }
@@ -380,7 +429,7 @@ fetch(&#x27;data/polyline/route.json&#x27;).then(function (response) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Marker Animation&lt;/title&gt;
+    &lt;title&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -392,10 +441,10 @@ fetch(&#x27;data/polyline/route.json&#x27;).then(function (response) {
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
     &lt;label for&#x3D;&quot;speed&quot;&gt;
-      speed:&amp;nbsp;
+      speed / 速度:&amp;nbsp;
       &lt;input id&#x3D;&quot;speed&quot; type&#x3D;&quot;range&quot; min&#x3D;&quot;10&quot; max&#x3D;&quot;999&quot; step&#x3D;&quot;10&quot; value&#x3D;&quot;60&quot;&gt;
     &lt;/label&gt;
-    &lt;button id&#x3D;&quot;start-animation&quot;&gt;Start Animation&lt;/button&gt;
+    &lt;button id&#x3D;&quot;start-animation&quot;&gt;Start Animation / 开始动画&lt;/button&gt;
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
   &lt;/body&gt;

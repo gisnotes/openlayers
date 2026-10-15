@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Tile Load Events</title>
+    <title>Tile Load Events / 瓦片加载事件与精细进度监控</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Tile Load Events</h4>
+        <h4 id="title">Tile Load Events / 瓦片加载事件与精细进度监控</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,16 +75,16 @@
               data-bs-target="#tag-example-list"
               data-title="tile"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;Custom Tiled WMS / 自定义投影转换的瓦片 WMS&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap 客户端 WGS84 重投影 (OpenStreetMap Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./tile-load-events.html&quot;&gt;Tile Load Events&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./arcgis-tiled.html&quot;&gt;Tiled ArcGIS MapServer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-tiled.html&quot;&gt;Tiled WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-tiled-wrap-180.html&quot;&gt;Tiled WMS Wrapping&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-tilegrid-512x256.html&quot;&gt;WMS 512x256 Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./tile-load-events.html&quot;&gt;Tile Load Events / 瓦片加载事件与精细进度监控&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./arcgis-tiled.html&quot;&gt;Tiled ArcGIS MapServer / ArcGIS 瓦片化地图服务（TileArcGISRest）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-tiled.html&quot;&gt;Tiled WMS / 瓦片式动态 WMS 服务&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-tiled-wrap-180.html&quot;&gt;Tiled WMS Wrapping / 瓦片式 WMS 跨 180° 经线连续环绕&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-reprojected.html&quot;&gt;Vector tiles reprojected / 矢量切片客户端动态重投影&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates / 地理坐标系下的 WFS 瓦片化加载与 useGeographic&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-tilegrid-512x256.html&quot;&gt;WMS 512x256 Tiles / WMS 512x256 自定义矩形瓦片网格&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-reprojected.html&quot;&gt;矢量切片动态重投影 (Vector tiles reprojected)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;自定义投影转换的瓦片 WMS (Custom Tiled WMS)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >10</a>
@@ -98,9 +98,9 @@
               data-bs-target="#tag-example-list"
               data-title="events"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-load-events.html&quot;&gt;Image Load Events&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./load-events.html&quot;&gt;Loading Spinner&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./tile-load-events.html&quot;&gt;Tile Load Events&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-load-events.html&quot;&gt;Image Load Events / 单张图像加载事件与进度指示&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./load-events.html&quot;&gt;Loading Spinner / 地图加载微动效旋转器&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./tile-load-events.html&quot;&gt;Tile Load Events / 瓦片加载事件与精细进度监控&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -114,14 +114,14 @@
               data-bs-target="#tag-example-list"
               data-title="loading"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service / ArcGIS REST 矢量要素服务瓦片化动态加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service / 可编辑的 ArcGIS REST 要素服务&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-load-events.html&quot;&gt;Image Load Events&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./load-events.html&quot;&gt;Loading Spinner&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./tile-load-events.html&quot;&gt;Tile Load Events&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-load-events.html&quot;&gt;Image Load Events / 单张图像加载事件与进度指示&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./load-events.html&quot;&gt;Loading Spinner / 地图加载微动效旋转器&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./tile-load-events.html&quot;&gt;Tile Load Events / 瓦片加载事件与精细进度监控&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS / GeoServer WFS 视口 BBOX 动态要素加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates / 地理坐标系下的 WFS 瓦片化加载与 useGeographic&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >8</a>
@@ -151,8 +151,47 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example using tile load events.</p>
-        <div id="docs"><p>Image tile sources fire events related to tile loading.  You can listen for <code>tileloadstart</code>, <code>tileloadend</code>, and <code>tileloaderror</code> type events to monitor tile loading progress.  This example registers listeners for these events and renders a tile loading progress bar at the bottom of the map. The progress bar is shown and hidden according to the map&#39;s <code>loadstart</code> and <code>loadend</code> events.</p>
+        <p id="shortdesc">Example using tile load events. / 演示如何监听 ImageTile 瓦片加载生命周期事件并构建高精度的动态加载进度条。</p>
+        <div id="docs"><h2>Image tile sources fire events related to tile loading.  You can listen for <code>tileloadstart</code>, <code>tileloadend</code>, and <code>tileloaderror</code> type events to monitor tile loading progress.  This example registers listeners for these events and renders a tile loading progress bar at the bottom of the map. The progress bar is shown and hidden according to the map&#39;s <code>loadstart</code> and <code>loadend</code> events.
+切片光栅数据源（如 ImageTile、XYZ、TileWMS 等）在网格瓦片拉取时会触发细粒度生命周期事件。你可以通过监听 <code>tileloadstart</code>、<code>tileloadend</code> 以及 <code>tileloaderror</code> 事件，精确量化瓦片请求池的队列状态与下载完成比率。
+本示例在地图视口底部渲染了一个响应式进度条，将各个瓦片的加载推进过程转化为平滑的百分比宽度增长；同时利用地图实例的 <code>loadstart</code> 与 <code>loadend</code> 事件管理进度条的生命周期显隐与复位。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计机制 (Core Architecture &amp; Mechanics) - <strong>瓦片池状态机模型（Tile Pool State Machine）</strong>：</h4>
+<p>  地图在一次漫游缩放中会计算出当前视口需要的若干瓦片索引 <code>(z, x, y)</code>。OpenLayers 内部通过 <code>TileQueue</code> 进行优先级调度（按距离视口中心的距离从近到远排序）：</p>
+<ul>
+<li>队列触发网络请求时，数据源抛出 <code>tileloadstart</code>；</li>
+<li>单张瓦片 <code>Image</code> 元素接收到 <code>load</code> 回调并完成纹理上传时，抛出 <code>tileloadend</code>；</li>
+<li>若瓦片返回 404、500 或因网络断开触发 <code>error</code>，抛出 <code>tileloaderror</code>。</li>
+<li><strong>累积比率进度计算法（Cumulative Ratio Progress）</strong>：
+与单张图像的 0/1 状态不同，视口涉及大量瓦片。进度条采用 <code>(loaded / loading) * 100</code> 的动态累积法，当视口持续滚动时，<code>loading</code> 计数动态上扬，<code>loaded</code> 计数平稳追赶，确保进度条能真实反映并发流式加载全貌。</li>
+</ul>
+<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns) - <strong>多事件监听合并与容错闭合</strong>：</h4>
+<pre><code class="language-javascript">source.on(&#39;tileloadstart&#39;, function () {
+  progress.addLoading(); // loading++ 并重绘宽度
+});
+// 使用数组同时捕获成功和失败，保证 loaded 计数器绝对自闭合
+source.on([&#39;tileloadend&#39;, &#39;tileloaderror&#39;], function () {
+  progress.addLoaded();  // loaded++ 并重绘宽度
+});
+</code></pre>
+<p>  严禁只监听 <code>tileloadend</code> 而忽略 <code>tileloaderror</code>，否则一旦发生少量瓦片 404，<code>loaded</code> 将永远小于 <code>loading</code>，导致进度条停滞在 90%+ 且无法复位。</p>
+<ul>
+<li><strong>重置与延迟消隐机制</strong>：<pre><code class="language-javascript">Progress.prototype.hide = function () {
+  const style = this.el.style;
+  setTimeout(function () {
+    style.visibility = &#39;hidden&#39;;
+    style.width = &#39;0px&#39;;
+  }, 250);
+};
+</code></pre>
+延迟 250ms 可使 CSS <code>transition: width 250ms ease</code> 完整跑完最后的满格动画，随即将宽度复位为 0，防止下一次加载时出现反向缩回的视觉瑕疵。</li>
+</ul>
+<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices) - <strong>计数器数值膨胀与归零重置</strong>：</h4>
+<p>  在长时间运行的监控看板或大屏系统中，如果用户持续漫游，<code>loading</code> 和 <code>loaded</code> 计数器会持续单调递增至数万。建议在 <code>loadend</code> 触发且进度条隐藏后，将 <code>this.loading = 0; this.loaded = 0;</code> 彻底复位归零，避免数值精度漂移与潜在逻辑溢出。</p>
+<ul>
+<li><strong>跨瓦片源并发混淆隔离</strong>：
+若地图挂载了多个图层（例如基础底图 + 专题注记 + 业务图斑），建议为每个关键图层单独实例化独立的 Progress 监控，或者在全局状态机中针对每个源计算带权重的综合进度，避免单个迟钝的影像图层拖垮整张地图的交互就绪指示。</li>
+</ul>
 </div>
       </div>
 
@@ -165,8 +204,8 @@ import TileLayer from &#x27;ol/layer/Tile.js&#x27;;
 import ImageTile from &#x27;ol/source/ImageTile.js&#x27;;
 
 /**
- * Renders a progress bar.
- * @param {HTMLElement} el The target element.
+ * Renders a progress bar. / 渲染并管理瓦片加载进度条状态的组件类
+ * @param {HTMLElement} el The target element. / 目标 DOM 容器元素
  * @class
  */
 function Progress(el) {
@@ -176,7 +215,7 @@ function Progress(el) {
 }
 
 /**
- * Increment the count of loading tiles.
+ * Increment the count of loading tiles. / 递增加载中瓦片计数并重算进度
  */
 Progress.prototype.addLoading &#x3D; function () {
   ++this.loading;
@@ -184,7 +223,7 @@ Progress.prototype.addLoading &#x3D; function () {
 };
 
 /**
- * Increment the count of loaded tiles.
+ * Increment the count of loaded tiles. / 递增已完成（成功或失败）瓦片计数并重算进度
  */
 Progress.prototype.addLoaded &#x3D; function () {
   ++this.loaded;
@@ -192,7 +231,7 @@ Progress.prototype.addLoaded &#x3D; function () {
 };
 
 /**
- * Update the progress bar.
+ * Update the progress bar. / 更新进度条 DOM 宽度百分比
  */
 Progress.prototype.update &#x3D; function () {
   const width &#x3D; ((this.loaded / this.loading) * 100).toFixed(1) + &#x27;%&#x27;;
@@ -200,14 +239,14 @@ Progress.prototype.update &#x3D; function () {
 };
 
 /**
- * Show the progress bar.
+ * Show the progress bar. / 显示进度条
  */
 Progress.prototype.show &#x3D; function () {
   this.el.style.visibility &#x3D; &#x27;visible&#x27;;
 };
 
 /**
- * Hide the progress bar.
+ * Hide the progress bar. / 延迟隐藏并重置进度条
  */
 Progress.prototype.hide &#x3D; function () {
   const style &#x3D; this.el.style;
@@ -217,26 +256,33 @@ Progress.prototype.hide &#x3D; function () {
   }, 250);
 };
 
+// Initialize progress bar instance / 实例化进度条组件
 const progress &#x3D; new Progress(document.getElementById(&#x27;progress&#x27;));
 
+// MapTiler key and attributions / MapTiler 密钥与版权信息
 const key &#x3D; &#x27;Get your own API key at https://www.maptiler.com/cloud/&#x27;;
 const attributions &#x3D;
   &#x27;&lt;a href&#x3D;&quot;https://www.maptiler.com/copyright/&quot; target&#x3D;&quot;_blank&quot;&gt;&amp;copy; MapTiler&lt;/a&gt; &#x27; +
   &#x27;&lt;a href&#x3D;&quot;https://www.openstreetmap.org/copyright&quot; target&#x3D;&quot;_blank&quot;&gt;&amp;copy; OpenStreetMap contributors&lt;/a&gt;&#x27;;
 
+// Configure ImageTile source / 配置栅格瓦片数据源
 const source &#x3D; new ImageTile({
   attributions: attributions,
   url: &#x27;https://api.maptiler.com/maps/streets-v2/{z}/{x}/{y}.png?key&#x3D;&#x27; + key,
   tileSize: 512,
 });
 
+// Listen for tile load start / 监听单张瓦片发起请求事件
 source.on(&#x27;tileloadstart&#x27;, function () {
   progress.addLoading();
 });
+
+// Listen for tile load end or error / 监听单张瓦片加载完成或出错事件
 source.on([&#x27;tileloadend&#x27;, &#x27;tileloaderror&#x27;], function () {
   progress.addLoaded();
 });
 
+// Initialize map instance / 初始化地图实例
 const map &#x3D; new Map({
   layers: [new TileLayer({source: source})],
   target: &#x27;map&#x27;,
@@ -246,9 +292,12 @@ const map &#x3D; new Map({
   }),
 });
 
+// Show progress bar on global map load start / 地图开始加载时展示进度条
 map.on(&#x27;loadstart&#x27;, function () {
   progress.show();
 });
+
+// Hide progress bar on global map load completion / 地图全部加载完成时隐藏进度条
 map.on(&#x27;loadend&#x27;, function () {
   progress.hide();
 });
@@ -263,7 +312,7 @@ map.on(&#x27;loadend&#x27;, function () {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Tile Load Events&lt;/title&gt;
+    &lt;title&gt;Tile Load Events / 瓦片加载事件与精细进度监控&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

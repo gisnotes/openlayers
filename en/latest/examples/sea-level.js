@@ -1,5 +1,12 @@
 import { Dr as Map, Ni as View, Vn as ImageLayer, X as RasterSource, ha as fromLonLat, kn as ImageTileSource, yr as TileLayer } from "./common.js";
 //#region examples/sea-level.js
+/**
+* Flood operation decoding elevation and coloring pixels below water level.
+* 解码像素高程并将低于设定水位的陆地区域染成水体蓝色的泛洪运算函数
+* @param {Array<Array<number>>} pixels Input pixel arrays / 输入像素通道数组
+* @param {Object} data Parameters from beforeoperations / 外部传入参数对象
+* @return {Array<number>} Output pixel / 运算输出的像素
+*/
 function flood(pixels, data) {
 	const pixel = pixels[0];
 	if (pixel[3]) if (-1e4 + (pixel[0] * 256 * 256 + pixel[1] * 256 + pixel[2]) * .1 <= data.level) {
@@ -59,6 +66,10 @@ raster.on("beforeoperations", function(event) {
 });
 var locations = document.getElementsByClassName("location");
 for (let i = 0, ii = locations.length; i < ii; ++i) locations[i].addEventListener("click", relocate);
+/**
+* Relocate map view to selected city. / 将地图视角平移缩放至目标城市
+* @param {Event} event Click event / 点击事件
+*/
 function relocate(event) {
 	const data = event.target.dataset;
 	const view = map.getView();

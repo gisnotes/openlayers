@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-鹰眼微缩地图（overviewmap）与导航控制体系实战架构指南">OpenLayers 鹰眼微缩地图（OverviewMap）与导航控制体系实战架构指南</h1>
+<blockquote>
+<p>在现代 WebGIS 应用程序中，用户需要清晰的宏观空间定位、敏捷的视口复位手段以及实时的坐标反馈。<strong>鹰眼微缩地图（OverviewMap）</strong>、<strong>全图范围复位（ZoomToExtent）</strong> 以及 <strong>鼠标位置坐标探针（MousePosition）</strong> 构成了空间导航控制体系的核心三角。</p>
+<p>OpenLayers 拥有优雅解耦的 <code>ol/control/Control</code> 抽象基类，支持内部容器渲染与外部 DOM 节点托管（External Target Mounting），并允许微缩地图与主地图实现深度的双向视图联动。本文基于 4 个核心官方示例（<code>overviewmap.html</code>、<code>overviewmap-custom.html</code>、<code>navigation-controls.html</code>、<code>mouse-position.html</code>），全面解构导航控件的底层运行机制、数据流与生产最佳实践。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：openlayers-控件体系设计哲学">1. 架构总览：OpenLayers 控件体系设计哲学</h2>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph HostPage [主页面布局 (Page DOM)]
+        ExternalStatus[&quot;底部外部状态栏&lt;br/&gt;#mouse-position&quot;]
+        MapContainer[&quot;地图容器&lt;br/&gt;#map (.ol-viewport)&quot;]
+    end
+
+    subgraph InternalControls [内置控件容器 .ol-overlaycontainer-stopevent]
+        ZoomCtrl[&quot;ol/control/Zoom&lt;br/&gt;(放大/缩小)&quot;]
+        ZoomExtentCtrl[&quot;ol/control/ZoomToExtent&lt;br/&gt;(苏黎世湖区范围复位)&quot;]
+        OverviewCtrl[&quot;ol/control/OverviewMap&lt;br/&gt;(独立微缩子地图)&quot;]
+    end
+
+    subgraph DualMapSync [双向空间联动管道]
+        MainView[&quot;主地图 View&lt;br/&gt;(center, resolution, rotation)&quot;]
+        SubMap[&quot;鹰眼内部无头 Map&lt;br/&gt;(绘制红框指示器 / 视角同步)&quot;]
+    end
+
+    MapContainer --&gt; InternalControls
+    ExternalStatus &lt;--&gt;|target: document.getElementById| MousePositionCtrl[&quot;ol/control/MousePosition&lt;br/&gt;(坐标格式化与重投影)&quot;]
+
+    ZoomCtrl &amp; ZoomExtentCtrl --&gt;|驱动| MainView
+    MainView &lt;--&gt;|事件监听与矩阵投影| DualMapSync
+    DualMapSync --&gt; OverviewCtrl
+</code></pre>
+<h3 id="11-四大导航控件核心特征对比">1.1 四大导航控件核心特征对比</h3>
+<table>
+<thead>
+<tr>
+<th align="left">控件类型</th>
+<th align="left">对应核心类</th>
+<th align="left">挂载宿主</th>
+<th align="left">核心功能</th>
+<th align="left">生产建议</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>基础鹰眼</strong></td>
+<td align="left"><code>ol/control/OverviewMap</code></td>
+<td align="left">视口内置浮层（右下角）</td>
+<td align="left">显示全局微缩底图与当前视野包围盒红框</td>
+<td align="left">共享数据源（Source）以复用切片缓存</td>
+</tr>
+<tr>
+<td align="left"><strong>高级定制鹰眼</strong></td>
+<td align="left"><code>ol/control/OverviewMap</code></td>
+<td align="left">视口内置浮层（自定义 CSS）</td>
+<td align="left">支持 <code>rotateWithView</code> 视角同步与异构高精底图</td>
+<td align="left">适合导航与带倾角漫游场景</td>
+</tr>
+<tr>
+<td align="left"><strong>范围导航</strong></td>
+<td align="left"><code>ol/control/ZoomToExtent</code></td>
+<td align="left">视口内置缩放工具栏</td>
+<td align="left">一键快速平滑定位到核心业务边界（Extent）</td>
+<td align="left">动态结合 <code>vectorSource.getExtent()</code></td>
+</tr>
+<tr>
+<td align="left"><strong>坐标探测</strong></td>
+<td align="left"><code>ol/control/MousePosition</code></td>
+<td align="left"><strong>外部独立 DOM</strong> / 内置</td>
+<td align="left">随鼠标光标移动实时输出经纬度与投影坐标</td>
+<td align="left">放置在系统页脚状态栏，保持极简</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-鹰眼微缩地图（overviewmap）底层架构与双模态实战">2. 鹰眼微缩地图（OverviewMap）底层架构与双模态实战</h2>
+<h3 id="21-强制独立图层与数据源共享原则（overviewmaphtml）">2.1 强制独立图层与数据源共享原则（<code>overviewmap.html</code>）</h3>
+<p>在 OpenLayers 架构中，一个 <code>Layer</code> 实例不可同时加入两个不同的 <code>Map</code>，否则会引发渲染管线冲突。因此创建 <code>OverviewMap</code> 时必须声明独立的 <code>layers</code>：</p>
+<pre><code class="language-javascript">import OverviewMap from &#39;ol/control/OverviewMap.js&#39;;
+import TileLayer from &#39;ol/layer/Tile.js&#39;;
+import OSM from &#39;ol/source/OSM.js&#39;;
+
+// 共享同一个数据源实例
+const source = new OSM();
+
+const overviewMapControl = new OverviewMap({
+  layers: [
+    new TileLayer({
+      source: source, // 复用主地图已缓存的瓦片，网络请求为 0
+    }),
+  ],
+});
+</code></pre>
+<h3 id="22-视角同步-vs-正向指北双模态（overviewmap-customhtml）">2.2 视角同步 vs 正向指北双模态（<code>overviewmap-custom.html</code>）</h3>
+<p>当用户按住 <code>Shift</code> 键拖拽鼠标旋转主地图时，鹰眼地图提供了两种交互哲学：</p>
+<pre><code class="language-javascript">const overviewMapControl = new OverviewMap({
+  className: &#39;ol-overviewmap ol-custom-overviewmap&#39;,
+  layers: [
+    new TileLayer({
+      source: new OSM({
+        url: &#39;https://{a-c}.tile.thunderforest.com/cycle/{z}/{x}/{y}.png?apikey=KEY&#39;,
+      }),
+    }),
+  ],
+  collapseLabel: &#39;\u00BB&#39;, // 折叠符号 »
+  label: &#39;\u00AB&#39;,         // 展开符号 «
+  collapsed: false,
+});
+
+rotateWithViewCheckbox.addEventListener(&#39;change&#39;, function () {
+  overviewMapControl.setRotateWithView(this.checked);
+});
+</code></pre>
+<ol>
+<li><strong>正向指北模式（<code>setRotateWithView(false)</code>）</strong>：微缩地图始终保持“上北下南”。当主地图旋转角度 $\theta$ 时，鹰眼内部的视野包围盒以角度 $-\theta$ 倾斜绘制，使用户直观了解当前视野与正北方的偏角；</li>
+<li><strong>视角同步模式（<code>setRotateWithView(true)</code>）</strong>：微缩地图整体同步旋转 $\theta$，红框在鹰眼中始终水平居中，符合车载导航或第一人称巡航习惯。</li>
+</ol>
+<hr>
+<h2 id="3-全图范围复位与精准导航（navigation-controlshtml）">3. 全图范围复位与精准导航（<code>navigation-controls.html</code>）</h2>
+<p>用户在多层级交互探索中容易“迷失”视野，<code>ZoomToExtent</code> 控件提供了即时复位的锚点：</p>
+<pre><code class="language-javascript">import ZoomToExtent from &#39;ol/control/ZoomToExtent.js&#39;;
+import {defaults as defaultControls} from &#39;ol/control/defaults.js&#39;;
+
+const map = new Map({
+  controls: defaultControls().extend([
+    new ZoomToExtent({
+      extent: [813079, 5929220, 848966, 5936863], // 苏黎世核心水网坐标
+      label: &#39;E&#39;,
+      tipLabel: &#39;复位至苏黎世全图&#39;,
+    }),
+  ]),
+});
+</code></pre>
+<blockquote>
+<p><strong>生产工程进阶</strong>：
+若空间范围非静态常量，推荐监听业务矢量源加载完成事件，通过 API 执行动态漫游动画：</p>
+<pre><code class="language-javascript">map.getView().fit(vectorSource.getExtent(), {
+  duration: 800,
+  padding: [60, 60, 60, 60], // 留出四周安全外边距
+});
+</code></pre>
+</blockquote>
+<hr>
+<h2 id="4-实时坐标探测与外部-dom-托管（mouse-positionhtml）">4. 实时坐标探测与外部 DOM 托管（<code>mouse-position.html</code>）</h2>
+<h3 id="41-外部容器重定向">4.1 外部容器重定向</h3>
+<p>通过配置 <code>target</code>，可将坐标显示控件从 Canvas 视口剥离，安置到外部 HTML 任意容器中：</p>
+<pre><code class="language-javascript">import MousePosition from &#39;ol/control/MousePosition.js&#39;;
+import {createStringXY} from &#39;ol/coordinate.js&#39;;
+
+const mousePositionControl = new MousePosition({
+  coordinateFormat: createStringXY(4), // 保留 4 位小数
+  projection: &#39;EPSG:4326&#39;,             // 输出 WGS84 经纬度
+  className: &#39;custom-mouse-position&#39;,
+  target: document.getElementById(&#39;mouse-position&#39;), // 外部挂载目标
+  undefinedHTML: &#39;光标在视口外&#39;,        // 移出边界时的提示文案
+});
+</code></pre>
+<h3 id="42-动态响应式切换">4.2 动态响应式切换</h3>
+<p>当用户在页面下拉框切换坐标系或微调小数位数时，控件提供无缝 Setter：</p>
+<pre><code class="language-javascript">// 切换投影：EPSG:4326 (经纬度) &lt;-&gt; EPSG:3857 (墨卡托米)
+mousePositionControl.setProjection(event.target.value);
+
+// 调整精度：根据数字动态重置格式化工具
+mousePositionControl.setCoordinateFormat(createStringXY(precision));
+</code></pre>
+<hr>
+<h2 id="5-生产级工程踩坑与优化指南">5. 生产级工程踩坑与优化指南</h2>
+<h3 id="51-鹰眼图层过度渲染引发掉帧（overdraw-trap）">5.1 鹰眼图层过度渲染引发掉帧（Overdraw Trap）</h3>
+<ul>
+<li><strong>陷阱</strong>：在主地图加载了数十万个设备点位或数个复杂 GeoJSON 面图层时，如果未经筛选直接将图层全部克隆到 <code>OverviewMap</code>，每次主地图平移都会迫使两个 Map 同时执行巨量空间检索与 Canvas 重绘，FPS 骤降。</li>
+<li><strong>最佳实践</strong>：<strong>鹰眼只做“路标”，不做“细节”</strong>。鹰眼内仅配置一层轻量级的纯色或低精矢量切片（或简化行政边界），坚决不叠加业务高频渲染图层。</li>
+</ul>
+<h3 id="52-移动端触屏界面的折叠默认值与避让">5.2 移动端触屏界面的折叠默认值与避让</h3>
+<ul>
+<li>手机端屏幕宽度通常仅 360~400px，150px 宽度的鹰眼若默认展开，将遮挡近 40% 的操作区。</li>
+<li><strong>移动端适配</strong>：<pre><code class="language-javascript">const isMobile = window.innerWidth &lt; 768;
+const overview = new OverviewMap({
+  collapsed: isMobile, // 移动端默认折叠，桌面端默认展开
+  collapsible: true,
+});
+</code></pre>
+</li>
+</ul>
+<h3 id="53-控件遮挡与-css-z-index-层级治理">5.3 控件遮挡与 CSS Z-Index 层级治理</h3>
+<p>OpenLayers 原生控件的默认 <code>z-index</code> 均为 <code>1</code> 并位于 <code>.ol-overlaycontainer-stopevent</code> 中。若页面存在底部浮动导航栏、顶部吸顶 Header，需严格在全局 CSS 中规划：</p>
+<pre><code class="language-css">.ol-overviewmap {
+  bottom: 30px; /* 避让底部状态栏 */
+  right: 15px;
+}
+.ol-custom-overviewmap .ol-overviewmap-map {
+  border: 2px solid #005fcc;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+</code></pre>
+<p>保证各控件界限分明、层级规整、视觉美观。</p>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

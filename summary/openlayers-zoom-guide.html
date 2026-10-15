@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-视口缩放控制与多尺度交互架构全景指南-zoom-control--multi-scale-interaction-architecture">OpenLayers 视口缩放控制与多尺度交互架构全景指南 (Zoom Control &amp; Multi-Scale Interaction Architecture)</h1>
+<blockquote>
+<p>本指南基于 OpenLayers 官方 <strong>zoom</strong> 核心专题群的代表性示例，深度解构 WebGIS 视口分辨率数学模型、视图级与图层级双重可见性区间约束、长页面嵌入时的“滚轮缩放陷阱（Scroll Trap）”协同防御机制、移动端双指与桌面修饰键协作手势（Cooperative Gestures），以及沉浸式全屏与复合旋转缩放动力学交互的最佳工程实践。</p>
+</blockquote>
+<hr>
+<h2 id="一、视口缩放与多尺度金字塔全景架构-architectural-overview">一、视口缩放与多尺度金字塔全景架构 (Architectural Overview)</h2>
+<p>在 WebGIS 中，缩放并非简单的图像拉伸，而是涉及空间地理坐标、切片分辨率等级与渲染视口的复杂数学映射：</p>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph PyramidModel[&quot;1. 瓦片金字塔数学模型 (Tile Pyramid Model)&quot;]
+        Level0[&quot;Level 0: 1 张 256x256 切片 (全球概览)&quot;] --&gt; LevelZ[&quot;Level Z: 2^z * 2^z 瓦片阵列&quot;]
+        LevelZ --&gt; ResEq[&quot;分辨率映射: Resolution = MaxResolution / 2^z&quot;]
+    end
+
+    subgraph ViewConstraints[&quot;2. 视图级约束引擎 (View Resolution Constraints)&quot;]
+        ResEq --&gt; ViewEngine[&quot;ol/View 约束管道 (createResolutionConstraint)&quot;]
+        ViewEngine --&gt; MinZoom[&quot;view.minZoom: 全局最大视野 (防止宽屏多世界平铺)&quot;]
+        ViewEngine --&gt; MaxZoom[&quot;view.maxZoom: 最大精细度 (杜绝切片 404)&quot;]
+        ViewEngine --&gt; LogFormula[&quot;自适应公式: ceil(log2(Width / 256))&quot;]
+        LogFormula --&gt; MinZoom
+    end
+
+    subgraph LayerVisibility[&quot;3. 图层级可见性调度 (Layer Visibility Limits)&quot;]
+        ViewEngine --&gt; FrameZoom[&quot;当前渲染帧 zoom 状态&quot;]
+        FrameZoom --&gt; IntervalCheck{&quot;半开半闭区间判定: minZoom &lt; z &lt;= maxZoom&quot;}
+        IntervalCheck --&gt;|&quot;符合区间&quot;| RenderTiles[&quot;触发当前图层切片网络加载与 Canvas 呈现&quot;]
+        IntervalCheck --&gt;|&quot;超出区间&quot;| SilentPass[&quot;网络静默: 零 HTTP 请求，跳过渲染&quot;]
+    end
+
+    subgraph GestureHandling[&quot;4. 页面协作手势防护 (Cooperative Gestures)&quot;]
+        WheelTouch[&quot;滚轮滚动 / 触摸滑动事件&quot;] --&gt; StrategyChoice{&quot;交互隔离策略&quot;}
+        StrategyChoice --&gt;|&quot;tabindex 焦点模式&quot;| FocusCheck{&quot;容器是否获得 :focus 焦点?&quot;}
+        FocusCheck --&gt;|&quot;否&quot;| PageScroll1[&quot;事件穿透: 驱动长网页上下平滑滚动&quot;]
+        FocusCheck --&gt;|&quot;是&quot;| MapZoom1[&quot;地图响应: 触发视口滚轮缩放&quot;]
+        
+        StrategyChoice --&gt;|&quot;协作手势模式&quot;| PointerCheck{&quot;触点计数 == 2 或 按下 Cmd/Ctrl?&quot;}
+        PointerCheck --&gt;|&quot;否 (单指触摸)&quot;| PageScroll2[&quot;事件放行: 手机顺畅滚动网页&quot;]
+        PointerCheck --&gt;|&quot;是 (双指/修饰键)&quot;| MapPanZoom2[&quot;地图响应: 拖拽平移与滚轮缩放&quot;]
+    end
+</code></pre>
+<hr>
+<h2 id="二、视图级缩放约束与单世界自适应解算-view-constraints">二、视图级缩放约束与单世界自适应解算 (<code>View Constraints</code>)</h2>
+<h3 id="1-宽屏显示器下的多世界平铺（world-wrapping）缺陷">1. 宽屏显示器下的多世界平铺（World Wrapping）缺陷</h3>
+<p>在标准的 Web 墨卡托（EPSG:3857）金字塔模型中，$z=0$ 时全球被投影为一个 $256 \times 256$ 像素的正方形。随着高分宽屏显示器（如 1920px、2560px 甚至 4K）的普及，若地图容器宽度 $W &gt; 256$ 且允许缩放至 $z=0$，屏幕横向会同时重复平铺 8~15 个重复拼接的世界地图，导致严重的视觉割裂与交互失焦。</p>
+<h3 id="2-对数临界阈值推导">2. 对数临界阈值推导</h3>
+<p>要确保屏幕横向刚好<strong>仅完整容纳单个世界地图</strong>，必须满足当前层级切片总宽度大于等于容器宽度：
+$$256 \times 2^z \ge W \implies 2^z \ge \frac{W}{256} \implies z \ge \log_2\left(\frac{W}{256}\right)$$</p>
+<p>利用自然对数换底公式与 JavaScript 常量 <code>Math.LOG2E</code>（即 $\log_2(e) \approx 1.442695$）：
+$$z_{\min} = \left\lceil \log_2(e) \cdot \ln\left(\frac{W}{256}\right) \right\rceil$$</p>
+<p>在 <a href="file:///d:/Users/Downloads/openlayers/examples/min-zoom.html"><code>examples/min-zoom.html</code></a> 中，该算法被优雅地封装并在窗口尺寸变动时动态更新：</p>
+<pre><code class="language-javascript">function getMinZoom() {
+  const width = viewport.clientWidth;
+  return Math.ceil(Math.LOG2E * Math.log(width / 256));
+}
+
+// 监听窗口尺寸变化，动态修正最小限制
+window.addEventListener(&#39;resize&#39;, function () {
+  const minZoom = getMinZoom();
+  if (minZoom !== view.getMinZoom()) {
+    view.setMinZoom(minZoom);
+  }
+});
+</code></pre>
+<h3 id="3-静态级别硬约束-minzoom-与-maxzoom">3. 静态级别硬约束 (<code>minZoom</code> 与 <code>maxZoom</code>)</h3>
+<p>在 <a href="file:///d:/Users/Downloads/openlayers/examples/zoom-constrained.html"><code>examples/zoom-constrained.html</code></a> 中，当数据源仅覆盖特定分辨率（如局部航测正射影像或特定区域矢量切片）时，可在创建 <code>View</code> 时显式声明级别边界：</p>
+<pre><code class="language-javascript">const view = new View({
+  center: [-13553864, 5918250],
+  zoom: 11,
+  minZoom: 9,   // 钳制最小级别：禁止缩放到无意义的全球宏观概览
+  maxZoom: 13,  // 钳制最大级别：杜绝超出切片深度的无效 404 请求
+});
+</code></pre>
+<hr>
+<h2 id="三、多尺度图层可见性与无缝切换架构-layer-zoom-limits">三、多尺度图层可见性与无缝切换架构 (<code>Layer Zoom Limits</code>)</h2>
+<p>在数字制图（Digital Cartography）中，宏观大视野需呈现简洁平整的综合行政区划底图，而进入微观街区后需渐进切换为高精度卫星影像、航测等高线或建筑白模。</p>
+<h3 id="1-半开半闭可见性数学区间">1. 半开半闭可见性数学区间</h3>
+<p>在 OpenLayers 中，图层上的 <code>minZoom</code> 与 <code>maxZoom</code> 具有极其严密的数学区间定义：
+$$\text{Layer is Visible} \iff \text{minZoom} &lt; z \le \text{maxZoom}$$</p>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>关键边界原则</strong>：<code>minZoom</code> 为<strong>严格大于（开区间）</strong>，<code>maxZoom</code> 为<strong>小于等于（闭区间）</strong>。</p>
+</blockquote>
+<p>以 <a href="file:///d:/Users/Downloads/openlayers/examples/layer-zoom-limits.html"><code>examples/layer-zoom-limits.html</code></a> 为例：</p>
+<ul>
+<li><strong>基础 OSM 概览图层</strong>：配置 <code>maxZoom: 14</code>，当 $z \le 14$ 时可见；</li>
+<li><strong>精细 Outdoor 地形图层</strong>：配置 <code>minZoom: 14</code>，当 $z &gt; 14$ 时可见；
+在临界点 $z=14.0$ 时，仅有 OSM 图层参与渲染。</li>
+</ul>
+<pre><code class="language-javascript">const map = new Map({
+  layers: [
+    new TileLayer({
+      maxZoom: 14, // 14 级及以下显示（zoom &lt;= 14）
+      source: new OSM(),
+    }),
+    new TileLayer({
+      minZoom: 14, // 超过 14 级显示（zoom &gt; 14）
+      source: new TileJSON({
+        url: &#39;https://api.maptiler.com/maps/outdoor-v2/tiles.json?key=&#39; + key,
+        tileSize: 512,
+      }),
+    }),
+  ],
+  view: new View({ center: centerCoords, zoom: 15, maxZoom: 18 }),
+});
+</code></pre>
+<h3 id="2-图层未激活时的网络静默（network-silence）">2. 图层未激活时的网络静默（Network Silence）</h3>
+<p>当视口缩放级别超出图层设定的 <code>(minZoom, maxZoom]</code> 区间时，OpenLayers 切片渲染调度器（TileQueue）会<strong>直接阻断该图层的切片加载</strong>。即使后台配置了数百万张瓦片，未处于可见区间的图层也不会产生任何 HTTP 网络开销与内存占用。</p>
+<hr>
+<h2 id="四、长网页滚轮缩放陷阱与协作手势防御机制">四、长网页“滚轮缩放陷阱”与协作手势防御机制</h2>
+<p>当 OpenLayers 地图被嵌入在包含丰富文字、产品展示或新闻资讯的长滚动网页中时，用户快速滚动鼠标滚轮极易被地图拦截，造成“页面突然卡住、地图疯狂缩放”的极差体验（业界称之为 <strong>Scroll Trap</strong>）。</p>
+<h3 id="1-方案一：tabindex-焦点优先隔离模式">1. 方案一：<code>tabindex</code> 焦点优先隔离模式</h3>
+<p><a href="file:///d:/Users/Downloads/openlayers/examples/page-scroll.html"><code>examples/page-scroll.html</code></a> 展示了纯 HTML 属性驱动的焦点隔离方案：</p>
+<pre><code class="language-html">&lt;!-- 为地图 div 挂载 tabindex 属性赋予其键盘和鼠标焦点能力 --&gt;
+&lt;div tabindex=&quot;1&quot; id=&quot;map&quot; class=&quot;map&quot;&gt;&lt;/div&gt;
+</code></pre>
+<ul>
+<li><strong>工作机制</strong>：当用户滚轮滑动经过地图上方时，若地图容器尚未被用户明确点击对焦（未处于 <code>:focus</code> 状态），<code>MouseWheelZoom</code> 交互会<strong>主动放弃捕获该事件</strong>，事件顺畅冒泡至浏览器窗口，长网页丝滑滚动；</li>
+<li><strong>进入缩放</strong>：仅当用户鼠标点击地图内部使其获得焦点后，滚轮事件才会被转为地图缩放指令。</li>
+</ul>
+<h3 id="2-方案二：移动端双指与桌面修饰键协作手势（cooperative-gestures）">2. 方案二：移动端双指与桌面修饰键协作手势（Cooperative Gestures）</h3>
+<p><a href="file:///d:/Users/Downloads/openlayers/examples/two-finger-pan-scroll.html"><code>examples/two-finger-pan-scroll.html</code></a> 展现了与 Google Maps / Apple Maps 体验完全一致的现代手势规范：</p>
+<pre><code class="language-javascript">const map = new Map({
+  interactions: defaults({
+    dragPan: false,        // 卸载默认的单指平移
+    mouseWheelZoom: false, // 卸载默认的无条件滚轮缩放
+  }).extend([
+    // 1. 触控屏双指拖动，或桌面端按住 Cmd/Ctrl 键拖动
+    new DragPan({
+      condition: function (event) {
+        return this.getPointerCount() === 2 || platformModifierKeyOnly(event);
+      },
+    }),
+    // 2. 桌面端按住 Cmd/Ctrl 键才允许滚轮缩放
+    new MouseWheelZoom({
+      condition: platformModifierKeyOnly,
+    }),
+  ]),
+});
+</code></pre>
+<ul>
+<li><strong>移动端绝佳体验</strong>：用户在手机浏览器上单指滑动屏幕时，无论是滑过文本还是滑过地图，整个网页均能一气呵成地上下滑动；只有使用<strong>双指捏合或双指滑动</strong>时，地图才响应平移与缩放。</li>
+<li><strong>跨平台修饰键</strong>：<code>platformModifierKeyOnly</code> 自动在 macOS 上映射为 <code>Command</code> 键，在 Windows/Linux 上映射为 <code>Ctrl</code> 键，免去手动维护平台判断分支。</li>
+</ul>
+<hr>
+<h2 id="五、沉浸式全屏与复合动力学手势-fullscreen--dragrotateandzoom">五、沉浸式全屏与复合动力学手势 (<code>FullScreen &amp; DragRotateAndZoom</code>)</h2>
+<p>在指挥中心大屏、应急指挥车与遥感解译工作站中，全屏沉浸与连续三维手势变换是标配交互：</p>
+<p><a href="file:///d:/Users/Downloads/openlayers/examples/full-screen-drag-rotate-and-zoom.html"><code>examples/full-screen-drag-rotate-and-zoom.html</code></a> 演示了全屏控件与复合拖拽手势的融合：</p>
+<pre><code class="language-javascript">const map = new Map({
+  controls: defaultControls().extend([new FullScreen()]),
+  interactions: defaultInteractions().extend([new DragRotateAndZoom()]),
+  target: &#39;map&#39;,
+  view: new View({
+    center: [-33519607, 5616436],
+    rotation: -Math.PI / 8,
+    zoom: 8,
+  }),
+});
+</code></pre>
+<h3 id="1-dragrotateandzoom-极坐标复合动力学">1. <code>DragRotateAndZoom</code> 极坐标复合动力学</h3>
+<p>用户按住 <code>Shift + 鼠标左键拖拽</code> 时：</p>
+<ol>
+<li>交互以拖拽起点为基准，实时解算鼠标当前位置相对于视口中心的夹角变化量 $\Delta \theta$；</li>
+<li>实时比对径向半径变化量 $\Delta r$，按对数比例动态映射缩放值 $\Delta z = \log_2(r_1 / r_0)$；</li>
+<li>一次拖拽动作即可<strong>同时实现平滑无级旋转与连续缩放</strong>，极大提升遥感影像的航向对齐效率。</li>
+</ol>
+<h3 id="2-全屏-css-尺寸铺满红线">2. 全屏 CSS 尺寸铺满红线</h3>
+<p>使用 <code>FullScreen</code> 控件时，必须确保地图容器在全屏伪类下拥有 100% 宽高：</p>
+<pre><code class="language-css">.map:fullscreen {
+  width: 100%;
+  height: 100%;
+}
+</code></pre>
+<hr>
+<h2 id="六、缩放控制与多尺度交互核心示例矩阵-examples-matrix">六、缩放控制与多尺度交互核心示例矩阵 (Examples Matrix)</h2>
+<table>
+<thead>
+<tr>
+<th align="left">示例文件与链接</th>
+<th align="left">技术切入点</th>
+<th align="left">核心 API / 关键配置</th>
+<th align="left">典型业务落地场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/min-zoom.html"><code>examples/min-zoom.html</code></a></td>
+<td align="left">动态全局视野约束</td>
+<td align="left"><code>view.setMinZoom()</code>, <code>Math.LOG2E</code> 自适应公式</td>
+<td align="left">宽屏显示器、大屏指挥系统消除横向多世界平铺</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/zoom-constrained.html"><code>examples/zoom-constrained.html</code></a></td>
+<td align="left">静态层级区间钳制</td>
+<td align="left"><code>View({ minZoom: 9, maxZoom: 13 })</code></td>
+<td align="left">局部航测正射项目、保护底图防止超量请求 404</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/layer-zoom-limits.html"><code>examples/layer-zoom-limits.html</code></a></td>
+<td align="left">多尺度图层动态调度</td>
+<td align="left"><code>Layer({ minZoom: 14, maxZoom: 14 })</code> (开闭区间)</td>
+<td align="left">宏观概览与微观高清地形/卫星图无缝自动切换</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/page-scroll.html"><code>examples/page-scroll.html</code></a></td>
+<td align="left">滚轮焦点隔离模式</td>
+<td align="left"><code>&lt;div tabindex=&quot;1&quot; id=&quot;map&quot;&gt;</code></td>
+<td align="left">博客文章、新闻专栏、落地页防止滚轮陷入缩放</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/two-finger-pan-scroll.html"><code>examples/two-finger-pan-scroll.html</code></a></td>
+<td align="left">移动端协作手势</td>
+<td align="left">`DragPan({ condition: 2_fingers</td>
+<td align="left"></td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/full-screen-drag-rotate-and-zoom.html"><code>examples/full-screen-drag-rotate-and-zoom.html</code></a></td>
+<td align="left">全屏与复合旋转缩放</td>
+<td align="left"><code>FullScreen</code>, <code>DragRotateAndZoom</code> (Shift+拖拽)</td>
+<td align="left">沉浸式全屏地图、遥感影像多角度飞行对齐查看</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/pinch-zoom.html"><code>examples/pinch-zoom.html</code></a></td>
+<td align="left">移动端捏合缩放</td>
+<td align="left"><code>ol/interaction/PinchZoom</code></td>
+<td align="left">智能手机与平板触控屏双指平滑无级缩放</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/zoomslider.html"><code>examples/zoomslider.html</code></a></td>
+<td align="left">缩放滑块 UI 定制</td>
+<td align="left"><code>ol/control/ZoomSlider</code>, 纯 CSS 定制滑轨与游标</td>
+<td align="left">桌面端大屏缩放层级直观滑动选择与刻度呈现</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/drag-rotate-and-zoom.html"><code>examples/drag-rotate-and-zoom.html</code></a></td>
+<td align="left">复合手势基础应用</td>
+<td align="left"><code>DragRotateAndZoom</code></td>
+<td align="left">桌面端高自由度地图视角探索与复合变换</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/double-click-drag-zoom.html"><code>examples/double-click-drag-zoom.html</code></a></td>
+<td align="left">单手双击拖拽缩放</td>
+<td align="left"><code>DoubleClickDragZoom</code></td>
+<td align="left">移动端与单手鼠标操作时的快速推拉视口缩放</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="七、生产级工程避坑指南-production-pitfalls-checklist">七、生产级工程避坑指南 (Production Pitfalls Checklist)</h2>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph ViewCheck[&quot;视图约束避坑&quot;]
+        A1[&quot;明确数据源最大切片级别，配置 maxZoom 杜绝 404&quot;]
+        A2[&quot;宽屏监控大屏必须动态计算 minZoom，防止多世界平铺&quot;]
+    end
+
+    subgraph LayerCheck[&quot;图层可见性避坑&quot;]
+        B1[&quot;遵循 LayerA.maxZoom === LayerB.minZoom 避免重叠渲染&quot;]
+        B2[&quot;牢记 minZoom 为严格开区间，maxZoom 为闭区间&quot;]
+    end
+
+    subgraph GestureCheck[&quot;手势与全屏避坑&quot;]
+        C1[&quot;长网页内嵌地图务必设置 tabindex 或双指协作手势&quot;]
+        C2[&quot;iframe 嵌套必须配置 allow=&#39;fullscreen&#39;&quot;]
+        C3[&quot;CSS 务必补齐 .map:fullscreen { width:100%; height:100%; }&quot;]
+    end
+</code></pre>
+<ol>
+<li><strong>图层边界层级重叠导致的性能裂化（Z-fighting）</strong>：
+在配置多级图层切换时，切忌将低级图层设为 <code>maxZoom: 15</code>，同时将高级图层设为 <code>minZoom: 14</code>。这会导致在 14~15 级之间两个图层同时可见，并发发起两倍的切片网络请求，并在 Canvas 上进行双重像素混合。必须保证 <code>LayerA.maxZoom === LayerB.minZoom</code>。</li>
+<li><strong>iframe 全屏权限丢失</strong>：
+在现代前端微前端或门户架构中，地图常作为子应用运行在 <code>&lt;iframe&gt;</code> 内。若父容器未给 iframe 标签添加 <code>allow=&quot;fullscreen&quot;</code> 或 <code>allowfullscreen=&quot;true&quot;</code> 属性，<code>FullScreen</code> 控件会被浏览器静默禁用并自动隐藏，排查时极易被误判为代码逻辑 bug。</li>
+<li><strong>触控协作模式下的提示覆盖层</strong>：
+当启用了 <code>two-finger-pan-scroll</code> 协作模式后，在移动端如果用户习惯性地使用单指拖拽地图，地图会静止不动而页面跟随滚动。为了提供极致的用户体验，建议在地图视口上方悬挂一个透明提示蒙版，监听地图的 <code>pointerdown</code> 事件：当检测到单指触摸且持续拖动时，渐变显示“请使用双指移动地图”半透明提示并在 1.5 秒后淡出。</li>
+</ol>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

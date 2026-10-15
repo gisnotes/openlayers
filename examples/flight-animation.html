@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Flight Animation</title>
+    <title>Flight Animation / 大圆航线生成与全球航班飞行轨迹动效</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Flight Animation</h4>
+        <h4 id="title">Flight Animation / 大圆航线生成与全球航班飞行轨迹动效</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,10 +75,10 @@
               data-title="animation"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animation.html&quot;&gt;View Animation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation / 要素雷达光晕扩散动画（postrender 与 VectorContext）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation / 大圆航线生成与全球航班飞行轨迹动效&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animation.html&quot;&gt;View Animation / 视图动画（平移、缩放、旋转与飞行巡检）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >5</a>
@@ -95,14 +95,14 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles-advanced.html&quot;&gt;Advanced Mapbox Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-webgl-line.html&quot;&gt;Applying a filter along lines rendered with WebGL / WebGL 沿线过滤与时间序列渐变渲染&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service / ArcGIS REST 矢量要素服务瓦片化动态加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cluster.html&quot;&gt;Clustered Features&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-circle-render.html&quot;&gt;Custom Circle Render&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-hit-detection-renderer.html&quot;&gt;Custom Hit Detection Render&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation / 要素雷达光晕扩散动画（postrender 与 VectorContext）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-circle-render.html&quot;&gt;Custom Circle Render / 自定义圆渲染（Canvas 径向渐变）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-hit-detection-renderer.html&quot;&gt;Custom Hit Detection Render / 自定义命中检测渲染器&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-interactions.html&quot;&gt;Custom Interactions / 自定义交互开发&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./declutter-group.html&quot;&gt;Declutter Group&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./declutter-group.html&quot;&gt;Declutter Group / 避让分组（独立避让组）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector / 矢量图像图层拖拽加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-features.html&quot;&gt;Draw and Modify Features / 绘制与修改要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-and-modify-geodesic.html&quot;&gt;Draw and Modify Geodesic Circles / 绘制与修改测地线圆&lt;/a&gt;
@@ -116,19 +116,20 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service / 可编辑的 ArcGIS REST 要素服务&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./equal-earth-geojson.html&quot;&gt;Equal Earth projection with dynamic center meridian&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./fractal.html&quot;&gt;Fractal Rendering&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./equal-earth-geojson.html&quot;&gt;Equal Earth projection with dynamic center meridian / 动态中央子午线 Equal Earth 投影与 GeoJSON 多边形裁剪&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation / 大圆航线生成与全球航班飞行轨迹动效&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./fractal.html&quot;&gt;Fractal Rendering / 分形几何（科赫雪花）高密度图元极限渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./draw-freehand.html&quot;&gt;Freehand Drawing / 自由手绘绘制&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson.html&quot;&gt;GeoJSON&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson-vt.html&quot;&gt;geojson-vt integration&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson.html&quot;&gt;GeoJSON / GeoJSON 多几何类型标准解析与多态样式映射&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson-vt.html&quot;&gt;geojson-vt integration / geojson-vt 浏览器端实时切片矢量瓦片&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-icon.html&quot;&gt;Icon modification / 图标点位拖拽修改&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-repeat.html&quot;&gt;Icon Repeat&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./jsts.html&quot;&gt;JSTS Integration&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./jsts.html&quot;&gt;JSTS Integration / JSTS 拓扑套件与空间缓冲区分析 (JSTS Buffer Analysis)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-styles.html&quot;&gt;Line Styles / 线条与多边形描边样式全解（Stroke 全属性实验室）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./line-arrows.html&quot;&gt;LineString Arrows / 折线线段箭头指示&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-layer.html&quot;&gt;Mapbox Vector Layer&lt;/a&gt;
@@ -142,45 +143,45 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles.html&quot;&gt;OGC Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles-geographic.html&quot;&gt;OGC Vector Tiles (Geographic)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./osm-vector-tiles.html&quot;&gt;OSM Vector Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./populated-places.html&quot;&gt;Populated Places&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes / 正多边形与星形矢量符号（RegularShape 全解）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rich-text-labels.html&quot;&gt;Rich Text Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rich-text-labels.html&quot;&gt;Rich Text Labels / 富文本排版注记&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-scale-and-rotate.html&quot;&gt;Scale and Rotate using Modify Interaction / 使用 Modify 交互进行缩放与旋转&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-features.html&quot;&gt;Select Features / 选择要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-hover-features.html&quot;&gt;Select Features by Hover&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./select-multiple-features.html&quot;&gt;Select multiple Features&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap.html&quot;&gt;Snap Interaction / 捕捉吸附交互&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./snap-custom-segmenter.html&quot;&gt;Snap Interaction with Custom Segmenter / 带有自定义线段分割器的 Snap 捕捉吸附&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels / 沿线道路注记（线型文本跟随）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-expressions.html&quot;&gt;Style Expressions / 样式表达式与规则驱动样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./style-renderer.html&quot;&gt;Style renderer / 样式渲染器（自定义渲染函数）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./synthetic-lines.html&quot;&gt;Synthetic Lines&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./synthetic-points.html&quot;&gt;Synthetic Points&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tooltip-on-hover.html&quot;&gt;Tooltip on Hover&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tooltip-on-hover.html&quot;&gt;Tooltip on Hover / 悬浮提示框 (Tooltip)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topojson.html&quot;&gt;TopoJSON / TopoJSON 拓扑矢量数据解析与渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./topolis.html&quot;&gt;topolis integration / topolis 拓扑库集成&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tracing.html&quot;&gt;Tracing around a polygon / 沿多边形边界自动追踪描摹&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap / 航迹热力图（折线要素 WebGL 热力场渲染）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./translate-features.html&quot;&gt;Translate Features / 平移移动要素&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./turf.html&quot;&gt;turf.js&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./turf.html&quot;&gt;turf.js / Turf.js 空间分析集成与等间距里程桩标注 (Turf.js Integration)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer / 矢量边界裁切图层&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-vector-layer.html&quot;&gt;Vector Image Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-label-decluttering.html&quot;&gt;Vector Label Decluttering&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels.html&quot;&gt;Vector Labels&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels-justify-text.html&quot;&gt;Vector Labels - Justify Text&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-layer.html&quot;&gt;Vector Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./hitdetect-vector.html&quot;&gt;Vector Layer Hit Detection&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-layer.html&quot;&gt;WebGL Vector Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-label-decluttering.html&quot;&gt;Vector Label Decluttering / 矢量注记智能避让&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels-justify-text.html&quot;&gt;Vector Labels - Justify Text / 矢量注记文本对齐与段落对齐解耦&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels.html&quot;&gt;Vector Labels / 矢量文本标注与全要素排版实战工作台&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-layer.html&quot;&gt;Vector Layer / 声明式矢量图层与属性驱动注记避让&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./hitdetect-vector.html&quot;&gt;Vector Layer Hit Detection / 矢量图层拾取检测与高性能 getFeatures 算法&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-layer.html&quot;&gt;WebGL Vector Layer / WebGL 矢量多边形面图层与悬停高亮&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer / WebGL 矢量切片图层（MVT 硬件加速渲染）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature / WFS 空间矢量要素过滤查询与叠加&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS / GeoServer WFS 视口 BBOX 动态要素加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates / 地理坐标系下的 WFS 瓦片化加载与 useGeographic&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wind-arrows.html&quot;&gt;Wind Arrows / 气象风向标箭头（RegularShape 组合与动态缩放位移）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
-              >86</a>
+              >87</a>
           </span>
           <span class="badge-group">
             <a
@@ -191,18 +192,18 @@
               data-bs-target="#tag-example-list"
               data-title="feature"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service / ArcGIS REST 矢量要素服务瓦片化动态加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./box-selection.html&quot;&gt;Box Selection / 框选要素&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-circle-render.html&quot;&gt;Custom Circle Render&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-hit-detection-renderer.html&quot;&gt;Custom Hit Detection Render&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-animation.html&quot;&gt;Custom Animation / 要素雷达光晕扩散动画（postrender 与 VectorContext）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-circle-render.html&quot;&gt;Custom Circle Render / 自定义圆渲染（Canvas 径向渐变）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-hit-detection-renderer.html&quot;&gt;Custom Hit Detection Render / 自定义命中检测渲染器&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-interactions.html&quot;&gt;Custom Interactions / 自定义交互开发&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service / 可编辑的 ArcGIS REST 要素服务&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering features with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering Features with WebGL / WebGL 海量要素动态过滤与着色器动画&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation / 大圆航线生成与全球航班飞行轨迹动效&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./translate-features.html&quot;&gt;Translate Features / 平移移动要素&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL points layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL Points Layer / WebGL 点要素高性能图层与声明式着色器样式编辑器&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >12</a>
@@ -216,7 +217,7 @@
               data-bs-target="#tag-example-list"
               data-title="flights"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation / 大圆航线生成与全球航班飞行轨迹动效&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -230,7 +231,7 @@
               data-bs-target="#tag-example-list"
               data-title="arc"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./flight-animation.html&quot;&gt;Flight Animation / 大圆航线生成与全球航班飞行轨迹动效&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -257,8 +258,51 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Demonstrates how to animate flights with ´postrender´.</p>
-        <div id="docs"><p>This example shows how to use <b>postrender</b> and <b>vectorContext</b> to animate flights. A great circle arc between two airports is calculated using <a href="https://github.com/springmeyer/arc.js">arc.js</a> and then the flight paths are animated with <b>postrender</b>. The flight data is provided by <a href="https://openflights.org/data.php">OpenFlights</a> (a simplified data set from the <a href="https://docs.mapbox.com/mapbox.js/example/v1.0.0/animating-flight-paths/"> Mapbox.js documentation</a> is used).</p>
+        <p id="shortdesc">Demonstrates how to animate flights with ´postrender´. / 演示如何使用 arc.js 生成大圆弧线（Great Circle）并利用 postrender 驱动多路航班飞行轨迹动态延展。</p>
+        <div id="docs"><h2>This example shows how to use <b>postrender</b> and <b>vectorContext</b> to animate flights. A great circle arc between two airports is calculated using <a href="https://github.com/springmeyer/arc.js">arc.js</a> and then the flight paths are animated with <b>postrender</b>. The flight data is provided by <a href="https://openflights.org/data.php">OpenFlights</a> (a simplified data set from the <a href="https://docs.mapbox.com/mapbox.js/example/v1.0.0/animating-flight-paths/"> Mapbox.js documentation</a> is used).
+本示例展示如何利用 <b>postrender</b> 事件帧回调与 <b>VectorContext</b> 矢量管线呈现震撼的全球航班飞行轨迹动效。借助第三方数学库 <a href="https://github.com/springmeyer/arc.js">arc.js</a> 精确解算两座机场之间在球面几何上的<strong>大圆航线（Great Circle Arc）</strong>，自动切分跨越国际日期变更线（$\pm 180^\circ$ 子午线）的断裂分段，并利用时间驱动的动态折线切片，配合多世界无缝平移（World Wrapping Offset），呈现数百条航线依次腾飞、平滑生长的航空大屏视效。航线数据来源于 <a href="https://openflights.org/data.php">OpenFlights</a>。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构原理 (Core Architecture) 在地球曲面上，两点间的最短距离是球面大圆劣弧（Great Circle），而在墨卡托平面地图中大圆航线呈现为弯曲拱形曲线： - <strong>大圆航线离散化与跨日界线反子午线切分</strong>：<code>arc.GreatCircle</code> 生成包含 100 个插值控制点的空间弧线。若航线跨越了 $\pm 180^\circ$ 反子午线，<code>arc.js</code> 会自动切分为两段独立的几何折线（<code>LineString</code>），避免在地图东西边缘横跨整幅画卷产生混乱的贯穿拉线。 - <strong>动态折线子切片截取 (<code>coords.slice(0, maxIndex)</code>)</strong>：通过当前帧真实流逝时间计算已飞过的离散点索引：</h4>
+<p>  $$\text{maxIndex} = \min(\text{elapsedTime} \times \text{pointsPerMs}, \text{coords.length})$$
+  构造临时截断折线 <code>new LineString(coords.slice(0, maxIndex))</code> 并通过 <code>vectorContext.drawGeometry()</code> 瞬态上屏，逼真模拟出航迹由起点向终点持续“生长延伸”的粒子流光效果。</p>
+<ul>
+<li><strong>跨世界连续平铺（World Wrapping）补偿</strong>：当用户横向无级拖拽地球时，视口中心可能位于第 $N$ 个复制世界。示例通过：
+$$\text{worldWidth} = \text{getWidth}(\text{projectionExtent}), \quad \text{offset} = \left\lfloor \frac{\text{center}_x}{\text{worldWidth}} \right\rfloor$$
+在主世界与相邻副本世界中连续调用 <code>currentLine.translate(worldWidth, 0)</code> 绘制两遍，确保环球漫游时航线无论滑到哪里都毫无接缝断层。</li>
+</ul>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript function animateFlights(event) {</h4>
+<p>  const vectorContext = getVectorContext(event);
+  const frameState = event.frameState;
+  vectorContext.setStyle(style);</p>
+<p>  const features = flightsSource.getFeatures();
+  for (let i = 0; i &lt; features.length; i++) {
+    const feature = features[i];
+    if (!feature.get(&#39;finished&#39;)) {
+      const coords = feature.getGeometry().getCoordinates();
+      const elapsedTime = frameState.time - feature.get(&#39;start&#39;);
+      if (elapsedTime &gt;= 0) {
+        const elapsedPoints = elapsedTime * pointsPerMs;
+        if (elapsedPoints &gt;= coords.length) {
+          feature.set(&#39;finished&#39;, true); // 飞行结束，移交常规图层样式渲染
+        }
+        // 截取当前飞行阶段的航迹折线
+        const maxIndex = Math.min(elapsedPoints, coords.length);
+        const currentLine = new LineString(coords.slice(0, maxIndex));</p>
+<pre><code>    // 多世界坐标平移与双重绘制补偿
+    const worldWidth = getWidth(map.getView().getProjection().getExtent());
+    const offset = Math.floor(map.getView().getCenter()[0] / worldWidth);
+    currentLine.translate(offset * worldWidth, 0);
+    vectorContext.drawGeometry(currentLine);
+    currentLine.translate(worldWidth, 0);
+    vectorContext.drawGeometry(currentLine);
+  }
+}
+</code></pre>
+<p>  }
+  // 持续驱动下一帧重绘
+  map.render();
+} ```</p>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>动画结束状态平滑移交</strong>：在航迹完全长成后，设置 <code>feature.set('finished', true)</code>，并将图层样式配置为 <code>style: feature =&gt; feature.get('finished') ? style : null</code>。此时要素平滑移交由矢量图层缓存机制进行常规渲染，不再占用每帧动态切片与临时对象创建，大幅降低稳定状态下的 CPU 开销。 - <strong>大量几何对象创建与垃圾回收（GC）优化</strong>：每帧 <code>new LineString(slice)</code> 会在高频循环中产生瞬态对象。对于超大规模航线网（万级航班），应复用固定的坐标缓冲区，或采用 WebGL 顶点着色器时序属性控制流线动效。</h4>
 </div>
       </div>
 
@@ -318,6 +362,7 @@ const flightsSource &#x3D; new VectorSource({
           const to &#x3D; flight[1];
 
           // create an arc circle between the two locations
+          // 利用 arc.js 在起点与终点之间计算球面大圆弧线
           const arcGenerator &#x3D; new arc.GreatCircle(
             {x: from[1], y: from[0]},
             {x: to[1], y: to[0]},
@@ -326,6 +371,7 @@ const flightsSource &#x3D; new VectorSource({
           const arcLine &#x3D; arcGenerator.Arc(100, {offset: 10});
           // paths which cross the -180°/+180° meridian are split
           // into two sections which will be animated sequentially
+          // 跨越 180° 反子午线的路径被自动切分为两个几何分段，按时序依次呈现动画
           const features &#x3D; [];
           arcLine.geometries.forEach(function (geometry) {
             const line &#x3D; new LineString(geometry.coords);
@@ -340,6 +386,7 @@ const flightsSource &#x3D; new VectorSource({
           });
           // add the features with a delay so that the animation
           // for all features does not start at the same time
+          // 增加阶梯延迟，使航线错峰腾飞
           addLater(features, i * 50);
         }
         tileLayer.on(&#x27;postrender&#x27;, animateFlights);
@@ -352,6 +399,7 @@ const flightsLayer &#x3D; new VectorLayer({
   style: function (feature) {
     // if the animation is still active for a feature, do not
     // render the feature with the layer style
+    // 若要素正在进行动态飞行，图层不直接绘制；完全飞完后移交常规样式渲染
     if (feature.get(&#x27;finished&#x27;)) {
       return style;
     }
@@ -362,6 +410,12 @@ const flightsLayer &#x3D; new VectorLayer({
 map.addLayer(flightsLayer);
 
 const pointsPerMs &#x3D; 0.02;
+
+/**
+ * Postrender animation handler: draws growing flight lines with vectorContext.
+ * 渲染后帧回调：使用 vectorContext 瞬态绘制逐步生长的飞行航迹。
+ * @param {import(&#x27;ol/render/Event.js&#x27;).default} event Render event.
+ */
 function animateFlights(event) {
   const vectorContext &#x3D; getVectorContext(event);
   const frameState &#x3D; event.frameState;
@@ -372,6 +426,7 @@ function animateFlights(event) {
     const feature &#x3D; features[i];
     if (!feature.get(&#x27;finished&#x27;)) {
       // only draw the lines for which the animation has not finished yet
+      // 仅对尚未完成飞行的航线进行帧动画绘制
       const coords &#x3D; feature.getGeometry().getCoordinates();
       const elapsedTime &#x3D; frameState.time - feature.get(&#x27;start&#x27;);
       if (elapsedTime &gt;&#x3D; 0) {
@@ -385,10 +440,12 @@ function animateFlights(event) {
         const currentLine &#x3D; new LineString(coords.slice(0, maxIndex));
 
         // animation is needed in the current and nearest adjacent wrapped world
+        // 多世界坐标平移补偿：计算当前视口中心所在的平铺世界偏移
         const worldWidth &#x3D; getWidth(map.getView().getProjection().getExtent());
         const offset &#x3D; Math.floor(map.getView().getCenter()[0] / worldWidth);
 
         // directly draw the lines with the vector context
+        // 直接使用 vector context 在当前世界与相邻世界中绘制航迹
         currentLine.translate(offset * worldWidth, 0);
         vectorContext.drawGeometry(currentLine);
         currentLine.translate(worldWidth, 0);
@@ -397,9 +454,16 @@ function animateFlights(event) {
     }
   }
   // tell OpenLayers to continue the animation
+  // 请求下一帧重绘继续推进动画
   map.render();
 }
 
+/**
+ * Stagger feature addition with timeout.
+ * 阶梯延迟注入要素到数据源中。
+ * @param {Array&lt;Feature&gt;} features Feature array.
+ * @param {number} timeout Timeout in ms.
+ */
 function addLater(features, timeout) {
   window.setTimeout(function () {
     let start &#x3D; Date.now();
@@ -423,7 +487,7 @@ function addLater(features, timeout) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Flight Animation&lt;/title&gt;
+    &lt;title&gt;Flight Animation / 大圆航线生成与全球航班飞行轨迹动效&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-欧空局哨兵卫星影像与实时多光谱解译实战架构指南-sentinel-hub-eo--real-time-multi-spectral-remote-sensing-architecture">OpenLayers 欧空局哨兵卫星影像与实时多光谱解译实战架构指南 (Sentinel Hub EO &amp; Real-Time Multi-Spectral Remote Sensing Architecture)</h1>
+<blockquote>
+<p>本指南基于 OpenLayers 官方 <strong>Sentinel Hub</strong> 核心专题群的代表性示例，深度解构基于欧洲航天局（ESA）Sentinel-2 遥感星座的云原生即时解译架构。系统剖析 <code>ol/source/SentinelHub</code> 数据源与 <code>ol/layer/WebGLTile</code> 硬件加速切片流、OAuth2 客户端凭据鉴权流水线、Evalscript 像素级云端波段代数运算（假彩色增强、NDMI 归一化差值水分指数）、多时相（Multi-temporal）过境卫星滑动观测窗口过滤，以及 WebP/PNG/JPEG 切片格式动态热更的工程级最佳实践。</p>
+</blockquote>
+<hr>
+<h2 id="一、云原生遥感解译全景架构-architectural-overview">一、云原生遥感解译全景架构 (Architectural Overview)</h2>
+<p>在传统遥感 GIS 项目中，获取卫星影像往往需要离线批量下载数吉字节的压缩包，随后在专业软件中经历繁重的辐射定标、大气校正、正射纠正与波段融合。<code>ol/source/SentinelHub</code> 依托 Sentinel Hub Processing API 开辟了纯云原生的<strong>按需即时多光谱解译（On-the-fly Multi-Spectral Processing）</strong>全景架构：</p>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph ClientLayer[&quot;1. 前端 OpenLayers 视口与交互 (Client Viewport)&quot;]
+        MapInstance[&quot;Map (useGeographic 经纬度模式)&quot;] --&gt; WebGLTile[&quot;ol/layer/WebGLTile 硬件加速图层&quot;]
+        DatePicker[&quot;HTML5 日期选择器 (7天滑动时间窗口)&quot;] --&gt; SetData[&quot;source.setData(timeRange)&quot;]
+        CodeMirror[&quot;CodeMirror 6 嵌入式代码编辑器&quot;] --&gt; SetEvalscript[&quot;source.setEvalscript(code)&quot;]
+        FormatSelect[&quot;格式选择器 (WebP / PNG / JPEG)&quot;] --&gt; SetFormat[&quot;source.setFormat(mimeType)&quot;]
+    end
+
+    subgraph SourcePipeline[&quot;2. SentinelHub 数据源管线 (ol/source/SentinelHub)&quot;]
+        OAuthModal[&quot;OAuth2 鉴权弹窗 (Client ID + Secret)&quot;] --&gt; TokenAuth[&quot;获取并维护 Bearer Access Token&quot;]
+        WebGLTile --&gt; Source[&quot;ol/source/SentinelHub&quot;]
+        TokenAuth --&gt; Source
+        SetData --&gt; Source
+        SetEvalscript --&gt; Source
+        SetFormat --&gt; Source
+        Source --&gt; POSTReq[&quot;组装标准 Processing API JSON POST 请求&quot;]
+    end
+
+    subgraph CloudProcessing[&quot;3. Sentinel Hub 云端计算集群 (Cloud Processing Cluster)&quot;]
+        POSTReq --&gt; DataFilter[&quot;空间范围 (BBOX) + 时序过滤 (TimeRange) + 云掩膜 (CLM)&quot;]
+        DataFilter --&gt; RawBands[&quot;提取 Sentinel-2 L2A 底表反射率原始多光谱波段 (B02-B12)&quot;]
+        RawBands --&gt; V8Engine[&quot;云端 V8 沙箱: 并行执行 Evalscript evaluatePixel()&quot;]
+        V8Engine --&gt; SpectralMath[&quot;波段代数: NDMI 水分、NDVI 植被、真彩色/假彩色增强&quot;]
+        SpectralMath --&gt; Encoder[&quot;图像编码器 (WebP / PNG / JPEG) -&gt; 压缩切片回传&quot;]
+    end
+</code></pre>
+<hr>
+<h2 id="二、oauth2-鉴权模型与企业级安全架构">二、OAuth2 鉴权模型与企业级安全架构</h2>
+<p>Sentinel Hub Processing API 是一项高价值计算型商业与科研云服务，所有数据交互均依托 OAuth2 保护。</p>
+<h3 id="1-client-credentials-鉴权流程">1. Client Credentials 鉴权流程</h3>
+<p>在开发测试阶段，<code>ol/source/SentinelHub</code> 支持直接注入 Client ID 与 Client Secret：</p>
+<pre><code class="language-javascript">source.setAuth({
+  clientId: &#39;fa02a066-fc80-4cb4-af26-aae0af26cbf1&#39;,
+  clientSecret: &#39;rate_limit_secret&#39;,
+});
+</code></pre>
+<p>数据源内部会自动向 <code>https://services.sentinel-hub.com/oauth/token</code> 发起 POST 请求，换取短生命周期（通常为数小时）的 <code>access_token</code>，并在切片加载请求头中自动注入 <code>Authorization: Bearer &lt;token&gt;</code>。</p>
+<h3 id="2-企业级生产环境防御">2. 企业级生产环境防御</h3>
+<blockquote>
+<p>[!CAUTION]
+<strong>绝对禁止在生产前端代码中暴露 Client Secret</strong>！
+在公网交付时，应当由企业后端服务集中维护 Client Secret，由后端调用 Sentinel Hub 接口换取临时的 Token，前端仅接收短期 Token 并调用 <code>source.setAuth({ token: tempToken })</code>，避免凭证泄露造成巨额计费账单。</p>
+</blockquote>
+<hr>
+<h2 id="三、evalscript-云端边缘计算与波段解译深度实战">三、Evalscript 云端边缘计算与波段解译深度实战</h2>
+<p>Evalscript 是运行在 Sentinel Hub 云端的大规模并行 JavaScript 算法脚本，是遥感即时解译的灵魂。</p>
+<h3 id="1-version3-规范与核心签名">1. <code>//VERSION=3</code> 规范与核心签名</h3>
+<p>每个现代 Evalscript 脚本必须以 <code>//VERSION=3</code> 开头，并包含两个核心导出函数：</p>
+<ul>
+<li><code>setup()</code>：向云端数据源申报所需拉取的原始光谱波段与输出图像通道数；</li>
+<li><code>evaluatePixel(sample)</code>：为切片中的每个像素逐一执行数学变换，入参 <code>sample</code> 包含已校正的各波段反射率浮点数值（通常在 $0.0 \sim 1.0$ 之间）。</li>
+</ul>
+<h3 id="2-归一化差值水分指数（ndmi）实战">2. 归一化差值水分指数（NDMI）实战</h3>
+<p>在 <a href="file:///d:/Users/Downloads/openlayers/examples/sentinel-hub-custom-script.html"><code>examples/sentinel-hub-custom-script.html</code></a> 中，展示了埃及尼罗河与法尤姆绿洲的水分遥感探测：</p>
+<pre><code class="language-javascript">//VERSION=3
+function setup() {
+  return {
+    input: [&#39;B02&#39;, &#39;B03&#39;, &#39;B04&#39;, &#39;B08&#39;, &#39;B11&#39;], // 提取可见光与近红外、短波红外
+    output: {bands: 3},
+  };
+}
+
+function evaluatePixel(sample) {
+  // NDMI = (近红外 - 短波红外) / (近红外 + 短波红外)
+  const ndmi = (sample.B08 - sample.B11) / (sample.B08 + sample.B11);
+  if (ndmi &lt;= 0) {
+    // 干燥裸岩与沙漠：输出 3 倍增强的真彩色
+    return [3 * sample.B04, 3 * sample.B03, 3 * sample.B02];
+  }
+  if (ndmi &lt;= 0.2) {
+    return [0, 0.8, 0.9]; // 低水分植被：浅蓝绿
+  }
+  if (ndmi &lt;= 0.4) {
+    return [0, 0.5, 0.9]; // 湿润农田：湖青蓝
+  }
+  return [0, 0, 0.7];     // 纯水体与极高湿度区：深蓝色
+}
+</code></pre>
+<h3 id="3-codemirror-6-嵌入式编辑器动态热更">3. CodeMirror 6 嵌入式编辑器动态热更</h3>
+<p>前端集成现代 CodeMirror 6 语法高亮编辑器，用户在线调整公式并提交后，通过：</p>
+<pre><code class="language-javascript">source.setEvalscript(editor.state.doc.toString());
+</code></pre>
+<p>该方法会更新数据源配置、自动清理当前视口切片缓存并重新发送 Processing API 请求，实现秒级所见即所得的算法调优。</p>
+<hr>
+<h2 id="四、多时相时序演变与滑动时间窗口-time-range-filtering">四、多时相时序演变与滑动时间窗口 (<code>Time-Range Filtering</code>)</h2>
+<p>Sentinel-2 由 A、B 两颗太阳同步极轨卫星组成，全球重访周期为 5 天。</p>
+<h3 id="1-滑动时间窗口容差设计">1. 滑动时间窗口容差设计</h3>
+<p>在 <a href="file:///d:/Users/Downloads/openlayers/examples/sentinel-hub-date-picker.html"><code>examples/sentinel-hub-date-picker.html</code></a> 中：</p>
+<ul>
+<li>若将时间精确锁定在某一天，由于卫星未必在当天正上方过境，且可能遭受厚云遮挡，地图将产生大面积黑色无数据黑洞；</li>
+<li><strong>7 天滑动回溯策略</strong>：以用户选择的日期为截止点，向前推移 7 天：<pre><code class="language-javascript">const toDate = new Date(picker.value);
+const fromDate = new Date(toDate.getTime());
+fromDate.setDate(fromDate.getDate() - 7); // 滑动回溯 7 天
+</code></pre>
+该 7 天窗口保证至少包含 1~2 次完整的卫星过境观测，云端自动执行时间就近镶嵌合成。</li>
+</ul>
+<h3 id="2-sourcesetdata-响应式数据过滤">2. <code>source.setData()</code> 响应式数据过滤</h3>
+<pre><code class="language-javascript">source.setData([
+  {
+    type: &#39;sentinel-2-l2a&#39;,
+    dataFilter: {
+      timeRange: {
+        from: fromDate.toISOString(), // 严格遵循 ISO 8601 UTC 格式
+        to: toDate.toISOString(),
+      },
+    },
+  },
+]);
+</code></pre>
+<p>调用 <code>setData</code> 后，当前图层在不重新挂载 DOM 的前提下，平滑更新所有瓦片纹理。</p>
+<hr>
+<h2 id="五、切片格式动态切换与带宽调优-image-format">五、切片格式动态切换与带宽调优 (<code>Image Format</code>)</h2>
+<p><a href="file:///d:/Users/Downloads/openlayers/examples/sentinel-hub-custom-format.html"><code>examples/sentinel-hub-custom-format.html</code></a> 演示了运行时图像传输编码的动态切换：</p>
+<table>
+<thead>
+<tr>
+<th align="left">格式名称</th>
+<th align="left">压缩机制</th>
+<th align="left">透明通道 (Alpha)</th>
+<th align="left">典型体积对比</th>
+<th align="left">生产推荐场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong><code>image/webp</code></strong></td>
+<td align="left">现代高压缩比算法</td>
+<td align="left">支持</td>
+<td align="left">极小（节约 40%~60% 带宽）</td>
+<td align="left"><strong>商用系统首选</strong>，高保真且加载最快</td>
+</tr>
+<tr>
+<td align="left"><strong><code>image/png</code></strong></td>
+<td align="left">无损压缩</td>
+<td align="left">完美支持</td>
+<td align="left">较大（基准 100%）</td>
+<td align="left">包含云掩膜、精准像素分割、科研绘图</td>
+</tr>
+<tr>
+<td align="left"><strong><code>image/jpeg</code></strong></td>
+<td align="left">经典有损离散余弦</td>
+<td align="left"><strong>不支持</strong>（强制不透明）</td>
+<td align="left">较小</td>
+<td align="left">纯陆地全覆盖真彩色正射航测图</td>
+</tr>
+</tbody></table>
+<pre><code class="language-javascript">// 切换格式并触发切片刷新
+source.setFormat(&#39;image/webp&#39;);
+</code></pre>
+<hr>
+<h2 id="六、sentinel-hub-核心示例矩阵-examples-matrix">六、Sentinel Hub 核心示例矩阵 (Examples Matrix)</h2>
+<table>
+<thead>
+<tr>
+<th align="left">示例文件与链接</th>
+<th align="left">技术切入点</th>
+<th align="left">核心 API / 关键技术</th>
+<th align="left">典型业务落地场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/sentinel-hub.html"><code>examples/sentinel-hub.html</code></a></td>
+<td align="left">Processing API 基础集成</td>
+<td align="left"><code>ol/source/SentinelHub</code>, <code>WebGLTile</code>, <code>useGeographic</code></td>
+<td align="left">欧空局哨兵2号多光谱数据实时接入与真/假彩色展现</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/sentinel-hub-custom-format.html"><code>examples/sentinel-hub-custom-format.html</code></a></td>
+<td align="left">切片格式带宽调优</td>
+<td align="left"><code>source.setFormat(&#39;image/webp&#39;)</code></td>
+<td align="left">移动端与弱网环境下遥感切片低延迟轻量化交付</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/sentinel-hub-custom-script.html"><code>examples/sentinel-hub-custom-script.html</code></a></td>
+<td align="left">Evalscript 在线边缘解译</td>
+<td align="left"><code>source.setEvalscript()</code>, CodeMirror 6, NDMI 水分指数</td>
+<td align="left">水体分布监测、旱情预警、植被叶绿素探测</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/sentinel-hub-date-picker.html"><code>examples/sentinel-hub-date-picker.html</code></a></td>
+<td align="left">多时相时序回溯</td>
+<td align="left"><code>source.setData()</code>, 7 天滑动窗口, ISO 8601 UTC</td>
+<td align="left">森林火灾灾前灾后对比、汛期淹没演变、季节物候分析</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="七、生产级工程避坑指南-production-pitfalls-checklist">七、生产级工程避坑指南 (Production Pitfalls Checklist)</h2>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph AuthCheck[&quot;鉴权安全避坑&quot;]
+        A1[&quot;禁止前端暴露 Client Secret，采用后端中转 Token&quot;]
+        A2[&quot;监听 source.on(&#39;change&#39;) 及时捕获 429 限流报错&quot;]
+    end
+
+    subgraph EvalscriptCheck[&quot;解译脚本避坑&quot;]
+        B1[&quot;首行必须书写 //VERSION=3 声明&quot;]
+        B2[&quot;透明区域严禁使用 image/jpeg 导出&quot;]
+        B3[&quot;禁止将 setEvalscript 绑定在高频 input 事件上&quot;]
+    end
+
+    subgraph TimeCheck[&quot;时空时序避坑&quot;]
+        C1[&quot;日期参数必须转换为标准 ISO 8601 UTC 字符串&quot;]
+        C2[&quot;窗口设置至少 5~7 天防止无过境切片产生黑洞&quot;]
+        C3[&quot;多云季节建议启用 mosaickingOrder: &#39;leastCC&#39;&quot;]
+    end
+</code></pre>
+<ol>
+<li><strong>Processing Units（PU）免费配额耗尽与 429 速率限制</strong>：
+Sentinel Hub 依据请求切片的像素数与波段复杂度计算 PU 消耗。在线编辑 Evalscript 或选择日期时，务必使用防抖（Debounce）或显式提交按钮，切忌在每次按键或拖动滑块时疯狂重发请求，否则会瞬间触发 429 速率限制并在控制台抛出 <code>Too Many Requests</code>。</li>
+<li><strong>时区偏差引发的时空断层</strong>：
+HTML <code>&lt;input type=&quot;date&quot;&gt;</code> 返回的是本地时间（如 <code>2024-06-01</code>）。在中国标准时间（UTC+8）下，直接转换可能产生 8 小时偏差。必须通过 <code>toISOString()</code> 显式将时间格式化为严格的零时区（UTC）字符串，确保服务端准确检索目标过境时刻的数据。</li>
+<li><strong>JPEG 格式抹杀透明度</strong>：
+若使用 Evalscript 对云层或水体进行了透明处理（返回带 Alpha 通道的数据），若切片格式误选为 <code>image/jpeg</code>，所有透明像素将被强制填充为纯黑底色。带有透明度逻辑的解译必须强制选用 <code>image/png</code> 或 <code>image/webp</code>。</li>
+</ol>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

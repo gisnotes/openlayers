@@ -2,11 +2,12 @@ import { Dr as Map, Ni as View, Vn as ImageLayer, X as RasterSource, kn as Image
 import { n as OSM } from "./OSM.js";
 //#region examples/shaded-relief.js
 /**
-* Generates a shaded relief image given elevation data.  Uses a 3x3
-* neighborhood for determining slope and aspect.
-* @param {Array<ImageData>} inputs Array of input images.
-* @param {Object} data Data added in the "beforeoperations" event.
-* @return {ImageData} Output image.
+* Generates a shaded relief image given elevation data.
+* Uses a 3x3 neighborhood for determining slope and aspect.
+* 基于数字高程切片使用 3x3 邻域解算坡度与坡向，生成日照山体阴影图像
+* @param {Array<ImageData>} inputs Array of input images. / 输入图像数组
+* @param {Object} data Data added in the "beforeoperations" event. / 外部上下文参数
+* @return {ImageData|Object} Output image. / 计算生成的山体阴影图像
 */
 function shade(inputs, data) {
 	const elevationImage = inputs[0];
@@ -30,6 +31,12 @@ function shade(inputs, data) {
 	const cosSunEl = Math.cos(sunEl);
 	const sinSunEl = Math.sin(sunEl);
 	let pixelX, pixelY, x0, x1, y0, y1, offset, z0, z1, dzdx, dzdy, slope, aspect, cosIncidence, scaled;
+	/**
+	* Extract elevation in meters from Terrarium DEM format.
+	* 从 Terrarium 格式像素解码真实高程（米）
+	* @param {Array<number>} pixel RGBA values / 像素数组
+	* @return {number} Elevation in meters / 高程（米）
+	*/
 	function calculateElevation(pixel) {
 		return pixel[0] * 256 + pixel[1] + pixel[2] / 256 - 32768;
 	}

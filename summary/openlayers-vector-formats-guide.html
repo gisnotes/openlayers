@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-地理空间标准矢量格式解析、4d时空轨迹与-wktwkb-实战架构指南">OpenLayers 地理空间标准矢量格式解析、4D时空轨迹与 WKT/WKB 实战架构指南</h1>
+<blockquote>
+<p>在现代 GIS 与数字孪生平台中，后端存储的数据格式千差万别（关系型空间数据库、无人机航测、户外运动手持机、航空黑匣子、桌面 GIS 导出文件）。前端若无法高效解析并统一转化为拓扑要素，就无法进行任何空间渲染与交互：</p>
+<ol>
+<li><strong>标绘与无人机生态（KML）</strong>：如何通过 <code>ol/format/KML</code> 解析 Google Earth XML 树，提取内嵌样式并实现毫秒级像素命中拾取？</li>
+<li><strong>运动轨迹与户外导航（GPX）</strong>：面对同时包含航点（<code>wpt</code>）、路线（<code>rte</code>）和航迹（<code>trk</code>）的 GPX 文件，如何根据几何类型（Point / LineString / MultiLineString）进行 $O(1)$ 样式分流路由？</li>
+<li><strong>4D 时空连续轨迹与吸附（IGC）</strong>：面对记录飞行时间与高度的四维坐标（<code>[x, y, m]</code>），如何利用 <code>getCoordinateAtM</code> 在近 5 万个顶点中毫秒级二分插值实现时间轴动态回放？如何通过 <code>getClosestPoint</code> 和 <code>postrender</code> 瞬时渲染吸附引导线？</li>
+<li><strong>空间数据库标准协议（WKT 与 WKB）</strong>：PostGIS 与 MySQL Spatial 输出的 WKT 纯文本与 WKB 二进制流，如何通过 <code>ol/format/WKT</code> 与 <code>ol/format/WKB</code> 在单步反序列化中直接完成坐标投影变换？</li>
+</ol>
+<p>本文基于 5 个核心官方示例（<code>kml.html</code>、<code>gpx.html</code>、<code>igc.html</code>、<code>wkt.html</code>、<code>wkb.html</code>），全面解构 OpenLayers 矢量格式解析体系、4D 轨迹回放及二进制流处理架构。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：openlayers-矢量格式抽象矩阵">1. 架构总览：OpenLayers 矢量格式抽象矩阵</h2>
+<p>OpenLayers 设计了高度统一的 <code>ol/format/Feature</code> 抽象基类。所有标准格式解析器均遵循 <code>readFeatures(source, opt_options)</code> 与 <code>writeFeatures(features, opt_options)</code> 的双向序列化流水线：</p>
+<pre><code class="language-mermaid">graph TD
+    subgraph DataSources[&quot;多源异构空间数据载体&quot;]
+        KML_File[&quot;Google Earth KML&lt;br/&gt;(XML / Placemark / Style)&quot;]
+        GPX_File[&quot;GPS 轨迹交换 GPX&lt;br/&gt;(XML / wpt, rte, trk)&quot;]
+        IGC_File[&quot;航空飞行记录 IGC&lt;br/&gt;(纯文本 / 4D 时空坐标 XYM)&quot;]
+        WKT_Text[&quot;数据库文本 WKT&lt;br/&gt;(POLYGON / LINESTRING)&quot;]
+        WKB_Binary[&quot;数据库二进制 WKB&lt;br/&gt;(Hex / ArrayBuffer 字节流)&quot;]
+    end
+
+    subgraph FormatParsers[&quot;OpenLayers 格式解析器家族 (ol/format)&quot;]
+        KML_Parser[&quot;ol/format/KML&quot;]
+        GPX_Parser[&quot;ol/format/GPX&quot;]
+        IGC_Parser[&quot;ol/format/IGC&quot;]
+        WKT_Parser[&quot;ol/format/WKT&quot;]
+        WKB_Parser[&quot;ol/format/WKB&quot;]
+    end
+
+    subgraph InternalModel[&quot;统一地理内存模型 (ol/Feature &amp; ol/geom)&quot;]
+        Geom4D[&quot;几何对象与四维坐标&lt;br/&gt;Point, LineString, Polygon [X, Y, Z, M]&quot;]
+        Properties[&quot;业务属性字典&lt;br/&gt;name, desc, pilot, timestamp&quot;]
+        StyleEngine[&quot;动态样式路由与缓存&lt;br/&gt;styleFunction / StyleCache&quot;]
+    end
+
+    subgraph InteractiveFeatures[&quot;进阶交互与渲染引擎&quot;]
+        HitDetect[&quot;像素级命中检测 (forEachFeatureAtPixel)&quot;]
+        TimeScrub[&quot;时间轴二分插值 (getCoordinateAtM)&quot;]
+        SnapLine[&quot;最近要素正交垂足吸附 (getClosestPoint)&quot;]
+        ImmediateRender[&quot;VectorContext 即时绘制 (postrender)&quot;]
+    end
+
+    KML_File --&gt; KML_Parser
+    GPX_File --&gt; GPX_Parser
+    IGC_File --&gt; IGC_Parser
+    WKT_Text --&gt; WKT_Parser
+    WKB_Binary --&gt; WKB_Parser
+
+    KML_Parser --&gt; InternalModel
+    GPX_Parser --&gt; InternalModel
+    IGC_Parser --&gt; InternalModel
+    WKT_Parser --&gt; InternalModel
+    WKB_Parser --&gt; InternalModel
+
+    InternalModel --&gt; HitDetect
+    InternalModel --&gt; TimeScrub
+    InternalModel --&gt; SnapLine
+    SnapLine --&gt; ImmediateRender
+</code></pre>
+<h3 id="11-五大标准矢量格式特性对比">1.1 五大标准矢量格式特性对比</h3>
+<table>
+<thead>
+<tr>
+<th align="left">格式标准</th>
+<th align="left">数据协议</th>
+<th align="left">空间维度支持</th>
+<th align="left">典型应用领域</th>
+<th align="left">核心解析器</th>
+<th align="left">核心优势与瓶颈</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>KML</strong></td>
+<td align="left">XML (OGC)</td>
+<td align="left">2D / 3D (XYZ)</td>
+<td align="left">Google Earth、无人机飞控</td>
+<td align="left"><code>ol/format/KML</code></td>
+<td align="left">可携带内嵌样式，但 XML 冗长体积庞大</td>
+</tr>
+<tr>
+<td align="left"><strong>GPX</strong></td>
+<td align="left">XML (通用)</td>
+<td align="left">3D / 4D (XYZM)</td>
+<td align="left">户外运动、Garmin 手持机、骑行</td>
+<td align="left"><code>ol/format/GPX</code></td>
+<td align="left">结构语义分明，自动提取高程与时间</td>
+</tr>
+<tr>
+<td align="left"><strong>IGC</strong></td>
+<td align="left">纯文本行</td>
+<td align="left">4D (XYM / 时间戳)</td>
+<td align="left">滑翔机、滑翔伞越野、航空防作弊</td>
+<td align="left"><code>ol/format/IGC</code></td>
+<td align="left">极度紧凑，适合数十万顶点时间序列回放</td>
+</tr>
+<tr>
+<td align="left"><strong>WKT</strong></td>
+<td align="left">纯文本 (OGC)</td>
+<td align="left">2D ~ 4D</td>
+<td align="left">PostGIS、SQL 数据库调试</td>
+<td align="left"><code>ol/format/WKT</code></td>
+<td align="left">跨平台人类可读，但浮点数有转换开销</td>
+</tr>
+<tr>
+<td align="left"><strong>WKB</strong></td>
+<td align="left">二进制流 (OGC)</td>
+<td align="left">2D ~ 4D</td>
+<td align="left">PostGIS 生产推流、RPC 微服务</td>
+<td align="left"><code>ol/format/WKB</code></td>
+<td align="left"><strong>体积精简 60% 以上，IEEE 754 零精度损失</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-kml-与-gpx：xml-结构化要素与多几何分流（kmlhtml--gpxhtml）">2. KML 与 GPX：XML 结构化要素与多几何分流（<code>kml.html</code> &amp; <code>gpx.html</code>）</h2>
+<h3 id="21-kml-异步加载与像素拾取">2.1 KML 异步加载与像素拾取</h3>
+<p>在 <code>kml.html</code> 中，<code>VectorSource</code> 通过内部的 <code>XHR</code> 异步拉取 KML 文件，并调用 <code>KML</code> 解析器生成要素集合。
+当用户在地图上滑动或点击时，利用 <code>map.forEachFeatureAtPixel()</code> 可以在离屏 Canvas 上执行无损命中检测：</p>
+<pre><code class="language-javascript">// 像素级要素探测与名称提取
+const displayFeatureInfo = function (pixel) {
+  const features = [];
+  map.forEachFeatureAtPixel(pixel, (feature) =&gt; features.push(feature));
+
+  if (features.length &gt; 0) {
+    const names = features.map((f) =&gt; f.get(&#39;name&#39;) || &#39;(unknown)&#39;);
+    document.getElementById(&#39;info&#39;).innerHTML = names.join(&#39;, &#39;);
+    map.getTargetElement().style.cursor = &#39;pointer&#39;;
+  } else {
+    document.getElementById(&#39;info&#39;).innerHTML = &#39;&amp;nbsp;&#39;;
+    map.getTargetElement().style.cursor = &#39;&#39;;
+  }
+};
+</code></pre>
+<h3 id="22-gpx-多几何类型动态样式路由">2.2 GPX 多几何类型动态样式路由</h3>
+<p>GPX 文件在同一个图层中经常混合存放地标点（<code>&lt;wpt&gt;</code>）与连续运动轨迹（<code>&lt;trkseg&gt;</code>）。
+直接配置固定样式无法满足点线的区分。<code>gpx.html</code> 演示了以 $O(1)$ 字典映射为核心的动态样式分流器：</p>
+<pre><code class="language-javascript">const style = {
+  &#39;Point&#39;: new Style({
+    image: new CircleStyle({ fill: new Fill({ color: &#39;rgba(255,255,0,0.4)&#39; }), radius: 5 }),
+  }),
+  &#39;LineString&#39;: new Style({ stroke: new Stroke({ color: &#39;#f00&#39;, width: 3 }) }),
+  &#39;MultiLineString&#39;: new Style({ stroke: new Stroke({ color: &#39;#0f0&#39;, width: 3 }) }),
+};
+
+const vector = new VectorLayer({
+  source: new VectorSource({ url: &#39;fells_loop.gpx&#39;, format: new GPX() }),
+  // 依据几何类型分流样式
+  style: (feature) =&gt; style[feature.getGeometry().getType()],
+});
+</code></pre>
+<hr>
+<h2 id="3-igc-4d-时空轨迹、二分插值回放与垂足吸附（igchtml）">3. IGC 4D 时空轨迹、二分插值回放与垂足吸附（<code>igc.html</code>）</h2>
+<p><code>igc.html</code> 是 OpenLayers 在处理海量时空轨迹数据领域的巅峰示例。5 条滑翔机轨迹包含了 <strong>49,707 个带有秒级时间戳的坐标点</strong>。</p>
+<h3 id="31-时间轴拖拽与-getcoordinateatm-二分插值算法">3.1 时间轴拖拽与 <code>getCoordinateAtM</code> 二分插值算法</h3>
+<p>在四维几何中，坐标结构为 <code>[x, y, m]</code>（$M$ 为时间戳）。
+当用户拖动时间滑块时，OpenLayers 无需手动遍历成千上万个数组，而是调用 <code>LineString.prototype.getCoordinateAtM(m, extrapolate)</code>：</p>
+<pre><code class="language-mermaid">sequenceDiagram
+    autonumber
+    actor User as 用户拖动时间滑块 (Time Slider)
+    participant App as 交互控制器 (input 事件)
+    participant Geom as ol/geom/LineString (4D 航迹)
+    participant Overlay as VectorLayer (飞行器位置浮层)
+
+    User-&gt;&gt;App: 改变时间滑块值 (当前时刻 m)
+    App-&gt;&gt;Geom: geometry.getCoordinateAtM(m, true)
+    Note over Geom: 内部执行二分查找：&lt;br/&gt;定位相邻两记录点 [x1, y1, t1] 与 [x2, y2, t2]&lt;br/&gt;按时间比率执行线性插值
+    Geom--&gt;&gt;App: 返回插值瞬时坐标 [x, y]
+    App-&gt;&gt;Overlay: marker.getGeometry().setCoordinates([x, y])
+    App-&gt;&gt;Map: map.render() 触发下一帧重绘
+</code></pre>
+<p>核心代码实现：</p>
+<pre><code class="language-javascript">control.addEventListener(&#39;input&#39;, function () {
+  const value = parseInt(control.value, 10) / 100;
+  const m = time.start + time.duration * value; // 计算当前时间戳
+  vectorSource.forEachFeature(function (feature) {
+    const geometry = feature.getGeometry();
+    // 毫秒级二分插值提取瞬时经纬度坐标
+    const coordinate = geometry.getCoordinateAtM(m, true);
+    let highlight = feature.get(&#39;highlight&#39;);
+    if (!highlight) {
+      highlight = new Feature(new Point(coordinate));
+      feature.set(&#39;highlight&#39;, highlight);
+      featureOverlay.getSource().addFeature(highlight);
+    } else {
+      highlight.getGeometry().setCoordinates(coordinate);
+    }
+  });
+  map.render();
+});
+</code></pre>
+<h3 id="32-空间垂足最近吸附与-vectorcontext-即时渲染">3.2 空间垂足最近吸附与 VectorContext 即时渲染</h3>
+<p>鼠标在地图上移动时，系统需要实时找出离光标最近的飞行员航迹，并绘制一条吸附红线与垂足靶心：</p>
+<ol>
+<li><strong>R 树快速初筛</strong>：<code>vectorSource.getClosestFeatureToCoordinate(coord)</code>；</li>
+<li><strong>多段线正交投影</strong>：<code>geometry.getClosestPoint(coord)</code>，返回垂足坐标并取出该位置的通过时间；</li>
+<li><strong>即时渲染（Immediate Rendering）</strong>：在 <code>vectorLayer.on(&#39;postrender&#39;)</code> 中利用 <code>getVectorContext(evt).drawGeometry()</code> 直接绘制，避免频繁操作 Source 引发垃圾回收（GC）丢帧。</li>
+</ol>
+<pre><code class="language-javascript">vectorLayer.on(&#39;postrender&#39;, function (evt) {
+  const vectorContext = getVectorContext(evt);
+  vectorContext.setStyle(style);
+  if (point !== null) vectorContext.drawGeometry(point);
+  if (line !== null) vectorContext.drawGeometry(line);
+});
+</code></pre>
+<hr>
+<h2 id="4-wkt-与-wkb：数据库交互与二进制传输极限（wkthtml--wkbhtml）">4. WKT 与 WKB：数据库交互与二进制传输极限（<code>wkt.html</code> &amp; <code>wkb.html</code>）</h2>
+<h3 id="41-单步解析--投影变换流水线">4.1 单步“解析 + 投影变换”流水线</h3>
+<p>无论 WKT 纯文本还是 WKB 二进制流，<code>ol/format</code> 均提供了双重投影参数配置：</p>
+<pre><code class="language-javascript">// WKT 单步解析
+const formatWKT = new WKT();
+const featureWKT = formatWKT.readFeature(wktString, {
+  dataProjection: &#39;EPSG:4326&#39;,       // 数据库返回的经纬度
+  featureProjection: &#39;EPSG:3857&#39;,    // 视口所需的 Web 墨卡托
+});
+
+// WKB 单步解析 (支持十六进制 Hex 或 Uint8Array)
+const formatWKB = new WKB();
+const featureWKB = formatWKB.readFeature(wkbHexOrBuffer, {
+  dataProjection: &#39;EPSG:4326&#39;,
+  featureProjection: &#39;EPSG:3857&#39;,
+});
+</code></pre>
+<h3 id="42-wkb-相比-wkt-的性能与网络优势">4.2 WKB 相比 WKT 的性能与网络优势</h3>
+<pre><code class="language-mermaid">graph LR
+    subgraph WKT_Flow[&quot;WKT 纯文本传输链路 (臃肿 &amp; 精度折损)&quot;]
+        DB1[&quot;PostGIS 内存浮点数&quot;] --&gt;|ST_AsText 四舍五入| Str[&quot;ASCII 字符串 (体积大)&quot;]
+        Str --&gt;|HTTP 传输 (宽带占用高)| Client1[&quot;前端字符串正则解析&quot;]
+        Client1 --&gt;|parseFloat 精度损失| Geom1[&quot;生成 Feature&quot;]
+    end
+
+    subgraph WKB_Flow[&quot;WKB 二进制传输链路 (极限紧凑 &amp; 零损耗)&quot;]
+        DB2[&quot;PostGIS 内存浮点数&quot;] --&gt;|ST_AsBinary 内存直出| Bin[&quot;IEEE 754 字节流 (精简 60%+)&quot;]
+        Bin --&gt;|HTTP 二进制直传| Client2[&quot;DataView 内存映射读取&quot;]
+        Client2 --&gt;|零拷贝直接还原| Geom2[&quot;生成 Feature (绝对零精度损失)&quot;]
+    end
+</code></pre>
+<hr>
+<h2 id="5-生产实践踩坑与选型指南">5. 生产实践踩坑与选型指南</h2>
+<h3 id="51-矢量格式选型决策矩阵">5.1 矢量格式选型决策矩阵</h3>
+<table>
+<thead>
+<tr>
+<th align="left">业务场景</th>
+<th align="left">推荐格式</th>
+<th align="left">核心选型依据</th>
+<th align="left">避坑提醒</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>空间数据库接口 (高并发/实时)</strong></td>
+<td align="left"><strong>WKB (二进制)</strong></td>
+<td align="left">体积最小，反序列化性能最高，零浮点精度损失</td>
+<td align="left">前端需使用 <code>response.arrayBuffer()</code> 接收并处理大/小端字节序</td>
+</tr>
+<tr>
+<td align="left"><strong>调试接口 / 人机可读文本</strong></td>
+<td align="left"><strong>WKT (文本)</strong></td>
+<td align="left">纯文本易读，便于在 SQL 控制台排查</td>
+<td align="left">注意经纬度顺序严格为 <code>X(经度) Y(纬度)</code>，不可颠倒</td>
+</tr>
+<tr>
+<td align="left"><strong>无人机 / 航测 / 航线规划</strong></td>
+<td align="left"><strong>KML</strong></td>
+<td align="left">行业通用标准，支持自带色彩描边与标注树</td>
+<td align="left">复杂大文件关闭 <code>extractStyles</code>，防止 Style 实例暴涨</td>
+</tr>
+<tr>
+<td align="left"><strong>运动户外 / 车联网轨迹</strong></td>
+<td align="left"><strong>GPX</strong></td>
+<td align="left">携带原生海拔与时间戳，生态工具链完整</td>
+<td align="left">注意解析 <code>[x, y, z, m]</code> 多维坐标并合理过滤无效 GPS 漂移点</td>
+</tr>
+<tr>
+<td align="left"><strong>高频时序时空回放</strong></td>
+<td align="left"><strong>IGC / 自定义 XYM</strong></td>
+<td align="left">时间戳内嵌于几何点中，配合 <code>getCoordinateAtM</code> 秒级回放</td>
+<td align="left">批量要素必须使用 <code>styleCache</code> 共享样式对象单例</td>
+</tr>
+</tbody></table>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

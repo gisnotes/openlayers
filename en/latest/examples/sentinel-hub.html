@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Sentinel Hub</title>
+    <title>Sentinel Hub / 欧空局哨兵卫星影像（Sentinel Hub Processing API）</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Sentinel Hub</h4>
+        <h4 id="title">Sentinel Hub / 欧空局哨兵卫星影像（Sentinel Hub Processing API）</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,10 +75,10 @@
               data-bs-target="#tag-example-list"
               data-title="SentinelHub"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./sentinel-hub.html&quot;&gt;Sentinel Hub&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-custom-format.html&quot;&gt;Sentinel Hub Custom Format&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-custom-script.html&quot;&gt;Sentinel Hub Custom Script&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-date-picker.html&quot;&gt;Sentinel Hub Date Picker&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./sentinel-hub.html&quot;&gt;Sentinel Hub / 欧空局哨兵卫星影像（Sentinel Hub Processing API）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-custom-format.html&quot;&gt;Sentinel Hub Custom Format / 哨兵影像切片格式动态切换（WebP / PNG / JPEG）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-custom-script.html&quot;&gt;Sentinel Hub Custom Script / 哨兵影像 Evalscript 在线波段解译与水分指数（NDMI）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-date-picker.html&quot;&gt;Sentinel Hub Date Picker / 哨兵时序卫星影像与日期选择联动（source.setData）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >4</a>
@@ -92,10 +92,10 @@
               data-bs-target="#tag-example-list"
               data-title="process"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./sentinel-hub.html&quot;&gt;Sentinel Hub&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-custom-format.html&quot;&gt;Sentinel Hub Custom Format&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-custom-script.html&quot;&gt;Sentinel Hub Custom Script&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-date-picker.html&quot;&gt;Sentinel Hub Date Picker&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./sentinel-hub.html&quot;&gt;Sentinel Hub / 欧空局哨兵卫星影像（Sentinel Hub Processing API）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-custom-format.html&quot;&gt;Sentinel Hub Custom Format / 哨兵影像切片格式动态切换（WebP / PNG / JPEG）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-custom-script.html&quot;&gt;Sentinel Hub Custom Script / 哨兵影像 Evalscript 在线波段解译与水分指数（NDMI）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-date-picker.html&quot;&gt;Sentinel Hub Date Picker / 哨兵时序卫星影像与日期选择联动（source.setData）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >4</a>
@@ -117,15 +117,15 @@
         <div id="map" class="map"></div>
 <dialog id="auth-dialog" open>
   <form method="dialog" id="auth-form">
-    <label>Client id
+    <label>Client id / 客户端 ID:
       <br>
       <input type="text" name="id" autofocus value="fa02a066-fc80-4cb4-af26-aae0af26cbf1">
     </label>
-    <label>Client secret
+    <label>Client secret / 客户端密钥:
       <br>
       <input type="password" name="secret" value="rate_limit_secret">
     </label>
-    <input type="submit" value="show map">
+    <input type="submit" value="show map / 加载卫星地图">
   </form>
 </dialog>
 
@@ -135,21 +135,50 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">A tile source using the Sentinel Hub Processing API</p>
-        <div id="docs"><p>This example renders a tile layer with a source that uses the Sentinel Hub <a href="https://docs.sentinel-hub.com/api/latest/api/process/">Processing API</a> to generate tiles. The Processing API requires an access token.  The form above can be used to provide an OAuth client id and secret. The default client id and secret used in this example is severely rate limited. For the example to perform well, you should register for your own client id and secret. With this information, the source will fetch an access token.  If an accesss token is fetched by other means, the <code>source.setAuth()</code> method can be called the token directly.  See the Sentinel Hub <a href="https://docs.sentinel-hub.com/api/latest/api/overview/authentication/">authentication documentation</a> for details.</p>
+        <p id="shortdesc">A tile source using the Sentinel Hub Processing API / 演示如何使用 ol/source/SentinelHub 接入欧空局哨兵2号多光谱遥感影像并执行客户端波段合成。</p>
+        <div id="docs"><p>This example renders a tile layer with a source that uses the Sentinel Hub <a href="https://docs.sentinel-hub.com/api/latest/api/process/">Processing API</a> to generate tiles. The Processing API requires an access token. The form above can be used to provide an OAuth client id and secret. The default client id and secret used in this example is severely rate limited. For the example to perform well, you should register for your own client id and secret. With this information, the source will fetch an access token. If an access token is fetched by other means, the <code>source.setAuth()</code> method can be called the token directly. See the Sentinel Hub <a href="https://docs.sentinel-hub.com/api/latest/api/overview/authentication/">authentication documentation</a> for details.</p>
 <p>
-  See these other examples for details on the following:
+  本示例展示如何利用 <code>ol/source/SentinelHub</code> 数据源直接对接欧洲航天局（ESA）Sentinel-2 遥感影像的 <a href="https://docs.sentinel-hub.com/api/latest/api/process/">Processing API</a> 生成切片。Processing API 要求通过 OAuth2 进行安全认证，上方弹窗可输入您的 Client ID 与 Client Secret（示例内置的默认凭证存在严苛的限流阈值，建议申请独立凭证测试）。数据源会自动获取并维护 Access Token；若通过后端代理获取令牌，亦可直接调用 <code>source.setAuth()</code> 注入 Token。
+</p> <p>
+  相关进阶示例延伸参考：
   <ul>
     <li>
       <a href="./sentinel-hub-date-picker.html">Sentinel Hub Date Picker</a>
-      &mdash; calling <code>source.setData()</code> to update the time range for the input data.
+      &mdash; 调用 <code>source.setData()</code> 动态变更卫星过境观测的时间窗口。
     </li>
     <li>
       <a href="./sentinel-hub-custom-script.html">Sentinel Hub Custom Script</a>
-      &mdash; calling <code>source.setEvalscript()</code> to update the Evalscript used in rendering tiles.
+      &mdash; 调用 <code>source.setEvalscript()</code> 在线编写 Evalscript 执行多光谱波段数学运算与植被/水分指数分类。
     </li>
   </ul>
 </p>
+---
+### 📚 学习记录与技术深度解读 (Learning Notes)
+#### 1. 核心架构原理 (Core Architecture) 传统遥感影像服务通常仅提供离线静态合成的 RGB 切片。Sentinel Hub 开创了“按需动态即时解译处理（On-the-fly Processing）”云原生模式： - <strong>多光谱原始波段抽取</strong>：Sentinel-2 卫星配备 13 个多光谱波段（覆盖可见光、近红外 NIR、短波红外 SWIR）。本例通过请求短波红外 `B12`、近红外 `B08` 与红光 `B04`，在服务端以 16 位精度动态组合，渲染出极具透视感的遥感假彩色地质与地貌影像。 - <strong>Evalscript 算子运行机制</strong>：在数据源配置中声明的 `evalscript` 脚本（包含 `setup()` 与 `evaluatePixel()`）会被直接发送至 Sentinel Hub 分布式云端算力集群，按像素并行执行系数缩放（如 `2.5 * sample.B12`）与色彩映射，随后切片压缩输出到前端。 - <strong>WebGLTile 硬件加速呈现</strong>：OpenLayers 采用专为现代多波段和浮点切片优化的 `ol/layer/WebGLTile` 进行渲染，保证视口缩放与平移时的极致平滑度。
+#### 2. 关键实现与代码拆解 (Code Deep Dive) ```javascript useGeographic(); // 启用经纬度直接传参模式
+const source = new SentinelHub({
+  data: [{
+    type: 'sentinel-2-l2a', // 指定欧洲空间局 Sentinel-2 L2A 大气校正底表反射率产品
+    dataFilter: {
+      timeRange: {
+        from: '2024-05-30T00:00:00Z',
+        to: '2024-06-01T00:00:00Z',
+      },
+    },
+  }],
+  evalscript: {
+    setup: () => ({
+      input: ['B12', 'B08', 'B04'], // 订阅所需光谱波段
+      output: {bands: 3},
+    }),
+    evaluatePixel: (sample) => [
+      2.5 * sample.B12, // 动态拉伸对比度
+      2 * sample.B08,
+      2 * sample.B04,
+    ],
+  },
+}); ```
+#### 3. 生产实战避坑与考量 (Production Pitfalls) - <strong>Client Secret 泄露风险</strong>：在公网商用系统中，严禁直接在前端暴露真实生产环境的 Client Secret。推荐由后端服务器调用 Sentinel Hub 接口换取短生命周期的临时 Access Token，前端通过 `source.setAuth({ token })` 纯令牌接入。 - <strong>云层遮挡与云掩膜过滤</strong>：Sentinel-2 光学卫星极易受多云天气影响。可在 `dataFilter` 中追加 `maxCloudCoverage: 20`（限制云量小于 20%），并在 `evalscript` 中引入 `CLM`（Cloud Mask）质量波段，将厚云或阴影像素动态透明化。
 </div>
       </div>
 
@@ -162,12 +191,16 @@ import TileLayer from &#x27;ol/layer/WebGLTile.js&#x27;;
 import {useGeographic} from &#x27;ol/proj.js&#x27;;
 import SentinelHub from &#x27;ol/source/SentinelHub.js&#x27;;
 
+// Enable geographic coordinates (lon, lat) directly across View and geometry
+// 启用地理坐标系模式，允许直接使用经纬度配置 View 与空间范围
 useGeographic();
 
+// Configure Sentinel Hub Processing API source with custom spectral band combination
+// 配置 Sentinel Hub 数据源：拉取 Sentinel-2 L2A 多光谱数据并执行云端波段运算合成
 const source &#x3D; new SentinelHub({
   data: [
     {
-      type: &#x27;sentinel-2-l2a&#x27;,
+      type: &#x27;sentinel-2-l2a&#x27;, // Sentinel-2 Level-2A Bottom-Of-Atmosphere reflectance / 哨兵2号L2A地表反射率产品
       dataFilter: {
         timeRange: {
           from: &#x27;2024-05-30T00:00:00Z&#x27;,
@@ -177,10 +210,14 @@ const source &#x3D; new SentinelHub({
     },
   ],
   evalscript: {
+    // Declare requested bands (SWIR-2 B12, NIR B08, Red B04)
+    // 声明订阅的波段：短波红外 B12、近红外 B08、红光 B04
     setup: () &#x3D;&gt; ({
       input: [&#x27;B12&#x27;, &#x27;B08&#x27;, &#x27;B04&#x27;],
       output: {bands: 3},
     }),
+    // Pixel-level dynamic stretching formula evaluated in the cloud
+    // 云端像素级波段线性拉伸公式
     evaluatePixel: (sample) &#x3D;&gt; [
       2.5 * sample.B12,
       2 * sample.B08,
@@ -189,6 +226,8 @@ const source &#x3D; new SentinelHub({
   },
 });
 
+// Render with WebGLTile layer for optimal rendering performance
+// 采用 WebGLTile 图层实现高吞吐硬件加速渲染
 const map &#x3D; new Map({
   layers: [new TileLayer({source})],
   target: &#x27;map&#x27;,
@@ -200,12 +239,16 @@ const map &#x3D; new Map({
   }),
 });
 
+// Listen to OAuth authentication form submission
+// 监听认证弹窗提交事件，注入 OAuth 凭证换取 Token
 document.getElementById(&#x27;auth-form&#x27;).addEventListener(&#x27;submit&#x27;, (event) &#x3D;&gt; {
   const clientId &#x3D; event.target.elements[&#x27;id&#x27;].value;
   const clientSecret &#x3D; event.target.elements[&#x27;secret&#x27;].value;
   source.setAuth({clientId, clientSecret});
 });
 
+// Handle authentication or processing errors
+// 监听数据源状态变更，捕获并提示认证失败或请求超限异常
 source.on(&#x27;change&#x27;, () &#x3D;&gt; {
   if (source.getState() &#x3D;&#x3D;&#x3D; &#x27;error&#x27;) {
     alert(source.getError());
@@ -222,7 +265,7 @@ source.on(&#x27;change&#x27;, () &#x3D;&gt; {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Sentinel Hub&lt;/title&gt;
+    &lt;title&gt;Sentinel Hub / 欧空局哨兵卫星影像（Sentinel Hub Processing API）&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -251,15 +294,15 @@ source.on(&#x27;change&#x27;, () &#x3D;&gt; {
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
     &lt;dialog id&#x3D;&quot;auth-dialog&quot; open&gt;
       &lt;form method&#x3D;&quot;dialog&quot; id&#x3D;&quot;auth-form&quot;&gt;
-        &lt;label&gt;Client id
+        &lt;label&gt;Client id / 客户端 ID:
           &lt;br&gt;
           &lt;input type&#x3D;&quot;text&quot; name&#x3D;&quot;id&quot; autofocus value&#x3D;&quot;fa02a066-fc80-4cb4-af26-aae0af26cbf1&quot;&gt;
         &lt;/label&gt;
-        &lt;label&gt;Client secret
+        &lt;label&gt;Client secret / 客户端密钥:
           &lt;br&gt;
           &lt;input type&#x3D;&quot;password&quot; name&#x3D;&quot;secret&quot; value&#x3D;&quot;rate_limit_secret&quot;&gt;
         &lt;/label&gt;
-        &lt;input type&#x3D;&quot;submit&quot; value&#x3D;&quot;show map&quot;&gt;
+        &lt;input type&#x3D;&quot;submit&quot; value&#x3D;&quot;show map / 加载卫星地图&quot;&gt;
       &lt;/form&gt;
     &lt;/dialog&gt;
 

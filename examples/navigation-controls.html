@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Navigation Controls</title>
+    <title>Navigation Controls / 地图导航控件 (ZoomToExtent)</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Navigation Controls</h4>
+        <h4 id="title">Navigation Controls / 地图导航控件 (ZoomToExtent)</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,12 +74,13 @@
               data-bs-target="#tag-example-list"
               data-title="control"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-controls.html&quot;&gt;Custom Controls&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./navigation-controls.html&quot;&gt;Navigation Controls&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./custom-controls.html&quot;&gt;Custom Controls / 自定义地图控件（指北针）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./navigation-controls.html&quot;&gt;Navigation Controls / 地图导航控件 (ZoomToExtent)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./screen-capture.html&quot;&gt;Screen Capture Control / 屏幕截屏控件（地图 Canvas 导出）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders / 缩放滑块控件与纯 CSS 样式定制（ZoomSlider）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
-              >3</a>
+              >4</a>
           </span>
           <span class="badge-group">
             <a
@@ -90,7 +91,7 @@
               data-bs-target="#tag-example-list"
               data-title="navigation"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./navigation-controls.html&quot;&gt;Navigation Controls&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./navigation-controls.html&quot;&gt;Navigation Controls / 地图导航控件 (ZoomToExtent)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -104,11 +105,11 @@
               data-bs-target="#tag-example-list"
               data-title="extent"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./extent-constrained.html&quot;&gt;Constrained Extent&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./extent-constrained.html&quot;&gt;Constrained Extent / 约束视图范围 (extent 边界限制)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./extent-interaction.html&quot;&gt;Extent Interaction / 空间范围矩形交互&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-extent.html&quot;&gt;Limited Layer Extent&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-extent.html&quot;&gt;Limited Layer Extent / 限制图层渲染空间范围（layer.setExtent）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./extent-interaction-modify.html&quot;&gt;Modify an extent / 修改既有范围矩形&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./navigation-controls.html&quot;&gt;Navigation Controls&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./navigation-controls.html&quot;&gt;Navigation Controls / 地图导航控件 (ZoomToExtent)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >5</a>
@@ -135,10 +136,31 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Shows how to add navigation controls.</p>
+        <p id="shortdesc">Shows how to add navigation controls. / 展示如何添加导航控件及使用 ZoomToExtent 一键快速复位全图范围。</p>
         <div id="docs"><p>This example shows how to use the <code>ol/control/ZoomToExtent</code> control.</p> <p>The following navigation controls are added to the map:</p> <ul>
   <li><code>ol/control/Zoom</code> (added by default)</li>
   <li><code>ol/control/ZoomToExtent</code></li>
+</ul> <p>本示例展示了如何向地图中添加 <code>ol/control/ZoomToExtent</code>（缩放至指定范围）导航控件。</p> <p>当前地图包含以下导航控件：</p> <ul>
+  <li><code>ol/control/Zoom</code>（OpenLayers 默认已内置的放大/缩小按钮）</li>
+  <li><code>ol/control/ZoomToExtent</code>（一键定位至苏黎世核心地理范围）</li>
+</ul> <hr> <h3>📚 学习记录与技术深度解读</h3>
+<h4>1. 核心架构与设计思想</h4> <ul>
+  <li><strong>导航控件体系（Navigation Controls）：</strong>
+    在复杂的业务地图系统中，用户在经历多次平移缩放后极易“迷失”当前视野。OpenLayers 提供了 <code>ZoomToExtent</code> 控件，以极简的原生按钮形态嵌入缩放工具栏中，用户点击后瞬间将视口平滑适配到预设的最佳空间包围盒（Extent）。
+  </li>
+  <li><strong>默认控件集扩展模式：</strong>
+    OpenLayers 的 <code>defaultControls()</code> 函数返回一个 <code>Collection</code> 集合（包含缩放、旋转与版权控件），通过 <code>defaultControls().extend([new ZoomToExtent(...)])</code> 能够保持默认控件行为的同时，优雅无缝注入扩展控件。
+  </li>
+</ul>
+<h4>2. 源码与关键 API 剖析</h4> <ul>
+  <li><code>extent: [minX, minY, maxX, maxY]</code>：指定复位时的空间投影包围盒（本示例为瑞士苏黎世湖区的 EPSG:3857 墨卡托坐标）。若未指定，控件默认复位到当前投影的全局范围（<code>projection.getExtent()</code>）。</li>
+  <li><code>label: 'E'</code>（默认）：按钮上显示的文本或图标（生产环境常用 FontAwesome 的 <code>&lt;i class="fa fa-compress"&gt;&lt;/i&gt;</code> 全图复位图标进行美化）。</li>
+  <li><code>tipLabel</code>：鼠标悬停提示文本，对无障碍和用户指引非常关键。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优</h4> <ul>
+  <li><strong>动态业务范围与硬编码陷阱：</strong>
+    静态写死 <code>extent</code> 仅适合行政区划固定的场景。在动态业务系统（如物流车辆监控、巡检任务追踪）中，应在数据加载完成后调用 <code>vectorSource.getExtent()</code>，并通过自定义按钮调用 <code>map.getView().fit(extent, { duration: 800, padding: [50, 50, 50, 50] })</code>，实现带平滑缓动动画与安全边距的视口自适应。
+  </li>
 </ul>
 </div>
       </div>
@@ -153,6 +175,8 @@ import {defaults as defaultControls} from &#x27;ol/control/defaults.js&#x27;;
 import TileLayer from &#x27;ol/layer/Tile.js&#x27;;
 import OSM from &#x27;ol/source/OSM.js&#x27;;
 
+// Initialize map with default controls extended with ZoomToExtent
+// 初始化地图，在默认控件基础上扩展 ZoomToExtent 控件
 const map &#x3D; new Map({
   controls: defaultControls().extend([
     new ZoomToExtent({
@@ -184,7 +208,7 @@ const map &#x3D; new Map({
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Navigation Controls&lt;/title&gt;
+    &lt;title&gt;Navigation Controls / 地图导航控件 (ZoomToExtent)&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

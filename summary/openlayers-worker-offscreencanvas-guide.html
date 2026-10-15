@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-离屏画布（offscreencanvas）与多线程-web-worker-渲染实战架构指南">OpenLayers 离屏画布（OffscreenCanvas）与多线程 Web Worker 渲染实战架构指南</h1>
+<blockquote>
+<p>在传统 WebGIS 架构中，所有图层渲染、投影计算、矢量瓦片（MVT PBF）反序列化和文本注记排版都运行在浏览器的<strong>主线程（Main Thread）</strong>上。当加载复杂矢量切片或高密度数据时，主线程 CPU 很容易被打满，导致页面滚动卡顿、按钮点击迟钝甚至掉帧白屏。</p>
+<p>随着现代浏览器标准对 <strong><code>OffscreenCanvas</code>（离屏画布）</strong> 与 <strong>Transferable <code>ImageBitmap</code>（零拷贝显存转移）</strong> 的完善支持，OpenLayers 实现了将繁重的渲染作业完全剥离到后台 <strong>Web Worker</strong> 子线程的革命性能力。本文基于 2 个官方核心前沿示例（<code>offscreen-canvas.html</code>、<code>tiled-layer-rendering-in-offscreen-canvas.html</code>），系统解构全图层委托与瓦片微任务多线程架构的底层原理与生产选型。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：两种离屏多线程渲染范式">1. 架构总览：两种离屏多线程渲染范式</h2>
+<p>根据渲染粒度与生命周期的不同，OpenLayers 在 Web Worker 中的实践分为两大流派：</p>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph MainThread [主线程 (Main Thread / UI &amp; Gesture)]
+        UserGesture[&quot;用户缩放/平移手势&lt;br/&gt;(60-120 FPS 极速响应)&quot;]
+        TransformComp[&quot;仿射变换补偿器&lt;br/&gt;updateContainerTransform()&quot;]
+        DisplayCanvas[&quot;宿主画布 / DOM 容器&quot;]
+    end
+
+    subgraph Mode1 [范式一：全幅委托架构 (offscreen-canvas)]
+        WorkerFull[&quot;Worker 全图渲染器&quot;]
+        HeadlessMVT[&quot;Mapbox 矢量瓦片引擎&lt;br/&gt;MVT 解码 + 样式排版&quot;]
+        OffCanvasFull[&quot;OffscreenCanvas (全屏尺寸)&quot;]
+    end
+
+    subgraph Mode2 [范式二：瓦片级微任务架构 (tiled-layer)]
+        TileLoader[&quot;ImageTileSource.loader&quot;]
+        WorkerPool[&quot;Worker 瓦片烘焙池&quot;]
+        OffCanvasTile[&quot;OffscreenCanvas (512×512)&quot;]
+    end
+
+    UserGesture --&gt;|同步状态| TransformComp
+    TransformComp --&gt; DisplayCanvas
+
+    UserGesture -.-&gt;|postMessage 异步帧状态| WorkerFull
+    WorkerFull --&gt; HeadlessMVT --&gt; OffCanvasFull
+    OffCanvasFull --&gt;|ImageBitmap 零拷贝传输| DisplayCanvas
+
+    TileLoader -.-&gt;|请求单个切片 [z,x,y]| WorkerPool
+    WorkerPool --&gt; OffCanvasTile
+    OffCanvasTile --&gt;|ImageBitmap| TileLoader --&gt; DisplayCanvas
+</code></pre>
+<h3 id="11-两种离屏方案综合特征对比">1.1 两种离屏方案综合特征对比</h3>
+<table>
+<thead>
+<tr>
+<th align="left">维度 / 模式</th>
+<th align="left">范式一：全幅图层委托架构</th>
+<th align="left">范式二：瓦片级微任务架构</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>典型示例</strong></td>
+<td align="left"><code>offscreen-canvas.html</code></td>
+<td align="left"><code>tiled-layer-rendering-in-offscreen-canvas.html</code></td>
+</tr>
+<tr>
+<td align="left"><strong>Worker 内部对象</strong></td>
+<td align="left">无头图层组、TileQueue、MVT 解析器</td>
+<td align="left">完整的无头 <code>ol/Map</code> 与独立 <code>View</code></td>
+</tr>
+<tr>
+<td align="left"><strong>画布规格</strong></td>
+<td align="left">随视口动态调整（如 1920×1080）</td>
+<td align="left">固定切片网格规格（如 512×512）</td>
+</tr>
+<tr>
+<td align="left"><strong>手势延迟补偿</strong></td>
+<td align="left"><strong>必需</strong>：通过 CSS Transform 补偿时空差</td>
+<td align="left"><strong>天然免除</strong>：由主线程标准 TileLayer 自动无缝拼接</td>
+</tr>
+<tr>
+<td align="left"><strong>要素拾取 (Hit Detect)</strong></td>
+<td align="left">需通过 <code>postMessage</code> 异步委托 Worker 拾取</td>
+<td align="left">无法直接拾取（切片已完全光栅化）</td>
+</tr>
+<tr>
+<td align="left"><strong>工程复杂度</strong></td>
+<td align="left">极高（涉及样式同步、雪碧图传递、字体替换）</td>
+<td align="left">较低（结构清晰，极易扩展为多 Worker 线程池）</td>
+</tr>
+<tr>
+<td align="left"><strong>最适业务场景</strong></td>
+<td align="left">超复杂 Mapbox 矢量切片底图（MVT）流畅运行</td>
+<td align="left">自定义光栅瓦片滤镜、离线切片预烘焙、大量切片并行加载</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-全幅图层委托与时空仿射补偿机制（offscreen-canvashtml）">2. 全幅图层委托与时空仿射补偿机制（<code>offscreen-canvas.html</code>）</h2>
+<p>在 <code>offscreen-canvas.html</code> 中，主线程与 Worker 之间存在典型的“交互快、渲染慢”异步时空差。</p>
+<h3 id="21-仿射矩阵几何补偿（anti-jitter-transform）">2.1 仿射矩阵几何补偿（Anti-Jitter Transform）</h3>
+<p>当用户拖拽地图时，主线程立刻获得最新的 <code>mainThreadFrameState</code>，而 Worker 可能还在渲染 16ms 之前的 <code>workerFrameState</code>。若直接将 Worker 传回的图像贴在屏幕上，会出现严重的画面拉扯和抖动。</p>
+<p>示例在主线程构建了 <code>updateContainerTransform()</code>：</p>
+<pre><code class="language-javascript">function updateContainerTransform() {
+  if (workerFrameState) {
+    const viewState = mainThreadFrameState.viewState;
+    const renderedViewState = workerFrameState.viewState;
+    const dx = renderedViewState.center[0] - viewState.center[0];
+    const dy = renderedViewState.center[1] - viewState.center[1];
+    
+    // 逆向计算主线程与 Worker 渲染帧的旋转、缩放与位移偏差
+    compose(
+      transform,
+      (Math.cos(rotation) * dx + Math.sin(rotation) * dy) / resolution,
+      (Math.sin(rotation) * dx - Math.cos(rotation) * dy) / resolution,
+      renderedResolution / resolution,
+      renderedResolution / resolution,
+      rotation - renderedRotation,
+      0, 0
+    );
+    transformContainer.style.transform = toTransformString(transform);
+  }
+}
+</code></pre>
+<p>通过该矩阵变换，主线程将上一个旧帧作为临时纹理拉伸对齐，新帧送达后瞬间替换，保证了 60FPS 视觉平滑无缝。</p>
+<h3 id="22-雪碧图显存零拷贝转移（transferable-imagebitmap）">2.2 雪碧图显存零拷贝转移（Transferable ImageBitmap）</h3>
+<p>Worker 无法直接通过 DOM 加载外部图像，主线程通过 <code>new Image()</code> 下载雪碧图后，将其转换为 <code>ImageBitmap</code>，并通过 Transferable 对象所有权转移给 Worker：</p>
+<pre><code class="language-javascript">createImageBitmap(image, 0, 0, image.width, image.height).then((imageBitmap) =&gt; {
+  worker.postMessage(
+    { action: &#39;imageLoaded&#39;, image: imageBitmap, src: msg.src },
+    [imageBitmap] // 第二个参数传入转移列表，瞬间转移显存句柄
+  );
+});
+</code></pre>
+<hr>
+<h2 id="3-瓦片级微任务架构与无头地图（tiled-layer-rendering-in-offscreen-canvashtml）">3. 瓦片级微任务架构与无头地图（<code>tiled-layer-rendering-in-offscreen-canvas.html</code>）</h2>
+<p>瓦片级模式将主线程与子线程的关系精简到极致：</p>
+<h3 id="31-自定义-tile-loader-与任务队列">3.1 自定义 Tile Loader 与任务队列</h3>
+<pre><code class="language-javascript">new ImageTileSource({
+  tileSize: 512,
+  loader: (z, x, y) =&gt; {
+    return new Promise((resolve) =&gt; {
+      // 注册单次响应回调
+      const handleMessage = ({ data: { action, imageData } }) =&gt; {
+        if (action !== &#39;rendered&#39;) return;
+        worker.removeEventListener(&#39;message&#39;, handleMessage);
+        resolve(imageData); // resolve ImageBitmap，直接渲染为瓦片
+      };
+      worker.addEventListener(&#39;message&#39;, handleMessage);
+      worker.postMessage({ action: &#39;render&#39;, tile: [z, x, y] });
+    });
+  },
+});
+</code></pre>
+<h3 id="32-worker-内部的无头微地图烘焙">3.2 Worker 内部的无头微地图烘焙</h3>
+<p>Worker 内部创建了挂载在 <code>new OffscreenCanvas(512, 512)</code> 上的无头 <code>Map</code>：</p>
+<pre><code class="language-javascript">worker.addEventListener(&#39;message&#39;, async ({ data: { action, tile } }) =&gt; {
+  if (action !== &#39;render&#39;) return;
+  // 动态将视图精准对齐到切片包围盒
+  map.setView(new View({
+    center: tileGrid.getTileCoordCenter(tile),
+    resolution: tileGrid.getResolution(tile[0]),
+  }));
+  map.once(&#39;rendercomplete&#39;, () =&gt; {
+    const imageData = canvas.transferToImageBitmap();
+    worker.postMessage({ action: &#39;rendered&#39;, imageData }, [imageData]);
+  });
+});
+</code></pre>
+<hr>
+<h2 id="4-跨线程空间要素拾取（cross-thread-hit-detection）">4. 跨线程空间要素拾取（Cross-Thread Hit Detection）</h2>
+<p>在全幅 Worker 模式中，DOM 命中检测（<code>map.forEachFeatureAtPixel</code>）无法直接跨线程访问要素。系统采用了异步通信代理通道：</p>
+<ol>
+<li><strong>主线程捕获</strong>：<pre><code class="language-javascript">map.on(&#39;pointermove&#39;, (evt) =&gt; {
+  if (evt.dragging) return;
+  worker.postMessage({ action: &#39;requestFeatures&#39;, pixel: evt.pixel });
+});
+</code></pre>
+</li>
+<li><strong>Worker 拾取并序列化属性</strong>：<pre><code class="language-javascript">const observables = layersInView.map((l) =&gt; l.getFeatures(event.data.pixel));
+Promise.all(observables).then((res) =&gt; {
+  const features = res.flat();
+  worker.postMessage({
+    action: &#39;getFeatures&#39;,
+    features: features.map((e) =&gt; e.getProperties()), // 仅序列化业务属性
+  });
+});
+</code></pre>
+</li>
+</ol>
+<hr>
+<h2 id="5-生产级工程踩坑与避坑指南">5. 生产级工程踩坑与避坑指南</h2>
+<h3 id="51-字体环境与缺失替代（font-fallback）">5.1 字体环境与缺失替代（Font Fallback）</h3>
+<ul>
+<li><strong>陷阱</strong>：Mapbox 样式表通常指定 <code>Noto Sans Regular</code> 或 <code>Roboto</code>。Web Worker 内部既没有 <code>document.fonts</code> 也没有浏览器的 DOM 字体渲染树。若未进行拦截，文本渲染将失败或崩溃。</li>
+<li><strong>解决方案</strong>：在 Worker 中配置 <code>getFont()</code> 函数，强制将复杂网络字体映射到标准通用字体族：<pre><code class="language-javascript">function getFont(font) {
+  return font[0].replace(&#39;Noto Sans&#39;, &#39;serif&#39;).replace(&#39;Roboto&#39;, &#39;sans-serif&#39;);
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="52-并发与丢帧锁（rendering-mutex）">5.2 并发与丢帧锁（Rendering Mutex）</h3>
+<p>主线程的 <code>postMessage</code> 是异步非阻塞的。如果在 <code>rendering = true</code> 期间持续向 Worker 发送新的 <code>render</code> 帧，Worker 消息队列堆积会引发几十帧的恶性延迟。必须设置渲染互斥锁：</p>
+<pre><code class="language-javascript">if (!rendering) {
+  rendering = true;
+  worker.postMessage({ action: &#39;render&#39;, ... });
+} else {
+  frameState.animate = true; // 保持主线程动画循环，等待完成后立即补发
+}
+</code></pre>
+<h3 id="53-跨域（cors）与-transferable-显存防暴涨">5.3 跨域（CORS）与 Transferable 显存防暴涨</h3>
+<ul>
+<li><code>ImageBitmap</code> 转移具有<strong>破坏性</strong>（调用 <code>transferToImageBitmap()</code> 后原画布内容被清空并重置）。</li>
+<li>确保所有瓦片和字体资源允许跨域访问（<code>Access-Control-Allow-Origin: *</code>），否则 <code>createImageBitmap()</code> 会抛出安全上下文受限异常。</li>
+</ul>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

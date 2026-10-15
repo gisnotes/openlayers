@@ -3,8 +3,9 @@ import { Aa as useGeographic, Dr as Map, Ni as View, at as WebGLTileLayer, kn as
 useGeographic();
 var tiles = new w("https://pmtiles.io/stamen_toner(raster)CC-BY+ODbL_z3.pmtiles");
 /**
-* @param {string} src The image source URL.
-* @return {Promise<HTMLImageElement>} Resolves with the loaded image.
+* Load image from URL into HTMLImageElement. / 从指定 URL 异步加载图像元素
+* @param {string} src The image source URL. / 图像源 URL
+* @return {Promise<HTMLImageElement>} Resolves with the loaded image. / 承载加载完成图像的 Promise
 */
 function loadImage(src) {
 	return new Promise((resolve, reject) => {

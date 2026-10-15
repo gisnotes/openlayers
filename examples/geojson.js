@@ -56,6 +56,12 @@ var styles = {
 		fill: new Fill({ color: "rgba(255,0,0,0.2)" })
 	})
 };
+/**
+* Polymorphic style function resolving style by geometry type.
+* 根据要素运行时几何类型动态匹配样式的多态样式函数
+* @param {import('../src/ol/Feature.js').default} feature Vector feature / 矢量要素
+* @return {Style} Style instance / 样式对象
+*/
 var styleFunction = function(feature) {
 	return styles[feature.getGeometry().getType()];
 };

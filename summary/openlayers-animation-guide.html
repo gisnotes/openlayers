@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-空间动效渲染与动态轨迹动画实战架构指南-spatial-animation--dynamic-trajectory-architecture">OpenLayers 空间动效渲染与动态轨迹动画实战架构指南 (Spatial Animation &amp; Dynamic Trajectory Architecture)</h1>
+<blockquote>
+<p>本指南基于 OpenLayers 官方 <strong>animation</strong> 核心专题群的代表性示例，深度解构 WebGIS 动态视效渲染管线。系统剖析 <code>view.animate()</code> 视图镜头动画引擎与两阶段飞行动画（FlyTo）视差模型、依托 <code>postrender</code> 渲染钩子与 <code>VectorContext</code> 瞬态画布实现的高性能雷达脉冲扩散、点要素沿折线（Polyline）轨迹时间积分平滑巡航，以及基于大圆航线（Great Circle）与跨国际日期变更线（$\pm 180^\circ$）切分的全球航空流向动效架构。</p>
+</blockquote>
+<hr>
+<h2 id="一、空间动效渲染管线全景架构-architectural-overview">一、空间动效渲染管线全景架构 (Architectural Overview)</h2>
+<p>在现代 WebGIS 中，空间动效分为<strong>相机视口级动画</strong>与<strong>图层要素级动效</strong>两大分支。OpenLayers 依托底层的帧循环（Frame Loop）机制，提供了零数据污染的高性能动效管线：</p>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph ViewCameraAnimation[&quot;1. 视图相机级动画 (View Camera Animation)&quot;]
+        ViewAnimate[&quot;view.animate(options, ...)&quot;] --&gt; TimeDriver[&quot;基于时间轴插值驱动&quot;]
+        TimeDriver --&gt; InterpolateType{&quot;参数插值类型&quot;}
+        InterpolateType --&gt;|&quot;并行复合&quot;| CenterZoomRot[&quot;中心点平移 + 缩放等级 + 锚点旋转&quot;]
+        InterpolateType --&gt;|&quot;串行链式&quot;| StageChain[&quot;两阶段起降 FlyTo 视差巡航 (zoom-1 -&gt; zoom)&quot;]
+        TimeDriver --&gt; EasingCurves[&quot;物理缓动: Bounce (弹跳) / Elastic (弹性衰减)&quot;]
+    end
+
+    subgraph FeaturePostrenderPipe[&quot;2. 要素瞬态动效管线 (Postrender Vector Pipeline)&quot;]
+        MapRender[&quot;map.render() 触发 60fps 帧循环&quot;] --&gt; PostrenderEvent[&quot;tileLayer / map 抛出 postrender 事件&quot;]
+        PostrenderEvent --&gt; VectorContext[&quot;getVectorContext(event) 获取即时矢量代理画布&quot;]
+        
+        VectorContext --&gt; FlashWave[&quot;雷达波纹扩散: 缓动动态半径与 Alpha 渐隐&quot;]
+        VectorContext --&gt; TrackCruise[&quot;车辆折线巡航: route.getCoordinateAt 距离插值&quot;]
+        VectorContext --&gt; FlightArc[&quot;大圆航迹流线: arc.js 球面切分 + coords.slice 动态生长&quot;]
+        
+        FlashWave --&gt; ZeroPollution[&quot;【核心优势】零数据污染: 绕过 R-Tree 空间索引重构&quot;]
+        TrackCruise --&gt; ZeroPollution
+        FlightArc --&gt; ZeroPollution
+        
+        ZeroPollution --&gt; WorldOffset[&quot;多世界平铺补偿: currentLine.translate(worldWidth, 0)&quot;]
+    end
+</code></pre>
+<hr>
+<h2 id="二、视图级动画引擎-viewanimate-深度解构">二、视图级动画引擎 (<code>View.animate</code>) 深度解构</h2>
+<p>在电子地图中，机械突兀的中心瞬移会破坏用户的空间方位感。<code>view.animate()</code> 提供了流畅的镜头运镜能力。</p>
+<h3 id="1-并行复合与串行链式组合">1. 并行复合与串行链式组合</h3>
+<ul>
+<li><strong>并行复合</strong>：当单一对象中配置多个属性时，平移、缩放与旋转在同一时间窗口内同步并行插值。</li>
+<li><strong>串行链式</strong>：将多个配置对象作为连续参数传入，OpenLayers 内部会自动排队按序执行：<pre><code class="language-javascript">// 串行执行两段动画
+view.animate(stage1Options, stage2Options);
+</code></pre>
+</li>
+</ul>
+<h3 id="2-电影级起降飞行（flyto）视差原理">2. 电影级起降飞行（FlyTo）视差原理</h3>
+<p><a href="file:///d:/Users/Downloads/openlayers/examples/animation.html"><code>examples/animation.html</code></a> 中的 <code>flyTo</code> 巧妙利用视差深度模拟无人机航拍起降：</p>
+<pre><code class="language-javascript">function flyTo(location, done) {
+  const duration = 2000;
+  const zoom = view.getZoom();
+  let parts = 2;
+  let called = false;
+  function callback(complete) {
+    --parts;
+    if (called) return;
+    if (parts === 0 || !complete) {
+      called = true;
+      done(complete);
+    }
+  }
+  // 1. 视口中心线性平移至目标城市（耗时 2000ms）
+  view.animate({ center: location, duration: duration }, callback);
+  // 2. 垂直高度两阶段缩放：前 1000ms 拉高巡航（zoom - 1），后 1000ms 俯冲着陆（zoom）
+  view.animate(
+    { zoom: zoom - 1, duration: duration / 2 },
+    { zoom: zoom, duration: duration / 2 },
+    callback
+  );
+}
+</code></pre>
+<h3 id="3-旋转最短弧度规避法则">3. 旋转最短弧度规避法则</h3>
+<p>OpenLayers 的旋转动画默认遵循<strong>沿最短角弧度插值</strong>。若目标角度设置为 <code>view.getRotation() + 2 * Math.PI</code>，系统计算起止角度差为 0，导致动画根本不发生旋转。
+要完成完整的 360° 全景环绕旋转，<strong>必须拆解为两个 $\pi$ 弧度的串行阶段</strong>：</p>
+<pre><code class="language-javascript">const rotation = view.getRotation();
+view.animate(
+  { rotation: rotation + Math.PI, anchor: rome, easing: easeIn },
+  { rotation: rotation + 2 * Math.PI, anchor: rome, easing: easeOut }
+);
+</code></pre>
+<hr>
+<h2 id="三、高性能要素动效范式-postrender-与-vectorcontext">三、高性能要素动效范式 (<code>postrender</code> 与 VectorContext)</h2>
+<p>在传统 GIS 开发中，若通过每秒 60 次修改 <code>feature.getGeometry().setCoordinates()</code> 来驱动动画，每次修改都会导致矢量源（<code>VectorSource</code>）内部的 R-Tree 空间索引树推倒重建并触发图层全量重绘，导致 CPU 占用飙升并出现严重掉帧。</p>
+<h3 id="1-postrender-与-vectorcontext-瞬态绘制">1. <code>postrender</code> 与 <code>VectorContext</code> 瞬态绘制</h3>
+<p>OpenLayers 提供了专为高帧率动效设计的通道：</p>
+<ol>
+<li>监听底层切片图层的 <code>postrender</code> 渲染完成事件：<code>tileLayer.on(&#39;postrender&#39;, animate)</code>；</li>
+<li>获取当前帧画布代理：<code>const vectorContext = getVectorContext(event)</code>；</li>
+<li>直接调用 <code>vectorContext.drawGeometry(transientGeom)</code> 绘制临时发光图形；</li>
+<li>调用 <code>map.render()</code> 自驱动请求下一帧（<code>requestAnimationFrame</code>）。</li>
+</ol>
+<h3 id="2-雷达波纹扩散动效（flash-wave）">2. 雷达波纹扩散动效（Flash Wave）</h3>
+<p>在 <a href="file:///d:/Users/Downloads/openlayers/examples/feature-animation.html"><code>examples/feature-animation.html</code></a> 中，每次添加点位时启动动态光晕：</p>
+<pre><code class="language-javascript">function flash(feature) {
+  const start = Date.now();
+  const flashGeom = feature.getGeometry().clone();
+  const listenerKey = tileLayer.on(&#39;postrender&#39;, animate);
+
+  function animate(event) {
+    const elapsed = event.frameState.time - start;
+    if (elapsed &gt;= duration) {
+      unByKey(listenerKey); // 达到 3 秒生命周期后彻底注销，防止内存泄漏
+      return;
+    }
+    const vectorContext = getVectorContext(event);
+    const elapsedRatio = elapsed / duration;
+    // 半径缓动扩展：5px -&gt; 30px
+    const radius = easeOut(elapsedRatio) * 25 + 5;
+    // 不透明度递减：1.0 -&gt; 0.0
+    const opacity = easeOut(1 - elapsedRatio);
+
+    vectorContext.setStyle(new Style({
+      image: new CircleStyle({
+        radius: radius,
+        stroke: new Stroke({
+          color: `rgba(255, 0, 0, ${opacity})`,
+          width: 0.25 + opacity,
+        }),
+      }),
+    }));
+    vectorContext.drawGeometry(flashGeom);
+    map.render();
+  }
+}
+</code></pre>
+<hr>
+<h2 id="四、折线轨迹沿线运动与车辆巡航架构-marker-animation">四、折线轨迹沿线运动与车辆巡航架构 (<code>Marker Animation</code>)</h2>
+<p>智慧物流、车联网监控与历史轨迹回放的核心是驱动车辆沿折线平滑行进。</p>
+<p><a href="file:///d:/Users/Downloads/openlayers/examples/feature-move-animation.html"><code>examples/feature-move-animation.html</code></a> 给出了工业级参考架构：</p>
+<h3 id="1-折线高精度百分比插值-routegetcoordinateat">1. 折线高精度百分比插值 (<code>route.getCoordinateAt</code>)</h3>
+<p><code>LineString.prototype.getCoordinateAt(fraction)</code> 接受一个 $0.0 \sim 1.0$ 的归一化比例值，内部自动对折线各分段进行累加并精准返回对应物理位置坐标，开发者无需手动计算复杂的折线各拐角向量。</p>
+<h3 id="2-时间增量积分与往复模运算">2. 时间增量积分与往复模运算</h3>
+<p>为保证在不同硬件设备和不同刷新率屏幕（60Hz、120Hz、144Hz）上车辆行驶的物理速度恒定，位移计算必须基于每帧的<strong>真实时间差（$\Delta t$）</strong>进行积分：
+$$\text{distance} = \left(\text{distance} + \frac{\text{speed} \times \Delta t}{10^6}\right) \bmod 2$$</p>
+<ul>
+<li>当 $\text{distance} \in [0, 1]$ 时，车辆处于正向巡航；</li>
+<li>当 $\text{distance} \in (1, 2)$ 时，车辆处于逆向折返，实际路径比例为 $2 - \text{distance}$。</li>
+</ul>
+<h3 id="3-临时隐藏--帧代理黄金性能模式">3. “临时隐藏 + 帧代理”黄金性能模式</h3>
+<ul>
+<li>启动巡航时：<code>geoMarker.setGeometry(null)</code>，将要素实体从数据源中剥离；</li>
+<li>巡航期间：每帧利用 <code>vectorContext.drawGeometry(position)</code> 绘制即时点位；</li>
+<li>停止巡航时：<code>geoMarker.setGeometry(position)</code> 恢复要素数据实体。
+这一技巧将动画期间的 CPU 运算量削减了 90% 以上！</li>
+</ul>
+<hr>
+<h2 id="五、大圆航线生成与全球航班飞行轨迹-flight-animation">五、大圆航线生成与全球航班飞行轨迹 (<code>Flight Animation</code>)</h2>
+<p>在展现跨国航空物流、全球航线网络等大屏可视化中，普通的平面直线无法反映真实的地球最短航线。</p>
+<p><a href="file:///d:/Users/Downloads/openlayers/examples/flight-animation.html"><code>examples/flight-animation.html</code></a> 展现了全球级航空流光动效：</p>
+<h3 id="1-球面大圆劣弧（great-circle）与反子午线切分">1. 球面大圆劣弧（Great Circle）与反子午线切分</h3>
+<p>地球为旋转椭球体，两点间最短飞行路径是大圆弧线。在墨卡托投影中大圆弧线展现为拱形曲面。借助 <code>arc.js</code>：</p>
+<pre><code class="language-javascript">const arcGenerator = new arc.GreatCircle(
+  { x: from[1], y: from[0] },
+  { x: to[1], y: to[0] }
+);
+const arcLine = arcGenerator.Arc(100, { offset: 10 });
+</code></pre>
+<p>若航线横跨 $\pm 180^\circ$ 国际日期变更线（反子午线），<code>arc.js</code> 会自动切分为两段独立的几何折线，彻底杜绝横穿整幅世界地图的“贯穿拉线”Bug。</p>
+<h3 id="2-动态切片与航迹生长-coordsslice">2. 动态切片与航迹生长 (<code>coords.slice</code>)</h3>
+<p>依据当前帧流逝时间计算已飞行的顶点数：
+$$\text{maxIndex} = \min(\text{elapsedTime} \times \text{pointsPerMs}, \text{coords.length})$$
+通过 <code>new LineString(coords.slice(0, maxIndex))</code> 截取子折线并上屏，呈现航迹从起点逐步向前推进生长的流光动态效果。</p>
+<h3 id="3-多世界平铺无缝平移补偿（world-wrapping-offset）">3. 多世界平铺无缝平移补偿（World Wrapping Offset）</h3>
+<p>当用户横向无级漫游地球时，视口中心所在的水平偏移为：
+$$\text{offset} = \left\lfloor \frac{\text{center}_x}{\text{worldWidth}} \right\rfloor$$
+通过在主世界与相邻副本世界中连续调用 <code>currentLine.translate(worldWidth, 0)</code> 绘制两遍，确保环球拖拽漫游时航线无论滑动到哪里都绝不断裂。</p>
+<hr>
+<h2 id="六、空间动效核心示例矩阵-examples-matrix">六、空间动效核心示例矩阵 (Examples Matrix)</h2>
+<table>
+<thead>
+<tr>
+<th align="left">示例文件与链接</th>
+<th align="left">技术切入点</th>
+<th align="left">核心 API / 关键配置</th>
+<th align="left">典型业务落地场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/animation.html"><code>examples/animation.html</code></a></td>
+<td align="left">视图镜头多维动画</td>
+<td align="left"><code>view.animate()</code>, <code>flyTo</code> 两阶段起降, 锚点旋转</td>
+<td align="left">智慧城市全景漫游、重大事件镜头聚焦特写、自动巡检演示</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/feature-animation.html"><code>examples/feature-animation.html</code></a></td>
+<td align="left">矢量要素发光光晕</td>
+<td align="left"><code>tileLayer.on(&#39;postrender&#39;)</code>, <code>getVectorContext(event)</code></td>
+<td align="left">突发火警定位、紧急事件高亮报警、新数据接入动态脉冲</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/feature-move-animation.html"><code>examples/feature-move-animation.html</code></a></td>
+<td align="left">折线沿线连续巡航</td>
+<td align="left"><code>Polyline.readGeometry</code>, <code>route.getCoordinateAt()</code>, 时间积分</td>
+<td align="left">车联网实时跟踪、外卖骑手轨迹回放、无人机巡线监控</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/flight-animation.html"><code>examples/flight-animation.html</code></a></td>
+<td align="left">球面大圆航迹流线</td>
+<td align="left"><code>arc.GreatCircle</code>, 跨 180° 切分, 多世界平铺补偿</td>
+<td align="left">国际客运航班大屏、跨国物流流向图、全球网络拓扑连线</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/animated-gif.html"><code>examples/animated-gif.html</code></a></td>
+<td align="left">动图栅格帧播放</td>
+<td align="left"><code>ol/style/Icon</code>, GIF 帧解码同步</td>
+<td align="left">天气雷达拼图、动态风暴眼演进、卡通动图地标</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="七、生产级工程避坑指南-production-pitfalls-checklist">七、生产级工程避坑指南 (Production Pitfalls Checklist)</h2>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph ViewCheck[&quot;视图动画避坑&quot;]
+        A1[&quot;高速飞行必须在底图配置 preload: 4 杜绝白屏&quot;]
+        A2[&quot;360度旋转必须拆为两阶段串联，防止最短角抵消&quot;]
+        A3[&quot;妥善处理 callback(false) 用户主动打断中断信号&quot;]
+    end
+
+    subgraph VectorCheck[&quot;要素动效避坑&quot;]
+        B1[&quot;严禁在动画循环中频繁修改 Feature 几何对象&quot;]
+        B2[&quot;动效结束必须显式调用 unByKey 彻底注销监听&quot;]
+        B3[&quot;大规模并发动效需建立集中式渲染调度池&quot;]
+    end
+
+    subgraph TrajectoryCheck[&quot;轨迹航线避坑&quot;]
+        C1[&quot;跨国航线必须切分反子午线（+-180度）&quot;]
+        C2[&quot;基于真实的帧耗时 delta_t 进行积分，杜绝掉帧跳跃&quot;]
+        C3[&quot;航线生长完毕后移交常规图层渲染，释放瞬态创建开销&quot;]
+    end
+</code></pre>
+<ol>
+<li><strong>底图瓦片预加载（Preload）与防白屏</strong>：
+在高速长距离执行 <code>flyTo</code> 或全景旋转时，若未在底图图层配置 <code>preload</code>，由于高分辨率切片下载需要数十毫秒至数百毫秒，视口边缘极易呈现大片空白。配置 <code>preload: 4</code> 能命令底层预缓存多级低清金字塔切片作为平滑衬底，大幅提升视觉品质。</li>
+<li><strong>海量点位并发动画的性能塌陷</strong>：
+在监控上千个报警点时，切勿为每个点要素单独注册 <code>tileLayer.on(&#39;postrender&#39;)</code>，这会导致每帧执行上千次函数调用。正确做法是维护一个单一全局的 <code>ActiveAnimationPool</code>，注册唯一一个 <code>postrender</code> 监听函数，在一次循环中完成所有活动要素的批量绘制。</li>
+<li><strong>跨越国际日期变更线（$\pm 180^\circ$）的航线拉扯</strong>：
+从北京（东经）飞往旧金山（西经）的航班必然穿越反子午线。如果直接将起点与终点连接为一条折线，墨卡托投影会沿顺时针方向横穿整个欧亚大陆与大西洋绘制一条贯穿全球的长直线。必须使用 <code>arc.js</code> 进行经度断点切分，分为东西两半球各自独立的折线段分别渲染。</li>
+</ol>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

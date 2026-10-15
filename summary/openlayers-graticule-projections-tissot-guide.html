@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-经纬网格网、等面积异构投影与蒂索变形椭圆实战架构指南">OpenLayers 经纬网格网、等面积/异构投影与蒂索变形椭圆实战架构指南</h1>
+<blockquote>
+<p>地球是一个不规则的三维旋转椭球体，而屏幕与纸张是二维平坦介质。从球面到平面的数学映射过程，构成了地图学（Cartography）最古老而又最核心的学科支柱：</p>
+<ol>
+<li><strong>空间地理基准（Graticule Coordinate Grid）</strong>：如何在任意投影平面下自适应绘制经纬度网格线，并将经纬度度数标签智能吸附在视口边缘？</li>
+<li><strong>等面积伪圆柱投影（Sphere Mollweide / ESRI:53009）</strong>：如何利用 Proj4js 拓展非墨卡托投影，通过精确的数学椭圆半轴边界（$x_{\max}=2\sqrt{2}R, y_{\max}=\sqrt{2}R$）与 <code>worldExtent</code> 配置，实现全无畸变的全球大区面积对比？</li>
+<li><strong>客户端即时任意投影转换（Reprojection by Code）</strong>：如何动态检索 EPSG 代号，利用自适应三角网（Adaptive Triangulated Mesh）将标准 Web 墨卡托光栅瓦片在浏览器 Canvas 中实时扭曲重投影？</li>
+<li><strong>投影失真几何可视化（Tissot&#39;s Indicatrix / 蒂索变形椭圆）</strong>：如何利用大圆测地多边形（<code>circularPolygon</code>），通过在真实地球表面铺设等径圆，科学定量地揭示等角投影的“面积膨胀”与等距柱面投影的“横向拉伸”？</li>
+</ol>
+<p>本文基于 4 个官方核心示例（<code>graticule.html</code>、<code>sphere-mollweide.html</code>、<code>reprojection-by-code.html</code>、<code>tissot.html</code>），系统解构投影几何学、经纬网格网以及客户端重采样引擎的底层奥秘。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：地图投影变换与形变几何空间">1. 架构总览：地图投影变换与形变几何空间</h2>
+<p>地图投影本质上是球面坐标 $(\lambda, \varphi)$ 到平面直角坐标 $(x, y)$ 的可微映射函数：
+$$x = f(\lambda, \varphi), \quad y = g(\lambda, \varphi)$$
+不同的数学映射方式会导致不同性质的形变，OpenLayers 支持对各类投影进行深度适配与可视化：</p>
+<pre><code class="language-mermaid">graph TD
+    subgraph SphereSpace[&quot;球面真实空间 (WGS84 / 测地线)&quot;]
+        Earth[&quot;三维地球表面 (R = 6,371,000m)&quot;]
+        GeodesicCircle[&quot;测地等径圆 (circularPolygon, R=800km)&quot;]
+    end
+
+    subgraph Projections[&quot;三大典型地图投影类型&quot;]
+        Mercator[&quot;Web 墨卡托 (EPSG:3857)&lt;br/&gt;正形等角投影 (Conformal)&lt;br/&gt;保持角度正交，高纬度面积急剧膨胀&quot;]
+        Equirect[&quot;WGS84 板块方格 (EPSG:4326)&lt;br/&gt;等距柱面投影 (Equirectangular)&lt;br/&gt;网格均匀，高纬度横向压扁严重&quot;]
+        Mollweide[&quot;摩尔威特投影 (ESRI:53009)&lt;br/&gt;伪圆柱等面积投影 (Equal-Area)&lt;br/&gt;全球 2:1 椭圆，保持真实陆地面积比例&quot;]
+    end
+
+    subgraph AnalysisTools[&quot;制图分析与可视化引擎&quot;]
+        GraticuleLayer[&quot;经纬网格层 (ol/layer/Graticule)&lt;br/&gt;视口边缘度数吸附标注&quot;]
+        TissotLayer[&quot;蒂索变形指示线 (Tissot Indicatrices)&lt;br/&gt;形状/面积畸变定量呈现&quot;]
+        ReprojEngine[&quot;客户端自适应三角网重投影引擎&lt;br/&gt;(Adaptive Triangulated Mesh)&quot;]
+    end
+
+    Earth --&gt; GeodesicCircle
+    GeodesicCircle --&gt;|投影映射| Mercator
+    GeodesicCircle --&gt;|投影映射| Equirect
+    GeodesicCircle --&gt;|投影映射| Mollweide
+
+    Mercator --&gt; TissotLayer
+    Equirect --&gt; TissotLayer
+    Mollweide --&gt; GraticuleLayer
+    Mercator --&gt;|动态检索 EPSG WKT 实时重投影| ReprojEngine
+</code></pre>
+<h3 id="11-四大投影与空间分析示例对比">1.1 四大投影与空间分析示例对比</h3>
+<table>
+<thead>
+<tr>
+<th align="left">示例 / 维度</th>
+<th align="left">经纬网格网 (<code>graticule</code>)</th>
+<th align="left">摩尔威特等面积 (<code>sphere-mollweide</code>)</th>
+<th align="left">任意代码重投影 (<code>reprojection-by-code</code>)</th>
+<th align="left">蒂索变形椭圆 (<code>tissot</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>典型示例</strong></td>
+<td align="left"><code>graticule.html</code></td>
+<td align="left"><code>sphere-mollweide.html</code></td>
+<td align="left"><code>reprojection-by-code.html</code></td>
+<td align="left"><code>tissot.html</code></td>
+</tr>
+<tr>
+<td align="left"><strong>核心 API</strong></td>
+<td align="left"><code>new Graticule()</code></td>
+<td align="left"><code>proj4.defs</code>, <code>worldExtent</code>, <code>extent</code></td>
+<td align="left"><code>applyTransform</code>, <code>TileDebug</code>, <code>register</code></td>
+<td align="left"><code>circularPolygon</code>, <code>geom.transform</code></td>
+</tr>
+<tr>
+<td align="left"><strong>投影特征</strong></td>
+<td align="left">EPSG:3857 墨卡托网格</td>
+<td align="left">ESRI:53009 伪圆柱等面积</td>
+<td align="left">任意全球/局部坐标系（如 27700, 3031）</td>
+<td align="left">EPSG:4326 vs EPSG:3857 双图同屏</td>
+</tr>
+<tr>
+<td align="left"><strong>形变表现</strong></td>
+<td align="left">垂直正交经纬虚线</td>
+<td align="left">对称半椭圆经线、平行纬线</td>
+<td align="left">依投影性质产生扇形/双曲形网格</td>
+<td align="left">墨卡托面积放大 / 4326 压扁椭圆</td>
+</tr>
+<tr>
+<td align="left"><strong>核心业务价值</strong></td>
+<td align="left">航海/航空定位基准刻度</td>
+<td align="left">全球生物圈生态分布、统计专题图</td>
+<td align="left">支持跨国界局部高精度测绘工程坐标系</td>
+<td align="left">空间变形教学、制图误差校准分析</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-经纬网格网图层与视口边缘标注（graticulehtml）">2. 经纬网格网图层与视口边缘标注（<code>graticule.html</code>）</h2>
+<h3 id="21-动态自适应网格与边缘吸附算法">2.1 动态自适应网格与边缘吸附算法</h3>
+<p>经纬网（Graticule）不仅需要根据当前地图分辨率自适应切换经纬线密度（如微观视角显示 $1^\circ$ 间隔，宏观视角切换为 $10^\circ$ 间隔），更具挑战性的是<strong>度数标签的排版</strong>。
+如果将文本直接绘制在网格线上，会严重干扰地图中央的要素视觉。
+<code>ol/layer/Graticule</code> 采用了创新的<strong>视口边缘钉扎算法</strong>：</p>
+<ol>
+<li>提取当前地图视口在屏幕上的四条物理边缘线段（Top, Bottom, Left, Right）；</li>
+<li>计算经纬线与视口边界的瞬时几何交点；</li>
+<li>将格式化后的度数文本（如 <code>4°E</code>, <code>48°N</code>）精准吸附在边界交点处，并在平移漫游时保持动态贴边。</li>
+</ol>
+<pre><code class="language-javascript">// 经纬网图层配置
+new Graticule({
+  // 网格线型样式：半透明橙色、点划线
+  strokeStyle: new Stroke({
+    color: &#39;rgba(255,120,0,0.9)&#39;,
+    width: 2,
+    lineDash: [0.5, 4],
+  }),
+  showLabels: true, // 开启视口边缘刻度吸附
+  wrapX: false,     // 单一世界范围绘制，避免重复渲染
+})
+</code></pre>
+<hr>
+<h2 id="3-摩尔威特全球等面积投影与数学边界（sphere-mollweidehtml）">3. 摩尔威特全球等面积投影与数学边界（<code>sphere-mollweide.html</code>）</h2>
+<h3 id="31-摩尔威特（mollweide）数学原理与椭圆外包盒">3.1 摩尔威特（Mollweide）数学原理与椭圆外包盒</h3>
+<p>德国数学家卡尔·摩尔威特（Karl Mollweide）于 1805 年提出该投影，用于在平面上真实展现不同大洲的实际面积比例（解决墨卡托投影中格陵兰岛虚假巨大的缺陷）。
+全球投影为一个长宽比为 $2:1$ 的对称椭圆：
+$$x = \frac{2\sqrt{2}}{\pi} R (\lambda - \lambda_0) \cos\theta, \quad y = \sqrt{2} R \sin\theta$$
+其中辅助参量角 $\theta$ 通过迭代求解超越方程：$2\theta + \sin(2\theta) = \pi \sin\varphi$。</p>
+<p>当球体半径 $R = 6,371,000\text{ m}$ 时：</p>
+<ul>
+<li><strong>半长轴（赤道跨度）</strong>：$x_{\max} = 2\sqrt{2} R \approx 18,019,909.21\text{ m}$</li>
+<li><strong>半短轴（极点跨度）</strong>：$y_{\max} = \sqrt{2} R \approx 9,009,954.61\text{ m}$</li>
+</ul>
+<h3 id="32-worldextent-对经纬网图层的防奇异保护">3.2 <code>worldExtent</code> 对经纬网图层的防奇异保护</h3>
+<p>由于椭圆在极点收敛为单点，如果经纬度范围直接包含 $\pm 90^\circ$ 和 $\pm 180^\circ$，浮点数极限会导致分母为 0 或线段断裂。
+在定义 <code>Projection</code> 时，必须使用 <code>worldExtent</code> 进行适度微量内缩（如 $[-179, -89.99, 179, 89.99]$）：</p>
+<pre><code class="language-javascript">// 注册摩尔威特投影
+proj4.defs(
+  &#39;ESRI:53009&#39;,
+  &#39;+proj=moll +lon_0=0 +x_0=0 +y_0=0 +a=6371000 +b=6371000 +units=m +no_defs&#39;,
+);
+register(proj4);
+
+const sphereMollweideProjection = new Projection({
+  code: &#39;ESRI:53009&#39;,
+  extent: [
+    -18019909.21177587, -9009954.605703328,
+    18019909.21177587, 9009954.605703328,
+  ],
+  worldExtent: [-179, -89.99, 179, 89.99], // 避开数学奇异点
+});
+</code></pre>
+<hr>
+<h2 id="4-客户端自适应三角网重投影引擎（reprojection-by-codehtml）">4. 客户端自适应三角网重投影引擎（<code>reprojection-by-code.html</code>）</h2>
+<h3 id="41-任意坐标系动态重投影工作流">4.1 任意坐标系动态重投影工作流</h3>
+<p>OpenLayers 拥有业界最先进的<strong>纯前端客户端栅格重投影引擎</strong>：</p>
+<pre><code class="language-mermaid">sequenceDiagram
+    autonumber
+    actor User as 用户搜索 (如 &quot;27700&quot; 英国国家格网)
+    participant Client as 搜索控制器
+    participant API as MapTiler Coordinates API
+    participant Proj4 as Proj4js &amp; OL Projection Table
+    participant Mesh as 自适应三角网格引擎 (Adaptive Mesh)
+    participant Canvas as 渲染画布
+
+    User-&gt;&gt;Client: 输入 EPSG 代码
+    Client-&gt;&gt;API: 检索坐标系定义与 BBOX
+    API--&gt;&gt;Client: 返回 WKT / proj4def 与地理经纬度范围
+    Client-&gt;&gt;Proj4: proj4.defs() + register(proj4)
+    Note over Client: applyTransform(bbox, stops=8) 计算弧形外接矩形
+    Client-&gt;&gt;Mesh: 将目标视口反向投影回 EPSG:3857
+    Mesh-&gt;&gt;Mesh: 在变形剧烈处自适应细分三角形网格
+    Mesh-&gt;&gt;Canvas: 采样 OSM 原始切片像素，三角形仿射贴图完成扭曲重绘
+</code></pre>
+<h3 id="42-弧形边界细分采样（subdivision-stops）">4.2 弧形边界细分采样（Subdivision Stops）</h3>
+<p>在非墨卡托投影（如极射投影）中，经纬度方框在平面上表现为复杂的弧线。
+若直接对 4 个角点进行投影转换，得到的外接矩形会严重丢失两侧膨出的弧度。
+OpenLayers 的 <code>applyTransform</code> 提供了第四个参数 <code>opt_stops = 8</code>：</p>
+<pre><code class="language-javascript">// 在经纬度 BBOX 的每条边上密集插入 8 个插值采样点，精准推算真实平面外包盒
+const extent = applyTransform(bbox, fromLonLat, undefined, 8);
+</code></pre>
+<hr>
+<h2 id="5-蒂索变形指示线与投影失真分析（tissothtml）">5. 蒂索变形指示线与投影失真分析（<code>tissot.html</code>）</h2>
+<h3 id="51-测地球面圆（circularpolygon）与蒂索椭圆">5.1 测地球面圆（<code>circularPolygon</code>）与蒂索椭圆</h3>
+<p>在地图上直接画圆时，开发者往往调用平面圆算法，这会导致虚假的“平面正圆”。
+OpenLayers 提供了 <code>circularPolygon([lon, lat], radius, 64)</code>，它基于大地测量学中的真实球面大圆方程，在 WGS84 椭球体表面生成真实等径的测地圆。</p>
+<pre><code class="language-mermaid">graph TD
+    subgraph EarthTrue[&quot;地球表面物理真实&quot;]
+        Circle[&quot;球面正圆 (半径 800km)&quot;]
+    end
+
+    subgraph PlateCarree[&quot;EPSG:4326 (等距柱面)&quot;]
+        SquishedEllipse[&quot;随纬度升高横向拉长&lt;br/&gt;赤道为正圆，高纬度变为扁平椭圆&quot;]
+    end
+
+    subgraph WebMercator[&quot;EPSG:3857 (等角正形)&quot;]
+        InflatedCircle[&quot;几何形状始终保持严格正圆&lt;br/&gt;但面积随纬度以 sec²(φ) 膨胀数百倍&quot;]
+    end
+
+    Circle --&gt;|投影至 EPSG:4326| SquishedEllipse
+    Circle --&gt;|投影至 EPSG:3857| InflatedCircle
+</code></pre>
+<h3 id="52-核心代码实现">5.2 核心代码实现</h3>
+<pre><code class="language-javascript">const radius = 800000; // 800 公里
+let x, y;
+
+// 全球 30 度网格循环撒点
+for (x = -180; x &lt; 180; x += 30) {
+  for (y = -90; y &lt;= 90; y += 30) {
+    // 生成真实的球面测地圆（64 个顶点保证平滑）
+    const circle4326 = circularPolygon([x, y], radius, 64);
+    // 克隆并转换至墨卡托投影空间
+    const circle3857 = circle4326.clone().transform(&#39;EPSG:4326&#39;, &#39;EPSG:3857&#39;);
+    vectorLayer4326.getSource().addFeature(new Feature(circle4326));
+    vectorLayer3857.getSource().addFeature(new Feature(circle3857));
+  }
+}
+</code></pre>
+<hr>
+<h2 id="6-生产实践踩坑与数学总结">6. 生产实践踩坑与数学总结</h2>
+<table>
+<thead>
+<tr>
+<th align="left">考量维度</th>
+<th align="left">踩坑现象</th>
+<th align="left">底层原因</th>
+<th align="left">解决方案与最佳实践</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>极地投影断裂</strong></td>
+<td align="left">经纬网在两极断裂或飞线</td>
+<td align="left">极点数学计算溢出（$\tan(90^\circ)=\infty$）</td>
+<td align="left">显式配置 <code>worldExtent: [-179, -89.99, 179, 89.99]</code></td>
+</tr>
+<tr>
+<td align="left"><strong>重投影瓦片模糊</strong></td>
+<td align="left">转换投影后光栅文字模糊</td>
+<td align="left">双线性插值在多级重采样中的像素虚化</td>
+<td align="left">开启 <code>source.setInterpolation(true)</code> 并配置 <code>maxZoom</code> 适当过度缩放</td>
+</tr>
+<tr>
+<td align="left"><strong>高纬度测距失真</strong></td>
+<td align="left">在墨卡托地图上用直尺量算距离偏大数十倍</td>
+<td align="left">墨卡托投影面积膨胀因子极大</td>
+<td align="left">严禁使用平面欧几里得距离，必须调用 <code>ol/sphere</code> 中的 <code>getLength()</code> 与 <code>getArea()</code> 测地线算法</td>
+</tr>
+</tbody></table>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

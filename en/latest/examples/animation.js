@@ -91,6 +91,12 @@ onClick("spin-to-rome", function() {
 		easing: easeOut
 	});
 });
+/**
+* FlyTo flight animation: combines pan with two-stage zoom out and zoom in.
+* 飞行模拟动画：平移中心点，同时并发执行“先缩小高度拉高巡航、后放大降落目标”的两阶段变焦。
+* @param {Array<number>} location Target coordinates.
+* @param {function(boolean):void} done Completion callback.
+*/
 function flyTo(location, done) {
 	const duration = 2e3;
 	const zoom = view.getZoom();
@@ -119,6 +125,10 @@ function flyTo(location, done) {
 onClick("fly-to-bern", function() {
 	flyTo(bern, function() {});
 });
+/**
+* Automatic tour: iterates through cities with sequential flyTo animations.
+* 自动巡检漫游：依次递归调用 flyTo 串联多个目标城市。
+*/
 function tour() {
 	const locations = [
 		london,
@@ -134,8 +144,8 @@ function tour() {
 			if (index < locations.length) setTimeout(function() {
 				flyTo(locations[index], next);
 			}, index === 0 ? 0 : 750);
-			else alert("Tour complete");
-		} else alert("Tour cancelled");
+			else alert("Tour complete / 巡视漫游已完成");
+		} else alert("Tour cancelled / 巡视已被打断取消");
 	}
 	next(true);
 }

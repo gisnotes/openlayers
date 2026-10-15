@@ -147,7 +147,12 @@ var shadedRelief = new WebGLTileLayer({
 	}),
 	style: {
 		variables,
-		color: ["color", scaled]
+		color: [
+			"color",
+			scaled,
+			scaled,
+			scaled
+		]
 	}
 });
 [
@@ -157,22 +162,24 @@ var shadedRelief = new WebGLTileLayer({
 ].forEach(function(id) {
 	const control = document.getElementById(id);
 	const output = document.getElementById(id + "Out");
-	function updateValues() {
-		output.innerText = control.value;
-		variables[id] = Number(control.value);
+	function value() {
+		return parseFloat(control.value);
 	}
-	updateValues();
-	control.addEventListener("input", function() {
-		updateValues();
+	variables[id] = value();
+	function update() {
+		output.innerText = control.value;
+		variables[id] = value();
 		shadedRelief.updateStyleVariables(variables);
-	});
+	}
+	control.addEventListener("input", update);
+	update();
 });
 new Map({
 	target: "map",
 	layers: [new WebGLTileLayer({ source: new OSM() }), shadedRelief],
 	view: new View({
-		center: [-13615645, 4497969],
-		zoom: 13
+		center: [15016024, -4076722],
+		zoom: 11
 	})
 });
 //#endregion

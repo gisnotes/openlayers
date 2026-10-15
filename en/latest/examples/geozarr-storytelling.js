@@ -11,13 +11,17 @@ var dimsContainer = document.getElementById("dims");
 var errorBox = document.getElementById("error");
 /**
 * Show a non-fatal error message above the map.
+* 在地图上方展示非致命错误提示信息。
 * @param {Error} error The error to display.
 */
 function showError(error) {
 	errorBox.textContent = error.message || String(error);
 	errorBox.style.display = "";
 }
-/** Clear any displayed error message. */
+/**
+* Clear any displayed error message.
+* 清空并隐藏所有错误信息。
+*/
 function hideError() {
 	errorBox.textContent = "";
 	errorBox.style.display = "none";
@@ -42,6 +46,7 @@ urlSelect.addEventListener("change", () => {
 });
 /**
 * Current index selected in each dimension dropdown.
+* 获取各个维度下拉框当前选中的索引字典。
 * @return {Object<string, number>} The selected index per dimension name.
 */
 function currentDimensions() {
@@ -51,9 +56,10 @@ function currentDimensions() {
 }
 /**
 * Convert a CF time value to milliseconds since the Unix epoch.
-* @param {number|bigint} value The encoded time value.
-* @param {string} units A CF units string, e.g. `'nanoseconds since 1970-01-01'`.
-* @return {number|null} Milliseconds since the epoch, or null if not decodable.
+* 将符合 CF 约定格式的时间数值转换为自 Unix 纪元以来的毫秒时间戳。
+* @param {number|bigint} value The encoded time value / 编码的时间数值
+* @param {string} units A CF units string, e.g. `'nanoseconds since 1970-01-01'` / CF 规范单位字符串
+* @return {number|null} Milliseconds since the epoch, or null if not decodable / 毫秒时间戳，解码失败返回 null
 */
 function cfTimeToMs(value, units) {
 	const match = /^\s*(\w+)\s+since\s+(.+?)\s*$/i.exec(units || "");
@@ -86,11 +92,12 @@ function cfTimeToMs(value, units) {
 * the dropdown lists them in ascending (e.g. chronological) order even when the
 * cube stores the slices unsorted. Falls back to the plain index when a value is
 * missing (a dimension without a coordinate array).
-* @param {GeoZarr} source The source.
-* @param {string} name The dimension name.
-* @param {number} size The dimension length.
-* @param {Object|null} attributes The dimension's coordinate array attributes.
-* @return {Promise<Array<{index: number, label: string}>>} Entries sorted by value.
+* 读取指定维度的坐标数组值并转化为下拉选项，将 CF 时间解码为易读日期。
+* @param {GeoZarr} source The source / 数据源
+* @param {string} name The dimension name / 维度名称
+* @param {number} size The dimension length / 维度长度
+* @param {Object|null} attributes The dimension's coordinate array attributes / 维度属性字典
+* @return {Promise<Array<{index: number, label: string}>>} Entries sorted by value / 按时序升序排序的选项列表
 */
 async function dimensionEntries(source, name, size, attributes) {
 	const units = attributes?.units;
@@ -110,9 +117,10 @@ async function dimensionEntries(source, name, size, attributes) {
 /**
 * Build one dropdown per non-spatial dimension, labeling each option with the
 * real coordinate value (e.g. a date) when available.
-* @param {GeoZarr} source The source.
-* @param {Object<string, {size: number, attributes: Object|null}>} dimensions The selectable dimensions.
-* @return {Promise<void>} Resolves when the selectors are built.
+* 为每个非空间维度动态构建下拉选择器，展示真实的坐标标签（如格式化日期）。
+* @param {GeoZarr} source The source / 数据源
+* @param {Object<string, {size: number, attributes: Object|null}>} dimensions The selectable dimensions / 可选维度
+* @return {Promise<void>} Resolves when the selectors are built
 */
 async function buildDimensionSelectors(source, dimensions) {
 	const columns = [];
@@ -145,7 +153,8 @@ async function buildDimensionSelectors(source, dimensions) {
 /**
 * WebGL style for the dual-polarization composite: vv -> red, vh -> green,
 * vv/vh -> blue, each rescaled from its fixed [low, high] range to [0, 255].
-* @return {Object} The WebGLTile style.
+* 双极化雷达复合合成 WebGL 样式：VV -> 红，VH -> 绿，VV/VH -> 蓝。
+* @return {Object} The WebGLTile style / WebGLTile 样式配置
 */
 function compositeStyle() {
 	const channel = (value, [low, high]) => [
@@ -172,7 +181,9 @@ function compositeStyle() {
 * (Re)render the map. A dimension change (`rebuildDimensions` false) reloads the
 * current cube's slice in place; a group change or the first load opens a fresh
 * source and rebuilds the dimension selectors and the map.
-* @param {boolean} rebuildDimensions Rebuild the dimension selectors.
+* (重新)渲染地图。仅维度切换时 (rebuildDimensions 为 false) 原地更新当前立方体切片；
+* 轨道群组变更或初次加载时开启全新数据源并重新构建维度下拉框和地图。
+* @param {boolean} rebuildDimensions Rebuild the dimension selectors / 是否重建维度下拉选择器
 */
 async function render(rebuildDimensions) {
 	if (!rootUrl) return;
@@ -210,8 +221,9 @@ async function render(rebuildDimensions) {
 * Discover the renderable groups in a store: the store's own group when it is a
 * multiscales group, otherwise its immediate child groups that are multiscales
 * groups (e.g. the `ascending`/`descending` orbit groups of an S1 RTC cube).
-* @param {Object} group The parsed store-root group zarr.json.
-* @return {Array<string>} Group paths relative to the entered url ('' = the url itself).
+* 自动探测存储中可渲染的多尺度群组（如升降轨群组）。
+* @param {Object} group The parsed store-root group zarr.json / 解析出的 zarr.json 对象
+* @return {Array<string>} Group paths relative to the entered url ('' = the url itself) / 群组相对路径列表
 */
 function discoverGroups(group) {
 	if (group.attributes?.multiscales?.layout) return [""];
@@ -220,12 +232,12 @@ function discoverGroups(group) {
 	for (const key of Object.keys(consolidated)) if (!key.includes("/") && consolidated[key]?.node_type === "group" && consolidated[key]?.attributes?.multiscales?.layout) groups.push(key);
 	return groups.length > 0 ? groups : [""];
 }
-/** Select the current group and render. */
+/** Select the current group and render / 选择当前选中的群组并执行渲染 */
 async function loadGroup() {
 	groupPath = groupSelect.value;
 	await render(true);
 }
-/** Load the entered store: read its root metadata, discover groups, render. */
+/** Load the entered store: read its root metadata, discover groups, render / 读取存储根元数据，探测群组并加载 */
 async function load() {
 	rootUrl = getUrl();
 	if (!rootUrl) return;

@@ -89,12 +89,12 @@ minColorInput.addEventListener("input", update);
 maxColorInput.addEventListener("input", update);
 minValueInput.addEventListener("input", update);
 maxValueInput.addEventListener("input", update);
-update();
 new Map({
 	target: "map",
 	layers: [layer],
 	view: source.getView()
 });
+update();
 //#endregion
 
 //# sourceMappingURL=cog-colors.js.map

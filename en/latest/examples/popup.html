@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Popup</title>
+    <title>Popup / 弹出框</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Popup</h4>
+        <h4 id="title">Popup / 弹出框</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,8 +75,8 @@
               data-bs-target="#tag-example-list"
               data-title="overlay"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./overlay.html&quot;&gt;Overlay&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./popup.html&quot;&gt;Popup&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./overlay.html&quot;&gt;Overlay / 地图覆盖物（Overlay）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./popup.html&quot;&gt;Popup / 弹出框&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -91,8 +91,8 @@
               data-title="popup"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./overlay.html&quot;&gt;Overlay&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./popup.html&quot;&gt;Popup&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./overlay.html&quot;&gt;Overlay / 地图覆盖物（Overlay）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./popup.html&quot;&gt;Popup / 弹出框&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -123,10 +123,33 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Uses an overlay to create a popup.</p>
+        <p id="shortdesc">Uses an overlay to create a popup. / 使用 Overlay 覆盖物创建交互弹窗。</p>
         <div id="docs"><p>
-  Click on the map to get a popup.  The popup is composed of a few basic elements: a container, a close button, and a place for the content.  To anchor the popup to the map, an <code>ol/Overlay</code> is created with the popup container.  A listener is registered for the map's <code>click</code> event to display the popup, and another listener is set as the <code>click</code> handler for the close button to hide the popup.
-</p>
+  Click on the map to get a popup. The popup is composed of a few basic elements: a container, a close button, and a place for the content. To anchor the popup to the map, an <code>ol/Overlay</code> is created with the popup container. A listener is registered for the map's <code>click</code> event to display the popup, and another listener is set as the <code>click</code> handler for the close button to hide the popup.
+</p> <p>
+  点击地图即可弹出浮窗。该弹窗由几个基础元素构成：外层容器容器 (container)、关闭按钮 (close button) 以及内容展示区 (content)。为了将弹窗锚定到地图坐标上，使用弹窗 DOM 容器创建了一个 <code>ol/Overlay</code> 实例。通过为地图注册 <code>singleclick</code> 单击事件监听器来展示弹窗，并为关闭按钮绑定点击事件以隐藏弹窗。
+</p> <hr> <h3>📚 学习记录与技术深度解读</h3>
+<h4>1. 核心架构与设计思想</h4> <ul>
+  <li><strong>DOM 覆盖物机制（Overlay Anchor）：</strong>OpenLayers 的矢量要素（<code>VectorLayer</code>）通过 Canvas/WebGL 在单画布内渲染，而 <code>ol/Overlay</code> 则直接将原生 HTML DOM 节点挂载在地图容器顶层（<code>.ol-overlaycontainer-stopevent</code>），并由引擎根据地图中心点、缩放级别与投影坐标动态计算 CSS <code>transform: translate(...)</code>，实现 DOM 与地理坐标的绝对联动。</li>
+  <li><strong>视图自动适应（autoPan 机制）：</strong>当弹窗在靠近地图可视区域边缘弹出时，弹窗可能会被视口截断。OpenLayers 提供了 <code>autoPan: { animation: { duration: 250 } }</code> 配置，在 <code>setPosition()</code> 时会自动计算弹窗几何边界，并触发地图平滑位移，确保弹窗内容完整呈现在用户视野中央。</li>
+  <li><strong>显示与隐藏的生命周期设计：</strong>弹窗并不需要频繁地从 DOM 树中销毁重建，只需调用 <code>overlay.setPosition(undefined)</code>，OpenLayers 会自动将其移动到可视区外（或设置隐藏），再次点击时调用 <code>overlay.setPosition(coordinate)</code> 即可秒级复用。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析</h4> <ul>
+  <li><code>new Overlay({ element, autoPan })</code>：
+    <ul>
+      <li><code>element</code>：挂载的 HTML 宿主容器节点。</li>
+      <li><code>autoPan</code>：包含 <code>animation</code>（动画持续毫秒数）及 <code>margin</code>（边距缓冲值），防止弹窗紧贴地图视口边缘。</li>
+      <li><code>stopEvent: true</code>（默认值）：阻止鼠标在弹窗内部拖动或双击时穿透触发地图底层的缩放与平移手势。</li>
+    </ul>
+  </li>
+  <li><code>map.on('singleclick', handler)</code>：为何推荐 <code>singleclick</code> 而非普通的 <code>click</code>？因为移动端或桌面端双击放大地图时，<code>click</code> 会触发两次事件导致弹窗闪烁；而 <code>singleclick</code> 会延迟约 250ms 等待确认非双击动作后再触发，用户交互更稳定。</li>
+  <li><code>closer.blur()</code>：在点击关闭按钮后主动移除链接的键盘焦点，避免某些浏览器在后续空格键或回车键操作中再次意外触发关闭链接。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优</h4> <ul>
+  <li><strong>海量标记点弹窗误区：</strong>切勿为成千上万个要素同时实例化成千上万个 <code>ol/Overlay</code>。浏览器 DOM 树节点过万会导致页面严重掉帧。最佳生产架构是：<strong>所有要素使用 <code>VectorLayer</code> 统一渲染，全局仅维护一个复用的 <code>ol/Overlay</code> 弹窗实例</strong>，在点击具体要素时动态替换该 Overlay 的坐标与内容。</li>
+  <li><strong>CSS 气泡三角与定位偏移：</strong>弹窗通常包含下方尖角小三角形（CSS border 伪元素）。若未配置 <code>positioning: 'bottom-center'</code>，弹窗默认以左上角（<code>top-left</code>）对齐点击坐标，导致气泡指示位置偏离实际点击点。</li>
+  <li><strong>XSS 防护意识：</strong>若从第三方 API 或用户提交的数据（如要素属性）读取文本并直接拼接 <code>content.innerHTML</code>，极易引发 XSS 脚本注入漏洞。生产环境必须进行 HTML 转义（如通过 <code>textContent</code> 赋值）或使用 DOMPurify 进行净化。</li>
+</ul>
 </div>
       </div>
 
@@ -143,6 +166,7 @@ import ImageTile from &#x27;ol/source/ImageTile.js&#x27;;
 
 /**
  * Elements that make up the popup.
+ * 构成弹出框的 DOM 元素。
  */
 const container &#x3D; document.getElementById(&#x27;popup&#x27;);
 const content &#x3D; document.getElementById(&#x27;popup-content&#x27;);
@@ -150,6 +174,7 @@ const closer &#x3D; document.getElementById(&#x27;popup-closer&#x27;);
 
 /**
  * Create an overlay to anchor the popup to the map.
+ * 创建 Overlay 覆盖物以将弹出框锚定到地图上。
  */
 const overlay &#x3D; new Overlay({
   element: container,
@@ -162,7 +187,8 @@ const overlay &#x3D; new Overlay({
 
 /**
  * Add a click handler to hide the popup.
- * @return {boolean} Don&#x27;t follow the href.
+ * 添加点击处理函数以隐藏弹出框。
+ * @return {boolean} Don&#x27;t follow the href. / 阻止 a 标签默认跳转行为。
  */
 closer.onclick &#x3D; function () {
   overlay.setPosition(undefined);
@@ -177,6 +203,7 @@ const attributions &#x3D;
 
 /**
  * Create the map.
+ * 创建地图实例。
  */
 const map &#x3D; new Map({
   layers: [
@@ -199,12 +226,14 @@ const map &#x3D; new Map({
 
 /**
  * Add a click handler to the map to render the popup.
+ * 为地图添加单击事件监听器以渲染弹出框。
  */
 map.on(&#x27;singleclick&#x27;, function (evt) {
   const coordinate &#x3D; evt.coordinate;
   const hdms &#x3D; toStringHDMS(toLonLat(coordinate));
 
-  content.innerHTML &#x3D; &#x27;&lt;p&gt;You clicked here:&lt;/p&gt;&lt;code&gt;&#x27; + hdms + &#x27;&lt;/code&gt;&#x27;;
+  content.innerHTML &#x3D;
+    &#x27;&lt;p&gt;You clicked here / 您点击的位置是：&lt;/p&gt;&lt;code&gt;&#x27; + hdms + &#x27;&lt;/code&gt;&#x27;;
   overlay.setPosition(coordinate);
 });
 </code></pre>
@@ -218,7 +247,7 @@ map.on(&#x27;singleclick&#x27;, function (evt) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Popup&lt;/title&gt;
+    &lt;title&gt;Popup / 弹出框&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

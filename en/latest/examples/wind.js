@@ -484,7 +484,7 @@ var quadVertexShader = `
   }
 `;
 /**
-* Sampes a texture and renders it with a new opacity.
+* Samples a texture and renders it with a new opacity.
 */
 var textureFragmentShader = `
   #ifdef GL_FRAGMENT_PRECISION_HIGH

@@ -25,10 +25,11 @@ var source = new VectorSource({
 	format: new GeoJSON()
 });
 /**
+* Generate WebGL FlatStyle expression based on dash and pattern toggles
 * 根据虚线与纹理开关生成 WebGL FlatStyle 样式表达式
-* @param {boolean} dash 是否包含虚线
-* @param {boolean} pattern 是否包含图片纹理
-* @return {import('../src/ol/style/flat.js').FlatStyle} 生成的样式对象
+* @param {boolean} dash Whether dash pattern is enabled / 是否包含虚线
+* @param {boolean} pattern Whether image pattern is enabled / 是否包含图片纹理
+* @return {import('../src/ol/style/flat.js').FlatStyle} Generated style object / 生成的样式对象
 */
 var getStyle = (dash, pattern) => {
 	let newStyle = {

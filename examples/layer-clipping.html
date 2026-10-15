@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Layer Clipping</title>
+    <title>Layer Clipping / 图层几何遮罩裁切</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Layer Clipping</h4>
+        <h4 id="title">Layer Clipping / 图层几何遮罩裁切</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,8 +75,8 @@
               data-bs-target="#tag-example-list"
               data-title="clipping"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./layer-clipping.html&quot;&gt;Layer Clipping&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./layer-clipping.html&quot;&gt;Layer Clipping / 图层几何遮罩裁切&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer / 矢量边界裁切图层&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -90,26 +90,26 @@
               data-bs-target="#tag-example-list"
               data-title="openstreetmap"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./center.html&quot;&gt;Advanced View Positioning&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./attributions.html&quot;&gt;Attributions&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./center.html&quot;&gt;Advanced View Positioning / 高级视口定位与居中 (centerOn &amp;amp; fit)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./attributions.html&quot;&gt;Attributions / 版权署名控件自适应折叠 (Attributions Responsive Collapsing)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-tiles.html&quot;&gt;Canvas Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cartodb.html&quot;&gt;CartoDB source example&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./export-pdf.html&quot;&gt;Export PDF example&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson.html&quot;&gt;GeoJSON&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geolocation.html&quot;&gt;Geolocation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./layer-clipping.html&quot;&gt;Layer Clipping&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cartodb.html&quot;&gt;CartoDB source example / CartoDB 云端空间数据源与动态 SQL 过滤 (CartoDB Source)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./export-pdf.html&quot;&gt;Export PDF example / 导出 PDF 地图示例&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson.html&quot;&gt;GeoJSON / GeoJSON 多几何类型标准解析与多态样式映射&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geolocation.html&quot;&gt;Geolocation / 地理定位服务&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./layer-clipping.html&quot;&gt;Layer Clipping / 图层几何遮罩裁切&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe / 图层卷帘对比&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./localized-openstreetmap.html&quot;&gt;Localized OpenStreetMap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mouse-position.html&quot;&gt;Mouse Position&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mouse-position.html&quot;&gt;Mouse Position / 鼠标位置坐标控件 (MousePosition)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap 客户端 WGS84 重投影 (OpenStreetMap Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./permalink.html&quot;&gt;Permalink&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scale-line.html&quot;&gt;Scale Line&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./permalink.html&quot;&gt;Permalink / 永久链接与历史状态同步 (Permalink &amp;amp; History API)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scale-line.html&quot;&gt;Scale Line / 比例尺与分段比例条控件 (ScaleLine / ScaleBar)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./simple.html&quot;&gt;Simple Map&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./static-attribution.html&quot;&gt;Static Attribution&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./teleport.html&quot;&gt;Teleporting Maps&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels.html&quot;&gt;Vector Labels&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels-justify-text.html&quot;&gt;Vector Labels - Justify Text&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./static-attribution.html&quot;&gt;Static Attribution / 静态常驻版权署名 (Static Attribution)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./teleport.html&quot;&gt;Teleporting Maps / 地图容器瞬态瞬移 (setTarget)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer / 矢量边界裁切图层&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels-justify-text.html&quot;&gt;Vector Labels - Justify Text / 矢量注记文本对齐与段落对齐解耦&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels.html&quot;&gt;Vector Labels / 矢量文本标注与全要素排版实战工作台&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rotation.html&quot;&gt;View Rotation&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -138,8 +138,18 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Layer clipping example</p>
-        <div id="docs"><p>Layer clipping example</p>
+        <p id="shortdesc">Layer clipping example / 使用贝塞尔曲线与 Canvas 路径对图层进行几何蒙版裁切。</p>
+        <div id="docs"><h2>Layer clipping example. Demonstrates clipping a layer using arbitrary Canvas 2D paths.
+本示例演示了如何通过监听图层的 <code>prerender</code> 事件，利用 HTML5 Canvas 2D 上下文的 <code>ctx.clip()</code> 方法对瓦片底图进行几何蒙版裁切。示例中使用贝塞尔曲线（Bézier Curves）在屏幕中心构造了一个爱心形状的矢量剪切蒙版，并根据地图的像素比（PixelRatio）与旋转角（Rotation）对变换矩阵进行反向抵消与动态校准，使裁切轮廓稳定居中显示。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 逆像素变换矩阵与屏幕空间锚定 (Inverse Pixel Transform &amp; Rotation Decoupling) - <strong>动态矩阵解析</strong>: 当地图发生平移、旋转（Rotation）或运行在高分屏（Retina / HiDPI）时，Canvas 2D 上下文已被 OpenLayers 预先施加了仿射变换。<code>event.inversePixelTransform</code> 提供了当前变换的逆矩阵 $[a, b, c, d, e, f]$。 - <strong>几何参数提取</strong>:</h4>
+<p>  $$\text{canvasPixelRatio} = \sqrt{a^2 + b^2}, \quad \text{canvasRotation} = -\text{atan2}(b, a)$$
+  通过矩阵元素提取画布真实的物理像素比与视口旋转弧度，为屏幕空间固定形状的裁切提供了数学依据。</p>
+<ul>
+<li><strong>居中对齐与旋转抵消</strong>: 通过 <code>ctx.translate(width/2, height/2)</code> 配合 <code>ctx.rotate(-canvasRotation)</code>，将坐标系锚定在屏幕绝对几何中心并抵消地图旋转角度，使蒙版无论地图如何旋转拖拽，始终端正居中。</li>
+</ul>
+<h4>2. 三次贝塞尔曲线路径与 <code>ctx.clip()</code> - <strong>参数化路径造型</strong>: 利用 <code>ctx.moveTo</code> 与 6 段 <code>ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)</code> 构建闭合心形矢量轮廓。 - <strong>硬件级像素裁剪</strong>: 调用 <code>ctx.clip()</code> 将当前 Canvas 上下文的绘制限制在闭合路径之内。随后的切片光栅化渲染只在心形蒙版区域生效，其余部分保持透明。</h4>
+<h4>3. 生产实践陷阱与避坑指南 (Production Pitfalls &amp; Best Practices) - <strong>成对的 <code>save</code> 与 <code>restore</code></strong>: 状态保护至关重要。<code>prerender</code> 中调用的 <code>ctx.save()</code> 必须与 <code>postrender</code> 中的 <code>ctx.restore()</code> 一一严格配对。如果因代码异常中断未执行 <code>restore()</code>，裁剪蒙版将永久驻留，后续绘制的任何图层都将被裁切。 - <strong>矩阵变换逆操作顺序</strong>: 在执行 <code>ctx.clip()</code> 之后，如果需要恢复或继续在该图层上绘制其他内容，必须严格按照正向变换的逆顺序撤销平移和缩放（<code>scale(1/scale)</code> -&gt; <code>rotate</code> -&gt; <code>translate</code>），否则容易造成局部坐标系污染。</h4>
 </div>
       </div>
 
@@ -151,10 +161,14 @@ import View from &#x27;ol/View.js&#x27;;
 import TileLayer from &#x27;ol/layer/Tile.js&#x27;;
 import OSM from &#x27;ol/source/OSM.js&#x27;;
 
+// OpenStreetMap tile layer subject to geometric clipping
+// OpenStreetMap 切片图层：作为待裁切的目标底图
 const osm &#x3D; new TileLayer({
   source: new OSM(),
 });
 
+// Initialize map centered at [0, 0]
+// 初始化地图实例：中心位于经纬度原点 [0, 0]，初始缩放层级为 2
 const map &#x3D; new Map({
   layers: [osm],
   target: &#x27;map&#x27;,
@@ -164,22 +178,32 @@ const map &#x3D; new Map({
   }),
 });
 
+// Hook into prerender to establish the Bézier heart clipping mask
+// 监听底图的 prerender 事件：在切片光栅化之前构建贝塞尔心形裁切蒙版
 osm.on(&#x27;prerender&#x27;, function (event) {
   const ctx &#x3D; event.context;
 
-  // calculate the pixel ratio and rotation of the canvas
+  // Calculate the pixel ratio and rotation of the canvas from inversePixelTransform
+  // 根据事件逆变换矩阵计算 Canvas 画布的物理像素比与视口旋转角度
   const matrix &#x3D; event.inversePixelTransform;
   const canvasPixelRatio &#x3D; Math.sqrt(
     matrix[0] * matrix[0] + matrix[1] * matrix[1],
   );
   const canvasRotation &#x3D; -Math.atan2(matrix[1], matrix[0]);
   ctx.save();
-  // center the canvas and remove rotation to position clipping
+
+  // Center the canvas and neutralize rotation to position clipping mask in screen space
+  // 将原点移至画布中心并抵消地图旋转，确保裁切蒙版稳定居中且保持竖直
   ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2);
   ctx.rotate(-canvasRotation);
 
+  // Scale and translate into local heart curve coordinates
+  // 缩放并平移至心形局部坐标系
   ctx.scale(3 * canvasPixelRatio, 3 * canvasPixelRatio);
   ctx.translate(-75, -80);
+
+  // Construct Bézier heart shape path
+  // 利用三次贝塞尔曲线构建闭合爱心矢量路径
   ctx.beginPath();
   ctx.moveTo(75, 40);
   ctx.bezierCurveTo(75, 37, 70, 25, 50, 25);
@@ -189,14 +213,20 @@ osm.on(&#x27;prerender&#x27;, function (event) {
   ctx.bezierCurveTo(130, 62.5, 130, 25, 100, 25);
   ctx.bezierCurveTo(85, 25, 75, 37, 75, 40);
   ctx.clip();
+
+  // Reverse local scale and translation transformations
+  // 反向撤销局部平移与缩放变换
   ctx.translate(75, 80);
   ctx.scale(1 / 3 / canvasPixelRatio, 1 / 3 / canvasPixelRatio);
 
-  // reapply canvas rotation and position
+  // Reapply canvas rotation and position back to original coordinate system
+  // 恢复画布原有的旋转与居中位置
   ctx.rotate(canvasRotation);
   ctx.translate(-ctx.canvas.width / 2, -ctx.canvas.height / 2);
 });
 
+// Restore canvas context state after rendering completes
+// postrender 阶段：恢复 Canvas 绘图状态栈，释放裁剪区
 osm.on(&#x27;postrender&#x27;, function (event) {
   const ctx &#x3D; event.context;
   ctx.restore();
@@ -212,7 +242,7 @@ osm.on(&#x27;postrender&#x27;, function (event) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Layer Clipping&lt;/title&gt;
+    &lt;title&gt;Layer Clipping / 图层几何遮罩裁切&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

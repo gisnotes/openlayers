@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Sentinel Hub Date Picker</title>
+    <title>Sentinel Hub Date Picker / 哨兵时序卫星影像与日期选择联动（source.setData）</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Sentinel Hub Date Picker</h4>
+        <h4 id="title">Sentinel Hub Date Picker / 哨兵时序卫星影像与日期选择联动（source.setData）</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,10 +75,10 @@
               data-bs-target="#tag-example-list"
               data-title="SentinelHub"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub.html&quot;&gt;Sentinel Hub&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-custom-format.html&quot;&gt;Sentinel Hub Custom Format&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-custom-script.html&quot;&gt;Sentinel Hub Custom Script&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./sentinel-hub-date-picker.html&quot;&gt;Sentinel Hub Date Picker&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub.html&quot;&gt;Sentinel Hub / 欧空局哨兵卫星影像（Sentinel Hub Processing API）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-custom-format.html&quot;&gt;Sentinel Hub Custom Format / 哨兵影像切片格式动态切换（WebP / PNG / JPEG）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-custom-script.html&quot;&gt;Sentinel Hub Custom Script / 哨兵影像 Evalscript 在线波段解译与水分指数（NDMI）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./sentinel-hub-date-picker.html&quot;&gt;Sentinel Hub Date Picker / 哨兵时序卫星影像与日期选择联动（source.setData）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >4</a>
@@ -92,10 +92,10 @@
               data-bs-target="#tag-example-list"
               data-title="process"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub.html&quot;&gt;Sentinel Hub&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-custom-format.html&quot;&gt;Sentinel Hub Custom Format&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-custom-script.html&quot;&gt;Sentinel Hub Custom Script&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./sentinel-hub-date-picker.html&quot;&gt;Sentinel Hub Date Picker&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub.html&quot;&gt;Sentinel Hub / 欧空局哨兵卫星影像（Sentinel Hub Processing API）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-custom-format.html&quot;&gt;Sentinel Hub Custom Format / 哨兵影像切片格式动态切换（WebP / PNG / JPEG）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sentinel-hub-custom-script.html&quot;&gt;Sentinel Hub Custom Script / 哨兵影像 Evalscript 在线波段解译与水分指数（NDMI）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./sentinel-hub-date-picker.html&quot;&gt;Sentinel Hub Date Picker / 哨兵时序卫星影像与日期选择联动（source.setData）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >4</a>
@@ -117,19 +117,19 @@
         <div id="map" class="map"></div>
 <dialog id="auth-dialog" open>
   <form method="dialog" id="auth-form">
-    <label>Client id
+    <label>Client id / 客户端 ID:
       <br>
       <input type="text" name="id" autofocus>
     </label>
-    <label>Client secret
+    <label>Client secret / 客户端密钥:
       <br>
       <input type="password" name="secret">
     </label>
-    <input type="submit" value="show map">
+    <input type="submit" value="show map / 加载卫星地图">
   </form>
 </dialog>
 <label>
-  Show imagery from the week before&nbsp;
+  Show imagery from the week before / 显示截止日前一周内的卫星影像:&nbsp;
   <input type="date" id="to-date" value="2024-06-01">
 </label>
 
@@ -139,9 +139,35 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Updating a Sentinel Hub source with new input data.</p>
+        <p id="shortdesc">Updating a Sentinel Hub source with new input data. / 演示如何使用 HTML5 日期选择器动态调用 source.setData() 切换卫星过境观测时间窗口，实现多时相遥感回溯。</p>
         <div id="docs"><p>This example renders tiles from Sentinel Hub based on imagery in a user-selected date range. Changing the date picker above calls <code>source.setData()</code> with an updated time range in the data filter.
 See the <a href="./sentinel-hub.html">basic Sentinel Hub example</a> for details on authentication.</p>
+<p>
+  本示例展示如何将 HTML5 原生日期选择器与 Sentinel Hub 数据源深度联动。用户调整右上角的观测日期时，程序会自动计算该日期前 7 天的滑动时间窗口，并调用 <code>source.setData()</code> 动态更新请求过滤器中的时空时间范围（<code>timeRange</code>），实现历史多时相（Multi-temporal）卫星影像的瞬时切换与环境时序演变回溯。
+</p>
+---
+### 📚 学习记录与技术深度解读 (Learning Notes)
+#### 1. 核心架构原理 (Core Architecture) 地球表面随季节更替、自然灾害（洪涝、干旱、森林火灾）与人类活动时刻发生变化： - <strong>卫星重访周期与时间窗口宽容度</strong>：Sentinel-2 由 A、B 两颗互补卫星构成，赤道地区重访周期约为 5 天，中纬度地区可达 2~3 天。若仅将 `timeRange` 限定在单一某一天，若该日卫星未过境或恰逢恶劣天气云层覆盖，切片将呈现大面积黑色无数据（NoData）。设置一个 7 天的滑动窗口（`fromDate.setDate(toDate.getDate() - 7)`），Sentinel Hub 云端会在该区间内自动执行时间最近（Mosaicking: most recent）切片镶嵌合成。 - <strong>`source.setData()` 响应式更新模型</strong>：调用 `source.setData(newDataArray)` 无需销毁重建图层或数据源对象，OpenLayers 底层会就地对比配置差异，保留当前视口与认证凭证，平滑替换切片加载任务并更新 WebGL 纹理。
+#### 2. 关键实现与代码拆解 (Code Deep Dive) ```javascript const picker = document.getElementById('to-date');
+function updateInputData() {
+  const toDate = new Date(picker.value);
+  const fromDate = new Date(toDate.getTime());
+  // 动态回溯 7 天作为观测窗口
+  fromDate.setDate(fromDate.getDate() - 7);<p>  // 格式化为严格的 ISO 8601 UTC 字符串并更新数据源
+  source.setData([
+    {
+      type: &#39;sentinel-2-l2a&#39;,
+      dataFilter: {
+        timeRange: {
+          from: fromDate.toISOString(),
+          to: toDate.toISOString(),
+        },
+      },
+    },
+  ]);
+}
+picker.addEventListener(&#39;change&#39;, () =&gt; updateInputData()); ```</p>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>时区与 UTC 零点陷阱</strong>：HTML <code>&lt;input type=&quot;date&quot;&gt;</code> 读取的值是本地时间的 <code>YYYY-MM-DD</code>。若直接将其传给未指定时区的 Date 构造函数，在东八区等非零时区可能会产生 8 小时偏移，进而导致查询到前一天的时空数据。建议使用 <code>new Date(picker.value + &#39;T00:00:00Z&#39;)</code> 或严格显式格式化为完整的 UTC ISO 8601 字符串。 - <strong>时间切片多云时的最少云量镶嵌</strong>：默认的时间镶嵌策略为 <code>mostRecent</code>。在汛期或多雨季节，可以在 <code>dataFilter</code> 中配合 <code>mosaickingOrder: &#39;leastCC&#39;</code>（Least Cloud Coverage），优先采纳窗口期内云量最少的那一次过境观测切片。</h4>
 </div>
       </div>
 
@@ -156,6 +182,8 @@ import SentinelHub from &#x27;ol/source/SentinelHub.js&#x27;;
 
 useGeographic();
 
+// Initialize source with true-color RGB band extraction (Red B04, Green B03, Blue B02)
+// 初始化数据源：订阅真彩色波段（红 B04、绿 B03、蓝 B02）并进行对比度增强
 const source &#x3D; new SentinelHub({
   evalscript: {
     setup: () &#x3D;&gt; ({
@@ -185,6 +213,10 @@ document.getElementById(&#x27;auth-form&#x27;).addEventListener(&#x27;submit&#x2
 
 const picker &#x3D; document.getElementById(&#x27;to-date&#x27;);
 
+/**
+ * Compute 7-day rolling time range and update input data filter on Sentinel Hub source.
+ * 计算当前选定日期往前推移 7 天的滑动时间窗口，并通过 source.setData() 更新时空数据过滤参数。
+ */
 function updateInputData() {
   const toDate &#x3D; new Date(picker.value);
   const fromDate &#x3D; new Date(toDate.getTime());
@@ -222,7 +254,7 @@ source.on(&#x27;change&#x27;, () &#x3D;&gt; {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Sentinel Hub Date Picker&lt;/title&gt;
+    &lt;title&gt;Sentinel Hub Date Picker / 哨兵时序卫星影像与日期选择联动（source.setData）&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -251,19 +283,19 @@ source.on(&#x27;change&#x27;, () &#x3D;&gt; {
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
     &lt;dialog id&#x3D;&quot;auth-dialog&quot; open&gt;
       &lt;form method&#x3D;&quot;dialog&quot; id&#x3D;&quot;auth-form&quot;&gt;
-        &lt;label&gt;Client id
+        &lt;label&gt;Client id / 客户端 ID:
           &lt;br&gt;
           &lt;input type&#x3D;&quot;text&quot; name&#x3D;&quot;id&quot; autofocus&gt;
         &lt;/label&gt;
-        &lt;label&gt;Client secret
+        &lt;label&gt;Client secret / 客户端密钥:
           &lt;br&gt;
           &lt;input type&#x3D;&quot;password&quot; name&#x3D;&quot;secret&quot;&gt;
         &lt;/label&gt;
-        &lt;input type&#x3D;&quot;submit&quot; value&#x3D;&quot;show map&quot;&gt;
+        &lt;input type&#x3D;&quot;submit&quot; value&#x3D;&quot;show map / 加载卫星地图&quot;&gt;
       &lt;/form&gt;
     &lt;/dialog&gt;
     &lt;label&gt;
-      Show imagery from the week before&amp;nbsp;
+      Show imagery from the week before / 显示截止日前一周内的卫星影像:&amp;nbsp;
       &lt;input type&#x3D;&quot;date&quot; id&#x3D;&quot;to-date&quot; value&#x3D;&quot;2024-06-01&quot;&gt;
     &lt;/label&gt;
 

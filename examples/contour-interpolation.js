@@ -3,6 +3,12 @@ import { n as OSM } from "./OSM.js";
 import { t as MousePosition } from "./MousePosition.js";
 //#region examples/contour-interpolation.js
 var attribution = "<a href=\"https://github.com/tilezen/joerd/blob/master/docs/attribution.md\" target=\"_blank\">Data sources and attribution</a>";
+/**
+* Decode Mapzen Terrarium elevation from RGB pixel array.
+* 从 RGB 像素数组解码 Mapzen Terrarium 格式的高程值
+* @param {Array<number>} pixel Pixel values [R, G, B, A] / 像素通道数组
+* @return {number|undefined} Elevation in meters / 高程值（米）
+*/
 var calculateElevation = function(pixel) {
 	if (pixel[3]) return -32768 + (pixel[0] * 256 + pixel[1] + pixel[2] / 256);
 };
@@ -103,6 +109,13 @@ var elevation2 = new WebGLTileLayer({
 	source,
 	style
 });
+/**
+* Image operation running in Web Worker to trace contour lines.
+* 在 Web Worker 线程中执行邻域比较并绘制等高线的光栅图像算法
+* @param {Array<ImageData>} inputs Input images / 输入图像数据
+* @param {Object} data Parameters from beforeoperations / 外部传入参数
+* @return {ImageData} Output contour image / 渲染生成的等高线图元
+*/
 var contours = function(inputs, data) {
 	const elevationImage = inputs[0];
 	const width = elevationImage.width;

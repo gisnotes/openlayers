@@ -17,9 +17,14 @@ map.on("pointermove", (evt) => {
 	showInfo(evt);
 });
 var info = document.getElementById("info");
+/**
+* Display properties of the top-most feature at current pointer position
+* 显示当前鼠标指针位置顶层要素的属性信息
+* @param {import('../src/ol/MapBrowserEvent.js').default|PointerEvent} event Event object / 事件对象
+*/
 function showInfo(event) {
 	const features = event.type === "pointerleave" ? [] : map.getFeaturesAtPixel(event.pixel);
-	if (features.length == 0) {
+	if (features.length === 0) {
 		info.innerText = "";
 		info.style.opacity = "0";
 		return;

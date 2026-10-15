@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Sea Level (with WebGL)</title>
+    <title>Sea Level (with WebGL) / WebGL 海平面上升淹没模拟与 DEM 高程着色器计算</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Sea Level (with WebGL)</h4>
+        <h4 id="title">Sea Level (with WebGL) / WebGL 海平面上升淹没模拟与 DEM 高程着色器计算</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -80,20 +80,20 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL / WebGL 渲染绘制线条&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering features with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-layer-swipe.html&quot;&gt;Layer Swipe (WebGL)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./numpytile.html&quot;&gt;Rendering 16-bit NumpyTiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-sea-level.html&quot;&gt;Sea Level (with WebGL)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-shaded-relief.html&quot;&gt;Shaded Relief (with WebGL)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL points layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering Features with WebGL / WebGL 海量要素动态过滤与着色器动画&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL / WebGL 图标精灵图（Sprite Atlas）海量点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-layer-swipe.html&quot;&gt;Layer Swipe (WebGL) / WebGL 卷帘对比（硬件级 Scissor 视口剪裁）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG Sources / 多 COG 数据源重投影与波段合成&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./numpytile.html&quot;&gt;Rendering 16-bit NumpyTiles / WebGL 渲染 16 位科学栅格切片（NumpyTile）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-sea-level.html&quot;&gt;Sea Level (with WebGL) / WebGL 海平面上升淹没模拟与 DEM 高程着色器计算&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-shaded-relief.html&quot;&gt;Shaded Relief (with WebGL) / WebGL 动态山体阴影（地貌日照晕渲与邻域采样）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap / 航迹热力图（折线要素 WebGL 热力场渲染）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL Points Layer / WebGL 点要素高性能图层与声明式着色器样式编辑器&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tiles.html&quot;&gt;WebGL Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-layer.html&quot;&gt;WebGL Vector Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time-webgl.html&quot;&gt;WMS Time (WebGL)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;多 COG 数据源重投影与波段合成 (Multiple COG sources)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tiles.html&quot;&gt;WebGL Tiles / WebGL 基础栅格瓦片渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-layer.html&quot;&gt;WebGL Vector Layer / WebGL 矢量多边形面图层与悬停高亮&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer / WebGL 矢量切片图层（MVT 硬件加速渲染）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time-webgl.html&quot;&gt;WMS Time (WebGL) / WebGL WMS 时序动态瓦片平滑过渡渲染&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >19</a>
@@ -107,7 +107,7 @@
               data-bs-target="#tag-example-list"
               data-title="math"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-sea-level.html&quot;&gt;Sea Level (with WebGL)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-sea-level.html&quot;&gt;Sea Level (with WebGL) / WebGL 海平面上升淹没模拟与 DEM 高程着色器计算&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -121,8 +121,8 @@
               data-bs-target="#tag-example-list"
               data-title="flood"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sea-level.html&quot;&gt;Sea Level&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-sea-level.html&quot;&gt;Sea Level (with WebGL)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./webgl-sea-level.html&quot;&gt;Sea Level (with WebGL) / WebGL 海平面上升淹没模拟与 DEM 高程着色器计算&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sea-level.html&quot;&gt;Sea Level / MapTiler Terrain-RGB 动态海平面上升模拟&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -143,16 +143,16 @@
         </div>
         <div id="map" class="map"></div>
 <label>
-  Sea level
+  Sea level / 海平面上升高度：
   <input id="level" type="range" min="0" max="100" value="1"/>
-  +<span id="output"></span> m
+  +<span id="output"></span> m / 米
 </label>
 <br>
-Go to
-<a class="location" data-center="-122.3267,37.8377" data-zoom="11">San Francisco</a>,
-<a class="location" data-center="-73.9338,40.6861" data-zoom="11">New York</a>,
-<a class="location" data-center="72.9481,18.9929" data-zoom="11">Mumbai</a>, or
-<a class="location" data-center="120.831,31.160" data-zoom="9">Shanghai</a>
+Go to / 快速跳转城市：
+<a class="location" data-center="-122.3267,37.8377" data-zoom="11">San Francisco / 旧金山</a>,
+<a class="location" data-center="-73.9338,40.6861" data-zoom="11">New York / 纽约</a>,
+<a class="location" data-center="72.9481,18.9929" data-zoom="11">Mumbai / 孟买</a>, or
+<a class="location" data-center="120.831,31.160" data-zoom="9">Shanghai / 上海</a>
 
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
           <input id="codesandbox-params" type="hidden" name="parameters">
@@ -160,22 +160,44 @@ Go to
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Render sea level at different elevations</p>
+        <p id="shortdesc">Render sea level at different elevations. / 使用 WebGLTile 动态解码 RGB 地形高程瓦片，结合着色器数学表达式模拟不同海平面上升高度下的淹没区域。</p>
         <div id="docs"><p>
   The <code>style</code> property of a WebGL tile layer accepts a <code>color</code> expression that
-  can be used to modify pixel values before rendering.  Here, RGB tiles representing elevation
+  can be used to modify pixel values before rendering. Here, RGB tiles representing elevation
   data are loaded and rendered so that values at or below sea level are blue, and values
-  above sea level are transparent.  The <code>color</code> expression operates on normalized pixel
-  values ranging from 0 to 1.  The <code>band</code> operator is used to select normalized values
+  above sea level are transparent. The <code>color</code> expression operates on normalized pixel
+  values ranging from 0 to 1. The <code>band</code> operator is used to select normalized values
   from a single band.
 </p><p>
   After converting the normalized RGB values to elevation, the <code>case</code> expression
-  is used to pick colors to apply at a given elevation.  Instead of using constant
+  is used to pick colors to apply at a given elevation. Instead of using constant
   numeric values as the stops in the colors array, the <code>var</code> operator allows you to
-  use a value that can be modified by your application.  When the user drags the
+  use a value that can be modified by your application. When the user drags the
   sea level slider, the <code>layer.updateStyleVariables()</code> function is called to update
   the <code>level</code> style variable with the value from the slider.
-</p>
+</p><p>
+  WebGL 瓦片图层的 <code>style</code> 配置接收声明式 <code>color</code> 表达式，可在最终渲染前在 GPU 片元着色器中实时处理每个像素。本例加载了经过 Terrain-RGB 编码的高程栅格切片：低于或等于当前模拟海平面的像素被渲染为水体蓝色，高于海平面的陆地像素则被设为完全透明。表达式中的 <code>band</code> 操作符提取对应波段的归一化像素值（范围 0 到 1）。
+</p><p>
+  将归一化的 RGB 值通过数学公式反算还原为真实海拔高程后，利用 <code>case</code> 条件分支表达式确定当前高程的显示色彩。借助 <code>var</code> 操作符，应用程序可动态传入外部样式变量。用户拖动海平面滑块时，调用 <code>layer.updateStyleVariables()</code> 即可毫秒级动态刷新 <code>level</code> 变量，直观模拟暴雨洪水或海平面上升对各沿海主要城市的淹没态势。
+</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. Terrain-RGB 高程编码与着色器波段解算（Band Math）</h4>
+<ul>
+<li><strong>编码原理</strong>：MapTiler / Mapbox 的 Terrain-RGB 协议利用 24 位 RGB 颜色通道存储高精度 DEM 高程：
+$$Elevation = -10000 + (R \times 256 \times 256 + G \times 256 + B) \times 0.1$$</li>
+<li><strong>着色器归一化系数适配</strong>：
+由于 WebGL 的 <code>[&#39;band&#39;, n]</code> 取出的像素强度已自动归一化到 $[0, 1]$，因此在着色器数学表达式中需要额外乘以 $255$ 还原字节分量：<ul>
+<li>R 分量权重：$0.1 \times 255 \times 256 \times 256 = 1671168$</li>
+<li>G 分量权重：$0.1 \times 255 \times 256 = 6528$</li>
+<li>B 分量权重：$0.1 \times 255 = 25.5$</li>
+<li>常数偏移：$-10000$</li>
+</ul>
+</li>
+</ul>
+<h4>2. GPU 条件分支与动态水体遮罩</h4>
+<ul>
+<li><strong>零重绘开销</strong>：传统方式计算淹没图需要后端 GIS 引擎执行栅格代数切图。而在 WebGL 中，<code>[&#39;case&#39;, [&#39;&lt;=&#39;, elevation, [&#39;var&#39;, &#39;level&#39;]], [139, 212, 255, 1], [139, 212, 255, 0]]</code> 在片元着色器内部直接完成逐像素测试，拖拽滑块时帧率稳定在 60 FPS。</li>
+</ul>
 </div>
       </div>
 
@@ -193,9 +215,8 @@ const attributions &#x3D;
   &#x27;&lt;a href&#x3D;&quot;https://www.maptiler.com/copyright/&quot; target&#x3D;&quot;_blank&quot;&gt;&amp;copy; MapTiler&lt;/a&gt; &#x27; +
   &#x27;&lt;a href&#x3D;&quot;https://www.openstreetmap.org/copyright&quot; target&#x3D;&quot;_blank&quot;&gt;&amp;copy; OpenStreetMap contributors&lt;/a&gt;&#x27;;
 
-// band math operates on normalized values from 0-1
-// so we scale by 255 to align with the elevation formula
-// from https://cloud.maptiler.com/tiles/terrain-rgb-v2/
+// Band math operates on normalized values from 0-1, so we scale by 255 to align with elevation formula
+// 着色器波段数学运算使用 0-1 范围的归一化像素值，因此乘以 255 对齐 Terrain-RGB 真实海拔反算公式
 const elevation &#x3D; [
   &#x27;+&#x27;,
   -10000,
@@ -219,7 +240,8 @@ const layer &#x3D; new TileLayer({
     },
     color: [
       &#x27;case&#x27;,
-      // use the &#x60;level&#x60; style variable to determine the color
+      // Use the &#x60;level&#x60; style variable to determine color (blue if submerged, transparent otherwise)
+      // 使用 &#x60;level&#x60; 样式变量判断像素颜色（被水淹没区域显示为蓝色，陆地部分完全透明）
       [&#x27;&lt;&#x3D;&#x27;, elevation, [&#x27;var&#x27;, &#x27;level&#x27;]],
       [139, 212, 255, 1],
       [139, 212, 255, 0],
@@ -260,6 +282,7 @@ for (let i &#x3D; 0, ii &#x3D; locations.length; i &lt; ii; ++i) {
   locations[i].addEventListener(&#x27;click&#x27;, relocate);
 }
 
+// Quick jump to city coordinates / 快速跳转至指定城市中心点
 function relocate(event) {
   const data &#x3D; event.target.dataset;
   const view &#x3D; map.getView();
@@ -277,7 +300,7 @@ function relocate(event) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Sea Level (with WebGL)&lt;/title&gt;
+    &lt;title&gt;Sea Level (with WebGL) / WebGL 海平面上升淹没模拟与 DEM 高程着色器计算&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -302,16 +325,16 @@ function relocate(event) {
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
     &lt;label&gt;
-      Sea level
+      Sea level / 海平面上升高度：
       &lt;input id&#x3D;&quot;level&quot; type&#x3D;&quot;range&quot; min&#x3D;&quot;0&quot; max&#x3D;&quot;100&quot; value&#x3D;&quot;1&quot;/&gt;
-      +&lt;span id&#x3D;&quot;output&quot;&gt;&lt;/span&gt; m
+      +&lt;span id&#x3D;&quot;output&quot;&gt;&lt;/span&gt; m / 米
     &lt;/label&gt;
     &lt;br&gt;
-    Go to
-    &lt;a class&#x3D;&quot;location&quot; data-center&#x3D;&quot;-122.3267,37.8377&quot; data-zoom&#x3D;&quot;11&quot;&gt;San Francisco&lt;/a&gt;,
-    &lt;a class&#x3D;&quot;location&quot; data-center&#x3D;&quot;-73.9338,40.6861&quot; data-zoom&#x3D;&quot;11&quot;&gt;New York&lt;/a&gt;,
-    &lt;a class&#x3D;&quot;location&quot; data-center&#x3D;&quot;72.9481,18.9929&quot; data-zoom&#x3D;&quot;11&quot;&gt;Mumbai&lt;/a&gt;, or
-    &lt;a class&#x3D;&quot;location&quot; data-center&#x3D;&quot;120.831,31.160&quot; data-zoom&#x3D;&quot;9&quot;&gt;Shanghai&lt;/a&gt;
+    Go to / 快速跳转城市：
+    &lt;a class&#x3D;&quot;location&quot; data-center&#x3D;&quot;-122.3267,37.8377&quot; data-zoom&#x3D;&quot;11&quot;&gt;San Francisco / 旧金山&lt;/a&gt;,
+    &lt;a class&#x3D;&quot;location&quot; data-center&#x3D;&quot;-73.9338,40.6861&quot; data-zoom&#x3D;&quot;11&quot;&gt;New York / 纽约&lt;/a&gt;,
+    &lt;a class&#x3D;&quot;location&quot; data-center&#x3D;&quot;72.9481,18.9929&quot; data-zoom&#x3D;&quot;11&quot;&gt;Mumbai / 孟买&lt;/a&gt;, or
+    &lt;a class&#x3D;&quot;location&quot; data-center&#x3D;&quot;120.831,31.160&quot; data-zoom&#x3D;&quot;9&quot;&gt;Shanghai / 上海&lt;/a&gt;
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
   &lt;/body&gt;

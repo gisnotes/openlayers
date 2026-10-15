@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Layer Z-Index</title>
+    <title>Layer Z-Index / 图层层级顺序与托管/非托管图层 (Layer Z-Index &amp; Stacking Context)</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Layer Z-Index</h4>
+        <h4 id="title">Layer Z-Index / 图层层级顺序与托管/非托管图层 (Layer Z-Index &amp; Stacking Context)</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,10 +74,10 @@
               data-bs-target="#tag-example-list"
               data-title="layer"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./layer-z-index.html&quot;&gt;Layer Z-Index&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-zoom-limits.html&quot;&gt;Layer Zoom Limits&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./svg-layer.html&quot;&gt;SVG Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL points layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./layer-z-index.html&quot;&gt;Layer Z-Index / 图层层级顺序与托管/非托管图层 (Layer Z-Index &amp;amp; Stacking Context)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-zoom-limits.html&quot;&gt;Layer Zoom Limits / 图层缩放级别可见性区间（minZoom 与 maxZoom）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./svg-layer.html&quot;&gt;SVG Layer / 交互式 SVG 图层与仿射矩阵同步&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL Points Layer / WebGL 点要素高性能图层与声明式着色器样式编辑器&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >4</a>
@@ -91,7 +91,7 @@
               data-bs-target="#tag-example-list"
               data-title="ordering"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./layer-z-index.html&quot;&gt;Layer Z-Index&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./layer-z-index.html&quot;&gt;Layer Z-Index / 图层层级顺序与托管/非托管图层 (Layer Z-Index &amp;amp; Stacking Context)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -105,7 +105,7 @@
               data-bs-target="#tag-example-list"
               data-title="z-index"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./layer-z-index.html&quot;&gt;Layer Z-Index&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./layer-z-index.html&quot;&gt;Layer Z-Index / 图层层级顺序与托管/非托管图层 (Layer Z-Index &amp;amp; Stacking Context)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -127,15 +127,16 @@
         <div id="map" class="map"></div>
 <div>
   <label for="idx1">
+    Square layer Z-index (蓝色正方形图层 Z-index):
     <input type="number" id="idx1"></input>
-    Square layer Z-index
   </label></br>
 
   <label for="idx2">
+    Triangle layer Z-index (红色三角形图层 Z-index):
     <input type="number" id="idx2"></input>
-    Triangle layer Z-index
   </label>
 </div>
+
 
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
           <input id="codesandbox-params" type="hidden" name="parameters">
@@ -143,8 +144,40 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of ordering layers using Z-index.</p>
-        <div id="docs"><p>There are are two managed layers (square and triangle) and one unmanaged layer (star).</br> The Z-index determines the rendering order; with {square: 1, triangle: 0, star: unmanaged} indices, the rendering order is triangle, square and star on top.</p>
+        <p id="shortdesc">Example of ordering layers using Z-index. / 演示如何使用 Z-index 动态控制图层渲染堆叠顺序，以及受控托管图层（Managed）与独立非托管图层（Unmanaged）的渲染机制差异。</p>
+        <div id="docs"><p>
+  There are are two managed layers (square and triangle) and one unmanaged layer (star).</br>
+  The Z-index determines the rendering order; with {square: 1, triangle: 0, star: unmanaged} indices, the rendering order is triangle, square and star on top.
+</p> <p>
+  在此示例中，包含两个受控托管图层（蓝色正方形与红色三角形）和一个独立非托管图层（绿色五角星）。</br>
+  Z-index（层级索引）决定了图层的渲染先后顺序：当初始设置为 <code>{square: 1, triangle: 0, star: unmanaged}</code> 时，渲染管线将先绘制红色三角形、再覆盖蓝色正方形，而非托管的绿色五角星由于直接通过 <code>setMap()</code> 绑定，将始终常驻在所有托管图层的最顶层。
+  在下方数字输入框中修改 Z-index，可实时观察图形的遮挡覆盖层次变动。
+</p> <hr> <h3>📚 学习记录与技术深度解读</h3>
+<h4>1. 核心架构与设计思想</h4> <ul>
+  <li><strong>受控托管图层（Managed Layers）的层级排序管线：</strong>
+    传入 <code>new Map({ layers: [...] })</code> 或通过 <code>map.addLayer()</code> 添加的图层均由 OpenLayers 内置的 <code>ol/layer/Group</code> 容器统一管理。
+    渲染引擎在每一帧按以下规则对托管图层排序：
+    1. 优先按 <code>layer.getZIndex()</code> 升序排列（数值越小越先绘制，位于底层；数值越大越后绘制，覆盖在上方）；
+    2. 当两个图层的 Z-index 相同时（默认均为 0 或未指定），严格按照其在图层数组中的下标先后顺序绘制（后加入者在上）。
+  </li>
+  <li><strong>独立非托管图层（Unmanaged Layers）的特殊顶层特权：</strong>
+    通过直接调用 <code>layer.setMap(map)</code> 而未将其放入 <code>map.getLayers()</code> 集合的图层被称为“非托管图层”。
+    非托管图层绕过了 LayerGroup 的排序与生命周期管理，其 Canvas / DOM 容器会被渲染管线强制放置在所有普通托管图层之上。
+    这种模式非常适合作为高频擦除重绘的临时标绘层、测距/测面测量橡皮筋图层，避免污染业务图层树。
+  </li>
+</ul>
+<h4>2. 源码与关键 API 剖析</h4> <ul>
+  <li><code>vectorLayer.setZIndex(number)</code>：动态设置图层的 Z 轴渲染优先级，触发地图微任务队列重新排序并重绘。</li>
+  <li><code>layer0.setMap(map)</code>：将图层声明为非托管层绑定至目标地图。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优</h4> <ul>
+  <li><strong>负数 Z-index 导致图层被底图湮没：</strong>
+    底图通常位于索引 0。若为业务矢量层赋予了负数（如 <code>zIndex: -1</code>），该图层将被底图切片彻底遮挡，在控制台无报错但屏幕完全不可见。
+  </li>
+  <li><strong>动态图层树层级跨度规范：</strong>
+    在复杂业务系统（如融合底图、热力图、网格面、轨迹线、POI 标记的多源一张图）中，建议采用步长为 10 或 100 的层级区间规划（如底图 0~9、面图层 10~19、线图层 20~29、点图标 30~39），预留足够的插槽，避免频繁动态计算排序。
+  </li>
+</ul>
 </div>
       </div>
 
@@ -158,6 +191,8 @@ import Point from &#x27;ol/geom/Point.js&#x27;;
 import VectorLayer from &#x27;ol/layer/Vector.js&#x27;;
 import VectorSource from &#x27;ol/source/Vector.js&#x27;;
 
+// Declarative webgl/canvas vector styles for shapes (square, triangle, star)
+// 几何图形矢量样式定义（蓝色正方形、红色三角形、绿色五角星）
 const styles &#x3D; {
   square: {
     &#x27;shape-points&#x27;: 4,
@@ -186,6 +221,8 @@ const styles &#x3D; {
   },
 };
 
+// Factory function to create a vector layer with a single point feature and initial zIndex
+// 工厂函数：创建包含单点要素与初始 Z-index 优先级的矢量图层
 function createLayer(coordinates, style, zIndex) {
   const feature &#x3D; new Feature(new Point(coordinates));
 
@@ -202,14 +239,20 @@ function createLayer(coordinates, style, zIndex) {
   return vectorLayer;
 }
 
+// Create layers: star (unmanaged), square (managed, zIndex: 1), triangle (managed, zIndex: 0)
+// 创建图层：五角星（非托管层）、方形（托管层，初始 Z-index&#x3D;1）、三角形（托管层，初始 Z-index&#x3D;0）
 const layer0 &#x3D; createLayer([40, 40], styles.star);
 const layer1 &#x3D; createLayer([0, 0], styles.square, 1);
 const layer2 &#x3D; createLayer([0, 40], styles.triangle, 0);
 
+// Managed layers collection passed into the map constructor
+// 传入地图构造函数的托管图层集合
 const layers &#x3D; [];
 layers.push(layer1);
 layers.push(layer2);
 
+// Initialize map with managed layers
+// 初始化地图并挂载托管图层
 const map &#x3D; new Map({
   layers: layers,
   target: &#x27;map&#x27;,
@@ -219,8 +262,12 @@ const map &#x3D; new Map({
   }),
 });
 
+// Set unmanaged layer directly on map: renders on top of all managed layers
+// 直接通过 setMap 挂载非托管图层：脱离普通排序管线，始终置于托管图层之上
 layer0.setMap(map);
 
+// Bind input number controls to dynamically change layer Z-index
+// 将输入框控件与对应图层的 Z-index 属性双向绑定
 function bindInputs(id, layer) {
   const idxInput &#x3D; document.getElementById(&#x27;idx&#x27; + id);
   idxInput.onchange &#x3D; function () {
@@ -241,7 +288,7 @@ bindInputs(2, layer2);
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Layer Z-Index&lt;/title&gt;
+    &lt;title&gt;Layer Z-Index / 图层层级顺序与托管/非托管图层 (Layer Z-Index &amp; Stacking Context)&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -254,15 +301,16 @@ bindInputs(2, layer2);
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
     &lt;div&gt;
       &lt;label for&#x3D;&quot;idx1&quot;&gt;
+        Square layer Z-index (蓝色正方形图层 Z-index):
         &lt;input type&#x3D;&quot;number&quot; id&#x3D;&quot;idx1&quot;&gt;&lt;/input&gt;
-        Square layer Z-index
       &lt;/label&gt;&lt;/br&gt;
     
       &lt;label for&#x3D;&quot;idx2&quot;&gt;
+        Triangle layer Z-index (红色三角形图层 Z-index):
         &lt;input type&#x3D;&quot;number&quot; id&#x3D;&quot;idx2&quot;&gt;&lt;/input&gt;
-        Triangle layer Z-index
       &lt;/label&gt;
     &lt;/div&gt;
+    
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
   &lt;/body&gt;

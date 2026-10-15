@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>NDVI from a COG with a raster source</title>
+    <title>NDVI from a COG with a raster source / 使用 Raster 数据源计算 COG 的 NDVI</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">NDVI from a COG with a raster source</h4>
+        <h4 id="title">NDVI from a COG with a raster source / 使用 Raster 数据源计算 COG 的 NDVI</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -76,20 +76,20 @@
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-stretch.html&quot;&gt;Band Contrast Stretch / 遥感波段组合与对比度拉伸&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog.html&quot;&gt;Cloud Optimized GeoTIFF (COG)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-blob.html&quot;&gt;Cloud Optimized GeoTIFF (COG) from a Blob&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-custom-client.html&quot;&gt;Cloud Optimized GeoTIFF (COG) with Custom Loader&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog.html&quot;&gt;Cloud Optimized GeoTIFF (COG) / 云优化 GeoTIFF (COG) 瓦片渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-blob.html&quot;&gt;Cloud Optimized GeoTIFF (COG) from a Blob / 从二进制 Blob 对象加载云优化 GeoTIFF&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-custom-client.html&quot;&gt;Cloud Optimized GeoTIFF (COG) with Custom Loader / 自定义网络加载器的云优化 GeoTIFF&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-pyramid.html&quot;&gt;GeoTIFF tile pyramid&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-overviews.html&quot;&gt;GeoTIFF with Overviews&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF 客户端动态重投影 (GeoTIFF Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math.html&quot;&gt;NDVI from a Sentinel 2 COG&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-colors.html&quot;&gt;NDVI with a Dynamic Color Ramp&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC support&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;包含模型仿射变换矩阵的 COG (COG with ModelTransformation)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;多 COG 数据源重投影与波段合成 (Multiple COG sources)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;COG with ModelTransformation / 包含模型仿射变换矩阵的 COG&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF Reprojection / GeoTIFF 客户端动态重投影&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-pyramid.html&quot;&gt;GeoTIFF tile pyramid / GeoTIFF 瓦片金字塔 (STACTA)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-overviews.html&quot;&gt;GeoTIFF with Overviews / 挂载外部金字塔文件的 GeoTIFF&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG Sources / 多 COG 数据源重投影与波段合成&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source / 使用 Raster 数据源计算 COG 的 NDVI&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math.html&quot;&gt;NDVI from a Sentinel 2 COG / 基于哨兵 2 号 COG 计算归一化植被指数 (NDVI)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-colors.html&quot;&gt;NDVI with a Dynamic Color Ramp / 动态色带交互调整的 NDVI 渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs / 基于两个 16 位 COG 同时计算 NDVI 与 NDWI&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC support / STAC 时空资产目录支持&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >16</a>
@@ -103,10 +103,10 @@
               data-bs-target="#tag-example-list"
               data-title="ndvi"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math.html&quot;&gt;NDVI from a Sentinel 2 COG&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-colors.html&quot;&gt;NDVI with a Dynamic Color Ramp&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source / 使用 Raster 数据源计算 COG 的 NDVI&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math.html&quot;&gt;NDVI from a Sentinel 2 COG / 基于哨兵 2 号 COG 计算归一化植被指数 (NDVI)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-colors.html&quot;&gt;NDVI with a Dynamic Color Ramp / 动态色带交互调整的 NDVI 渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs / 基于两个 16 位 COG 同时计算 NDVI 与 NDWI&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >4</a>
@@ -120,13 +120,13 @@
               data-bs-target="#tag-example-list"
               data-title="raster"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./contour-interpolation.html&quot;&gt;Interpolating Contours from a DEM&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./pmtiles-image.html&quot;&gt;PMTiles Image Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sea-level.html&quot;&gt;Sea Level&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./shaded-relief.html&quot;&gt;Shaded Relief&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./contour-interpolation.html&quot;&gt;Interpolating Contours from a DEM / DEM 高程插值与动态等高线生成&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source / 使用 Raster 数据源计算 COG 的 NDVI&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./pmtiles-image.html&quot;&gt;PMTiles Image Tiles / PMTiles 单文件云原生切片归档读取&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing / 种子点区域生长与交互式影像分割&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sea-level.html&quot;&gt;Sea Level / MapTiler Terrain-RGB 动态海平面上升模拟&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./shaded-relief.html&quot;&gt;Shaded Relief / 动态日照山体阴影（Hillshade）实时渲染&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >7</a>
@@ -146,7 +146,7 @@
           </div>
         </div>
         <div id="map" class="map"></div>
-<div>NDVI at pointer: <span id="output">&nbsp;</span></div>
+<div>NDVI at pointer / 光标处 NDVI 数值: <span id="output">&nbsp;</span></div>
 
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
           <input id="codesandbox-params" type="hidden" name="parameters">
@@ -154,8 +154,27 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Running a pixel operation over multi-band data tiles.</p>
-        <div id="docs"><p>This example computes the Normalized Difference Vegetation Index (NDVI) from two Sentinel 2 bands using an <code>ol/source/Raster</code> operation.  The raster source takes a <code>GeoTIFF</code> data tile source as input, samples it at its native tile resolution, and runs a pixel operation that maps NDVI to a color ramp.  The map view is in Web Mercator, so the operation runs in the source&#39;s own projection and its result is reprojected to the view - the OSM base layer shows the alignment. Compare with the <a href="../cog-math.html">NDVI from a Sentinel 2 COG</a> example, which uses a WebGL layer style instead.  Move the pointer over the map to read the NDVI value from the source&#39;s <code>getData()</code> lookup.</p>
+        <p id="shortdesc">Running a pixel operation over multi-band data tiles. / 基于 ol/source/Raster 在 Web Worker 多线程中执行像素级运算计算 NDVI。</p>
+        <div id="docs"><h2>This example computes the Normalized Difference Vegetation Index (NDVI) from two Sentinel 2 bands using an <code>ol/source/Raster</code> operation.  The raster source takes a <code>GeoTIFF</code> data tile source as input, samples it at its native tile resolution, and runs a pixel operation that maps NDVI to a color ramp.  The map view is in Web Mercator, so the operation runs in the source&#39;s own projection and its result is reprojected to the view - the OSM base layer shows the alignment. Compare with the <a href="../cog-math.html">NDVI from a Sentinel 2 COG</a> example, which uses a WebGL layer style instead.  Move the pointer over the map to read the NDVI value from the source&#39;s <code>getData()</code> lookup.
+本示例使用 <code>ol/source/Raster</code> 像元算子从两个哨兵 2 号波段中计算归一化植被指数（NDVI）。 栅格数据源将 <code>GeoTIFF</code> 数据瓦片源作为输入，按其原生瓦片分辨率进行像元采样，并在后台线程执行像素级算法，将计算出的 NDVI 映射到色带中。 地图视图采用 Web 墨卡托投影（EPSG:3857），运算在数据源自身投影（UTM）中执行，运算结果动态重投影至地图视图——底部的 OSM 图层印证了严密的坐标吻合度。 可与 <a href="../cog-math.html">基于哨兵 2 号 COG 计算 NDVI</a> 示例进行对比，后者采用 WebGL 图层声明式着色器实现。 移动鼠标指针，可以通过数据源的 <code>getData()</code> 查询当前坐标下的实际 NDVI 数值。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 架构对比：<code>ol/layer/WebGLTile</code> (GPU) vs <code>ol/source/Raster</code> (CPU Web Worker) 在 OpenLayers 中处理遥感影像像元计算有两种经典技术架构：</h4>
+<p>| 对比维度 | WebGL 着色器架构 (<code>WebGLTile</code>) | 栅格算子流水线 (<code>RasterSource</code>) | | :--- | :--- | :--- | | <strong>计算单元</strong> | <strong>GPU 显卡片元着色器 (Fragment Shader)</strong> | <strong>CPU 多线程 Web Worker</strong> | | <strong>算法表达方式</strong> | 声明式 AST 表达式树（编译为 GLSL） | 原生 JavaScript 任意数学函数与逻辑 | | <strong>算法复杂度上限</strong> | 适合纯数学/矩阵运算，难以执行复杂循环、递归或图搜索 | <strong>无限制</strong>，支持任意复杂算法（如区域生长、连通域分析、形态学滤波） | | <strong>性能特点</strong> | 百万像素每秒 60 FPS 瞬时刷新，适合交互调参 | 后台异步计算，计算密集时可能有轻微延迟，适合复杂特征提取 | | <strong>投影与图层类型</strong> | 直接在 GPU 贴图中采样重投影 | 输出为客户端单张动态图像 (<code>ol/layer/Image</code>) |</p>
+<h4>2. <code>ol/source/Raster</code> 的 Web Worker 通信机制 * <strong>代码注入与序列化</strong>：</h4>
+<p>  由于 Web Worker 运行在独立的 JavaScript 线程中，无法直接访问主线程的作用域。
+  <code>RasterSource</code> 提供了专门的 <code>lib</code> 选项：</p>
+<pre><code class="language-javascript">const raster = new RasterSource({
+  sources: [cog],
+  operation: ndviToColor,
+  lib: { colorFromRamp: colorFromRamp }, // 注入到 Worker 内部的辅助函数
+});
+</code></pre>
+<p>  OpenLayers 会在 Worker 启动时将 <code>operation</code> 与 <code>lib</code> 内的函数转为字符串传输并在子线程中 <code>eval</code> 恢复。</p>
+<ul>
+<li><strong><code>beforeoperations</code> 事件</strong>：
+用于在每轮瓦片计算前，向 Worker 传递外部数据字典（如颜色渐变阈值数组 <code>data.stops</code>）。</li>
+</ul>
+<h4>3. 拾取像元数值：<code>raster.getData(coordinate)</code> 通过 <code>raster.getData(event.coordinate)</code>，直接传入地理坐标，OpenLayers 会自动定位到底层对应的 Float32Array 像元数组，取得 Red 与 NIR 原始辐射反射率，在主线程实时算出精确浮点 NDVI。</h4>
 </div>
       </div>
 
@@ -169,21 +188,23 @@ import RasterSource from &#x27;ol/source/Raster.js&#x27;;
 
 // &#x60;normalize: false&#x60; keeps the raw 16-bit reflectance as Float32Array data, so
 // the operation runs the NDVI math on the actual band values.
+// &#x60;normalize: false&#x60; 保留原始 16 位反射率数据为 Float32Array，使像素算子能够基于真实辐射度数值计算 NDVI。
 const cog &#x3D; new GeoTIFF({
   normalize: false,
   sources: [
     {
-      // visible red
+      // Visible red / 可见光红光
       url: &#x27;https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/36/Q/WD/2020/7/S2A_36QWD_20200701_0_L2A/B04.tif&#x27;,
     },
     {
-      // near infrared
+      // Near infrared / 近红外
       url: &#x27;https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/36/Q/WD/2020/7/S2A_36QWD_20200701_0_L2A/B08.tif&#x27;,
     },
   ],
 });
 
 // NDVI color ramp, handed to the operation in &quot;beforeoperations&quot;.
+// NDVI 颜色渐变阶梯，在 &quot;beforeoperations&quot; 事件中传递给后台算子。
 const ndviStops &#x3D; [
   -0.2,
   [191, 191, 191],
@@ -228,9 +249,8 @@ const ndviStops &#x3D; [
 ];
 
 /**
- * Map a value to an &#x60;[r, g, b, a]&#x60; color using a ramp of &#x60;value, [r, g, b]&#x60;
- * stops.  Provided to the operation with the &#x60;lib&#x60; option so it is available in
- * the worker.
+ * Map a value to an &#x60;[r, g, b, a]&#x60; color using a ramp of &#x60;value, [r, g, b]&#x60; stops.
+ * 将数值通过 &#x60;[value, [r, g, b]]&#x60; 梯度插值为 &#x60;[r, g, b, a]&#x60; 颜色。
  * @param {number} value The value to map.
  * @param {Array&lt;number|Array&lt;number&gt;&gt;} stops Flat &#x60;value, color&#x60; ramp stops.
  * @return {Array&lt;number&gt;} The &#x60;[r, g, b, a]&#x60; color.
@@ -261,9 +281,9 @@ function colorFromRamp(value, stops) {
 
 /**
  * Compute NDVI from the two input bands and map it through the color ramp.
- * @param {Array&lt;Array&lt;number&gt;&gt;} pixels One pixel per input source; the first
- *     (and only) input carries the red and near-infrared bands.
- * @param {Object} data The object populated in the &quot;beforeoperations&quot; event.
+ * 从两个输入波段中计算 NDVI 并通过色带映射出颜色。
+ * @param {Array&lt;Array&lt;number&gt;&gt;} pixels One pixel per input source / 每个输入源的一个像素
+ * @param {Object} data The object populated in the &quot;beforeoperations&quot; event / 在 beforeoperations 中注入的数据
  * @return {Array&lt;number&gt;} An &#x60;[r, g, b, a]&#x60; pixel.
  */
 function ndviToColor(pixels, data) {
@@ -271,16 +291,19 @@ function ndviToColor(pixels, data) {
   const nir &#x3D; pixels[0][1];
   const sum &#x3D; nir + red;
   if (!sum) {
-    // transparent outside the data
+    // Transparent outside the data / 数据有效范围之外设为全透明
     return [0, 0, 0, 0];
   }
   return colorFromRamp((nir - red) / sum, data.stops);
 }
 
+// Create RasterSource running calculation in Web Workers
+// 创建在 Web Worker 多线程中执行像元算子的 RasterSource
 const raster &#x3D; new RasterSource({
   sources: [cog],
   operation: ndviToColor,
   // Functions in the &#x60;lib&#x60; object are available to the operation in the worker.
+  // lib 中的辅助函数会被序列化并注入到 Web Worker 子线程中供算子调用
   lib: {
     colorFromRamp: colorFromRamp,
   },
@@ -298,6 +321,7 @@ const map &#x3D; new Map({
 
 // getData() returns the input band values at a coordinate, so we can compute
 // and show the NDVI value the color above was derived from.
+// getData() 返回指定地理坐标处的输入波段值，供主线程计算并展示光标下的精确 NDVI 数值
 const output &#x3D; document.getElementById(&#x27;output&#x27;);
 map.on([&#x27;pointermove&#x27;, &#x27;click&#x27;], function (event) {
   const pixels &#x3D; raster.getData(event.coordinate);
@@ -320,7 +344,7 @@ map.on([&#x27;pointermove&#x27;, &#x27;click&#x27;], function (event) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;NDVI from a COG with a raster source&lt;/title&gt;
+    &lt;title&gt;NDVI from a COG with a raster source / 使用 Raster 数据源计算 COG 的 NDVI&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -331,7 +355,7 @@ map.on([&#x27;pointermove&#x27;, &#x27;click&#x27;], function (event) {
   &lt;/head&gt;
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
-    &lt;div&gt;NDVI at pointer: &lt;span id&#x3D;&quot;output&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/div&gt;
+    &lt;div&gt;NDVI at pointer / 光标处 NDVI 数值: &lt;span id&#x3D;&quot;output&quot;&gt;&amp;nbsp;&lt;/span&gt;&lt;/div&gt;
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
   &lt;/body&gt;

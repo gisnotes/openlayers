@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Rectangle</title>
+    <title>Rectangle / 矩形几何（fromExtent）</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Rectangle</h4>
+        <h4 id="title">Rectangle / 矩形几何（fromExtent）</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,13 +74,13 @@
               data-bs-target="#tag-example-list"
               data-title="simple"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cartodb.html&quot;&gt;CartoDB source example&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cartodb.html&quot;&gt;CartoDB source example / CartoDB 云端空间数据源与动态 SQL 过滤 (CartoDB Source)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles.html&quot;&gt;Mapbox Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-wrapping.html&quot;&gt;Polygon map wrapping&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./rectangle.html&quot;&gt;Rectangle&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-wrapping.html&quot;&gt;Polygon map wrapping / 多边形跨日界线循环环绕渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./rectangle.html&quot;&gt;Rectangle / 矩形几何（fromExtent）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./simple.html&quot;&gt;Simple Map&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer / WebGL 矢量切片图层（MVT 硬件加速渲染）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >7</a>
@@ -95,9 +95,9 @@
               data-title="geometry"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-clusters.html&quot;&gt;Earthquake Clusters / 地震点位聚合与悬停散开渲染&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-wrapping.html&quot;&gt;Polygon map wrapping&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./rectangle.html&quot;&gt;Rectangle&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./render-geometry.html&quot;&gt;Render geometries to a canvas&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-wrapping.html&quot;&gt;Polygon map wrapping / 多边形跨日界线循环环绕渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./rectangle.html&quot;&gt;Rectangle / 矩形几何（fromExtent）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./render-geometry.html&quot;&gt;Render geometries to a canvas / 即时渲染：将几何直接绘制到独立 Canvas&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >4</a>
@@ -111,8 +111,8 @@
               data-bs-target="#tag-example-list"
               data-title="rectangle"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-wrapping.html&quot;&gt;Polygon map wrapping&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./rectangle.html&quot;&gt;Rectangle&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-wrapping.html&quot;&gt;Polygon map wrapping / 多边形跨日界线循环环绕渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./rectangle.html&quot;&gt;Rectangle / 矩形几何（fromExtent）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./regularshape.html&quot;&gt;Regular Shapes / 正多边形与星形矢量符号（RegularShape 全解）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
@@ -130,8 +130,8 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./box-selection.html&quot;&gt;Box Selection / 框选要素&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./extent-interaction.html&quot;&gt;Extent Interaction / 空间范围矩形交互&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./extent-interaction-modify.html&quot;&gt;Modify an extent / 修改既有范围矩形&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-wrapping.html&quot;&gt;Polygon map wrapping&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./rectangle.html&quot;&gt;Rectangle&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-wrapping.html&quot;&gt;Polygon map wrapping / 多边形跨日界线循环环绕渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./rectangle.html&quot;&gt;Rectangle / 矩形几何（fromExtent）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >5</a>
@@ -146,10 +146,10 @@
               data-title="bbox"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./extent-interaction-modify.html&quot;&gt;Modify an extent / 修改既有范围矩形&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-wrapping.html&quot;&gt;Polygon map wrapping&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./rectangle.html&quot;&gt;Rectangle&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-wrapping.html&quot;&gt;Polygon map wrapping / 多边形跨日界线循环环绕渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./rectangle.html&quot;&gt;Rectangle / 矩形几何（fromExtent）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS / GeoServer WFS 视口 BBOX 动态要素加载&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >5</a>
@@ -164,8 +164,8 @@
               data-title="polygon"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-styles.html&quot;&gt;Custom Polygon Styles / 自定义多边形样式与顶点渲染&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-wrapping.html&quot;&gt;Polygon map wrapping&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./rectangle.html&quot;&gt;Rectangle&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-wrapping.html&quot;&gt;Polygon map wrapping / 多边形跨日界线循环环绕渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./rectangle.html&quot;&gt;Rectangle / 矩形几何（fromExtent）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -192,8 +192,23 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Renders a rectangle on a map.</p>
-        <div id="docs"><p>A simple map with an OSM basemap and a rectangular polygon feature (e.g. a bounding box).</p>
+        <p id="shortdesc">Renders a rectangle on a map. / 在地图上渲染基于包围盒范围构建的矩形多边形要素。</p>
+        <div id="docs"><p>A simple map with an OSM basemap and a rectangular polygon feature (e.g. a bounding box).</p> <p>本示例演示在 OpenStreetMap 底图上，如何借助 <code>fromExtent</code> 工具函数将空间四至包围盒（Bounding Box）便捷转换为矩形多边形（Polygon）要素并渲染。</p>
+---
+### 📚 学习记录与技术深度解读 (Learning Notes)
+#### 1. 核心架构与设计思想 (Core Architecture & Design) - <strong>为什么 OpenLayers 没有独立的 `ol/geom/Rectangle` 类？</strong>：
+  在 OGC（开放地理空间信息联盟）标准与 ISO 19107 空间几何规范中，二维面状要素的基础类型统一抽象为 `Polygon` 与 `MultiPolygon`。矩形在数学与拓扑本质上是一个外环由 4 条正交线段构成的闭合多边形（共 5 个坐标点，首尾闭合）。若单独设计 Rectangle 类，会导致空间关系断言（Intersects、Contains）、缓冲区计算以及格式序列化（GeoJSON、WKT）产生不必要的多态分支与代码冗余。
+- <strong>`Polygon.fromExtent` 的轻量封装模式</strong>：
+  OpenLayers 提供了静态工厂函数 `fromExtent([minX, minY, maxX, maxY])`，自动按照逆时针顺序构造顶点数组：
+  `[[minX, minY], [minX, maxY], [maxX, maxY], [maxX, minY], [minX, minY]]`。<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis) - <code>fromExtent(extent)</code>：</h4>
+<ul>
+<li>入参：标准四元组数字数组 <code>[minX, minY, maxX, maxY]</code>。</li>
+<li>返回值：标准 <code>ol/geom/Polygon</code> 实例。支持直接调用多边形的全部原生方法（如 <code>transform</code>、<code>getArea</code>、<code>getCoordinates</code>、<code>scale</code>）。</li>
+<li>与 <code>ol/geom/Polygon</code> 构造器的性能对比：
+直接传入原始坐标数组需要开发者手动计算首尾闭合点，极易发生点位顺序颠倒（顺时针/逆时针在某些三维或 GIS 计算中代表洞环内孔）。使用 <code>fromExtent</code> 具有严格的逆时针保证与极简语法。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization) - <strong>经纬度范围坐标转换时机</strong>：</h4>
+<p>  若从后端接口获取的经纬度 BBOX 为 <code>[116.3, 39.9, 116.5, 40.1]</code>，切勿直接传入 <code>fromExtent</code>，否则矩形会落在非洲几内亚湾（原点附近几百米内）。必须先调用 <code>transformExtent(bbox, &#39;EPSG:4326&#39;, &#39;EPSG:3857&#39;)</code> 转换为墨卡托米制坐标，或在地图使用 <code>useGeographic()</code> 模式下直接使用经纬度。</p>
 </div>
       </div>
 
@@ -209,6 +224,8 @@ import VectorLayer from &#x27;ol/layer/Vector.js&#x27;;
 import OSM from &#x27;ol/source/OSM.js&#x27;;
 import VectorSource from &#x27;ol/source/Vector.js&#x27;;
 
+// Initialize map with OSM basemap and a rectangular polygon feature
+// 初始化包含 OSM 底图与矩形多边形要素的地图实例
 const map &#x3D; new Map({
   layers: [
     new TileLayer({
@@ -218,8 +235,9 @@ const map &#x3D; new Map({
       source: new VectorSource({
         features: [
           new Feature(
-            // Here a &#x60;Geometry&#x60; is expected, e.g. a &#x60;Polygon&#x60;, which has a handy function to create a rectangle from bbox coordinates
-            fromExtent([-1000000, 5000000, 3000000, 7000000]), // minX, minY, maxX, maxY
+            // Create a rectangular polygon geometry directly from bounding box extent [minX, minY, maxX, maxY]
+            // 利用 fromExtent 便捷函数直接从四至包围盒坐标 [minX, minY, maxX, maxY] 构建矩形多边形
+            fromExtent([-1000000, 5000000, 3000000, 7000000]),
           ),
         ],
       }),
@@ -242,7 +260,7 @@ const map &#x3D; new Map({
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Rectangle&lt;/title&gt;
+    &lt;title&gt;Rectangle / 矩形几何（fromExtent）&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

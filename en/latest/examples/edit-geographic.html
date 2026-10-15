@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Geographic Editing</title>
+    <title>Geographic Editing / 地理坐标编辑</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Geographic Editing</h4>
+        <h4 id="title">Geographic Editing / 地理坐标编辑</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,10 +74,10 @@
               data-bs-target="#tag-example-list"
               data-title="geographic"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geographic.html&quot;&gt;Geographic Coordinates&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./edit-geographic.html&quot;&gt;Geographic Editing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./immediate-geographic.html&quot;&gt;Immediate Rendering (Geographic)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geographic.html&quot;&gt;Geographic Coordinates / 地理坐标模式（useGeographic 全局经纬度透明映射）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./edit-geographic.html&quot;&gt;Geographic Editing / 地理坐标编辑&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./immediate-geographic.html&quot;&gt;Immediate Rendering (Geographic) / 即时渲染（地理坐标模式）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates / 地理坐标系下的 WFS 瓦片化加载与 useGeographic&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >4</a>
@@ -98,8 +98,8 @@
         </div>
         <div id="map" class="map"></div>
 <select id="mode">
-  <option value="modify">select a feature to modify</option>
-  <option value="draw">draw new features</option>
+  <option value="modify">select a feature to modify / 选择要素进行修改</option>
+  <option value="draw">draw new features / 绘制新要素</option>
 </select>
 
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
@@ -108,8 +108,13 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Editing geometries with geographic coordinates.</p>
-        <div id="docs"><p>Calling the <code>useGeographic</code> function in the <code>'ol/proj'</code> module makes it so the map view uses geographic coordinates (even if the view projection is not geographic).</p>
+        <p id="shortdesc">Editing geometries with geographic coordinates. / 使用地理坐标（经纬度）编辑和绘制几何图形。</p>
+        <div id="docs"><h2>Calling the <code>useGeographic</code> function in the <code>'ol/proj'</code> module makes it so the map view uses geographic coordinates (even if the view projection is not geographic).
+调用 <code>'ol/proj'</code> 模块中的 <code>useGeographic</code> 函数，可以让地图视图及交互（绘制、修改、捕捉等）直接使用地理坐标（经纬度 <code>[lon, lat]</code>），即便视图底层投影仍是 Web 墨卡托投影（EPSG:3857）。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与全局地理模式 (Core Architecture &amp; Global Geographic Mode) - <strong>用户投影全局重映射 (User Projection Remapping)</strong>: OpenLayers 默认底层渲染采用 Web 墨卡托投影（<code>EPSG:3857</code>），传统开发中开发者在操作坐标时必须频繁调用 <code>fromLonLat([lon, lat])</code> 与 <code>toLonLat(coord)</code> 进行显式互转。调用 <code>useGeographic()</code> 后，OpenLayers 将全局“用户投影”（User Projection）设置为 <code>EPSG:4326</code>。 - <strong>交互系统透明集成</strong>: 所有矢量交互组件（<code>Draw</code> 绘制、<code>Modify</code> 节点修改、<code>Select</code> 选择、<code>Snap</code> 捕捉）的输入输出坐标均自动适配经纬度 <code>[lon, lat]</code>，而底层画布渲染仍然保持墨卡托投影的高性能切片与矩阵变换，兼顾了直观的开发体验与高效的渲染性能。</h4>
+<h4>2. 编辑与捕捉流水线设计 (Editing &amp; Snapping Pipeline) - <strong>动态模式切换与交互互斥</strong>: 在单地图页面中切换“绘制”与“修改”模式时，必须在添加新交互前卸载已有交互，避免鼠标事件流被竞争消费（例如绘制时的单击被 <code>Select</code> 拦截）。 - <strong>吸附交互 (Snap) 的拓扑辅助</strong>: <code>Snap</code> 交互必须关联矢量数据源 <code>source</code>，并通常作为最后一个交互加入地图（或在绘制/修改之后添加）。它在像素级别（默认 10px 容差）将鼠标指针吸附到最近的已有要素节点或边线上，吸附坐标计算完全受 <code>useGeographic()</code> 驱动，保证拓扑精度。</h4>
+<h4>3. 生产实践陷阱与避坑指南 (Production Pitfalls &amp; Best Practices) - <strong>全局污染与多实例隔离</strong>: <code>useGeographic()</code> 是全局生效的单例配置函数。若在微前端或复杂 GIS 协同应用中，存在假定坐标为投影平面坐标（米制单位）的遗留模块或第三方插件，全局切换可能会导致计算异常。局部项目如需隔离，建议在矢量图层与格式化解析器中使用局部配置（如 <code>featureProjection</code> 与 <code>dataProjection</code>）。 - <strong>坐标维度顺序严谨性</strong>: 全局经纬度模式下遵循现代 GIS 规范 <code>[经度 longitude, 纬度 latitude]</code>（X 轴为经度，Y 轴为纬度）。绝对不可混淆为 Google Maps 早期 SDK 或部分移动端常见的 <code>[lat, lon]</code> 顺序。 - <strong>跨日界线连续绘制 (World Wrapping)</strong>: 在全球连续漫游视图下，用户可能在展开的相邻世界（经度大于 $180^\circ$ 或小于 $-180^\circ$）上进行绘制或编辑，此时要素顶点坐标可能出现例如 $195^\circ$。在向数据库（如 PostGIS / GeoJSON 服务）持久化提交前，需评估后端是否支持未经归一化的经度，必要时执行拓扑裁切或坐标归一化。</h4>
 </div>
       </div>
 
@@ -127,13 +132,19 @@ import VectorLayer from &#x27;ol/layer/Vector.js&#x27;;
 import {useGeographic} from &#x27;ol/proj.js&#x27;;
 import VectorSource from &#x27;ol/source/Vector.js&#x27;;
 
+// Enable geographic coordinates (longitude/latitude) across all OpenLayers APIs
+// 全局启用地理坐标（经纬度 [lon, lat]）模式，简化输入与交互坐标处理
 useGeographic();
 
+// Vector data source loading US state boundaries in GeoJSON format
+// 矢量数据源：加载 GeoJSON 格式的美国各州多边形边界
 const source &#x3D; new VectorSource({
   url: &#x27;https://openlayers.org/data/vector/us-states.json&#x27;,
   format: new GeoJSON(),
 });
 
+// Initialize map with a vector layer and geographic view
+// 初始化地图：配置矢量图层与基于经纬度坐标的初始视图
 const map &#x3D; new Map({
   target: &#x27;map&#x27;,
   layers: [
@@ -143,50 +154,68 @@ const map &#x3D; new Map({
     }),
   ],
   view: new View({
+    // Geographic center [longitude, latitude]
+    // 地理中心点 [经度, 纬度]
     center: [-100, 38.5],
     zoom: 4,
   }),
 });
 
+// Select interaction to pick features for modification
+// 选择交互：点击要素以建立选区供修改交互操作
 const select &#x3D; new Select();
 
+// Modify interaction linked to the selected features collection
+// 修改交互：直接绑定已选中的要素集合，允许拖动或增删几何节点
 const modify &#x3D; new Modify({
   features: select.getFeatures(),
 });
 
+// Draw interaction for digitizing new polygons in geographic coordinates
+// 绘制交互：使用地理坐标数字化采集新的面状多边形要素
 const draw &#x3D; new Draw({
   type: &#x27;Polygon&#x27;,
   source: source,
 });
 
+// Snap interaction to align vertices and edges during drawing/modifying
+// 捕捉交互：在绘制与修改过程中将光标自动吸附到数据源中要素的顶点和边缘
 const snap &#x3D; new Snap({
   source: source,
 });
 
+// Helper function to remove all active editing interactions
+// 辅助函数：卸载当前所有的编辑与选择交互，避免事件流冲突
 function removeInteractions() {
   map.removeInteraction(modify);
   map.removeInteraction(select);
   map.removeInteraction(draw);
-  map.removeInteraction(select);
+  map.removeInteraction(snap);
 }
 
+// Mode selector element for toggling between draw and modify modes
+// 模式选择下拉框：用于在“修改要素”与“绘制新要素”之间切换
 const mode &#x3D; document.getElementById(&#x27;mode&#x27;);
 function onChange() {
   removeInteractions();
   switch (mode.value) {
     case &#x27;draw&#x27;: {
+      // Add draw and snap interactions in drawing mode
+      // 绘制模式下：激活绘制交互与顶点吸附交互
       map.addInteraction(draw);
       map.addInteraction(snap);
       break;
     }
     case &#x27;modify&#x27;: {
+      // Add select, modify, and snap interactions in modification mode
+      // 修改模式下：激活要素选择、节点修改与顶点吸附交互
       map.addInteraction(select);
       map.addInteraction(modify);
       map.addInteraction(snap);
       break;
     }
     default: {
-      // pass
+      // pass / 忽略其他未定义模式
     }
   }
 }
@@ -203,7 +232,7 @@ onChange();
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Geographic Editing&lt;/title&gt;
+    &lt;title&gt;Geographic Editing / 地理坐标编辑&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -215,8 +244,8 @@ onChange();
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
     &lt;select id&#x3D;&quot;mode&quot;&gt;
-      &lt;option value&#x3D;&quot;modify&quot;&gt;select a feature to modify&lt;/option&gt;
-      &lt;option value&#x3D;&quot;draw&quot;&gt;draw new features&lt;/option&gt;
+      &lt;option value&#x3D;&quot;modify&quot;&gt;select a feature to modify / 选择要素进行修改&lt;/option&gt;
+      &lt;option value&#x3D;&quot;draw&quot;&gt;draw new features / 绘制新要素&lt;/option&gt;
     &lt;/select&gt;
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;

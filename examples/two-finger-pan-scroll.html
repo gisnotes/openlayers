@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Panning and page scrolling</title>
+    <title>Panning and page scrolling / 双指平移与页面协作滚动（Cooperative Gesture）</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Panning and page scrolling</h4>
+        <h4 id="title">Panning and page scrolling / 双指平移与页面协作滚动（Cooperative Gesture）</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,8 +74,8 @@
               data-bs-target="#tag-example-list"
               data-title="trackpad"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./page-scroll.html&quot;&gt;Page Scrolling&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./two-finger-pan-scroll.html&quot;&gt;Panning and page scrolling&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./page-scroll.html&quot;&gt;Page Scrolling / 页面滚动与焦点隔离（tabindex 缩放陷阱防御）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./two-finger-pan-scroll.html&quot;&gt;Panning and page scrolling / 双指平移与页面协作滚动（Cooperative Gesture）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -89,8 +89,8 @@
               data-bs-target="#tag-example-list"
               data-title="mousewheel"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./page-scroll.html&quot;&gt;Page Scrolling&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./two-finger-pan-scroll.html&quot;&gt;Panning and page scrolling&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./page-scroll.html&quot;&gt;Page Scrolling / 页面滚动与焦点隔离（tabindex 缩放陷阱防御）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./two-finger-pan-scroll.html&quot;&gt;Panning and page scrolling / 双指平移与页面协作滚动（Cooperative Gesture）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -104,14 +104,14 @@
               data-bs-target="#tag-example-list"
               data-title="zoom"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom / 视图缩放级别区间约束（minZoom 与 maxZoom）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./double-click-drag-zoom.html&quot;&gt;Double click, Drag and Zoom / 双击拖拽缩放&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-rotate-and-zoom.html&quot;&gt;Drag, Rotate, and Zoom / 拖拽同时旋转与缩放&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./page-scroll.html&quot;&gt;Page Scrolling&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./two-finger-pan-scroll.html&quot;&gt;Panning and page scrolling&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom / 全屏联动拖拽旋转与复合缩放&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./page-scroll.html&quot;&gt;Page Scrolling / 页面滚动与焦点隔离（tabindex 缩放陷阱防御）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./two-finger-pan-scroll.html&quot;&gt;Panning and page scrolling / 双指平移与页面协作滚动（Cooperative Gesture）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./pinch-zoom.html&quot;&gt;Pinch Zoom / 移动端双指捏合缩放&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./min-zoom.html&quot;&gt;View Min-Zoom&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./min-zoom.html&quot;&gt;View Min-Zoom / 视图最小缩放级别动态限制（单世界自适应）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders / 缩放滑块控件与纯 CSS 样式定制（ZoomSlider）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
@@ -126,8 +126,8 @@
               data-bs-target="#tag-example-list"
               data-title="scroll"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./page-scroll.html&quot;&gt;Page Scrolling&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./two-finger-pan-scroll.html&quot;&gt;Panning and page scrolling&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./page-scroll.html&quot;&gt;Page Scrolling / 页面滚动与焦点隔离（tabindex 缩放陷阱防御）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./two-finger-pan-scroll.html&quot;&gt;Panning and page scrolling / 双指平移与页面协作滚动（Cooperative Gesture）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -141,8 +141,8 @@
               data-bs-target="#tag-example-list"
               data-title="page"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./page-scroll.html&quot;&gt;Page Scrolling&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./two-finger-pan-scroll.html&quot;&gt;Panning and page scrolling&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./page-scroll.html&quot;&gt;Page Scrolling / 页面滚动与焦点隔离（tabindex 缩放陷阱防御）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./two-finger-pan-scroll.html&quot;&gt;Panning and page scrolling / 双指平移与页面协作滚动（Cooperative Gesture）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -169,8 +169,32 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Shows a map that allows page scrolling unless two fingers or Cmd/Ctrl are used to pan the map.</p>
-        <div id="docs"><p>This example shows a common behavior for page scrolling: on touch devices, when one finger is placed on the map, it can be used to scroll the page. Only two fingers will perform drag pan. For mouse or trackpad devices, the platform modifier key (Cmd or Ctrl) will enable drag pan on the map, otherwise the page will scroll.</p>
+        <p id="shortdesc">Shows a map that allows page scrolling unless two fingers or Cmd/Ctrl are used to pan the map. / 演示如何配置协作手势：触屏上单指滚动网页、双指拖拽地图；桌面端按住 Cmd/Ctrl 键才允许拖拽平移与滚轮缩放。</p>
+        <div id="docs"><h2>This example shows a common behavior for page scrolling: on touch devices, when one finger is placed on the map, it can be used to scroll the page. Only two fingers will perform drag pan. For mouse or trackpad devices, the platform modifier key (Cmd or Ctrl) will enable drag pan on the map, otherwise the page will scroll.
+本示例展示在现代 Web 应用中极为通用的“协作手势模式（Cooperative Gesture Handling）”：在触控屏设备（手机/平板）上，单指在地图上滑动依然用于顺畅滚动外层网页，唯有使用<strong>双指触摸（Two-Finger）</strong>时才会触发地图的拖拽平移；在桌面鼠标与触控板设备上，需同时按住操作系统修饰键（macOS 上的 <code>Cmd</code> 或 Windows 上的 <code>Ctrl</code>）才能对地图进行拖动与滚轮缩放，否则滚轮与滑动手势将继续平滑滚动页面。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构原理 (Core Architecture) “滚轮与手势陷阱”是嵌入式地图组件破坏宿主页面可用性的头号痛点。主流地图平台普遍采用该协作交互范式： - <strong>默认交互的禁用与重构</strong>：默认情况下，OpenLayers 内部装载了无条件的 <code>DragPan</code> 与 <code>MouseWheelZoom</code>。本示例通过 <code>defaults({ dragPan: false, mouseWheelZoom: false })</code> 移除默认实例，换上配置了复合条件谓词（Condition Predicates）的定制实例。 - <strong>触摸点数探测机制 (<code>this.getPointerCount()</code>)</strong>：在自定义 <code>DragPan</code> 的 <code>condition</code> 函数中，通过访问当前交互实例的 <code>this.getPointerCount()</code>，可实时精确探测屏幕当前的活动触控点数。当且仅当触控点数为 2 时返回 <code>true</code>，触发地图平移；触控点为 1 时条件不满足，OpenLayers 放弃拦截事件，原生触摸事件驱动页面正常顺滑上下滚动。 - <strong>跨平台修饰键适配 (<code>platformModifierKeyOnly</code>)</strong>：OpenLayers 封装了跨平台的事件条件工具函数 <code>platformModifierKeyOnly(event)</code>，在 macOS 上自动匹配 <code>metaKey</code>（Command 键），在 Windows / Linux 上自动匹配 <code>ctrlKey</code>，无需开发者编写繁琐的平台分支兼容代码。</h4>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript const map = new Map({</h4>
+<p>  interactions: defaults({
+    dragPan: false,        // 卸载默认无条件拖拽
+    mouseWheelZoom: false, // 卸载默认无条件滚轮缩放
+  }).extend([
+    // 1. 双指或配合修饰键的拖拽平移
+    new DragPan({
+      condition: function (event) {
+        return this.getPointerCount() === 2 || platformModifierKeyOnly(event);
+      },
+    }),
+    // 2. 必须按住 Cmd/Ctrl 才响应的滚轮缩放
+    new MouseWheelZoom({
+      condition: platformModifierKeyOnly,
+    }),
+  ]),
+  layers: [new TileLayer({ source: new OSM() })],
+  target: &#39;map&#39;,
+  view: new View({ center: [0, 0], zoom: 2 }),
+}); ```</p>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>浮层手势引导提示（User Guidance Overlay）</strong>：在商用落地页中，建议搭配交互提示遮罩（如提示：“使用双指移动地图”或“按住 ⌘/Ctrl 滚轮缩放地图”），当用户触发单指滑动或未按键滚轮时短暂停留 1.5 秒后自动淡出。 - <strong>捏合缩放（Pinch Zoom）协同</strong>：即使重构了平移逻辑，默认的 <code>PinchZoom</code>（双指捏合缩放）依然可以正常保留，与双指平移（<code>getPointerCount() === 2</code>）天然完美契合。</h4>
 </div>
       </div>
 
@@ -186,15 +210,19 @@ import {defaults} from &#x27;ol/interaction/defaults.js&#x27;;
 import TileLayer from &#x27;ol/layer/Tile.js&#x27;;
 import OSM from &#x27;ol/source/OSM.js&#x27;;
 
+// Initialize map with cooperative gesture interactions (two-finger touch or Cmd/Ctrl drag)
+// 初始化带有协作手势（触屏双指平移、桌面端按住 Cmd/Ctrl 键拖拽平移与滚轮缩放）的地图实例
 const map &#x3D; new Map({
   interactions: defaults({dragPan: false, mouseWheelZoom: false}).extend([
     new DragPan({
       condition: function (event) {
+        // Allow drag pan only with 2 fingers on touch screens or platform modifier key on desktops
+        // 仅在触屏使用双指触摸或桌面端按下平台修饰键（Cmd/Ctrl）时允许平移地图
         return this.getPointerCount() &#x3D;&#x3D;&#x3D; 2 || platformModifierKeyOnly(event);
       },
     }),
     new MouseWheelZoom({
-      condition: platformModifierKeyOnly,
+      condition: platformModifierKeyOnly, // Zoom with mouse wheel only when Cmd/Ctrl is pressed / 仅按下修饰键时滚轮缩放
     }),
   ]),
   layers: [
@@ -219,7 +247,7 @@ const map &#x3D; new Map({
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Panning and page scrolling&lt;/title&gt;
+    &lt;title&gt;Panning and page scrolling / 双指平移与页面协作滚动（Cooperative Gesture）&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

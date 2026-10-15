@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Color Manipulation</title>
+    <title>Color Manipulation / 栅格像素级色彩空间变换（HCL/RGB）</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Color Manipulation</h4>
+        <h4 id="title">Color Manipulation / 栅格像素级色彩空间变换（HCL/RGB）</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,7 +75,7 @@
               data-bs-target="#tag-example-list"
               data-title="color"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./color-manipulation.html&quot;&gt;Color Manipulation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./color-manipulation.html&quot;&gt;Color Manipulation / 栅格像素级色彩空间变换（HCL/RGB）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -89,7 +89,7 @@
               data-bs-target="#tag-example-list"
               data-title="hue"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./color-manipulation.html&quot;&gt;Color Manipulation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./color-manipulation.html&quot;&gt;Color Manipulation / 栅格像素级色彩空间变换（HCL/RGB）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -103,7 +103,7 @@
               data-bs-target="#tag-example-list"
               data-title="lightness"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./color-manipulation.html&quot;&gt;Color Manipulation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./color-manipulation.html&quot;&gt;Color Manipulation / 栅格像素级色彩空间变换（HCL/RGB）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -117,7 +117,7 @@
               data-bs-target="#tag-example-list"
               data-title="chroma"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./color-manipulation.html&quot;&gt;Color Manipulation&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./color-manipulation.html&quot;&gt;Color Manipulation / 栅格像素级色彩空间变换（HCL/RGB）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -139,17 +139,17 @@
         <div id="map" class="map"></div>
 <table class="controls">
   <tr>
-    <td><label for="hue">hue</label></td>
+    <td><label for="hue">hue / 色相</label></td>
     <td><input id="hue" type="range" min="-180" max="180" value="0"/></td>
     <td><span id="hueOut"></span> °&nbsp;</td>
   </tr>
   <tr>
-    <td><label for="chroma">chroma</label></td>
+    <td><label for="chroma">chroma / 色度</label></td>
     <td><input id="chroma" type="range" min="0" max="100" value="100"/></td>
     <td><span id="chromaOut"></span> %</td>
   </tr>
   <tr>
-    <td><label for="lightness">lightness</label></td>
+    <td><label for="lightness">lightness / 亮度</label></td>
     <td><input id="lightness" type="range" min="0" max="100" value="100"/></td>
     <td><span id="lightnessOut"></span> %</td>
   </tr>
@@ -161,8 +161,34 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Demonstrates color manipulation with a raster source.</p>
-        <div id="docs"><p>A raster source allows arbitrary manipulation of pixel values.  In this example, RGB values on the input tile source are adjusted in a pixel-wise operation before being rendered with a second raster source.  The raster operation takes pixels in in RGB space, converts them to HCL color space, adjusts the values based on the controls above, and then converts them back to RGB space for rendering.</p>
+        <p id="shortdesc">Demonstrates color manipulation with a raster source. / 演示利用 RasterSource 在 Web Worker 中进行像素级色相、色度、亮度（HCL）动态色彩空间变换。</p>
+        <div id="docs"><p>
+  A raster source allows arbitrary manipulation of pixel values. In this example, RGB values on the input tile source are adjusted in a pixel-wise operation before being rendered with a second raster source. The raster operation takes pixels in RGB space, converts them to HCL color space, adjusts the values based on the controls above, and then converts them back to RGB space for rendering.
+</p> <p>
+  栅格数据源（RasterSource）允许开发者在客户端对任意图层的像元像素进行深度数学运算。在这一示例中，输入的底图切片源像素在被渲染之前，由后台独立 Web Worker 执行逐像素数学变换：将原生 RGB 颜色空间映射到更加贴合人类视觉感知的 <strong>HCL（Hue 色相, Chroma 色度, Lightness 亮度）</strong> 色彩空间，根据界面控件动态调整对应分量后，再逆变换回 RGB 空间渲染输出。
+</p>
+---
+### 📚 学习记录与技术深度解读 (Learning Notes)
+#### 1. 核心架构与设计思想 (Core Architecture & Design) - <strong>`RasterSource` 客户端栅格代数计算管线</strong>：
+  传统的地图滤镜大多基于 CSS `filter`（如 `brightness()`、`contrast()`），其调整粗糙且无法针对非线性色彩空间操作。`RasterSource` 在独立于 UI 主线程的 Web Worker 中接收输入图层（如 `StadiaMaps` 水彩底图）的原始 `ImageData` 像素流，通过并行像元循环执行像素重构，彻底杜绝主线程卡顿。
+- <strong>为什么要从 RGB 转换到 HCL 色彩空间？</strong>：
+  RGB 空间是面向硬件发光管（红绿蓝）设计的，其三个通道在数学上与人类的主观明暗感知高度非线性耦合（例如绿色发光强度远高于蓝色）。而 **HCL（基于 CIE L\*a\*b\* 柱面极坐标）<strong> 具有严格的</strong>感知均匀性（Perceptually Uniform）**：
+  - 调节 `Lightness` 只改变明暗，完全不影响色相；
+  - 调节 `Hue` 在色环上均匀旋转，不会像 HSV 一样在黄色区域产生刺眼的假亮；
+  - 调节 `Chroma` 线性改变色彩饱和纯度。<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis) - <code>RasterSource({ sources, operation, lib })</code>：</h4>
+<ul>
+<li><code>sources</code>：输入图层源数组（支持多个源同时输入进行波段代数运算）。</li>
+<li><code>operation(pixels, data)</code>：每个像元执行的核心算法回调函数。必须保持为纯函数（无外部闭包变量引用）。</li>
+<li><code>lib</code>：将 Worker 所需的纯数学辅助函数（如 <code>rgb2hcl</code>、<code>hcl2rgb</code>）序列化后注入 Worker 运行上下文。</li>
+<li><code>beforeoperations</code> 数据注入与 <code>raster.changed()</code> 刷新通知：
+监听 <code>raster.on(&#39;beforeoperations&#39;, (evt) =&gt; { evt.data.hue = ... })</code>，将 UI 主线程当前的滑动条数值打包写入 Worker 每帧执行上下文；滑块滑动时调用 <code>raster.changed()</code> 立即触发新一轮 Worker 运算。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization) - <strong>Worker 函数作用域隔离（<code>lib</code> 陷阱）</strong>：</h4>
+<p>  <code>operation</code> 函数内部绝不能访问主线程的 <code>window</code>、<code>document</code> 或模块闭包作用域变量。所有依赖的数学常量（如 <code>twoPi</code>、<code>Xn</code>）和辅助函数必须显式列在 <code>lib</code> 属性字典中，否则在 Worker 线程解析时会报 <code>ReferenceError</code> 致命异常。</p>
+<ul>
+<li><strong>跨域切片 CORS 限制</strong>：
+<code>RasterSource</code> 依赖 <code>ctx.getImageData()</code> 提取图像像素。如果底图瓦片服务器未正确配置 CORS 跨域响应头（<code>Access-Control-Allow-Origin: *</code>），浏览器会直接判定 Canvas 被污染（Tainted Canvas）并抛出安全安全错误拒绝导出像素。</li>
+</ul>
 </div>
       </div>
 
@@ -176,8 +202,8 @@ import RasterSource from &#x27;ol/source/Raster.js&#x27;;
 import StadiaMaps from &#x27;ol/source/StadiaMaps.js&#x27;;
 
 /**
- * Color manipulation functions below are adapted from
- * https://github.com/d3/d3-color.
+ * Color manipulation functions below are adapted from https://github.com/d3/d3-color
+ * 以下颜色空间转换数学公式改编自 d3-color 开源算法库
  */
 const Xn &#x3D; 0.95047;
 const Yn &#x3D; 1;
@@ -189,9 +215,10 @@ const t3 &#x3D; t1 * t1 * t1;
 const twoPi &#x3D; 2 * Math.PI;
 
 /**
- * Convert an RGB pixel into an HCL pixel.
- * @param {Array&lt;number&gt;} pixel A pixel in RGB space.
- * @return {Array&lt;number&gt;} A pixel in HCL space.
+ * Convert an RGB pixel into an HCL pixel
+ * 将 RGB 像素转换为感知均匀的 HCL 色彩空间像素
+ * @param {Array&lt;number&gt;} pixel A pixel in RGB space / RGB 像素通道值数组
+ * @return {Array&lt;number&gt;} A pixel in HCL space / HCL 像素通道值数组
  */
 function rgb2hcl(pixel) {
   const red &#x3D; rgb2xyz(pixel[0]);
@@ -226,9 +253,10 @@ function rgb2hcl(pixel) {
 }
 
 /**
- * Convert an HCL pixel into an RGB pixel.
- * @param {Array&lt;number&gt;} pixel A pixel in HCL space.
- * @return {Array&lt;number&gt;} A pixel in RGB space.
+ * Convert an HCL pixel into an RGB pixel
+ * 将 HCL 空间像素反向映射回用于硬件显示的 RGB 像素
+ * @param {Array&lt;number&gt;} pixel A pixel in HCL space / HCL 像素通道值数组
+ * @return {Array&lt;number&gt;} A pixel in RGB space / RGB 像素通道值数组
  */
 function hcl2rgb(pixel) {
   const h &#x3D; pixel[0];
@@ -271,6 +299,8 @@ function xyz2rgb(x) {
   );
 }
 
+// Create RasterSource running pixel operations in Web Worker
+// 创建在后台 Web Worker 中运行像素级运算的栅格数据源
 const raster &#x3D; new RasterSource({
   sources: [
     new StadiaMaps({
@@ -280,6 +310,8 @@ const raster &#x3D; new RasterSource({
   operation: function (pixels, data) {
     const hcl &#x3D; rgb2hcl(pixels[0]);
 
+    // Apply hue rotation
+    // 应用色相旋转
     let h &#x3D; hcl[0] + (Math.PI * data.hue) / 180;
     if (h &lt; 0) {
       h +&#x3D; twoPi;
@@ -288,6 +320,8 @@ const raster &#x3D; new RasterSource({
     }
     hcl[0] &#x3D; h;
 
+    // Apply chroma and lightness scaling
+    // 应用色度与亮度比例缩放
     hcl[1] *&#x3D; data.chroma / 100;
     hcl[2] *&#x3D; data.lightness / 100;
 
@@ -313,6 +347,8 @@ const raster &#x3D; new RasterSource({
 
 const controls &#x3D; {};
 
+// Send current UI slider values into worker before each operation pass
+// 在每次像素运算轮次前将 UI 滑动条当前值打包传递给 Worker 线程
 raster.on(&#x27;beforeoperations&#x27;, function (event) {
   const data &#x3D; event.data;
   for (const id in controls) {
@@ -320,6 +356,8 @@ raster.on(&#x27;beforeoperations&#x27;, function (event) {
   }
 });
 
+// Main map instance rendering the dynamic raster source
+// 地图主实例，呈现经过动态像素色彩变换的栅格图层
 const map &#x3D; new Map({
   layers: [
     new ImageLayer({
@@ -334,6 +372,8 @@ const map &#x3D; new Map({
   }),
 });
 
+// Wire slider event listeners to update labels and trigger raster recomputation
+// 绑定滑动条监听事件以同步更新数值标注并触发栅格重算
 const controlIds &#x3D; [&#x27;hue&#x27;, &#x27;chroma&#x27;, &#x27;lightness&#x27;];
 controlIds.forEach(function (id) {
   const control &#x3D; document.getElementById(id);
@@ -356,7 +396,7 @@ controlIds.forEach(function (id) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Color Manipulation&lt;/title&gt;
+    &lt;title&gt;Color Manipulation / 栅格像素级色彩空间变换（HCL/RGB）&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -376,17 +416,17 @@ controlIds.forEach(function (id) {
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
     &lt;table class&#x3D;&quot;controls&quot;&gt;
       &lt;tr&gt;
-        &lt;td&gt;&lt;label for&#x3D;&quot;hue&quot;&gt;hue&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;hue&quot;&gt;hue / 色相&lt;/label&gt;&lt;/td&gt;
         &lt;td&gt;&lt;input id&#x3D;&quot;hue&quot; type&#x3D;&quot;range&quot; min&#x3D;&quot;-180&quot; max&#x3D;&quot;180&quot; value&#x3D;&quot;0&quot;/&gt;&lt;/td&gt;
         &lt;td&gt;&lt;span id&#x3D;&quot;hueOut&quot;&gt;&lt;/span&gt; °&amp;nbsp;&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
-        &lt;td&gt;&lt;label for&#x3D;&quot;chroma&quot;&gt;chroma&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;chroma&quot;&gt;chroma / 色度&lt;/label&gt;&lt;/td&gt;
         &lt;td&gt;&lt;input id&#x3D;&quot;chroma&quot; type&#x3D;&quot;range&quot; min&#x3D;&quot;0&quot; max&#x3D;&quot;100&quot; value&#x3D;&quot;100&quot;/&gt;&lt;/td&gt;
         &lt;td&gt;&lt;span id&#x3D;&quot;chromaOut&quot;&gt;&lt;/span&gt; %&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
-        &lt;td&gt;&lt;label for&#x3D;&quot;lightness&quot;&gt;lightness&lt;/label&gt;&lt;/td&gt;
+        &lt;td&gt;&lt;label for&#x3D;&quot;lightness&quot;&gt;lightness / 亮度&lt;/label&gt;&lt;/td&gt;
         &lt;td&gt;&lt;input id&#x3D;&quot;lightness&quot; type&#x3D;&quot;range&quot; min&#x3D;&quot;0&quot; max&#x3D;&quot;100&quot; value&#x3D;&quot;100&quot;/&gt;&lt;/td&gt;
         &lt;td&gt;&lt;span id&#x3D;&quot;lightnessOut&quot;&gt;&lt;/span&gt; %&lt;/td&gt;
       &lt;/tr&gt;

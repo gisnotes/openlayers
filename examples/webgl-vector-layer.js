@@ -85,7 +85,7 @@ var displayFeatureInfo = function(pixel) {
 	});
 	const info = document.getElementById("info");
 	if (feature) info.innerHTML = feature.get("ECO_NAME") || "&nbsp;";
-	else info.innerHTML = "&nbsp;";
+	else info.innerHTML = "Hover or click an ecoregion / 悬停或点击生态区以查看名称";
 	const id = feature ? feature.getId() : -1;
 	if (id !== highlightedId) {
 		highlightedId = id;

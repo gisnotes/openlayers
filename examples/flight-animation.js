@@ -57,6 +57,11 @@ var flightsLayer = new VectorLayer({
 });
 map.addLayer(flightsLayer);
 var pointsPerMs = .02;
+/**
+* Postrender animation handler: draws growing flight lines with vectorContext.
+* 渲染后帧回调：使用 vectorContext 瞬态绘制逐步生长的飞行航迹。
+* @param {import("../src/ol/render/Event.js").default} event Render event.
+*/
 function animateFlights(event) {
 	const vectorContext = getVectorContext(event);
 	const frameState = event.frameState;
@@ -83,6 +88,12 @@ function animateFlights(event) {
 	}
 	map.render();
 }
+/**
+* Stagger feature addition with timeout.
+* 阶梯延迟注入要素到数据源中。
+* @param {Array<Feature>} features Feature array.
+* @param {number} timeout Timeout in ms.
+*/
 function addLater(features, timeout) {
 	window.setTimeout(function() {
 		let start = Date.now();

@@ -10,8 +10,9 @@ var channels = [
 ];
 for (const channel of channels) document.getElementById(channel).addEventListener("change", update);
 /**
+* Get current band mappings from dropdown selectors
 * 读取当前下拉框所选取的波段通道映射变量
-* @return {Object<string, number>} 包含 red、green、blue 对应波段索引的对象
+* @return {Object<string, number>} Variables object containing band index for red, green, and blue / 包含 red、green、blue 对应波段索引的对象
 */
 function getVariables() {
 	const variables = {};
@@ -52,6 +53,7 @@ var layer = new WebGLTileLayer({
 	}
 });
 /**
+* Update style variables when dropdown selection changes to trigger real-time GPU redraw
 * 当用户更改波段选择时，更新 WebGL 图层样式变量，触发 GPU 实时重绘
 */
 function update() {
@@ -65,9 +67,7 @@ new Map({
 	})).then(function(options) {
 		const projection = "EPSG:3857";
 		const extent = createEmpty();
-		options.forEach(function(options) {
-			extend(extent, transformExtent(options.extent, options.projection, projection));
-		});
+		for (let i = 0; i < options.length; ++i) extend(extent, transformExtent(options[i].extent, options[i].projection, projection));
 		return {
 			projection,
 			center: getCenter(extent),

@@ -1,6 +1,10 @@
 import { Dr as Map, F as bounds_default, L as json_default, M as select_default, N as mercator_default, Ni as View, P as path_default, Qr as Layer, ha as fromLonLat, ho as getCenter, j as feature_default, wa as toLonLat, xo as getWidth, yr as TileLayer } from "./common.js";
 import { t as StadiaMaps } from "./StadiaMaps.js";
 //#region examples/d3.js
+/**
+* Custom OpenLayers Layer integrating D3.js SVG rendering pipeline
+* 自定义 OpenLayers 图层类，集成 D3.js 的 SVG 渲染管线
+*/
 var CanvasLayer = class extends Layer {
 	constructor(options) {
 		super(options);
@@ -11,6 +15,12 @@ var CanvasLayer = class extends Layer {
 	getSourceState() {
 		return "ready";
 	}
+	/**
+	* Render function called on each map render frame
+	* 每帧地图渲染时触发的核心渲染函数，同步 OpenLayers 视口状态到 D3 投影器
+	* @param {import('../src/ol/Map.js').FrameState} frameState Frame state / 帧渲染状态
+	* @return {HTMLElement} SVG DOM node / SVG 根节点
+	*/
 	render(frameState) {
 		const width = frameState.size[0];
 		const height = frameState.size[1];
@@ -49,7 +59,8 @@ var map = new Map({
 	})
 });
 /**
-* Load the topojson data and create an ol/layer/Layer for that data.
+* Load TopoJSON data and instantiate the custom D3 layer
+* 加载 TopoJSON 数据并实例化自定义 D3 SVG 图层挂载至地图
 */
 json_default("data/topojson/us.json").then(function(us) {
 	const layer = new CanvasLayer({ features: feature_default(us, "counties") });

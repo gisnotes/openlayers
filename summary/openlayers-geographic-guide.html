@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-地理坐标系（usegeographic）与即时渲染深度实战指南">OpenLayers 地理坐标系（useGeographic）与即时渲染深度实战指南</h1>
+<blockquote>
+<p>在现代 WebGIS 架构中，坐标系统是连接现实地理空间与屏幕像素的核心桥梁。长期以来，OpenLayers 内部默认以 Web 墨卡托投影（<code>EPSG:3857</code>）作为投影平面的度量基准，开发者在处理来自 GPS、GeoJSON、后台服务或用户输入的经纬度（<code>EPSG:4326</code>）数据时，不得不频繁编写 <code>fromLonLat([lon, lat])</code> 与 <code>toLonLat(coord)</code> 模板代码。</p>
+<p>OpenLayers 引入的 <code>useGeographic()</code> 机制打破了这一常规壁垒，它在框架级建立了<strong>透明的用户投影（User Projection）重映射管线</strong>，使应用层代码能直接使用直观的经纬度，而底层渲染引擎依然享受墨卡托平面切片与 GPU 加速的高性能变换。本文将深入解析该机制的实现原理、交互编辑系统集成以及高帧率即时渲染（Immediate Rendering）的最佳生产实践。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：从显式投影转换到透明用户投影">1. 架构总览：从显式投影转换到透明用户投影</h2>
+<h3 id="11-传统模式-vs-usegeographic-模式">1.1 传统模式 vs <code>useGeographic()</code> 模式</h3>
+<p>在未开启地理模式时，OpenLayers 要求所有与视图（View）、要素几何（Feature/Geometry）、叠加层（Overlay）及交互拾取（PointerEvent）相关的坐标均匹配视图投影：</p>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph Traditional [传统显式转换模式]
+        direction TB
+        RawData[&quot;业务经纬度 [lon, lat]&quot;] --&gt;|fromLonLat| WebMercator[&quot;Web 墨卡托 [x, y]&quot;]
+        WebMercator --&gt; ViewProj[&quot;View 视图 / VectorSource / Overlay&quot;]
+        ViewProj --&gt;|toLonLat| ExportData[&quot;导出经纬度 [lon, lat]&quot;]
+    end
+
+    subgraph GeoMode [useGeographic 透明投影模式]
+        direction TB
+        GeoInput[&quot;业务经纬度 [lon, lat]&quot;] --&gt; API[&quot;OpenLayers 公共 API (View/Source/Overlay/Draw)&quot;]
+        API &lt;--&gt;|User Projection EPSG:4326| Engine[&quot;渲染管道 (内部自动投影为 EPSG:3857 矩阵)&quot;]
+    end
+</code></pre>
+<h3 id="12-usegeographic-的底层工作机制">1.2 <code>useGeographic()</code> 的底层工作机制</h3>
+<p>在 <code>ol/proj.js</code> 模块中，<code>useGeographic()</code> 执行的实质操作非常轻量但影响深远：</p>
+<pre><code class="language-javascript">import {setUserProjection} from &#39;./proj.js&#39;;
+
+export function useGeographic() {
+  setUserProjection(&#39;EPSG:4326&#39;);
+}
+</code></pre>
+<p>当 <code>setUserProjection(&#39;EPSG:4326&#39;)</code> 被调用后：</p>
+<ol>
+<li><strong>视图层（View）</strong>：<code>view.getCenter()</code>、<code>view.setCenter()</code>、<code>view.calculateExtent()</code> 均按 <code>[lon, lat]</code> 格式与地理范围 <code>[minLon, minLat, maxLon, maxLat]</code> 工作；</li>
+<li><strong>要素与几何体（Geometry）</strong>：创建 <code>new Point([lon, lat])</code> 或 <code>new Polygon(...)</code> 时，构造函数识别到全局用户投影，自动将其注册为用户坐标，内部渲染时由 WebGL/Canvas 渲染器完成向投影平面的实时投影投射；</li>
+<li><strong>交互系统（Interactions）</strong>：<code>Draw</code> 绘制过程中生成的坐标、<code>Modify</code> 拖动修改的顶点、<code>Snap</code> 捕捉吸附计算、<code>Select</code> 选区过滤，全部透明输出并消费经纬度；</li>
+<li><strong>覆盖物（Overlay）</strong>：<code>overlay.setPosition([lon, lat])</code> 无需额外包装，直接锚定至经纬度位置。</li>
+</ol>
+<hr>
+<h2 id="2-交互编辑体系集成：draw-modify-snap-与-select">2. 交互编辑体系集成：Draw, Modify, Snap 与 Select</h2>
+<p>在地理模式下进行矢量图层数字化编辑，体验与直接在 QGIS 或 ArcGIS Pro 中操作经纬度图层高度一致。</p>
+<h3 id="21-协同工作流水线">2.1 协同工作流水线</h3>
+<pre><code class="language-mermaid">flowchart TD
+    User([用户鼠标操作]) --&gt; SnapInt[Snap 交互吸附]
+    SnapInt --&gt;|校准吸附后的 [lon, lat]| ActiveMode{当前激活模式}
+    ActiveMode --&gt;|draw 模式| DrawInt[Draw 交互: 生成多边形]
+    DrawInt --&gt; Source[(VectorSource 数据源)]
+    ActiveMode --&gt;|modify 模式| SelectInt[Select 交互: 拾取要素]
+    SelectInt --&gt; FeatureCollection[Selected Features 集合]
+    FeatureCollection --&gt; ModifyInt[Modify 交互: 拖动编辑顶点]
+    ModifyInt --&gt; Source
+</code></pre>
+<h3 id="22-编辑模式切换与交互互斥代码范式">2.2 编辑模式切换与交互互斥代码范式</h3>
+<p>在实现单页面的多模式切换时，交互冲突是常见问题（例如：在绘制时单机被 <code>Select</code> 拦截导致无法落点）。最佳实践是集中管理交互注销与按需挂载：</p>
+<pre><code class="language-javascript">import {useGeographic} from &#39;ol/proj&#39;;
+import Map from &#39;ol/Map&#39;;
+import View from &#39;ol/View&#39;;
+import Draw from &#39;ol/interaction/Draw&#39;;
+import Modify from &#39;ol/interaction/Modify&#39;;
+import Select from &#39;ol/interaction/Select&#39;;
+import Snap from &#39;ol/interaction/Snap&#39;;
+import VectorSource from &#39;ol/source/Vector&#39;;
+import VectorLayer from &#39;ol/layer/Vector&#39;;
+
+useGeographic();
+
+const source = new VectorSource();
+const map = new Map({
+  target: &#39;map&#39;,
+  layers: [new VectorLayer({source})],
+  view: new View({center: [116.4074, 39.9042], zoom: 10}),
+});
+
+const select = new Select();
+const modify = new Modify({features: select.getFeatures()});
+const draw = new Draw({source, type: &#39;Polygon&#39;});
+const snap = new Snap({source});
+
+// 集中卸载所有可能冲突的交互
+function removeInteractions() {
+  map.removeInteraction(modify);
+  map.removeInteraction(select);
+  map.removeInteraction(draw);
+  map.removeInteraction(snap);
+}
+
+// 根据业务状态动态装配
+function setEditMode(mode) {
+  removeInteractions();
+  if (mode === &#39;draw&#39;) {
+    map.addInteraction(draw);
+    map.addInteraction(snap); // Snap 必须在编辑交互之后生效
+  } else if (mode === &#39;modify&#39;) {
+    map.addInteraction(select);
+    map.addInteraction(modify);
+    map.addInteraction(snap);
+  }
+}
+</code></pre>
+<hr>
+<h2 id="3-即时渲染-api（immediate-rendering）与高性能动态粒子">3. 即时渲染 API（Immediate Rendering）与高性能动态粒子</h2>
+<p>在气象台风流场、雷达回波、低空无人机尾迹或实时 GPS 轨迹回放中，数以万计的点每秒高频更新。若通过常规的 <code>Feature</code> 实例与 <code>VectorSource</code> 托管，其创建属性字典、变更事件派发和空间 R 树索引（RBush）重建将产生巨大的 CPU 与垃圾回收（GC）开销。</p>
+<h3 id="31-即时渲染原理：跳过要素生命周期">3.1 即时渲染原理：跳过要素生命周期</h3>
+<p>通过监听渲染管线事件（如 <code>layer.on(&#39;postrender&#39;)</code>），OpenLayers 提供了轻量级的矢量即时绘制接口 <code>getVectorContext(event)</code>：</p>
+<pre><code class="language-mermaid">sequenceDiagram
+    autonumber
+    participant Engine as 渲染主循环 (Map Render Loop)
+    participant Layer as TileLayer / Map
+    participant Event as RenderEvent (postrender)
+    participant VC as VectorContext (即时绘制上下文)
+    participant GPU as Canvas2D / WebGL 像素缓冲区
+
+    Engine-&gt;&gt;Layer: 执行切片或底图光栅化
+    Layer-&gt;&gt;Event: 触发 postrender 事件
+    Event-&gt;&gt;VC: getVectorContext(event)
+    loop 遍历 1000+ 动态几何体
+        VC-&gt;&gt;VC: setStyle(sharedStyle) 单例样式动态更新
+        VC-&gt;&gt;GPU: drawGeometry(point[lon, lat]) 像素直写
+    end
+    Event-&gt;&gt;Engine: map.render() 调度下一帧重绘
+</code></pre>
+<h3 id="32-零-gc-压力的动态衰减流星雨代码范式">3.2 零 GC 压力的动态衰减流星雨代码范式</h3>
+<pre><code class="language-javascript">import {useGeographic} from &#39;ol/proj&#39;;
+import {getVectorContext} from &#39;ol/render&#39;;
+import Point from &#39;ol/geom/Point&#39;;
+import Style from &#39;ol/style/Style&#39;;
+import Circle from &#39;ol/style/Circle&#39;;
+import Fill from &#39;ol/style/Fill&#39;;
+import {upAndDown} from &#39;ol/easing&#39;;
+
+useGeographic();
+
+// 1. 严格单例化样式对象，避免在每秒 60 帧中产生数万个临时对象导致 GC 掉帧
+const particleImage = new Circle({
+  radius: 6,
+  fill: new Fill({color: &#39;rgba(255, 120, 0, 1)&#39;}),
+});
+const particleStyle = new Style({image: particleImage});
+
+const N = 1000;
+const geometries = new Array(N);
+for (let i = 0; i &lt; N; ++i) {
+  geometries[i] = new Point([
+    Math.random() * 360 - 180,
+    Math.random() * 180 - 90,
+  ]);
+}
+
+// 2. 挂载到底图渲染完成钩子上
+baseLayer.on(&#39;postrender&#39;, (event) =&gt; {
+  const vectorContext = getVectorContext(event);
+
+  for (let i = 0; i &lt; N; ++i) {
+    // 缓动曲线计算衰减权重
+    const importance = upAndDown(Math.pow((N - i) / N, 0.15));
+    if (importance &lt; 0.05) continue;
+
+    // 动态调整单例属性并立即直绘
+    particleImage.setOpacity(importance);
+    particleImage.setScale(importance);
+    vectorContext.setStyle(particleStyle);
+    vectorContext.drawGeometry(geometries[i]);
+  }
+
+  // 3. 滑动队列：淘汰陈旧点，入队新点
+  geometries.push(new Point([Math.random() * 360 - 180, Math.random() * 180 - 90]));
+  geometries.shift();
+
+  // 4. 请求下一帧连续重绘
+  map.render();
+});
+</code></pre>
+<hr>
+<h2 id="4-跨日界线连续视口与世界循环（world-wrapping）">4. 跨日界线连续视口与世界循环（World Wrapping）</h2>
+<p>当用户在水平方向持续拖拽漫游地图时，墨卡托投影会无缝展开相邻的“虚拟世界”（World 1, World 2...），经度坐标会出现超出 $[-180^\circ, 180^\circ]$ 的连续延展（例如经度变为 $195^\circ$ 或 $-210^\circ$）。</p>
+<h3 id="41-浮动弹出框（overlay）世界对齐算法">4.1 浮动弹出框（Overlay）世界对齐算法</h3>
+<p>在 <code>geographic.html</code> 示例中，如果要素固定位于东京（<code>[139.753, 35.684]</code>），而用户在右侧连续世界（经度在 $400^\circ$ 附近）点击要素时，若不进行周期重映射，弹出框依然会弹回原始世界（经度 $139^\circ$），导致视觉跳跃。</p>
+<p>解决该问题的标准世界平移对齐公式为：</p>
+<p>$$\text{displayLon} = \text{targetLon} + \text{round}\left(\frac{\text{clickLon}}{360}\right) \times 360$$</p>
+<p>对应实现代码：</p>
+<pre><code class="language-javascript">map.on(&#39;singleclick&#39;, (evt) =&gt; {
+  const coordinate = evt.coordinate;
+  // 计算当前视口处于哪一个世界副本中（0 为本初子午线主世界，1 为右侧第一个镜像世界，-1 为左侧镜像世界）
+  const worldIndex = Math.round(coordinate[0] / 360);
+  
+  // 将目标要素的经度平移至当前展开的世界中
+  const popupCoordinate = [
+    targetFeatureLon + worldIndex * 360,
+    targetFeatureLat,
+  ];
+  overlay.setPosition(popupCoordinate);
+});
+</code></pre>
+<hr>
+<h2 id="5-生产避坑指南与工程规范">5. 生产避坑指南与工程规范</h2>
+<h3 id="51-全局作用域污染陷阱">5.1 全局作用域污染陷阱</h3>
+<ul>
+<li><strong>问题</strong>：<code>useGeographic()</code> 会修改 OpenLayers 全局单例的 <code>userProjection</code>。</li>
+<li><strong>排查</strong>：如果你的工程是一个大型微前端系统，或者引入了依赖米制平面坐标（如按米计算等距缓冲区、特定投影测量插件）的第三方组件，全局调用可能引发隐蔽的计算偏差。</li>
+<li><strong>解法</strong>：在局部图层或模块中，若需保持传统隔离，可通过在 <code>VectorSource</code> 或 <code>GeoJSON</code> 读取时单独显式声明 <code>dataProjection: &#39;EPSG:4326&#39;, featureProjection: &#39;EPSG:3857&#39;</code>。</li>
+</ul>
+<h3 id="52-坐标维度顺序严禁倒置">5.2 坐标维度顺序严禁倒置</h3>
+<ul>
+<li><strong>问题</strong>：部分移动端地图 SDK（如早期的 Leaflet 或高德某些接口）采用 <code>[lat, lon]</code> 顺序，而数学与现代 GIS 工业规范统一使用 <code>[x, y]</code> 即 <code>[经度 lon, 纬度 lat]</code>。</li>
+<li><strong>排查</strong>：在 <code>useGeographic()</code> 开启后，输入 <code>[39.9, 116.4]</code> 会直接导致几何体漂移至南极洲或非法纬度超出报错（纬度必须在 $[-90, 90]$ 之间）。</li>
+<li><strong>规范</strong>：严格核验所有 API 参数，确保第一维度为经度（Longitude），第二维度为纬度（Latitude）。</li>
+</ul>
+<h3 id="53-即时渲染的无限递归重绘灾难">5.3 即时渲染的无限递归重绘灾难</h3>
+<ul>
+<li><strong>问题</strong>：在 <code>postrender</code> 监听器内部调用 <code>map.render()</code> 会触发浏览器 <code>requestAnimationFrame</code> 的永动机式重绘。</li>
+<li><strong>排查</strong>：在非活跃页面、地图容器被隐藏（<code>display: none</code>）或用户最小化窗口时，未停止的重绘会导致客户端笔记本风扇狂转、移动设备发热严重。</li>
+<li><strong>解法</strong>：结合 <code>document.visibilityState</code> 或 <code>IntersectionObserver</code> 监听地图视口可见性；在隐藏时暂停调用 <code>map.render()</code>，恢复可见时再次唤醒。</li>
+</ul>
+<hr>
+<h2 id="6-核心知识图谱与-api-对照表">6. 核心知识图谱与 API 对照表</h2>
+<table>
+<thead>
+<tr>
+<th align="left">API / 组件</th>
+<th align="left">传统模式 (<code>EPSG:3857</code>)</th>
+<th align="left">地理模式 (<code>useGeographic</code>)</th>
+<th align="left">适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong><code>View.center</code></strong></td>
+<td align="left">米制坐标（如 <code>[12958000, 4830000]</code>）</td>
+<td align="left">经纬度 <code>[116.40, 39.90]</code></td>
+<td align="left">全局视图定位与动态平移</td>
+</tr>
+<tr>
+<td align="left"><strong><code>new Point(...)</code></strong></td>
+<td align="left">需要 <code>fromLonLat([lon, lat])</code></td>
+<td align="left">直接传 <code>[lon, lat]</code></td>
+<td align="left">矢量要素快速数字化建库</td>
+</tr>
+<tr>
+<td align="left"><strong><code>Draw / Modify</code></strong></td>
+<td align="left">顶点数据为米制平面坐标</td>
+<td align="left">顶点数据直接为真实经纬度</td>
+<td align="left">业务端无缝对接 GeoJSON/WFS</td>
+</tr>
+<tr>
+<td align="left"><strong><code>getVectorContext</code></strong></td>
+<td align="left">支持像素/平面投影即时绘制</td>
+<td align="left">自动将经纬度几何体映射至当前帧画布</td>
+<td align="left">海量粒子、高频轨迹与雷达动态动画</td>
+</tr>
+<tr>
+<td align="left"><strong><code>Overlay.position</code></strong></td>
+<td align="left">必须传入投影后坐标</td>
+<td align="left">直接支持经纬度（需处理世界循环偏移）</td>
+<td align="left">提示弹窗、HTML 气泡组件定位</td>
+</tr>
+</tbody></table>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

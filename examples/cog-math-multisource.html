@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>NDVI+NDWI from two 16-bit COGs</title>
+    <title>NDVI+NDWI from two 16-bit COGs / 基于两个 16 位 COG 同时计算 NDVI 与 NDWI</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">NDVI+NDWI from two 16-bit COGs</h4>
+        <h4 id="title">NDVI+NDWI from two 16-bit COGs / 基于两个 16 位 COG 同时计算 NDVI 与 NDWI</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -76,20 +76,20 @@
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-stretch.html&quot;&gt;Band Contrast Stretch / 遥感波段组合与对比度拉伸&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog.html&quot;&gt;Cloud Optimized GeoTIFF (COG)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-blob.html&quot;&gt;Cloud Optimized GeoTIFF (COG) from a Blob&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-custom-client.html&quot;&gt;Cloud Optimized GeoTIFF (COG) with Custom Loader&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog.html&quot;&gt;Cloud Optimized GeoTIFF (COG) / 云优化 GeoTIFF (COG) 瓦片渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-blob.html&quot;&gt;Cloud Optimized GeoTIFF (COG) from a Blob / 从二进制 Blob 对象加载云优化 GeoTIFF&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-custom-client.html&quot;&gt;Cloud Optimized GeoTIFF (COG) with Custom Loader / 自定义网络加载器的云优化 GeoTIFF&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-pyramid.html&quot;&gt;GeoTIFF tile pyramid&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-overviews.html&quot;&gt;GeoTIFF with Overviews&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF 客户端动态重投影 (GeoTIFF Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math.html&quot;&gt;NDVI from a Sentinel 2 COG&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-colors.html&quot;&gt;NDVI with a Dynamic Color Ramp&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC support&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;包含模型仿射变换矩阵的 COG (COG with ModelTransformation)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;多 COG 数据源重投影与波段合成 (Multiple COG sources)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;COG with ModelTransformation / 包含模型仿射变换矩阵的 COG&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF Reprojection / GeoTIFF 客户端动态重投影&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-pyramid.html&quot;&gt;GeoTIFF tile pyramid / GeoTIFF 瓦片金字塔 (STACTA)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-overviews.html&quot;&gt;GeoTIFF with Overviews / 挂载外部金字塔文件的 GeoTIFF&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG Sources / 多 COG 数据源重投影与波段合成&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source / 使用 Raster 数据源计算 COG 的 NDVI&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math.html&quot;&gt;NDVI from a Sentinel 2 COG / 基于哨兵 2 号 COG 计算归一化植被指数 (NDVI)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-colors.html&quot;&gt;NDVI with a Dynamic Color Ramp / 动态色带交互调整的 NDVI 渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs / 基于两个 16 位 COG 同时计算 NDVI 与 NDWI&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC support / STAC 时空资产目录支持&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >16</a>
@@ -103,10 +103,10 @@
               data-bs-target="#tag-example-list"
               data-title="ndvi"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math.html&quot;&gt;NDVI from a Sentinel 2 COG&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-colors.html&quot;&gt;NDVI with a Dynamic Color Ramp&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source / 使用 Raster 数据源计算 COG 的 NDVI&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math.html&quot;&gt;NDVI from a Sentinel 2 COG / 基于哨兵 2 号 COG 计算归一化植被指数 (NDVI)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-colors.html&quot;&gt;NDVI with a Dynamic Color Ramp / 动态色带交互调整的 NDVI 渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs / 基于两个 16 位 COG 同时计算 NDVI 与 NDWI&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >4</a>
@@ -120,7 +120,7 @@
               data-bs-target="#tag-example-list"
               data-title="ndwi"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs / 基于两个 16 位 COG 同时计算 NDVI 与 NDWI&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -134,7 +134,7 @@
               data-bs-target="#tag-example-list"
               data-title="sentinel"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs / 基于两个 16 位 COG 同时计算 NDVI 与 NDWI&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -148,11 +148,11 @@
               data-bs-target="#tag-example-list"
               data-title="geotiff"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-per-band-stats.html&quot;&gt;GeoTIFF per band statistics&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF 客户端动态重投影 (GeoTIFF Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./export-map.html&quot;&gt;Map Export&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC support&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-per-band-stats.html&quot;&gt;GeoTIFF per band statistics / GeoTIFF 单波段统计拉伸&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF Reprojection / GeoTIFF 客户端动态重投影&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./export-map.html&quot;&gt;Map Export / 地图导出 (GeoTIFF / PNG / Worldfile)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs / 基于两个 16 位 COG 同时计算 NDVI 与 NDWI&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC support / STAC 时空资产目录支持&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >5</a>
@@ -179,8 +179,31 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Calculating NDVI+NDWI as green and blue values.</p>
-        <div id="docs"><p>The GeoTIFF layer in this example calculates the Normalized Difference Vegetation Index (NDVI) and Normalized Difference Water Index (NDWI) from two cloud-optimized Sentinel 2 GeoTIFFs: one with 10 m resolution and red and a near infrared bands, and one with 60 m resolution and a short wave infrared channel. The NDVI is shown as green, the NDWI as blue. The 4th band is the alpha band, which gets added when a source has a <code>nodata</code> value configured.</p>
+        <p id="shortdesc">Calculating NDVI+NDWI as green and blue values. / 跨越不同空间分辨率的 16 位云原生 GeoTIFF 影像，在 GPU 中同时解算植被指数 (NDVI) 与水体指数 (NDWI)。</p>
+        <div id="docs"><h2>The GeoTIFF layer in this example calculates the Normalized Difference Vegetation Index (NDVI) and Normalized Difference Water Index (NDWI) from two cloud-optimized Sentinel 2 GeoTIFFs: one with 10 m resolution and red and a near infrared bands, and one with 60 m resolution and a short wave infrared channel. The NDVI is shown as green, the NDWI as blue. The 4th band is the alpha band, which gets added when a source has a <code>nodata</code> value configured.
+本示例中的 GeoTIFF 图层从两幅不同分辨率的云优化哨兵 2 号（Sentinel-2）GeoTIFF 中同时计算归一化植被指数（NDVI）与归一化水体指数（NDWI）： 第一幅影像为 10 米空间分辨率，包含红光（Red）与近红外（NIR）波段；第二幅影像为 60 米空间分辨率，包含短波红外（SWIR）波段。 在最终渲染中，NDVI 强度被映射为绿色分量，NDWI 强度被映射为蓝色分量。当数据源配置了 <code>nodata</code> 值时，第 4 波段会自动作为 Alpha 透明度通道参与遮罩裁切。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 双指数复合遥感解译：NDVI 与 NDWI * <strong>归一化植被指数 (NDVI)</strong>：</h4>
+<p>  $$\text{NDVI} = \frac{\text{NIR} - \text{Red}}{\text{NIR} + \text{Red}} = \frac{\text{Band 2} - \text{Band 1}}{\text{Band 2} + \text{Band 1}}$$</p>
+<ul>
+<li>本例中将 NDVI 乘以 255 赋予 <strong>Green 通道</strong>，健康植被呈现明亮绿色。</li>
+<li><strong>归一化水体指数 (NDWI, McFeeters / Gao 变体)</strong>：
+$$\text{NDWI} = \frac{\text{SWIR} - \text{Red}}{\text{SWIR} + \text{Red}} = \frac{\text{Band 3} - \text{Band 1}}{\text{Band 3} + \text{Band 1}}$$<ul>
+<li>水体在短波红外（SWIR）与红光处的吸收特性形成显著反差。</li>
+<li>本例中将 NDWI 乘以 255 赋予 <strong>Blue 通道</strong>，湖泊、河流、湿地等水体呈现鲜艳蓝色。</li>
+</ul>
+</li>
+<li><strong>地表混杂特征（差异绝对值赋予 Red 通道）</strong>：
+$$\text{Red} = 255 \times |\text{NDVI} - \text{NDWI}|$$
+红通道突出显示植被与水体指数差异极大的过渡区域（如沙滩、城市人工地表、裸露岩石），三色通道融合成丰富的地物多光谱伪彩图！</li>
+</ul>
+<h4>2. 跨空间分辨率动态重采样（10m 与 60m 融合） * 在现实遥感应用中，不同传感器波段的空间分辨率通常不同（如哨兵 2 号的 B04/B08 是 10 米，而大气校正与特定短波红外波段是 20 米或 60 米）。 * OpenLayers 的 <code>ol/source/GeoTIFF</code> 支持同时声明多个异构 <code>sources</code>：</h4>
+<ul>
+<li><code>sources[0]</code>：10 米分辨率，提取 <code>bands: [3, 4]</code>；</li>
+<li><code>sources[1]</code>：60 米分辨率，提取 <code>bands: [9]</code>；</li>
+<li>WebGLTile 渲染管线会在显卡显存中对较低分辨率的波段自动执行<strong>双线性插值采样（Bilinear Interpolation）</strong>，开发者无需在后端离线执行耗时的“重采样对齐网格”，即可直接在前端完成多尺度波段代数运算！</li>
+</ul>
+<h4>3. 无效值处理：<code>nodata: 0</code> 与 <code>case</code> 条件遮罩 * 卫星影像在拍摄边界外常填充值为 <code>0</code> 的黑边。 * 通过配置 <code>nodata: 0</code> 以及在着色器中使用 <code>[&#39;case&#39;, [&#39;any&#39;, [&#39;==&#39;, [&#39;band&#39;, 1], 0], ...], [0, 0, 0, 0], ...]</code>，只要任何一个波段无数据，立即将像元 Alpha 设为 0 完全透明，完美剔除影像周边黑框。</h4>
 </div>
       </div>
 
@@ -192,14 +215,20 @@ import View from &#x27;ol/View.js&#x27;;
 import TileLayer from &#x27;ol/layer/WebGLTile.js&#x27;;
 import GeoTIFF from &#x27;ol/source/GeoTIFF.js&#x27;;
 
+// Multi-source GeoTIFF combining two images of different spatial resolutions (10m and 60m)
+// 多源 GeoTIFF，融合两幅不同空间分辨率的卫星影像（10 米与 60 米）
 const source &#x3D; new GeoTIFF({
   sources: [
     {
+      // 10m resolution image containing Red and NIR bands
+      // 10 米分辨率影像，包含红光和近红外波段
       url: &#x27;https://cloudlessdownloads.eox.at/api/public/dl/jvu06wnt/OpenLayers_Sentinel-2_samples/R10m.tif&#x27;,
       bands: [3, 4],
       nodata: 0,
     },
     {
+      // 60m resolution image containing Shortwave Infrared (SWIR) band
+      // 60 米分辨率影像，包含短波红外 (SWIR) 波段
       url: &#x27;https://cloudlessdownloads.eox.at/api/public/dl/jvu06wnt/OpenLayers_Sentinel-2_samples/R60m.tif&#x27;,
       bands: [9],
       nodata: 0,
@@ -211,18 +240,24 @@ source.setAttributions(
   &quot;&lt;a href&#x3D;&#x27;https://s2maps.eu&#x27;&gt;Sentinel-2 cloudless&lt;/a&gt; by &lt;a href&#x3D;&#x27;https://eox.at/&#x27;&gt;EOX IT Services GmbH&lt;/a&gt; (Contains modified Copernicus Sentinel data 2019)&quot;,
 );
 
+// NDVI expression: (NIR - Red) / (NIR + Red)
+// NDVI 表达式：(近红外 - 红光) / (近红外 + 红光)
 const ndvi &#x3D; [
   &#x27;/&#x27;,
   [&#x27;-&#x27;, [&#x27;band&#x27;, 2], [&#x27;band&#x27;, 1]],
   [&#x27;+&#x27;, [&#x27;band&#x27;, 2], [&#x27;band&#x27;, 1]],
 ];
 
+// NDWI expression: (SWIR - Red) / (SWIR + Red)
+// NDWI 表达式：(短波红外 - 红光) / (短波红外 + 红光)
 const ndwi &#x3D; [
   &#x27;/&#x27;,
   [&#x27;-&#x27;, [&#x27;band&#x27;, 3], [&#x27;band&#x27;, 1]],
   [&#x27;+&#x27;, [&#x27;band&#x27;, 3], [&#x27;band&#x27;, 1]],
 ];
 
+// WebGL layer with combined multi-band shader: Red &#x3D; |NDVI - NDWI|, Green &#x3D; NDVI, Blue &#x3D; NDWI
+// WebGL 图层，采用复合多波段着色器：红通道 &#x3D; |NDVI - NDWI|，绿通道 &#x3D; NDVI，蓝通道 &#x3D; NDWI
 const map &#x3D; new Map({
   target: &#x27;map&#x27;,
   layers: [
@@ -239,11 +274,11 @@ const map &#x3D; new Map({
           [0, 0, 0, 0],
           [
             &#x27;color&#x27;,
-            // red: | NDVI - NDWI |
+            // red: | NDVI - NDWI | / 红通道：植被与水体指数差异绝对值
             [&#x27;*&#x27;, 255, [&#x27;abs&#x27;, [&#x27;-&#x27;, ndvi, ndwi]]],
-            // green: NDVI
+            // green: NDVI / 绿通道：NDVI 植被指数
             [&#x27;*&#x27;, 255, ndvi],
-            // blue: NDWI
+            // blue: NDWI / 蓝通道：NDWI 水体指数
             [&#x27;*&#x27;, 255, ndwi],
           ],
         ],
@@ -267,7 +302,7 @@ const map &#x3D; new Map({
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;NDVI+NDWI from two 16-bit COGs&lt;/title&gt;
+    &lt;title&gt;NDVI+NDWI from two 16-bit COGs / 基于两个 16 位 COG 同时计算 NDVI 与 NDWI&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>球形摩尔威特等面积投影 (Sphere Mollweide)</title>
+    <title>Sphere Mollweide / 球形摩尔威特等面积投影 (Sphere Mollweide)</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">球形摩尔威特等面积投影 (Sphere Mollweide)</h4>
+        <h4 id="title">Sphere Mollweide / 球形摩尔威特等面积投影 (Sphere Mollweide)</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,9 +74,9 @@
               data-bs-target="#tag-example-list"
               data-title="graticule"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./graticule.html&quot;&gt;Map Graticule&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./sphere-mollweide.html&quot;&gt;球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./graticule.html&quot;&gt;Map Graticule / 经纬网格网图层 (Map Graticule)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection by Code / 坐标系搜索与栅格动态重投影 (Reprojection by Code)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./sphere-mollweide.html&quot;&gt;Sphere Mollweide / 球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -90,7 +90,7 @@
               data-bs-target="#tag-example-list"
               data-title="Mollweide"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./sphere-mollweide.html&quot;&gt;球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./sphere-mollweide.html&quot;&gt;Sphere Mollweide / 球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -105,19 +105,19 @@
               data-title="projection"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;COG with ModelTransformation / 包含模型仿射变换矩阵的 COG&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;Custom Tiled WMS / 自定义投影转换的瓦片 WMS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG Sources / 多 COG 数据源重投影与波段合成&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap 客户端 WGS84 重投影 (OpenStreetMap Reprojection)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./projection-and-scale.html&quot;&gt;Projection and Scale / 投影切换与比例尺保持&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection / 多投影栅格数据动态重投影&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection by Code / 坐标系搜索与栅格动态重投影 (Reprojection by Code)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js / 集成 Proj4js 的单图像 WMS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./sphere-mollweide.html&quot;&gt;Sphere Mollweide / 球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-no-proj.html&quot;&gt;WMS without Projection / 无投影转换定义的 WMS&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify 亿级超大图像金字塔 (Zoomify)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;包含模型仿射变换矩阵的 COG (COG with ModelTransformation)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;单幅静态图像客户端重投影 (Image Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;多 COG 数据源重投影与波段合成 (Multiple COG sources)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;多投影栅格数据动态重投影 (Raster Reprojection)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-no-proj.html&quot;&gt;无投影转换定义的 WMS (WMS without Projection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./sphere-mollweide.html&quot;&gt;球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;自定义投影转换的瓦片 WMS (Custom Tiled WMS)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >14</a>
@@ -132,11 +132,11 @@
               data-title="proj4js"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection / 多投影栅格数据动态重投影&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection by Code / 坐标系搜索与栅格动态重投影 (Reprojection by Code)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js / 集成 Proj4js 的单图像 WMS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./sphere-mollweide.html&quot;&gt;Sphere Mollweide / 球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;单幅静态图像客户端重投影 (Image Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;多投影栅格数据动态重投影 (Raster Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./sphere-mollweide.html&quot;&gt;球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >6</a>
@@ -163,33 +163,35 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">演示结合经纬网图层（Graticule）展示全球球形摩尔威特等面积伪圆柱投影（Sphere Mollweide / ESRI:53009）。</p>
-        <div id="docs"><p>本例展示了如何配置并渲染全球<strong>球形摩尔威特等面积伪圆柱投影（Sphere Mollweide / ESRI:53009）</strong>，并叠加经纬网图层（<code>ol/layer/Graticule</code>）直观观察其几何等积特征与椭圆经纬线弧度。</p>
-<h3>核心机制与原理解析</h3>
-<ol>
-<li><p><strong>摩尔威特等面积投影数学原理</strong>：</p>
-<ul>
-<li>摩尔威特投影是由德国数学家卡尔·摩尔威特（Karl Mollweide）于 1805 年设计的一种伪圆柱等面积投影，全球轮廓呈现为一个长宽比为 $2:1$ 的完整椭圆。</li>
-<li>其经度方向展平为连续的对称半椭圆，纬线为平行直线。将球体半径设为 $R = 6,371,000\text{ m}$ 时，平面正算公式如下：
-$$x = \frac{2\sqrt{2}}{\pi} R (\lambda - \lambda_0) \cos\theta$$
-$$y = \sqrt{2} R \sin\theta$$
-其中辅助参量角 $\theta$ 通过求解超越方程确定：$2\theta + \sin(2\theta) = \pi \sin\varphi$。</li>
-<li>全球外包半长轴 $x_{\max} = 2\sqrt{2} R \approx 18,019,909.21\text{ m}$，半短轴 $y_{\max} = \sqrt{2} R \approx 9,009,954.61\text{ m}$，与代码中配置的 <code>extent</code> 完全吻合。</li>
+        <p id="shortdesc">Demonstrates the Sphere Mollweide equal-area projection with a graticule layer. / 演示结合经纬网图层（Graticule）展示全球球形摩尔威特等面积伪圆柱投影（Sphere Mollweide / ESRI:53009）。</p>
+        <div id="docs"><p>
+  This example shows how to configure and render the global <strong>Sphere Mollweide equal-area pseudo-cylindrical projection (ESRI:53009)</strong>, overlaid with a graticule layer (<code>ol/layer/Graticule</code>) to visualize area-preserving geometry and elliptical meridian curves.
+</p> <p>
+  本例展示了如何配置并渲染全球<strong>球形摩尔威特等面积伪圆柱投影（Sphere Mollweide / ESRI:53009）</strong>，并叠加经纬网图层（<code>ol/layer/Graticule</code>）直观观察其几何等积特征与椭圆经纬线弧度。
+</p> <hr> <h3>📚 学习记录与技术深度解读</h3>
+<h4>1. 核心架构与设计思想</h4> <ul>
+  <li><strong>摩尔威特等面积伪圆柱投影数学原理：</strong>
+    摩尔威特投影是由德国数学家卡尔·摩尔威特（Karl Mollweide）于 1805 年设计的等面积投影，全球轮廓呈现为一个长宽比为 $2:1$ 的完整椭圆。
+    其经度方向展平为连续的对称半椭圆，纬线为平行直线。将球体半径设为 $R = 6,371,000\text{ m}$ 时，平面正算公式如下：
+    $$x = \frac{2\sqrt{2}}{\pi} R (\lambda - \lambda_0) \cos\theta, \quad y = \sqrt{2} R \sin\theta$$
+    其中辅助参量角 $\theta$ 通过迭代求解超越方程确定：$2\theta + \sin(2\theta) = \pi \sin\varphi$。
+    全球外包半长轴 $x_{\max} = 2\sqrt{2} R \approx 18,019,909.21\text{ m}$，半短轴 $y_{\max} = \sqrt{2} R \approx 9,009,954.61\text{ m}$。
+  </li>
+  <li><strong><code>worldExtent</code> 与经纬网（Graticule）图层的协同：</strong>
+    <code>Graticule</code> 图层在非墨卡托投影下绘制等经线与等纬线时，必须依赖投影对象的 <code>worldExtent</code> 明确经纬度的起止绘制边界。
+    代码中配置了 <code>worldExtent: [-179, -89.99, 179, 89.99]</code>，适度内缩极点和日界线边缘，有效避免了极点投影在椭圆两极产生数学奇异与线段断裂。
+  </li>
 </ul>
-</li>
-<li><p><strong><code>worldExtent</code> 与经纬网（Graticule）图层的协同</strong>：</p>
-<ul>
-<li><code>Graticule</code> 图层在非墨卡托投影下绘制等经线与等纬线时，必须依赖投影对象的 <code>worldExtent</code> 明确经纬度的起止绘制边界。</li>
-<li>代码中配置了 <code>worldExtent: [-179, -89.99, 179, 89.99]</code>，适度内缩极点和日界线边缘，有效避免了极点投影在椭圆两极产生数学奇异与线段断裂。</li>
+<h4>2. 源码与关键 API 剖析</h4> <ul>
+  <li><code>proj4.defs('ESRI:53009', '+proj=moll ...')</code>：通过 Proj4js 声明摩尔威特投影参数。</li>
+  <li><code>register(proj4)</code>：将自定义投影同步注册至 OpenLayers 投影字典。</li>
+  <li><code>new Graticule()</code>：在自定义椭圆投影下自适应绘制经纬线网格。</li>
 </ul>
-</li>
-<li><p><strong>矢量要素客户端即时重投影</strong>：</p>
-<ul>
-<li>全球生态分区数据（<code>ecoregions.json</code>）源数据为标准 WGS84 经纬度（EPSG:4326）GeoJSON。</li>
-<li>OpenLayers 结合 Proj4js 规则，在数据加载解析时将成千上万个多边形顶点的球面经纬度即时正算转换为摩尔威特平面椭圆坐标，并利用声明式样式表达式 <code>[&#39;string&#39;, [&#39;get&#39;, &#39;COLOR_BIO&#39;], &#39;#eee&#39;]</code> 依生物圈分类字段高效填充色彩。</li>
+<h4>3. 生产实践踩坑与性能调优</h4> <ul>
+  <li><strong>矢量要素客户端即时重投影性能：</strong>
+    全球生态大区矢量数据为 EPSG:4326 GeoJSON。OpenLayers 结合 Proj4js 在客户端对上万个几何顶点执行球面到椭圆平面的动态正算转换，配合样式表达式 <code>['string', ['get', 'COLOR_BIO'], '#eee']</code> 实现零后端依赖的高性能纯前端渲染。
+  </li>
 </ul>
-</li>
-</ol>
 </div>
       </div>
 
@@ -265,7 +267,7 @@ const map &#x3D; new Map({
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/title&gt;
+    &lt;title&gt;Sphere Mollweide / 球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

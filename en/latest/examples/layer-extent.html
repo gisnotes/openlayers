@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Limited Layer Extent</title>
+    <title>Limited Layer Extent / 限制图层渲染空间范围（layer.setExtent）</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Limited Layer Extent</h4>
+        <h4 id="title">Limited Layer Extent / 限制图层渲染空间范围（layer.setExtent）</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,11 +74,11 @@
               data-bs-target="#tag-example-list"
               data-title="extent"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./extent-constrained.html&quot;&gt;Constrained Extent&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./extent-constrained.html&quot;&gt;Constrained Extent / 约束视图范围 (extent 边界限制)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./extent-interaction.html&quot;&gt;Extent Interaction / 空间范围矩形交互&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./layer-extent.html&quot;&gt;Limited Layer Extent&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./layer-extent.html&quot;&gt;Limited Layer Extent / 限制图层渲染空间范围（layer.setExtent）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./extent-interaction-modify.html&quot;&gt;Modify an extent / 修改既有范围矩形&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./navigation-controls.html&quot;&gt;Navigation Controls&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./navigation-controls.html&quot;&gt;Navigation Controls / 地图导航控件 (ZoomToExtent)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >5</a>
@@ -92,11 +92,11 @@
               data-bs-target="#tag-example-list"
               data-title="tilejson"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-group.html&quot;&gt;Layer Groups&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./layer-extent.html&quot;&gt;Limited Layer Extent&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./semi-transparent-layer.html&quot;&gt;Semi-Transparent Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tilejson.html&quot;&gt;TileJSON&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./utfgrid.html&quot;&gt;UTFGrid&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-group.html&quot;&gt;Layer Groups / 图层组树级分层组织与双向数据绑定（LayerGroup）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./layer-extent.html&quot;&gt;Limited Layer Extent / 限制图层渲染空间范围（layer.setExtent）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./semi-transparent-layer.html&quot;&gt;Semi-Transparent Layer / 半透明专题图层叠加与 CSS 黑白滤镜&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tilejson.html&quot;&gt;TileJSON / TileJSON 瓦片元数据规范与自动解析&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./utfgrid.html&quot;&gt;UTFGrid / UTFGrid 栅格交互探测与瓦片属性离线拾取&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >5</a>
@@ -116,10 +116,10 @@
           </div>
         </div>
         <div id="map" class="map"></div>
-<button type="button" class="btn btn-light" id="India">India</button>
-<button type="button" class="btn btn-light" id="Argentina">Argentina</button>
-<button type="button" class="btn btn-light" id="Nigeria">Nigeria</button>
-<button type="button" class="btn btn-light" id="Sweden">Sweden</button>
+<button type="button" class="btn btn-light" id="India">India / 印度</button>
+<button type="button" class="btn btn-light" id="Argentina">Argentina / 阿根廷</button>
+<button type="button" class="btn btn-light" id="Nigeria">Nigeria / 尼日利亚</button>
+<button type="button" class="btn btn-light" id="Sweden">Sweden / 瑞典</button>
 
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
           <input id="codesandbox-params" type="hidden" name="parameters">
@@ -127,8 +127,20 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Restricting layer rendering to a limited extent.</p>
-        <div id="docs"><p>This example uses the <code>layer.setExtent()</code> method to modify the extent of the overlay layer.  Use the controls above to limit rendering based on an extent (approximate country bounds).</p>
+        <p id="shortdesc">Restricting layer rendering to a limited extent. / 演示如何使用 layer.setExtent() 动态裁剪并限制图层仅在特定空间边界内渲染。</p>
+        <div id="docs"><h2>This example uses the <code>layer.setExtent()</code> method to modify the extent of the overlay layer.  Use the controls above to limit rendering based on an extent (approximate country bounds).
+本示例展示如何利用 <code>layer.setExtent()</code> 方法动态裁剪并限制图层在特定空间范围（Extent）内呈现。点击下方按钮可动态切换上层黑色主题世界地图的显示包围盒（印度、阿根廷、尼日利亚、瑞典国界范围），包围盒外部的区域将自动停止切片请求并进行像素级裁切遮罩。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构原理 (Core Architecture) 在多图层叠加应用中，通常只需在特定国家、行政区划或项目红线内叠加特定专题图层（如高分辨率暗黑主题图、专题热力图、遥感正射切片）： - <strong>图层级边界裁剪（Layer Extent Masking）</strong>：<code>TileLayer</code> 的 <code>extent: [minX, minY, maxX, maxY]</code> 会通知底层渲染引擎：只有与该空间包围盒发生相交（Intersect）的切片才会被下载。在 Canvas 绘制阶段，OpenLayers 会利用 <code>ctx.clip()</code> 沿着当前视口下计算出的包围盒矩形进行硬件级画布裁剪，盒外的多余瓦片直接丢弃。 - <strong>坐标投影统一</strong>：<code>extent</code> 的单位必须严格与当前地图的投影坐标系保持一致。若原始经纬度坐标为 WGS84（EPSG:4326），在默认地图（EPSG:3857）中使用前必须通过 <code>transformExtent(extent, 'EPSG:4326', 'EPSG:3857')</code> 进行投影转换。</h4>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript // 1. 将 WGS84 经纬度包围盒转换为 Web 墨卡托投影米制坐标 function transform(extent) {</h4>
+<p>  return transformExtent(extent, &#39;EPSG:4326&#39;, &#39;EPSG:3857&#39;);
+}
+// 2. 按钮点击动态重置图层裁剪范围 for (const key in extents) {
+  document.getElementById(key).onclick = function (event) {
+    overlay.setExtent(extents[event.target.id]);
+  };
+} ```</p>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>坐标投影不一致导致的图层彻底消失</strong>：若直接将 <code>[68.1, 7.9, 97.4, 35.4]</code> 赋值给使用 EPSG:3857 的图层，由于该范围在米制坐标系中被当做大西洋几内亚湾附近仅数十米大的微小区域，在视口中将完全不可见。务必牢记坐标系转换。 - <strong>不规则多边形裁剪需求</strong>：<code>extent</code> 仅支持正向轴对齐的矩形包围盒（Bounding Box）。若业务需求为沿真实的国界、省界等不规则复杂多边形进行精准裁切，需结合图层的 <code>prerender</code> 事件配合 Canvas 的 <code>clip()</code> 进行矢量路径抠图。</h4>
 </div>
       </div>
 
@@ -141,10 +153,18 @@ import TileLayer from &#x27;ol/layer/Tile.js&#x27;;
 import {transformExtent} from &#x27;ol/proj.js&#x27;;
 import TileJSON from &#x27;ol/source/TileJSON.js&#x27;;
 
+/**
+ * Transform extent from WGS84 (EPSG:4326) to Web Mercator (EPSG:3857).
+ * 将 WGS84 经纬度包围盒转换为 Web 墨卡托投影坐标系包围盒。
+ * @param {import(&#x27;ol/extent.js&#x27;).Extent} extent WGS84 extent.
+ * @return {import(&#x27;ol/extent.js&#x27;).Extent} Projected extent.
+ */
 function transform(extent) {
   return transformExtent(extent, &#x27;EPSG:4326&#x27;, &#x27;EPSG:3857&#x27;);
 }
 
+// Approximate country bounding boxes in EPSG:3857
+// 各国近似空间包围盒范围定义
 const extents &#x3D; {
   India: transform([68.17665, 7.96553, 97.40256, 35.49401]),
   Argentina: transform([-73.41544, -55.25, -53.62835, -21.83231]),
@@ -155,6 +175,8 @@ const extents &#x3D; {
 const key &#x3D;
   &#x27;pk.eyJ1IjoiYWhvY2V2YXIiLCJhIjoiY2t0cGdwMHVnMGdlbzMxbDhwazBic2xrNSJ9.WbcTL9uj8JPAsnT9mgb7oQ&#x27;;
 
+// Base map layer with full global extent
+// 全球范围浅色底图
 const base &#x3D; new TileLayer({
   source: new TileJSON({
     url:
@@ -164,6 +186,8 @@ const base &#x3D; new TileLayer({
   }),
 });
 
+// Overlay layer restricted by spatial extent
+// 叠加层：限制仅在特定国家范围内部渲染黑色主题瓦片
 const overlay &#x3D; new TileLayer({
   extent: extents.India,
   source: new TileJSON({
@@ -183,8 +207,10 @@ const map &#x3D; new Map({
   }),
 });
 
-for (const key in extents) {
-  document.getElementById(key).onclick &#x3D; function (event) {
+// Bind buttons to dynamically update overlay extent
+// 绑定国家按钮点击事件，动态更新叠加图层的裁剪空间包围盒
+for (const countryKey in extents) {
+  document.getElementById(countryKey).onclick &#x3D; function (event) {
     overlay.setExtent(extents[event.target.id]);
   };
 }
@@ -199,7 +225,7 @@ for (const key in extents) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Limited Layer Extent&lt;/title&gt;
+    &lt;title&gt;Limited Layer Extent / 限制图层渲染空间范围（layer.setExtent）&lt;/title&gt;
     &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
@@ -211,10 +237,10 @@ for (const key in extents) {
   &lt;/head&gt;
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
-    &lt;button type&#x3D;&quot;button&quot; class&#x3D;&quot;btn btn-light&quot; id&#x3D;&quot;India&quot;&gt;India&lt;/button&gt;
-    &lt;button type&#x3D;&quot;button&quot; class&#x3D;&quot;btn btn-light&quot; id&#x3D;&quot;Argentina&quot;&gt;Argentina&lt;/button&gt;
-    &lt;button type&#x3D;&quot;button&quot; class&#x3D;&quot;btn btn-light&quot; id&#x3D;&quot;Nigeria&quot;&gt;Nigeria&lt;/button&gt;
-    &lt;button type&#x3D;&quot;button&quot; class&#x3D;&quot;btn btn-light&quot; id&#x3D;&quot;Sweden&quot;&gt;Sweden&lt;/button&gt;
+    &lt;button type&#x3D;&quot;button&quot; class&#x3D;&quot;btn btn-light&quot; id&#x3D;&quot;India&quot;&gt;India / 印度&lt;/button&gt;
+    &lt;button type&#x3D;&quot;button&quot; class&#x3D;&quot;btn btn-light&quot; id&#x3D;&quot;Argentina&quot;&gt;Argentina / 阿根廷&lt;/button&gt;
+    &lt;button type&#x3D;&quot;button&quot; class&#x3D;&quot;btn btn-light&quot; id&#x3D;&quot;Nigeria&quot;&gt;Nigeria / 尼日利亚&lt;/button&gt;
+    &lt;button type&#x3D;&quot;button&quot; class&#x3D;&quot;btn btn-light&quot; id&#x3D;&quot;Sweden&quot;&gt;Sweden / 瑞典&lt;/button&gt;
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
   &lt;/body&gt;

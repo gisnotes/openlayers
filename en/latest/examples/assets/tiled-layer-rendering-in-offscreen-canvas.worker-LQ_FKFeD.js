@@ -2316,7 +2316,7 @@ PROPERTYCHANGE: "propertychange" };
 		return x;
 	}
 	/**
-	* Converts radians to to degrees.
+	* Converts radians to degrees.
 	*
 	* @param {number} angleInRadians Angle in radians.
 	* @return {number} Angle in degrees.
@@ -10735,17 +10735,17 @@ function(resolution) {
 	* false means intermediary zoom levels are allowed.
 	*/
 	/**
-	* Mutliplier for the DOM_DELTA_LINE delta value.
+	* Multiplier for the DOM_DELTA_LINE delta value.
 	* @type {number}
 	*/
 	const DELTA_LINE_MULTIPLIER = 40;
 	/**
-	* Mutliplier for the DOM_DELTA_PAGE delta value.
+	* Multiplier for the DOM_DELTA_PAGE delta value.
 	* @type {number}
 	*/
 	const DELTA_PAGE_MULTIPLIER = 300;
 	/**
-	* Mutliplier for the delta value when using pinch-to-zoom
+	* Multiplier for the delta value when using pinch-to-zoom
 	* @type {number}
 	*/
 	const DELTA_TRACKPAD_PINCH_TO_ZOOM_MULTIPLIER = 3;
@@ -14929,12 +14929,27 @@ function(resolution) {
 	* @module ol/style/Image
 	*/
 	/**
+	* @typedef {'point' | 'line'} ImageStylePlacement
+	* Default placement is `'point'`, meaning the symbolizer is only drawn for `Point`/`MultiPoint`
+	* geometries. For a {@link module:ol/geom/LineString~LineString}, {@link module:ol/geom/MultiLineString~MultiLineString},
+	* {@link module:ol/geom/Polygon~Polygon} or {@link module:ol/geom/MultiPolygon~MultiPolygon} geometry, set `placement`
+	* to `'line'` to draw the symbolizer along the path (only the exterior ring for polygons), repeated at the `repeat`
+	* interval when set, and rotated according to `rotateWithView`. A single symbolizer at the geometry's own midpoint,
+	* using only the style's own fixed `rotation`, can be obtained with `placement: 'line'`, no `repeat`, and
+	* `rotateWithView: false`.
+	*/
+	/**
 	* @typedef {Object} Options
 	* @property {number} opacity Opacity.
-	* @property {boolean} rotateWithView If the image should get rotated with the view.
+	* @property {boolean} rotateWithView If the image should get rotated with the view. When `placement` is set to
+	* `'line'`, this also controls whether the symbolizer follows the local direction of the line (`true`) or keeps
+	* its own fixed `rotation` (`false`).
 	* @property {number} rotation Rotation.
 	* @property {number|import("../size.js").Size} scale Scale.
 	* @property {Array<number>} displacement Displacement.
+	* @property {ImageStylePlacement} [placement='point'] Placement.
+	* @property {number} [repeat] Repeat interval. When set, the symbolizer will be repeated at this interval, which
+	* specifies the distance between two anchors in pixels. Only available when `placement` is set to `'line'`.
 	* @property {import('../style/Style.js').DeclutterMode} [declutterMode] Declutter mode: `declutter`, `obstacle`, `none`.
 	*/
 	/**
@@ -14982,6 +14997,16 @@ function(resolution) {
 			this.displacement_ = options.displacement;
 			/**
 			* @private
+			* @type {ImageStylePlacement}
+			*/
+			this.placement_ = options.placement !== void 0 ? options.placement : "point";
+			/**
+			* @private
+			* @type {number|undefined}
+			*/
+			this.repeat_ = options.repeat;
+			/**
+			* @private
 			* @type {import('../style/Style.js').DeclutterMode|undefined}
 			*/
 			this.declutterMode_ = options.declutterMode;
@@ -14999,6 +15024,8 @@ function(resolution) {
 				rotation: this.getRotation(),
 				rotateWithView: this.getRotateWithView(),
 				displacement: this.getDisplacement().slice(),
+				placement: this.getPlacement(),
+				repeat: this.getRepeat(),
 				declutterMode: this.getDeclutterMode()
 			});
 		}
@@ -15056,6 +15083,39 @@ function(resolution) {
 		*/
 		getDeclutterMode() {
 			return this.declutterMode_;
+		}
+		/**
+		* Get the placement.
+		* @return {ImageStylePlacement} Placement.
+		* @api
+		*/
+		getPlacement() {
+			return this.placement_;
+		}
+		/**
+		* Set the placement.
+		*
+		* @param {ImageStylePlacement} placement Placement.
+		* @api
+		*/
+		setPlacement(placement) {
+			this.placement_ = placement;
+		}
+		/**
+		* Get the repeat interval.
+		* @return {number|undefined} Repeat interval in pixels.
+		* @api
+		*/
+		getRepeat() {
+			return this.repeat_;
+		}
+		/**
+		* Set the repeat interval.
+		* @param {number|undefined} [repeat] Repeat interval in pixels.
+		* @api
+		*/
+		setRepeat(repeat) {
+			this.repeat_ = repeat;
 		}
 		/**
 		* Get the anchor point in pixels. The anchor determines the center point for the
@@ -15215,6 +15275,9 @@ function(resolution) {
 	* @property {boolean} [rotateWithView=false] Whether to rotate the shape with the view.
 	* @property {number|import("../size.js").Size} [scale=1] Scale. Unless two dimensional scaling is required a better
 	* result may be obtained with appropriate settings for `radius` and `radius2`.
+	* @property {import("./Image.js").ImageStylePlacement} [placement='point'] Placement.
+	* @property {number} [repeat] Repeat interval. When set, the shape will be repeated at this interval, which specifies
+	* the distance between two anchors in pixels. Only available when `placement` is set to `'line'`.
 	* @property {import('./Style.js').DeclutterMode} [declutterMode] Declutter mode.
 	*/
 	/**
@@ -15246,6 +15309,8 @@ function(resolution) {
 				rotation: options.rotation !== void 0 ? options.rotation : 0,
 				scale: options.scale !== void 0 ? options.scale : 1,
 				displacement: options.displacement !== void 0 ? options.displacement : [0, 0],
+				placement: options.placement,
+				repeat: options.repeat,
 				declutterMode: options.declutterMode
 			});
 			/**
@@ -15324,6 +15389,8 @@ function(resolution) {
 				rotateWithView: this.getRotateWithView(),
 				scale: Array.isArray(scale) ? scale.slice() : scale,
 				displacement: this.getDisplacement().slice(),
+				placement: this.getPlacement(),
+				repeat: this.getRepeat(),
 				declutterMode: this.getDeclutterMode()
 			});
 			style.setOpacity(this.getOpacity());
@@ -15396,7 +15463,7 @@ function(resolution) {
 				shared.set(cacheKey, null, iconImage);
 				createImageBitmap(image).then((imageBitmap) => {
 					iconImage.setImage(imageBitmap);
-				});
+				}).catch(() => {});
 			}
 			return image;
 		}
@@ -15716,6 +15783,9 @@ function(resolution) {
 	* (positive rotation clockwise, meaningful only when used in conjunction with a two dimensional scale).
 	* @property {boolean} [rotateWithView=false] Whether to rotate the shape with the view
 	* (meaningful only when used in conjunction with a two dimensional scale).
+	* @property {import("./Image.js").ImageStylePlacement} [placement='point'] Placement.
+	* @property {number} [repeat] Repeat interval. When set, the circle will be repeated at this interval, which specifies
+	* the distance between two anchors in pixels. Only available when `placement` is set to `'line'`.
 	* @property {import('./Style.js').DeclutterMode} [declutterMode] Declutter mode
 	*/
 	/**
@@ -15738,6 +15808,8 @@ function(resolution) {
 				rotation: options.rotation !== void 0 ? options.rotation : 0,
 				rotateWithView: options.rotateWithView !== void 0 ? options.rotateWithView : false,
 				displacement: options.displacement !== void 0 ? options.displacement : [0, 0],
+				placement: options.placement,
+				repeat: options.repeat,
 				declutterMode: options.declutterMode
 			});
 		}
@@ -15757,6 +15829,8 @@ function(resolution) {
 				rotation: this.getRotation(),
 				rotateWithView: this.getRotateWithView(),
 				displacement: this.getDisplacement().slice(),
+				placement: this.getPlacement(),
+				repeat: this.getRepeat(),
 				declutterMode: this.getDeclutterMode()
 			});
 			style.setOpacity(this.getOpacity());
@@ -15900,6 +15974,9 @@ function(resolution) {
 	* @property {import("../size.js").Size} [size] Icon size in pixels. Used together with `offset` to define the
 	* sub-rectangle to use from the original (sprite) image.
 	* @property {string} [src] Image source URI.
+	* @property {import("./Image.js").ImageStylePlacement} [placement='point'] Icon placement.
+	* @property {number} [repeat] Repeat interval. When set, the icon will be repeated at this interval, which specifies
+	* the distance between two icon anchors in pixels. Only available when `placement` is set to `'line'`.
 	* @property {import("./Style.js").DeclutterMode} [declutterMode] Declutter mode.
 	*/
 	/**
@@ -15948,6 +16025,8 @@ function(resolution) {
 				scale,
 				displacement: options.displacement !== void 0 ? options.displacement : [0, 0],
 				rotateWithView,
+				placement: options.placement,
+				repeat: options.repeat,
 				declutterMode: options.declutterMode
 			});
 			/**
@@ -16094,6 +16173,8 @@ function(resolution) {
 				size: this.size_ !== null ? this.size_.slice() : void 0,
 				src: this.getSrc(),
 				displacement: this.getDisplacement().slice(),
+				placement: this.getPlacement(),
+				repeat: this.getRepeat(),
 				declutterMode: this.getDeclutterMode()
 			});
 		}
@@ -17973,6 +18054,8 @@ function(resolution) {
 		const evaluateDisplacement = coordinateEvaluator(flatStyle, "icon-displacement", context);
 		const evaluateRotation = numberEvaluator(flatStyle, "icon-rotation", context);
 		const evaluateRotateWithView = booleanEvaluator(flatStyle, "icon-rotate-with-view", context);
+		const evaluatePlacement = stringEvaluator(flatStyle, "icon-placement", context);
+		const evaluateRepeat = numberEvaluator(flatStyle, "icon-repeat", context);
 		const anchorOrigin = optionalIconOrigin(flatStyle, "icon-anchor-origin");
 		const anchorXUnits = optionalIconAnchorUnits(flatStyle, "icon-anchor-x-units");
 		const anchorYUnits = optionalIconAnchorUnits(flatStyle, "icon-anchor-y-units");
@@ -18011,6 +18094,12 @@ function(resolution) {
 			if (evaluateDisplacement) icon.setDisplacement(evaluateDisplacement(context));
 			if (evaluateRotation) icon.setRotation(evaluateRotation(context));
 			if (evaluateRotateWithView) icon.setRotateWithView(evaluateRotateWithView(context));
+			if (evaluatePlacement) {
+				const placement = evaluatePlacement(context);
+				if (placement !== "point" && placement !== "line") throw new Error("Expected point or line for icon-placement");
+				icon.setPlacement(placement);
+			}
+			if (evaluateRepeat) icon.setRepeat(evaluateRepeat(context));
 			if (evaluateScale) icon.setScale(evaluateScale(context));
 			if (evaluateAnchor) icon.setAnchor(evaluateAnchor(context));
 			return icon;
@@ -19134,7 +19223,7 @@ function(resolution) {
 	* the map's pixel ratio.
 	* For accessibility (focus and keyboard events for map navigation), the `target` element must have a
 	*  properly configured `tabindex` attribute. If the `target` element is inside a Shadow DOM, the
-	*  `tabindex` atribute must be set on the custom element's host element.
+	*  `tabindex` attribute must be set on the custom element's host element.
 	* **Note:** CSS `transform` support for the target element is limited to `scale`.
 	* @property {View|Promise<import("./View.js").ViewOptions>} [view] The map's view.  No layer sources will be
 	* fetched unless this is specified at construction time or through
@@ -20302,7 +20391,7 @@ function(resolution) {
 		* Set the target element to render this map into.
 		* For accessibility (focus and keyboard events for map navigation), the `target` element must have a
 		*  properly configured `tabindex` attribute. If the `target` element is inside a Shadow DOM, the
-		*  `tabindex` atribute must be set on the custom element's host element.
+		*  `tabindex` attribute must be set on the custom element's host element.
 		* @param {HTMLElement|string|null|undefined} [target] The Element or id of the Element
 		*     that the map is rendered in.
 		* @observable
@@ -25760,4 +25849,4 @@ function(tileCoord, pixelRatio, projection) {
 	//#endregion
 })();
 
-//# sourceMappingURL=tiled-layer-rendering-in-offscreen-canvas.worker-BzDZzwSA.js.map
+//# sourceMappingURL=tiled-layer-rendering-in-offscreen-canvas.worker-LQ_FKFeD.js.map

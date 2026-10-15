@@ -4,6 +4,13 @@ import { n as OSM } from "./OSM.js";
 import { t as Draw } from "./Draw.js";
 //#region examples/chaikin.js
 var import_chaikin_smooth = /* @__PURE__ */ __toESM(require_chaikin_smooth(), 1);
+/**
+* Apply Chaikin's corner-cutting algorithm iteratively to smooth a coordinate path
+* 迭代调用 Chaikin 割角切角平滑算法平滑给定的坐标序列
+* @param {Array<Array<number>>} path Input coordinate array / 原始坐标数组
+* @param {number} numIterations Number of smoothing rounds / 平滑迭代轮次
+* @return {Array<Array<number>>} Smoothed coordinate array / 平滑后的坐标数组
+*/
 function makeSmooth(path, numIterations) {
 	numIterations = Math.min(Math.max(numIterations, 1), 10);
 	while (numIterations > 0) {

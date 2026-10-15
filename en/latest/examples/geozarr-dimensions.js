@@ -67,7 +67,7 @@ source.getDimensions().then(async ({ time }) => {
 	slider.disabled = false;
 	slider.addEventListener("input", () => showSlice(Number(slider.value)));
 	showSlice(0);
-}).catch(() => label.textContent = "Failed to load the GeoZarr store.");
+}).catch(() => label.textContent = "Failed to load the GeoZarr store. / 加载 GeoZarr 存储失败。");
 //#endregion
 
 //# sourceMappingURL=geozarr-dimensions.js.map

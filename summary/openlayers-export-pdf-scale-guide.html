@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-地图导出-pdf、工程测绘指定比例尺打印与-scaleline-深度实战指南">OpenLayers 地图导出 PDF、工程测绘指定比例尺打印与 ScaleLine 深度实战指南</h1>
+<blockquote>
+<p>在自然资源调查、国土空间规划、水利水电勘察以及工程施工等专业 GIS 业务中，<strong>地图出图与打印（Map Printing &amp; Exporting）</strong> 是一项至关重要的核心职能。</p>
+<p>屏幕显示与纸质工程图纸有着本质区别：屏幕显示受制于设备屏幕分辨率与像素比，而印刷出版要求严格对齐 <strong>国际标准纸张规格（A0~A5）</strong>、<strong>高精印刷分辨率（150~300 DPI）</strong> 以及 <strong>严格的法定工程比例尺（如 1:10,000、1:50,000）</strong>。OpenLayers 提供了完整的空间投影变形校正与多图层合成机制。本文基于 3 个核心官方示例（<code>export-pdf.html</code>、<code>print-to-scale.html</code>、<code>scale-line.html</code>），系统解构高质量 PDF 导出、精确比例尺换算及比例尺控件定制的实战技术方案。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：从屏幕视口到测绘级物理图纸">1. 架构总览：从屏幕视口到测绘级物理图纸</h2>
+<h3 id="11-打印输出处理流与数学推导">1.1 打印输出处理流与数学推导</h3>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph UserSpec [用户制图规格输入]
+        PaperSize[&quot;纸张尺寸 (如 A4: 297mm × 210mm)&quot;]
+        PrintDPI[&quot;印刷分辨率 (如 300 DPI)&quot;]
+        TargetScale[&quot;目标比例尺 (如 1:25,000)&quot;]
+    end
+
+    subgraph PixelMath [物理尺寸与空间分辨率解算]
+        CalcPixel[&quot;物理像素计算:&lt;br/&gt;width = round(dim_x × DPI / 25.4)&lt;br/&gt;height = round(dim_y × DPI / 25.4)&quot;]
+        PointRes[&quot;投影纬度变形校正:&lt;br/&gt;getPointResolution(projection, DPI / 25.4, center)&quot;]
+        ScaleRes[&quot;计算打印目标分辨率:&lt;br/&gt;scaleResolution = scale / pointResolution&quot;]
+    end
+
+    subgraph OLRenderer [OpenLayers 渲染执行管线]
+        Resize[&quot;临时重置尺寸与分辨率:&lt;br/&gt;map.setSize([w, h])&lt;br/&gt;view.setResolution(scaleRes)&quot;]
+        RenderWait[&quot;等待加载与绘制:&lt;br/&gt;map.once(&#39;rendercomplete&#39;)&quot;]
+        CanvasMerge[&quot;多图层 Canvas 合流 / html2canvas 捕获&quot;]
+    end
+
+    subgraph PDFAssembly [jsPDF 文档封装与保存]
+        GenPDF[&quot;new jsPDF(&#39;landscape&#39;, &#39;mm&#39;, format)&quot;]
+        InsertImg[&quot;pdf.addImage(mapDataUrl, &#39;JPEG&#39;, 0, 0, w_mm, h_mm)&quot;]
+        FileSave[&quot;pdf.save(&#39;map.pdf&#39;)&quot;]
+        RestoreMap[&quot;状态复原: 恢复原始屏幕尺寸与控件状态&quot;]
+    end
+
+    PaperSize &amp; PrintDPI --&gt; CalcPixel
+    TargetScale &amp; PrintDPI --&gt; PointRes --&gt; ScaleRes
+    CalcPixel &amp; ScaleRes --&gt; Resize --&gt; RenderWait --&gt; CanvasMerge
+    CanvasMerge --&gt; GenPDF --&gt; InsertImg --&gt; FileSave --&gt; RestoreMap
+</code></pre>
+<h3 id="12-方案选型综合特征对照表">1.2 方案选型综合特征对照表</h3>
+<table>
+<thead>
+<tr>
+<th align="left">维度 / 模式</th>
+<th align="left">视口常规 PDF 导出</th>
+<th align="left">测绘级指定比例尺打印</th>
+<th align="left">比例尺定制展示</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>典型示例</strong></td>
+<td align="left"><code>export-pdf.html</code></td>
+<td align="left"><code>print-to-scale.html</code></td>
+<td align="left"><code>scale-line.html</code></td>
+</tr>
+<tr>
+<td align="left"><strong>空间范围控制</strong></td>
+<td align="left">严格继承当前屏幕所见范围</td>
+<td align="left"><strong>由比例尺与纸张尺寸决定</strong>（屏幕仅定中心点）</td>
+<td align="left">随视口漫游动态变化</td>
+</tr>
+<tr>
+<td align="left"><strong>比例尺保真度</strong></td>
+<td align="left">无固定比例尺（按纸张拉伸）</td>
+<td align="left"><strong>1:10,000 ~ 1:500,000 毫米级精准对应</strong></td>
+<td align="left">实时显示当前纬度物理距离</td>
+</tr>
+<tr>
+<td align="left"><strong>图饰控件处理</strong></td>
+<td align="left">仅导出纯地图画布</td>
+<td align="left"><strong>利用 html2canvas 完整捕获比例尺与版权</strong></td>
+<td align="left">原生 DOM 控件动态配置</td>
+</tr>
+<tr>
+<td align="left"><strong>DPI 适配</strong></td>
+<td align="left">72 / 150 / 300 DPI 动态调整</td>
+<td align="left">72 / 150 / 200 / 300 DPI 深度同步</td>
+<td align="left"><code>scaleLine.setDpi()</code> 联动</td>
+</tr>
+<tr>
+<td align="left"><strong>主要第三方库</strong></td>
+<td align="left"><code>jspdf</code></td>
+<td align="left"><code>jspdf</code> + <code>html2canvas</code> + <code>proj4</code></td>
+<td align="left">无（OpenLayers 原生）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-多图层-canvas-仿射矩阵合成与-jspdf-导出（export-pdfhtml）">2. 多图层 Canvas 仿射矩阵合成与 jsPDF 导出（<code>export-pdf.html</code>）</h2>
+<p>在 <code>export-pdf.html</code> 中，核心难点在于 OpenLayers 的瓦片和矢量图层分散在不同的 <code>&lt;canvas&gt;</code> 节点中，且各自包含独立的 CSS <code>transform</code> 位移缩放矩阵与 CSS <code>opacity</code>。</p>
+<h3 id="21-物理像素换算与地图尺寸扩充">2.1 物理像素换算与地图尺寸扩充</h3>
+<p>根据国际印刷标准，1 英寸等于 25.4 毫米：</p>
+<pre><code class="language-javascript">const dim = dims[format]; // 例如 A4 为 [297, 210] 毫米
+const width = Math.round((dim[0] * resolution) / 25.4);
+const height = Math.round((dim[1] * resolution) / 25.4);
+
+// 临时放大地图画布，促使 OpenLayers 加载高分切片
+map.setSize([width, height]);
+const scaling = Math.min(width / size[0], height / size[1]);
+map.getView().setResolution(viewResolution / scaling);
+</code></pre>
+<h3 id="22-跨图层矩阵无损合流">2.2 跨图层矩阵无损合流</h3>
+<p>在 <code>rendercomplete</code> 监听中，通过遍历图层画布并复现仿射矩阵：</p>
+<pre><code class="language-javascript">map.once(&#39;rendercomplete&#39;, function () {
+  const mapCanvas = document.createElement(&#39;canvas&#39;);
+  mapCanvas.width = width;
+  mapCanvas.height = height;
+  const mapContext = mapCanvas.getContext(&#39;2d&#39;);
+
+  document.querySelectorAll(&#39;.ol-layer canvas&#39;).forEach((canvas) =&gt; {
+    if (canvas.width &gt; 0) {
+      // 提取图层透明度
+      const opacity = canvas.parentNode.style.opacity;
+      mapContext.globalAlpha = opacity === &#39;&#39; ? 1 : Number(opacity);
+
+      // 从 style.transform 中正则提取 matrix(a, b, c, d, e, f)
+      const matrix = canvas.style.transform
+        .match(/^matrix\(([^\(]*)\)$/)[1]
+        .split(&#39;,&#39;)
+        .map(Number);
+      CanvasRenderingContext2D.prototype.setTransform.apply(mapContext, matrix);
+      mapContext.drawImage(canvas, 0, 0);
+    }
+  });
+
+  // 写入 PDF 并保存
+  const pdf = new jsPDF(&#39;landscape&#39;, undefined, format);
+  pdf.addImage(mapCanvas.toDataURL(&#39;image/jpeg&#39;), &#39;JPEG&#39;, 0, 0, dim[0], dim[1]);
+  pdf.save(&#39;map.pdf&#39;);
+});
+</code></pre>
+<hr>
+<h2 id="3-测绘级指定比例尺打印核心数学模型（print-to-scalehtml）">3. 测绘级指定比例尺打印核心数学模型（<code>print-to-scale.html</code>）</h2>
+<p>在工程规划中，必须保证打印出的图纸“拿尺子在纸上量 1 厘米等于实际 250 米”（即 1:25,000）。</p>
+<h3 id="31-墨卡托投影变形修正（getpointresolution）">3.1 墨卡托投影变形修正（<code>getPointResolution</code>）</h3>
+<p>在墨卡托投影（EPSG:3857）或高斯克吕格投影（EPSG:27700）中，单位投影坐标与地球表面物理距离随着纬度或中央经线距离存在拉伸。OpenLayers 提供了 <code>getPointResolution</code>：
+$$\text{scaleResolution} = \frac{\text{scale}}{\text{getPointResolution}(\text{projection}, \frac{\text{DPI}}{25.4}, \text{center})}$$</p>
+<ul>
+<li><strong>参数说明</strong>：<ul>
+<li><code>scale</code>：比例尺分母（如 250 代表 1:250,000，25 代表 1:25,000）；</li>
+<li><code>DPI / 25.4</code>：每毫米包含的物理像素数；</li>
+<li><code>center</code>：当前视图中心点地理坐标。</li>
+</ul>
+</li>
+</ul>
+<h3 id="32-借助-html2canvas-捕获-dom-比例尺与版权">3.2 借助 <code>html2canvas</code> 捕获 DOM 比例尺与版权</h3>
+<p>纯 Canvas 导出无法包含 HTML DOM 样式的比例尺。示例通过 <code>html2canvas</code> 对 <code>map.getViewport()</code> 执行全要素捕获，并利用 <code>ignoreElements</code> 智能剔除交互按钮：</p>
+<pre><code class="language-javascript">const exportOptions = {
+  useCORS: true,
+  ignoreElements: (el) =&gt; {
+    const cls = el.className || &#39;&#39;;
+    // 屏蔽除比例尺和版权之外的所有控件
+    return cls.includes(&#39;ol-control&#39;) &amp;&amp;
+      !cls.includes(&#39;ol-scale&#39;) &amp;&amp;
+      (!cls.includes(&#39;ol-attribution&#39;) || !cls.includes(&#39;ol-uncollapsible&#39;));
+  },
+};
+</code></pre>
+<hr>
+<h2 id="4-比例尺控件体系全解（scale-linehtml）">4. 比例尺控件体系全解（<code>scale-line.html</code>）</h2>
+<p><code>ol/control/ScaleLine</code> 提供了专业制图所需的全套标尺表现形式：</p>
+<h3 id="41-核心配置与模式对比">4.1 核心配置与模式对比</h3>
+<pre><code class="language-javascript">// 模式一：经典紧凑折角线 (ScaleLine)
+const simpleLine = new ScaleLine({
+  units: &#39;metric&#39;, // metric(公制), imperial(英制), us(美制), nautical(海里), degrees(度)
+});
+
+// 模式二：工程分段交替条 (ScaleBar)
+const zebraBar = new ScaleLine({
+  units: &#39;metric&#39;,
+  bar: true,                    // 开启分段块渲染
+  steps: 4,                     // 4 个等分子区间
+  text: true,                   // 在分段点标注刻度数值
+  minWidth: 140,                // 最小宽度像素约束
+});
+</code></pre>
+<ul>
+<li><strong>颜色反转（Invert Colors）</strong>：通过为控件元素添加 <code>ol-scale-bar-inverted</code> 类名，将黑白相间反转为白黑相间，轻松适配深色底图或复杂航拍影像。</li>
+<li><strong>打印协同（<code>scaleLine.setDpi(resolution)</code>）</strong>：在导出高 DPI PDF 时，必须同步调用 <code>setDpi</code>，控件将自动根据目标打印分辨率缩放其 CSS 物理尺寸。</li>
+</ul>
+<hr>
+<h2 id="5-生产实践踩坑与性能调优指南">5. 生产实践踩坑与性能调优指南</h2>
+<h3 id="51-画布跨域污染（tainted-canvas）报错排查">5.1 画布跨域污染（Tainted Canvas）报错排查</h3>
+<ul>
+<li><strong>现象</strong>：调用 <code>canvas.toDataURL()</code> 抛出 <code>SecurityError: Failed to execute &#39;toDataURL&#39; on &#39;HTMLCanvasElement&#39;</code>。</li>
+<li><strong>根本原因</strong>：加载的栅格瓦片来自第三方未配置 CORS 响应头的源（如未经配置的内网 GeoServer 或特定商业切片）。</li>
+<li><strong>解决办法</strong>：<ol>
+<li>为瓦片源配置 <code>crossOrigin: &#39;anonymous&#39;</code>；</li>
+<li>确保切片服务器响应头包含 <code>Access-Control-Allow-Origin: *</code>；</li>
+<li>若数据源无法修改，需搭建 Nginx 反向代理层统一追加 CORS 响应头。</li>
+</ol>
+</li>
+</ul>
+<h3 id="52-超大图纸（a0--300-dpi）的内存溢出崩溃">5.2 超大图纸（A0 / 300 DPI）的内存溢出崩溃</h3>
+<ul>
+<li><strong>风险</strong>：A0 纸张（1189mm × 841mm）在 300 DPI 下对应 $14043 \times 9933$ 像素，单个 Canvas 显存占用高达 550MB 以上。在 32 位浏览器或手机端执行必将导致浏览器进程崩溃（Out of Memory）。</li>
+<li><strong>优化方案</strong>：<ul>
+<li>针对 A1/A0 超大图纸，前端仅导出 150 DPI（公文级清晰度已足够）；</li>
+<li>300 DPI 测绘出版图纸建议将当前视图 Extent、图层列表与样式规则序列化打包发送给后端，由基于 Node-Canvas 或 Headless Chrome 集群的后端专用导出服务完成出图。</li>
+</ul>
+</li>
+</ul>
+<h3 id="53-导出完成后的状态复原（state-cleanup）">5.3 导出完成后的状态复原（State Cleanup）</h3>
+<p>在触发打印时临时放大了容器并修改了分辨率，一旦 PDF 生成完毕，必须在 <code>finally</code> 逻辑中恢复环境：</p>
+<pre><code class="language-javascript">scaleLine.setDpi(undefined);
+map.getTargetElement().style.width = &#39;&#39;;
+map.getTargetElement().style.height = &#39;&#39;;
+map.updateSize();
+map.getView().setResolution(viewResolution);
+</code></pre>
+<p>保证用户在导出完成后，屏幕视口能丝滑回滚到操作前的正常状态。</p>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

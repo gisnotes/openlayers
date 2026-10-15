@@ -36,6 +36,10 @@ document.getElementById("auth-form").addEventListener("submit", (event) => {
 	});
 });
 var picker = document.getElementById("to-date");
+/**
+* Compute 7-day rolling time range and update input data filter on Sentinel Hub source.
+* 计算当前选定日期往前推移 7 天的滑动时间窗口，并通过 source.setData() 更新时空数据过滤参数。
+*/
 function updateInputData() {
 	const toDate = new Date(picker.value);
 	const fromDate = new Date(toDate.getTime());

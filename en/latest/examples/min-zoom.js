@@ -2,6 +2,11 @@ import { Dr as Map, Ni as View, yr as TileLayer } from "./common.js";
 import { n as OSM } from "./OSM.js";
 //#region examples/min-zoom.js
 var viewport = document.getElementById("map");
+/**
+* Calculate minimum zoom level to ensure only a single world is visible horizontally.
+* 计算最小缩放级别，确保视口中横向只呈现单个世界切片，防止多次平铺重复。
+* @return {number} Calculated min zoom.
+*/
 function getMinZoom() {
 	const width = viewport.clientWidth;
 	return Math.ceil(Math.LOG2E * Math.log(width / 256));

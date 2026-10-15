@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="esri-arcgis-rest-地图服务集成与切片加速实战架构指南">Esri ArcGIS REST 地图服务集成与切片加速实战架构指南</h1>
+<blockquote>
+<p>在企业级 GIS、数字孪生、智慧城市以及自然资源信息化平台中，<strong>Esri ArcGIS Enterprise / ArcGIS Server</strong> 是应用最为广泛的工业级空间地理服务器之一。ArcGIS 对外提供了丰富的 REST 风格服务接口（包括 <code>MapServer</code>、<code>ImageServer</code>、<code>FeatureServer</code>）。</p>
+<p>OpenLayers 原生深度适配了 Esri ArcGIS REST 协议规范，并针对不同的网络延迟、服务器算力与交互场景提供了三种截然不同的接入范式：<strong>视口动态单图出图（<code>ImageArcGISRest</code>）</strong>、<strong>动态分块瓦片导出（<code>TileArcGISRest</code>）</strong>以及<strong>预切片高速直连（<code>XYZ / WebGLTile</code>）</strong>。本文基于 3 个核心官方示例，系统解构三种集成方案的底层实现原理、性能特征与生产工程选型实践。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：arcgis-rest-服务与-openlayers-的三大接入范式">1. 架构总览：ArcGIS REST 服务与 OpenLayers 的三大接入范式</h2>
+<h3 id="11-三种接入模式的架构拓扑对比">1.1 三种接入模式的架构拓扑对比</h3>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph ArcGISServer [ArcGIS Enterprise / ArcGIS Server]
+        DynamicEngine[&quot;动态制图引擎 (ArcObjects / Core)&quot;]
+        CompactCache[(&quot;紧凑切片缓存 (Compact Cache / Bundle)&quot;)]
+    end
+
+    subgraph OpenLayersClient [OpenLayers 客户端渲染通道]
+        direction TB
+        Mode1[&quot;模式一：ImageArcGISRest&lt;br/&gt;(单张视口图，动态 /export)&quot;]
+        Mode2[&quot;模式二：TileArcGISRest&lt;br/&gt;(网格分块，动态 /export)&quot;]
+        Mode3[&quot;模式三：ImageTile / WebGLTile&lt;br/&gt;(XYZ 静态直连 /tile/{z}/{y}/{x})&quot;]
+    end
+
+    Mode1 &lt;--&gt;|实时渲染单张大图| DynamicEngine
+    Mode2 &lt;--&gt;|按瓦片并发请求实时出图| DynamicEngine
+    Mode3 &lt;--&gt;|静态直取瓦片文件 (CDN 友好)| CompactCache
+</code></pre>
+<h3 id="12-方案选型综合特征对照表">1.2 方案选型综合特征对照表</h3>
+<table>
+<thead>
+<tr>
+<th align="left">维度 / 模式</th>
+<th align="left">单张动态图 (<code>ImageArcGISRest</code>)</th>
+<th align="left">瓦片化动态图 (<code>TileArcGISRest</code>)</th>
+<th align="left">紧凑切片直连 (<code>XYZ / ImageTile</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>对应图层</strong></td>
+<td align="left"><code>ol/layer/Image</code></td>
+<td align="left"><code>ol/layer/Tile</code></td>
+<td align="left"><code>ol/layer/WebGLTile</code> / <code>ol/layer/Tile</code></td>
+</tr>
+<tr>
+<td align="left"><strong>底层请求接口</strong></td>
+<td align="left"><code>/MapServer/export?bbox=...&amp;size=...</code></td>
+<td align="left"><code>/MapServer/export?bbox=...</code> (瓦片网格)</td>
+<td align="left"><code>/MapServer/tile/{z}/{y}/{x}</code></td>
+</tr>
+<tr>
+<td align="left"><strong>服务端处理</strong></td>
+<td align="left">每次平移/缩放实时空间查询与渲染</td>
+<td align="left">针对每个瓦片实时空间查询与渲染</td>
+<td align="left">零动态计算，静态文件分发</td>
+</tr>
+<tr>
+<td align="left"><strong>客户端展现</strong></td>
+<td align="left">整屏单张图像无缝呈现</td>
+<td align="left">渐进式方块拼接加载</td>
+<td align="left">GPU 毫秒级极速渲染（60 FPS）</td>
+</tr>
+<tr>
+<td align="left"><strong>注记文本表现</strong></td>
+<td align="left">完美连续、无拼接截断</td>
+<td align="left">瓦片接缝处可能截断或重复</td>
+<td align="left">依赖预切片时的固定注记排版</td>
+</tr>
+<tr>
+<td align="left"><strong>动态参数过滤</strong></td>
+<td align="left">原生支持 <code>LAYERS</code>, <code>LAYERDEFS</code>, <code>TIME</code></td>
+<td align="left">原生支持 <code>LAYERS</code>, <code>LAYERDEFS</code>, <code>TIME</code></td>
+<td align="left"><strong>不支持</strong>（切片为静态烘焙产物）</td>
+</tr>
+<tr>
+<td align="left"><strong>服务器负载</strong></td>
+<td align="left">中等（随用户缩放平移单次请求）</td>
+<td align="left">较高（单次平移触发十几个 export 请求）</td>
+<td align="left">极低（CDN 轻松承载数万人并发）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-动态地图服务出图（imagearcgisrest）">2. 动态地图服务出图（<code>ImageArcGISRest</code>）</h2>
+<p>在 <code>arcgis-image.html</code> 中，通过单张图片图层承载动态 MapServer：</p>
+<pre><code class="language-javascript">import ImageLayer from &#39;ol/layer/Image&#39;;
+import ImageArcGISRest from &#39;ol/source/ImageArcGISRest&#39;;
+
+const imageryLayer = new ImageLayer({
+  source: new ImageArcGISRest({
+    ratio: 1, // 视口宽高比匹配系数
+    params: {
+      LAYERS: &#39;show:0,1,2&#39;,              // 仅显示特定子图层
+      LAYERDEFS: &#39;{&quot;0&quot;: &quot;STATE_NAME = \&#39;California\&#39;&quot;}&#39;, // 动态 SQL 属性过滤
+      FORMAT: &#39;png32&#39;,
+      TRANSPARENT: true,
+    },
+    url: &#39;https://sampleserver6.arcgisonline.com/ArcGIS/rest/services/USA/MapServer&#39;,
+  }),
+});
+</code></pre>
+<h3 id="21-动态出图请求机制解析">2.1 动态出图请求机制解析</h3>
+<p>每次地图视口变化完成（<code>moveend</code>）时，OpenLayers 会自动计算当前屏幕像素的物理外接矩形，向服务端派发如下标准的 HTTP GET 请求：</p>
+<p>$$\text{Request URL} = \text{url} + \text{/export?} \text{bbox}=\text{minx,miny,maxx,maxy} &amp; \text{size}=\text{w,h} &amp; \text{f}=\text{image} &amp; \text{dpi}=96$$</p>
+<h3 id="22-ratio-参数的平滑度权衡">2.2 <code>ratio</code> 参数的平滑度权衡</h3>
+<ul>
+<li><code>ratio: 1</code>：请求图片尺寸严格等于 <code>&lt;div id=&quot;map&quot;&gt;</code> 像素尺寸，网络载荷最小，但稍微拖拽平移就会露出白边；</li>
+<li><code>ratio: 1.5</code>：请求外扩 1.5 倍尺寸的图片，地图周围缓存有半屏图像，在轻微拖拽时无缝漫游，体验更优。</li>
+</ul>
+<hr>
+<h2 id="3-瓦片化动态请求（tilearcgisrest）与范围约束">3. 瓦片化动态请求（<code>TileArcGISRest</code>）与范围约束</h2>
+<p>在 <code>arcgis-tiled.html</code> 中，针对没有预生成切片但希望获得“并发渐进加载”的动态服务，采用了 <code>TileArcGISRest</code>：</p>
+<pre><code class="language-javascript">import TileLayer from &#39;ol/layer/Tile&#39;;
+import TileArcGISRest from &#39;ol/source/TileArcGISRest&#39;;
+
+const tiledArcGIS = new TileLayer({
+  // 关键：严格约束请求的空间包围盒，杜绝全球范围无效出图
+  extent: [-13884991, 2870341, -7455066, 6338219],
+  source: new TileArcGISRest({
+    url: &#39;https://sampleserver6.arcgisonline.com/ArcGIS/rest/services/USA/MapServer&#39;,
+  }),
+});
+</code></pre>
+<h3 id="31-空间包围盒范围约束（extent）的工程必要性">3.1 空间包围盒范围约束（<code>extent</code>）的工程必要性</h3>
+<p>动态 MapServer 在全球尺度下若未加 <code>extent</code> 约束，用户在非洲或南极洲漫游时，OpenLayers 依然会向服务器请求成百上千个空白瓦片的 <code>/export</code>。
+设置 <code>extent</code> 后，OpenLayers 渲染引擎会自动剔除范围外的切片请求，避免由于无意义的空请求将 ArcGIS Server 的 SOC（Server Object Container）进程池占满。</p>
+<hr>
+<h2 id="4-预切片紧凑缓存直连（xyz--imagetile）与-webgl-加速">4. 预切片紧凑缓存直连（<code>XYZ / ImageTile</code>）与 WebGL 加速</h2>
+<p>在 <code>xyz-esri.html</code> 中，展示了加载已切片缓存的最佳实践：</p>
+<pre><code class="language-javascript">import Map from &#39;ol/Map&#39;;
+import View from &#39;ol/View&#39;;
+import WebGLTileLayer from &#39;ol/layer/WebGLTile&#39;;
+import ImageTileSource from &#39;ol/source/ImageTile&#39;;
+import {useGeographic} from &#39;ol/proj&#39;;
+
+useGeographic();
+
+const map = new Map({
+  target: &#39;map&#39;,
+  layers: [
+    new WebGLTileLayer({
+      source: new ImageTileSource({
+        // 标准 ArcGIS REST 切片模板 /tile/{z}/{y}/{x}
+        url: &#39;https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}&#39;,
+      }),
+    }),
+  ],
+  view: new View({
+    center: [-121.1, 47.5],
+    zoom: 7,
+  }),
+});
+</code></pre>
+<h3 id="41-gpu-硬件加速管线">4.1 GPU 硬件加速管线</h3>
+<p><code>WebGLTileLayer</code> 直接将每个从 CDN 拉取的 256×256 瓦片转换为 GPU 纹理显存，在缩放平移时通过顶点着色器（Vertex Shader）与片元着色器执行无极仿射过渡变换，帧率稳定在 60 FPS，彻底消除传统 DOM/Canvas 瓦片更新时的白色闪烁。</p>
+<hr>
+<h2 id="5-生产避坑指南与常见故障排查">5. 生产避坑指南与常见故障排查</h2>
+<h3 id="51-自定义切片方案（tilegrid）原点不一致导致的-404-与错位">5.1 自定义切片方案（TileGrid）原点不一致导致的 404 与错位</h3>
+<ul>
+<li><strong>现象</strong>：加载私有部署的 ArcGIS MapServer 切片时，控制台频繁抛出大量瓦片 404，或者地图地物严重错位分裂。</li>
+<li><strong>根因</strong>：Esri 公开底图（如 Topo、Imagery）默认采用标准 Web 墨卡托原点 <code>[-20037508.34, 20037508.34]</code>。但许多国内单位或特定投影的自建切片，原点可能是自定义坐标（例如以地方城市中心为原点）。</li>
+<li><strong>解法</strong>：在加载前通过浏览器访问 <code>https://&lt;server&gt;/MapServer?f=pjson</code>，查看其 <code>tileInfo</code> 对象：<pre><code class="language-javascript">import TileGrid from &#39;ol/tilegrid/TileGrid&#39;;
+
+const tileGrid = new TileGrid({
+  origin: [tileInfo.origin.x, tileInfo.origin.y],
+  resolutions: tileInfo.lods.map(lod =&gt; lod.resolution),
+  tileSize: [tileInfo.rows, tileInfo.cols],
+});
+
+const source = new ImageTileSource({
+  url: &#39;.../MapServer/tile/{z}/{y}/{x}&#39;,
+  tileGrid: tileGrid,
+});
+</code></pre>
+</li>
+</ul>
+<h3 id="52-token-动态鉴权安全拦截">5.2 Token 动态鉴权安全拦截</h3>
+<ul>
+<li><strong>现象</strong>：专网 ArcGIS 资源返回 HTTP 498（Invalid Token）或 499（Token Required）。</li>
+<li><strong>解法</strong>：在 URL 末尾附加 <code>?token={token}</code>，或者利用 <code>tileLoadFunction</code> 注入请求头：<pre><code class="language-javascript">source.setTileLoadFunction((imageTile, src) =&gt; {
+  fetch(src, {
+    headers: {Authorization: `Bearer ${getArcGISToken()}`},
+  })
+    .then(res =&gt; res.blob())
+    .then(blob =&gt; {
+      imageTile.getImage().src = URL.createObjectURL(blob);
+    });
+});
+</code></pre>
+</li>
+</ul>
+<hr>
+<h2 id="6-决策指南：三维选型决策树">6. 决策指南：三维选型决策树</h2>
+<pre><code class="language-mermaid">flowchart TD
+    Start([ArcGIS MapServer 接入需求]) --&gt; HasCache{服务端是否已生成静态切片缓存?}
+    HasCache --&gt;|是 (Cached)| HighPerf[优先采用 XYZ / ImageTile + WebGLTile]
+    HasCache --&gt;|否 (Dynamic)| NeedDynamicFilter{业务是否需要动态图层/属性 SQL 过滤?}
+    NeedDynamicFilter --&gt;|是| CheckQuality{对注记品质与网络要求?}
+    NeedDynamicFilter --&gt;|否| BuildCache[建议管理员发布切片缓存]
+    CheckQuality --&gt;|要求文字绝对不被切断| UseImage[选用 ImageArcGISRest (单图视口出图)]
+    CheckQuality --&gt;|要求网络慢时渐进渲染| UseTile[选用 TileArcGISRest + extent 范围约束]
+</code></pre>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

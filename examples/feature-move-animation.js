@@ -355,6 +355,11 @@ fetch("data/polyline/route.json").then(function(response) {
 		let animating = false;
 		let distance = 0;
 		let lastTime;
+		/**
+		* Postrender animation loop: interpolate position and draw with VectorContext.
+		* 渲染后帧回调：基于时间差积分计算折线插值坐标，使用 VectorContext 瞬态绘制。
+		* @param {import("../src/ol/render/Event.js").default} event Render event.
+		*/
 		function moveFeature(event) {
 			const speed = Number(speedInput.value);
 			const time = event.frameState.time;
@@ -368,16 +373,24 @@ fetch("data/polyline/route.json").then(function(response) {
 			vectorContext.drawGeometry(position);
 			map.render();
 		}
+		/**
+		* Start animation: detach geometry from source and subscribe to postrender.
+		* 启动动画：临时将 geoMarker 几何置空以优化性能，挂载 postrender 监听。
+		*/
 		function startAnimation() {
 			animating = true;
 			lastTime = Date.now();
-			startButton.textContent = "Stop Animation";
+			startButton.textContent = "Stop Animation / 停止动画";
 			vectorLayer.on("postrender", moveFeature);
 			geoMarker.setGeometry(null);
 		}
+		/**
+		* Stop animation: restore geometry to source and unsubscribe from postrender.
+		* 停止动画：将最终位置赋回 geoMarker 并注销 postrender 监听。
+		*/
 		function stopAnimation() {
 			animating = false;
-			startButton.textContent = "Start Animation";
+			startButton.textContent = "Start Animation / 开始动画";
 			geoMarker.setGeometry(position);
 			vectorLayer.un("postrender", moveFeature);
 		}

@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-geojson-矢量数据体系与客户端渲染实战架构指南-geojson-vector-pipeline--client-side-architecture">OpenLayers GeoJSON 矢量数据体系与客户端渲染实战架构指南 (GeoJSON Vector Pipeline &amp; Client-Side Architecture)</h1>
+<blockquote>
+<p>本指南基于 OpenLayers 官方 <strong>geojson</strong> 专题的核心示例群，深度解构 RFC 7946 标准几何对象的反序列化生命周期，剖析非墨卡托投影（如 Equal Earth 等面积投影）下的动态中央子午线重算与反子午线几何切分算法，实战演示利用 <code>geojson-vt</code> 在浏览器端进行毫秒级动态矢量切片的架构设计，并系统梳理声明式扁平样式（Flat Style）、注记碰撞避让（Declutter）与启发式空间拾取的工程最佳实践。</p>
+</blockquote>
+<hr>
+<h2 id="一、geojson-客户端处理全景架构-architectural-overview">一、GeoJSON 客户端处理全景架构 (Architectural Overview)</h2>
+<p>在现代 WebGIS 前端架构中，GeoJSON 不仅仅是一种静态文件交换格式，更是连接服务端空间分析、前端动态渲染与高频交互的核心枢纽。整个流式管线涵盖数据解构、坐标转换、动态切片与 GPU 绘制四大阶段：</p>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph Ingestion[&quot;1. 数据接入与解析 (Data Ingestion &amp; Parsing)&quot;]
+        RawJSON[&quot;原始 GeoJSON 文本 / 对象 (RFC 7946 JSON)&quot;]
+        Parser[&quot;ol/format/GeoJSON 解析器&quot;]
+        RawJSON --&gt; Parser
+        Parser --&gt;|&quot;常规要素&quot;| StandardFeature[&quot;ol/Feature (带完整属性与事件驱动)&quot;]
+        Parser --&gt;|&quot;轻量化图元&quot;| RenderFeature[&quot;ol/render/Feature (紧凑平铺坐标数组，节省 70% 内存)&quot;]
+    end
+
+    subgraph GeometryEngine[&quot;2. 投影与几何变换 (Projection &amp; Topology Transform)&quot;]
+        ProjTrans[&quot;坐标投影变换 (dataProjection: EPSG:4326 -&gt; featureProjection)&quot;]
+        ClipAntimeridian[&quot;反子午线切分器 (clipPolygon: 解决 lon_0 ± 180° 撕裂拉丝)&quot;]
+        StandardFeature --&gt; ProjTrans
+        RenderFeature --&gt; ProjTrans
+        ProjTrans --&gt; ClipAntimeridian
+    end
+
+    subgraph TilingLayer[&quot;3. 客户端实时切片分发 (geojson-vt On-The-Fly Tiling)&quot;]
+        GeoJSONVT[&quot;geojson-vt 内存空间切片索引 (Tile Index)&quot;]
+        TileSource[&quot;VectorTileSource (TILE_PIXELS 归一化网格映射)&quot;]
+        ClipAntimeridian --&gt; GeoJSONVT
+        GeoJSONVT --&gt; TileSource
+    end
+
+    subgraph RenderPipeline[&quot;4. 渲染与避让管线 (Styling &amp; Decluttering)&quot;]
+        DeclutterTree[&quot;DeclutterTree 空间碰撞规避树&quot;]
+        CanvasOrWebGL[&quot;Canvas 2D / WebGL 矢量渲染管线&quot;]
+        TileSource --&gt; DeclutterTree
+        ClipAntimeridian --&gt; DeclutterTree
+        DeclutterTree --&gt; CanvasOrWebGL
+    end
+</code></pre>
+<hr>
+<h2 id="二、rfc-7946-规范与-openlayers-几何反序列化机制">二、RFC 7946 规范与 OpenLayers 几何反序列化机制</h2>
+<h3 id="1-标准-7-大几何类型与-openlayers-对应模型">1. 标准 7 大几何类型与 OpenLayers 对应模型</h3>
+<p>如 <a href="file:///d:/Users/Downloads/openlayers/examples/geojson.html"><code>examples/geojson.html</code></a> 所示，OpenLayers 的 <code>ol/format/GeoJSON</code> 原生完整映射了 OGC 简单要素规范中的所有几何拓扑：</p>
+<table>
+<thead>
+<tr>
+<th align="left">GeoJSON 几何类型</th>
+<th align="left">坐标数组维度</th>
+<th align="left">OpenLayers 几何类</th>
+<th align="left">典型空间语义</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Point</strong></td>
+<td align="left"><code>[x, y]</code></td>
+<td align="left"><code>ol/geom/Point</code></td>
+<td align="left">单个 POI 点、监测站、气象浮标</td>
+</tr>
+<tr>
+<td align="left"><strong>MultiPoint</strong></td>
+<td align="left"><code>[[x, y], ...]</code></td>
+<td align="left"><code>ol/geom/MultiPoint</code></td>
+<td align="left">离散岛屿群点、传感器点阵</td>
+</tr>
+<tr>
+<td align="left"><strong>LineString</strong></td>
+<td align="left"><code>[[x, y], ...]</code></td>
+<td align="left"><code>ol/geom/LineString</code></td>
+<td align="left">道路、河流、轨迹线段</td>
+</tr>
+<tr>
+<td align="left"><strong>MultiLineString</strong></td>
+<td align="left"><code>[[[x, y], ...], ...]</code></td>
+<td align="left"><code>ol/geom/MultiLineString</code></td>
+<td align="left">分叉管网、铁路网络</td>
+</tr>
+<tr>
+<td align="left"><strong>Polygon</strong></td>
+<td align="left"><code>[[[x, y], ...], ...]</code></td>
+<td align="left"><code>ol/geom/Polygon</code></td>
+<td align="left">单个行政区、地块（含外环与内孔洞）</td>
+</tr>
+<tr>
+<td align="left"><strong>MultiPolygon</strong></td>
+<td align="left"><code>[[[[x, y], ...], ...], ...]</code></td>
+<td align="left"><code>ol/geom/MultiPolygon</code></td>
+<td align="left">跨国领土、群岛国家、非连通保护区</td>
+</tr>
+<tr>
+<td align="left"><strong>GeometryCollection</strong></td>
+<td align="left">包含多种 geometries</td>
+<td align="left"><code>ol/geom/GeometryCollection</code></td>
+<td align="left">复杂复合资产包（如枢纽站场综合体）</td>
+</tr>
+<tr>
+<td align="left"><strong>Circle (扩展)</strong></td>
+<td align="left"><code>center, radius</code></td>
+<td align="left"><code>ol/geom/Circle</code></td>
+<td align="left"><strong>OpenLayers 特有扩展</strong>（数学解析圆）</td>
+</tr>
+</tbody></table>
+<h3 id="2-多态样式映射函数-polymorphic-style-dispatcher">2. 多态样式映射函数 (Polymorphic Style Dispatcher)</h3>
+<p>在同一个图层中混合存在多种几何类型时，无需创建多个图层，通过多态样式函数根据几何类型动态路由：</p>
+<pre><code class="language-javascript">const styles = {
+  &#39;Point&#39;: new Style({ image: pointMarker }),
+  &#39;LineString&#39;: new Style({ stroke: lineStroke }),
+  &#39;Polygon&#39;: new Style({ stroke: polyStroke, fill: polyFill }),
+  &#39;GeometryCollection&#39;: new Style({ stroke: gcStroke, fill: gcFill, image: gcPoint }),
+  &#39;Circle&#39;: new Style({ stroke: circleStroke, fill: circleFill }),
+};
+
+// 运行时根据要素几何类型分发对应样式
+const styleFunction = function (feature) {
+  return styles[feature.getGeometry().getType()];
+};
+</code></pre>
+<h3 id="3-renderfeature：数万图斑的轻量化提速利器">3. <code>RenderFeature</code>：数万图斑的轻量化提速利器</h3>
+<p>如 <a href="file:///d:/Users/Downloads/openlayers/examples/equal-earth-geojson.html"><code>examples/equal-earth-geojson.html</code></a> 所示，在只读展示海量多边形时，通过配置 <code>featureClass: RenderFeature</code>，大幅精简对象元数据：</p>
+<pre><code class="language-javascript">const vectorSource = new VectorSource({
+  features: new GeoJSON({
+    featureProjection: projection,
+    featureClass: RenderFeature, // 关键：生成轻量扁平图元，避免大内存开销
+  }).readFeatures(geojson),
+});
+</code></pre>
+<hr>
+<h2 id="三、浏览器端动态切片体系：geojson-vt-集成实战">三、浏览器端动态切片体系：<code>geojson-vt</code> 集成实战</h2>
+<p>当 GeoJSON 数据量达到数兆至数十兆（如全球生态区、全国县界线、全省建筑轮廓）时，传统方案直接加载整个 GeoJSON 会导致浏览器卡死在初始化阶段。</p>
+<p>如 <a href="file:///d:/Users/Downloads/openlayers/examples/geojson-vt.html"><code>examples/geojson-vt.html</code></a> 所示，Mapbox 开源的 <code>geojson-vt</code> 库能够在浏览器端构建动态切片索引，OpenLayers 通过将切片像素映射至虚拟坐标系，实现<strong>无需任何 GIS 服务器的零门槛即时矢量瓦片</strong>：</p>
+<pre><code class="language-mermaid">sequenceDiagram
+    autonumber
+    participant App as 应用程序 (Client)
+    participant VT as geojson-vt 索引树 (RAM)
+    participant Source as VectorTileSource
+    participant Layer as VectorTileLayer
+
+    App-&gt;&gt;VT: geojsonvt(geojsonData, {extent: 4096, debug: 1})
+    Note over VT: 毫秒级生成金字塔空间索引树 (R-Tree)
+    
+    Layer-&gt;&gt;Source: 视图漫游，请求切片 [z, x, y]
+    Source-&gt;&gt;Source: tileUrlFunction 生成缓存伪 URL (JSON.stringify(tileCoord))
+    Source-&gt;&gt;VT: tileIndex.getTile(z, x, y)
+    VT--&gt;&gt;Source: 返回局部像素几何 ({features, x, y, z})
+    Source-&gt;&gt;Source: format.readFeatures(tileGeoJSON, {extent, featureProjection})
+    Source-&gt;&gt;Layer: tile.setFeatures(features)
+    Layer-&gt;&gt;Layer: 渲染当前视口切片，超视口要素零开销
+</code></pre>
+<h3 id="核心实现要素：">核心实现要素：</h3>
+<ol>
+<li><strong><code>TILE_PIXELS</code> 虚拟投影声明</strong>：<pre><code class="language-javascript">const format = new GeoJSON({
+  dataProjection: new Projection({
+    code: &#39;TILE_PIXELS&#39;,
+    units: &#39;tile-pixels&#39;,
+    extent: [0, 0, 4096, 4096],
+  }),
+});
+</code></pre>
+</li>
+<li><strong>切片数据替换器（Replacer）</strong>：
+<code>geojson-vt</code> 内部为极致压缩，将类型编码为数字（1=点，2=线，3=面）。通过自定义 <code>replacer</code> 函数将其逆向还原为 GeoJSON 标准格式，无缝衔接 OpenLayers 的要素读取器。</li>
+</ol>
+<hr>
+<h2 id="四、动态中央子午线-equal-earth-投影与反子午线切分">四、动态中央子午线 Equal Earth 投影与反子午线切分</h2>
+<h3 id="1-equal-earth-投影数学定义与动态注册">1. Equal Earth 投影数学定义与动态注册</h3>
+<p>墨卡托投影在高纬度地区存在剧烈的面积形变。Equal Earth 等面积投影专为全球主题制图打造。如 <a href="file:///d:/Users/Downloads/openlayers/examples/equal-earth-geojson.html"><code>examples/equal-earth-geojson.html</code></a> 所示，为了在平移漫游时保持全球外包椭圆居中，代码按经度步长动态重构中央子午线：</p>
+<pre><code class="language-javascript">function dynEqualEarth(center, round = 15) {
+  const lon0 = Math.round(center[0] / round) * round;
+  const code = `EqualEarth${lon0}`;
+  let prj = getProjection(code);
+  if (!prj) {
+    proj4.defs(
+      code,
+      `+proj=eqearth +lon_0=${lon0} +x_0=0 +y_0=0 +R=6371008.7714 +units=m +no_defs +type=crs`,
+    );
+    register(proj4);
+    prj = getProjection(code);
+    prj.setGlobal(true);
+    prj.setExtent([-17243959.06, -8392927.6, 17243959.06, 8392927.6]);
+    prj.setWorldExtent([-180, -90, 180, 90]);
+  }
+  return prj;
+}
+</code></pre>
+<h3 id="2-反子午线（antimeridian）多边形撕裂与切分算法">2. 反子午线（Antimeridian）多边形撕裂与切分算法</h3>
+<p>在非圆柱连续投影中，当要素横跨 <code>lon_0 ± 180°</code> 切割边线时，屏幕两端的顶点连线会横切整个地图画面（产生贯穿东西的巨大撕裂多边形）。
+<code>clipPolygon</code> 函数在要素送入图层前进行了几何预处理：</p>
+<ol>
+<li>检测几何外包在经度方向是否越过 <code>minX = lon_0 - 180°</code> 或 <code>maxX = lon_0 + 180°</code>；</li>
+<li>将多边形转为 <code>MultiPolygon</code>，在切线处钳位（Clamp）坐标，并将超出部分平移 $\pm 360^\circ$；</li>
+<li>防御性过滤因坐标重合退化的简并图元，彻底杜绝渲染拉丝缺陷。</li>
+</ol>
+<hr>
+<h2 id="五、声明式样式表达式与标注避让体系-declutter-engine">五、声明式样式表达式与标注避让体系 (Declutter Engine)</h2>
+<h3 id="1-现代化声明式-flat-style-表达式">1. 现代化声明式 Flat Style 表达式</h3>
+<p>如 <a href="file:///d:/Users/Downloads/openlayers/examples/vector-layer.html"><code>examples/vector-layer.html</code></a> 所示，自 OpenLayers 7 起引入的扁平样式语法摆脱了繁冗的对象创建：</p>
+<pre><code class="language-javascript">const vectorLayer = new VectorLayer({
+  background: &#39;#1a2b39&#39;, // 无底图模式下的海洋底色
+  style: {
+    // 动态属性提取与默认颜色兜底
+    &#39;fill-color&#39;: [&#39;string&#39;, [&#39;get&#39;, &#39;COLOR&#39;], &#39;#eee&#39;],
+    // 多级空值防御函数：若 ECO_NAME 为空则回退至 &#39;unknown&#39;
+    &#39;text-value&#39;: [&#39;coalesce&#39;, [&#39;get&#39;, &#39;ECO_NAME&#39;], &#39;unknown&#39;],
+    &#39;text-font&#39;: &#39;bold 12px &quot;Open Sans&quot;, sans-serif&#39;,
+    &#39;text-fill-color&#39;: &#39;#333&#39;,
+    &#39;text-stroke-color&#39;: &#39;rgba(255,255,255,0.8)&#39;,
+    &#39;text-stroke-width&#39;: 2,
+    &#39;text-declutter-mode&#39;: &#39;declutter&#39;, // 标注避让模式
+  },
+  declutter: true, // 开启图层级碰撞检测
+});
+</code></pre>
+<h3 id="2-文本标注全维度控制工作台-olstyletext">2. 文本标注全维度控制工作台 (<code>ol/style/Text</code>)</h3>
+<p>如 <a href="file:///d:/Users/Downloads/openlayers/examples/vector-labels.html"><code>examples/vector-labels.html</code></a> 所示，OpenLayers 提供了完整的矢量注记控制参数矩阵：</p>
+<table>
+<thead>
+<tr>
+<th align="left">属性名称</th>
+<th align="left">参数类型 / 选项</th>
+<th align="left">核心功能与制图场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong><code>placement</code></strong></td>
+<td align="left"><code>&#39;point&#39;</code> | <code>&#39;line&#39;</code></td>
+<td align="left"><code>&#39;point&#39;</code> 锚定要素质心；<code>&#39;line&#39;</code> 计算线切线斜率使文字紧贴线段蜿蜒排列</td>
+</tr>
+<tr>
+<td align="left"><strong><code>maxAngle</code></strong></td>
+<td align="left">弧度（如 $\pi/4 \approx 45^\circ$）</td>
+<td align="left">沿线排版时允许的最大线段弯折角，超过阈值自动抑制标注，防止字形重叠扭曲</td>
+</tr>
+<tr>
+<td align="left"><strong><code>overflow</code></strong></td>
+<td align="left"><code>boolean</code></td>
+<td align="left">是否允许标注文字长度超出其实际线段物理长度（河流/道路必配）</td>
+</tr>
+<tr>
+<td align="left"><strong><code>declutterMode</code></strong></td>
+<td align="left"><code>&#39;declutter&#39;</code> | <code>&#39;obstacle&#39;</code> | <code>&#39;none&#39;</code></td>
+<td align="left">参与碰撞避让、仅充当避让障碍物或强制穿透渲染</td>
+</tr>
+<tr>
+<td align="left"><strong><code>textAlign</code></strong></td>
+<td align="left"><code>&#39;left&#39;</code> | <code>&#39;center&#39;</code> | <code>&#39;right&#39;</code> | <code>&#39;start&#39;</code> | <code>&#39;end&#39;</code></td>
+<td align="left">文字水平锚点基准</td>
+</tr>
+<tr>
+<td align="left"><strong><code>textBaseline</code></strong></td>
+<td align="left"><code>&#39;top&#39;</code> | <code>&#39;middle&#39;</code> | <code>&#39;bottom&#39;</code> | <code>&#39;alphabetic&#39;</code></td>
+<td align="left">文字垂直对齐基准（西文排版推荐 <code>&#39;alphabetic&#39;</code>，中文推荐 <code>&#39;middle&#39;</code>）</td>
+</tr>
+<tr>
+<td align="left"><strong><code>stroke</code></strong></td>
+<td align="left"><code>Stroke({color, width})</code></td>
+<td align="left">文字光晕描边（Text Halo），在复杂多色底图上提供高对比度防护罩</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="六、矢量要素拾取检测性能对比与架构权衡">六、矢量要素拾取检测性能对比与架构权衡</h2>
+<p>在富交互地图中，光标悬停与点击拾取是最高频的用户操作。<a href="file:///d:/Users/Downloads/openlayers/examples/hitdetect-vector.html"><code>examples/hitdetect-vector.html</code></a> 揭示了图层级与地图级两种不同检测路径的底层机制差异：</p>
+<pre><code class="language-mermaid">graph LR
+    subgraph LayerLevel[&quot;图层级拾取: vectorLayer.getFeatures(pixel)&quot;]
+        direction TB
+        L1[&quot;用户触发 pointermove (60 FPS)&quot;] --&gt; L2[&quot;空间索引 R-Tree 粗筛&quot;]
+        L2 --&gt; L3[&quot;快速几何包络盒距离估算&quot;]
+        L3 --&gt; L4[&quot;异步 Promise: 返回顶层单一要素 [feature]&quot;]
+        L4 --&gt; L5[&quot;耗时: &lt; 0.5ms，不掉帧&quot;]
+    end
+
+    subgraph MapLevel[&quot;地图级拾取: map.forEachFeatureAtPixel(pixel)&quot;]
+        direction TB
+        M1[&quot;用户触发 click (离散低频)&quot;] --&gt; M2[&quot;准备离屏 Canvas 缓冲区&quot;]
+        M2 --&gt; M3[&quot;逐图层像素重绘并回读 getImageData&quot;]
+        M3 --&gt; M4[&quot;同步回调: 遍历所有图层的全部重叠要素&quot;]
+        M4 --&gt; M5[&quot;耗时: 5 ~ 20ms，像素级精准&quot;]
+    end
+</code></pre>
+<h3 id="生产级高亮架构模式-feature-overlay-pattern：">生产级高亮架构模式 (Feature Overlay Pattern)：</h3>
+<p>为了防止悬停时频繁调用 <code>feature.setStyle()</code> 触发主图层全量重新编译，推荐始终挂载一个独立的 <code>featureOverlay</code>：</p>
+<pre><code class="language-javascript">const featureOverlay = new VectorLayer({
+  source: new VectorSource(),
+  map: map,
+  style: {
+    &#39;stroke-color&#39;: &#39;rgba(255, 255, 255, 0.7)&#39;,
+    &#39;stroke-width&#39;: 2,
+  },
+});
+
+// 悬停命中时仅向 overlaySource 添加，主矢量图层保持只读纯净
+if (feature) {
+  featureOverlay.getSource().addFeature(feature);
+}
+</code></pre>
+<hr>
+<h2 id="七、geojson-专题核心示例索引-examples-reference">七、GeoJSON 专题核心示例索引 (Examples Reference)</h2>
+<table>
+<thead>
+<tr>
+<th align="left">示例文件</th>
+<th align="left">核心技术点</th>
+<th align="left">关键类与模块</th>
+<th align="left">适用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/geojson.html"><code>geojson.html</code></a></td>
+<td align="left">OGC 7 大标准几何类型与解析圆样式映射</td>
+<td align="left"><code>ol/format/GeoJSON</code>, <code>ol/geom/*</code></td>
+<td align="left">格式规范合规性校验、多几何图元混合展示</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/equal-earth-geojson.html"><code>equal-earth-geojson.html</code></a></td>
+<td align="left">动态中央子午线 Equal Earth 投影与多边形裁剪</td>
+<td align="left"><code>dynEqualEarth</code>, <code>clipPolygon</code>, <code>RenderFeature</code></td>
+<td align="left">全球等面积科学制图、反子午线飞线缺陷修复</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/geojson-vt.html"><code>geojson-vt.html</code></a></td>
+<td align="left">浏览器端内存切片与矢量瓦片源映射</td>
+<td align="left"><code>geojson-vt</code>, <code>VectorTileSource</code>, <code>TILE_PIXELS</code></td>
+<td align="left">客户端零服务渲染数十兆海量多边形数据</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/hitdetect-vector.html"><code>hitdetect-vector.html</code></a></td>
+<td align="left">高性能启发式图层拾取与悬停覆盖层</td>
+<td align="left"><code>vectorLayer.getFeatures()</code>, <code>featureOverlay</code></td>
+<td align="left">高频鼠标漫游探测、60 FPS 流畅悬停反馈</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/vector-layer.html"><code>vector-layer.html</code></a></td>
+<td align="left">声明式 AST 样式表达式与文字碰撞避让</td>
+<td align="left"><code>VectorLayer.declutter</code>, <code>[&#39;coalesce&#39;, ...]</code></td>
+<td align="left">现代化前后端分离制图、无底图纯专题图</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/vector-labels.html"><code>vector-labels.html</code></a></td>
+<td align="left">点线面注记排版全维度交互工作台</td>
+<td align="left"><code>ol/style/Text</code>, <code>placement: &#39;line&#39;</code>, <code>wrap</code></td>
+<td align="left">道路沿线文字蜿蜒排版、复杂字体注记排印</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/style-renderer.html"><code>style-renderer.html</code></a></td>
+<td align="left">Canvas 2D 绘图上下文自定义剪裁贴图</td>
+<td align="left"><code>Style.renderer</code>, <code>toContext</code>, <code>context.clip()</code></td>
+<td align="left">国旗填充多边形、特殊纹理贴图与动画渲染</td>
+</tr>
+</tbody></table>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

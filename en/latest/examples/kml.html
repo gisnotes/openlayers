@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>KML</title>
+    <title>KML / KML 矢量图层加载与要素拾取 (KML Data)</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">KML</h4>
+        <h4 id="title">KML / KML 矢量图层加载与要素拾取 (KML Data)</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -81,7 +81,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-earthquakes.html&quot;&gt;Earthquakes in KML / KML 地震点位符号化与悬浮提示框（Tooltip）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./kml.html&quot;&gt;KML&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./kml.html&quot;&gt;KML / KML 矢量图层加载与要素拾取 (KML Data)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml-timezones.html&quot;&gt;Timezones in KML / KML 全球时区渲染与昼夜光照动态样式&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
@@ -97,31 +97,31 @@
               data-title="maptiler"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom / 视图缩放级别区间约束（minZoom 与 maxZoom）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop.html&quot;&gt;Drag-and-Drop / 拖拽加载文件&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector / 矢量图像图层拖拽加载&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen.html&quot;&gt;Full Screen Control&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./gpx.html&quot;&gt;GPX Data&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-filter.html&quot;&gt;Image Filters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./kml.html&quot;&gt;KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-spy.html&quot;&gt;Layer Spy&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./magnify.html&quot;&gt;Magnify&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen.html&quot;&gt;Full Screen Control / 全屏显示控件 (FullScreen)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom / 全屏联动拖拽旋转与复合缩放&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./gpx.html&quot;&gt;GPX Data / GPX 户外轨迹数据解析与多几何类型着色 (GPX Data)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-filter.html&quot;&gt;Image Filters / 图像滤镜&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./kml.html&quot;&gt;KML / KML 矢量图层加载与要素拾取 (KML Data)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-spy.html&quot;&gt;Layer Spy / 图层探照灯（透镜探查）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe / 图层卷帘对比&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./magnify.html&quot;&gt;Magnify / 局部放大镜（像素插值放大）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./side-by-side.html&quot;&gt;Shared Views&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing / 种子点区域生长与交互式影像分割&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection by Code / 坐标系搜索与栅格动态重投影 (Reprojection by Code)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./side-by-side.html&quot;&gt;Shared Views / 共享视图多屏联动 (Shared Views)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels / 沿线道路注记（线型文本跟随）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-style.html&quot;&gt;Vector tiles created from a Mapbox Style object / 使用 Mapbox 样式对象创建矢量切片地图&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-4326.html&quot;&gt;Vector tiles in EPSG:4326&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-retina.html&quot;&gt;XYZ Retina Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-4326.html&quot;&gt;Vector tiles in EPSG:4326 / EPSG:4326 坐标系矢量切片&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature / WFS 空间矢量要素过滤查询与叠加&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS / GeoServer WFS 视口 BBOX 动态要素加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates / 地理坐标系下的 WFS 瓦片化加载与 useGeographic&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-retina.html&quot;&gt;XYZ Retina Tiles / XYZ 视网膜高清切片 (@2x)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >26</a>
@@ -149,8 +149,34 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Rendering KML with a vector source.</p>
-        <div id="docs"><p>This example uses the <code>ol/format/KML</code> to parse KML for rendering with a vector source.</p>
+        <p id="shortdesc">Rendering KML with a vector source. / 演示使用 ol/format/KML 解析 Keyhole Markup Language (KML) 文件并通过矢量图层渲染与鼠标悬停信息提示。</p>
+        <div id="docs"><p>
+  This example uses the <code>ol/format/KML</code> to parse KML for rendering with a vector source.
+</p> <p>
+  此示例演示了如何使用 <code>ol/format/KML</code> 解析器加载并渲染 Google Earth 标准的 KML（Keyhole 标记语言）矢量文件。
+  将鼠标悬停在地图上的要素上时，通过 <code>map.forEachFeatureAtPixel()</code> 像素拾取算法，可在下方实时展示对应要素的名称属性（<code>name</code>）。
+</p> <hr> <h3>📚 学习记录与技术深度解读</h3>
+<h4>1. 核心架构与设计思想</h4> <ul>
+  <li><strong>KML (Keyhole Markup Language) 协议与解析管线：</strong>
+    KML 是一种基于 XML 语法的 OGC 开放地理标记语言，广泛应用于 Google Earth 与航拍无人机航线规划。
+    <code>ol/format/KML</code> 内部集成了标准 DOMParser，能够高效解析 <code>&lt;Placemark&gt;</code>、<code>&lt;LineString&gt;</code>、<code>&lt;Polygon&gt;</code> 等空间节点，并支持自动抽取 KML 内嵌的色彩描边样式（<code>&lt;Style&gt;</code> 与 <code>&lt;StyleMap&gt;</code>）。
+  </li>
+  <li><strong>地理坐标到投影平面的透明映射：</strong>
+    依据 OGC 规范，KML 文件内部的坐标必须且只能是 WGS84 经纬度（EPSG:4326）。
+    当在 <code>VectorSource</code> 中注入 <code>new KML()</code> 时，OpenLayers 内部在解析要素的同时自动将经纬度转换为目标视图投影（EPSG:3857），开发者无需手动编写遍历转换逻辑。
+  </li>
+</ul>
+<h4>2. 源码与关键 API 剖析</h4> <ul>
+  <li><code>new VectorSource({ url: '...', format: new KML() })</code>：声明异步加载并解析 KML 文件。</li>
+  <li><code>map.forEachFeatureAtPixel(pixel, callback)</code>：基于离屏命中检测（Hit-Detection）Canvas 快速检索光标下的要素集合。</li>
+  <li><code>map.getTargetElement().style.cursor = 'pointer'</code>：交互状态反馈。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优</h4> <ul>
+  <li><strong>样式提取与 GC 内存开销：</strong>
+    KML 解析器默认 <code>extractStyles: true</code>。若 KML 包含上万个独立样式节点，会导致创建上万个 <code>ol/style/Style</code> 实例引发内存飙升。
+    生产中若不需要内嵌样式，建议显式设置 <code>new KML({ extractStyles: false })</code> 并通过统一的图层 <code>style</code> 函数进行批量渲染。
+  </li>
+</ul>
 </div>
       </div>
 
@@ -165,11 +191,15 @@ import VectorLayer from &#x27;ol/layer/Vector.js&#x27;;
 import ImageTile from &#x27;ol/source/ImageTile.js&#x27;;
 import VectorSource from &#x27;ol/source/Vector.js&#x27;;
 
+// MapTiler API Key and attribution notices
+// MapTiler API 访问密钥与版权信息
 const key &#x3D; &#x27;Get your own API key at https://www.maptiler.com/cloud/&#x27;;
 const attributions &#x3D;
   &#x27;&lt;a href&#x3D;&quot;https://www.maptiler.com/copyright/&quot; target&#x3D;&quot;_blank&quot;&gt;&amp;copy; MapTiler&lt;/a&gt; &#x27; +
   &#x27;&lt;a href&#x3D;&quot;https://www.openstreetmap.org/copyright&quot; target&#x3D;&quot;_blank&quot;&gt;&amp;copy; OpenStreetMap contributors&lt;/a&gt;&#x27;;
 
+// Base raster imagery tile layer
+// 底层高分辨率卫星影像瓦片图层
 const raster &#x3D; new TileLayer({
   source: new ImageTile({
     attributions: attributions,
@@ -179,6 +209,8 @@ const raster &#x3D; new TileLayer({
   }),
 });
 
+// Vector layer loading and parsing KML data
+// 加载并解析 KML 空间数据的矢量图层
 const vector &#x3D; new VectorLayer({
   source: new VectorSource({
     url: &#x27;data/kml/2012-02-10.kml&#x27;,
@@ -186,6 +218,8 @@ const vector &#x3D; new VectorLayer({
   }),
 });
 
+// Initialize map with imagery raster and KML vector layers
+// 初始化地图并加载遥感底图与 KML 矢量图层
 const map &#x3D; new Map({
   layers: [raster, vector],
   target: document.getElementById(&#x27;map&#x27;),
@@ -196,6 +230,8 @@ const map &#x3D; new Map({
   }),
 });
 
+// Inspect and display feature name at the given screen pixel
+// 拾取并展示指定屏幕像素位置处的要素名称属性
 const displayFeatureInfo &#x3D; function (pixel) {
   const features &#x3D; [];
   map.forEachFeatureAtPixel(pixel, function (feature) {
@@ -215,6 +251,8 @@ const displayFeatureInfo &#x3D; function (pixel) {
   }
 };
 
+// Bind pointermove listener for hover inspection
+// 监听鼠标移动事件，动态高亮拾取要素
 map.on(&#x27;pointermove&#x27;, function (evt) {
   if (evt.dragging) {
     return;
@@ -222,6 +260,8 @@ map.on(&#x27;pointermove&#x27;, function (evt) {
   displayFeatureInfo(evt.pixel);
 });
 
+// Bind click listener for click selection
+// 监听点击事件，同步更新要素信息
 map.on(&#x27;click&#x27;, function (evt) {
   displayFeatureInfo(evt.pixel);
 });
@@ -236,7 +276,7 @@ map.on(&#x27;click&#x27;, function (evt) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;KML&lt;/title&gt;
+    &lt;title&gt;KML / KML 矢量图层加载与要素拾取 (KML Data)&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

@@ -110,6 +110,7 @@ var client = new XMLHttpRequest();
 client.open("GET", "data/geolocation-orientation.json");
 /**
 * Handle data loading.
+* 解析模拟轨迹 JSON 数据
 */
 client.onload = function() {
 	simulationData = JSON.parse(client.responseText).data;

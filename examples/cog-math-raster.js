@@ -127,9 +127,8 @@ var ndviStops = [
 	]
 ];
 /**
-* Map a value to an `[r, g, b, a]` color using a ramp of `value, [r, g, b]`
-* stops.  Provided to the operation with the `lib` option so it is available in
-* the worker.
+* Map a value to an `[r, g, b, a]` color using a ramp of `value, [r, g, b]` stops.
+* 将数值通过 `[value, [r, g, b]]` 梯度插值为 `[r, g, b, a]` 颜色。
 * @param {number} value The value to map.
 * @param {Array<number|Array<number>>} stops Flat `value, color` ramp stops.
 * @return {Array<number>} The `[r, g, b, a]` color.
@@ -167,9 +166,9 @@ function colorFromRamp(value, stops) {
 }
 /**
 * Compute NDVI from the two input bands and map it through the color ramp.
-* @param {Array<Array<number>>} pixels One pixel per input source; the first
-*     (and only) input carries the red and near-infrared bands.
-* @param {Object} data The object populated in the "beforeoperations" event.
+* 从两个输入波段中计算 NDVI 并通过色带映射出颜色。
+* @param {Array<Array<number>>} pixels One pixel per input source / 每个输入源的一个像素
+* @param {Object} data The object populated in the "beforeoperations" event / 在 beforeoperations 中注入的数据
 * @return {Array<number>} An `[r, g, b, a]` pixel.
 */
 function ndviToColor(pixels, data) {

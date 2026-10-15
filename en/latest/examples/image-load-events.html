@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Image Load Events</title>
+    <title>Image Load Events / 单张图像加载事件与进度指示</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Image Load Events</h4>
+        <h4 id="title">Image Load Events / 单张图像加载事件与进度指示</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -76,12 +76,12 @@
               data-title="image"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector / 矢量图像图层拖拽加载&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./arcgis-image.html&quot;&gt;Image ArcGIS MapServer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./image-load-events.html&quot;&gt;Image Load Events&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-wms.html&quot;&gt;MapServer WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image.html&quot;&gt;Single Image WMS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./arcgis-image.html&quot;&gt;Image ArcGIS MapServer / ArcGIS 动态图像服务（ImageArcGISRest）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./image-load-events.html&quot;&gt;Image Load Events / 单张图像加载事件与进度指示&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-wms.html&quot;&gt;MapServer WMS / MapServer WMS 服务集成与高清屏优化&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image.html&quot;&gt;Single Image WMS / 单图像动态 WMS 服务&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-vector-layer.html&quot;&gt;Vector Image Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-svg.html&quot;&gt;WMS loader with SVG format&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-svg.html&quot;&gt;WMS loader with SVG format / 采用 SVG 矢量格式的 WMS 加载器&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;单幅静态图像客户端重投影 (Image Reprojection)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
@@ -96,9 +96,9 @@
               data-bs-target="#tag-example-list"
               data-title="events"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./image-load-events.html&quot;&gt;Image Load Events&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./load-events.html&quot;&gt;Loading Spinner&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tile-load-events.html&quot;&gt;Tile Load Events&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./image-load-events.html&quot;&gt;Image Load Events / 单张图像加载事件与进度指示&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./load-events.html&quot;&gt;Loading Spinner / 地图加载微动效旋转器&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tile-load-events.html&quot;&gt;Tile Load Events / 瓦片加载事件与精细进度监控&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -112,14 +112,14 @@
               data-bs-target="#tag-example-list"
               data-title="loading"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri.html&quot;&gt;ArcGIS REST Feature Service / ArcGIS REST 矢量要素服务瓦片化动态加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-esri-edit.html&quot;&gt;Editable ArcGIS REST Feature Service / 可编辑的 ArcGIS REST 要素服务&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./image-load-events.html&quot;&gt;Image Load Events&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./load-events.html&quot;&gt;Loading Spinner&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tile-load-events.html&quot;&gt;Tile Load Events&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./image-load-events.html&quot;&gt;Image Load Events / 单张图像加载事件与进度指示&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./load-events.html&quot;&gt;Loading Spinner / 地图加载微动效旋转器&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tile-load-events.html&quot;&gt;Tile Load Events / 瓦片加载事件与精细进度监控&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS / GeoServer WFS 视口 BBOX 动态要素加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates / 地理坐标系下的 WFS 瓦片化加载与 useGeographic&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >8</a>
@@ -149,8 +149,39 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example using image load events.</p>
-        <div id="docs"><p>Image sources fire events related to image loading.  You can listen for <code>imageloadstart</code>, <code>imageloadend</code>, and <code>imageloaderror</code> type events to monitor image loading progress.  This example registers listeners for these events and renders an image loading progress bar at the bottom of the map. The progress bar is shown and hidden according to the map&#39;s <code>loadstart</code> and <code>loadend</code> events.</p>
+        <p id="shortdesc">Example using image load events. / 演示如何监听单张图像（ImageWMS）数据源的加载生命周期事件并渲染动态进度条。</p>
+        <div id="docs"><h2>Image sources fire events related to image loading.  You can listen for <code>imageloadstart</code>, <code>imageloadend</code>, and <code>imageloaderror</code> type events to monitor image loading progress.  This example registers listeners for these events and renders an image loading progress bar at the bottom of the map. The progress bar is shown and hidden according to the map&#39;s <code>loadstart</code> and <code>loadend</code> events.
+图像数据源（如 ImageWMS、ImageStatic）在图像请求与解析期间会触发细粒度生命周期事件。你可以通过监听 <code>imageloadstart</code>、<code>imageloadend</code> 和 <code>imageloaderror</code> 事件实时掌握图像资源的传输与就绪状态。
+本示例演示了如何通过封装一个轻量级进度条组件，监听数据源的加载状态变更进度条宽度，并结合地图实例级别的 <code>loadstart</code> 与 <code>loadend</code> 事件控制进度条的整体显隐，呈现优雅流畅的加载反馈动效。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计机制 (Core Architecture &amp; Mechanics) - <strong>单张图像与瓦片加载生命周期的差异</strong>：</h4>
+<p>  瓦片数据源（TileSource）一次视口变更是由数十个切片并发请求组成的，而单张图像数据源（ImageSource，如 <code>ImageWMS</code>、<code>ImageStatic</code> 等）在每次平移或缩放停顿后向服务端请求单张覆盖当前视口 BBOX 的大幅面光栅图。</p>
+<ul>
+<li><strong>双层生命周期协同管道</strong>：<ul>
+<li><strong>Map 容器层</strong>：<code>loadstart</code> 与 <code>loadend</code> 标志着地图视口渲染任务的开始与结束（包括所有图层的所有渲染队列），常用于全局蒙版、骨架屏或顶层指示器的显示与隐藏。</li>
+<li><strong>Source 数据源层</strong>：<code>imageloadstart</code> 标志着底层创建图像请求并向网络发起调用；<code>imageloadend</code> 标志着图像二进制完全下载并解码完毕；<code>imageloaderror</code> 则在 4xx/5xx 或跨域 CORS 拦截时触发，避免 UI 卡死在 Loading 状态。</li>
+</ul>
+</li>
+</ul>
+<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns) - <strong>加载计数器模型（Progress Counter）</strong>：</h4>
+<pre><code class="language-javascript">source.on(&#39;imageloadstart&#39;, function () {
+  progress.addLoading(); // loading 计数递增并更新百分比宽度
+});
+source.on([&#39;imageloadend&#39;, &#39;imageloaderror&#39;], function () {
+  progress.addLoaded();  // loaded 计数递增，完成或失败均推进进度
+});
+</code></pre>
+<p>  即使发生网络异常（<code>imageloaderror</code>），也必须将其归入 <code>addLoaded()</code> 计算，确保进度条能平稳闭合至 100% 并淡出，杜绝死锁。</p>
+<ul>
+<li><strong>淡出延迟与重置</strong>：
+在 <code>loadend</code> 事件触发后，通过 <code>setTimeout(..., 250)</code> 延迟隐藏 DOM，让用户肉眼捕捉到 100% 满格反馈，随后重置宽度为 <code>0px</code>，优化人机交互微动效。</li>
+</ul>
+<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices) - <strong>防抖与高频视口拖拽丢弃</strong>：</h4>
+<p>  用户连续拖拽或滚轮极速缩放时，OpenLayers 会自动中断上一帧废弃的 WMS 图片请求（通过重设 <code>img.src = &#39;&#39;</code> 或取消挂载）。因此在生产环境中，若手动管理加载锁，必须确保每个 <code>imageloadstart</code> 对应的实例都能正确闭合，推荐使用计数器差值比或 WeakMap 关联。</p>
+<ul>
+<li><strong>CORS 跨域像素读取污染</strong>：
+若后续需要在 Canvas 中对图像执行像素分析（如 <code>forEachLayerAtPixel</code> 或 WebGL 滤镜），<code>ImageWMS</code> 需显式配置 <code>crossOrigin: &#39;anonymous&#39;</code>，否则图片虽然能正常显示，但 Canvas 会被“污染（tainted）”从而抛出安全异常。</li>
+</ul>
 </div>
       </div>
 
@@ -163,8 +194,8 @@ import ImageLayer from &#x27;ol/layer/Image.js&#x27;;
 import ImageWMS from &#x27;ol/source/ImageWMS.js&#x27;;
 
 /**
- * Renders a progress bar.
- * @param {HTMLElement} el The target element.
+ * Renders a progress bar. / 渲染并管理进度条状态的组件类
+ * @param {HTMLElement} el The target element. / 目标 DOM 容器元素
  * @class
  */
 function Progress(el) {
@@ -174,7 +205,7 @@ function Progress(el) {
 }
 
 /**
- * Increment the count of loading tiles.
+ * Increment the count of loading tiles. / 递增加载中计数
  */
 Progress.prototype.addLoading &#x3D; function () {
   ++this.loading;
@@ -182,7 +213,7 @@ Progress.prototype.addLoading &#x3D; function () {
 };
 
 /**
- * Increment the count of loaded tiles.
+ * Increment the count of loaded tiles. / 递增已完成（成功或失败）计数
  */
 Progress.prototype.addLoaded &#x3D; function () {
   ++this.loaded;
@@ -190,7 +221,7 @@ Progress.prototype.addLoaded &#x3D; function () {
 };
 
 /**
- * Update the progress bar.
+ * Update the progress bar. / 更新进度条 DOM 宽度百分比
  */
 Progress.prototype.update &#x3D; function () {
   const width &#x3D; ((this.loaded / this.loading) * 100).toFixed(1) + &#x27;%&#x27;;
@@ -198,14 +229,14 @@ Progress.prototype.update &#x3D; function () {
 };
 
 /**
- * Show the progress bar.
+ * Show the progress bar. / 显示进度条
  */
 Progress.prototype.show &#x3D; function () {
   this.el.style.visibility &#x3D; &#x27;visible&#x27;;
 };
 
 /**
- * Hide the progress bar.
+ * Hide the progress bar. / 隐藏并重置进度条
  */
 Progress.prototype.hide &#x3D; function () {
   const style &#x3D; this.el.style;
@@ -215,21 +246,26 @@ Progress.prototype.hide &#x3D; function () {
   }, 250);
 };
 
+// Initialize progress bar instance / 实例化进度条组件
 const progress &#x3D; new Progress(document.getElementById(&#x27;progress&#x27;));
 
+// Configure ImageWMS source / 配置单张图像 WMS 数据源
 const source &#x3D; new ImageWMS({
   url: &#x27;https://ahocevar.com/geoserver/wms&#x27;,
   params: {&#x27;LAYERS&#x27;: &#x27;topp:states&#x27;},
   serverType: &#x27;geoserver&#x27;,
 });
 
+// Listen for image load start / 监听单张图像开始请求
 source.on(&#x27;imageloadstart&#x27;, function () {
   progress.addLoading();
 });
+// Listen for image load completion or error / 监听单张图像加载结束或异常
 source.on([&#x27;imageloadend&#x27;, &#x27;imageloaderror&#x27;], function () {
   progress.addLoaded();
 });
 
+// Initialize map with single-image WMS layer / 初始化包含单张图像图层的地图实例
 const map &#x3D; new Map({
   layers: [new ImageLayer({source: source})],
   target: &#x27;map&#x27;,
@@ -239,6 +275,7 @@ const map &#x3D; new Map({
   }),
 });
 
+// Toggle progress bar visibility based on map load events / 结合地图视口级别加载事件控制进度条显隐
 map.on(&#x27;loadstart&#x27;, function () {
   progress.show();
 });
@@ -256,7 +293,7 @@ map.on(&#x27;loadend&#x27;, function () {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Image Load Events&lt;/title&gt;
+    &lt;title&gt;Image Load Events / 单张图像加载事件与进度指示&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

@@ -81,8 +81,8 @@ function updateStatusText() {
 }
 var pointsLayer = new WebGLVectorLayer({
 	variables: {
-		minYear: parseInt(minYearInput.value),
-		maxYear: parseInt(maxYearInput.value)
+		minYear: parseInt(minYearInput.value, 10),
+		maxYear: parseInt(maxYearInput.value, 10)
 	},
 	style: [{
 		style,
@@ -97,11 +97,11 @@ var pointsLayer = new WebGLVectorLayer({
 	disableHitDetection: true
 });
 minYearInput.addEventListener("input", function() {
-	pointsLayer.updateStyleVariables({ minYear: parseInt(minYearInput.value) });
+	pointsLayer.updateStyleVariables({ minYear: parseInt(minYearInput.value, 10) });
 	updateStatusText();
 });
 maxYearInput.addEventListener("input", function() {
-	pointsLayer.updateStyleVariables({ maxYear: parseInt(maxYearInput.value) });
+	pointsLayer.updateStyleVariables({ maxYear: parseInt(maxYearInput.value, 10) });
 	updateStatusText();
 });
 updateStatusText();
@@ -119,7 +119,7 @@ client.onload = function() {
 		if (isNaN(coords[0]) || isNaN(coords[1])) continue;
 		features.push(new Feature({
 			mass: parseFloat(line[1]) || 0,
-			year: parseInt(line[2]) || 0,
+			year: parseInt(line[2], 10) || 0,
 			geometry: new Point(coords)
 		}));
 	}

@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-图层堆叠管理、透明度混合、层级深度与分辨率阈值控制实战架构指南">OpenLayers 图层堆叠管理、透明度混合、层级深度与分辨率阈值控制实战架构指南</h1>
+<blockquote>
+<p>在现代复杂的企业级 WebGIS 平台中，地图视口往往需要承载数十甚至上百个专题图层（包括遥感卫星影像、电子导航底图、行政区划网格面、路网轨迹线、动态热力图以及实时标绘要素）。面对如此繁杂的图层树，如何保障渲染的高性能与视觉呈现的清晰可辨？</p>
+<ol>
+<li><strong>多图层 Alpha 混合与透明度控制（Layer Opacity）</strong>：如何通过硬件加速的片元着色器或 Canvas 全局合成，实现多时相/多源切片的高平滑度半透明透视融合？</li>
+<li><strong>堆叠深度与托管/非托管图层特权机制（Z-Index &amp; Managed/Unmanaged Layers）</strong>：OpenLayers 内部如何对图层进行层级排序？为什么 <code>layer.setMap(map)</code> 挂载的非托管图层能够始终常驻在所有托管图层的最顶层？</li>
+<li><strong>多尺度金字塔与分辨率区间门控（Min/Max Resolution）</strong>：如何利用 $\text{minResolution} \le \text{res} &lt; \text{maxResolution}$ 这一半开区间门控准则，从根源上阻断屏幕外图层的瓦片网络拉取与绘制开销？</li>
+<li><strong>图层外壳与数据引擎解耦的懒加载架构（Lazy Source）</strong>：面对庞大的图层目录树，如何实现按需即时挂载（<code>setSource</code>）并在关闭时彻底释放海量切片强引用，辅助浏览器垃圾回收（GC）？</li>
+</ol>
+<p>本文基于 4 个核心官方示例（<code>layer-opacity.html</code>、<code>layer-z-index.html</code>、<code>min-max-resolution.html</code>、<code>lazy-source.html</code>），全方位解构 OpenLayers 图层生命周期、混合管线与堆叠排序的底层机制。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：图层管线合成与四维控制矩阵">1. 架构总览：图层管线合成与四维控制矩阵</h2>
+<p>OpenLayers 对每一个图层（<code>ol/layer/Layer</code>）的生命周期与渲染调度，抽象出了由 <strong>透明度（Opacity）、层级深度（Z-Index）、空间分辨率区间（Resolution Range）和数据源挂载状态（Source State）</strong> 构成的四维控制矩阵：</p>
+<pre><code class="language-mermaid">graph TD
+    subgraph MapPipeline[&quot;地图渲染主管线 (ol/Map / LayerGroup)&quot;]
+        ResGate{&quot;分辨率门控检查&lt;br/&gt;minRes &amp;le; currentRes &lt; maxRes ?&quot;}
+        SourceGate{&quot;数据源挂载检查&lt;br/&gt;layer.getSource() !== null ?&quot;}
+        ZSort[&quot;Z-Index 升序排序管线&lt;br/&gt;1. layer.getZIndex()&lt;br/&gt;2. 数组插入先后顺序&quot;]
+    end
+
+    subgraph LayerTypes[&quot;图层管理分类&quot;]
+        Managed[&quot;受控托管图层 (Managed Layers)&lt;br/&gt;放入 map.getLayers() 集合&lt;br/&gt;由 LayerGroup 统一纳管&quot;]
+        Unmanaged[&quot;独立非托管图层 (Unmanaged Layers)&lt;br/&gt;通过 layer.setMap(map) 挂载&lt;br/&gt;脱离排序，强制置顶绘制&quot;]
+    end
+
+    subgraph RenderComposite[&quot;合成与像素输出&quot;]
+        AlphaBlend[&quot;Alpha 混合器 (layer.setOpacity)&lt;br/&gt;WebGL 片元着色器 Uniform / Canvas globalAlpha&quot;]
+        ScreenOutput[&quot;屏幕最终画布 (60FPS Frame)&quot;]
+    end
+
+    Managed --&gt; ZSort
+    ZSort --&gt; ResGate
+    ResGate --&gt;|超出区间: 跳过绘制与网络请求| Skip[&quot;跳过 (零消耗)&quot;]
+    ResGate --&gt;|满足区间| SourceGate
+    SourceGate --&gt;|无 Source: 静默| Skip
+    SourceGate --&gt;|数据就绪| AlphaBlend
+    
+    Unmanaged --&gt;|绕过普通排序，直接进入顶层| AlphaBlend
+    AlphaBlend --&gt; ScreenOutput
+</code></pre>
+<h3 id="11-四大图层控制机制对比">1.1 四大图层控制机制对比</h3>
+<table>
+<thead>
+<tr>
+<th align="left">机制 / 维度</th>
+<th align="left">透明度混合 (<code>opacity</code>)</th>
+<th align="left">层级深度排序 (<code>z-index</code>)</th>
+<th align="left">分辨率门控 (<code>min/maxResolution</code>)</th>
+<th align="left">按需懒加载 (<code>lazy-source</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>典型示例</strong></td>
+<td align="left"><code>layer-opacity.html</code></td>
+<td align="left"><code>layer-z-index.html</code></td>
+<td align="left"><code>min-max-resolution.html</code></td>
+<td align="left"><code>lazy-source.html</code></td>
+</tr>
+<tr>
+<td align="left"><strong>核心 API</strong></td>
+<td align="left"><code>setOpacity(number)</code></td>
+<td align="left"><code>setZIndex(number)</code>, <code>setMap(map)</code></td>
+<td align="left"><code>minResolution</code>, <code>maxResolution</code></td>
+<td align="left"><code>setSource(source)</code>, <code>setSource(null)</code></td>
+</tr>
+<tr>
+<td align="left"><strong>控制维度</strong></td>
+<td align="left">像素 Alpha 通道混合因子 (0~1)</td>
+<td align="left">画面遮挡与绘制前后遍历次序</td>
+<td align="left">视口缩放比例尺可见性区间</td>
+<td align="left">数据源异步绑定与内存引用释放</td>
+</tr>
+<tr>
+<td align="left"><strong>性能收益</strong></td>
+<td align="left">属性驱动局部重绘，零数据重载</td>
+<td align="left">避免重复重排，保障拓扑直观</td>
+<td align="left"><strong>节省网络切片并发与 GPU 绘制</strong></td>
+<td align="left"><strong>彻底释放内存切片缓存，防止 OOM</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>典型场景</strong></td>
+<td align="left">遥感影像与电子道路底图叠置</td>
+<td align="left">临时测量工具、高频标绘图层置顶</td>
+<td align="left">宏观卫星地貌与精细街道底图自动交接</td>
+<td align="left">复杂多图层树、按需开启的重度专题分析</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-图层透明度与硬件加速混合（layer-opacityhtml）">2. 图层透明度与硬件加速混合（<code>layer-opacity.html</code>）</h2>
+<h3 id="21-alpha-通道与双渲染器混合原理">2.1 Alpha 通道与双渲染器混合原理</h3>
+<p>在多图层叠加显示时，上层图层的透明度控制着底层底图的透视可见程度：
+$$\text{OutputColor} = \text{TopLayerColor} \times \alpha + \text{BottomLayerColor} \times (1 - \alpha)$$</p>
+<p>在 OpenLayers 中：</p>
+<ol>
+<li><strong>2D Canvas 渲染器</strong>：在每一图层的绘制循环中设置 <code>ctx.globalAlpha = layer.getOpacity()</code>；</li>
+<li><strong>WebGLTile 渲染器</strong>：将 <code>opacity</code> 作为片元着色器（Fragment Shader）中的全局 Uniform 变量，在 GPU 硬件中以每秒数十亿次并行像素指令完成极速 Alpha 混合。</li>
+</ol>
+<pre><code class="language-javascript">// 遥感卫星底图 (WebGLTile 硬件加速)
+const imagery = new TileLayer({
+  className: &#39;ol-layer-imagery&#39;,
+  source: new ImageTile({ ... }),
+});
+
+// 上层 OpenStreetMap 矢量切片底图
+const osm = new TileLayer({ source: new OSM() });
+
+// 响应滑块拖动，动态调整 OSM 透明度
+function update() {
+  const opacity = parseFloat(opacityInput.value);
+  osm.setOpacity(opacity); // 派发 change:opacity 事件，触发下一帧平滑重绘
+  opacityOutput.innerText = opacity.toFixed(2);
+}
+opacityInput.addEventListener(&#39;input&#39;, update);
+</code></pre>
+<hr>
+<h2 id="3-层级排序体系与非托管图层特权（layer-z-indexhtml）">3. 层级排序体系与非托管图层特权（<code>layer-z-index.html</code>）</h2>
+<h3 id="31-托管图层排序管线算法">3.1 托管图层排序管线算法</h3>
+<p>传入 <code>new Map({ layers: [...] })</code> 或通过 <code>map.addLayer()</code> 加入的图层属于<strong>托管图层</strong>。
+其在内部绘制循环中的排序规则如下伪代码所示：</p>
+<pre><code class="language-typescript">function sortLayers(layers: Layer[]): Layer[] {
+  return layers.slice().sort((a, b) =&gt; {
+    const zIndexA = a.getZIndex() || 0;
+    const zIndexB = b.getZIndex() || 0;
+    if (zIndexA !== zIndexB) {
+      return zIndexA - zIndexB; // 数值小者先绘制（底层），数值大者后绘制（顶层）
+    }
+    // Z-index 相同时的决平规则：保持原数组中的相对插入顺序
+    return layers.indexOf(a) - layers.indexOf(b);
+  });
+}
+</code></pre>
+<h3 id="32-独立非托管图层（unmanaged-layer）的顶层特权">3.2 独立非托管图层（Unmanaged Layer）的顶层特权</h3>
+<p>通过直接调用 <code>layer.setMap(map)</code> 绑定的图层称为<strong>非托管图层</strong>：</p>
+<ul>
+<li><strong>脱离图层树</strong>：它不会出现在 <code>map.getLayers()</code> 的数组中，因此不会被图层管理树的全局遍历所干扰；</li>
+<li><strong>强制置顶（On Top）</strong>：OpenLayers 渲染引擎在完成所有托管图层的 Canvas/WebGL 合成后，会额外独立遍历所有非托管图层并将它们直接绘制在最顶层。</li>
+<li><strong>最佳应用</strong>：测量工具（Measure Tool）的动态虚线橡皮筋、框选查询临时矩形、测距距离标签等。</li>
+</ul>
+<pre><code class="language-javascript">// 创建五角星图层，并直接通过 setMap 声明为非托管层
+const layer0 = createLayer([40, 40], styles.star);
+layer0.setMap(map); // 无论其它图层的 Z-index 调多大，五角星始终居于最上方！
+
+// 方形与三角形图层作为托管图层，通过 setZIndex 动态竞逐次序
+layer1.setZIndex(1); // 蓝色方形在上
+layer2.setZIndex(0); // 红色三角形在下
+</code></pre>
+<hr>
+<h2 id="4-多尺度金字塔与分辨率半开区间门控（min-max-resolutionhtml）">4. 多尺度金字塔与分辨率半开区间门控（<code>min-max-resolution.html</code>）</h2>
+<h3 id="41-分辨率与缩放级别的反向数学关系">4.1 分辨率与缩放级别的反向数学关系</h3>
+<p>在 WebGIS 中，分辨率 $\text{Resolution}$ 定义为“单像素代表的物理地面距离”（单位：米/像素）：
+$$\text{Resolution} = \frac{\text{EquatorLength} \times \cos(\text{latitude})}{256 \times 2^{\text{zoom}}}$$</p>
+<ul>
+<li><strong>级别越大（Zoom 宏观 $\to$ 微观）</strong>：单个像素代表的地理范围越小，$\text{Resolution}$ 数值<strong>急剧减小</strong>；</li>
+<li><strong>级别越小（Zoom 微观 $\to$ 宏观）</strong>：单个像素覆盖整个大洲甚至半球，$\text{Resolution}$ 数值<strong>急剧变大</strong>。</li>
+</ul>
+<pre><code class="language-mermaid">graph LR
+    ZoomLow[&quot;Zoom 0~4 (宏观大洲视角)&quot;] --&gt;|放大地图 (Zoom In)| ZoomHigh[&quot;Zoom 15~18 (微观街道视角)&quot;]
+    ResHigh[&quot;Resolution: 20000 ~ 2000 米/像素&lt;br/&gt;(数值极大)&quot;] --&gt;|数值减小| ResLow[&quot;Resolution: 200 ~ 1 米/像素&lt;br/&gt;(数值极小)&quot;]
+</code></pre>
+<h3 id="42-半开区间门控与无缝平滑交接">4.2 半开区间门控与无缝平滑交接</h3>
+<p>图层渲染器在每一帧通过闭开区间进行判定：
+$$\text{minResolution} \le \text{currentResolution} &lt; \text{maxResolution}$$</p>
+<pre><code class="language-javascript">const map = new Map({
+  layers: [
+    // 街道微观层：仅在分辨率 200 ~ 2000（高放大级别）渲染
+    new TileLayer({
+      source: new OSM(),
+      minResolution: 200,
+      maxResolution: 2000,
+    }),
+    // 地貌宏观层：仅在分辨率 2000 ~ 20000（低放大级别）渲染
+    new TileLayer({
+      source: new TileJSON({ ... }),
+      minResolution: 2000,
+      maxResolution: 20000,
+    }),
+  ],
+  ...
+});
+</code></pre>
+<p>在交界点 <code>2000</code> 处，由于下边界闭合、上边界开放，两个图层无缝交接，既不会出现同时渲染的双重视图重叠，也不会出现空白丢图帧。</p>
+<hr>
+<h2 id="5-图层与数据引擎解耦的懒加载架构（lazy-sourcehtml）">5. 图层与数据引擎解耦的懒加载架构（<code>lazy-source.html</code>）</h2>
+<h3 id="51-图层容器与数据引擎的独立性">5.1 图层容器与数据引擎的独立性</h3>
+<p>在 OpenLayers 中，<code>TileLayer</code>、<code>VectorLayer</code> 是负责与 Map 对接的渲染容器外壳；而 <code>Source</code> 是提供要素和切片瓦片的数据流引擎。
+图层在构造时完全可以不传入任何 Source：</p>
+<pre><code class="language-javascript">// 1. 实例化无源图层（空外壳）
+const layer = new TileLayer();
+
+// 2. 挂载到地图（此时静默，不发起任何 HTTP 请求与绘制）
+const map = new Map({
+  layers: [layer],
+  target: &#39;map&#39;,
+  view: new View({ center: [0, 0], zoom: 2 }),
+});
+
+// 3. 用户在 UI 勾选时按需即时挂载
+document.getElementById(&#39;set-source&#39;).onclick = () =&gt; {
+  layer.setSource(source); // 触发瓦片并发拉取并启动渲染管线
+};
+
+// 4. 用户关闭时彻底释放
+document.getElementById(&#39;unset-source&#39;).onclick = () =&gt; {
+  layer.setSource(null); // 切断对底层切片缓存与要素集合的强引用
+};
+</code></pre>
+<h3 id="52-性能对比：setvisiblefalse-vs-setsourcenull">5.2 性能对比：<code>setVisible(false)</code> vs <code>setSource(null)</code></h3>
+<table>
+<thead>
+<tr>
+<th align="left">操作手段</th>
+<th align="left"><code>layer.setVisible(false)</code></th>
+<th align="left"><code>layer.setSource(null)</code></th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>图层外壳状态</strong></td>
+<td align="left">保留在图层树中</td>
+<td align="left">保留在图层树中</td>
+</tr>
+<tr>
+<td align="left"><strong>切片/要素内存占用</strong></td>
+<td align="left"><strong>强引用驻留内存</strong>（数兆至数百兆）</td>
+<td align="left"><strong>解除引用</strong>，允许浏览器 V8 彻底 GC 回收</td>
+</tr>
+<tr>
+<td align="left"><strong>再次激活速度</strong></td>
+<td align="left">0 毫秒瞬间呈现（命中内存切片缓存）</td>
+<td align="left">需重新发起网络请求与数据解析</td>
+</tr>
+<tr>
+<td align="left"><strong>网络请求状态</strong></td>
+<td align="left">中断当前排队请求，但已缓存瓦片保留</td>
+<td align="left">彻底清空对应切片池（TileCache）</td>
+</tr>
+<tr>
+<td align="left"><strong>适用业务场景</strong></td>
+<td align="left">用户频繁来回勾选的常用业务图层</td>
+<td align="left">庞大点云、高精度正射影像、内存受限移动端</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="6-生产实践踩坑与企业级优化指南">6. 生产实践踩坑与企业级优化指南</h2>
+<h3 id="61-负数-z-index-与底图遮挡盲区">6.1 负数 Z-Index 与底图遮挡“盲区”</h3>
+<p>新手在组织图层时，有时为了让特定要素位于其他矢量层下方，随意给其设置负数（如 <code>zIndex: -1</code>）。
+由于底图瓦片层（如 OSM 或天地图切片）的默认 Z-Index 通常为 0，设置了 <code>-1</code> 的图层将直接沉入底图切片下方，虽然控制台没有任何报错，但在屏幕上完全被底图遮挡导致“不可见”。
+<strong>企业级规范</strong>：为图层树划分明确的阶梯式常量空间：</p>
+<pre><code class="language-javascript">export const LAYER_Z_INDEX = {
+  BASE_MAP: 0,        // 底图切片: 0 ~ 9
+  POLYGON_AREA: 10,   // 面状网格要素: 10 ~ 19
+  LINE_ROUTE: 20,     // 线状轨迹要素: 20 ~ 29
+  POINT_MARKER: 30,   // POI 点位图标: 30 ~ 39
+  HEATMAP: 40,        // 热力图与聚合层: 40 ~ 49
+  MEASURE_SKETCH: 100 // 标绘与测量临时层: 100+
+};
+</code></pre>
+<h3 id="62-分数缩放（fractional-zoom）与分辨率边界跳变">6.2 分数缩放（Fractional Zoom）与分辨率边界跳变</h3>
+<p>当用户使用双指缩放触控板或手机触屏时，地图会出现连续的分数级别（如 <code>zoom: 5.378</code>）。
+若业务系统直接根据整数 zoom 级别切换图层，可能会在临界浮点数处发生微小抖动。
+推荐始终以物理分辨率 <code>view.getResolution()</code> 为准，并为图层配置 <code>minResolution</code> 和 <code>maxResolution</code>，OpenLayers 内部的数学比对完全支持任意浮点数精度的无级平滑判定。</p>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

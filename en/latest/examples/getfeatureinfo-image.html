@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>WMS GetFeatureInfo (Image Layer)</title>
+    <title>WMS GetFeatureInfo (Image Layer) / WMS 单图要素属性查询与像素探测</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">WMS GetFeatureInfo (Image Layer)</h4>
+        <h4 id="title">WMS GetFeatureInfo (Image Layer) / WMS 单图要素属性查询与像素探测</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,8 +74,8 @@
               data-bs-target="#tag-example-list"
               data-title="getfeatureinfo"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./getfeatureinfo-image.html&quot;&gt;WMS GetFeatureInfo (Image Layer)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./getfeatureinfo-tile.html&quot;&gt;WMS GetFeatureInfo (Tile Layer)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./getfeatureinfo-image.html&quot;&gt;WMS GetFeatureInfo (Image Layer) / WMS 单图要素属性查询与像素探测&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./getfeatureinfo-tile.html&quot;&gt;WMS GetFeatureInfo (Tile Layer) / WMS 瓦片要素属性查询与像素探测&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -89,8 +89,8 @@
               data-bs-target="#tag-example-list"
               data-title="getData"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./getfeatureinfo-image.html&quot;&gt;WMS GetFeatureInfo (Image Layer)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./getfeatureinfo-tile.html&quot;&gt;WMS GetFeatureInfo (Tile Layer)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./getfeatureinfo-image.html&quot;&gt;WMS GetFeatureInfo (Image Layer) / WMS 单图要素属性查询与像素探测&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./getfeatureinfo-tile.html&quot;&gt;WMS GetFeatureInfo (Tile Layer) / WMS 瓦片要素属性查询与像素探测&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -118,8 +118,34 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Using an image WMS source with GetFeatureInfo requests</p>
-        <div id="docs"><p>This example shows how to trigger WMS GetFeatureInfo requests on click for a WMS image layer.  Additionally <code>layer.getData(pixel)</code> is used to change the mouse pointer when hovering a non-transparent pixel on the map.</p>
+        <p id="shortdesc">Using an image WMS source with GetFeatureInfo requests / 基于单张图像 WMS 数据源执行 GetFeatureInfo 点击查询与 getData 悬浮像素命中探测。</p>
+        <div id="docs"><p>
+  This example shows how to trigger WMS GetFeatureInfo requests on click for a WMS image layer. Additionally <code>layer.getData(pixel)</code> is used to change the mouse pointer when hovering a non-transparent pixel on the map.
+</p> <p>
+  本示例演示了如何为 WMS 单张图像图层（Image Layer）绑定点击事件以触发 OGC <code>GetFeatureInfo</code> 要素属性查询请求。此外，还展示了利用 <code>layer.getData(pixel)</code> 在光标滑动时检测像素透明度，在悬停于非透明有效要素上方时动态切换鼠标指针为手型（pointer）。
+</p> <hr> <h3>📚 学习记录与技术深度解读</h3>
+<h4>1. 核心架构与设计思想</h4> <ul>
+  <li><strong>光栅服务端要素穿透查询（WMS GetFeatureInfo）：</strong>
+    WMS 服务向客户端分发的是已经光栅化的图片（PNG/JPEG），客户端 Canvas 本身并不包含矢量几何对象。为了实现“点击地图查询图斑属性”，OGC 制定了 <code>GetFeatureInfo</code> 协议规范。OpenLayers 提供了 <code>getFeatureInfoUrl()</code>，能够根据用户点击的地理坐标、当前视图分辨率与投影，精确反算出对应的像素点与视口 BBOX 请求参数，向服务端发起反查。
+  </li>
+  <li><strong>客户端即时像素拾取（Client-Side Pixel Probing）：</strong>
+    若每次 <code>pointermove</code> 都向后端发送网络请求以判断是否显示手型指针，网络开销将极其庞大。OpenLayers 提供了 <code>layer.getData(pixel)</code>，直接从当前已渲染的 Canvas 像素缓冲区中同步提取 RGBA 四通道数值。通过判断 Alpha 透明度 <code>data[3] &gt; 0</code>，零网络延迟实现光标手型悬停高亮。
+  </li>
+</ul>
+<h4>2. 源码与关键 API 剖析</h4> <ul>
+  <li><code>wmsSource.getFeatureInfoUrl(coordinate, resolution, projection, params)</code>：
+    核心 URL 组装器。根据传入的坐标自动拼接 <code>QUERY_LAYERS</code>、<code>X/Y</code>（或 <code>I/J</code>）坐标、<code>WIDTH/HEIGHT</code> 及 <code>BBOX</code>。</li>
+  <li><code>'INFO_FORMAT': 'text/html'</code>：指定服务端返回的富文本格式（亦可指定 <code>application/json</code> 直接解析属性并注入自定义 Vue/React 弹窗）。</li>
+  <li><code>const data = wmsLayer.getData(evt.pixel)</code>：返回 <code>Uint8ClampedArray [R, G, B, A]</code>，透明背景处 <code>data[3] === 0</code>，陆地或图斑处 <code>data[3] &gt; 0</code>。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优</h4> <ul>
+  <li><strong>CORS 跨域与 `getData` 失败风险：</strong>
+    <code>layer.getData(pixel)</code> 依赖底层 <code>canvas.getImageData()</code>。若数据源未设置 <code>crossOrigin: 'anonymous'</code>，浏览器安全机制会判定画布受污染（Tainted），直接导致 <code>getData</code> 报错崩溃。
+  </li>
+  <li><strong>点击容差（Tolerance / Buffer）：</strong>
+    在点要素或极细河流要素上，用户手指或鼠标极难分毫不差地正中单像素。在 GeoServer 服务端中，可在请求参数中补充 <code>buffer: 10</code>（像素缓冲），显著提高要素命中的容错率。
+  </li>
+</ul>
 </div>
       </div>
 
@@ -131,6 +157,8 @@ import View from &#x27;ol/View.js&#x27;;
 import ImageLayer from &#x27;ol/layer/Image.js&#x27;;
 import ImageWMS from &#x27;ol/source/ImageWMS.js&#x27;;
 
+// Single-image WMS source
+// 单张视口图像 WMS 数据源
 const wmsSource &#x3D; new ImageWMS({
   url: &#x27;https://ahocevar.com/geoserver/wms&#x27;,
   params: {&#x27;LAYERS&#x27;: &#x27;ne:ne&#x27;},
@@ -147,12 +175,16 @@ const view &#x3D; new View({
   zoom: 1,
 });
 
+// Initialize map
+// 初始化地图
 const map &#x3D; new Map({
   layers: [wmsLayer],
   target: &#x27;map&#x27;,
   view: view,
 });
 
+// Single-click listener for WMS GetFeatureInfo
+// 单击地图触发 WMS GetFeatureInfo 属性查询
 map.on(&#x27;singleclick&#x27;, function (evt) {
   document.getElementById(&#x27;info&#x27;).innerHTML &#x3D; &#x27;&#x27;;
   const viewResolution &#x3D; view.getResolution();
@@ -171,6 +203,8 @@ map.on(&#x27;singleclick&#x27;, function (evt) {
   }
 });
 
+// Pointer move listener to probe pixel alpha and toggle cursor
+// 指针移动事件监听：探测像素 Alpha 通道并动态切换鼠标光标手型
 map.on(&#x27;pointermove&#x27;, function (evt) {
   if (evt.dragging) {
     return;
@@ -190,7 +224,7 @@ map.on(&#x27;pointermove&#x27;, function (evt) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;WMS GetFeatureInfo (Image Layer)&lt;/title&gt;
+    &lt;title&gt;WMS GetFeatureInfo (Image Layer) / WMS 单图要素属性查询与像素探测&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

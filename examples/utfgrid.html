@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>UTFGrid</title>
+    <title>UTFGrid / UTFGrid 栅格交互探测与瓦片属性离线拾取</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">UTFGrid</h4>
+        <h4 id="title">UTFGrid / UTFGrid 栅格交互探测与瓦片属性离线拾取</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,7 +75,7 @@
               data-bs-target="#tag-example-list"
               data-title="utfgrid"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./utfgrid.html&quot;&gt;UTFGrid&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./utfgrid.html&quot;&gt;UTFGrid / UTFGrid 栅格交互探测与瓦片属性离线拾取&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -89,11 +89,11 @@
               data-bs-target="#tag-example-list"
               data-title="tilejson"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-group.html&quot;&gt;Layer Groups&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-extent.html&quot;&gt;Limited Layer Extent&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./semi-transparent-layer.html&quot;&gt;Semi-Transparent Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tilejson.html&quot;&gt;TileJSON&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./utfgrid.html&quot;&gt;UTFGrid&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-group.html&quot;&gt;Layer Groups / 图层组树级分层组织与双向数据绑定（LayerGroup）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-extent.html&quot;&gt;Limited Layer Extent / 限制图层渲染空间范围（layer.setExtent）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./semi-transparent-layer.html&quot;&gt;Semi-Transparent Layer / 半透明专题图层叠加与 CSS 黑白滤镜&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tilejson.html&quot;&gt;TileJSON / TileJSON 瓦片元数据规范与自动解析&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./utfgrid.html&quot;&gt;UTFGrid / UTFGrid 栅格交互探测与瓦片属性离线拾取&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >5</a>
@@ -114,10 +114,10 @@
         </div>
         <div id="map" class="map"></div>
 <div style="display: none;">
-  <!-- Overlay with the country info -->
+  <!-- Overlay with the country info / 国家浮层提示组件 -->
   <div id="country-info">
     <div id="country-name">&nbsp;</div>
-    <img id="country-flag" />
+    <img id="country-flag" alt="Country Flag / 国旗" />
   </div>
 </div>
 
@@ -127,8 +127,34 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">This example shows how to read data from a UTFGrid source.</p>
+        <p id="shortdesc">This example shows how to read data from a UTFGrid source. / 演示如何使用 UTFGrid 数据源以极高性能在客户端根据鼠标坐标即时拾取地理属性与国旗图标。</p>
         <div id="docs"><p>Point to a country to see its name and flag.</p> Tiles made with <a href="https://tilemill-project.github.io/tilemill/">TileMill</a>. Hosting on <a href="https://www.mapbox.com/">mapbox.com</a> or with open-source <a href="https://github.com/maptiler/tileserver-php">TileServer</a>.
+<p>将鼠标指针移动到地图上的国家区域即可实时查看该国国名与国旗图标。</p> <p>本示例展示如何利用 <code>ol/source/UTFGrid</code> 实现零服务端查询请求的超轻量客户端属性拾取（Hit-Testing）。切片通过 <a href="https://tilemill-project.github.io/tilemill/">TileMill</a> 烘焙导出，由 Mapbox 托管。通过将矢量属性数据直接栅格化为基于 UTF-8 字符编码的紧凑矩阵瓦片，前端可在毫秒级根据屏幕坐标定位到要素实体与 Base64 国旗图片，彻底解决海量多边形交互查询时的网络与 GPU 性能瓶颈。</p>
+---
+### 📚 学习记录与技术深度解读 (Learning Notes)
+#### 1. 核心架构原理 (Core Architecture) 在 WebGIS 演进史中，当需要对数十万个复杂多边形进行鼠标悬停（Hover）提示时，直接渲染全量矢量会导致浏览器崩溃，而每次发送 WMS GetFeatureInfo 请求又会造成高延迟与服务器高负载： - <strong>UTFGrid 字符编码栅格规范</strong>：Mapbox 提出的 UTFGrid 规范将空间多边形在服务端栅格化为一个微型字符矩阵（通常为 $64 \times 64$ 个字符，每个字符由 UTF-8 编码表示该像素所属要素的 ID 索引），并配以一个轻量的属性查找字典（JSON）。 - <strong>`ol/source/UTFGrid` 缓存与就地解算</strong>：OpenLayers 的 <code>UTFGrid</code> 数据源会与视觉瓦片同步下载对应的 UTFGrid JSON 瓦片。当鼠标移动时，调用 <code>gridSource.forDataAtCoordinateAndResolution(coordinate, resolution, callback)</code>，系统根据地理坐标计算出所在的切片与内部矩阵偏移，直接从内存中常数时间 $O(1)$ 检索出绑定的属性对象（包含国名 <code>admin</code> 与 Base64 编码的国旗 <code>flag_png</code>），实现完全离线的极速无卡顿交互！
+#### 2. 关键实现与代码拆解 (Code Deep Dive) ```javascript const displayCountryInfo = function (coordinate) {
+  const viewResolution = view.getResolution();
+  // 毫秒级空间坐标反查 UTFGrid 属性字典
+  gridSource.forDataAtCoordinateAndResolution(
+    coordinate,
+    viewResolution,
+    function (data) {
+      mapElement.style.cursor = data ? 'pointer' : '';
+      if (data) {
+        flagElement.src = 'data:image/png;base64,' + data['flag_png'];
+        nameElement.innerHTML = data['admin'];
+      }
+      infoOverlay.setPosition(data ? coordinate : undefined);
+    },
+  );
+};
+// 鼠标悬停实时跟随探测 map.on('pointermove', function (evt) {
+  if (evt.dragging) return;
+  const coordinate = map.getEventCoordinate(evt.originalEvent);
+  displayCountryInfo(coordinate);
+}); ```
+#### 3. 生产实战避坑与考量 (Production Pitfalls) - <strong>视口分辨率精度同步</strong>：<code>forDataAtCoordinateAndResolution</code> 必须传入当前视图的实际 <code>resolution</code>，以便内部算法精确定位到当前缩放级别对应的 UTFGrid 瓦片层级。 - <strong>矢量切片（MVT）时代的演进</strong>：尽管 UTFGrid 在栅格切片时代是无与伦比的属性拾取神器，但在现代 Mapbox Vector Tile（MVT）广泛普及后，矢量切片原生自带要素几何与属性，支持直接调用 <code>map.forEachFeatureAtPixel()</code>。然而在纯栅格卫星图或历史切片归档系统中，UTFGrid 依然是极具性价比的轻量属性交互首选。
 </div>
       </div>
 
@@ -145,6 +171,8 @@ import UTFGrid from &#x27;ol/source/UTFGrid.js&#x27;;
 const key &#x3D;
   &#x27;pk.eyJ1IjoiYWhvY2V2YXIiLCJhIjoiY2t0cGdwMHVnMGdlbzMxbDhwazBic2xrNSJ9.WbcTL9uj8JPAsnT9mgb7oQ&#x27;;
 
+// Visual tile layer loading rendered map tiles
+// 可视化切片图层：加载渲染好的地理底图
 const mapLayer &#x3D; new TileLayer({
   source: new TileJSON({
     url:
@@ -153,6 +181,8 @@ const mapLayer &#x3D; new TileLayer({
   }),
 });
 
+// UTFGrid source loading compact attribute character matrix tiles
+// UTFGrid 数据源：同步加载紧凑的字符编码要素属性矩阵切片
 const gridSource &#x3D; new UTFGrid({
   url:
     &#x27;https://api.tiles.mapbox.com/v4/mapbox.geography-class.json?secure&amp;access_token&#x3D;&#x27; +
@@ -177,6 +207,8 @@ const infoElement &#x3D; document.getElementById(&#x27;country-info&#x27;);
 const flagElement &#x3D; document.getElementById(&#x27;country-flag&#x27;);
 const nameElement &#x3D; document.getElementById(&#x27;country-name&#x27;);
 
+// Overlay displaying hovered country name and flag icon
+// 悬停浮层：展示鼠标悬停处的国家名称与国旗图标
 const infoOverlay &#x3D; new Overlay({
   element: infoElement,
   offset: [15, 15],
@@ -184,15 +216,17 @@ const infoOverlay &#x3D; new Overlay({
 });
 map.addOverlay(infoOverlay);
 
+/**
+ * Query UTFGrid attribute dictionary by coordinate and update overlay.
+ * 根据空间地理坐标与分辨率向 UTFGrid 检索属性数据并更新提示浮层。
+ * @param {import(&#x27;ol/coordinate.js&#x27;).Coordinate} coordinate Map coordinate.
+ */
 const displayCountryInfo &#x3D; function (coordinate) {
   const viewResolution &#x3D; view.getResolution();
   gridSource.forDataAtCoordinateAndResolution(
     coordinate,
     viewResolution,
     function (data) {
-      // If you want to use the template from the TileJSON,
-      //  load the mustache.js library separately and call
-      //  info.innerHTML &#x3D; Mustache.render(gridSource.getTemplate(), data);
       mapElement.style.cursor &#x3D; data ? &#x27;pointer&#x27; : &#x27;&#x27;;
       if (data) {
         flagElement.src &#x3D; &#x27;data:image/png;base64,&#x27; + data[&#x27;flag_png&#x27;];
@@ -203,6 +237,8 @@ const displayCountryInfo &#x3D; function (coordinate) {
   );
 };
 
+// Pointermove listener for instant hover inspection
+// 指针移动监听：实现毫秒级属性跟随探测
 map.on(&#x27;pointermove&#x27;, function (evt) {
   if (evt.dragging) {
     return;
@@ -211,6 +247,8 @@ map.on(&#x27;pointermove&#x27;, function (evt) {
   displayCountryInfo(coordinate);
 });
 
+// Click listener to pin or inspect attributes
+// 点击事件：同理反查要素属性
 map.on(&#x27;click&#x27;, function (evt) {
   displayCountryInfo(evt.coordinate);
 });
@@ -225,7 +263,7 @@ map.on(&#x27;click&#x27;, function (evt) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;UTFGrid&lt;/title&gt;
+    &lt;title&gt;UTFGrid / UTFGrid 栅格交互探测与瓦片属性离线拾取&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -243,10 +281,10 @@ map.on(&#x27;click&#x27;, function (evt) {
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
     &lt;div style&#x3D;&quot;display: none;&quot;&gt;
-      &lt;!-- Overlay with the country info --&gt;
+      &lt;!-- Overlay with the country info / 国家浮层提示组件 --&gt;
       &lt;div id&#x3D;&quot;country-info&quot;&gt;
         &lt;div id&#x3D;&quot;country-name&quot;&gt;&amp;nbsp;&lt;/div&gt;
-        &lt;img id&#x3D;&quot;country-flag&quot; /&gt;
+        &lt;img id&#x3D;&quot;country-flag&quot; alt&#x3D;&quot;Country Flag / 国旗&quot; /&gt;
       &lt;/div&gt;
     &lt;/div&gt;
 

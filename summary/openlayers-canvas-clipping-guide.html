@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-canvas-视口裁剪、透镜卷帘与像素滤镜实战架构指南">OpenLayers Canvas 视口裁剪、透镜卷帘与像素滤镜实战架构指南</h1>
+<blockquote>
+<p>在空间数据可视化工程中，除了常规的矢量标注与切片贴图，开发者常常需要实现高阶的视觉交互效果——例如<strong>双时相影像卷帘对比（Layer Swipe）</strong>、<strong>特定行政区划多边形蒙版裁切（Vector Mask Clipping）</strong>、<strong>局部圆形探照灯（Spyglass）</strong>、<strong>像素放大镜（Magnify）</strong>以及<strong>空间卷积图像滤镜（锐化/高斯模糊/浮雕/边缘检测）</strong>。</p>
+<p>OpenLayers 拥有深厚而优雅的 Canvas 渲染拦截能力。通过在图层或地图的 <code>prerender</code> 与 <code>postrender</code> 生命周期钩子中接管底层的 HTML5 Canvas 2D 上下文，开发者无需侵入底层的渲染矩阵，即可在 GPU 像素上屏前后以极高帧率实施任意几何剪切、混合模式变换与像素重采样。本文基于 6 个核心官方示例，全面解构这一技术体系的底层架构与生产实践。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：openlayers-渲染管线与-canvas-拦截钩子">1. 架构总览：OpenLayers 渲染管线与 Canvas 拦截钩子</h2>
+<h3 id="11-prerender-与-postrender-的执行拓扑">1.1 <code>prerender</code> 与 <code>postrender</code> 的执行拓扑</h3>
+<p>OpenLayers 的图层渲染并不是一个黑盒，而是为每个渲染通道提供了前置（<code>prerender</code>）与后置（<code>postrender</code>）拦截点：</p>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph LayerRenderPipeline [图层 Canvas 渲染流水线]
+        direction TB
+        StartRender([开始当前图层渲染]) --&gt; PreHook[&quot;触发 prerender 事件 (event.context)&quot;]
+        PreHook --&gt; SaveState[&quot;ctx.save() 保存上下文初始状态&quot;]
+        SaveState --&gt; ApplyClip[&quot;应用裁剪区 / 几何蒙版 (ctx.clip())&quot;]
+        ApplyClip --&gt; Rasterize[&quot;OpenLayers 内核: 切片光栅化 / 矢量绘制&quot;]
+        Rasterize --&gt; PostHook[&quot;触发 postrender 事件 (event.context)&quot;]
+        PostHook --&gt; PostProcess[&quot;像素后处理 / 混合模式 / 边框高亮&quot;]
+        PostProcess --&gt; RestoreState[&quot;ctx.restore() 恢复上下文状态栈&quot;]
+        RestoreState --&gt; EndRender([完成该图层上屏])
+    end
+</code></pre>
+<h3 id="12-核心事件参数解析">1.2 核心事件参数解析</h3>
+<p>在事件回调函数中，<code>event</code> 包含了至关重要的绘图上下文与几何变换元数据：</p>
+<ul>
+<li><code>event.context</code>：当前图层绑定的 <code>CanvasRenderingContext2D</code> 对象；</li>
+<li><code>event.inversePixelTransform</code>：当前视口所应用的仿射逆变换矩阵 $[a, b, c, d, e, f]$，用于解构物理像素比与视口旋转角；</li>
+<li><code>getRenderPixel(event, cssPixel)</code>：OpenLayers 提供的标准工具函数，负责将 DOM/CSS 逻辑像素换算为高分屏（Retina / HiDPI）上的 Canvas 物理像素。</li>
+</ul>
+<hr>
+<h2 id="2-空间卷积核图像滤镜与-cpu-像素后处理">2. 空间卷积核图像滤镜与 CPU 像素后处理</h2>
+<p>在 <code>image-filter.html</code> 示例中，遥感卫星影像在光栅化完成后，通过 <code>postrender</code> 拦截器接管像素缓冲区，应用 $3 \times 3$ 空间卷积核进行数字图像处理。</p>
+<h3 id="21-二维离散卷积数学模型">2.1 二维离散卷积数学模型</h3>
+<p>图像空间卷积通过一个加权矩阵（Kernel）滑过整张图像。对于输出图像中的每个像素 $(x, y)$，其各通道（R、G、B）由自身及周围邻近像素的加权和决定：</p>
+<p>$$I_{\text{out}}(x, y) = \sum_{j=-1}^{1} \sum_{i=-1}^{1} I_{\text{in}}(x + i, y + j) \cdot K(i + 1, j + 1)$$</p>
+<pre><code class="language-mermaid">classDiagram
+    class ConvolutionKernels {
+      +Array none: 直通恒等
+      +Array sharpen: 中心拉升、边缘差分
+      +Array blur: 均值低通滤波
+      +Array shadow: 方向梯度差分
+      +Array emboss: 浮雕高光立体
+      +Array edge: 拉普拉斯高通边缘提取
+    }
+</code></pre>
+<h3 id="22-能量守恒与权重归一化算法">2.2 能量守恒与权重归一化算法</h3>
+<p>当卷积核权值之和 $\sum K &gt; 0$ 时，必须将各元素除以总和以保持整体图像总亮度不变：</p>
+<pre><code class="language-javascript">function normalize(kernel) {
+  const len = kernel.length;
+  const normal = new Array(len);
+  let sum = 0;
+  for (let i = 0; i &lt; len; ++i) {
+    sum += kernel[i];
+  }
+  if (sum &lt;= 0) {
+    normal.normalized = false;
+    sum = 1; // 边缘检测算子总和通常为 0，保留绝对梯度差
+  } else {
+    normal.normalized = true;
+  }
+  for (let i = 0; i &lt; len; ++i) {
+    normal[i] = kernel[i] / sum;
+  }
+  return normal;
+}
+</code></pre>
+<hr>
+<h2 id="3-动态交互透镜：探照灯（spyglass）与局部放大镜（magnify）">3. 动态交互透镜：探照灯（Spyglass）与局部放大镜（Magnify）</h2>
+<p>透镜效果通过将用户的鼠标指针位置转换为局部关注区，实现不同图层间的无缝穿透或细节倍增。</p>
+<h3 id="31-图层探照灯：prerender-阶段的圆形裁切蒙版">3.1 图层探照灯：<code>prerender</code> 阶段的圆形裁切蒙版</h3>
+<p>在 <code>layer-spy.html</code> 中，底图为矢量路网（<code>roads</code>），上层为遥感影像（<code>imagery</code>）。遥感影像图层通过在渲染前设置圆形剪切区，仅在光标周围暴露卫星影像：</p>
+<pre><code class="language-mermaid">sequenceDiagram
+    autonumber
+    participant Pointer as 鼠标指针 (mousemove)
+    participant Map as Map 地图实例
+    participant ImgLayer as 遥感影像图层 (imagery)
+    participant Canvas as Canvas 2D 上下文
+
+    Pointer-&gt;&gt;Map: 记录 mousePosition 并触发 map.render()
+    Map-&gt;&gt;ImgLayer: 触发 prerender 事件
+    ImgLayer-&gt;&gt;Canvas: getRenderPixel 计算物理中心与半径
+    ImgLayer-&gt;&gt;Canvas: ctx.save()
+    ImgLayer-&gt;&gt;Canvas: ctx.arc(centerX, centerY, radius, 0, 2π)
+    ImgLayer-&gt;&gt;Canvas: ctx.clip() 开启圆形物理裁剪
+    Map-&gt;&gt;ImgLayer: 瓦片光栅化（仅圆内像素被实际写入）
+    Map-&gt;&gt;ImgLayer: 触发 postrender 事件
+    ImgLayer-&gt;&gt;Canvas: ctx.restore() 恢复全局上下文
+</code></pre>
+<h3 id="32-局部放大镜：postrender-阶段的-2times-极坐标超采样">3.2 局部放大镜：<code>postrender</code> 阶段的 $2\times$ 极坐标超采样</h3>
+<p>在 <code>magnify.html</code> 中，通过在 <code>postrender</code> 中截取光标周围 $size \times size$ 的局部图像矩形，并利用极坐标欧氏距离判断是否在透镜圆内。圆内像素采用 $2\times$ 倍率反向映射采样，从而形成光学放大镜效果：</p>
+<p>$$\Delta i = i - half, \quad \Delta j = j - half, \quad dist = \sqrt{\Delta i^2 + \Delta j^2}$$</p>
+<p>$$sourceI = \begin{cases} \text{round}\left(half + \frac{\Delta i}{2}\right) &amp; dist &lt; half \ i &amp; dist \ge half \end{cases}$$</p>
+<hr>
+<h2 id="4-几何蒙版裁切：贝塞尔心形与-geojson-矢量边界冲压">4. 几何蒙版裁切：贝塞尔心形与 GeoJSON 矢量边界冲压</h2>
+<h3 id="41-逆像素变换矩阵与屏幕空间心形裁切">4.1 逆像素变换矩阵与屏幕空间心形裁切</h3>
+<p>在 <code>layer-clipping.html</code> 中，为了让爱心蒙版端正居中地固定在屏幕正中央，即便地图发生平移或旋转也不会晃动，必须利用逆像素变换矩阵（<code>event.inversePixelTransform</code>）提取视口参数：</p>
+<p>$$\text{canvasPixelRatio} = \sqrt{a^2 + b^2}, \quad \text{canvasRotation} = -\text{atan2}(b, a)$$</p>
+<p>通过在 <code>prerender</code> 中逆向平移到中心、反向旋转视口角度，并执行贝塞尔路径裁切：</p>
+<pre><code class="language-javascript">osm.on(&#39;prerender&#39;, function (event) {
+  const ctx = event.context;
+  const matrix = event.inversePixelTransform;
+  const canvasPixelRatio = Math.sqrt(matrix[0] * matrix[0] + matrix[1] * matrix[1]);
+  const canvasRotation = -Math.atan2(matrix[1], matrix[0]);
+
+  ctx.save();
+  // 1. 移动至画布中心并抵消地图旋转
+  ctx.translate(ctx.canvas.width / 2, ctx.canvas.height / 2);
+  ctx.rotate(-canvasRotation);
+
+  // 2. 缩放至心形局部坐标系并绘制贝塞尔曲线
+  ctx.scale(3 * canvasPixelRatio, 3 * canvasPixelRatio);
+  ctx.translate(-75, -80);
+  ctx.beginPath();
+  // ...绘制心形三次贝塞尔曲线...
+  ctx.clip(); // 执行裁切
+
+  // 3. 撤销局部变换并恢复原始上下文矩阵
+  ctx.translate(75, 80);
+  ctx.scale(1 / 3 / canvasPixelRatio, 1 / 3 / canvasPixelRatio);
+  ctx.rotate(canvasRotation);
+  ctx.translate(-ctx.canvas.width / 2, -ctx.canvas.height / 2);
+});
+</code></pre>
+<h3 id="42-多-canvas-隔离与-destination-in-矢量冲压裁切">4.2 多 Canvas 隔离与 <code>destination-in</code> 矢量冲压裁切</h3>
+<p>在 <code>layer-clipping-vector.html</code> 中，需求是将底图裁切为<strong>瑞士国界</strong>的复杂行政区划多边形：</p>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph MultiCanvas [多 Canvas 分层架构]
+        BGCanvas[&quot;背景 Canvas (className: &#39;toner&#39;)&quot;]
+        BaseCanvas[&quot;待裁切底图 Canvas (OSM Base)&quot;]
+    end
+
+    subgraph Stamping [矢量要素冲压流水线]
+        BaseCanvas --&gt;|postrender| Step1[&quot;底图瓦片已光栅化 (Destination)&quot;]
+        Step1 --&gt; Step2[&quot;globalCompositeOperation = &#39;destination-in&#39;&quot;]
+        Step2 --&gt; Step3[&quot;vectorContext.drawFeature(瑞士国界, style)&quot;]
+        Step3 --&gt; Step4[&quot;仅重叠多边形部分被保留，其余透明&quot;]
+        Step4 --&gt; Step5[&quot;globalCompositeOperation = &#39;source-over&#39;&quot;]
+    end
+
+    BGCanvas -.-&gt;|自然透出| Result[&quot;呈现：灰色背景 + 瑞士国界彩色底图&quot;]
+</code></pre>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>多 Canvas 强制隔离法则</strong>：OpenLayers 默认将同类型的瓦片图层合并在单一共享 Canvas 中。若未显式为背景图层配置 <code>className: &#39;toner&#39;</code>，背景图层与待裁切底图将绘制在同一画布上，执行 <code>destination-in</code> 会连同背景图层一并裁切成空白！</p>
+</blockquote>
+<hr>
+<h2 id="5-交互式图层卷帘（layer-swipe）工程实践">5. 交互式图层卷帘（Layer Swipe）工程实践</h2>
+<p>在 <code>layer-swipe.html</code> 中，利用滑动输入条（Range Input）动态调节视口矩形裁切分界线：</p>
+<pre><code class="language-javascript">aerial.on(&#39;prerender&#39;, function (event) {
+  const ctx = event.context;
+  const mapSize = map.getSize();
+  const width = mapSize[0] * (Number(swipe.value) / 100);
+
+  // 关键：必须换算为高分屏物理像素坐标
+  const tl = getRenderPixel(event, [width, 0]);
+  const tr = getRenderPixel(event, [mapSize[0], 0]);
+  const bl = getRenderPixel(event, [width, mapSize[1]]);
+  const br = getRenderPixel(event, mapSize);
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(tl[0], tl[1]);
+  ctx.lineTo(bl[0], bl[1]);
+  ctx.lineTo(br[0], br[1]);
+  ctx.lineTo(tr[0], tr[1]);
+  ctx.closePath();
+  ctx.clip(); // 右半侧可见
+});
+
+aerial.on(&#39;postrender&#39;, function (event) {
+  event.context.restore();
+});
+</code></pre>
+<hr>
+<h2 id="6-生产环境避坑指南与工程规范">6. 生产环境避坑指南与工程规范</h2>
+<h3 id="61-状态栈泄漏导致的全图黑屏或空白">6.1 状态栈泄漏导致的全图黑屏或空白</h3>
+<ul>
+<li><strong>问题</strong>：在 <code>prerender</code> 中调用了 <code>ctx.save()</code>，但在 <code>postrender</code> 中未执行 <code>ctx.restore()</code>（或代码抛错导致中断）。</li>
+<li><strong>后果</strong>：Canvas 内部的状态栈不断压栈，且局域 <code>clip()</code> 遮罩持续收缩，最终导致整张地图无法绘制任何内容。</li>
+<li><strong>最佳实践</strong>：成对编写 <code>save()</code> 与 <code>restore()</code>，在可能抛出异常的复杂逻辑外使用 <code>try ... finally</code> 确保 <code>restore()</code> 百分之百执行。</li>
+</ul>
+<h3 id="62-跨域画布污染（cors-taint）">6.2 跨域画布污染（CORS Taint）</h3>
+<ul>
+<li><strong>问题</strong>：在执行 <code>getImageData()</code> 时控制台报错 <code>SecurityError: The canvas has been tainted by cross-origin data</code>。</li>
+<li><strong>排查</strong>：切片瓦片服务必须支持 CORS，且 HTTP 响应头必须包含 <code>Access-Control-Allow-Origin: *</code>。</li>
+<li><strong>规范</strong>：使用标准瓦片提供商时，确认数据源构造选项支持跨域凭据。</li>
+</ul>
+<h3 id="63-高分屏（retina--hidpi）像素坐标错位">6.3 高分屏（Retina / HiDPI）像素坐标错位</h3>
+<ul>
+<li><strong>问题</strong>：在 MacBook、高分显示器或移动端，探照灯透镜偏移或卷帘分界线不在鼠标指定位置。</li>
+<li><strong>根因</strong>：直接使用了 CSS 逻辑像素进行 Canvas 路径绘制，未乘以 <code>window.devicePixelRatio</code>。</li>
+<li><strong>解决</strong>：永远使用 <code>getRenderPixel(event, cssCoord)</code> 处理一切传递给 Canvas 上下文的坐标与半径。</li>
+</ul>
+<h3 id="64-视口边缘采样越界保护">6.4 视口边缘采样越界保护</h3>
+<ul>
+<li><strong>问题</strong>：当鼠标移至地图视口边缘时，放大镜提取区域越界抛出 <code>IndexSizeError</code>。</li>
+<li><strong>解决</strong>：计算采样子矩形时必须使用 <code>Math.max(0, ...)</code> 与 <code>Math.min(canvas.width, ...)</code> 实施保护。</li>
+</ul>
+<hr>
+<h2 id="7-核心-api-与技术方案选型对比表">7. 核心 API 与技术方案选型对比表</h2>
+<table>
+<thead>
+<tr>
+<th align="left">特性 / 模式</th>
+<th align="left">核心技术方案</th>
+<th align="left">适用生命周期钩子</th>
+<th align="left">优势</th>
+<th align="left">适用业务场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>空间卷积滤镜</strong></td>
+<td align="left"><code>getImageData</code> + 卷积核加权</td>
+<td align="left"><code>postrender</code></td>
+<td align="left">像素级可编程、效果丰富</td>
+<td align="left">影像边缘提取、清晰度增强、浮雕特效</td>
+</tr>
+<tr>
+<td align="left"><strong>探照灯（Spyglass）</strong></td>
+<td align="left"><code>ctx.arc()</code> + <code>ctx.clip()</code></td>
+<td align="left"><code>prerender</code> / <code>postrender</code></td>
+<td align="left">纯几何裁切、开销极低、无缝透视</td>
+<td align="left">双时相影像地物对比、地下管网透视</td>
+</tr>
+<tr>
+<td align="left"><strong>局部放大镜（Magnify）</strong></td>
+<td align="left">局部矩形截取 + 极坐标映射</td>
+<td align="left"><code>postrender</code></td>
+<td align="left">无需加载额外切片即可局部放大</td>
+<td align="left">标本细节检查、密集点云与细小路网微观查看</td>
+</tr>
+<tr>
+<td align="left"><strong>几何蒙版裁切</strong></td>
+<td align="left">贝塞尔路径 / SVG + 逆矩阵抵消</td>
+<td align="left"><code>prerender</code> / <code>postrender</code></td>
+<td align="left">屏幕空间固定、不受地图旋转影响</td>
+<td align="left">趣味地图、艺术遮罩、圆形航海图</td>
+</tr>
+<tr>
+<td align="left"><strong>矢量要素冲压</strong></td>
+<td align="left"><code>destination-in</code> + <code>className</code> 隔离</td>
+<td align="left"><code>postrender</code></td>
+<td align="left">严格匹配地理多边形（如国界/省界）</td>
+<td align="left">行政区划白模剔除、特定范围专题图制作</td>
+</tr>
+<tr>
+<td align="left"><strong>双图层卷帘对比</strong></td>
+<td align="left">矩形多边形 <code>ctx.clip()</code></td>
+<td align="left"><code>prerender</code> / <code>postrender</code></td>
+<td align="left">极高帧率（60FPS）、零网络额外负载</td>
+<td align="left">灾前灾后卫星影像对比、规划图与现状图对比</td>
+</tr>
+</tbody></table>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

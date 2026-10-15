@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-矢量切片高级架构、交互拾取与跨坐标系重投影实战指南">OpenLayers 矢量切片高级架构、交互拾取与跨坐标系重投影实战指南</h1>
+<blockquote>
+<p><strong>专题标识</strong>：<code>vector-tiles-grid-reprojected</code><br><strong>核心标签</strong>：<code>vector tiles</code>、<code>grid</code>、<code>reprojection</code>、<code>epsg4326</code>、<code>selection</code>、<code>tms</code><br><strong>涉及示例</strong>：</p>
+<ul>
+<li><a href="../examples/vector-tile-info.html"><code>vector-tile-info</code></a> - 矢量切片要素属性交互探测</li>
+<li><a href="../examples/vector-tile-selection.html"><code>vector-tile-selection</code></a> - 矢量切片要素交互拾取与高亮 (Single/Multi/Hover)</li>
+<li><a href="../examples/vector-tiles-4326.html"><code>vector-tiles-4326</code></a> - EPSG:4326 地理坐标系矢量切片与 Mapbox Style</li>
+<li><a href="../examples/vector-tiles-reprojected.html"><code>vector-tiles-reprojected</code></a> - 矢量切片客户端动态重投影 (极地等面积方位投影)</li>
+<li><a href="../examples/canvas-tiles-tms.html"><code>canvas-tiles-tms</code></a> - 自定义 Canvas 切片与 TMS 坐标网格调试</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：新一代矢量切片运行机制">1. 架构总览：新一代矢量切片运行机制</h2>
+<p>随着高分辨率显示设备与 Web 空间分析需求的普及，基于 Protocol Buffers 二进制流的 <strong>Mapbox 矢量切片（MVT/PBF）</strong> 已成为现代 WebGIS 的事实标准。传统栅格切片（PNG/JPEG）将图元光栅化为死板的像元矩阵，丢失了全部图元拓扑、属性字典与样式自适应能力；而矢量切片将点、线、面矢量坐标及键值对属性编码进网格化的金字塔中，交由前端浏览器执行动态着色、注记布局与交互探测。</p>
+<p>OpenLayers 拥有业界最成熟、可扩展性最高的矢量切片（<code>VectorTileLayer</code> + <code>VectorTileSource</code>）架构。它不仅完美支持标准 Web 墨卡托（EPSG:3857），更支持<strong>非墨卡托原生切片（EPSG:4326 等经纬度网格）</strong>、<strong>任意异构坐标系下的客户端矢量实时重投影（如北极极地投影 ESRI:102017）</strong>、<strong>TMS/XYZ 坐标翻转调试</strong> 以及 <strong>毫秒级跨切片要素统一高亮（Selection）</strong>。</p>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph Server[&quot;后端切片服务 (GeoServer / MapTiler / ArcGIS)&quot;]
+        PBF[&quot;MVT (Protocol Buffers) 切片文件&lt;br/&gt;含局部裁剪坐标与属性字典&quot;]
+    end
+
+    subgraph Source[&quot;VectorTileSource 数据源层&quot;]
+        Loader[&quot;切片加载器与网络流拉取&quot;]
+        TileGrid[&quot;TileGrid 金字塔解析&lt;br/&gt;(3857 1:1 / 4326 2:1 网格)&quot;]
+        Parser[&quot;MVT 二进制解码器 (idProperty 身份绑定)&quot;]
+    end
+
+    subgraph Engine[&quot;OpenLayers 渲染内核&quot;]
+        Reproject{&quot;源坐标系 == 视图坐标系?&quot;}
+        DirectRender[&quot;直接渲染管线&quot;]
+        Proj4Engine[&quot;Proj4 顶点动态空间坐标变换&quot;]
+        DeclutterMgr[&quot;全局注记避让管理器 (Declutter)&quot;]
+    end
+
+    subgraph Layer[&quot;图层呈现与交互拾取&quot;]
+        BaseLayer[&quot;基础图层 (renderMode: hybrid)&lt;br/&gt;离屏 Canvas 位图高速渲染缓存&quot;]
+        SelectLayer[&quot;高亮图层 (renderMode: vector)&lt;br/&gt;纯矢量即时绘制 60fps 响应&quot;]
+        HitTest[&quot;getFeaturesAtPixel / layer.getFeatures&lt;br/&gt;像素碰撞检测与属性探测&quot;]
+    end
+
+    PBF --&gt; Loader --&gt; Parser --&gt; TileGrid
+    Parser --&gt; Reproject
+    Reproject -- 是 --&gt; DirectRender
+    Reproject -- 否 (如极地投影) --&gt; Proj4Engine --&gt; DirectRender
+    DirectRender --&gt; DeclutterMgr --&gt; BaseLayer &amp; SelectLayer
+    BaseLayer &amp; SelectLayer --&gt; HitTest
+</code></pre>
+<hr>
+<h2 id="2-核心技术对比与方案选型">2. 核心技术对比与方案选型</h2>
+<table>
+<thead>
+<tr>
+<th align="left">评估维度</th>
+<th align="left">传统栅格切片 (TileLayer)</th>
+<th align="left">默认矢量切片 (<code>renderMode: &#39;hybrid&#39;</code>)</th>
+<th align="left">纯矢量高亮切片 (<code>renderMode: &#39;vector&#39;</code>)</th>
+<th align="left">传统矢量图层 (<code>VectorLayer</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>数据载荷</strong></td>
+<td align="left">压缩位图 (PNG/JPEG/WebP)</td>
+<td align="left">压缩二进制 (MVT/PBF)</td>
+<td align="left">压缩二进制 (MVT/PBF)</td>
+<td align="left">纯文本/JSON (GeoJSON/WFS)</td>
+</tr>
+<tr>
+<td align="left"><strong>内存与渲染方式</strong></td>
+<td align="left">显存/内存位图贴图</td>
+<td align="left">离屏 Canvas 位图光栅化缓存</td>
+<td align="left">视口逐帧纯矢量 Path 绘制</td>
+<td align="left">全量 DOM/Canvas 几何对象树</td>
+</tr>
+<tr>
+<td align="left"><strong>属性探测机制</strong></td>
+<td align="left">需向后端请求 WMS <code>GetFeatureInfo</code></td>
+<td align="left">客户端本地直接读取 <code>getProperties()</code></td>
+<td align="left">客户端本地直接读取 <code>getProperties()</code></td>
+<td align="left">客户端直接读取 <code>getProperties()</code></td>
+</tr>
+<tr>
+<td align="left"><strong>高频重绘性能</strong></td>
+<td align="left">极快（仅平移贴图）</td>
+<td align="left">瓦片重光栅化开销大（约 15~30fps）</td>
+<td align="left">局部图元即时重绘（稳居 60fps）</td>
+<td align="left">要素量大时 CPU/GC 瓶颈明显</td>
+</tr>
+<tr>
+<td align="left"><strong>样式动态定制</strong></td>
+<td align="left">不支持（需后端重绘发图）</td>
+<td align="left">支持（通过 JS 样式函数或 Mapbox Style）</td>
+<td align="left">支持（通过高亮过滤样式函数）</td>
+<td align="left">完全支持自由重设样式</td>
+</tr>
+<tr>
+<td align="left"><strong>重投影表现</strong></td>
+<td align="left">栅格变形，边缘与文字发虚</td>
+<td align="left">顶点精确重投影，边缘极致锐利</td>
+<td align="left">顶点精确重投影，边缘极致锐利</td>
+<td align="left">顶点重投影，数据量大时耗时长</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="3-核心机制深入剖析">3. 核心机制深入剖析</h2>
+<h3 id="31-属性实时拾取：getfeaturesatpixel-vs-layergetfeatures">3.1 属性实时拾取：<code>getFeaturesAtPixel</code> vs <code>layer.getFeatures</code></h3>
+<p>在矢量切片中探测鼠标悬停或点击的要素，OpenLayers 提供了两种主流途径：</p>
+<h4 id="途径一：mapgetfeaturesatpixelpixel-options（同步检索）">途径一：<code>map.getFeaturesAtPixel(pixel, [options])</code>（同步检索）</h4>
+<pre><code class="language-javascript">// examples/vector-tile-info.js
+map.on(&#39;pointermove&#39;, (evt) =&gt; {
+  if (evt.dragging) return; // 平移过程中中断探测，提升性能
+  
+  const features = map.getFeaturesAtPixel(evt.pixel);
+  if (features.length &gt; 0) {
+    const props = features[0].getProperties();
+    console.log(&#39;要素属性字典:&#39;, props);
+  }
+});
+</code></pre>
+<ul>
+<li><strong>工作机制</strong>：同步遍历当前渲染在 Canvas 上的图元碰撞体。</li>
+<li><strong>优点</strong>：代码直观简单，天然受图层层级（Z-Index）与可见性影响。</li>
+<li><strong>局限</strong>：在切片正在加载重绘的交界期，可能受栅格缓存影响。</li>
+</ul>
+<h4 id="途径二：layergetfeaturespixel（异步-promise-检索）">途径二：<code>layer.getFeatures(pixel)</code>（异步 Promise 检索）</h4>
+<pre><code class="language-javascript">// examples/vector-tile-selection.js
+vtLayer.getFeatures(event.pixel).then((features) =&gt; {
+  if (!features.length) {
+    selection = {};
+    selectionLayer.changed();
+    return;
+  }
+  const feature = features[0];
+  const fid = feature.getId(); // 基于唯一业务主键
+  selection[fid] = feature;
+  selectionLayer.changed();
+});
+</code></pre>
+<ul>
+<li><strong>工作机制</strong>：直接穿透到底层 <code>VectorTileSource</code> 的瓦片图元树，以 Promise 异步返回精确要素。</li>
+<li><strong>优点</strong>：能够精准锁定特定图层，并在内部多级 Tile 缓存中完成精细拓扑匹配。</li>
+</ul>
+<hr>
+<h3 id="32-跨瓦片接缝消除：idproperty-与双图层高亮架构">3.2 跨瓦片接缝消除：<code>idProperty</code> 与双图层高亮架构</h3>
+<p>在矢量切片生产过程中，跨越瓦片分界线的多边形会被切成多个子多边形分别封入不同的 PBF 文件中。若直接高亮某个切片中的要素，会导致<strong>只高亮了多边形的一半</strong>。</p>
+<h4 id="解决方案：全局唯一标识提取">解决方案：全局唯一标识提取</h4>
+<pre><code class="language-javascript">source: new VectorTileSource({
+  format: new MVT({
+    idProperty: &#39;iso_a3&#39;, // 将属性中的 ISO 3 字代码提取为 feature.getId()
+  }),
+  url: &#39;https://.../{z}/{x}/{-y}.pbf&#39;,
+})
+</code></pre>
+<p>当配置了 <code>idProperty</code> 后，各切片中解出的子图元都拥有相同的 <code>feature.getId() === &#39;CHN&#39;</code>。</p>
+<h4 id="双图层覆盖模式（base-layer--selection-layer）">双图层覆盖模式（Base Layer + Selection Layer）</h4>
+<p>为实现极致的高亮交互性能，避免修改底图切片导致全图重光栅化：</p>
+<ol>
+<li><strong>底图图层</strong>：负责底图背景与全部多边形的常规绘制。</li>
+<li><strong>高亮图层</strong>：共享底图数据源 <code>source: vtLayer.getSource()</code>，自身不发任何网络请求；配置 <code>renderMode: &#39;vector&#39;</code>，样式函数只匹配 <code>feature.getId() in selection</code> 的图元。</li>
+</ol>
+<pre><code class="language-mermaid">sequenceDiagram
+    autonumber
+    actor User as 用户交互 (Click / Hover)
+    participant Map as Map 视口
+    participant VT as vtLayer (基础切片)
+    participant State as 全局选择状态 selection
+    participant SelLayer as selectionLayer (高亮图层)
+
+    User-&gt;&gt;Map: 触发 pointermove / click
+    Map-&gt;&gt;VT: vtLayer.getFeatures(pixel)
+    VT--&gt;&gt;Map: 返回命中的图元数组 [feature]
+    Map-&gt;&gt;State: 提取 feature.getId(), 写入 selection[fid]
+    Map-&gt;&gt;SelLayer: selectionLayer.changed()
+    Note over SelLayer: renderMode: &#39;vector&#39; 纯矢量即时绘制
+    SelLayer-&gt;&gt;SelLayer: 样式函数命中 fid，应用红色高亮样式
+    SelLayer--&gt;&gt;User: 60fps 实时局部渲染高亮轮廓
+</code></pre>
+<hr>
+<h3 id="33-epsg4326-原生矢量切片与-mapbox-样式集成">3.3 EPSG:4326 原生矢量切片与 Mapbox 样式集成</h3>
+<p>绝大多数在线地图切片基于 Web 墨卡托（EPSG:3857，范围为 1:1 正方形）。而在气象、水文、高精度测绘及非墨卡托项目中，数据源往往是原生的等经纬度网格（EPSG:4326，经度 360°、纬度 180°，长宽比 2:1）。</p>
+<p>OpenLayers 通过 <code>createXYZ</code> 精准定制 4326 的切片分辨率金字塔：</p>
+<pre><code class="language-javascript">// examples/vector-tiles-4326.js
+const tileGrid = createXYZ({
+  extent: [-180, -90, 180, 90], // 全球经纬度范围
+  tileSize: 512,                // 512 像素大瓦片
+  maxResolution: 180 / 512,      // Zoom 0 分辨率：180度 / 512像素 = 0.3515625
+  maxZoom: 13,
+});
+
+const layer = new VectorTileLayer({
+  declutter: true,
+  source: new VectorTileSource({
+    projection: &#39;EPSG:4326&#39;,
+    tileGrid: tileGrid,
+  }),
+});
+
+// 使用 ol-mapbox-style 渲染样式，必须传入切片网格 resolutions
+applyStyle(layer, styleJsonUrl, {resolutions: tileGrid.getResolutions()});
+applyBackground(layer, styleJsonUrl);
+</code></pre>
+<blockquote>
+<p>[!IMPORTANT]
+<strong>Mapbox 样式的 Zoom 与 Resolution 映射</strong>：<br>Mapbox Style 规范基于 3857 的 Zoom 级别定义线宽和字号。在 4326 切片中，由于每度代表的物理距离随纬度变化，必须通过 <code>{resolutions: tileGrid.getResolutions()}</code> 将切片网格的实际分辨率映射表注入 <code>applyStyle</code>，否则样式规则的断点（Stop）计算将严重漂移。</p>
+</blockquote>
+<hr>
+<h3 id="34-极地与异构坐标系下的客户端矢量实时重投影">3.4 极地与异构坐标系下的客户端矢量实时重投影</h3>
+<p>Web 墨卡托投影在南北纬 85° 以上区域形变趋于无穷大，导致北极航道、格陵兰岛或南极洲在 3857 切片中直接被截断或严重扭曲。</p>
+<p>利用 OpenLayers 的矢量重投影引擎，我们可以拉取 <strong>EPSG:4326 矢量切片</strong>，并在客户端直接将其重投影到 <strong>北极朗伯等面积方位投影（ESRI:102017）</strong> 呈现：</p>
+<pre><code class="language-javascript">// examples/vector-tiles-reprojected.js
+// 1. 注册 Proj4 极地等面积方位投影定义
+proj4.defs(
+  &#39;ESRI:102017&#39;,
+  &#39;+proj=laea +lat_0=90 +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs +type=crs&#39;
+);
+register(proj4);
+
+// 2. 矢量切片源维持 EPSG:4326
+const layer = new VectorTileLayer({
+  source: new VectorTileSource({
+    projection: &#39;EPSG:4326&#39;,
+    tileGrid: tileGrid4326,
+  }),
+});
+
+// 3. 地图 View 采用 ESRI:102017 极地投影
+const map = new Map({
+  target: &#39;map&#39;,
+  layers: [layer],
+  view: new View({
+    projection: &#39;ESRI:102017&#39;,
+    center: fromLonLat([0, 90], &#39;ESRI:102017&#39;), // 以北极点为中心
+    zoom: 4,
+  }),
+});
+</code></pre>
+<h4 id="为什么矢量切片重投影完胜栅格切片重投影？">为什么矢量切片重投影完胜栅格切片重投影？</h4>
+<ul>
+<li><strong>无重采样模糊</strong>：栅格重投影是将正方形像素拉伸成梯形并插值，文字和细线会严重模糊；矢量切片重投影直接对几何顶点调用数学坐标转换公式，重投影后文字依然是水平/沿线清晰排版，线条边缘保持原生 1 像素物理锐度。</li>
+<li><strong>无接缝撕裂</strong>：切片生产时带有微小像素缓冲（Buffer），OpenLayers 在目标投影像素空间下直接拼接多边形，渲染无缝无裂纹。</li>
+</ul>
+<hr>
+<h3 id="35-tms-与-xyz-坐标系排错调试：tiledebug">3.5 TMS 与 XYZ 坐标系排错调试：<code>TileDebug</code></h3>
+<p>在加载切片服务时，经常会遇到“整图全白”、“切片返回 404”或“南北半球颠倒”的现象，这通常是由于 <strong>TMS（Tile Map Service）</strong> 与 <strong>XYZ</strong> 坐标系的 Y 轴定义差异导致的：</p>
+<pre><code>XYZ / WMTS 规范 (Top-Left 原点):
+Y=0 位于最北端 (+85.05°)，向南逐渐增大：Y -&gt; 最大
+
+TMS 规范 (Bottom-Left 原点):
+Y=0 位于最南端 (-85.05°)，向北逐渐增大：Y -&gt; 最大
+</code></pre>
+<p>OpenLayers 在 URL 模板中通过 <code>{-y}</code> 占位符自动执行 TMS 行号翻转：
+$${-y} = 2^z - 1 - y$$</p>
+<h4 id="借助-tiledebug-实时显化切片行号与网格">借助 <code>TileDebug</code> 实时显化切片行号与网格</h4>
+<pre><code class="language-javascript">// examples/canvas-tiles-tms.js
+const debugLayer = new TileLayer({
+  source: new TileDebug({
+    template: &#39;z:{z} x:{x} y:{-y}&#39;,               // 打印实际向后端请求的 TMS 行号
+    projection: vtLayer.getSource().getProjection(), // 对齐投影
+    tileGrid: vtLayer.getSource().getTileGrid(),     // 严格继承切片网格
+    zDirection: 1,                                  // 优先选择高分辨率切片匹配
+  }),
+});
+</code></pre>
+<p>在界面上开启该图层后，视口内每个瓦片中心都会显示黑框与编号，如 <code>z:4 x:8 y:10</code>。开发者可在浏览器 Network 面板中对照实际请求的 URL，若瓦片编号一致且能命中数据，即可迅速定位是投影偏移、TileGrid 错位还是 Y 轴未翻转。</p>
+<hr>
+<h2 id="4-生产实践踩坑与工程避坑指南">4. 生产实践踩坑与工程避坑指南</h2>
+<h3 id="41-避让机制（declutter）与多切片重复文本">4.1 避让机制（Declutter）与多切片重复文本</h3>
+<ul>
+<li><strong>现象</strong>：一个大型国家（如加拿大、俄罗斯）横跨 10 多个瓦片，地图缩放时到处都出现重复的国家名称标签。</li>
+<li><strong>根因</strong>：切片切片机为了保证每个瓦片独立可用，会在相交的每个瓦片内都写入该要素的中心注记点或多边形。</li>
+<li><strong>解决策</strong>：在 <code>VectorTileLayer</code> 上务必开启 <code>declutter: true</code>。OpenLayers 的全局避让管理器会在屏幕像素空间汇总所有注记，根据要素 ID 或文本内容自动合并去重，只在最佳几何中心展示一个标签。</li>
+</ul>
+<h3 id="42-内存泄漏与-canvas-缓存暴涨">4.2 内存泄漏与 Canvas 缓存暴涨</h3>
+<ul>
+<li><strong>现象</strong>：用户在矢量切片地图上频繁缩放与大幅平移后，浏览器内存占用从 200MB 飙升到 1.5GB 以上，甚至触发 WebGL 上下文丢失或页面崩溃。</li>
+<li><strong>优化配置</strong>：<pre><code class="language-javascript">const source = new VectorTileSource({
+  cacheSize: 512, // 限制内部 LRU 缓存的切片最大数量（默认相对宽松）
+  maxZoom: 16,
+  // ...
+});
+</code></pre>
+在单页应用（SPA）组件卸载时，务必调用 <code>map.setTarget(null)</code> 并清空数据源引用，确保垃圾回收器（GC）及时回收离屏切片缓存。</li>
+</ul>
+<hr>
+<h2 id="5-总结与延伸阅读">5. 总结与延伸阅读</h2>
+<p>本专题完整演示了 OpenLayers 针对现代矢量切片的底层运行机制：</p>
+<ol>
+<li><strong>高性能探测与高亮</strong>：通过属性提取（<code>idProperty</code>）与双图层分离（<code>renderMode: &#39;vector&#39;</code>），在毫秒级实现要素单选、多选与悬停响应；</li>
+<li><strong>多投影兼容</strong>：打破 3857 垄断，支持 EPSG:4326 原生切片与 Mapbox 样式转换；</li>
+<li><strong>极地实时重投影</strong>：利用 Proj4 实现异构投影无损矢量保真展示；</li>
+<li><strong>切片调试与排错</strong>：运用 <code>TileDebug</code> 快速排查 TMS 轴向与网格分块异常。</li>
+</ol>
+<p>建议结合以下专题交叉进阶学习：</p>
+<ul>
+<li><a href="./openlayers-vector-formats-guide.html">OpenLayers 矢量图层与样式渲染专题指南</a></li>
+<li><a href="./openlayers-graticule-projections-tissot-guide.html">OpenLayers 投影坐标系与格网实战指南</a></li>
+<li><a href="./openlayers-layer-stack-zindex-resolution-guide.html">OpenLayers 图层堆叠与渲染通道优化指南</a></li>
+</ul>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

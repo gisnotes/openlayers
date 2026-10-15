@@ -2,8 +2,8 @@ import { Dr as Map, Ni as View, Vn as ImageLayer, X as RasterSource } from "./co
 import { t as StadiaMaps } from "./StadiaMaps.js";
 //#region examples/color-manipulation.js
 /**
-* Color manipulation functions below are adapted from
-* https://github.com/d3/d3-color.
+* Color manipulation functions below are adapted from https://github.com/d3/d3-color
+* 以下颜色空间转换数学公式改编自 d3-color 开源算法库
 */
 var Xn = .95047;
 var Yn = 1;
@@ -14,9 +14,10 @@ var t2 = 3 * t1 * t1;
 var t3 = t1 * t1 * t1;
 var twoPi = 2 * Math.PI;
 /**
-* Convert an RGB pixel into an HCL pixel.
-* @param {Array<number>} pixel A pixel in RGB space.
-* @return {Array<number>} A pixel in HCL space.
+* Convert an RGB pixel into an HCL pixel
+* 将 RGB 像素转换为感知均匀的 HCL 色彩空间像素
+* @param {Array<number>} pixel A pixel in RGB space / RGB 像素通道值数组
+* @return {Array<number>} A pixel in HCL space / HCL 像素通道值数组
 */
 function rgb2hcl(pixel) {
 	const red = rgb2xyz(pixel[0]);
@@ -37,9 +38,10 @@ function rgb2hcl(pixel) {
 	return pixel;
 }
 /**
-* Convert an HCL pixel into an RGB pixel.
-* @param {Array<number>} pixel A pixel in HCL space.
-* @return {Array<number>} A pixel in RGB space.
+* Convert an HCL pixel into an RGB pixel
+* 将 HCL 空间像素反向映射回用于硬件显示的 RGB 像素
+* @param {Array<number>} pixel A pixel in HCL space / HCL 像素通道值数组
+* @return {Array<number>} A pixel in RGB space / RGB 像素通道值数组
 */
 function hcl2rgb(pixel) {
 	const h = pixel[0];

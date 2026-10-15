@@ -418,7 +418,7 @@ var Modify = class extends PointerInteraction {
 		if (options.hitDetection) this.hitDetection_ = options.hitDetection;
 		/**
 		* Internal features array.  When adding or removing features, be sure to use
-		* addFeature_()/removeFeature_() so that the the segment index is adjusted.
+		* addFeature_()/removeFeature_() so that the segment index is adjusted.
 		* @type {Array<Feature>}
 		* @private
 		*/

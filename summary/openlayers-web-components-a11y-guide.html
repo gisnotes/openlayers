@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-web-components-原生组件化封装与无障碍访问（a11y）实战架构指南">OpenLayers Web Components 原生组件化封装与无障碍访问（A11y）实战架构指南</h1>
+<blockquote>
+<p>在现代化前端研发体系中，企业级系统常常面临两大核心命题：</p>
+<ol>
+<li><strong>技术栈异构与微前端架构</strong>：同一企业生态中可能同时存在 React、Vue、Angular 及老旧 jQuery 页面，亟需一种<strong>零依赖、跨框架通用、样式强隔离</strong>的原生地图组件；</li>
+<li><strong>数字包容与无障碍合规（A11y / Accessibility）</strong>：全球范围对 WCAG 2.1、ADA 及政府公共服务系统的无障碍法律法规要求日趋严苛，高度依赖鼠标手势的电子地图必须支持<strong>纯键盘操作、跳跃链接与屏幕阅读器友好</strong>。</li>
+</ol>
+<p>OpenLayers 依托现代浏览器底层标准，天然支持 W3C <strong>Web Components（Custom Elements + Shadow DOM）</strong> 原生封装，并内置了完整的键盘导航与无障碍事件管线。本文基于 3 个核心官方示例（<code>accessible.html</code>、<code>es2015-custom-element.html</code>、<code>es2015-custom-element-a11y.html</code>），系统解构原生地图组件封装与无障碍落地的核心原理与最佳实践。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：shadow-dom-隔离与无障碍事件流">1. 架构总览：Shadow DOM 隔离与无障碍事件流</h2>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph HostDocument [主文档 / 业务页面 (Host DOM)]
+        SkipLink[&quot;无障碍跳跃链接&lt;br/&gt;&amp;lt;a href=&#39;#map&#39;&amp;gt;&quot;]
+        ExternalBtn[&quot;语义化控制按钮&lt;br/&gt;&amp;lt;button&amp;gt; Zoom +/-&quot;]
+        CustomTag[&quot;自定义元素宿主&lt;br/&gt;&amp;lt;ol-map tabindex=&#39;0&#39;&amp;gt;&quot;]
+    end
+
+    subgraph ShadowDOMBoundary [Shadow DOM 独立作用域边界]
+        HostStyle[&quot;:host { display: block; }&quot;]
+        ScopedCSS[&quot;隔离样式表 theme/ol.css&quot;]
+        MapDiv[&quot;内部挂载容器 &amp;lt;div&amp;gt;&quot;]
+    end
+
+    subgraph OLMapEngine [OpenLayers 地图引擎]
+        ViewSystem[&quot;View (中心点 / 缩放层级)&quot;]
+        KeyboardInteraction[&quot;内置交互器: KeyboardPan &amp; KeyboardZoom&quot;]
+        LayerRender[&quot;瓦片底图渲染 (OSM)&quot;]
+    end
+
+    SkipLink --&gt;|Tab 聚焦直接跳转| CustomTag
+    ExternalBtn --&gt;|点击 / Enter 触发| ViewSystem
+    CustomTag --&gt;|attachShadow({mode:&#39;open&#39;})| ShadowDOMBoundary
+    ShadowDOMBoundary --&gt; MapDiv
+    MapDiv --&gt; OLMapEngine
+
+    CustomTag -.-&gt;|键盘事件穿透 (composed: true)| KeyboardInteraction
+    KeyboardInteraction --&gt;|驱动视口漫游/缩放| ViewSystem
+</code></pre>
+<h3 id="11-核心方案选型特征对比">1.1 核心方案选型特征对比</h3>
+<table>
+<thead>
+<tr>
+<th align="left">维度 / 特性</th>
+<th align="left">传统 DIV 容器集成</th>
+<th align="left">原生 Web Component (<code>&lt;ol-map&gt;</code>)</th>
+<th align="left">无障碍强化版 (<code>&lt;ol-map tabindex=&quot;0&quot;&gt;</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>典型示例</strong></td>
+<td align="left"><code>accessible.html</code></td>
+<td align="left"><code>es2015-custom-element.html</code></td>
+<td align="left"><code>es2015-custom-element-a11y.html</code></td>
+</tr>
+<tr>
+<td align="left"><strong>宿主载体</strong></td>
+<td align="left">普通 <code>div#map</code></td>
+<td align="left">自定义元素 <code>OLComponent</code></td>
+<td align="left">自定义元素 <code>OLComponent</code></td>
+</tr>
+<tr>
+<td align="left"><strong>样式隔离</strong></td>
+<td align="left">全局 CSS，易与外层框架冲突</td>
+<td align="left"><strong>Shadow DOM 强隔离</strong>（零污染）</td>
+<td align="left"><strong>Shadow DOM 强隔离</strong>（零污染）</td>
+</tr>
+<tr>
+<td align="left"><strong>跨框架兼容</strong></td>
+<td align="left">需针对 React/Vue 分别编写适配器</td>
+<td align="left"><strong>原生 HTML 标签</strong>，任意框架开箱即用</td>
+<td align="left"><strong>原生 HTML 标签</strong>，任意框架开箱即用</td>
+</tr>
+<tr>
+<td align="left"><strong>键盘导航</strong></td>
+<td align="left">支持（需在 div 上配 tabindex）</td>
+<td align="left">默认不可聚焦</td>
+<td align="left"><strong>原生支持全键盘方向键漫游与 +/- 缩放</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>WCAG 合规</strong></td>
+<td align="left">需额外手工补充</td>
+<td align="left">仅完成组件化</td>
+<td align="left"><strong>完全满足 WCAG 2.1 AA 无障碍合规</strong></td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-无障碍地图（a11y）架构与全键盘导航（accessiblehtml）">2. 无障碍地图（A11y）架构与全键盘导航（<code>accessible.html</code>）</h2>
+<p>对于视障人士（依赖屏幕阅读器）或上肢运动受限人士（依赖键盘单手操作），传统地图的拖拽与滚轮手势是无法逾越的障碍。</p>
+<h3 id="21-tabindex0-与文档焦点序列">2.1 <code>tabindex=&quot;0&quot;</code> 与文档焦点序列</h3>
+<p>普通 <code>&lt;div&gt;</code> 默认无法接收浏览器焦点。通过添加 <code>tabindex=&quot;0&quot;</code>，浏览器将其插入自然的键盘 Tab 遍历链条中：</p>
+<pre><code class="language-html">&lt;a class=&quot;skiplink&quot; href=&quot;#map&quot;&gt;Go to map / 跳转到地图&lt;/a&gt;
+&lt;div id=&quot;map&quot; class=&quot;map&quot; tabindex=&quot;0&quot;&gt;&lt;/div&gt;
+&lt;button id=&quot;zoom-out&quot;&gt;Zoom out / 缩小&lt;/button&gt;
+&lt;button id=&quot;zoom-in&quot;&gt;Zoom in / 放大&lt;/button&gt;
+</code></pre>
+<h3 id="22-跳跃链接（skip-link）设计模式">2.2 跳跃链接（Skip Link）设计模式</h3>
+<p>盲人用户使用屏幕阅读器打开页面时，若页面头部有数十个导航菜单，逐项按 Tab 耗时极长。</p>
+<pre><code class="language-css">a.skiplink {
+  position: absolute;
+  clip: rect(1px, 1px, 1px, 1px);
+  padding: 0;
+  border: 0;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+}
+a.skiplink:focus {
+  clip: auto;
+  height: auto;
+  width: auto;
+  background-color: #fff;
+  padding: 10px;
+  z-index: 10000;
+}
+</code></pre>
+<p><strong>行为表现</strong>：平时完全隐形，一旦键盘初次按下 <code>Tab</code>，跳跃链接立即高亮显现；按下 <code>Enter</code> 键即可瞬间将光标焦点移至 <code>#map</code>。</p>
+<h3 id="23-内置键盘交互管线">2.3 内置键盘交互管线</h3>
+<p>OpenLayers 默认包含了 <code>ol/interaction/KeyboardPan</code> 和 <code>ol/interaction/KeyboardZoom</code>：</p>
+<ul>
+<li><strong><code>+</code> / <code>-</code> 键</strong>：执行 <code>view.setZoom(zoom ± 1)</code> 渐进式镜头缩放；</li>
+<li><strong>方向键（↑ / ↓ / ← / →）</strong>：以固定像素步长向对应方向平滑漫游；</li>
+<li>当且仅当地图容器获得焦点（Focused）时拦截按键，失去焦点后自动释放，不干扰网页常规文本输入。</li>
+</ul>
+<hr>
+<h2 id="3-原生-web-components-自定义地图组件架构（es2015-custom-elementhtml）">3. 原生 Web Components 自定义地图组件架构（<code>es2015-custom-element.html</code>）</h2>
+<p>利用 W3C Custom Elements 标准，可以将地图完整封装为 <code>&lt;ol-map&gt;</code> 标签：</p>
+<pre><code class="language-javascript">import Map from &#39;ol/Map.js&#39;;
+import View from &#39;ol/View.js&#39;;
+import TileLayer from &#39;ol/layer/Tile.js&#39;;
+import OSM from &#39;ol/source/OSM.js&#39;;
+
+class OLComponent extends HTMLElement {
+  constructor() {
+    super();
+    // 1. 创建开放模式的影子根节点
+    this.shadow = this.attachShadow({mode: &#39;open&#39;});
+
+    // 2. 注入独立样式（外部 Tailwind / Bootstrap 无法穿透破坏）
+    const link = document.createElement(&#39;link&#39;);
+    link.setAttribute(&#39;rel&#39;, &#39;stylesheet&#39;);
+    link.setAttribute(&#39;href&#39;, &#39;theme/ol.css&#39;);
+    this.shadow.appendChild(link);
+
+    // 3. 必须显式声明宿主为 block 布局
+    const style = document.createElement(&#39;style&#39;);
+    style.innerText = `:host { display: block; }`;
+    this.shadow.appendChild(style);
+
+    // 4. 地图挂载容器
+    const div = document.createElement(&#39;div&#39;);
+    div.style.width = &#39;100%&#39;;
+    div.style.height = &#39;100%&#39;;
+    this.shadow.appendChild(div);
+
+    // 5. 初始化内部地图
+    this.map = new Map({
+      target: div,
+      layers: [new TileLayer({ source: new OSM() })],
+      view: new View({ center: [0, 0], zoom: 2 }),
+    });
+  }
+}
+
+// 注册标准标签（必须包含短横线）
+customElements.define(&#39;ol-map&#39;, OLComponent);
+</code></pre>
+<h3 id="关键点剖析：">关键点剖析：</h3>
+<ol>
+<li><strong><code>:host { display: block; }</code> 的必要性</strong>：根据 HTML 标准规范，所有自定义元素默认都是 <code>display: inline</code>。如果不在 Shadow DOM 内部显式声明为 block，外部设置的 <code>width: 100%; height: 500px</code> 将全部无效。</li>
+<li><strong>样式完全沙盒化</strong>：<code>theme/ol.css</code> 仅作用于当前 Shadow DOM 内部，彻底解决了全局样式污染、图层控制按钮图标样式被宿主应用冲刷变形的世纪难题。</li>
+</ol>
+<hr>
+<h2 id="4-shadow-dom-与无障碍焦点的深度融合（es2015-custom-element-a11yhtml）">4. Shadow DOM 与无障碍焦点的深度融合（<code>es2015-custom-element-a11y.html</code>）</h2>
+<p>当组件化与无障碍同时存在时，核心挑战在于<strong>事件与焦点的穿透（Focus Tunneling）</strong>：</p>
+<pre><code class="language-html">&lt;!-- 直接赋予自定义组件宿主 tabindex=&quot;0&quot; --&gt;
+&lt;ol-map id=&quot;map&quot; class=&quot;map&quot; tabindex=&quot;0&quot;&gt;&lt;/ol-map&gt;
+</code></pre>
+<h3 id="41-键盘事件的-composed-冒泡链条">4.1 键盘事件的 Composed 冒泡链条</h3>
+<p>当焦点落在 <code>&lt;ol-map&gt;</code> 宿主上时，用户敲击方向键或 <code>+/-</code> 键触发的 <code>KeyboardEvent</code> 具备 W3C 标准的 <code>composed: true</code> 属性，能够跨越 ShadowRoot 边界直接向内部传播。OpenLayers 内部监听器捕获事件并计算坐标平移，实现了外层纯净标签与内层复杂交互的完美解耦。</p>
+<h3 id="42-视觉高亮环的最佳规范">4.2 视觉高亮环的最佳规范</h3>
+<p>在 Shadow 内部样式中补充 <code>:host(:focus)</code> 状态控制：</p>
+<pre><code class="language-css">:host(:focus) {
+  outline: 3px solid #005fcc;
+  outline-offset: 2px;
+}
+</code></pre>
+<p>保证了键盘用户导航到地图时拥有清晰明确的高反差视觉反馈。</p>
+<hr>
+<h2 id="5-生产级避坑指南与进阶实践">5. 生产级避坑指南与进阶实践</h2>
+<h3 id="51-组件生命周期与内存泄漏（critical）">5.1 组件生命周期与内存泄漏（Critical）</h3>
+<p>在 Vue/React 单页应用中，组件被切换路由时会从 DOM 树移除。如果在 Custom Element 中未做销毁处理，Map 实例和图层切片缓存将永远驻留内存中。</p>
+<pre><code class="language-javascript">connectedCallback() {
+  // 元素挂载到 DOM 时，可重新触发更新
+  this.map?.updateSize();
+}
+
+disconnectedCallback() {
+  // 元素卸载时，必须切断目标挂载，释放事件与 WebGL/Canvas 上下文
+  if (this.map) {
+    this.map.setTarget(null);
+  }
+}
+</code></pre>
+<h3 id="52-容器尺寸自适应（resizeobserver）">5.2 容器尺寸自适应（ResizeObserver）</h3>
+<p>当 <code>&lt;ol-map&gt;</code> 位于侧边栏折叠面板或弹性网格布局（Flex / Grid）中时，容器尺寸变化通常不会触发全局 <code>window.resize</code> 事件。</p>
+<pre><code class="language-javascript">this.resizeObserver = new ResizeObserver(() =&gt; {
+  this.map?.updateSize();
+});
+this.resizeObserver.observe(this);
+</code></pre>
+<h3 id="53-屏幕阅读器语义补全（aria-角色）">5.3 屏幕阅读器语义补全（ARIA 角色）</h3>
+<p>为了使盲人使用的 NVDA 或 iOS VoiceOver 能够准确读出组件含义，推荐在自定义组件内部或宿主上补充：</p>
+<pre><code class="language-html">&lt;ol-map id=&quot;map&quot; class=&quot;map&quot; tabindex=&quot;0&quot; role=&quot;region&quot; aria-label=&quot;地理空间矢量地图&quot;&gt;&lt;/ol-map&gt;
+</code></pre>
+<p>用户 Tab 聚焦时，读屏软件将自动朗读：“地理空间矢量地图，可聚焦区域，按方向键平移，按加减号缩放”。</p>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Cloud Optimized GeoTIFF (COG) from a Blob</title>
+    <title>Cloud Optimized GeoTIFF (COG) from a Blob / 从二进制 Blob 对象加载云优化 GeoTIFF</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Cloud Optimized GeoTIFF (COG) from a Blob</h4>
+        <h4 id="title">Cloud Optimized GeoTIFF (COG) from a Blob / 从二进制 Blob 对象加载云优化 GeoTIFF</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -76,20 +76,20 @@
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-stretch.html&quot;&gt;Band Contrast Stretch / 遥感波段组合与对比度拉伸&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog.html&quot;&gt;Cloud Optimized GeoTIFF (COG)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-blob.html&quot;&gt;Cloud Optimized GeoTIFF (COG) from a Blob&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-custom-client.html&quot;&gt;Cloud Optimized GeoTIFF (COG) with Custom Loader&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog.html&quot;&gt;Cloud Optimized GeoTIFF (COG) / 云优化 GeoTIFF (COG) 瓦片渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-blob.html&quot;&gt;Cloud Optimized GeoTIFF (COG) from a Blob / 从二进制 Blob 对象加载云优化 GeoTIFF&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-custom-client.html&quot;&gt;Cloud Optimized GeoTIFF (COG) with Custom Loader / 自定义网络加载器的云优化 GeoTIFF&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-pyramid.html&quot;&gt;GeoTIFF tile pyramid&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-overviews.html&quot;&gt;GeoTIFF with Overviews&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF 客户端动态重投影 (GeoTIFF Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math.html&quot;&gt;NDVI from a Sentinel 2 COG&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-colors.html&quot;&gt;NDVI with a Dynamic Color Ramp&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC support&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;包含模型仿射变换矩阵的 COG (COG with ModelTransformation)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;多 COG 数据源重投影与波段合成 (Multiple COG sources)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;COG with ModelTransformation / 包含模型仿射变换矩阵的 COG&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF Reprojection / GeoTIFF 客户端动态重投影&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-pyramid.html&quot;&gt;GeoTIFF tile pyramid / GeoTIFF 瓦片金字塔 (STACTA)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-overviews.html&quot;&gt;GeoTIFF with Overviews / 挂载外部金字塔文件的 GeoTIFF&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG Sources / 多 COG 数据源重投影与波段合成&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source / 使用 Raster 数据源计算 COG 的 NDVI&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math.html&quot;&gt;NDVI from a Sentinel 2 COG / 基于哨兵 2 号 COG 计算归一化植被指数 (NDVI)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-colors.html&quot;&gt;NDVI with a Dynamic Color Ramp / 动态色带交互调整的 NDVI 渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs / 基于两个 16 位 COG 同时计算 NDVI 与 NDWI&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC support / STAC 时空资产目录支持&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >16</a>
@@ -116,8 +116,20 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Rendering a COG as a tiled layer from a Blob.</p>
-        <div id="docs"><p>Tiled data from a Cloud Optimized GeoTIFF (COG) can be rendered as a layer.  In this example, a single 3-band GeoTIFF is used to render RGB data from a Blob.</p>
+        <p id="shortdesc">Rendering a COG as a tiled layer from a Blob. / 将内存中的二进制 Blob 对象（如本地文件或动态获取的字节流）渲染为 COG 瓦片图层。</p>
+        <div id="docs"><h2>Tiled data from a Cloud Optimized GeoTIFF (COG) can be rendered as a layer.  In this example, a single 3-band GeoTIFF is used to render RGB data from a Blob.
+云优化 GeoTIFF（COG）中的平铺数据可以直接从二进制 Blob 对象渲染为图层。在本示例中，从服务端抓取二进制文件并转换为内存 <code>Blob</code>，由 <code>ol/source/GeoTIFF</code> 解析其三波段 RGB 像元并在客户端呈现。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 为什么支持直接传入 Blob 对象？ 在生产场景中，并非所有的 GeoTIFF 都是公开托管在支持 HTTP Range 请求的公共云存储（如 S3）上的。很多时候数据来源于： * <strong>用户本地文件拖拽或选定</strong>：利用 HTML5 <code>&lt;input type=&quot;file&quot;&gt;</code> 或拖拽放置读取用户的本地 <code>.tif</code> 文件（直接生成 <code>File</code> 对象，<code>File</code> 继承自 <code>Blob</code>），<strong>无需先上传到后台服务器</strong>，纯前端即可在地图上秒级预览！ * <strong>前端加密解密流</strong>：通过自定义接口获取加密二进制流，前端解密后生成的内存 <code>Blob</code>。 * <strong>动态合成二进制流</strong>：由前端 Canvas、WebAssembly 计算管线（如 GDAL.js）直接导出的栅格内存块。</h4>
+<h4>2. <code>sources: [{ blob: blob }]</code> 的内部机制 当给 <code>ol/source/GeoTIFF</code> 传入 <code>blob</code> 而不是 <code>url</code> 时： * 底层的 <code>geotiff.js</code> 会通过 <code>fromBlob(blob)</code> 创建客户端读取句柄。 * 相比于基于 HTTP Range 的远程分块请求，<code>fromBlob</code> 会在内存中使用 <code>Blob.slice()</code> 进行像元切片读取。 * <strong>注意与权衡</strong>：</h4>
+<ul>
+<li>优势：零网络延迟，完全离线可用，不需要配置 CORS 跨域响应头。</li>
+<li>权衡：因为整个文件必须先完整存在于浏览器内存中（或者通过 File API 访问本地磁盘），所以对于数十 GB 级别的海量数据，仍推荐托管在云端使用 URL 进行 HTTP Range 局部按需读取。</li>
+</ul>
+<h4>3. 异步配置：<code>source.getView().then((viewConfig) =&gt; ...)</code> 当通过 <code>source.getView()</code> 异步初始化视口时： ```javascript view: source.getView().then((viewConfig) =&gt; {</h4>
+<p>  viewConfig.showFullExtent = true;
+  return viewConfig;
+}), ``` * <code>showFullExtent: true</code>：确保视图在缩放和漫游时，始终限制并展示影像的完整边界，避免用户在放大或平移时地图漫游到影像之外的空白未知区域。</p>
 </div>
       </div>
 
@@ -128,9 +140,13 @@
 import TileLayer from &#x27;ol/layer/WebGLTile.js&#x27;;
 import GeoTIFF from &#x27;ol/source/GeoTIFF.js&#x27;;
 
+// Fetch the TIFF file as a binary Blob
+// 发起网络请求并将 TIFF 文件获取为二进制 Blob 对象
 fetch(&#x27;data/example.tif&#x27;)
   .then((response) &#x3D;&gt; response.blob())
   .then((blob) &#x3D;&gt; {
+    // Construct a GeoTIFF source from the in-memory Blob
+    // 使用内存中的 Blob 对象构建 GeoTIFF 数据源
     const source &#x3D; new GeoTIFF({
       sources: [
         {
@@ -139,6 +155,8 @@ fetch(&#x27;data/example.tif&#x27;)
       ],
     });
 
+    // Initialize the Map with WebGL Tile Layer and an asynchronously resolved view
+    // 初始化地图实例，挂载 WebGL 瓦片图层并使用异步解析的视口配置
     const map &#x3D; new Map({
       target: &#x27;map&#x27;,
       layers: [
@@ -146,7 +164,11 @@ fetch(&#x27;data/example.tif&#x27;)
           source: source,
         }),
       ],
+      // source.getView() returns a Promise resolving to View options based on TIFF metadata
+      // source.getView() 返回一个 Promise，解析出与 TIFF 元数据相匹配的视图选项
       view: source.getView().then((viewConfig) &#x3D;&gt; {
+        // Constrain view to show the full extent
+        // 约束视图以完整展示影像范围
         viewConfig.showFullExtent &#x3D; true;
         return viewConfig;
       }),
@@ -163,7 +185,7 @@ fetch(&#x27;data/example.tif&#x27;)
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Cloud Optimized GeoTIFF (COG) from a Blob&lt;/title&gt;
+    &lt;title&gt;Cloud Optimized GeoTIFF (COG) from a Blob / 从二进制 Blob 对象加载云优化 GeoTIFF&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

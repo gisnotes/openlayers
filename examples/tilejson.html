@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>TileJSON</title>
+    <title>TileJSON / TileJSON 瓦片元数据规范与自动解析</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">TileJSON</h4>
+        <h4 id="title">TileJSON / TileJSON 瓦片元数据规范与自动解析</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,11 +74,11 @@
               data-bs-target="#tag-example-list"
               data-title="tilejson"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-group.html&quot;&gt;Layer Groups&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-extent.html&quot;&gt;Limited Layer Extent&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./semi-transparent-layer.html&quot;&gt;Semi-Transparent Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./tilejson.html&quot;&gt;TileJSON&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./utfgrid.html&quot;&gt;UTFGrid&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-group.html&quot;&gt;Layer Groups / 图层组树级分层组织与双向数据绑定（LayerGroup）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-extent.html&quot;&gt;Limited Layer Extent / 限制图层渲染空间范围（layer.setExtent）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./semi-transparent-layer.html&quot;&gt;Semi-Transparent Layer / 半透明专题图层叠加与 CSS 黑白滤镜&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./tilejson.html&quot;&gt;TileJSON / TileJSON 瓦片元数据规范与自动解析&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./utfgrid.html&quot;&gt;UTFGrid / UTFGrid 栅格交互探测与瓦片属性离线拾取&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >5</a>
@@ -105,8 +105,25 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of a TileJSON layer.</p>
-        <div id="docs"><p>Example of a TileJSON layer.</p>
+        <p id="shortdesc">Example of a TileJSON layer. / 展示如何加载符合 TileJSON 规范的切片服务，自动解析瓦片模板 URL、边界与缩放级别。</p>
+        <div id="docs"><h2>Example of a TileJSON layer.
+本示例展示如何通过 <code>ol/source/TileJSON</code> 直接接入符合 TileJSON 标准协议的切片服务（此处使用 Gnosis Map Server 的 Natural Earth 栅格切片）。OpenLayers 会自动解析服务元数据中的切片 URL 模板、空间范围（Bounds）、最小与最大缩放级别以及版权归属（Attributions），无需开发者手动拼接切片网格与投影参数。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构原理 (Core Architecture) 在传统的切片配置中，开发者需手动指定 <code>url: &#39;.../{z}/{x}/{y}.png&#39;</code>、<code>minZoom</code>、<code>maxZoom</code>、<code>attributions</code> 以及复杂的 <code>tileGrid</code>。 - <strong>TileJSON 规范使命</strong>：由 Mapbox 发起的 TileJSON 是一种基于 JSON 的轻量级切片地图元数据开放规范。它将地图服务的全部要素（切片 URL 数组、缩放范围、边界范围、矢量图层定义与版权说明）打包为一个统一清单。 - <strong>异步自配置管道</strong>：<code>ol/source/TileJSON</code> 接收到一个配置 URL（如 <code>.../WebMercatorQuad?f=tilejson</code>）后，在后台发起异步 HTTP 请求获取元数据，随后<strong>自动配置底层的 <code>TileUrlFunction</code>、<code>TileGrid</code>、版权归属与有效范围</strong>，大幅降低前端接入第三方瓦片服务的代码量与维护复杂度。</h4>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript const map = new Map({</h4>
+<p>  layers: [
+    new TileLayer({
+      source: new TileJSON({
+        // 指向支持 TileJSON 的服务端清单端点
+        url: &#39;<a href="https://maps.gnosis.earth/ogcapi/collections/NaturalEarth:raster:HYP_HR_SR_OB_DR/map/tiles/WebMercatorQuad?f=tilejson">https://maps.gnosis.earth/ogcapi/collections/NaturalEarth:raster:HYP_HR_SR_OB_DR/map/tiles/WebMercatorQuad?f=tilejson</a>&#39;,
+        crossOrigin: &#39;anonymous&#39;,
+      }),
+    }),
+  ],
+  target: &#39;map&#39;,
+  view: new View({ center: [0, 0], zoom: 2 }),
+}); ```</p>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>CORS 跨域必须声明</strong>：由于 TileJSON 首先需要通过 <code>fetch</code> / <code>XMLHttpRequest</code> 请求远程 JSON 文本，随后瓦片图片又由 <code>Image</code> 标签加载，服务端必须同时对 JSON 响应和切片图片开启 <code>Access-Control-Allow-Origin: *</code>，且前端源需声明 <code>crossOrigin: 'anonymous'</code>。 - <strong>异步加载中的视口初始化</strong>：TileJSON 元数据是异步加载的。在元数据尚未返回前，<code>tileSource.getState()</code> 为 <code>loading</code>，此时不要依赖 <code>source.getTileGrid()</code> 进行同步计算；若需获取其定义的默认范围或中心点，应监听 <code>source.on('change', ...)</code> 等待状态变为 <code>ready</code>。</h4>
 </div>
       </div>
 
@@ -118,12 +135,14 @@ import View from &#x27;ol/View.js&#x27;;
 import TileLayer from &#x27;ol/layer/Tile.js&#x27;;
 import TileJSON from &#x27;ol/source/TileJSON.js&#x27;;
 
+// Initialize map with a TileJSON source
+// 初始化地图实例，接入符合 TileJSON 规范的切片服务
 const map &#x3D; new Map({
   layers: [
     new TileLayer({
       source: new TileJSON({
         url: &#x27;https://maps.gnosis.earth/ogcapi/collections/NaturalEarth:raster:HYP_HR_SR_OB_DR/map/tiles/WebMercatorQuad?f&#x3D;tilejson&#x27;,
-        crossOrigin: &#x27;anonymous&#x27;,
+        crossOrigin: &#x27;anonymous&#x27;, // Enable CORS for remote tile access / 开启匿名跨域支持
       }),
     }),
   ],
@@ -144,7 +163,7 @@ const map &#x3D; new Map({
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;TileJSON&lt;/title&gt;
+    &lt;title&gt;TileJSON / TileJSON 瓦片元数据规范与自动解析&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

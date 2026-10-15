@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>GeoTIFF with Overviews</title>
+    <title>GeoTIFF with Overviews / 挂载外部金字塔文件的 GeoTIFF</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">GeoTIFF with Overviews</h4>
+        <h4 id="title">GeoTIFF with Overviews / 挂载外部金字塔文件的 GeoTIFF</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -76,20 +76,20 @@
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-stretch.html&quot;&gt;Band Contrast Stretch / 遥感波段组合与对比度拉伸&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog.html&quot;&gt;Cloud Optimized GeoTIFF (COG)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-blob.html&quot;&gt;Cloud Optimized GeoTIFF (COG) from a Blob&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-custom-client.html&quot;&gt;Cloud Optimized GeoTIFF (COG) with Custom Loader&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog.html&quot;&gt;Cloud Optimized GeoTIFF (COG) / 云优化 GeoTIFF (COG) 瓦片渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-blob.html&quot;&gt;Cloud Optimized GeoTIFF (COG) from a Blob / 从二进制 Blob 对象加载云优化 GeoTIFF&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-custom-client.html&quot;&gt;Cloud Optimized GeoTIFF (COG) with Custom Loader / 自定义网络加载器的云优化 GeoTIFF&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-pyramid.html&quot;&gt;GeoTIFF tile pyramid&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-overviews.html&quot;&gt;GeoTIFF with Overviews&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF 客户端动态重投影 (GeoTIFF Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math.html&quot;&gt;NDVI from a Sentinel 2 COG&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-colors.html&quot;&gt;NDVI with a Dynamic Color Ramp&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC support&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;包含模型仿射变换矩阵的 COG (COG with ModelTransformation)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;多 COG 数据源重投影与波段合成 (Multiple COG sources)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;COG with ModelTransformation / 包含模型仿射变换矩阵的 COG&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geotiff-reprojection.html&quot;&gt;GeoTIFF Reprojection / GeoTIFF 客户端动态重投影&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-pyramid.html&quot;&gt;GeoTIFF tile pyramid / GeoTIFF 瓦片金字塔 (STACTA)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-overviews.html&quot;&gt;GeoTIFF with Overviews / 挂载外部金字塔文件的 GeoTIFF&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG Sources / 多 COG 数据源重投影与波段合成&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source / 使用 Raster 数据源计算 COG 的 NDVI&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math.html&quot;&gt;NDVI from a Sentinel 2 COG / 基于哨兵 2 号 COG 计算归一化植被指数 (NDVI)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-colors.html&quot;&gt;NDVI with a Dynamic Color Ramp / 动态色带交互调整的 NDVI 渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-multisource.html&quot;&gt;NDVI+NDWI from two 16-bit COGs / 基于两个 16 位 COG 同时计算 NDVI 与 NDWI&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./stac-item.html&quot;&gt;STAC support / STAC 时空资产目录支持&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >16</a>
@@ -103,9 +103,9 @@
               data-bs-target="#tag-example-list"
               data-title="overview"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./overviewmap-custom.html&quot;&gt;Custom Overview Map&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-overviews.html&quot;&gt;GeoTIFF with Overviews&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./overviewmap.html&quot;&gt;Overview Map Control&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./overviewmap-custom.html&quot;&gt;Custom Overview Map / 高级定制鹰眼微缩地图&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cog-overviews.html&quot;&gt;GeoTIFF with Overviews / 挂载外部金字塔文件的 GeoTIFF&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./overviewmap.html&quot;&gt;Overview Map Control / 鹰眼微缩地图控件 (OverviewMap)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -132,8 +132,30 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Rendering a GeoTIFF with external overviews as a layer.</p>
-        <div id="docs"><p>In some cases, a GeoTIFF may have external overviews.  This example uses the <code>overviews</code> property to provide URL for a file containing external overviews.</p>
+        <p id="shortdesc">Rendering a GeoTIFF with external overviews as a layer. / 为无内置金字塔的普通 GeoTIFF 挂载外部概览文件 (.ovr / .ovr.tif) 实现平滑多级缩放。</p>
+        <div id="docs"><h2>In some cases, a GeoTIFF may have external overviews.  This example uses the <code>overviews</code> property to provide URL for a file containing external overviews.
+在某些场景中，GeoTIFF 文件的多级分辨率概览金字塔可能存储在外部文件中（如 <code>.ovr</code> 或 <code>.ovr.tif</code>）。本示例演示如何通过 <code>overviews</code> 属性指定外部概览文件的 URL，使 OpenLayers 能够无缝拉取各级缩小视口下的瓦片。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 为什么会有“外部金字塔文件”？ * 在遥感与 GIS 生产中（如使用 GDAL、ArcGIS 或 QGIS），处理一个数十吉字节的原始 TIFF 文件时，直接向原文件内部写入内嵌金字塔需要修改原始文件结构，风险较高或操作耗时。 * 行业通用方案通常使用 GDAL 命令行：</h4>
+<pre><code class="language-bash">gdaladdo -ro input.tif 2 4 8 16 32
+</code></pre>
+<p>  参数 <code>-ro</code>（Read-Only）会在原文件旁边生成一个名为 <code>input.tif.ovr</code> 或 <code>input.ovr.tif</code> 的外部金字塔文件，原始 TIFF 保持只读且不被修改。</p>
+<ul>
+<li><strong>OpenLayers 的 <code>overviews</code> 配置</strong>：<pre><code class="language-javascript">sources: [
+  {
+    url: &#39;https://openlayers.org/data/raster/no-overviews.tif&#39;,
+    overviews: [&#39;https://openlayers.org/data/raster/no-overviews.ovr.tif&#39;],
+  },
+]
+</code></pre>
+OpenLayers 的 <code>GeoTIFF</code> source 会同时解析主文件与其对应的 <code>.ovr</code> 概览文件，自动在内存中拼接成完整的瓦片金字塔索引映射表。</li>
+</ul>
+<h4>2. 如果缺少 Overviews 会发生什么灾难？ * 当用户在宏观尺度（小缩放级别，如全国或全球视野）查看影像时：</h4>
+<ul>
+<li><strong>如果存在 Overviews</strong>：只需下载 1~2 张极小的 256×256 概览瓦片（几 KB 数据）。</li>
+<li><strong>如果缺少 Overviews</strong>：OpenLayers 必须被迫读取全分辨率原始影像的数万个瓦片并在前端逐像素计算降采样，导致成百上千个网络请求瞬时发出，直接造成浏览器内存溢出（OOM）或网络瘫痪！</li>
+<li>因此，对于生产级云上栅格可视化，无论采用“内置 COG 金字塔”还是“外部 <code>.ovr</code>”，金字塔索引都是必不可少的基石。</li>
+</ul>
 </div>
       </div>
 
@@ -144,6 +166,8 @@
 import TileLayer from &#x27;ol/layer/WebGLTile.js&#x27;;
 import GeoTIFF from &#x27;ol/source/GeoTIFF.js&#x27;;
 
+// GeoTIFF source specifying both the base TIFF and an external overview pyramid file
+// 创建 GeoTIFF 数据源，同时指定基础 TIFF 文件与外部概览金字塔文件 (.ovr)
 const source &#x3D; new GeoTIFF({
   sources: [
     {
@@ -153,6 +177,8 @@ const source &#x3D; new GeoTIFF({
   ],
 });
 
+// Initialize map with WebGL tile layer and default view from source
+// 初始化地图实例，使用 WebGL 瓦片图层与数据源推导出的默认视图
 const map &#x3D; new Map({
   target: &#x27;map&#x27;,
   layers: [
@@ -173,7 +199,7 @@ const map &#x3D; new Map({
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;GeoTIFF with Overviews&lt;/title&gt;
+    &lt;title&gt;GeoTIFF with Overviews / 挂载外部金字塔文件的 GeoTIFF&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

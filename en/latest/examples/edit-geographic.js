@@ -31,7 +31,7 @@ function removeInteractions() {
 	map.removeInteraction(modify);
 	map.removeInteraction(select);
 	map.removeInteraction(draw);
-	map.removeInteraction(select);
+	map.removeInteraction(snap);
 }
 var mode = document.getElementById("mode");
 function onChange() {

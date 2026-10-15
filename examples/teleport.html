@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Teleporting Maps</title>
+    <title>Teleporting Maps / 地图容器瞬态瞬移 (setTarget)</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Teleporting Maps</h4>
+        <h4 id="title">Teleporting Maps / 地图容器瞬态瞬移 (setTarget)</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,7 +74,7 @@
               data-bs-target="#tag-example-list"
               data-title="teleport"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./teleport.html&quot;&gt;Teleporting Maps&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./teleport.html&quot;&gt;Teleporting Maps / 地图容器瞬态瞬移 (setTarget)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -88,26 +88,26 @@
               data-bs-target="#tag-example-list"
               data-title="openstreetmap"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./center.html&quot;&gt;Advanced View Positioning&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./attributions.html&quot;&gt;Attributions&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./center.html&quot;&gt;Advanced View Positioning / 高级视口定位与居中 (centerOn &amp;amp; fit)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./attributions.html&quot;&gt;Attributions / 版权署名控件自适应折叠 (Attributions Responsive Collapsing)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-tiles.html&quot;&gt;Canvas Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cartodb.html&quot;&gt;CartoDB source example&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./export-pdf.html&quot;&gt;Export PDF example&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson.html&quot;&gt;GeoJSON&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geolocation.html&quot;&gt;Geolocation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping.html&quot;&gt;Layer Clipping&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cartodb.html&quot;&gt;CartoDB source example / CartoDB 云端空间数据源与动态 SQL 过滤 (CartoDB Source)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./export-pdf.html&quot;&gt;Export PDF example / 导出 PDF 地图示例&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson.html&quot;&gt;GeoJSON / GeoJSON 多几何类型标准解析与多态样式映射&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geolocation.html&quot;&gt;Geolocation / 地理定位服务&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping.html&quot;&gt;Layer Clipping / 图层几何遮罩裁切&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe / 图层卷帘对比&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./localized-openstreetmap.html&quot;&gt;Localized OpenStreetMap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mouse-position.html&quot;&gt;Mouse Position&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mouse-position.html&quot;&gt;Mouse Position / 鼠标位置坐标控件 (MousePosition)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap 客户端 WGS84 重投影 (OpenStreetMap Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./permalink.html&quot;&gt;Permalink&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scale-line.html&quot;&gt;Scale Line&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./permalink.html&quot;&gt;Permalink / 永久链接与历史状态同步 (Permalink &amp;amp; History API)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scale-line.html&quot;&gt;Scale Line / 比例尺与分段比例条控件 (ScaleLine / ScaleBar)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./simple.html&quot;&gt;Simple Map&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./static-attribution.html&quot;&gt;Static Attribution&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./teleport.html&quot;&gt;Teleporting Maps&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels.html&quot;&gt;Vector Labels&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels-justify-text.html&quot;&gt;Vector Labels - Justify Text&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./static-attribution.html&quot;&gt;Static Attribution / 静态常驻版权署名 (Static Attribution)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./teleport.html&quot;&gt;Teleporting Maps / 地图容器瞬态瞬移 (setTarget)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer / 矢量边界裁切图层&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels-justify-text.html&quot;&gt;Vector Labels - Justify Text / 矢量注记文本对齐与段落对齐解耦&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels.html&quot;&gt;Vector Labels / 矢量文本标注与全要素排版实战工作台&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rotation.html&quot;&gt;View Rotation&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -130,7 +130,7 @@
         </div>
         <div id="map1" class="map"></div>
 <div id="map2" class="map"></div>
-<button id="teleport">Teleport</button>
+<button id="teleport">Teleport / 瞬移地图</button>
 
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
           <input id="codesandbox-params" type="hidden" name="parameters">
@@ -138,8 +138,26 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of moving a map from one target to another.</p>
-        <div id="docs"><p>Click on the teleport button the map to move the map from one target to another.</p>
+        <p id="shortdesc">Example of moving a map from one target to another. / 演示在不同 DOM 目标容器之间无损、零重绘瞬移迁移地图实例的示例。</p>
+        <div id="docs"><p>Click on the teleport button the map to move the map from one target to another.</p> <p>点击“瞬移”按钮，将地图实例从一个 DOM 目标容器无缝迁移至另一个容器。在整个迁移过程中，地图的当前中心点、层级比例尺、瓦片内存缓存与图层加载状态完全保持不变，实现真正的零销毁重用。</p> <hr> <h3>📚 学习记录与技术深度解读</h3>
+<h4>1. 核心架构与设计思想</h4> <ul>
+  <li><strong>单例复用与容器动态瞬移（Zero-Destruction Portal）：</strong>
+    在包含“多标签页切换（Tab Switch）”、“主分屏对比（Split Screen）”或“悬浮小窗/全屏主图切换”的复杂业务系统中，传统前端往往在切换标签时销毁旧地图并在新容器中 <code>new Map()</code>。这种做法不仅消耗大量 CPU/GPU 资源重新加载数十张底图切片，还会导致用户当前缩放位置丢失。
+    OpenLayers 提供了 <code>map.setTarget(newTarget)</code>，直接将当前 Map 内部维护的 <code>.ol-viewport</code> DOM 节点从旧父容器中摘取并挂载到新父容器中，瞬时完成“瞬移”。
+  </li>
+  <li><strong>完全保持活跃的状态机：</strong>
+    由于 <code>Map</code> 实例未被销毁，所有图层对象、矢量要素数据源、切片缓存池（TileCache）以及视图 <code>View</code>（包含当前的平滑动画、中心点与旋转角）全部完好无损地持续运行，页面毫无白屏闪烁。
+  </li>
+</ul>
+<h4>2. 源码与关键 API 剖析</h4> <ul>
+  <li><code>map.setTarget(target)</code>：支持传入 DOM 元素 ID 字符串或直接传入 <code>HTMLElement</code> 引用。若传入 <code>null</code> 或 <code>undefined</code>，则彻底解绑挂载，进入无头（Headless）挂起状态。</li>
+  <li><code>map.getTarget()</code>：返回当前正在挂载的目标容器 ID 或节点。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优</h4> <ul>
+  <li><strong>容器尺寸突变后的自适应（`map.updateSize`）：</strong>
+    若两个目标容器的物理宽高不同（例如从 400×300 的侧边微缩框瞬移到 1920×1080 的全屏主窗口），虽然 OpenLayers 会尝试自动侦测，但在复杂 CSS 动画或弹性布局下，推荐在 <code>setTarget</code> 后手动调用一次 <code>map.updateSize()</code>，确保瓦片调度网格立即刷新。
+  </li>
+</ul>
 </div>
       </div>
 
@@ -151,6 +169,8 @@ import View from &#x27;ol/View.js&#x27;;
 import TileLayer from &#x27;ol/layer/Tile.js&#x27;;
 import OSM from &#x27;ol/source/OSM.js&#x27;;
 
+// Initialize map with OSM layer
+// 初始化地图并加载 OSM 瓦片图层
 const map &#x3D; new Map({
   layers: [
     new TileLayer({
@@ -163,10 +183,14 @@ const map &#x3D; new Map({
   }),
 });
 
+// Mount map to initial target container map1
+// 将地图初始挂载至 map1 目标容器
 map.setTarget(&#x27;map1&#x27;);
 
 const teleportButton &#x3D; document.getElementById(&#x27;teleport&#x27;);
 
+// Toggle target container between map1 and map2 on button click
+// 点击按钮在 map1 和 map2 目标容器之间无损瞬移切换
 teleportButton.addEventListener(
   &#x27;click&#x27;,
   function () {
@@ -186,7 +210,7 @@ teleportButton.addEventListener(
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Teleporting Maps&lt;/title&gt;
+    &lt;title&gt;Teleporting Maps / 地图容器瞬态瞬移 (setTarget)&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -198,7 +222,7 @@ teleportButton.addEventListener(
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map1&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
     &lt;div id&#x3D;&quot;map2&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
-    &lt;button id&#x3D;&quot;teleport&quot;&gt;Teleport&lt;/button&gt;
+    &lt;button id&#x3D;&quot;teleport&quot;&gt;Teleport / 瞬移地图&lt;/button&gt;
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
   &lt;/body&gt;

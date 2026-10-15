@@ -1,0 +1,491 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - OpenLayers WebGL 渲染引擎与着色器实战架构指南</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">WebGL 渲染架构指南</li></ol></nav>
+
+<h1 id="openlayers-webgl-渲染引擎与着色器实战架构指南">OpenLayers WebGL 渲染引擎与着色器实战架构指南</h1>
+<blockquote>
+<p>基于 19 个官方核心 WebGL 示例，深度解构 GPU 硬件加速管线、表达式语法树（AST）、波段代数与海量空间数据实战</p>
+</blockquote>
+<hr>
+<h2 id="引言：为什么-webgis-需要-webgl-渲染引擎">引言：为什么 WebGIS 需要 WebGL 渲染引擎</h2>
+<p>在传统的 WebGIS 渲染架构中，地图视图主要依赖浏览器的 HTML5 Canvas 2D 上下文。当面临以下现代复杂业务场景时，Canvas 2D 往往会遇到性能瓶颈：</p>
+<ol>
+<li><strong>海量矢量要素渲染</strong>：屏幕存在数万至数十万个点位或密集路网时，CPU 端逐要素遍历并执行绘图指令（<code>arc</code>、<code>lineTo</code>）会引发主线程阻塞，导致帧率断崖式下跌；</li>
+<li><strong>多波段遥感与科学栅格分析</strong>：云原生 GeoTIFF（COG）、16 位高动态深度的数字高程（DEM）或气象多维网格（Zarr/NetCDF），若在 CPU 端逐像素计算植被指数（NDVI）或坡度坡向，处理延迟通常以秒计；</li>
+<li><strong>时序动态模拟与毫秒级高频交互</strong>：在气象雷达回波、航班动态轨迹或海平面上升淹没模拟中，滑块每拖动一次都需要即时响应，重新切图或遍历样式开销巨大。</li>
+</ol>
+<p>OpenLayers 从底层重构并推出了现代化的 <strong>WebGL 渲染体系</strong>（包括 <code>WebGLTile</code>、<code>WebGLVector</code>、<code>WebGLVectorTile</code> 与 <code>Heatmap</code>）。它将运算从 CPU 转移到 GPU 显卡硬件，通过高度优化的着色器表达式（Expression AST）提供实时光栅化与计算能力。</p>
+<p>本文基于官方示例库中精选的 <strong>19 个 WebGL 核心示例</strong>，系统梳理 OpenLayers WebGL 的技术架构、表达式设计模型与生产落地实践。</p>
+<hr>
+<h2 id="第一部分：全景视盘19-个核心-webgl-示例矩阵">第一部分：全景视盘——19 个核心 WebGL 示例矩阵</h2>
+<p>下表将 19 个官方示例按图层体系与应用场景进行了全景梳理：</p>
+<table>
+<thead>
+<tr>
+<th align="left">技术分类</th>
+<th align="left">示例标识</th>
+<th align="left">核心类 / 关键 API</th>
+<th align="left">解决的典型生产场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>栅格瓦片与遥感增强</strong></td>
+<td align="left"><a href="../en/latest/examples/webgl-tiles.html"><code>webgl-tiles</code></a></td>
+<td align="left"><code>ol/layer/WebGLTile</code> + <code>ImageTile</code></td>
+<td align="left">基础栅格瓦片 GPU 硬件加速加载，跳过 2D Canvas 重绘开销</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/webgl-tile-style.html"><code>webgl-tile-style</code></a></td>
+<td align="left"><code>WebGLTile({style: {exposure, contrast...}})</code></td>
+<td align="left">瓦片实时色彩调整：动态控制曝光度、对比度与饱和度</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/webgl-layer-swipe.html"><code>webgl-layer-swipe</code></a></td>
+<td align="left"><code>prerender</code> + <code>gl.scissor()</code></td>
+<td align="left">硬件级视口剪裁：利用显卡 Scissor 测试实现零开销图层卷帘对比</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/wms-time-webgl.html"><code>wms-time-webgl</code></a></td>
+<td align="left"><code>WebGLTile</code> + <code>TileWMS.updateParams()</code></td>
+<td align="left">双缓冲时序重载：WMS 连续切换时间帧无白屏闪烁平滑过渡</td>
+</tr>
+<tr>
+<td align="left"><strong>波段代数与地形计算</strong></td>
+<td align="left"><a href="../en/latest/examples/webgl-sea-level.html"><code>webgl-sea-level</code></a></td>
+<td align="left"><code>[&#39;band&#39;, n]</code> + Terrain-RGB 解码</td>
+<td align="left">片元着色器实时计算高程：模拟不同海平面上升高度下的淹没区域</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/webgl-shaded-relief.html"><code>webgl-shaded-relief</code></a></td>
+<td align="left"><code>[&#39;band&#39;, n, dx, dy]</code> 邻域采样</td>
+<td align="left">坡度坡向实时解算：根据太阳高度角与方位角动态生成山体日照晕渲</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/numpytile.html"><code>numpytile</code></a></td>
+<td align="left"><code>ol/source/DataTile</code> + 16 位数组解析</td>
+<td align="left">科学数据直读：解析 16 位高动态 NumPy 遥感瓦片并进行动态对比度拉伸</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/cog-style.html"><code>cog-style</code></a></td>
+<td align="left">COG + 波段代数归一化</td>
+<td align="left">多波段遥感 NDVI 植被指数动态计算与伪彩色图层渐变映射</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/cog-stretch.html"><code>cog-stretch</code></a></td>
+<td align="left">COG + 动态变量百分比截断</td>
+<td align="left">卫星遥感原始反射率动态直方图对比度增强显示</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/multiple-cogs.html"><code>multiple-cogs</code></a></td>
+<td align="left"><code>WebGLTile({sources: [...]})</code> 跨 UTM 分带</td>
+<td align="left">跨分带 COG 边缘多源拼接、实时重投影与 RGB 通道动态重构</td>
+</tr>
+<tr>
+<td align="left"><strong>海量矢量点位与精灵图</strong></td>
+<td align="left"><a href="../en/latest/examples/filter-points-webgl.html"><code>filter-points-webgl</code></a></td>
+<td align="left"><code>WebGLVectorLayer</code> + <code>[&#39;time&#39;]</code> 动画</td>
+<td align="left">4.5 万个陨石撞击点流畅渲染、着色器内置时钟驱动呼吸脉冲与时间过滤</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/icon-sprite-webgl.html"><code>icon-sprite-webgl</code></a></td>
+<td align="left">纹理图集（Sprite Atlas） + <code>icon-offset</code></td>
+<td align="left">8 万个 UFO 目击事件渲染，单张大图纹理子域采样规避 Draw Call 瓶颈</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/webgl-points-layer.html"><code>webgl-points-layer</code></a></td>
+<td align="left">声明式样式编辑器 + 复杂符号化</td>
+<td align="left">预设三角形、动态旋转柱状图、随层级保持物理尺寸的圆与文本标注</td>
+</tr>
+<tr>
+<td align="left"><strong>折线、面要素与矢量切片</strong></td>
+<td align="left"><a href="../en/latest/examples/webgl-vector-layer.html"><code>webgl-vector-layer</code></a></td>
+<td align="left">多边形面三角剖分（Earcut） + 条件高亮</td>
+<td align="left">复杂生态区面要素渲染，基于 <code>updateStyleVariables</code> 瞬间切换悬停高亮</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/webgl-draw-line.html"><code>webgl-draw-line</code></a></td>
+<td align="left">线段膨胀三角带 + <code>stroke-line-dash</code></td>
+<td align="left">线端线帽（Cap）、拐角斜接（Join）与 GPU 过程式虚线生成</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/filter-webgl-line.html"><code>filter-webgl-line</code></a></td>
+<td align="left"><code>XYM</code> 坐标布局 + <code>[&#39;line-metric&#39;]</code></td>
+<td align="left">高维时序飞行轨迹沿线插值渐变与时间阈值动态截断</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/webgl-vector-tiles.html"><code>webgl-vector-tiles</code></a></td>
+<td align="left"><code>ol/layer/WebGLVectorTile</code> + MVT 瓦片</td>
+<td align="left">城市级全量矢量切片（路网、水体、建筑）GPU 硬件加速高速渲染</td>
+</tr>
+<tr>
+<td align="left"><strong>热力场与核密度分析</strong></td>
+<td align="left"><a href="../en/latest/examples/heatmap-earthquakes.html"><code>heatmap-earthquakes</code></a></td>
+<td align="left"><code>ol/layer/Heatmap</code> (点要素)</td>
+<td align="left">地震点位震级权重叠加、WebGL 离屏高斯模糊与调色板着色</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/heatmap-trajectories.html"><code>heatmap-trajectories</code></a></td>
+<td align="left"><code>ol/layer/Heatmap</code> (线要素)</td>
+<td align="left">船舶航迹线要素密度叠加、核半径动态调优与船种实时过滤</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="第二部分：架构全景openlayers-webgl-渲染管线模型">第二部分：架构全景——OpenLayers WebGL 渲染管线模型</h2>
+<p>OpenLayers 将不同数据类型抽象为三大核心 WebGL 图层类，并在底层统一了着色器生成与显存管理机制：</p>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph DataSources[&quot;数据源类型&quot;]
+        R1[&quot;标准栅格 / 遥感 COG / 16位切片\n(ImageTile / GeoTIFF / DataTile)&quot;]
+        V1[&quot;矢量要素 (Point / Line / Polygon)\n(VectorSource)&quot;]
+        VT1[&quot;矢量切片 (Mapbox MVT / PBF)\n(VectorTileSource)&quot;]
+    end
+
+    subgraph Processing[&quot;CPU / Worker 预处理管线&quot;]
+        P1[&quot;瓦片纹理绑定\n(RGB / RGBA / Float32Array)&quot;]
+        P2[&quot;几何三角剖分 (Tessellation)\n(Earcut 剖面 / 折线膨胀四边形带)&quot;]
+        P3[&quot;PBF 解包与瓦片网格编译&quot;]
+    end
+
+    subgraph Layers[&quot;WebGL 图层抽象&quot;]
+        L1[&quot;ol/layer/WebGLTile\n(栅格瓦片图层)&quot;]
+        L2[&quot;ol/layer/WebGLVector\n(矢量要素图层)&quot;]
+        L3[&quot;ol/layer/WebGLVectorTile\n(矢量切片图层)&quot;]
+    end
+
+    subgraph GPU[&quot;GPU 硬件渲染管线&quot;]
+        Shaders[&quot;AST 声明式表达式自动编译为 GLSL&quot;]
+        VBO[&quot;顶点属性缓冲区 (VBO) &amp; 实例绘制 (Instanced)&quot;]
+        Uniforms[&quot;样式变量 (Style Variables) 动态更新&quot;]
+        Output[&quot;屏幕输出 / 离屏混合快照&quot;]
+    end
+
+    R1 --&gt; P1 --&gt; L1 --&gt; Shaders
+    V1 --&gt; P2 --&gt; L2 --&gt; Shaders
+    VT1 --&gt; P3 --&gt; L3 --&gt; Shaders
+
+    Shaders --&gt; VBO
+    Shaders --&gt; Uniforms
+    VBO --&gt; Output
+    Uniforms --&gt; Output
+</code></pre>
+<h3 id="核心设计原则">核心设计原则</h3>
+<ol>
+<li><strong>CPU 与 GPU 的明确分工</strong>：<ul>
+<li><strong>CPU / Web Worker</strong>：负责 I/O 读取、数据解压与几何拓扑三角剖分（如面要素由 Earcut 生成三角形索引）；</li>
+<li><strong>GPU 显存</strong>：要素顶点坐标与属性（如质量、时间戳、年份）作为顶点属性（Attribute）常驻显存。</li>
+</ul>
+</li>
+<li><strong>表达式即着色器（Expressions as Shaders）</strong>：
+开发者书写的并不是纯 GLSL 字符串，而是符合规范的 JSON 抽象语法树（AST）。OpenLayers 的着色器编译器在图层初始化时自动将其编译成高性能 GLSL 代码。</li>
+</ol>
+<hr>
+<h2 id="第三部分：核心引擎声明式样式表达式（expression-ast）">第三部分：核心引擎——声明式样式表达式（Expression AST）</h2>
+<p>WebGL 渲染体系彻底告别了传统 <code>styleFunction(feature, resolution)</code> 逐要素回调的模式，采用声明式数组语法树。</p>
+<h3 id="1-基础语法骨架与操作符分类">1. 基础语法骨架与操作符分类</h3>
+<p>表达式通常以数组形式组织：<code>[operator, ...operands]</code>。</p>
+<table>
+<thead>
+<tr>
+<th align="left">操作符类别</th>
+<th align="left">典型语法</th>
+<th align="left">运行机制与用途</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>属性读取</strong></td>
+<td align="left"><code>[&#39;get&#39;, &#39;population&#39;]</code></td>
+<td align="left">从要素属性中提取字段值，映射为 GPU 顶点属性</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>[&#39;id&#39;]</code></td>
+<td align="left">读取要素的唯一 ID 标识</td>
+</tr>
+<tr>
+<td align="left"><strong>动态变量</strong></td>
+<td align="left"><code>[&#39;var&#39;, &#39;minYear&#39;]</code></td>
+<td align="left">映射为着色器中的 Uniform 变量，通过 <code>updateStyleVariables</code> 更新</td>
+</tr>
+<tr>
+<td align="left"><strong>数学运算</strong></td>
+<td align="left"><code>[&#39;+&#39;, a, b]</code>, <code>[&#39;*&#39;, a, b]</code>, <code>[&#39;^&#39;, a, 2]</code></td>
+<td align="left">GPU 级并行算术计算（加减乘除、求幂、模运算 <code>%</code>）</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>[&#39;atan&#39;, y, x]</code>, <code>[&#39;sqrt&#39;, x]</code>, <code>[&#39;clamp&#39;, v, min, max]</code></td>
+<td align="left">三角函数与数值截断约束</td>
+</tr>
+<tr>
+<td align="left"><strong>插值映射</strong></td>
+<td align="left"><code>[&#39;interpolate&#39;, [&#39;linear&#39;], input, x1, y1, x2, y2...]</code></td>
+<td align="left">线性分段连续插值（如数值映射颜色、高程映射半径）</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>[&#39;interpolate&#39;, [&#39;exponential&#39;, 2], [&#39;zoom&#39;], ...]</code></td>
+<td align="left">底数为 2 的指数插值，常用于保持世界物理尺寸不变</td>
+</tr>
+<tr>
+<td align="left"><strong>逻辑分支</strong></td>
+<td align="left"><code>[&#39;case&#39;, condition1, output1, defaultOutput]</code></td>
+<td align="left">三元条件分支判定</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>[&#39;match&#39;, input, key1, val1, key2, val2..., defaultVal]</code></td>
+<td align="left">多分支模式匹配（如按 UFO 形状取偏移量）</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>[&#39;between&#39;, val, min, max]</code>, <code>[&#39;any&#39;, ...]</code>, <code>[&#39;all&#39;, ...]</code></td>
+<td align="left">逻辑区间与布尔组合判定</td>
+</tr>
+<tr>
+<td align="left"><strong>着色器内置信号</strong></td>
+<td align="left"><code>[&#39;time&#39;]</code></td>
+<td align="left">递增动画时钟（秒），驱动自旋转与脉冲光晕</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>[&#39;zoom&#39;]</code></td>
+<td align="left">当前视口缩放层级（支持浮点插值）</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>[&#39;resolution&#39;]</code></td>
+<td align="left">当前地图物理分辨率（米/像素）</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>[&#39;line-metric&#39;]</code></td>
+<td align="left">仅在 <code>XYM</code> 折线中可用，GPU 自动内插的沿线度量值</td>
+</tr>
+<tr>
+<td align="left"><strong>栅格波段运算</strong></td>
+<td align="left"><code>[&#39;band&#39;, 1]</code></td>
+<td align="left">提取当前像素指定波段的归一化强度值（$0 \sim 1$）</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><code>[&#39;band&#39;, 1, -1, 0]</code></td>
+<td align="left"><strong>邻域采样</strong>：提取当前像元偏移 <code>[-1, 0]</code> 的邻域像素值</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="第四部分：经典实战案例解构">第四部分：经典实战案例解构</h2>
+<h3 id="案例-1：terrain-rgb-高程解算与海平面淹没模拟（webgl-sea-level）">案例 1：Terrain-RGB 高程解算与海平面淹没模拟（<code>webgl-sea-level</code>）</h3>
+<p>MapTiler / Mapbox 的 Terrain-RGB 瓦片通过 24 位 RGB 存储真实高程：
+$$Elevation = -10000 + (R \times 256 \times 256 + G \times 256 + B) \times 0.1$$</p>
+<p>由于 OpenLayers 的 <code>[&#39;band&#39;, n]</code> 取得的是归一化到 $[0, 1]$ 的浮点数，因此在着色器中需要乘以 255 还原字节数值：</p>
+<pre><code class="language-javascript">// 高程反算着色器表达式
+const elevation = [
+  &#39;+&#39;,
+  -10000,
+  [&#39;*&#39;, 0.1 * 255 * 256 * 256, [&#39;band&#39;, 1]], // R 通道权重 1671168
+  [&#39;*&#39;, 0.1 * 255 * 256, [&#39;band&#39;, 2]],       // G 通道权重 6528
+  [&#39;*&#39;, 0.1 * 255, [&#39;band&#39;, 3]],             // B 通道权重 25.5
+];
+
+// 图层配置
+const seaLevelLayer = new WebGLTileLayer({
+  source: terrainRgbSource,
+  style: {
+    variables: { level: 0 },
+    color: [
+      &#39;case&#39;,
+      [&#39;&lt;=&#39;, elevation, [&#39;var&#39;, &#39;level&#39;]],
+      [139, 212, 255, 1], // 低于海平面：着水蓝色
+      [139, 212, 255, 0], // 高于海平面：完全透明
+    ],
+  },
+});
+</code></pre>
+<h3 id="案例-2：利用邻域采样实时生成山体日照晕渲（webgl-shaded-relief）">案例 2：利用邻域采样实时生成山体日照晕渲（<code>webgl-shaded-relief</code>）</h3>
+<p>传统山体阴影需要离线预切，而在 WebGL 中，利用 <code>[&#39;band&#39;, bandIdx, dx, dy]</code> 可直接在片元着色器中计算 3x3 邻域中心差分：</p>
+<pre><code class="language-javascript">// 提取偏移位置的高程
+function elevation(dx, dy) {
+  return [
+    &#39;+&#39;,
+    [&#39;*&#39;, 255 * 256, [&#39;band&#39;, 1, dx, dy]],
+    [&#39;*&#39;, 255, [&#39;band&#39;, 2, dx, dy]],
+    [&#39;*&#39;, 255 / 256, [&#39;band&#39;, 3, dx, dy]],
+    -32768,
+  ];
+}
+
+// 中心差分梯度
+const dp = [&#39;*&#39;, 2, [&#39;resolution&#39;]];
+const dzdx = [&#39;/&#39;, [&#39;-&#39;, [&#39;*&#39;, [&#39;var&#39;, &#39;vert&#39;], elevation(1, 0)], [&#39;*&#39;, [&#39;var&#39;, &#39;vert&#39;], elevation(-1, 0)]], dp];
+const dzdy = [&#39;/&#39;, [&#39;-&#39;, [&#39;*&#39;, [&#39;var&#39;, &#39;vert&#39;], elevation(0, 1)], [&#39;*&#39;, [&#39;var&#39;, &#39;vert&#39;], elevation(0, -1)]], dp];
+
+// 坡度与坡向
+const slope = [&#39;atan&#39;, [&#39;sqrt&#39;, [&#39;+&#39;, [&#39;^&#39;, dzdx, 2], [&#39;^&#39;, dzdy, 2]]]];
+const aspect = [&#39;clamp&#39;, [&#39;atan&#39;, [&#39;-&#39;, 0, dzdx], dzdy], -Math.PI, Math.PI];
+
+// 漫反射光照入射角余弦值
+const cosIncidence = [
+  &#39;+&#39;,
+  [&#39;*&#39;, [&#39;sin&#39;, [&#39;var&#39;, &#39;sunEl&#39;]], [&#39;cos&#39;, slope]],
+  [&#39;*&#39;, [&#39;cos&#39;, [&#39;var&#39;, &#39;sunEl&#39;]], [&#39;sin&#39;, slope], [&#39;cos&#39;, [&#39;-&#39;, [&#39;var&#39;, &#39;sunAz&#39;], aspect]]],
+];
+</code></pre>
+<h3 id="案例-3：8-万点精灵图集（sprite-atlas）与色彩插值（icon-sprite-webgl）">案例 3：8 万点精灵图集（Sprite Atlas）与色彩插值（<code>icon-sprite-webgl</code>）</h3>
+<p>将各种外形图标打包在同一张贴图网格中，通过 <code>match</code> 动态指定 UV 纹理偏移：</p>
+<pre><code class="language-javascript">const style = {
+  &#39;icon-src&#39;: &#39;data/ufo_shapes.png&#39;,
+  &#39;icon-width&#39;: 128,
+  &#39;icon-height&#39;: 64,
+  &#39;icon-size&#39;: [32, 32],
+  // 根据目击年份在着色器中插值着色
+  &#39;icon-color&#39;: [
+    &#39;interpolate&#39;, [&#39;linear&#39;], [&#39;get&#39;, &#39;year&#39;],
+    1950, [255, 160, 110], // 早期偏红
+    2013, [180, 255, 200], // 近期偏蓝绿
+  ],
+  // 纹理子域采样偏移
+  &#39;icon-offset&#39;: [
+    &#39;match&#39;, [&#39;get&#39;, &#39;shape&#39;],
+    &#39;light&#39;, [0, 0],
+    &#39;sphere&#39;, [32, 0],
+    &#39;disc&#39;, [64, 0],
+    &#39;fireball&#39;, [0, 32],
+    [96, 32] // 默认回退偏移
+  ],
+};
+</code></pre>
+<hr>
+<h2 id="第五部分：生产环境工程最佳实践与避坑清单">第五部分：生产环境工程最佳实践与避坑清单</h2>
+<ol>
+<li><strong><code>updateStyleVariables()</code> vs 图层重建</strong>：<ul>
+<li><strong>极速路径</strong>：改变颜色、阈值、时间戳、高亮 ID 等数值时，**务必使用 <code>layer.updateStyleVariables(variables)</code>**。这仅修改 GPU Uniform 标量，耗时 $&lt; 0.1 \text{ms}$；</li>
+<li><strong>重编译路径</strong>：只有当增删操作符结构、切换纹理图片路径或修改着色器控制流时，才需要调用 <code>layer.setStyle()</code> 或重建图层。</li>
+</ul>
+</li>
+<li><strong>海量点要素关闭拾取探测（Hit Detection）</strong>：
+在渲染 5 万个以上点要素时，如果不依赖鼠标点击或悬停拾取，显式配置 <code>disableHitDetection: true</code>。这可以彻底跳过离屏拾取缓冲区的渲染开销，帧率提升可达 40% 以上。</li>
+<li><strong>高分屏像素比与 Scissor 剪裁</strong>：
+在利用 <code>gl.scissor</code> 制作卷帘（Swipe）对比时，务必通过 <code>getRenderPixel(event, cssPixel)</code> 获取真实的物理渲染像素，并考虑 WebGL 原点在左下角（Y 轴向上）的坐标系差异。</li>
+<li><strong>共享 WebGL 上下文（Context Sharing）</strong>：
+当一个页面存在多个 WebGL 图层时，为它们赋予相同的 <code>className: &#39;canvas3d&#39;</code> 可以让 OpenLayers 复用同一个 WebGLRenderingContext，降低显存占用并减少移动端浏览器 WebGL 上下文丢失（Context Lost）的风险。</li>
+</ol>
+<hr>
+<h2 id="附录：19-个-webgl-核心示例直达索引">附录：19 个 WebGL 核心示例直达索引</h2>
+<ol>
+<li><a href="../en/latest/examples/webgl-tiles.html">webgl-tiles (基础栅格瓦片 GPU 加速加载)</a></li>
+<li><a href="../en/latest/examples/webgl-tile-style.html">webgl-tile-style (栅格瓦片实时色彩调整)</a></li>
+<li><a href="../en/latest/examples/webgl-layer-swipe.html">webgl-layer-swipe (硬件级视口剪裁图层卷帘)</a></li>
+<li><a href="../en/latest/examples/wms-time-webgl.html">wms-time-webgl (WMS 时序动态瓦片平滑过渡)</a></li>
+<li><a href="../en/latest/examples/webgl-sea-level.html">webgl-sea-level (DEM 高程解码与海平面上升模拟)</a></li>
+<li><a href="../en/latest/examples/webgl-shaded-relief.html">webgl-shaded-relief (邻域像元采样与动态山体日照晕渲)</a></li>
+<li><a href="../en/latest/examples/numpytile.html">numpytile (16位科学栅格瓦片直读与对比度拉伸)</a></li>
+<li><a href="../en/latest/examples/cog-style.html">cog-style (卫星影像多波段植被指数计算与渐变映射)</a></li>
+<li><a href="../en/latest/examples/cog-stretch.html">cog-stretch (原始反射率动态直方图拉伸)</a></li>
+<li><a href="../en/latest/examples/multiple-cogs.html">multiple-cogs (跨分带 COG 重投影与通道动态重构)</a></li>
+<li><a href="../en/latest/examples/filter-points-webgl.html">filter-points-webgl (海量点位过滤与着色器脉冲动画)</a></li>
+<li><a href="../en/latest/examples/icon-sprite-webgl.html">icon-sprite-webgl (纹理图集 UV 子域采样海量点渲染)</a></li>
+<li><a href="../en/latest/examples/webgl-points-layer.html">webgl-points-layer (点要素声明式着色器样式编辑器)</a></li>
+<li><a href="../en/latest/examples/webgl-vector-layer.html">webgl-vector-layer (多边形面三角剖分与悬停高亮)</a></li>
+<li><a href="../en/latest/examples/webgl-draw-line.html">webgl-draw-line (线段三角带膨胀与过程式虚线)</a></li>
+<li><a href="../en/latest/examples/filter-webgl-line.html">filter-webgl-line (XYM 时序轨迹沿线渐变与时间截断)</a></li>
+<li><a href="../en/latest/examples/webgl-vector-tiles.html">webgl-vector-tiles (城市级 MVT 矢量切片硬件加速渲染)</a></li>
+<li><a href="../en/latest/examples/heatmap-earthquakes.html">heatmap-earthquakes (点要素 WebGL 核密度热力场)</a></li>
+<li><a href="../en/latest/examples/heatmap-trajectories.html">heatmap-trajectories (折线航迹要素 WebGL 热力场)</a></li>
+</ol>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

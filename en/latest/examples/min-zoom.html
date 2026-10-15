@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>View Min-Zoom</title>
+    <title>View Min-Zoom / 视图最小缩放级别动态限制（单世界自适应）</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">View Min-Zoom</h4>
+        <h4 id="title">View Min-Zoom / 视图最小缩放级别动态限制（单世界自适应）</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,7 +74,7 @@
               data-bs-target="#tag-example-list"
               data-title="min"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./min-zoom.html&quot;&gt;View Min-Zoom&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./min-zoom.html&quot;&gt;View Min-Zoom / 视图最小缩放级别动态限制（单世界自适应）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -88,14 +88,14 @@
               data-bs-target="#tag-example-list"
               data-title="zoom"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom / 视图缩放级别区间约束（minZoom 与 maxZoom）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./double-click-drag-zoom.html&quot;&gt;Double click, Drag and Zoom / 双击拖拽缩放&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-rotate-and-zoom.html&quot;&gt;Drag, Rotate, and Zoom / 拖拽同时旋转与缩放&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./page-scroll.html&quot;&gt;Page Scrolling&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./two-finger-pan-scroll.html&quot;&gt;Panning and page scrolling&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom / 全屏联动拖拽旋转与复合缩放&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./page-scroll.html&quot;&gt;Page Scrolling / 页面滚动与焦点隔离（tabindex 缩放陷阱防御）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./two-finger-pan-scroll.html&quot;&gt;Panning and page scrolling / 双指平移与页面协作滚动（Cooperative Gesture）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./pinch-zoom.html&quot;&gt;Pinch Zoom / 移动端双指捏合缩放&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./min-zoom.html&quot;&gt;View Min-Zoom&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./min-zoom.html&quot;&gt;View Min-Zoom / 视图最小缩放级别动态限制（单世界自适应）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomslider.html&quot;&gt;Zoom Sliders / 缩放滑块控件与纯 CSS 样式定制（ZoomSlider）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
@@ -123,8 +123,28 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Demonstrates how the view&#x27;s minimum zoom level can be changed.</p>
-        <div id="docs"><p>The <code>minZoom</code> option for a view limits how far out you can zoom.  This property can be updated by calling <code>view.setMinZoom(newMinZoom)</code>. In this example, the minimum zoom level is set so that you only see one world at a time.  Resize your browser window to change the threshold.</p>
+        <p id="shortdesc">Demonstrates how the view&#x27;s minimum zoom level can be changed. / 演示如何动态更新 View 的最小缩放级别（minZoom），防止地图在宽屏下横向多次平铺重复。</p>
+        <div id="docs"><h2>The <code>minZoom</code> option for a view limits how far out you can zoom.  This property can be updated by calling <code>view.setMinZoom(newMinZoom)</code>. In this example, the minimum zoom level is set so that you only see one world at a time.  Resize your browser window to change the threshold.
+视图（View）的 <code>minZoom</code> 选项用于严格限制地图视口可缩放的最大全局视野（即数值最小的级别）。该属性可在运行时通过调用 <code>view.setMinZoom(newMinZoom)</code> 动态更改。本示例根据当前浏览器窗口的物理像素宽度，通过对数公式动态计算 <code>minZoom</code>，确保视口中横向刚好仅完整呈现单个世界地图，消除瓦片重复拼接；缩放浏览器窗口时将实时重算并生效。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构原理 (Core Architecture) 在 Web 墨卡托投影（EPSG:3857）的标准金字塔切片模型中，缩放级别 $z=0$ 时整个地球被切为一个 $256 \times 256$ 像素的正方形切片。随着缩放级别 $z$ 递增，切片像素总宽度为 $256 \times 2^z$。 - <strong>宽屏下的多世界平铺（World Wrapping）</strong>：若地图容器宽度 $W &gt; 256$，在 $z=0$ 时容器内横向会重复绘制多个拼接的世界地图，这在桌面宽屏或大屏监控场景下极度影响审美与交互逻辑。 - <strong>单世界自适应临界级别解算</strong>：要确保屏幕宽度刚好不超过单个世界宽度，必须满足：</h4>
+<p>  $$256 \times 2^z \ge W \implies 2^z \ge \frac{W}{256} \implies z \ge \log_2\left(\frac{W}{256}\right)$$
+  利用换底公式与 JavaScript 的 <code>Math.LOG2E</code>（即 $\log_2(e)$）：
+  $$z_{\min} = \lceil \log_2(e) \cdot \ln(W / 256) \rceil$$</p>
+<ul>
+<li><strong>动态视口监听与运行时热更</strong>：通过监听 <code>window.resize</code> 事件，动态获取 <code>viewport.clientWidth</code>，并在值变动时触发 <code>view.setMinZoom(minZoom)</code>，OpenLayers 内部的约束器（Constraint Engine）会自动平滑钳制当前视口，防止出现多世界视效。</li>
+</ul>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript // 1. 基于视口像素宽度动态推导最小限制缩放级别 function getMinZoom() {</h4>
+<p>  const width = viewport.clientWidth;
+  return Math.ceil(Math.LOG2E * Math.log(width / 256));
+}
+// 2. 窗口尺寸调整时动态钳制 window.addEventListener(&#39;resize&#39;, function () {
+  const minZoom = getMinZoom();
+  if (minZoom !== view.getMinZoom()) {
+    view.setMinZoom(minZoom);
+  }
+}); ```</p>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>Resize 防抖优化</strong>：<code>window.addEventListener('resize')</code> 在用户拖拽窗体时会高频触发，生产环境中建议使用防抖（Debounce）或 <code>requestAnimationFrame</code> 延迟 100~200ms 执行，避免持续引发 View 的约束重算。 - <strong><code>multiWorld: false</code> 备选方案</strong>：若业务完全禁止横向跨周期连续滚动，可在创建 <code>View</code> 时设置 <code>multiWorld: false</code>，但此设置会使地图在世界东西边缘硬性截断；动态 <code>minZoom</code> 方案既保留了自然的环球漫游，又杜绝了宽屏平铺的多世界瑕疵。</h4>
 </div>
       </div>
 
@@ -138,6 +158,11 @@ import OSM from &#x27;ol/source/OSM.js&#x27;;
 
 const viewport &#x3D; document.getElementById(&#x27;map&#x27;);
 
+/**
+ * Calculate minimum zoom level to ensure only a single world is visible horizontally.
+ * 计算最小缩放级别，确保视口中横向只呈现单个世界切片，防止多次平铺重复。
+ * @return {number} Calculated min zoom.
+ */
 function getMinZoom() {
   const width &#x3D; viewport.clientWidth;
   return Math.ceil(Math.LOG2E * Math.log(width / 256));
@@ -145,6 +170,8 @@ function getMinZoom() {
 
 const initialZoom &#x3D; getMinZoom();
 
+// Initialize view with dynamic minZoom constraint
+// 使用动态计算的 minZoom 约束初始化视图
 const view &#x3D; new View({
   center: [0, 0],
   minZoom: initialZoom,
@@ -161,6 +188,8 @@ const map &#x3D; new Map({
   view: view,
 });
 
+// Update minZoom dynamically upon window resize
+// 监听窗口尺寸变化，动态更新视图的最小缩放级别
 window.addEventListener(&#x27;resize&#x27;, function () {
   const minZoom &#x3D; getMinZoom();
   if (minZoom !&#x3D;&#x3D; view.getMinZoom()) {
@@ -178,7 +207,7 @@ window.addEventListener(&#x27;resize&#x27;, function () {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;View Min-Zoom&lt;/title&gt;
+    &lt;title&gt;View Min-Zoom / 视图最小缩放级别动态限制（单世界自适应）&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

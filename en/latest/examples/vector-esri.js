@@ -126,6 +126,10 @@ var map = new Map({
 		zoom: 14
 	})
 });
+/**
+* Display feature attributes under the mouse cursor. / 探测并展示光标所在要素的属性信息
+* @param {import('../src/ol/pixel.js').Pixel} pixel Screen coordinates / 屏幕像素坐标
+*/
 var displayFeatureInfo = function(pixel) {
 	const feature = map.forEachFeatureAtPixel(pixel, function(feature) {
 		return feature;

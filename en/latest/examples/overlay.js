@@ -35,10 +35,10 @@ map.on("click", function(evt) {
 	popover = new bootstrap.Popover(element, {
 		animation: false,
 		container: element,
-		content: "<p>The location you clicked was:</p><code>" + hdms + "</code>",
+		content: "<p>The location you clicked was / 您点击的位置是：</p><code>" + hdms + "</code>",
 		html: true,
 		placement: "top",
-		title: "Welcome to OpenLayers"
+		title: "Welcome to OpenLayers / 欢迎使用 OpenLayers"
 	});
 	popover.show();
 });

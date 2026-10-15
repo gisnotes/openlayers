@@ -409,6 +409,11 @@ var infoOverlay = new Overlay({
 	stopEvent: false
 });
 map.addOverlay(infoOverlay);
+/**
+* Query UTFGrid attribute dictionary by coordinate and update overlay.
+* 根据空间地理坐标与分辨率向 UTFGrid 检索属性数据并更新提示浮层。
+* @param {import("../src/ol/coordinate.js").Coordinate} coordinate Map coordinate.
+*/
 var displayCountryInfo = function(coordinate) {
 	const viewResolution = view.getResolution();
 	gridSource.forDataAtCoordinateAndResolution(coordinate, viewResolution, function(data) {

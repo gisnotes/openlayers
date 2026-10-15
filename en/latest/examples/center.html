@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Advanced View Positioning</title>
+    <title>Advanced View Positioning / 高级视口定位与居中 (centerOn &amp; fit)</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Advanced View Positioning</h4>
+        <h4 id="title">Advanced View Positioning / 高级视口定位与居中 (centerOn &amp; fit)</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,8 +75,8 @@
               data-bs-target="#tag-example-list"
               data-title="center"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./center.html&quot;&gt;Advanced View Positioning&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./view-padding.html&quot;&gt;View Padding&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./center.html&quot;&gt;Advanced View Positioning / 高级视口定位与居中 (centerOn &amp;amp; fit)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./view-padding.html&quot;&gt;View Padding / 视图内边距与视口避让 (padding)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -90,11 +90,12 @@
               data-bs-target="#tag-example-list"
               data-title="rotation"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./center.html&quot;&gt;Advanced View Positioning&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./center.html&quot;&gt;Advanced View Positioning / 高级视口定位与居中 (centerOn &amp;amp; fit)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-repeat.html&quot;&gt;Icon Repeat&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rotation.html&quot;&gt;View Rotation&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
-              >2</a>
+              >3</a>
           </span>
           <span class="badge-group">
             <a
@@ -105,26 +106,26 @@
               data-bs-target="#tag-example-list"
               data-title="openstreetmap"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./center.html&quot;&gt;Advanced View Positioning&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./attributions.html&quot;&gt;Attributions&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./center.html&quot;&gt;Advanced View Positioning / 高级视口定位与居中 (centerOn &amp;amp; fit)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./attributions.html&quot;&gt;Attributions / 版权署名控件自适应折叠 (Attributions Responsive Collapsing)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-tiles.html&quot;&gt;Canvas Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cartodb.html&quot;&gt;CartoDB source example&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./export-pdf.html&quot;&gt;Export PDF example&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson.html&quot;&gt;GeoJSON&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geolocation.html&quot;&gt;Geolocation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping.html&quot;&gt;Layer Clipping&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cartodb.html&quot;&gt;CartoDB source example / CartoDB 云端空间数据源与动态 SQL 过滤 (CartoDB Source)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./export-pdf.html&quot;&gt;Export PDF example / 导出 PDF 地图示例&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson.html&quot;&gt;GeoJSON / GeoJSON 多几何类型标准解析与多态样式映射&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geolocation.html&quot;&gt;Geolocation / 地理定位服务&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping.html&quot;&gt;Layer Clipping / 图层几何遮罩裁切&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe / 图层卷帘对比&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./localized-openstreetmap.html&quot;&gt;Localized OpenStreetMap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mouse-position.html&quot;&gt;Mouse Position&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mouse-position.html&quot;&gt;Mouse Position / 鼠标位置坐标控件 (MousePosition)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap 客户端 WGS84 重投影 (OpenStreetMap Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./permalink.html&quot;&gt;Permalink&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scale-line.html&quot;&gt;Scale Line&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./permalink.html&quot;&gt;Permalink / 永久链接与历史状态同步 (Permalink &amp;amp; History API)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scale-line.html&quot;&gt;Scale Line / 比例尺与分段比例条控件 (ScaleLine / ScaleBar)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./simple.html&quot;&gt;Simple Map&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./static-attribution.html&quot;&gt;Static Attribution&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./teleport.html&quot;&gt;Teleporting Maps&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels.html&quot;&gt;Vector Labels&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels-justify-text.html&quot;&gt;Vector Labels - Justify Text&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./static-attribution.html&quot;&gt;Static Attribution / 静态常驻版权署名 (Static Attribution)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./teleport.html&quot;&gt;Teleporting Maps / 地图容器瞬态瞬移 (setTarget)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer / 矢量边界裁切图层&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels-justify-text.html&quot;&gt;Vector Labels - Justify Text / 矢量注记文本对齐与段落对齐解耦&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels.html&quot;&gt;Vector Labels / 矢量文本标注与全要素排版实战工作台&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rotation.html&quot;&gt;View Rotation&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -153,9 +154,9 @@
   <div class="padding-bottom"></div>
   <div class="center"></div>
 </div>
-<button id="zoomtoswitzerland">Zoom to Switzerland</button> (best fit).<br/>
-<button id="zoomtolausanne">Zoom to Lausanne</button> (with min resolution),<br/>
-<button id="centerlausanne">Center on Lausanne</button>
+<button id="zoomtoswitzerland">Zoom to Switzerland / 缩放至瑞士全境 (best fit)</button><br/>
+<button id="zoomtolausanne">Zoom to Lausanne / 缩放至洛桑 (with min resolution)</button><br/>
+<button id="centerlausanne">Center on Lausanne / 居中对齐洛桑</button>
 
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
           <input id="codesandbox-params" type="hidden" name="parameters">
@@ -163,8 +164,34 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">This example demonstrates how a map&#x27;s view can be adjusted so a geometry or coordinate is positioned at a specific pixel location.</p>
-        <div id="docs"><p>This example demonstrates how a map&#39;s view can be adjusted so a geometry or coordinate is positioned at a specific pixel location. The map above has top, right, bottom, and left padding applied inside the viewport. The view&#39;s <code>fit</code> method is used to fit a geometry in the view with the same padding. The view&#39;s <code>centerOn</code> method is used to position a coordinate (Lausanne) at a specific pixel location (the center of the black box). <p>Use <code>Alt+Shift+Drag</code> to rotate the map.</p> <p><b>Note:</b> This example does not shift the view center. So the zoom  controls and rotating the map will still use the center of the viewport as anchor. To shift the whole view based on a padding, use the <code>padding</code> option on the view, as shown in the <a href="view-padding.html">view-padding.html</a> example. </p></p>
+        <p id="shortdesc">This example demonstrates how a map&#x27;s view can be adjusted so a geometry or coordinate is positioned at a specific pixel location. / 演示如何调整视图，使要素几何体或指定坐标精准定位在特定屏幕像素位置。</p>
+        <div id="docs"><p>
+  This example demonstrates how a map's view can be adjusted so a geometry or coordinate is positioned at a specific pixel location. The map above has top, right, bottom, and left padding applied inside the viewport. The view's <code>fit</code> method is used to fit a geometry in the view with the same padding. The view's <code>centerOn</code> method is used to position a coordinate (Lausanne) at a specific pixel location (the center of the black box).
+</p> <p>Use <code>Alt+Shift+Drag</code> to rotate the map.</p> <p><b>Note:</b> This example does not shift the view center. So the zoom controls and rotating the map will still use the center of the viewport as anchor. To shift the whole view based on a padding, use the `padding` option on the view, as shown in the <a href="view-padding.html">view-padding.html</a> example.</p> <p>
+  本示例演示了如何通过高阶视图方法将几何图形或目标地理坐标精准定位于屏幕视口的特定像素位置。上方的地图在视口内部模拟了顶部、右侧、底部与左侧的悬浮内边距（Padding）。调用 <code>view.fit()</code> 可将几何要素在剔除内边距后的可用可视区内自适应完整展示；调用 <code>view.centerOn()</code> 可将指定坐标（瑞士洛桑）精准钉在视口内的特定像素坐标（黑色方块中心）。
+</p> <p>按住 <code>Alt+Shift</code> 并拖拽鼠标左键可自由旋转地图。</p> <p><b>注意：</b>本示例通过局部参数进行定位，并没有从根本上改变 View 的中心点锚点。因此旋转与缩放按钮仍以视口绝对几何中心为轴心。若需全局偏移整个视图旋转缩放锚点，推荐使用 View 的 <code>padding</code> 构造选项，详见 <a href="view-padding.html">view-padding.html</a> 示例。</p> <hr> <h3>📚 学习记录与技术深度解读</h3>
+<h4>1. 核心架构与设计思想</h4> <ul>
+  <li><strong>非对称视口中的几何自适应（View fit with Padding）：</strong>
+    现代 WebGIS 界面往往在左侧布置折叠菜单、顶部放置导航栏、底部布置时序滑块。在传统开发中，如果直接 <code>view.fit(extent)</code>，目标区域的边缘会被四周的悬浮面板遮挡。通过传入 <code>padding: [top, right, bottom, left]</code>，OpenLayers 内部在反算最佳缩放分辨率与中心点时，预先扣除遮挡区域，确保几何图形完整且居中暴露在有效观察区。
+  </li>
+  <li><strong>特定像素点坐标钉扎（<code>view.centerOn</code>）：</strong>
+    常规的 <code>view.setCenter(coord)</code> 强制将地理点置于视口正中心 $(W/2, H/2)$。但在多屏对比或需要留出弹出详情卡片的场景下，业务往往需要将某个重点目标固定在屏幕的特定偏置位置（如右侧 $2/3$ 处）。<code>view.centerOn(coordinate, size, pixelPosition)</code> 内部通过视口尺寸和目标像素偏移量逆向换算 View Center，实现像素级偏置定位。
+  </li>
+</ul>
+<h4>2. 源码与关键 API 剖析</h4> <ul>
+  <li><code>view.fit(geometry, options)</code>：
+    <ul>
+      <li><code>padding: [170, 50, 30, 150]</code>：分别声明上、右、下、左的像素遮挡缓冲值。</li>
+      <li><code>minResolution: 50</code>：防止单个点要素或超微小多边形在 fit 时被过度放大到不可思议的超大比例尺。</li>
+    </ul>
+  </li>
+  <li><code>view.centerOn(coord, size, [px_x, px_y])</code>：将地理坐标 <code>coord</code> 精准对齐到屏幕容器尺寸为 <code>size</code> 时的像素坐标 <code>[570, 500]</code>。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优</h4> <ul>
+  <li><strong>`centerOn` 与旋转的耦合陷阱：</strong>
+    若地图处于旋转状态（<code>rotation &ne; 0</code>），<code>centerOn</code> 的像素偏移换算必须依赖当前的旋转矩阵。若在旋转动画未停止时频繁触发 <code>centerOn</code>，可能会导致跳帧闪烁。建议在动画停止后再执行绝对定位。
+  </li>
+</ul>
 </div>
       </div>
 
@@ -179,6 +206,8 @@ import VectorLayer from &#x27;ol/layer/Vector.js&#x27;;
 import OSM from &#x27;ol/source/OSM.js&#x27;;
 import VectorSource from &#x27;ol/source/Vector.js&#x27;;
 
+// Load GeoJSON vector source containing Switzerland boundary and cities
+// 加载包含瑞士国界多边形和城市要素的 GeoJSON 矢量数据源
 const source &#x3D; new VectorSource({
   url: &#x27;data/geojson/switzerland.geojson&#x27;,
   format: new GeoJSON(),
@@ -201,6 +230,9 @@ const view &#x3D; new View({
   center: [0, 0],
   zoom: 1,
 });
+
+// Initialize map
+// 初始化地图
 const map &#x3D; new Map({
   layers: [
     new TileLayer({
@@ -212,6 +244,8 @@ const map &#x3D; new Map({
   view: view,
 });
 
+// Fit polygon geometry with custom padding
+// 在预留内边距的可用视口区域内自适应完整展示多边形几何体
 const zoomtoswitzerland &#x3D; document.getElementById(&#x27;zoomtoswitzerland&#x27;);
 zoomtoswitzerland.addEventListener(
   &#x27;click&#x27;,
@@ -223,6 +257,8 @@ zoomtoswitzerland.addEventListener(
   false,
 );
 
+// Fit point geometry with padding and minimum resolution constraint
+// 自适应点要素，配置内边距并设定最小分辨率约束
 const zoomtolausanne &#x3D; document.getElementById(&#x27;zoomtolausanne&#x27;);
 zoomtolausanne.addEventListener(
   &#x27;click&#x27;,
@@ -234,6 +270,8 @@ zoomtolausanne.addEventListener(
   false,
 );
 
+// Center on Lausanne coordinate at specific pixel location
+// 将洛桑地理坐标精准对齐到特定的屏幕像素点位置
 const centerlausanne &#x3D; document.getElementById(&#x27;centerlausanne&#x27;);
 centerlausanne.addEventListener(
   &#x27;click&#x27;,
@@ -256,7 +294,7 @@ centerlausanne.addEventListener(
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Advanced View Positioning&lt;/title&gt;
+    &lt;title&gt;Advanced View Positioning / 高级视口定位与居中 (centerOn &amp; fit)&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -335,9 +373,9 @@ centerlausanne.addEventListener(
       &lt;div class&#x3D;&quot;padding-bottom&quot;&gt;&lt;/div&gt;
       &lt;div class&#x3D;&quot;center&quot;&gt;&lt;/div&gt;
     &lt;/div&gt;
-    &lt;button id&#x3D;&quot;zoomtoswitzerland&quot;&gt;Zoom to Switzerland&lt;/button&gt; (best fit).&lt;br/&gt;
-    &lt;button id&#x3D;&quot;zoomtolausanne&quot;&gt;Zoom to Lausanne&lt;/button&gt; (with min resolution),&lt;br/&gt;
-    &lt;button id&#x3D;&quot;centerlausanne&quot;&gt;Center on Lausanne&lt;/button&gt;
+    &lt;button id&#x3D;&quot;zoomtoswitzerland&quot;&gt;Zoom to Switzerland / 缩放至瑞士全境 (best fit)&lt;/button&gt;&lt;br/&gt;
+    &lt;button id&#x3D;&quot;zoomtolausanne&quot;&gt;Zoom to Lausanne / 缩放至洛桑 (with min resolution)&lt;/button&gt;&lt;br/&gt;
+    &lt;button id&#x3D;&quot;centerlausanne&quot;&gt;Center on Lausanne / 居中对齐洛桑&lt;/button&gt;
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
   &lt;/body&gt;

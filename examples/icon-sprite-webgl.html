@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Icon Sprites with WebGL</title>
+    <title>Icon Sprites with WebGL / WebGL 图标精灵图（Sprite Atlas）海量点渲染</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -68,7 +68,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Icon Sprites with WebGL</h4>
+        <h4 id="title">Icon Sprites with WebGL / WebGL 图标精灵图（Sprite Atlas）海量点渲染</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -84,20 +84,20 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-style.html&quot;&gt;Change Tile Layer Style / 更改瓦片图层样式&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-draw-line.html&quot;&gt;Draw lines rendered with WebGL / WebGL 渲染绘制线条&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-earthquakes.html&quot;&gt;Earthquakes Heatmap / 地震分布热力图（WebGL Heatmap）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering features with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-layer-swipe.html&quot;&gt;Layer Swipe (WebGL)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./numpytile.html&quot;&gt;Rendering 16-bit NumpyTiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-sea-level.html&quot;&gt;Sea Level (with WebGL)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-shaded-relief.html&quot;&gt;Shaded Relief (with WebGL)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL points layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering Features with WebGL / WebGL 海量要素动态过滤与着色器动画&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL / WebGL 图标精灵图（Sprite Atlas）海量点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-layer-swipe.html&quot;&gt;Layer Swipe (WebGL) / WebGL 卷帘对比（硬件级 Scissor 视口剪裁）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG Sources / 多 COG 数据源重投影与波段合成&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./numpytile.html&quot;&gt;Rendering 16-bit NumpyTiles / WebGL 渲染 16 位科学栅格切片（NumpyTile）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-sea-level.html&quot;&gt;Sea Level (with WebGL) / WebGL 海平面上升淹没模拟与 DEM 高程着色器计算&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-shaded-relief.html&quot;&gt;Shaded Relief (with WebGL) / WebGL 动态山体阴影（地貌日照晕渲与邻域采样）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./heatmap-trajectories.html&quot;&gt;Trajectories Heatmap / 航迹热力图（折线要素 WebGL 热力场渲染）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL Points Layer / WebGL 点要素高性能图层与声明式着色器样式编辑器&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tile-style.html&quot;&gt;WebGL Tile Layer Styles / WebGL 瓦片图层色彩滤镜样式（曝光度、对比度、饱和度实时调色）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tiles.html&quot;&gt;WebGL Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-layer.html&quot;&gt;WebGL Vector Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time-webgl.html&quot;&gt;WMS Time (WebGL)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;多 COG 数据源重投影与波段合成 (Multiple COG sources)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tiles.html&quot;&gt;WebGL Tiles / WebGL 基础栅格瓦片渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-layer.html&quot;&gt;WebGL Vector Layer / WebGL 矢量多边形面图层与悬停高亮&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer / WebGL 矢量切片图层（MVT 硬件加速渲染）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time-webgl.html&quot;&gt;WMS Time (WebGL) / WebGL WMS 时序动态瓦片平滑过渡渲染&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >19</a>
@@ -112,17 +112,18 @@
               data-title="icon"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./animated-gif.html&quot;&gt;Animated GIF / 动态 GIF 图标渲染&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering features with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering Features with WebGL / WebGL 海量要素动态过滤与着色器动画&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-scale.html&quot;&gt;Icon and Label Scale / 图标与文本标注的双向缩放及空间变换&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-color.html&quot;&gt;Icon Colors / 图标动态着色（单图多色复用）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./modify-icon.html&quot;&gt;Icon modification / 图标点位拖拽修改&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-repeat.html&quot;&gt;Icon Repeat&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL / WebGL 图标精灵图（Sprite Atlas）海量点渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon.html&quot;&gt;Icon Symbolizer / 图标符号化与点击弹窗（Icon 基础篇）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-width.html&quot;&gt;Icon Symbolizer width and height / 图标像素宽高控制与等比自适应（Icon 尺寸篇）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
-              >9</a>
+              >10</a>
           </span>
           <span class="badge-group">
             <a
@@ -133,8 +134,8 @@
               data-bs-target="#tag-example-list"
               data-title="sprite"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering features with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./filter-points-webgl.html&quot;&gt;Filtering Features with WebGL / WebGL 海量要素动态过滤与着色器动画&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL / WebGL 图标精灵图（Sprite Atlas）海量点渲染&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -148,8 +149,8 @@
               data-bs-target="#tag-example-list"
               data-title="point"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL points layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL / WebGL 图标精灵图（Sprite Atlas）海量点渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-points-layer.html&quot;&gt;WebGL Points Layer / WebGL 点要素高性能图层与声明式着色器样式编辑器&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -163,7 +164,7 @@
               data-bs-target="#tag-example-list"
               data-title="ufo"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./icon-sprite-webgl.html&quot;&gt;Icon Sprites with WebGL / WebGL 图标精灵图（Sprite Atlas）海量点渲染&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -183,9 +184,9 @@
           </div>
         </div>
         <div id="map" class="map"></div>
-<div>Current sighting: <span id="info"></span></div>
+<div>Current sighting / 当前目击信息：<span id="info">None / 暂无</span></div>
 <div>
-  <label for="shape-filter">Filter by UFO shape:</label>
+  <label for="shape-filter">Filter by UFO shape / 按目击形状筛选：</label>
   <select id="shape-filter"></select>
 </div>
 
@@ -195,14 +196,27 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Rendering many icons with WebGL</p>
+        <p id="shortdesc">Rendering many icons with WebGL. / 使用 WebGL 矢量图层配合纹理图集（Sprite Atlas）高效渲染 8 万个 UFO 目击事件点位。</p>
         <div id="docs"><p>This example shows how to use <code>ol/layer/WebGLVector</code> to render
-  a very large amount of sprites. The above map is based on a dataset from the National UFO Reporting Center: each
-  icon marks a UFO sighting according to its reported shape (disk, light, fireball...). The older the sighting, the redder
-  the icon.</p>
-<p>A very simple sprite atlas is used in the form of a PNG file containing all icons on a grid. Then, the <code>style</code> object
-  given to the <code>ol/layer/WebGLVector</code> constructor is used to specify which sprite to use according to the sighting shape.</p>
-<p>The dataset contains around 80k points and can be found here: <a href="https://www.kaggle.com/NUFORC/ufo-sightings">https://www.kaggle.com/NUFORC/ufo-sightings</a></p>
+a very large amount of sprites. The above map is based on a dataset from the National UFO Reporting Center: each
+icon marks a UFO sighting according to its reported shape (disk, light, fireball...). The older the sighting, the redder
+the icon.</p><p>A very simple sprite atlas is used in the form of a PNG file containing all icons on a grid. Then, the <code>style</code> object
+given to the <code>ol/layer/WebGLVector</code> constructor is used to specify which sprite to use according to the sighting shape.</p><p>The dataset contains around 80k points and can be found here: https://www.kaggle.com/NUFORC/ufo-sightings</p><p>本示例展示如何利用 <code>ol/layer/WebGLVector</code> 渲染海量图标精灵（Sprites）。地图数据来源于美国国家不明飞行物报告中心（NUFORC）记录的约 8 万条目击事件：每个图标根据目击报告的几何外形（如圆盘形、光点、火球、椭圆形等）显示不同的精灵贴图。目击年份越早，图标颜色在着色器中被插值渲染得越偏红。</p><p>图层通过一张轻量的 PNG 精灵纹理图集（Sprite Atlas，将各种形态图标规整排布在一个网格图像中），随后在 WebGL 样式表达式中利用 <code>match</code> 算子根据要素的 <code>shape</code> 属性动态映射对应的纹理偏移量（<code>icon-offset</code>），免除频繁切换纹理绑定的 GPU 开销。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 纹理图集（Sprite Atlas / Texture Atlas）在 WebGL 中的核心优势</h4>
+<ul>
+<li><strong>批处理与 Draw Call 优化</strong>：在标准 WebGL 渲染管线中，如果 8 万个点位使用多张分散的图片贴图，每次更换图片都必须触发 <code>gl.bindTexture</code> 并拆分 Draw Call，导致严峻的 CPU/GPU 切换开销。</li>
+<li><strong>UV 纹理子域采样</strong>：通过将所有图标打包到一张 128x64 像素的贴图网格中，并配置 <code>icon-size: [32, 32]</code> 以及基于属性匹配的 <code>icon-offset</code>（如 <code>light: [0, 0]</code>, <code>sphere: [32, 0]</code>, <code>fireball: [0, 32]</code>），着色器在单次批处理中仅通过调整纹理坐标（UV Coordinates）即可渲染完全不同形态的图标。</li>
+</ul>
+<h4>2. GPU 片元色彩插值（Color Tinting）</h4>
+<ul>
+<li>样式中直接使用 <code>icon-color: [&#39;interpolate&#39;, [&#39;linear&#39;], [&#39;get&#39;, &#39;year&#39;], 1950, oldColor, 2013, newColor]</code>，在片元着色器中将纹理灰度与目标颜色进行乘法调制（Texture Tinting），无需生成数十种不同颜色的预制图片。</li>
+</ul>
+<h4>3. 拾取交互与动态属性过滤</h4>
+<ul>
+<li>借助 <code>map.forEachFeatureAtPixel</code> 在海量点下高效检索鼠标悬停命中要素。</li>
+<li>配合 <code>updateStyleVariables({filterShape})</code> 在着色器层面毫秒级完成按特定外形（如盘状、球状）实时筛选显示。</li>
+</ul>
 </div>
       </div>
 
@@ -244,6 +258,8 @@ const map &#x3D; new Map({
 const oldColor &#x3D; [255, 160, 110];
 const newColor &#x3D; [180, 255, 200];
 
+// WebGL literal style with sprite atlas offset mapping and color interpolation
+// WebGL 字面量样式：结合精灵图偏移映射与年份颜色插值
 const style &#x3D; {
   &#x27;icon-src&#x27;: &#x27;data/ufo_shapes.png&#x27;,
   &#x27;icon-width&#x27;: 128,
@@ -305,6 +321,7 @@ shapeSelect.addEventListener(&#x27;input&#x27;, function () {
   pointsLayer.updateStyleVariables({filterShape: shapeSelect.value});
   map.render();
 });
+
 function fillShapeSelect(shapeTypes) {
   Object.keys(shapeTypes)
     .sort(function (a, b) {
@@ -313,23 +330,26 @@ function fillShapeSelect(shapeTypes) {
     .forEach(function (shape) {
       const option &#x3D; document.createElement(&#x27;option&#x27;);
       const sightings &#x3D; shapeTypes[shape];
-      option.text &#x3D; &#x60;${shape} (${sightings} sighting${
+      const displayName &#x3D; shape &#x3D;&#x3D;&#x3D; &#x27;all&#x27; ? &#x27;All shapes / 全部形态&#x27; : shape;
+      option.text &#x3D; &#x60;${displayName} (${sightings} sighting${
         sightings &#x3D;&#x3D;&#x3D; 1 ? &#x27;&#x27; : &#x27;s&#x27;
-      })&#x60;;
+      } / 次)&#x60;;
       option.value &#x3D; shape;
       shapeSelect.appendChild(option);
     });
 }
 
+// Load UFO sightings CSV dataset (approx 80k points)
+// 异步读取 UFO 目击事件 CSV 数据集（约 8 万条记录）
 const client &#x3D; new XMLHttpRequest();
 client.open(&#x27;GET&#x27;, &#x27;data/csv/ufo_sighting_data.csv&#x27;);
 client.addEventListener(&#x27;load&#x27;, function () {
   const csv &#x3D; client.responseText;
-  // key is shape name, value is sightings count
+  // Key is shape name, value is sightings count / 统计各形态频次
   const shapeTypes &#x3D; {};
   const features &#x3D; [];
 
-  let prevIndex &#x3D; csv.indexOf(&#x27;\n&#x27;) + 1; // scan past the header line
+  let prevIndex &#x3D; csv.indexOf(&#x27;\n&#x27;) + 1; // Scan past header line / 跳过表头
   let curIndex;
   while ((curIndex &#x3D; csv.indexOf(&#x27;\n&#x27;, prevIndex)) !&#x3D;&#x3D; -1) {
     const line &#x3D; csv.substring(prevIndex, curIndex).split(&#x27;,&#x27;);
@@ -342,7 +362,7 @@ client.addEventListener(&#x27;load&#x27;, function () {
     features.push(
       new Feature({
         datetime: line[0],
-        year: parseInt(/[0-9]{4}/.exec(line[0])[0], 10), // extract the year as int
+        year: parseInt(/[0-9]{4}/.exec(line[0])[0], 10), // Extract year as int / 提取目击年份
         shape: shape,
         duration: line[3],
         geometry: new Point(fromLonLat(coords)),
@@ -356,6 +376,7 @@ client.addEventListener(&#x27;load&#x27;, function () {
 });
 client.send();
 
+// Feature hover hit detection / 鼠标移动要素拾取探测
 const info &#x3D; document.getElementById(&#x27;info&#x27;);
 map.on(&#x27;pointermove&#x27;, function (evt) {
   if (map.getView().getInteracting() || map.getView().getAnimating()) {
@@ -365,9 +386,9 @@ map.on(&#x27;pointermove&#x27;, function (evt) {
     const datetime &#x3D; feature.get(&#x27;datetime&#x27;);
     const duration &#x3D; feature.get(&#x27;duration&#x27;);
     const shape &#x3D; feature.get(&#x27;shape&#x27;);
-    return &#x60;On ${datetime}, lasted ${duration} seconds and had a &quot;${shape}&quot; shape.&#x60;;
+    return &#x60;On ${datetime}, lasted ${duration} seconds and had a &quot;${shape}&quot; shape. / 时间：${datetime}，持续 ${duration} 秒，形态为 &quot;${shape}&quot;。&#x60;;
   });
-  info.innerText &#x3D; text || &#x27;&#x27;;
+  info.innerText &#x3D; text || &#x27;None / 暂无&#x27;;
 });
 </code></pre>
         </div>
@@ -380,7 +401,7 @@ map.on(&#x27;pointermove&#x27;, function (evt) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Icon Sprites with WebGL&lt;/title&gt;
+    &lt;title&gt;Icon Sprites with WebGL / WebGL 图标精灵图（Sprite Atlas）海量点渲染&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -391,9 +412,9 @@ map.on(&#x27;pointermove&#x27;, function (evt) {
   &lt;/head&gt;
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
-    &lt;div&gt;Current sighting: &lt;span id&#x3D;&quot;info&quot;&gt;&lt;/span&gt;&lt;/div&gt;
+    &lt;div&gt;Current sighting / 当前目击信息：&lt;span id&#x3D;&quot;info&quot;&gt;None / 暂无&lt;/span&gt;&lt;/div&gt;
     &lt;div&gt;
-      &lt;label for&#x3D;&quot;shape-filter&quot;&gt;Filter by UFO shape:&lt;/label&gt;
+      &lt;label for&#x3D;&quot;shape-filter&quot;&gt;Filter by UFO shape / 按目击形状筛选：&lt;/label&gt;
       &lt;select id&#x3D;&quot;shape-filter&quot;&gt;&lt;/select&gt;
     &lt;/div&gt;
 

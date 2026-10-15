@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>无投影转换定义的 WMS (WMS without Projection)</title>
+    <title>WMS without Projection / 无投影转换定义的 WMS</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">无投影转换定义的 WMS (WMS without Projection)</h4>
+        <h4 id="title">WMS without Projection / 无投影转换定义的 WMS</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,20 +74,20 @@
               data-bs-target="#tag-example-list"
               data-title="wms"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-wms.html&quot;&gt;MapServer WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image.html&quot;&gt;Single Image WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-tiled.html&quot;&gt;Tiled WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-tiled-wrap-180.html&quot;&gt;Tiled WMS Wrapping&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-tilegrid-512x256.html&quot;&gt;WMS 512x256 Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-capabilities.html&quot;&gt;WMS Capabilities Parsing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-getlegendgraphic.html&quot;&gt;WMS GetLegendGraphic&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-svg.html&quot;&gt;WMS loader with SVG format&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time.html&quot;&gt;WMS Time&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time-webgl.html&quot;&gt;WMS Time (WebGL)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;多投影栅格数据动态重投影 (Raster Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-no-proj.html&quot;&gt;无投影转换定义的 WMS (WMS without Projection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;自定义投影转换的瓦片 WMS (Custom Tiled WMS)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;Custom Tiled WMS / 自定义投影转换的瓦片 WMS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-wms.html&quot;&gt;MapServer WMS / MapServer WMS 服务集成与高清屏优化&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection / 多投影栅格数据动态重投影&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image.html&quot;&gt;Single Image WMS / 单图像动态 WMS 服务&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js / 集成 Proj4js 的单图像 WMS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-tiled.html&quot;&gt;Tiled WMS / 瓦片式动态 WMS 服务&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-tiled-wrap-180.html&quot;&gt;Tiled WMS Wrapping / 瓦片式 WMS 跨 180° 经线连续环绕&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-tilegrid-512x256.html&quot;&gt;WMS 512x256 Tiles / WMS 512x256 自定义矩形瓦片网格&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-capabilities.html&quot;&gt;WMS Capabilities Parsing / WMS 服务元数据能力文档解析&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-getlegendgraphic.html&quot;&gt;WMS GetLegendGraphic / WMS 动态图例获取与尺度自适应&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-svg.html&quot;&gt;WMS loader with SVG format / 采用 SVG 矢量格式的 WMS 加载器&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time-webgl.html&quot;&gt;WMS Time (WebGL) / WebGL WMS 时序动态瓦片平滑过渡渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time.html&quot;&gt;WMS Time / WMS 时间维度时序雷达动态播放&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-no-proj.html&quot;&gt;WMS without Projection / 无投影转换定义的 WMS&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >14</a>
@@ -102,19 +102,19 @@
               data-title="projection"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;COG with ModelTransformation / 包含模型仿射变换矩阵的 COG&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;Custom Tiled WMS / 自定义投影转换的瓦片 WMS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;Multiple COG Sources / 多 COG 数据源重投影与波段合成&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap 客户端 WGS84 重投影 (OpenStreetMap Reprojection)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./projection-and-scale.html&quot;&gt;Projection and Scale / 投影切换与比例尺保持&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection / 多投影栅格数据动态重投影&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection by Code / 坐标系搜索与栅格动态重投影 (Reprojection by Code)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js / 集成 Proj4js 的单图像 WMS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sphere-mollweide.html&quot;&gt;Sphere Mollweide / 球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-no-proj.html&quot;&gt;WMS without Projection / 无投影转换定义的 WMS&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify 亿级超大图像金字塔 (Zoomify)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-modeltransformation.html&quot;&gt;包含模型仿射变换矩阵的 COG (COG with ModelTransformation)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;单幅静态图像客户端重投影 (Image Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./multiple-cogs.html&quot;&gt;多 COG 数据源重投影与波段合成 (Multiple COG sources)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;多投影栅格数据动态重投影 (Raster Reprojection)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-no-proj.html&quot;&gt;无投影转换定义的 WMS (WMS without Projection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sphere-mollweide.html&quot;&gt;球形摩尔威特等面积投影 (Sphere Mollweide)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;自定义投影转换的瓦片 WMS (Custom Tiled WMS)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >14</a>
@@ -141,29 +141,13 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">本例展示了两个使用 EPSG:21781 投影的 WMS 图层，该投影在客户端未定义任何 Proj4js 转换参数。</p>
-        <div id="docs"><p>只要<strong>不需要在客户端进行坐标转换</strong>（Coordinate Transformation），OpenLayers 即可直接使用仅配置了 <code>code</code>（投影代号）和 <code>units</code>（距离单位）的轻量级投影对象正常工作。</p>
-<h3>核心机制与原理解析</h3>
-<ol>
-<li><p><strong>纯平面直角坐标直传机制</strong>：</p>
-<ul>
-<li>在本例中，无论是瓦片 WMS（<code>TileWMS</code>）还是单图像 WMS（<code>ImageWMS</code>），服务端与客户端视图（<code>View</code>）均统一使用瑞士国家投影坐标系 <code>EPSG:21781</code>（CH1903 / LV03）。</li>
-<li>OpenLayers 发起 WMS 请求时，仅需将当前视口的平面矩形边界拼接为 <code>BBOX=minx,miny,maxx,maxy</code> 并携带 <code>CRS=EPSG:21781</code> 发给服务端。切片裁剪与图片渲染全由 WMS 地图服务器在服务端完成，客户端仅需充当“平面视口与瓦片网格计算器”，完全不需要客户端具备经纬度正逆投影能力。</li>
-</ul>
-</li>
-<li><p><strong>比例尺（ScaleLine）与地表真实距离近似</strong>：</p>
-<ul>
-<li>在缺乏经纬度椭球体模型与重投影正反算函数时，OpenLayers 会假定投影单位（此处为 <code>&#39;m&#39;</code> 米）即代表地表的真实物理距离。</li>
-<li>对于局部国家或城市级投影（如瑞士高斯-克吕格变种等角投影，在瑞士全境内的投影长度变形系数极小），直接依据平面米制单位计算比例尺已具备极高工程参考价值。</li>
-</ul>
-</li>
-<li><p><strong>极简定义 vs 引入 Proj4js 的选型边界</strong>：</p>
-<ul>
-<li><strong>使用极简定义即可</strong>：所有图层坐标系统一、CAD 施工平面图、园区/厂区独立相对坐标系、无需叠加 GPS 经纬度航迹或 OSM 外部底图的场景。</li>
-<li><strong>必须引入 Proj4js 的场景</strong>：需要在该地图上直接打点经纬度数据（<code>[lng, lat]</code> 来自 GPS/WGS84）、需要多源异构跨投影图层混合叠加、或需要精确球面测地线几何计算。</li>
-</ul>
-</li>
-</ol>
+        <p id="shortdesc">Example of two WMS layers using the projection EPSG:21781, which is unknown to the client. / 本例展示两个使用 EPSG:21781 投影的 WMS 图层，该投影在客户端未定义任何 Proj4js 转换参数。</p>
+        <div id="docs"><h2>As long as no coordinate transformations are required, OpenLayers works fine with projections that are only configured with a <code>code</code> and <code>units</code>.
+只要<strong>不需要在客户端进行坐标转换</strong>（Coordinate Transformation），OpenLayers 即可直接使用仅配置了 <code>code</code>（投影代号）和 <code>units</code>（距离单位）的轻量级投影对象正常工作。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 纯平面直角坐标直传机制 * 在本例中，无论是瓦片 WMS（<code>TileWMS</code>）还是单图像 WMS（<code>ImageWMS</code>），服务端与客户端视图（<code>View</code>）均统一使用瑞士国家投影坐标系 <code>EPSG:21781</code>（CH1903 / LV03）。 * OpenLayers 发起 WMS 请求时，仅需将当前视口的平面矩形边界拼接为 <code>BBOX=minx,miny,maxx,maxy</code> 并携带 <code>CRS=EPSG:21781</code> 发给服务端。切片裁剪与图片渲染全由 WMS 地图服务器在服务端完成，客户端仅需充当“平面视口与瓦片网格计算器”，完全不需要客户端具备经纬度正逆投影能力。</h4>
+<h4>2. 比例尺（ScaleLine）与地表真实距离近似 * 在缺乏经纬度椭球体模型与重投影正反算函数时，OpenLayers 会假定投影单位（此处为 <code>&#39;m&#39;</code> 米）即代表地表的真实物理距离。 * 对于局部国家或城市级投影（如瑞士高斯-克吕格变种等角投影，在瑞士全境内的投影长度变形系数极小），直接依据平面米制单位计算比例尺已具备极高工程参考价值。</h4>
+<h4>3. 极简定义 vs 引入 Proj4js 的选型边界 * <strong>使用极简定义即可</strong>：所有图层坐标系统一、CAD 施工平面图、园区/厂区独立相对坐标系、无需叠加 GPS 经纬度航迹或 OSM 外部底图的场景。 * <strong>必须引入 Proj4js 的场景</strong>：需要在该地图上直接打点经纬度数据（<code>[lng, lat]</code> 来自 GPS/WGS84）、需要多源异构跨投影图层混合叠加、或需要精确球面测地线几何计算。</h4>
 </div>
       </div>
 
@@ -180,12 +164,10 @@ import Projection from &#x27;ol/proj/Projection.js&#x27;;
 import ImageWMS from &#x27;ol/source/ImageWMS.js&#x27;;
 import TileWMS from &#x27;ol/source/TileWMS.js&#x27;;
 
-/**
- * 图层列表定义
- * 包含一个瓦片式 WMS（TileWMS）底图和一个单图像 WMS（ImageWMS）业务专题图层。
- * 两者均采用瑞士国家坐标系 EPSG:21781 (CH1903 / LV03)。
- */
+// Layer definitions: Tiled WMS base map and Single Image WMS thematic overlay
+// 图层定义：瓦片式 WMS 底图与单图像 WMS 专题业务图层（均采用瑞士国家坐标系 EPSG:21781）
 const layers &#x3D; [
+  // Tiled WMS layer (Swiss Federal Office of Topography 1:1,000,000 pixel map)
   // 基础底图：瓦片 WMS 图层（瑞士联邦地形局 1:1,000,000 彩色像元地图）
   new TileLayer({
     source: new TileWMS({
@@ -200,6 +182,7 @@ const layers &#x3D; [
       url: &#x27;https://wms.geo.admin.ch/&#x27;,
     }),
   }),
+  // Thematic layer: Single Image WMS (Swiss national flood alert hazard map)
   // 专题业务图层：单图像 WMS 图层（瑞士环境局全国洪水警戒分布图）
   new ImageLayer({
     source: new ImageWMS({
@@ -214,27 +197,23 @@ const layers &#x3D; [
   }),
 ];
 
-// 极简投影对象（Minimal Projection）：
-// 仅配置空间参考标识码（SRS code）与地图单位（units）。
-// 使用该极简投影对象时，客户端无法执行经纬度与其他坐标系之间的正逆转换。
-// 客户端向 WMS 请求切片或单图时，只需附带该 code 以及视口笛卡尔直角坐标范围（BBOX）；
-// 服务端会自行根据该代号渲染制图，客户端无需感知该坐标在地球椭球面上的经纬度几何关系。
-//
-// 在无坐标转换函数的情况下，OpenLayers 默认将投影单位（此处为米 &#x27;m&#x27;）视作地表真实距离。
-// 对于局部工程或国家投影系统，此假设与地表真实尺度的偏差极小，足以支撑比例尺控件（ScaleLine）
-// 呈现出极具实用价值的近似比例。
-
+// Minimal projection object: only configured with SRS code and distance units.
+// Without coordinate transform functions, OpenLayers passes planar BBOX directly to the WMS server.
+// 极简投影对象：仅配置空间参考标识码与地图单位。
+// 在客户端无需转换坐标的情况下，OpenLayers 直接将平面直角坐标范围传递给 WMS 服务端。
 const projection &#x3D; new Projection({
   code: &#x27;EPSG:21781&#x27;,
   units: &#x27;m&#x27;,
 });
 
-// 初始化地图实例
+// Initialize map instance with ScaleLine control and custom planar projection view
+// 初始化地图实例，配置比例尺控件与自定义平面投影视图
 const map &#x3D; new Map({
   controls: defaultControls().extend([new ScaleLine()]),
   layers: layers,
   target: &#x27;map&#x27;,
   view: new View({
+    // Coordinates near Bern in Swiss national grid [Easting, Northing]
     // 瑞士伯尔尼附近的旧国家投影坐标点 [X(东), Y(北)]
     center: [660000, 190000],
     projection: projection,
@@ -252,7 +231,7 @@ const map &#x3D; new Map({
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;无投影转换定义的 WMS (WMS without Projection)&lt;/title&gt;
+    &lt;title&gt;WMS without Projection / 无投影转换定义的 WMS&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

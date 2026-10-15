@@ -1,13 +1,8 @@
-import { $ as GeoTIFFSource, Dr as Map, Ni as View, Y as proj4, at as WebGLTileLayer, et as fromProjectionCode, ka as transformExtent, nt as register } from "./common.js";
+import { $ as GeoTIFFSource, Dr as Map, Ni as View, Y as proj4, at as WebGLTileLayer, et as fromEPSGCode, ka as transformExtent, nt as register } from "./common.js";
 import { n as OSM } from "./OSM.js";
 import { t as TileDebug } from "./TileDebug.js";
 //#region examples/cog-modeltransformation.js
 register(proj4);
-/**
-* 创建 COG 数据源
-* 加载来自 Umbra 开放数据目录的高分辨率合成孔径雷达（SAR）GEC 级影像。
-* 该 GeoTIFF 文件内部嵌入了 ModelTransformation 标签，定义了包含旋转与倾斜的像元仿射映射关系。
-*/
 var cogSource = new GeoTIFFSource({ sources: [{ url: "https://umbra-open-data-catalog.s3.amazonaws.com/sar-data/tasks/Tanna%20Island,%20Vanuatu/9c76a918-9247-42bf-b9f6-3b4f672bc148/2023-02-12-21-33-56_UMBRA-04/2023-02-12-21-33-56_UMBRA-04_GEC.tif" }] });
 var showTilesCheckbox = document.getElementById("show-tiles");
 var debugLayer = new WebGLTileLayer({
@@ -29,7 +24,7 @@ var map = new Map({
 	],
 	view: new View()
 });
-cogSource.getView().then((viewConfig) => fromProjectionCode(viewConfig.projection.getCode()).then(() => {
+cogSource.getView().then((viewConfig) => fromEPSGCode(viewConfig.projection.getCode()).then(() => {
 	const view = map.getView();
 	view.fit(transformExtent(viewConfig.extent, viewConfig.projection, view.getProjection()));
 }));

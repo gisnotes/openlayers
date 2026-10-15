@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Custom Canvas Tiles</title>
+    <title>Custom Canvas Tiles / 自定义 Canvas 切片与 TMS 坐标网格</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Custom Canvas Tiles</h4>
+        <h4 id="title">Custom Canvas Tiles / 自定义 Canvas 切片与 TMS 坐标网格</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,7 +75,7 @@
               data-title="layers"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-tiles.html&quot;&gt;Canvas Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-tiles-tms.html&quot;&gt;Custom Canvas Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-tiles-tms.html&quot;&gt;Custom Canvas Tiles / 自定义 Canvas 切片与 TMS 坐标网格&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >2</a>
@@ -89,12 +89,12 @@
               data-bs-target="#tag-example-list"
               data-title="vectortiles"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-tiles-tms.html&quot;&gt;Custom Canvas Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tile-info.html&quot;&gt;Vector Tile Info&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tile-selection.html&quot;&gt;Vector Tile Selection&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-tiles-tms.html&quot;&gt;Custom Canvas Tiles / 自定义 Canvas 切片与 TMS 坐标网格&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tile-info.html&quot;&gt;Vector Tile Info / 矢量切片要素属性交互探测&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tile-selection.html&quot;&gt;Vector Tile Selection / 矢量切片要素交互拾取与高亮&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-style.html&quot;&gt;Vector tiles created from a Mapbox Style object / 使用 Mapbox 样式对象创建矢量切片地图&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-4326.html&quot;&gt;Vector tiles in EPSG:4326&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-reprojected.html&quot;&gt;矢量切片动态重投影 (Vector tiles reprojected)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-4326.html&quot;&gt;Vector tiles in EPSG:4326 / EPSG:4326 坐标系矢量切片&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-reprojected.html&quot;&gt;Vector tiles reprojected / 矢量切片客户端动态重投影&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >6</a>
@@ -108,7 +108,7 @@
               data-bs-target="#tag-example-list"
               data-title="tms"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-tiles-tms.html&quot;&gt;Custom Canvas Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-tiles-tms.html&quot;&gt;Custom Canvas Tiles / 自定义 Canvas 切片与 TMS 坐标网格&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -123,14 +123,15 @@
               data-title="canvas"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-tiles.html&quot;&gt;Canvas Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-tiles-tms.html&quot;&gt;Custom Canvas Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./canvas-tiles-tms.html&quot;&gt;Custom Canvas Tiles / 自定义 Canvas 切片与 TMS 坐标网格&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./render-geometry.html&quot;&gt;Render geometries to a canvas&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./render-geometry.html&quot;&gt;Render geometries to a canvas / 即时渲染：将几何直接绘制到独立 Canvas&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./screen-capture.html&quot;&gt;Screen Capture Control / 屏幕截屏控件（地图 Canvas 导出）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-gradient-pattern.html&quot;&gt;Styling feature with CanvasGradient or CanvasPattern / 使用 Canvas 渐变（CanvasGradient）或图案（CanvasPattern）渲染要素&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
-              >6</a>
+              >7</a>
           </span>
         </p>
         <div class="modal modal-tag-example" id="tag-example-list" tabindex="-1" role="dialog" aria-labelledby="tag-example-title" aria-hidden="true">
@@ -154,8 +155,40 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Renders tiles with TMS coordinates for debugging.</p>
-        <div id="docs"><p>The black grid tiles are generated on the client with an HTML5 canvas. The displayed TMS tile coordinates are produced using a custom template for TMS, the vector tile source&#39;s 512 pixel tile grid and the <code>zDirection</code> setting for vector tiles. Notice how the country polygons can be split between tiles and vector labels may appear in each tile.</p>
+        <p id="shortdesc">Renders tiles with TMS coordinates for debugging. / 渲染带有 TMS 切片坐标的网格以进行空间调试与切片对齐验证。</p>
+        <div id="docs"><p>
+  The black grid tiles are generated on the client with an HTML5 canvas.
+  The displayed TMS tile coordinates are produced using a custom template
+  for TMS, the vector tile source's 512 pixel tile grid and the
+  <code>zDirection</code> setting for vector tiles.
+  Notice how the country polygons can be split between tiles and vector
+  labels may appear in each tile.
+</p> <p>
+  黑色网格切片由客户端借助 HTML5 Canvas 动态即时生成。
+  所显示的 TMS 切片坐标系利用了自定义 TMS 模板（如 <code>{-y}</code>）、矢量切片源的 512 像素切片网格（TileGrid）以及矢量切片专用的 <code>zDirection</code> 设置。
+  请观察多边形国家要素是如何被切片边界无缝截断分割的，以及矢量文本标注是如何在各个切片中独立渲染的。
+</p>
+---
+### 📚 学习记录与技术深度解读 (Learning Notes)
+#### 1. 核心架构与设计思想 (Core Architecture & Design) - <strong>TMS（Tile Map Service）与 XYZ 坐标系的 Y 轴倒置原理</strong>：
+  - <strong>标准 XYZ / WMTS</strong>：原点位于左上角（Top-Left），随着纬度降低，Y 坐标自顶向下递增（$Y = 0$ 在最北端 85.05°N）。
+  - <strong>TMS 规范</strong>：原点位于左下角（Bottom-Left），符合传统笛卡尔直角坐标系，$Y = 0$ 在最南端，随着纬度升高，Y 坐标自底向上递增。
+  - OpenLayers 在 URL 模板中通过 `{-y}` 占位符支持 TMS 协议，公式为：`{-y} = (1 << z) - 1 - y`。
+- <strong>TileDebug 调试切片源在空间排错中的价值</strong>：
+  `ol/source/TileDebug` 可以在客户端透明生成一个轻量级的动态调试网格，将当前的缩放层级（Z）、列号（X）、行号（Y / -Y）直接绘制在对应的切片网格中心。它是排查切片 404、切片漂移、跨瓦片接缝不齐的核心排错武器。<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis) - <code>TileDebug({ template: &#39;z:{z} x:{x} y:{-y}&#39;, projection, tileGrid, zDirection: 1 })</code>：</h4>
+<ul>
+<li><code>template</code>：支持自定义调试文本模板，使用 <code>{-y}</code> 可精准反映 TMS 规范下发给服务端的实际请求行号。</li>
+<li><code>tileGrid</code>：直接绑定矢量切片图层数据源的 <code>getTileGrid()</code>，确保调试网格与真实的矢量切片物理分块完全重合。</li>
+<li><code>zDirection: 1</code>：控制缩放过程中的切片选择偏向。<code>1</code> 表示倾向于选择更高分辨率（更大 Z 级别）的瓦片进行插值显示，提升清晰度。</li>
+<li><strong>多边形跨切片分割与标注重复机制</strong>：
+由于矢量切片服务器在切割几何时，会在各瓦片边界进行裁剪并将国家属性写入每个相关切片。若不启用 <code>declutter: true</code>（标注避让整理），同一个国家的名称可能会在相邻的多个切片中反复出现。开启 <code>declutter: true</code> 后，OpenLayers 的全局避让管理器会在视口中执行多边形标注去重与最优摆放。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization) - <strong>TMS 坐标翻转导致的切片 404 灾难</strong>：</h4>
+<p>  在接入基于 GeoServer GWC、MapProxy 等支持 TMS 协议的服务时，若切片 URL 误写成了 <code>{z}/{x}/{y}.pbf</code> 而非 <code>{z}/{x}/{-y}.pbf</code>，会导致请求发送到地球对称的另一侧半球，返回大面积 404 或南美与北美颠倒。使用 <code>TileDebug</code> 能够一目了然验证 Y 轴计算是否正确。</p>
+<ul>
+<li><strong>TileDebug 生产环境剔除</strong>：
+<code>TileDebug</code> 仅供开发调试时使用，每个瓦片都会创建 Canvas 上下文并执行 fillText，生产上线前应通过环境变量或配置开关彻底移除该图层，释放 CPU 与 GPU 资源。</li>
+</ul>
 </div>
       </div>
 
@@ -174,6 +207,8 @@ import Stroke from &#x27;ol/style/Stroke.js&#x27;;
 import Style from &#x27;ol/style/Style.js&#x27;;
 import Text from &#x27;ol/style/Text.js&#x27;;
 
+// Base styling for country polygon boundary and label text
+// 国家多边形边界与文本标注的基础样式
 const style &#x3D; new Style({
   fill: new Fill({
     color: &#x27;rgba(255, 255, 255, 0.6)&#x27;,
@@ -194,6 +229,8 @@ const style &#x3D; new Style({
   }),
 });
 
+// Vector tile layer consuming TMS-indexed MVT tiles from GeoServer GWC
+// 矢量切片图层，消费来自 GeoServer GWC 的 TMS 坐标规范 MVT 矢量切片
 const vtLayer &#x3D; new VectorTileLayer({
   declutter: true,
   source: new VectorTileSource({
@@ -209,6 +246,8 @@ const vtLayer &#x3D; new VectorTileLayer({
   },
 });
 
+// Debug layer rendering client-side canvas grid with TMS coordinates
+// 调试图层，使用客户端 Canvas 实时绘制包含 TMS 坐标编号的网格
 const debugLayer &#x3D; new TileLayer({
   source: new TileDebug({
     template: &#x27;z:{z} x:{x} y:{-y}&#x27;,
@@ -218,6 +257,8 @@ const debugLayer &#x3D; new TileLayer({
   }),
 });
 
+// Initialize map with vector tile layer and debug overlay
+// 初始化包含矢量切片与调试覆盖网格的地图实例
 const map &#x3D; new Map({
   layers: [vtLayer, debugLayer],
   target: &#x27;map&#x27;,
@@ -237,7 +278,7 @@ const map &#x3D; new Map({
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Custom Canvas Tiles&lt;/title&gt;
+    &lt;title&gt;Custom Canvas Tiles / 自定义 Canvas 切片与 TMS 坐标网格&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

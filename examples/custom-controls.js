@@ -10,7 +10,7 @@ var RotateNorthControl = class extends Control {
 		const options = opt_options || {};
 		const button = document.createElement("button");
 		button.type = "button";
-		button.title = "Rotate to north";
+		button.title = "Rotate to north / 复位至正北";
 		button.innerHTML = northArrow;
 		const element = document.createElement("div");
 		element.className = "rotate-north ol-unselectable ol-control";
@@ -21,18 +21,24 @@ var RotateNorthControl = class extends Control {
 		});
 		/**
 		* The north arrow, rotated together with the map.
+		* 指北箭头 SVG 元素，随地图旋转角度联动变换
 		* @type {SVGElement}
 		* @private
 		*/
 		this.arrow_ = button.querySelector("svg");
 		/**
 		* The rotation the arrow was last rendered with.
+		* 上一次渲染时记录的旋转弧度值，用于脏检查避免无效 DOM 更新
 		* @type {number|undefined}
 		* @private
 		*/
 		this.rotation_ = void 0;
 		button.addEventListener("click", this.handleRotateNorth.bind(this), false);
 	}
+	/**
+	* Animate the map view back to 0 rotation.
+	* 平滑缓动复位视角至 0 弧度（正北）
+	*/
 	handleRotateNorth() {
 		this.getMap().getView().animate({
 			rotation: 0,
@@ -42,6 +48,7 @@ var RotateNorthControl = class extends Control {
 	/**
 	* Keep the arrow pointing north, and hide the control when the map is
 	* already rotated to north.
+	* 保持箭头始终指向正北；当且仅当地图已处于正北（0弧度）时隐藏控件。
 	* @param {import("../src/ol/MapEvent.js").default} mapEvent Map event.
 	* @override
 	*/

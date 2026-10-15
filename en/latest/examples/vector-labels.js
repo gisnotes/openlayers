@@ -58,16 +58,32 @@ var myDom = {
 		maxreso: document.getElementById("polygons-maxreso")
 	}
 };
+/**
+* Resolve display text based on resolution and strategy.
+* 根据地图分辨率及截断/换行策略获取最终标注文本
+* @param {import('../src/ol/Feature.js').default} feature Feature / 矢量要素
+* @param {number} resolution View resolution / 视图分辨率
+* @param {Object} dom Control DOMs / 表单 DOM 控件对象
+* @return {string} Processed text / 处理后的文本字符串
+*/
 var getText = function(feature, resolution, dom) {
 	const type = dom.text.value;
 	const maxResolution = dom.maxreso.value;
 	let text = feature.get("name");
 	if (resolution > maxResolution) text = "";
-	else if (type == "hide") text = "";
-	else if (type == "shorten") text = truncate(text, 12);
-	else if (type == "wrap" && (!dom.placement || dom.placement.value != "line")) text = stringDivider(text, 16, "\n");
+	else if (type === "hide") text = "";
+	else if (type === "shorten") text = truncate(text, 12);
+	else if (type === "wrap" && (!dom.placement || dom.placement.value !== "line")) text = stringDivider(text, 16, "\n");
 	return text;
 };
+/**
+* Create dynamic ol/style/Text instance from user controls.
+* 根据界面表单配置动态创建 ol/style/Text 文本样式对象
+* @param {import('../src/ol/Feature.js').default} feature Feature / 矢量要素
+* @param {number} resolution View resolution / 视图分辨率
+* @param {Object} dom Control DOMs / 表单 DOM 控件对象
+* @return {Text} Text style instance / 文本样式实例
+*/
 var createTextStyle = function(feature, resolution, dom) {
 	const align = dom.align.value;
 	const baseline = dom.baseline.value;
@@ -78,9 +94,9 @@ var createTextStyle = function(feature, resolution, dom) {
 	const weight = dom.weight.value;
 	const placement = dom.placement ? dom.placement.value : void 0;
 	const maxAngle = dom.maxangle ? parseFloat(dom.maxangle.value) : void 0;
-	const overflow = dom.overflow ? dom.overflow.value == "true" : void 0;
+	const overflow = dom.overflow ? dom.overflow.value === "true" : void 0;
 	const rotation = parseFloat(dom.rotation.value);
-	if (dom.font.value == "'Open Sans'" && !openSansAdded) {
+	if (dom.font.value === "'Open Sans'" && !openSansAdded) {
 		const openSans = document.createElement("link");
 		openSans.href = "https://fonts.googleapis.com/css?family=Open+Sans";
 		openSans.rel = "stylesheet";
@@ -92,7 +108,7 @@ var createTextStyle = function(feature, resolution, dom) {
 	const outlineColor = dom.outline.value;
 	const outlineWidth = parseInt(dom.outlineWidth.value, 10);
 	return new Text({
-		textAlign: align == "" ? void 0 : align,
+		textAlign: align === "" ? void 0 : align,
 		textBaseline: baseline,
 		font,
 		text: getText(feature, resolution, dom),
@@ -185,20 +201,28 @@ document.getElementById("refresh-polygons").addEventListener("click", function()
 	vectorPolygons.setStyle(polygonStyleFunction);
 });
 /**
-* @param {string} string String
-* @param {number} n The max number of characters to keep.
-* @return {string} Truncated string.
+* Truncate long string and append ellipsis. / 截断超出长度的字符串并追加省略号
+* @param {string} string Input string / 输入字符串
+* @param {number} n Max character count / 最大保留字符数
+* @return {string} Truncated string / 截断后字符串
 */
 function truncate(string, n) {
 	return string.length > n ? string.slice(0, n - 1) + "…" : string.slice();
 }
+/**
+* Wrap string at whitespace or hyphen boundaries. / 在空格或破折号处自动分词折行
+* @param {string} str Input string / 输入字符串
+* @param {number} width Line wrap threshold / 折行宽度阈值
+* @param {string} spaceReplacer Separator character (e.g. \n) / 换行替换符
+* @return {string} Wrapped multi-line text / 折行后多行文本
+*/
 function stringDivider(str, width, spaceReplacer) {
 	if (str.length > width) {
 		let p = width;
-		while (p > 0 && str[p] != " " && str[p] != "-") p--;
+		while (p > 0 && str[p] !== " " && str[p] !== "-") p--;
 		if (p > 0) {
 			let left;
-			if (str.substring(p, p + 1) == "-") left = str.substring(0, p + 1);
+			if (str.substring(p, p + 1) === "-") left = str.substring(0, p + 1);
 			else left = str.substring(0, p);
 			const right = str.substring(p + 1);
 			return left + spaceReplacer + stringDivider(right, width, spaceReplacer);

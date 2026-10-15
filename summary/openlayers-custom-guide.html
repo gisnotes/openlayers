@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-底层扩展与自定义开发全景实战架构指南-customization-architecture--low-level-extensibility">OpenLayers 底层扩展与自定义开发全景实战架构指南 (Customization Architecture &amp; Low-Level Extensibility)</h1>
+<blockquote>
+<p>本指南基于 OpenLayers 官方 <strong>custom</strong> 核心专题群的代表性示例，深度解构框架从 DOM 控件、用户交互手势、Canvas 样式渲染到离屏命中检测与视口截屏的全栈自定义扩展机制。系统剖析 <code>ol/control/Control</code> 继承模式与 60fps 渲染同步、<code>Style.renderer</code> 屏幕像素级 Canvas 2D 绘图接管、<code>Style.hitDetectionRenderer</code> 视觉与拾取解耦架构，以及 <code>map.setTarget(canvas)</code> 离屏重定向截屏导出的工程级最佳实践。</p>
+</blockquote>
+<hr>
+<h2 id="一、openlayers-自定义扩展全景架构-extensibility-architecture">一、OpenLayers 自定义扩展全景架构 (Extensibility Architecture)</h2>
+<p>OpenLayers 采用高度解耦的面向对象与组件化分层设计，为开发者在各个生命周期节点提供了丰富的扩展插槽（Slots）与钩子函数（Hooks）。其扩展体系可划分为四大核心层级：</p>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph UIControlLayer[&quot;1. DOM 控件层扩展 (ol/control/Control)&quot;]
+        BaseControl[&quot;ol/control/Control 基类&quot;] --&gt; CustomControl[&quot;RotateNorthControl / ScreenCaptureControl&quot;]
+        CustomControl --&gt; DOMElement[&quot;自定义 DOM 结构与 UI 样式 (SVG 图标、按钮)&quot;]
+        CustomControl --&gt; RenderHook[&quot;render(mapEvent) 帧回调: 脏检查与 CSS 硬件加速&quot;]
+        DOMElement --&gt; FullscreenFix[&quot;全屏模式容器挂载隔离 (container: &#39;#map&#39;)&quot;]
+    end
+
+    subgraph InteractionLayer[&quot;2. 交互手势层扩展 (ol/interaction/Pointer)&quot;]
+        BasePointer[&quot;ol/interaction/Pointer 基类&quot;] --&gt; CustomInteraction[&quot;拖拽、平移、吸附等复杂业务手势状态机&quot;]
+    end
+
+    subgraph StyleRenderLayer[&quot;3. 样式渲染层扩展 (ol/style/Style.renderer)&quot;]
+        VectorPipe[&quot;矢量图层渲染管线 (VectorContext)&quot;] --&gt; StyleRenderer[&quot;Style.renderer(coordinates, state)&quot;]
+        StyleRenderer --&gt; CanvasCtx[&quot;接管 CanvasRenderingContext2D (径向渐变、发光波束)&quot;]
+        StyleRenderer --&gt; ScreenCoord[&quot;投影坐标 -&gt; 屏幕物理像素坐标映射转换&quot;]
+    end
+
+    subgraph HitDetectLayer[&quot;4. 拾取检测层扩展 (ol/style/Style.hitDetectionRenderer)&quot;]
+        PointerEvent[&quot;鼠标移动 / 点击 (map.forEachFeatureAtPixel)&quot;] --&gt; OffscreenCanvas[&quot;1x1 离屏 Hit-test 画布&quot;]
+        OffscreenCanvas --&gt; HitRenderer[&quot;Style.hitDetectionRenderer&quot;]
+        HitRenderer --&gt; AlphaTest[&quot;Alpha 通道像素探查: 剥离大范围半透明遮罩，精确定位轮廓&quot;]
+    end
+
+    subgraph ExportPipeline[&quot;5. 视口重定向与导出 (map.setTarget)&quot;]
+        MapInstance[&quot;Map 实例&quot;] --&gt; TargetSwitch[&quot;map.setTarget(offscreenCanvas)&quot;]
+        TargetSwitch --&gt; OnceRender[&quot;map.once(&#39;rendercomplete&#39;) 收集图层与版权 Promise&quot;]
+        OnceRender --&gt; CompositeBlob[&quot;Canvas.toBlob -&gt; PNG 导出与 URL.revokeObjectURL&quot;]
+    end
+</code></pre>
+<hr>
+<h2 id="二、dom-控件扩展机制-olcontrolcontrol">二、DOM 控件扩展机制 (<code>ol/control/Control</code>)</h2>
+<p>在 OpenLayers 中，控件（Control）是浮动在地图视口之上的 HTML DOM 组件。与绘制在 Canvas 画布内部的图层不同，控件享有浏览器原生事件、CSS 动画及高精度排版的全部能力。</p>
+<h3 id="1-继承模式与构造函数规范">1. 继承模式与构造函数规范</h3>
+<p>自定义控件需通过继承 <code>ol/control/Control</code> 实现，核心流程如下：</p>
+<pre><code class="language-javascript">import Control from &#39;ol/control/Control.js&#39;;
+
+class RotateNorthControl extends Control {
+  constructor(opt_options) {
+    const options = opt_options || {};
+
+    // 1. 构建控件 DOM 容器与按钮
+    const button = document.createElement(&#39;button&#39;);
+    button.type = &#39;button&#39;;
+    button.title = &#39;Rotate to north / 复位至正北&#39;;
+    button.innerHTML = &#39;&lt;svg ...&gt;...&lt;/svg&gt;&#39;;
+
+    const element = document.createElement(&#39;div&#39;);
+    // 规范：ol-unselectable 禁用文本选中，ol-control 提供定位与毛玻璃层叠样式
+    element.className = &#39;rotate-north ol-unselectable ol-control&#39;;
+    element.appendChild(button);
+
+    // 2. 调用父类构造函数注入 DOM 节点
+    super({
+      element: element,
+      target: options.target, // 支持挂载至地图视口外部的独立 DOM 容器
+    });
+
+    // 3. 缓存内部 DOM 引用并绑定事件
+    this.arrow_ = button.querySelector(&#39;svg&#39;);
+    this.rotation_ = undefined; // 脏检查缓存值
+    button.addEventListener(&#39;click&#39;, this.handleRotateNorth.bind(this), false);
+  }
+
+  handleRotateNorth() {
+    // 平滑动画重置视角至 0 弧度
+    this.getMap().getView().animate({rotation: 0, duration: 250});
+  }
+}
+</code></pre>
+<h3 id="2-rendermapevent-60fps-帧同步与脏检查守则">2. <code>render(mapEvent)</code> 60fps 帧同步与脏检查守则</h3>
+<p>当用户平移、缩放或惯性旋转地图时，OpenLayers 会在每一渲染帧广播 <code>render(mapEvent)</code>。</p>
+<ul>
+<li><strong>性能红线</strong>：该方法每秒可能执行 60 至 120 次，<strong>严禁在此处执行 <code>querySelector</code>、大量 DOM 增删或触发同步排版（Layout Reflow）的操作</strong>。</li>
+<li><strong>脏检查机制</strong>：通过本地变量 <code>this.rotation_</code> 记录上一帧的值，仅在角度真实变动时更新 CSS Transform，极大降低 CPU/GPU 占用：</li>
+</ul>
+<pre><code class="language-javascript">render(mapEvent) {
+  const frameState = mapEvent.frameState;
+  if (!frameState) return;
+
+  const rotation = frameState.viewState.rotation;
+  if (rotation !== this.rotation_) {
+    // 利用 GPU 硬件加速的 transform 属性进行实时旋转
+    this.arrow_.style.transform = `rotate(${rotation}rad)`;
+    // 角度为 0 时自动切换隐藏
+    this.element.classList.toggle(&#39;ol-hidden&#39;, rotation === 0);
+    this.rotation_ = rotation;
+  }
+}
+</code></pre>
+<hr>
+<h2 id="三、canvas-2d-绘图接管与样式定制-stylerenderer">三、Canvas 2D 绘图接管与样式定制 (<code>Style.renderer</code>)</h2>
+<p>默认的 <code>ol/style/Fill</code> 与 <code>Stroke</code> 仅能满足基础单色或虚线渲染。对于雷达光晕、动态脉冲、发光渐变等高级视觉特效，<code>ol/style/Style</code> 的 <code>renderer</code> 钩子函数允许开发者直接接管底层 Canvas 2D 上下文。</p>
+<h3 id="1-坐标体系映射与物理像素解构">1. 坐标体系映射与物理像素解构</h3>
+<p>传入 <code>renderer(coordinates, state)</code> 的参数具有特殊规范：</p>
+<ul>
+<li><code>coordinates</code>：并非原始的地理投影坐标，而是<strong>已经被 OpenLayers 内部渲染管道投影并转换为当前视口的屏幕物理像素坐标</strong>。</li>
+<li>对于 <code>ol/geom/Circle</code>，<code>coordinates</code> 结构为 <code>[[centerX, centerY], [edgeX, edgeY]]</code>。</li>
+<li>两点间的欧几里得距离即为该圆在当前屏幕上的真实像素半径：
+$$\text{radius} = \sqrt{(x_1 - x_0)^2 + (y_1 - y_0)^2}$$</li>
+</ul>
+<h3 id="2-径向渐变光晕实战实现">2. 径向渐变光晕实战实现</h3>
+<p>以 <a href="file:///d:/Users/Downloads/openlayers/examples/custom-circle-render.html"><code>examples/custom-circle-render.html</code></a> 为例，在 Canvas 上构建发光渐变：</p>
+<pre><code class="language-javascript">new Style({
+  renderer(coordinates, state) {
+    const [[x, y], [x1, y1]] = coordinates;
+    const ctx = state.context; // 当前图层的 CanvasRenderingContext2D
+    const radius = Math.hypot(x1 - x, y1 - y);
+
+    // 构建由中心透明到边缘半透明红晕的径向渐变
+    const gradient = ctx.createRadialGradient(x, y, 0, x, y, radius * 1.4);
+    gradient.addColorStop(0, &#39;rgba(255, 0, 0, 0)&#39;);
+    gradient.addColorStop(0.6, &#39;rgba(255, 0, 0, 0.2)&#39;);
+    gradient.addColorStop(1, &#39;rgba(255, 0, 0, 0.8)&#39;);
+
+    ctx.beginPath();
+    ctx.arc(x, y, radius, 0, 2 * Math.PI, true);
+    ctx.fillStyle = gradient;
+    ctx.fill();
+
+    ctx.arc(x, y, radius, 0, 2 * Math.PI, true);
+    ctx.strokeStyle = &#39;rgba(255, 0, 0, 1)&#39;;
+    ctx.stroke();
+  },
+});
+</code></pre>
+<hr>
+<h2 id="四、空间交互中的视觉与拾取解耦-stylehitdetectionrenderer">四、空间交互中的视觉与拾取解耦 (<code>Style.hitDetectionRenderer</code>)</h2>
+<p>在传统 GIS 开发中，开发者常遇到一个棘手难题：为了营造震撼的视觉效果，要素往往带有大范围的发光阴影、半透明扩散波或虚化外圈，这会导致<strong>鼠标在距离要素主体很远时就被半透明区域触发拾取</strong>，从而遮挡或抢占了下层其他要素的点击事件。</p>
+<h3 id="1-openlayers-离屏命中检测机制-hit-detection-pipeline">1. OpenLayers 离屏命中检测机制 (Hit-Detection Pipeline)</h3>
+<p>OpenLayers 执行 <code>map.forEachFeatureAtPixel(pixel, callback)</code> 时：</p>
+<ol>
+<li>不会读取包含底图和注记的主画布（防止底图像素颜色干扰要素归属）。</li>
+<li>在内存中创建一个微型离屏 Canvas（通常仅 1x1 像素）。</li>
+<li>针对鼠标像素点对应的候选要素，调用要素样式的绘制方法将其单独渲染到离屏画布中。</li>
+<li>调用 <code>ctx.getImageData(0, 0, 1, 1)</code> 检查 Alpha 通道值：若 $\text{Alpha} &gt; 0$，则判定击中该要素。</li>
+</ol>
+<h3 id="2-视觉与拾取分离实战">2. 视觉与拾取分离实战</h3>
+<p><a href="file:///d:/Users/Downloads/openlayers/examples/custom-hit-detection-renderer.html"><code>examples/custom-hit-detection-renderer.html</code></a> 演示了精妙的解耦方案：</p>
+<ul>
+<li><code>renderer</code>：同时绘制大半径渐变光晕圆和中心文字。</li>
+<li><code>hitDetectionRenderer</code>：<strong>彻底略过渐变大圆，仅向离屏画布绘制文字轮廓</strong>！</li>
+</ul>
+<pre><code class="language-javascript">circleFeature.setStyle(
+  new Style({
+    // 视觉渲染：渐变圆 + 文字
+    renderer(coordinates, state) {
+      drawRadialCircle(state.context, coordinates);
+      renderLabelText(state.context, coordinates[0]);
+    },
+    // 命中检测：仅保留文字，彻底排除大圆！
+    hitDetectionRenderer(coordinates, state) {
+      renderLabelText(state.context, coordinates[0]);
+    },
+  })
+);
+</code></pre>
+<p>用户鼠标在大圆内部划过时毫无反应；只有当光标精准悬停在中心文字像素上方时，拾取事件才被触发。</p>
+<hr>
+<h2 id="五、地图视口捕获与离屏重定向导出架构-screencapturecontrol">五、地图视口捕获与离屏重定向导出架构 (<code>ScreenCaptureControl</code>)</h2>
+<p>导出包含多图层叠加、动态注记与版权信息的全高清地图是许多业务系统的刚需。主流的 <code>html2canvas</code> 方案存在样式失真、跨域报错和性能低下等缺陷。</p>
+<p><a href="file:///d:/Users/Downloads/openlayers/examples/screen-capture.html"><code>examples/screen-capture.html</code></a> 展现了 OpenLayers 原生的高性能离屏截屏架构：</p>
+<pre><code class="language-mermaid">sequenceDiagram
+    autonumber
+    actor User as 用户
+    participant Control as ScreenCaptureControl
+    participant Map as Map 实例
+    participant Canvas as 离屏 HTMLCanvasElement
+    participant Browser as 浏览器下载
+
+    User-&gt;&gt;Control: 点击相机截图按钮
+    Control-&gt;&gt;Canvas: 创建与 map.getSize() 严格等宽高的离屏 Canvas
+    Control-&gt;&gt;Map: map.once(&#39;rendercomplete&#39;, callback) 挂载完成监听
+    Control-&gt;&gt;Map: map.setTarget(canvas) 切换渲染目标到离屏 Canvas
+    Note over Map,Canvas: OpenLayers 触发一次性同步管线绘制整图
+    Map--&gt;&gt;Control: rendercomplete 事件触发 (携带 frameState)
+    Control-&gt;&gt;Map: map.setTarget(originalTarget) 立即恢复原 DOM 容器
+    Control-&gt;&gt;Map: map.render() 恢复屏幕正常显示
+    Control-&gt;&gt;Canvas: 聚合所有图层 Attributions 并绘制水印文本
+    Control-&gt;&gt;Canvas: canvas.toBlob(blob, &#39;image/png&#39;)
+    Control-&gt;&gt;User: 弹出截图预览面板 (showPreview)
+    User-&gt;&gt;Control: 点击下载
+    Control-&gt;&gt;Browser: 触发 a[download] 下载并 URL.revokeObjectURL 释放内存
+</code></pre>
+<h3 id="生产级截屏核心代码与内存防护">生产级截屏核心代码与内存防护</h3>
+<pre><code class="language-javascript">handleCapture() {
+  const map = this.getMap();
+  const target = map.getTargetElement();
+  const size = map.getSize();
+  const canvas = document.createElement(&#39;canvas&#39;);
+  canvas.width = size[0];
+  canvas.height = size[1];
+
+  map.once(&#39;rendercomplete&#39;, (event) =&gt; {
+    // 1. 收集当前帧所有图层的版权归属 Promise
+    const attributions = map
+      .getAllLayers()
+      .flatMap((layer) =&gt; layer.getAttributions(event.frameState));
+
+    // 2. 立即将地图 Target 恢复为原始网页 DOM 容器并请求刷新
+    map.setTarget(target);
+    map.render();
+
+    // 3. 异步解析图层版权文字并合成到离屏画布右下角
+    Promise.all(attributions).then((resolved) =&gt; {
+      drawAttributions(canvas, resolved);
+      canvas.toBlob((blob) =&gt; this.showPreview_(blob, size), &#39;image/png&#39;);
+    });
+  });
+
+  // 4. 重定向渲染目标至离屏 Canvas
+  map.setTarget(canvas);
+}
+</code></pre>
+<hr>
+<h2 id="六、dom-增强与全屏模式穿透-button-tooltips">六、DOM 增强与全屏模式穿透 (<code>Button Tooltips</code>)</h2>
+<p>在定制地图原生按钮的提示组件（如 Bootstrap Tooltip、Tippy.js 或 Ant Design Tooltip）时，存在一个极具隐蔽性的浏览器全屏陷阱：</p>
+<h3 id="1-全屏伪类-fullscreen-与层叠遮挡陷阱">1. 全屏伪类 <code>:fullscreen</code> 与层叠遮挡陷阱</h3>
+<p>默认情况下，第三方 UI 组件库将气泡容器挂载在 <code>document.body</code> 尾部。当用户点击 OpenLayers 的 <code>FullScreen</code> 控件使地图容器进入全屏模式时：</p>
+<ul>
+<li>浏览器的全屏呈现层（Top Layer / <code>:fullscreen</code>）将地图容器提升为独立顶层显示。</li>
+<li>此时位于 <code>document.body</code> 顶层的 Tooltip DOM 节点完全被全屏层阻挡在后方，导致悬浮提示瞬间失效或消失。</li>
+</ul>
+<h3 id="2-正确挂载策略：容器穿透">2. 正确挂载策略：容器穿透</h3>
+<p>解决方案是显式声明 Tooltip 的挂载容器为地图宿主自身：</p>
+<pre><code class="language-javascript">document
+  .querySelectorAll(&#39;.ol-zoom-in, .ol-zoom-out, .ol-rotate-reset&#39;)
+  .forEach(function (el) {
+    new bootstrap.Tooltip(el, {
+      container: &#39;#map&#39;, // 关键：强制挂载在地图容器内部，无惧全屏模式
+    });
+  });
+</code></pre>
+<hr>
+<h2 id="七、自定义扩展核心示例矩阵-examples-matrix">七、自定义扩展核心示例矩阵 (Examples Matrix)</h2>
+<table>
+<thead>
+<tr>
+<th align="left">示例编号与名称</th>
+<th align="left">扩展切入点</th>
+<th align="left">核心 API / 关键技术</th>
+<th align="left">典型业务场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/button-title.html"><code>examples/button-title.html</code></a></td>
+<td align="left">DOM 控件外观增强</td>
+<td align="left"><code>bootstrap.Tooltip({ container: &#39;#map&#39; })</code></td>
+<td align="left">全屏适配、多语言无障碍提示气泡</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/custom-controls.html"><code>examples/custom-controls.html</code></a></td>
+<td align="left">控件基类子类化</td>
+<td align="left"><code>class ... extends Control</code>, <code>render(mapEvent)</code> 60fps 脏检查</td>
+<td align="left">自定义动态指北针、图层联动控制器、时序播放轴</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/custom-circle-render.html"><code>examples/custom-circle-render.html</code></a></td>
+<td align="left">矢量样式 Canvas 接管</td>
+<td align="left"><code>Style.renderer(coordinates, state)</code>, <code>createRadialGradient</code></td>
+<td align="left">雷达波束、发光能量环、警示光晕动画</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/custom-hit-detection-renderer.html"><code>examples/custom-hit-detection-renderer.html</code></a></td>
+<td align="left">拾取与命中解耦</td>
+<td align="left"><code>Style.hitDetectionRenderer</code>, <code>forEachFeatureAtPixel</code> 离屏探查</td>
+<td align="left">消除大范围半透明遮罩误触，精细拾取中心微小文字</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/screen-capture.html"><code>examples/screen-capture.html</code></a></td>
+<td align="left">视口重定向与导出</td>
+<td align="left"><code>map.setTarget(canvas)</code>, <code>rendercomplete</code>, <code>URL.revokeObjectURL</code></td>
+<td align="left">纯前端无污染地图截图、图层版权水印自动合成</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/custom-interactions.html"><code>examples/custom-interactions.html</code></a></td>
+<td align="left">用户手势交互拦截</td>
+<td align="left"><code>class ... extends PointerInteraction</code>, <code>handleDownEvent</code></td>
+<td align="left">空间要素自定义手势拖拽、图形变形、吸附捕捉</td>
+</tr>
+<tr>
+<td align="left"><a href="file:///d:/Users/Downloads/openlayers/examples/style-renderer.html"><code>examples/style-renderer.html</code></a></td>
+<td align="left">复杂多几何体渲染</td>
+<td align="left"><code>Style.renderer</code>, 多段线沿线标注与符号绘制</td>
+<td align="left">气象风向标、测井曲线图、动态航线图表</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="八、生产级工程避坑与性能总结-production-pitfalls-checklist">八、生产级工程避坑与性能总结 (Production Pitfalls Checklist)</h2>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph ControlsCheck[&quot;控件开发避坑&quot;]
+        A1[&quot;严禁在 render() 中频繁调用 DOM 查询&quot;]
+        A2[&quot;务必添加 ol-unselectable 与 ol-control 样式&quot;]
+        A3[&quot;Tooltip 必须设置 container: &#39;#map&#39;&quot;]
+    end
+
+    subgraph StyleCheck[&quot;样式渲染避坑&quot;]
+        B1[&quot;避免在 renderer 中滥用 ctx.filter 高斯模糊&quot;]
+        B2[&quot;善用 ctx.save() / ctx.restore() 保护上下文&quot;]
+        B3[&quot;视觉有大范围羽化时，必须配对 hitDetectionRenderer&quot;]
+    end
+
+    subgraph ExportCheck[&quot;截屏导出避坑&quot;]
+        C1[&quot;底图瓦片必须配置 crossOrigin: &#39;anonymous&#39;&quot;]
+        C2[&quot;Blob 链接使用完毕后必须立即 URL.revokeObjectURL&quot;]
+        C3[&quot;导出完成后立即 map.setTarget(target) 恢复屏幕渲染&quot;]
+    end
+</code></pre>
+<ol>
+<li><strong>避免在 <code>render(mapEvent)</code> 中引发重排（Reflow）</strong>：
+<code>render</code> 回调是高频执行代码段。若在该函数内部直接读取 <code>offsetWidth</code>、<code>getComputedStyle</code> 等会导致浏览器强制同步重排，从而导致地图拖拽产生肉眼可见的掉帧卡顿。务必在构造函数中缓存尺寸并在必要时才读取。</li>
+<li><strong>离屏拾取命中性能保障</strong>：
+<code>hitDetectionRenderer</code> 旨在为拾取算法提供像素依据，千万不要在此函数中计算阴影、滤镜、文本抗锯齿或渐变等装饰性逻辑。使用纯色实心单色填充即可实现最轻量、最极速的拾取判定。</li>
+<li><strong>CORS 跨域与 Canvas 污染</strong>：
+在截屏与导出流程中，如果地图底图（如 OSM 或天地图等第三方瓦片）未正确返回 <code>Access-Control-Allow-Origin: *</code>，或者图层未声明 <code>crossOrigin: &#39;anonymous&#39;</code>，Canvas 会被浏览器标记为 <strong>Tainted（被污染）</strong>，调用 <code>toBlob()</code> 时将抛出致命安全异常。在初始化数据源时必须严格验证 CORS 配置。</li>
+</ol>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

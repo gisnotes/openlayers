@@ -15,11 +15,14 @@ var map = new Map({
 		zoom: 4
 	})
 });
+/**
+* Bind input elements (checkbox & slider) to a layer's visibility and opacity.
+* 将 DOM 表单控件（复选框与滑动条）与图层的可见性及透明度进行双向绑定。
+* @param {string} layerid DOM element selector prefix.
+* @param {import("../src/ol/layer/Base.js").default} layer Target layer.
+*/
 function bindInputs(layerid, layer) {
 	const visibilityInput = document.querySelector(layerid + " input.visible");
-	visibilityInput.addEventListener("change", function() {
-		layer.setVisible(this.checked);
-	});
 	visibilityInput.addEventListener("change", function() {
 		layer.setVisible(this.checked);
 	});
@@ -30,6 +33,12 @@ function bindInputs(layerid, layer) {
 	});
 	opacityInput.value = String(layer.getOpacity());
 }
+/**
+* Recursively traverse layer groups and bind controls to each layer.
+* 递归遍历图层树，为每个叶子图层与父图层组动态绑定 UI 控件。
+* @param {string} id ID prefix.
+* @param {LayerGroup} group Layer group.
+*/
 function setup(id, group) {
 	group.getLayers().forEach(function(layer, i) {
 		const layerid = id + i;

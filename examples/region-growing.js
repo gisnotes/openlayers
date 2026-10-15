@@ -1,9 +1,16 @@
 import { Dr as Map, Ni as View, Vn as ImageLayer, X as RasterSource, ha as fromLonLat, kn as ImageTileSource, yr as TileLayer } from "./common.js";
 //#region examples/region-growing.js
+/**
+* Region growing segmentation algorithm running as an image operation in Web Worker.
+* 在 Web Worker 线程中运行的整图级区域生长空间分割算法
+* @param {Array<ImageData>} inputs Input images / 输入图像数据数组
+* @param {Object} data Context data from beforeoperations / 外部注入的上下文参数
+* @return {ImageData|Object} Output image with segmented region highlighted / 标记高亮后的输出图像
+*/
 function growRegion(inputs, data) {
 	const image = inputs[0];
 	let seed = data.pixel;
-	const delta = parseInt(data.delta);
+	const delta = parseInt(data.delta, 10);
 	if (!seed) return image;
 	seed = seed.map(Math.round);
 	const width = image.width;
@@ -47,6 +54,12 @@ function growRegion(inputs, data) {
 		height
 	};
 }
+/**
+* Return 4-connected neighbor pixel coordinates.
+* 获取当前像素上下左右 4-邻域连通坐标
+* @param {Array<number>} edge Pixel coordinates [x, y] / 当前像素坐标
+* @return {Array<Array<number>>} 4-connected neighbors / 四邻域坐标数组
+*/
 function next4Edges(edge) {
 	const x = edge[0];
 	const y = edge[1];

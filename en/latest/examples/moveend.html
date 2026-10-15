@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Moveend Event</title>
+    <title>Moveend Event / 地图漫游停止事件 (moveend)</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Moveend Event</h4>
+        <h4 id="title">Moveend Event / 地图漫游停止事件 (moveend)</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,7 +74,7 @@
               data-bs-target="#tag-example-list"
               data-title="moveend"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./moveend.html&quot;&gt;Moveend Event&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./moveend.html&quot;&gt;Moveend Event / 地图漫游停止事件 (moveend)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -88,7 +88,7 @@
               data-bs-target="#tag-example-list"
               data-title="map"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./moveend.html&quot;&gt;Moveend Event&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./moveend.html&quot;&gt;Moveend Event / 地图漫游停止事件 (moveend)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -102,7 +102,7 @@
               data-bs-target="#tag-example-list"
               data-title="event"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./moveend.html&quot;&gt;Moveend Event&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./moveend.html&quot;&gt;Moveend Event / 地图漫游停止事件 (moveend)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -122,10 +122,10 @@
           </div>
         </div>
         <div id="map" class="map"></div>
-<label>left: <input readonly="readonly" type="text" id="left"></label>
-<label>right: <input readonly="readonly" type="text" id="right"></label>
-<label>bottom: <input readonly="readonly" type="text" id="bottom"></label>
-<label>top: <input readonly="readonly" type="text" id="top"></label>
+<label>Left (西经 / 最小经度): <input readonly="readonly" type="text" id="left"></label>
+<label>Right (东经 / 最大经度): <input readonly="readonly" type="text" id="right"></label>
+<label>Bottom (南纬 / 最小纬度): <input readonly="readonly" type="text" id="bottom"></label>
+<label>Top (北纬 / 最大纬度): <input readonly="readonly" type="text" id="top"></label>
 
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
           <input id="codesandbox-params" type="hidden" name="parameters">
@@ -133,12 +133,36 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Use of the moveend event.</p>
+        <p id="shortdesc">Use of the moveend event. / 监听 moveend 事件计算当前视口空间包围盒并格式化输出经纬度四至范围的示例。</p>
         <div id="docs"><p>
   In this example, a listener is registered for the map's
-  <code>moveend</code> event.  Whenever this listener is called,
+  <code>moveend</code> event. Whenever this listener is called,
   it updates the inputs below with the map extent in decimal degrees.
-</p>
+</p> <p>
+  在此示例中，为地图注册了 <code>moveend</code>（漫游结束）事件监听器。每当用户拖拽平移、鼠标滚轮缩放或镜头惯性动画彻底静止时，该监听器被触发，动态计算当前地图视口在地理空间中的四至包围盒范围（西经、东经、南纬、北纬），并以十进制经纬度度数实时回填到下方表单输入框中。
+</p> <hr> <h3>📚 学习记录与技术深度解读</h3>
+<h4>1. 核心架构与设计思想</h4> <ul>
+  <li><strong>视图生命周期中的终态事件（The `moveend` Lifecycle）：</strong>
+    在前端地图交互中，用户拖拽地图或鼠标快速滚轮会触发几十次每秒的高频重绘（如 <code>pointerdrag</code>、<code>postrender</code>）。如果在此期间高频发起后端空间拓扑查询（如根据屏幕范围加载商圈/POI），会导致服务器请求堆叠甚至崩溃。
+    <code>moveend</code> 事件是 OpenLayers 官方推荐的<strong>最佳稳态节流触发点</strong>，它在用户手指释放、滚轮滑动结束且所有惯性减速动画完全停止后才触发一次。
+  </li>
+  <li><strong>视口物理边界与地理四至反算：</strong>
+    通过 <code>map.getView().calculateExtent(map.getSize())</code>，系统获取当前地图在投影平面（如 EPSG:3857）上的最小包围盒 <code>[minX, minY, maxX, maxY]</code>。接着利用 <code>getBottomLeft()</code> 和 <code>getTopRight()</code> 提取对角点，并调用 <code>toLonLat()</code> 转换为标准 WGS84 经纬度。
+  </li>
+  <li><strong>跨反子午线经度折叠算法（Longitude Normalization）：</strong>
+    当用户在地图上持续向左或向右拖动环绕地球数周时，墨卡托坐标的经度会不断累加（例如达到 $+540^\circ$ 或 $-720^\circ$）。示例中设计了优雅的 <code>wrapLon(value)</code> 算法，将任意累加值折叠回归到 $[-180^\circ, +180^\circ]$ 标准区间：
+    $$\text{worlds} = \text{floor}\left(\frac{\text{lon} + 180}{360}\right), \quad \text{normalizedLon} = \text{lon} - \text{worlds} \times 360$$
+  </li>
+</ul>
+<h4>2. 源码与关键 API 剖析</h4> <ul>
+  <li><code>map.on('moveend', onMoveEnd)</code>：绑定漫游终止监听，回调入参 <code>evt.map</code> 包含触发事件的地图上下文。</li>
+  <li><code>getBottomLeft(extent)</code> 与 <code>getTopRight(extent)</code>：来自 <code>ol/extent.js</code> 的工具函数，高效提取几何包围盒的西南角与东北角坐标。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优</h4> <ul>
+  <li><strong>地图旋转（Rotation &ne; 0）时的外包盒膨胀陷阱：</strong>
+    若地图处于旋转状态（如旋转了 45 度），视口在地理空间上呈现为菱形。此时 <code>calculateExtent()</code> 计算出的是能够包裹住该菱形的<strong>正向外接矩形（Axis-Aligned Bounding Box, AABB）</strong>，四至范围会比屏幕实际看到的面积极大，向后端请求空间要素时需注意多边形几何裁剪。
+  </li>
+</ul>
 </div>
       </div>
 
@@ -152,6 +176,8 @@ import TileLayer from &#x27;ol/layer/Tile.js&#x27;;
 import {toLonLat} from &#x27;ol/proj.js&#x27;;
 import OSM from &#x27;ol/source/OSM.js&#x27;;
 
+// Initialize map with OpenStreetMap base layer
+// 初始化地图并加载 OpenStreetMap 底图瓦片
 const map &#x3D; new Map({
   layers: [
     new TileLayer({
@@ -165,18 +191,28 @@ const map &#x3D; new Map({
   }),
 });
 
+// Helper function to display coordinate values in input fields
+// 辅助函数：将保留两位小数的数值展示在指定 input 输入框中
 function display(id, value) {
   document.getElementById(id).value &#x3D; value.toFixed(2);
 }
 
+// Wrap longitude to ensure it remains within the [-180, 180] degree range
+// 跨反子午线经度规整：将持续漫游累加的经度折叠限制在 [-180, 180] 度区间内
 function wrapLon(value) {
   const worlds &#x3D; Math.floor((value + 180) / 360);
   return value - worlds * 360;
 }
 
+// Handler for the map&#x27;s moveend event
+// 地图漫游结束 (moveend) 事件处理器
 function onMoveEnd(evt) {
   const map &#x3D; evt.map;
+  // Calculate current extent in projected coordinate space
+  // 计算当前视口在投影坐标系下的四至包围盒范围
   const extent &#x3D; map.getView().calculateExtent(map.getSize());
+  // Transform corner coordinates to WGS84 longitude/latitude
+  // 将西南角与东北角投影坐标转换为 WGS84 经纬度
   const bottomLeft &#x3D; toLonLat(getBottomLeft(extent));
   const topRight &#x3D; toLonLat(getTopRight(extent));
   display(&#x27;left&#x27;, wrapLon(bottomLeft[0]));
@@ -185,6 +221,8 @@ function onMoveEnd(evt) {
   display(&#x27;top&#x27;, topRight[1]);
 }
 
+// Register listener on moveend event
+// 注册地图漫游结束事件监听器
 map.on(&#x27;moveend&#x27;, onMoveEnd);
 </code></pre>
         </div>
@@ -197,7 +235,7 @@ map.on(&#x27;moveend&#x27;, onMoveEnd);
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Moveend Event&lt;/title&gt;
+    &lt;title&gt;Moveend Event / 地图漫游停止事件 (moveend)&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -208,10 +246,10 @@ map.on(&#x27;moveend&#x27;, onMoveEnd);
   &lt;/head&gt;
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
-    &lt;label&gt;left: &lt;input readonly&#x3D;&quot;readonly&quot; type&#x3D;&quot;text&quot; id&#x3D;&quot;left&quot;&gt;&lt;/label&gt;
-    &lt;label&gt;right: &lt;input readonly&#x3D;&quot;readonly&quot; type&#x3D;&quot;text&quot; id&#x3D;&quot;right&quot;&gt;&lt;/label&gt;
-    &lt;label&gt;bottom: &lt;input readonly&#x3D;&quot;readonly&quot; type&#x3D;&quot;text&quot; id&#x3D;&quot;bottom&quot;&gt;&lt;/label&gt;
-    &lt;label&gt;top: &lt;input readonly&#x3D;&quot;readonly&quot; type&#x3D;&quot;text&quot; id&#x3D;&quot;top&quot;&gt;&lt;/label&gt;
+    &lt;label&gt;Left (西经 / 最小经度): &lt;input readonly&#x3D;&quot;readonly&quot; type&#x3D;&quot;text&quot; id&#x3D;&quot;left&quot;&gt;&lt;/label&gt;
+    &lt;label&gt;Right (东经 / 最大经度): &lt;input readonly&#x3D;&quot;readonly&quot; type&#x3D;&quot;text&quot; id&#x3D;&quot;right&quot;&gt;&lt;/label&gt;
+    &lt;label&gt;Bottom (南纬 / 最小纬度): &lt;input readonly&#x3D;&quot;readonly&quot; type&#x3D;&quot;text&quot; id&#x3D;&quot;bottom&quot;&gt;&lt;/label&gt;
+    &lt;label&gt;Top (北纬 / 最大纬度): &lt;input readonly&#x3D;&quot;readonly&quot; type&#x3D;&quot;text&quot; id&#x3D;&quot;top&quot;&gt;&lt;/label&gt;
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
   &lt;/body&gt;

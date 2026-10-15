@@ -1,0 +1,230 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - </title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <h1 id="openlayers-全屏沉浸式交互、多窗口弹窗联动与-dom-容器动态瞬移实战架构指南">OpenLayers 全屏沉浸式交互、多窗口弹窗联动与 DOM 容器动态瞬移实战架构指南</h1>
+<blockquote>
+<p>在传统的 WebGIS 开发观念中，地图通常被认为与一个固定的 <code>&lt;div id=&quot;map&quot;&gt;</code> 强绑定。然而在大型安防调度中心、指挥大屏、微前端标签页系统以及多显示器办公场景中，业务对地图的视口灵活性提出了前所未有的要求：</p>
+<ol>
+<li><strong>全屏沉浸化</strong>：不仅地图自身全屏，还需要将<strong>侧边业务面板与控制工具栏</strong>一并带入全屏；</li>
+<li><strong>跨窗口独立化（Portals）</strong>：将地图从当前网页中“弹离”，迁移至副屏或独立的外部子窗口中运行，并保持数据与操作互通；</li>
+<li><strong>多容器瞬移化（Teleportation）</strong>：在多个标签页（Tabs）或分屏布局之间瞬间迁移地图实例，<strong>保持切片缓存不丢失、视图中心不重置、零销毁零白屏</strong>。</li>
+</ol>
+<p>OpenLayers 拥有彻底解耦的 <code>map.setTarget()</code> 宿主机制，并深度适配了 W3C Fullscreen API。本文基于 4 个核心官方示例（<code>full-screen.html</code>、<code>full-screen-source.html</code>、<code>external-map.html</code>、<code>teleport.html</code>），系统解构全屏沉浸、多窗口联动与容器瞬移的底层原理与架构模式。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：打破单一-dom-容器桎梏的视口演进">1. 架构总览：打破单一 DOM 容器桎梏的视口演进</h2>
+<pre><code class="language-mermaid">stateDiagram-v2
+    [*] --&gt; LocalContainer: 初始化地图 (setTarget(&#39;map&#39;))
+    
+    LocalContainer --&gt; FullscreenLocal: 点击全屏 (FullScreen)
+    FullscreenLocal --&gt; LocalContainer: 退出全屏 (Esc / 还原)
+
+    LocalContainer --&gt; FullscreenParent: 整体全屏 (source: &#39;parent&#39;)&lt;br/&gt;包含侧边栏看板
+    FullscreenParent --&gt; LocalContainer: 退出全屏
+
+    LocalContainer --&gt; ExternalWindow: 弹出独立窗口 (window.open)&lt;br/&gt;map.setTarget(childMapTarget)
+    ExternalWindow --&gt; LocalContainer: 子窗口关闭 (unload / pagehide)&lt;br/&gt;resetMapTarget() 归还主容器
+
+    LocalContainer --&gt; TeleportContainer: 动态瞬移 (map.setTarget(&#39;map2&#39;))&lt;br/&gt;多标签/多分屏无缝迁移
+    TeleportContainer --&gt; LocalContainer: 瞬移归位 (setTarget(&#39;map1&#39;))
+</code></pre>
+<h3 id="11-四大视口拓扑模式对比">1.1 四大视口拓扑模式对比</h3>
+<table>
+<thead>
+<tr>
+<th align="left">模式 / 特性</th>
+<th align="left">纯地图全屏</th>
+<th align="left">扩展父级全屏</th>
+<th align="left">外部独立子窗口</th>
+<th align="left">DOM 容器动态瞬移</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>典型示例</strong></td>
+<td align="left"><code>full-screen.html</code></td>
+<td align="left"><code>full-screen-source.html</code></td>
+<td align="left"><code>external-map.html</code></td>
+<td align="left"><code>teleport.html</code></td>
+</tr>
+<tr>
+<td align="left"><strong>核心 API</strong></td>
+<td align="left"><code>new FullScreen()</code></td>
+<td align="left"><code>new FullScreen({ source })</code></td>
+<td align="left"><code>window.open</code> + <code>map.setTarget</code></td>
+<td align="left"><code>map.setTarget(newId)</code></td>
+</tr>
+<tr>
+<td align="left"><strong>全屏目标</strong></td>
+<td align="left">仅 <code>#map</code> 元素</td>
+<td align="left">包含侧边栏的外层容器</td>
+<td align="left">外部独立浏览器 Window</td>
+<td align="left">页面内的任意其它容器</td>
+</tr>
+<tr>
+<td align="left"><strong>实例生命周期</strong></td>
+<td align="left">持续保活</td>
+<td align="left">持续保活</td>
+<td align="left">持续保活（零销毁重用）</td>
+<td align="left">持续保活（零重载复用）</td>
+</tr>
+<tr>
+<td align="left"><strong>适用业务场景</strong></td>
+<td align="left">移动端地图全屏沉浸模式</td>
+<td align="left">智慧大屏、带控制台的调度中心</td>
+<td align="left">跨双显示器指挥监控平台</td>
+<td align="left">多 Tab 标签页切换、分屏对比</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-fullscreen-全屏沉浸式交互与父容器外扩">2. FullScreen 全屏沉浸式交互与父容器外扩</h2>
+<h3 id="21-浏览器顶层（top-layer）机制与纯地图全屏（full-screenhtml）">2.1 浏览器顶层（Top Layer）机制与纯地图全屏（<code>full-screen.html</code>）</h3>
+<p>W3C 全屏规范会将目标元素移入浏览器的顶层堆叠上下文（Top Layer）。<code>ol/control/FullScreen</code> 内部监听了厂商前缀各异的全屏事件，并在进入全屏时自动触发 <code>map.updateSize()</code>，迫使 WebGL / Canvas 渲染管线自适应屏幕分辨率。</p>
+<h3 id="22-扩展父级容器整体全屏（full-screen-sourcehtml）">2.2 扩展父级容器整体全屏（<code>full-screen-source.html</code>）</h3>
+<ul>
+<li><strong>痛点</strong>：若直接对地图执行全屏，位于地图旁边的侧边栏（Side Panel）会被丢在全屏之外，用户在全屏下无法进行业务操作。</li>
+<li><strong>架构方案</strong>：通过指定 <code>source: &#39;fullscreen&#39;</code>（包含地图与面板的共同父级 DIV）：<pre><code class="language-javascript">const map = new Map({
+  controls: defaultControls().extend([
+    new FullScreen({
+      source: &#39;fullscreen&#39;, // 指定外层父级容器整体全屏
+    }),
+  ]),
+  target: &#39;map&#39;,
+  view: view,
+});
+</code></pre>
+结合外层的 Flex 弹性布局，全屏后地图与业务面板完美并存，控制台丝滑交互。</li>
+</ul>
+<hr>
+<h2 id="3-跨窗口独立地图运行与双向生命周期（external-maphtml）">3. 跨窗口独立地图运行与双向生命周期（<code>external-map.html</code>）</h2>
+<p>在调度监控中心，业务人员常需要将地图“拔”出来拖拽到外接的大显示器上：</p>
+<h3 id="31-零重绘外部窗口挂载（portals）">3.1 零重绘外部窗口挂载（Portals）</h3>
+<p>只要在同一浏览器进程中，通过 <code>window.open()</code> 打开的子窗口与父窗口共享同一个 JavaScript 执行线程：</p>
+<pre><code class="language-javascript">mapWindow = window.open(&#39;resources/external-map-map.html&#39;, &#39;MapWindow&#39;, &#39;width=800,height=600&#39;);
+mapWindow.addEventListener(&#39;DOMContentLoaded&#39;, function () {
+  const externalMapTarget = mapWindow.document.getElementById(&#39;map&#39;);
+  localMapTarget.style.height = &#39;0px&#39;; // 收缩主窗口容器
+  map.setTarget(externalMapTarget);    // 核心：直接将地图画布移入子窗口
+});
+</code></pre>
+<p>地图无需重新加载瓦片，当前视角与动画状态毫秒级无损转移。</p>
+<h3 id="32-严密的双向生命周期闭环">3.2 严密的双向生命周期闭环</h3>
+<ol>
+<li><strong>防止孤儿僵尸窗口</strong>：主窗口监听 <code>pagehide</code>，在主页面刷新或跳转时协同关闭子窗口：<pre><code class="language-javascript">window.addEventListener(&#39;pagehide&#39;, () =&gt; mapWindow?.close());
+</code></pre>
+</li>
+<li><strong>子窗口关闭自动归还</strong>：监听子窗口的 <code>pagehide</code>，一旦用户关闭子窗口，主窗口立刻恢复尺寸并执行 <code>map.setTarget(localMapTarget)</code> 完璧归赵。</li>
+<li><strong>主窗口状态掩模</strong>：使用自定义控件 <code>UnusableMask extends Control</code>，在主窗口覆盖半透明文字提示，防止用户在主窗口发生空指针误操作。</li>
+</ol>
+<hr>
+<h2 id="4-动态-dom-容器瞬移与单例架构（teleporthtml）">4. 动态 DOM 容器瞬移与单例架构（<code>teleport.html</code>）</h2>
+<p>在包含“多标签页（Tabs）”的企业管理后台中，传统开发者常常在切换标签时反复 <code>map.dispose()</code> 并重新 <code>new Map()</code>，引发严重的内存卡顿与网络重复请求。</p>
+<h3 id="41-mapsettarget-瞬移的核心机制">4.1 <code>map.setTarget</code> 瞬移的核心机制</h3>
+<pre><code class="language-javascript">teleportButton.addEventListener(&#39;click&#39;, function () {
+  const nextTarget = map.getTarget() === &#39;map1&#39; ? &#39;map2&#39; : &#39;map1&#39;;
+  map.setTarget(nextTarget); // 瞬间完成 DOM 树转移
+  map.updateSize();          // 确保网格与新容器尺寸对齐
+});
+</code></pre>
+<ul>
+<li><strong>核心收益</strong>：<ul>
+<li><strong>瓦片缓存 100% 保留</strong>：底层的 <code>TileCache</code> 与已下载的数百张切片无需重新发起网络请求；</li>
+<li><strong>交互状态 100% 延续</strong>：用户此前放大到的具体街区、正在进行的测量折线全部保留；</li>
+<li><strong>CPU/GPU 零抖动</strong>：避免了重复创建 WebGL 上下文引发的显存暴涨。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="5-生产级工程踩坑与避坑指南">5. 生产级工程踩坑与避坑指南</h2>
+<h3 id="51-浏览器弹窗拦截（popup-blocker）防护">5.1 浏览器弹窗拦截（Popup Blocker）防护</h3>
+<p><code>window.open</code> 必须在<strong>真实用户交互事件（如按钮的物理 <code>click</code>）的直接同步执行流</strong>中调用。严禁在异步 <code>Promise.then</code> 或 <code>setTimeout</code> 中执行，否则 100% 被浏览器内核强制拦截。</p>
+<h3 id="52-外部窗口样式孤岛（css-isolation）">5.2 外部窗口样式孤岛（CSS Isolation）</h3>
+<p>子窗口由 <code>window.open</code> 创建，拥有独立的 <code>document</code> 对象。若子窗口 HTML 中没有引入 <code>theme/ol.css</code>，移动到子窗口的 OpenLayers 控件将完全失去定位。子窗口 HTML 必须预先引入完整的样式表：</p>
+<pre><code class="language-html">&lt;link rel=&quot;stylesheet&quot; href=&quot;theme/ol.css&quot; type=&quot;text/css&quot;&gt;
+</code></pre>
+<h3 id="53-iframe-权限声明与全屏穿透">5.3 iframe 权限声明与全屏穿透</h3>
+<p>在微前端或嵌入式系统中，如果外层存在 <code>&lt;iframe&gt;</code>，必须配置：</p>
+<pre><code class="language-html">&lt;iframe src=&quot;...&quot; allow=&quot;fullscreen&quot;&gt;&lt;/iframe&gt;
+</code></pre>
+<p>否则浏览器将无情阻断 <code>requestFullscreen</code> 请求。</p>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

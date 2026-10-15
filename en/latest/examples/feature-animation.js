@@ -13,11 +13,20 @@ var map = new Map({
 		multiWorld: true
 	})
 });
+/**
+* Add a random point feature across the globe.
+* 在全球范围内随机生成并添加点要素。
+*/
 function addRandomFeature() {
 	const feature = new Feature(new Point(fromLonLat([Math.random() * 360 - 180, Math.random() * 170 - 85])));
 	source.addFeature(feature);
 }
 var duration = 3e3;
+/**
+* Trigger a 3-second animated radar pulse/flash wave on the given feature.
+* 对指定要素触发为期 3 秒的雷达波纹扩散动效。
+* @param {Feature} feature Target feature to flash.
+*/
 function flash(feature) {
 	const start = Date.now();
 	const flashGeom = feature.getGeometry().clone();

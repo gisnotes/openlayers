@@ -11027,7 +11027,7 @@ PROPERTYCHANGE: "propertychange" };
 		return x;
 	}
 	/**
-	* Converts radians to to degrees.
+	* Converts radians to degrees.
 	*
 	* @param {number} angleInRadians Angle in radians.
 	* @return {number} Angle in degrees.
@@ -19988,17 +19988,17 @@ function(resolution) {
 	* false means intermediary zoom levels are allowed.
 	*/
 	/**
-	* Mutliplier for the DOM_DELTA_LINE delta value.
+	* Multiplier for the DOM_DELTA_LINE delta value.
 	* @type {number}
 	*/
 	const DELTA_LINE_MULTIPLIER = 40;
 	/**
-	* Mutliplier for the DOM_DELTA_PAGE delta value.
+	* Multiplier for the DOM_DELTA_PAGE delta value.
 	* @type {number}
 	*/
 	const DELTA_PAGE_MULTIPLIER = 300;
 	/**
-	* Mutliplier for the delta value when using pinch-to-zoom
+	* Multiplier for the delta value when using pinch-to-zoom
 	* @type {number}
 	*/
 	const DELTA_TRACKPAD_PINCH_TO_ZOOM_MULTIPLIER = 3;
@@ -24559,12 +24559,27 @@ function(resolution) {
 	* @module ol/style/Image
 	*/
 	/**
+	* @typedef {'point' | 'line'} ImageStylePlacement
+	* Default placement is `'point'`, meaning the symbolizer is only drawn for `Point`/`MultiPoint`
+	* geometries. For a {@link module:ol/geom/LineString~LineString}, {@link module:ol/geom/MultiLineString~MultiLineString},
+	* {@link module:ol/geom/Polygon~Polygon} or {@link module:ol/geom/MultiPolygon~MultiPolygon} geometry, set `placement`
+	* to `'line'` to draw the symbolizer along the path (only the exterior ring for polygons), repeated at the `repeat`
+	* interval when set, and rotated according to `rotateWithView`. A single symbolizer at the geometry's own midpoint,
+	* using only the style's own fixed `rotation`, can be obtained with `placement: 'line'`, no `repeat`, and
+	* `rotateWithView: false`.
+	*/
+	/**
 	* @typedef {Object} Options
 	* @property {number} opacity Opacity.
-	* @property {boolean} rotateWithView If the image should get rotated with the view.
+	* @property {boolean} rotateWithView If the image should get rotated with the view. When `placement` is set to
+	* `'line'`, this also controls whether the symbolizer follows the local direction of the line (`true`) or keeps
+	* its own fixed `rotation` (`false`).
 	* @property {number} rotation Rotation.
 	* @property {number|import("../size.js").Size} scale Scale.
 	* @property {Array<number>} displacement Displacement.
+	* @property {ImageStylePlacement} [placement='point'] Placement.
+	* @property {number} [repeat] Repeat interval. When set, the symbolizer will be repeated at this interval, which
+	* specifies the distance between two anchors in pixels. Only available when `placement` is set to `'line'`.
 	* @property {import('../style/Style.js').DeclutterMode} [declutterMode] Declutter mode: `declutter`, `obstacle`, `none`.
 	*/
 	/**
@@ -24612,6 +24627,16 @@ function(resolution) {
 			this.displacement_ = options.displacement;
 			/**
 			* @private
+			* @type {ImageStylePlacement}
+			*/
+			this.placement_ = options.placement !== void 0 ? options.placement : "point";
+			/**
+			* @private
+			* @type {number|undefined}
+			*/
+			this.repeat_ = options.repeat;
+			/**
+			* @private
 			* @type {import('../style/Style.js').DeclutterMode|undefined}
 			*/
 			this.declutterMode_ = options.declutterMode;
@@ -24629,6 +24654,8 @@ function(resolution) {
 				rotation: this.getRotation(),
 				rotateWithView: this.getRotateWithView(),
 				displacement: this.getDisplacement().slice(),
+				placement: this.getPlacement(),
+				repeat: this.getRepeat(),
 				declutterMode: this.getDeclutterMode()
 			});
 		}
@@ -24686,6 +24713,39 @@ function(resolution) {
 		*/
 		getDeclutterMode() {
 			return this.declutterMode_;
+		}
+		/**
+		* Get the placement.
+		* @return {ImageStylePlacement} Placement.
+		* @api
+		*/
+		getPlacement() {
+			return this.placement_;
+		}
+		/**
+		* Set the placement.
+		*
+		* @param {ImageStylePlacement} placement Placement.
+		* @api
+		*/
+		setPlacement(placement) {
+			this.placement_ = placement;
+		}
+		/**
+		* Get the repeat interval.
+		* @return {number|undefined} Repeat interval in pixels.
+		* @api
+		*/
+		getRepeat() {
+			return this.repeat_;
+		}
+		/**
+		* Set the repeat interval.
+		* @param {number|undefined} [repeat] Repeat interval in pixels.
+		* @api
+		*/
+		setRepeat(repeat) {
+			this.repeat_ = repeat;
 		}
 		/**
 		* Get the anchor point in pixels. The anchor determines the center point for the
@@ -24845,6 +24905,9 @@ function(resolution) {
 	* @property {boolean} [rotateWithView=false] Whether to rotate the shape with the view.
 	* @property {number|import("../size.js").Size} [scale=1] Scale. Unless two dimensional scaling is required a better
 	* result may be obtained with appropriate settings for `radius` and `radius2`.
+	* @property {import("./Image.js").ImageStylePlacement} [placement='point'] Placement.
+	* @property {number} [repeat] Repeat interval. When set, the shape will be repeated at this interval, which specifies
+	* the distance between two anchors in pixels. Only available when `placement` is set to `'line'`.
 	* @property {import('./Style.js').DeclutterMode} [declutterMode] Declutter mode.
 	*/
 	/**
@@ -24876,6 +24939,8 @@ function(resolution) {
 				rotation: options.rotation !== void 0 ? options.rotation : 0,
 				scale: options.scale !== void 0 ? options.scale : 1,
 				displacement: options.displacement !== void 0 ? options.displacement : [0, 0],
+				placement: options.placement,
+				repeat: options.repeat,
 				declutterMode: options.declutterMode
 			});
 			/**
@@ -24954,6 +25019,8 @@ function(resolution) {
 				rotateWithView: this.getRotateWithView(),
 				scale: Array.isArray(scale) ? scale.slice() : scale,
 				displacement: this.getDisplacement().slice(),
+				placement: this.getPlacement(),
+				repeat: this.getRepeat(),
 				declutterMode: this.getDeclutterMode()
 			});
 			style.setOpacity(this.getOpacity());
@@ -25026,7 +25093,7 @@ function(resolution) {
 				shared.set(cacheKey, null, iconImage);
 				createImageBitmap(image).then((imageBitmap) => {
 					iconImage.setImage(imageBitmap);
-				});
+				}).catch(() => {});
 			}
 			return image;
 		}
@@ -25346,6 +25413,9 @@ function(resolution) {
 	* (positive rotation clockwise, meaningful only when used in conjunction with a two dimensional scale).
 	* @property {boolean} [rotateWithView=false] Whether to rotate the shape with the view
 	* (meaningful only when used in conjunction with a two dimensional scale).
+	* @property {import("./Image.js").ImageStylePlacement} [placement='point'] Placement.
+	* @property {number} [repeat] Repeat interval. When set, the circle will be repeated at this interval, which specifies
+	* the distance between two anchors in pixels. Only available when `placement` is set to `'line'`.
 	* @property {import('./Style.js').DeclutterMode} [declutterMode] Declutter mode
 	*/
 	/**
@@ -25368,6 +25438,8 @@ function(resolution) {
 				rotation: options.rotation !== void 0 ? options.rotation : 0,
 				rotateWithView: options.rotateWithView !== void 0 ? options.rotateWithView : false,
 				displacement: options.displacement !== void 0 ? options.displacement : [0, 0],
+				placement: options.placement,
+				repeat: options.repeat,
 				declutterMode: options.declutterMode
 			});
 		}
@@ -25387,6 +25459,8 @@ function(resolution) {
 				rotation: this.getRotation(),
 				rotateWithView: this.getRotateWithView(),
 				displacement: this.getDisplacement().slice(),
+				placement: this.getPlacement(),
+				repeat: this.getRepeat(),
 				declutterMode: this.getDeclutterMode()
 			});
 			style.setOpacity(this.getOpacity());
@@ -25530,6 +25604,9 @@ function(resolution) {
 	* @property {import("../size.js").Size} [size] Icon size in pixels. Used together with `offset` to define the
 	* sub-rectangle to use from the original (sprite) image.
 	* @property {string} [src] Image source URI.
+	* @property {import("./Image.js").ImageStylePlacement} [placement='point'] Icon placement.
+	* @property {number} [repeat] Repeat interval. When set, the icon will be repeated at this interval, which specifies
+	* the distance between two icon anchors in pixels. Only available when `placement` is set to `'line'`.
 	* @property {import("./Style.js").DeclutterMode} [declutterMode] Declutter mode.
 	*/
 	/**
@@ -25578,6 +25655,8 @@ function(resolution) {
 				scale,
 				displacement: options.displacement !== void 0 ? options.displacement : [0, 0],
 				rotateWithView,
+				placement: options.placement,
+				repeat: options.repeat,
 				declutterMode: options.declutterMode
 			});
 			/**
@@ -25724,6 +25803,8 @@ function(resolution) {
 				size: this.size_ !== null ? this.size_.slice() : void 0,
 				src: this.getSrc(),
 				displacement: this.getDisplacement().slice(),
+				placement: this.getPlacement(),
+				repeat: this.getRepeat(),
 				declutterMode: this.getDeclutterMode()
 			});
 		}
@@ -27603,6 +27684,8 @@ function(resolution) {
 		const evaluateDisplacement = coordinateEvaluator(flatStyle, "icon-displacement", context);
 		const evaluateRotation = numberEvaluator(flatStyle, "icon-rotation", context);
 		const evaluateRotateWithView = booleanEvaluator(flatStyle, "icon-rotate-with-view", context);
+		const evaluatePlacement = stringEvaluator(flatStyle, "icon-placement", context);
+		const evaluateRepeat = numberEvaluator(flatStyle, "icon-repeat", context);
 		const anchorOrigin = optionalIconOrigin(flatStyle, "icon-anchor-origin");
 		const anchorXUnits = optionalIconAnchorUnits(flatStyle, "icon-anchor-x-units");
 		const anchorYUnits = optionalIconAnchorUnits(flatStyle, "icon-anchor-y-units");
@@ -27641,6 +27724,12 @@ function(resolution) {
 			if (evaluateDisplacement) icon.setDisplacement(evaluateDisplacement(context));
 			if (evaluateRotation) icon.setRotation(evaluateRotation(context));
 			if (evaluateRotateWithView) icon.setRotateWithView(evaluateRotateWithView(context));
+			if (evaluatePlacement) {
+				const placement = evaluatePlacement(context);
+				if (placement !== "point" && placement !== "line") throw new Error("Expected point or line for icon-placement");
+				icon.setPlacement(placement);
+			}
+			if (evaluateRepeat) icon.setRepeat(evaluateRepeat(context));
 			if (evaluateScale) icon.setScale(evaluateScale(context));
 			if (evaluateAnchor) icon.setAnchor(evaluateAnchor(context));
 			return icon;
@@ -28764,7 +28853,7 @@ function(resolution) {
 	* the map's pixel ratio.
 	* For accessibility (focus and keyboard events for map navigation), the `target` element must have a
 	*  properly configured `tabindex` attribute. If the `target` element is inside a Shadow DOM, the
-	*  `tabindex` atribute must be set on the custom element's host element.
+	*  `tabindex` attribute must be set on the custom element's host element.
 	* **Note:** CSS `transform` support for the target element is limited to `scale`.
 	* @property {View|Promise<import("./View.js").ViewOptions>} [view] The map's view.  No layer sources will be
 	* fetched unless this is specified at construction time or through
@@ -29932,7 +30021,7 @@ function(resolution) {
 		* Set the target element to render this map into.
 		* For accessibility (focus and keyboard events for map navigation), the `target` element must have a
 		*  properly configured `tabindex` attribute. If the `target` element is inside a Shadow DOM, the
-		*  `tabindex` atribute must be set on the custom element's host element.
+		*  `tabindex` attribute must be set on the custom element's host element.
 		* @param {HTMLElement|string|null|undefined} [target] The Element or id of the Element
 		*     that the map is rendered in.
 		* @observable
@@ -30386,16 +30475,47 @@ function(resolution) {
 		return dest;
 	}
 	/**
+	* Appends the coordinates of a line string to `measured`, each with the
+	* cumulative 2D length as M, continuing from the last M in `measured`.
 	* @param {Array<number>} flatCoordinates Flat coordinates.
 	* @param {number} offset Offset.
 	* @param {number} end End.
 	* @param {number} stride Stride.
-	* @param {number} m M.
+	* @param {Array<number>} measured Flat coordinates with stride `stride + 1`.
+	* @return {Array<number>} `measured`.
+	*/
+	function measure(flatCoordinates, offset, end, stride, measured) {
+		let length = measured.length ? measured[measured.length - 1] : 0;
+		let x1 = flatCoordinates[offset];
+		let y1 = flatCoordinates[offset + 1];
+		for (let i = offset; i < end; i += stride) {
+			const x2 = flatCoordinates[i];
+			const y2 = flatCoordinates[i + 1];
+			length += Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+			for (let j = 0; j < stride; ++j) measured.push(flatCoordinates[i + j]);
+			measured.push(length);
+			x1 = x2;
+			y1 = y2;
+		}
+		return measured;
+	}
+	/**
+	* @param {Array<number>} flatCoordinates Flat coordinates.
+	* @param {number} offset Offset.
+	* @param {number} end End.
+	* @param {number} stride Stride.
+	* @param {number} m M, or the 2D length along the line string if `hasM` is `false`.
 	* @param {boolean} extrapolate Extrapolate.
+	* @param {boolean} [hasM] Whether the last ordinate of each coordinate is M (default is `true`).
 	* @return {import("../../coordinate.js").Coordinate|null} Coordinate.
 	*/
-	function lineStringCoordinateAtM(flatCoordinates, offset, end, stride, m, extrapolate) {
+	function lineStringCoordinateAtM(flatCoordinates, offset, end, stride, m, extrapolate, hasM) {
 		if (end == offset) return null;
+		if (hasM === false) {
+			const measured = measure(flatCoordinates, offset, end, stride, []);
+			const coordinate = lineStringCoordinateAtM(measured, 0, measured.length, stride + 1, m, extrapolate);
+			return coordinate && coordinate.slice(0, stride);
+		}
 		let coordinate;
 		if (m < flatCoordinates[offset + stride - 1]) {
 			if (extrapolate) {
@@ -30438,10 +30558,25 @@ function(resolution) {
 	* @param {number} m M.
 	* @param {boolean} extrapolate Extrapolate.
 	* @param {boolean} interpolate Interpolate.
+	* @param {boolean} [hasM] Whether the last ordinate of each coordinate is M (default is `true`).
+	* If `false`, `m` is the 2D length along the line strings, including the gaps between them
+	* when `interpolate` is `true`.
 	* @return {import("../../coordinate.js").Coordinate|null} Coordinate.
 	*/
-	function lineStringsCoordinateAtM(flatCoordinates, offset, ends, stride, m, extrapolate, interpolate) {
-		if (interpolate) return lineStringCoordinateAtM(flatCoordinates, offset, ends[ends.length - 1], stride, m, extrapolate);
+	function lineStringsCoordinateAtM(flatCoordinates, offset, ends, stride, m, extrapolate, interpolate, hasM) {
+		if (interpolate) return lineStringCoordinateAtM(flatCoordinates, offset, ends[ends.length - 1], stride, m, extrapolate, hasM);
+		if (hasM === false) {
+			/** @type {Array<number>} */
+			const measured = [];
+			const measuredEnds = [];
+			for (let i = 0, ii = ends.length; i < ii; ++i) {
+				measure(flatCoordinates, offset, ends[i], stride, measured);
+				measuredEnds.push(measured.length);
+				offset = ends[i];
+			}
+			const coordinate = lineStringsCoordinateAtM(measured, 0, measuredEnds, stride + 1, m, extrapolate, false);
+			return coordinate && coordinate.slice(0, stride);
+		}
 		let coordinate;
 		if (m < flatCoordinates[stride - 1]) {
 			if (extrapolate) {
@@ -30590,9 +30725,13 @@ function(resolution) {
 		* such coordinate exists.
 		*
 		* `extrapolate` controls extrapolation beyond the range of Ms in the
-		* MultiLineString. If `extrapolate` is `true` then Ms less than the first
+		* LineString. If `extrapolate` is `true` then Ms less than the first
 		* M will return the first coordinate and Ms greater than the last M will
 		* return the last coordinate.
+		*
+		* If the layout has no M (`XY` or `XYZ`), `m` is the 2D length along the
+		* LineString, measured from its first coordinate in the units of the
+		* coordinates (like {@link module:ol/geom/LineString~LineString#getLength}).
 		*
 		* @param {number} m M.
 		* @param {boolean} [extrapolate] Extrapolate. Default is `false`.
@@ -30600,9 +30739,8 @@ function(resolution) {
 		* @api
 		*/
 		getCoordinateAtM(m, extrapolate) {
-			if (this.layout != "XYM" && this.layout != "XYZM") return null;
 			extrapolate = extrapolate !== void 0 ? extrapolate : false;
-			return lineStringCoordinateAtM(this.flatCoordinates, 0, this.flatCoordinates.length, this.stride, m, extrapolate);
+			return lineStringCoordinateAtM(this.flatCoordinates, 0, this.flatCoordinates.length, this.stride, m, extrapolate, this.layout == "XYM" || this.layout == "XYZM");
 		}
 		/**
 		* Return the coordinates of the linestring.
@@ -30797,6 +30935,12 @@ function(resolution) {
 		* `false` then the function will return `null` for Ms falling between
 		* LineStrings.
 		*
+		* If the layout has no M (`XY` or `XYZ`), `m` is the 2D length along the
+		* MultiLineString, measured from its first coordinate in the units of the
+		* coordinates. If `interpolate` is `true`, the straight-line distances
+		* between consecutive LineStrings are included in that length; otherwise
+		* they are not.
+		*
 		* @param {number} m M.
 		* @param {boolean} [extrapolate] Extrapolate. Default is `false`.
 		* @param {boolean} [interpolate] Interpolate. Default is `false`.
@@ -30804,10 +30948,10 @@ function(resolution) {
 		* @api
 		*/
 		getCoordinateAtM(m, extrapolate, interpolate) {
-			if (this.layout != "XYM" && this.layout != "XYZM" || this.flatCoordinates.length === 0) return null;
+			if (this.flatCoordinates.length === 0) return null;
 			extrapolate = extrapolate !== void 0 ? extrapolate : false;
 			interpolate = interpolate !== void 0 ? interpolate : false;
-			return lineStringsCoordinateAtM(this.flatCoordinates, 0, this.ends_, this.stride, m, extrapolate, interpolate);
+			return lineStringsCoordinateAtM(this.flatCoordinates, 0, this.ends_, this.stride, m, extrapolate, interpolate, this.layout == "XYM" || this.layout == "XYZM");
 		}
 		/**
 		* Return the coordinates of the multilinestring.
@@ -32390,7 +32534,7 @@ function(resolution) {
 			if (!this.idProperty_) id = rawFeature.id;
 			else {
 				id = values[this.idProperty_];
-				values[this.idProperty_] = void 0;
+				delete values[this.idProperty_];
 			}
 			values[this.layerName_] = rawFeature.layer.name;
 			const flatCoordinates = [];
@@ -36495,6 +36639,85 @@ function(resolution) {
 		}
 	};
 	//#endregion
+	//#region src/ol/geom/flat/lineanchors.js
+	/**
+	* @module ol/geom/flat/lineanchors
+	*/
+	/**
+	* Compute evenly-spaced anchor points along a line (or ring), without allocating
+	* per-chunk coordinate arrays. The number of anchors is the closest whole number of
+	* `repeatLength`-sized intervals that fit the line's total length, so spacing is always
+	* even (no short leftover interval at the end).
+	* @param {number} repeatLength Nominal length of each interval.
+	* @param {Array<number>} flatCoordinates Flat coordinates.
+	* @param {number} offset Start offset of the `flatCoordinates`.
+	* @param {number} end End offset of the `flatCoordinates`.
+	* @param {number} stride Stride.
+	* @param {boolean|undefined} withRotation Also compute each anchor's tangent rotation,
+	* from the start/end of its own interval.
+	* @return {Array<number>} Flat `[x0, y0, x1, y1, ...]`, or when `withRotation` is `true`,
+	* flat `[x0, y0, rotation0, x1, y1, rotation1, ...]`.
+	*/
+	function lineAnchors(repeatLength, flatCoordinates, offset, end, stride, withRotation) {
+		const totalLength = lineStringLength(flatCoordinates, offset, end, stride);
+		const count = Math.max(1, Math.round(totalLength / repeatLength));
+		const interval = totalLength / count / 2;
+		const result = [];
+		let cursor = offset;
+		let x1 = flatCoordinates[offset];
+		let y1 = flatCoordinates[offset + 1];
+		let traveled = 0;
+		let intervalStartX = x1;
+		let intervalStartY = y1;
+		let midX = x1;
+		let midY = y1;
+		const boundaryCount = count * 2;
+		for (let k = 1; k <= boundaryCount; ++k) {
+			let boundaryX, boundaryY;
+			if (k === boundaryCount) {
+				boundaryX = flatCoordinates[end - stride];
+				boundaryY = flatCoordinates[end - stride + 1];
+			} else while (true) {
+				const x2 = flatCoordinates[cursor + stride];
+				const y2 = flatCoordinates[cursor + stride + 1];
+				const segmentLength = Math.sqrt((x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1));
+				if (traveled + segmentLength >= interval) {
+					const m = segmentLength === 0 ? 1 : (interval - traveled) / segmentLength;
+					if (m >= 1) {
+						cursor += stride;
+						x1 = x2;
+						y1 = y2;
+						boundaryX = x2;
+						boundaryY = y2;
+					} else {
+						boundaryX = lerp(x1, x2, m);
+						boundaryY = lerp(y1, y2, m);
+						x1 = boundaryX;
+						y1 = boundaryY;
+					}
+					traveled = 0;
+					break;
+				}
+				traveled += segmentLength;
+				cursor += stride;
+				x1 = x2;
+				y1 = y2;
+			}
+			if (k % 2 === 1) {
+				midX = boundaryX;
+				midY = boundaryY;
+			} else {
+				if (withRotation) {
+					const rotation = Math.atan2(intervalStartY - boundaryY, boundaryX - intervalStartX);
+					result.push(midX, midY, rotation);
+				} else result.push(midX, midY);
+				intervalStartX = boundaryX;
+				intervalStartY = boundaryY;
+			}
+		}
+		return result;
+	}
+	//#endregion
 	//#region src/ol/render/canvas/ImageBuilder.js
 	/**
 	* @module ol/render/canvas/ImageBuilder
@@ -36575,6 +36798,11 @@ function(resolution) {
 			this.width_ = void 0;
 			/**
 			* @private
+			* @type {number|undefined}
+			*/
+			this.repeat_ = void 0;
+			/**
+			* @private
 			* @type {import('../../style/Style.js').DeclutterMode|undefined}
 			*/
 			this.declutterMode_ = void 0;
@@ -36598,50 +36826,7 @@ function(resolution) {
 			const stride = pointGeometry.getStride();
 			const myBegin = this.coordinates.length;
 			const myEnd = this.appendFlatPointCoordinates(flatCoordinates, stride);
-			const imagePixelRatio = this.imagePixelRatio_ ?? 1;
-			const anchorX = this.anchorX_ ?? 0;
-			const anchorY = this.anchorY_ ?? 0;
-			const height = this.height_ ?? 0;
-			const originX = this.originX_ ?? 0;
-			const originY = this.originY_ ?? 0;
-			const scale = this.scale_ ?? [1, 1];
-			const width = this.width_ ?? 0;
-			this.instructions.push([
-				Instruction.DRAW_IMAGE,
-				myBegin,
-				myEnd,
-				this.image_,
-				anchorX * imagePixelRatio,
-				anchorY * imagePixelRatio,
-				Math.ceil(height * imagePixelRatio),
-				this.opacity_,
-				originX * imagePixelRatio,
-				originY * imagePixelRatio,
-				this.rotateWithView_,
-				this.rotation_,
-				[scale[0] * this.pixelRatio / imagePixelRatio, scale[1] * this.pixelRatio / imagePixelRatio],
-				Math.ceil(width * imagePixelRatio),
-				this.declutterMode_,
-				this.declutterImageWithText_
-			]);
-			this.hitDetectionInstructions.push([
-				Instruction.DRAW_IMAGE,
-				myBegin,
-				myEnd,
-				this.hitDetectionImage_,
-				this.anchorX_,
-				this.anchorY_,
-				this.height_,
-				1,
-				this.originX_,
-				this.originY_,
-				this.rotateWithView_,
-				this.rotation_,
-				this.scale_,
-				this.width_,
-				this.declutterMode_,
-				this.declutterImageWithText_
-			]);
+			this.appendImageInstruction_(myBegin, myEnd, this.rotation_);
 			this.endGeometry(feature);
 		}
 		/**
@@ -36658,6 +36843,126 @@ function(resolution) {
 			for (let i = 0, ii = flatCoordinates.length; i < ii; i += multiPointGeometry.getStride()) if (!this.maxExtent || containsCoordinate(this.maxExtent, flatCoordinates.slice(i, i + 2))) filteredFlatCoordinates.push(flatCoordinates[i], flatCoordinates[i + 1]);
 			const myBegin = this.coordinates.length;
 			const myEnd = this.appendFlatPointCoordinates(filteredFlatCoordinates, 2);
+			this.appendImageInstruction_(myBegin, myEnd, this.rotation_);
+			this.endGeometry(feature);
+		}
+		/**
+		* @param {import("../../geom/LineString.js").default|import("../Feature.js").default} lineStringGeometry Line string geometry.
+		* @param {import("../../Feature.js").FeatureLike} feature Feature.
+		* @param {number} [index] Render order index.
+		* @override
+		*/
+		drawLineString(lineStringGeometry, feature, index) {
+			if (!this.image_) return;
+			const geometryExtent = lineStringGeometry.getExtent();
+			if (this.maxExtent && !intersects$1(this.maxExtent, geometryExtent)) return;
+			this.beginGeometry(lineStringGeometry, feature, index ?? 0);
+			const flatCoordinates = lineStringGeometry.getFlatCoordinates();
+			const stride = lineStringGeometry.getStride();
+			this.drawAnchoredImages_(flatCoordinates, 0, flatCoordinates.length, stride);
+			this.endGeometry(feature);
+		}
+		/**
+		* @param {import("../../geom/MultiLineString.js").default|import("../Feature.js").default} multiLineStringGeometry MultiLineString geometry.
+		* @param {import("../../Feature.js").FeatureLike} feature Feature.
+		* @param {number} [index] Render order index.
+		* @override
+		*/
+		drawMultiLineString(multiLineStringGeometry, feature, index) {
+			if (!this.image_) return;
+			const geometryExtent = multiLineStringGeometry.getExtent();
+			if (this.maxExtent && !intersects$1(this.maxExtent, geometryExtent)) return;
+			this.beginGeometry(multiLineStringGeometry, feature, index ?? 0);
+			const ends = multiLineStringGeometry.getEnds();
+			const flatCoordinates = multiLineStringGeometry.getFlatCoordinates();
+			const stride = multiLineStringGeometry.getStride();
+			let offset = 0;
+			for (let i = 0, ii = ends.length; i < ii; ++i) {
+				this.drawAnchoredImages_(flatCoordinates, offset, ends[i], stride);
+				offset = ends[i];
+			}
+			this.endGeometry(feature);
+		}
+		/**
+		* @param {import("../../geom/Polygon.js").default|import("../Feature.js").default} polygonGeometry Polygon geometry.
+		* @param {import("../../Feature.js").FeatureLike} feature Feature.
+		* @param {number} [index] Render order index.
+		* @override
+		*/
+		drawPolygon(polygonGeometry, feature, index) {
+			if (!this.image_) return;
+			const geometryExtent = polygonGeometry.getExtent();
+			if (this.maxExtent && !intersects$1(this.maxExtent, geometryExtent)) return;
+			this.beginGeometry(polygonGeometry, feature, index ?? 0);
+			const end = polygonGeometry.getEnds()[0];
+			const flatCoordinates = polygonGeometry.getFlatCoordinates();
+			const stride = polygonGeometry.getStride();
+			this.drawAnchoredImages_(flatCoordinates, 0, end, stride);
+			this.endGeometry(feature);
+		}
+		/**
+		* @param {import("../../geom/MultiPolygon.js").default|import("../Feature.js").default} multiPolygonGeometry MultiPolygon geometry.
+		* @param {import("../../Feature.js").FeatureLike} feature Feature.
+		* @param {number} [index] Render order index.
+		* @override
+		*/
+		drawMultiPolygon(multiPolygonGeometry, feature, index) {
+			if (!this.image_) return;
+			const geometryExtent = multiPolygonGeometry.getExtent();
+			if (this.maxExtent && !intersects$1(this.maxExtent, geometryExtent)) return;
+			this.beginGeometry(multiPolygonGeometry, feature, index ?? 0);
+			const endss = multiPolygonGeometry.getEndss();
+			const flatCoordinates = multiPolygonGeometry.getFlatCoordinates();
+			const stride = multiPolygonGeometry.getStride();
+			let offset = 0;
+			for (let i = 0, ii = endss.length; i < ii; ++i) {
+				const end = endss[i][0];
+				this.drawAnchoredImages_(flatCoordinates, offset, end, stride);
+				offset = end;
+			}
+			this.endGeometry(feature);
+		}
+		/**
+		* Compute evenly-spaced anchors (or a single anchor when `repeat_` is not set) along
+		* a sub-line, and draw one image per anchor. When `rotateWithView_` is `true` (the
+		* default), each image is rotated to follow its own interval's start/end tangent;
+		* otherwise every image just keeps the image style's own fixed rotation.
+		* @param {Array<number>} flatCoordinates Flat coordinates.
+		* @param {number} offset Offset.
+		* @param {number} end End.
+		* @param {number} stride Stride.
+		* @private
+		*/
+		drawAnchoredImages_(flatCoordinates, offset, end, stride) {
+			const anchors = lineAnchors(this.repeat_ ? this.repeat_ * this.resolution : Infinity, flatCoordinates, offset, end, stride, this.rotateWithView_);
+			const step = this.rotateWithView_ ? 3 : 2;
+			for (let i = 0, ii = anchors.length; i < ii; i += step) {
+				const rotation = this.rotateWithView_ ? anchors[i + 2] : this.rotation_;
+				this.drawImageAtCoordinate_([anchors[i], anchors[i + 1]], rotation);
+			}
+		}
+		/**
+		* Push one `DRAW_IMAGE` instruction for a single anchor coordinate, using the
+		* provided rotation instead of the image style's own fixed rotation.
+		* @param {import("../../coordinate.js").Coordinate} coordinate Coordinate to draw the image at.
+		* @param {number|undefined} rotation Rotation (radians).
+		* @private
+		*/
+		drawImageAtCoordinate_(coordinate, rotation) {
+			const myBegin = this.coordinates.length;
+			const myEnd = this.appendFlatPointCoordinates(coordinate, 2);
+			if (myEnd === myBegin) return;
+			this.appendImageInstruction_(myBegin, myEnd, rotation);
+		}
+		/**
+		* Append one `DRAW_IMAGE` instruction (and its hit-detection counterpart) covering the
+		* coordinates in `this.coordinates` between `myBegin` and `myEnd`.
+		* @param {number} myBegin Begin index into `this.coordinates`.
+		* @param {number} myEnd End index into `this.coordinates`.
+		* @param {number|undefined} rotation Rotation (radians).
+		* @private
+		*/
+		appendImageInstruction_(myBegin, myEnd, rotation) {
 			const imagePixelRatio = this.imagePixelRatio_ ?? 1;
 			const anchorX = this.anchorX_ ?? 0;
 			const anchorY = this.anchorY_ ?? 0;
@@ -36678,7 +36983,7 @@ function(resolution) {
 				originX * imagePixelRatio,
 				originY * imagePixelRatio,
 				this.rotateWithView_,
-				this.rotation_,
+				rotation,
 				[scale[0] * this.pixelRatio / imagePixelRatio, scale[1] * this.pixelRatio / imagePixelRatio],
 				Math.ceil(width * imagePixelRatio),
 				this.declutterMode_,
@@ -36696,13 +37001,12 @@ function(resolution) {
 				this.originX_,
 				this.originY_,
 				this.rotateWithView_,
-				this.rotation_,
+				rotation,
 				this.scale_,
 				this.width_,
 				this.declutterMode_,
 				this.declutterImageWithText_
 			]);
-			this.endGeometry(feature);
 		}
 		/**
 		* @return {import("../canvas.js").SerializableInstructions} the serializable instructions.
@@ -36723,6 +37027,7 @@ function(resolution) {
 			this.rotateWithView_ = void 0;
 			this.rotation_ = void 0;
 			this.width_ = void 0;
+			this.repeat_ = void 0;
 			return super.finish();
 		}
 		/**
@@ -36748,6 +37053,7 @@ function(resolution) {
 			this.rotation_ = imageStyle.getRotation();
 			this.scale_ = imageStyle.getScaleArray();
 			this.width_ = size[0];
+			this.repeat_ = imageStyle.getRepeat();
 			this.declutterMode_ = imageStyle.getDeclutterMode();
 			this.declutterImageWithText_ = sharedData;
 		}
@@ -37255,7 +37561,7 @@ function(resolution) {
 		const chunks = [];
 		let cursor = offset;
 		let chunkM = 0;
-		let currentChunk = flatCoordinates.slice(offset, 2);
+		let currentChunk = flatCoordinates.slice(offset, offset + 2);
 		while (chunkM < chunkLength && cursor + stride < end) {
 			const [x1, y1] = currentChunk.slice(-2);
 			const x2 = flatCoordinates[cursor + stride];
@@ -37929,7 +38235,7 @@ function(resolution) {
 	//#region src/ol/geom/flat/lineoffset.js
 	/**
 	* Offsets a line string to the left / right along its segments direction.
-	* Offset is applied to each segment of the line in the direciton of the segment normal (positive offset goes "right" relative to the line direction).
+	* Offset is applied to each segment of the line in the direction of the segment normal (positive offset goes "right" relative to the line direction).
 	* For very sharp angles between segments, the function falls back to offsetting along the segment normal direction to avoid excessively long miters.
 	*
 	* Coordinates and the offset should be in the same units — either pixels or the same spatial reference system as the input line coordinates.
@@ -40521,6 +40827,12 @@ function(resolution) {
 			lineStringReplay.setFillStrokeStyle(null, strokeStyle);
 			lineStringReplay.drawLineString(geometry, feature, index);
 		}
+		const imageStyle = style.getImage();
+		if (imageStyle && imageStyle.getPlacement() === "line" && imageStyle.getImageState() == ImageState_default.LOADED) {
+			const imageReplay = builderGroup.getBuilder(style.getZIndex(), "Image");
+			imageReplay.setImageStyle(imageStyle);
+			imageReplay.drawLineString(geometry, feature, index);
+		}
 		const textStyle = style.getText();
 		if (textStyle && textStyle.getText()) {
 			const textReplay = builderGroup.getBuilder(style.getZIndex(), "Text");
@@ -40541,6 +40853,12 @@ function(resolution) {
 			const lineStringReplay = builderGroup.getBuilder(style.getZIndex(), "LineString");
 			lineStringReplay.setFillStrokeStyle(null, strokeStyle);
 			lineStringReplay.drawMultiLineString(geometry, feature, index);
+		}
+		const imageStyle = style.getImage();
+		if (imageStyle && imageStyle.getPlacement() === "line" && imageStyle.getImageState() == ImageState_default.LOADED) {
+			const imageReplay = builderGroup.getBuilder(style.getZIndex(), "Image");
+			imageReplay.setImageStyle(imageStyle);
+			imageReplay.drawMultiLineString(geometry, feature, index);
 		}
 		const textStyle = style.getText();
 		if (textStyle && textStyle.getText()) {
@@ -40563,6 +40881,12 @@ function(resolution) {
 			const polygonReplay = builderGroup.getBuilder(style.getZIndex(), "Polygon");
 			polygonReplay.setFillStrokeStyle(fillStyle, strokeStyle);
 			polygonReplay.drawMultiPolygon(geometry, feature, index);
+		}
+		const imageStyle = style.getImage();
+		if (imageStyle && imageStyle.getPlacement() === "line" && imageStyle.getImageState() == ImageState_default.LOADED) {
+			const imageReplay = builderGroup.getBuilder(style.getZIndex(), "Image");
+			imageReplay.setImageStyle(imageStyle);
+			imageReplay.drawMultiPolygon(geometry, feature, index);
 		}
 		const textStyle = style.getText();
 		if (textStyle && textStyle.getText()) {
@@ -40638,6 +40962,12 @@ function(resolution) {
 			const polygonReplay = builderGroup.getBuilder(style.getZIndex(), "Polygon");
 			polygonReplay.setFillStrokeStyle(fillStyle, strokeStyle);
 			polygonReplay.drawPolygon(geometry, feature, index);
+		}
+		const imageStyle = style.getImage();
+		if (imageStyle && imageStyle.getPlacement() === "line" && imageStyle.getImageState() == ImageState_default.LOADED) {
+			const imageReplay = builderGroup.getBuilder(style.getZIndex(), "Image");
+			imageReplay.setImageStyle(imageStyle);
+			imageReplay.drawPolygon(geometry, feature, index);
 		}
 		const textStyle = style.getText();
 		if (textStyle && textStyle.getText()) {
@@ -42961,7 +43291,7 @@ function(tileCoord, pixelRatio, projection) {
 	*
 	* This function takes 3 arguments: an {@link module:ol/extent~Extent} representing
 	* the area to be loaded, a `{number}` representing the resolution (map units per pixel), and a
-	* {@link module:ol/proj/Projection~Projection} for the projection. The function is expeced to return
+	* {@link module:ol/proj/Projection~Projection} for the projection. The function is expected to return
 	* a promise that resolves to an array of features.
 	*
 	* There are also a deprecated signature, with `void` as
@@ -43015,20 +43345,28 @@ function(tileCoord, pixelRatio, projection) {
 		xhr.onload = function(event) {
 			if (!xhr.status || xhr.status >= 200 && xhr.status < 300) {
 				const type = format.getType();
-				try {
-					/** @type {Document|Node|Object|string|undefined} */
-					let source;
-					if (type == "text" || type == "json") source = xhr.responseText;
-					else if (type == "xml") source = xhr.responseXML || xhr.responseText;
-					else if (type == "arraybuffer") source = xhr.response;
-					if (source) success(format.readFeatures(source, {
-						extent,
-						featureProjection: projection
-					}), format.readProjection(source));
-					else failure();
-				} catch {
-					failure();
-				}
+				/** @type {Document|Node|Object|string|undefined} */
+				let source;
+				if (type == "text" || type == "json") source = xhr.responseText;
+				else if (type == "xml") source = xhr.responseXML || xhr.responseText;
+				else if (type == "arraybuffer") source = xhr.response;
+				if (source) {
+					/** @type {Array<FeatureType>} */
+					let features;
+					/** @type {import("./proj/Projection.js").default|undefined} */
+					let dataProjection;
+					try {
+						features = format.readFeatures(source, {
+							extent,
+							featureProjection: projection
+						});
+						dataProjection = format.readProjection(source);
+					} catch {
+						failure();
+						return;
+					}
+					success(features, dataProjection);
+				} else failure();
 			} else failure();
 		};
 		/**
@@ -45085,4 +45423,4 @@ function(tileCoord, pixelRatio, projection) {
 	//#endregion
 })();
 
-//# sourceMappingURL=offscreen-canvas.worker-OuU74lu8.js.map
+//# sourceMappingURL=offscreen-canvas.worker-DHWZzKLq.js.map

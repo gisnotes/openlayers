@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>WMS Capabilities Parsing</title>
+    <title>WMS Capabilities Parsing / WMS 服务元数据能力文档解析</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">WMS Capabilities Parsing</h4>
+        <h4 id="title">WMS Capabilities Parsing / WMS 服务元数据能力文档解析</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,20 +75,20 @@
               data-bs-target="#tag-example-list"
               data-title="wms"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-wms.html&quot;&gt;MapServer WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image.html&quot;&gt;Single Image WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-tiled.html&quot;&gt;Tiled WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-tiled-wrap-180.html&quot;&gt;Tiled WMS Wrapping&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-tilegrid-512x256.html&quot;&gt;WMS 512x256 Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-capabilities.html&quot;&gt;WMS Capabilities Parsing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-getlegendgraphic.html&quot;&gt;WMS GetLegendGraphic&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-svg.html&quot;&gt;WMS loader with SVG format&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time.html&quot;&gt;WMS Time&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time-webgl.html&quot;&gt;WMS Time (WebGL)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;多投影栅格数据动态重投影 (Raster Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-no-proj.html&quot;&gt;无投影转换定义的 WMS (WMS without Projection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;自定义投影转换的瓦片 WMS (Custom Tiled WMS)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;集成 Proj4js 的单图像 WMS (Single Image WMS with Proj4js)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;Custom Tiled WMS / 自定义投影转换的瓦片 WMS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-wms.html&quot;&gt;MapServer WMS / MapServer WMS 服务集成与高清屏优化&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection / 多投影栅格数据动态重投影&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image.html&quot;&gt;Single Image WMS / 单图像动态 WMS 服务&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js / 集成 Proj4js 的单图像 WMS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-tiled.html&quot;&gt;Tiled WMS / 瓦片式动态 WMS 服务&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-tiled-wrap-180.html&quot;&gt;Tiled WMS Wrapping / 瓦片式 WMS 跨 180° 经线连续环绕&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-tilegrid-512x256.html&quot;&gt;WMS 512x256 Tiles / WMS 512x256 自定义矩形瓦片网格&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-capabilities.html&quot;&gt;WMS Capabilities Parsing / WMS 服务元数据能力文档解析&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-getlegendgraphic.html&quot;&gt;WMS GetLegendGraphic / WMS 动态图例获取与尺度自适应&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-svg.html&quot;&gt;WMS loader with SVG format / 采用 SVG 矢量格式的 WMS 加载器&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time-webgl.html&quot;&gt;WMS Time (WebGL) / WebGL WMS 时序动态瓦片平滑过渡渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time.html&quot;&gt;WMS Time / WMS 时间维度时序雷达动态播放&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-no-proj.html&quot;&gt;WMS without Projection / 无投影转换定义的 WMS&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >14</a>
@@ -102,7 +102,7 @@
               data-bs-target="#tag-example-list"
               data-title="capabilities"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-capabilities.html&quot;&gt;WMS Capabilities Parsing&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-capabilities.html&quot;&gt;WMS Capabilities Parsing / WMS 服务元数据能力文档解析&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -118,7 +118,7 @@
               data-bs-target="#tag-example-list"
               data-title="getcapabilities"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-capabilities.html&quot;&gt;WMS Capabilities Parsing&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-capabilities.html&quot;&gt;WMS Capabilities Parsing / WMS 服务元数据能力文档解析&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -147,8 +147,23 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of parsing a WMS GetCapabilities response.</p>
-        <div id="docs"><p>This example shows the contents of the result object from parsing a WMS capabilities response.</p>
+        <p id="shortdesc">Example of parsing a WMS GetCapabilities response. / 使用 ol/format/WMSCapabilities 解析 WMS 服务的 GetCapabilities XML 文档并提取图层元数据。</p>
+        <div id="docs"><h2>This example shows the contents of the result object from parsing a WMS capabilities response.
+本示例展示如何使用 <code>ol/format/WMSCapabilities</code> 格式化解析器，将 WMS 服务的 <code>GetCapabilities</code> XML 元数据响应解析为结构化 JavaScript 对象并展示其详细内容。</h2>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 什么是 WMS <code>GetCapabilities</code>？ * <code>GetCapabilities</code> 是 OGC WMS 规范中最核心的自描述元数据请求：</h4>
+<pre><code class="language-text">https://.../wms?SERVICE=WMS&amp;REQUEST=GetCapabilities&amp;VERSION=1.3.0
+</code></pre>
+<ul>
+<li>服务端返回一个大型 XML 文档，详尽记录了：<ul>
+<li><strong>服务级别元数据</strong>：服务标题、摘要、联系人、关键字、操作约束；</li>
+<li><strong>支持的图层树</strong>：每个图层的 <code>Name</code>、<code>Title</code>、<code>Abstract</code>、支持的投影坐标系列表（<code>CRS</code> / <code>SRS</code>）、地理边界（<code>EX_GeographicBoundingBox</code> 与投影包围盒 <code>BoundingBox</code>）；</li>
+<li><strong>支持的输出格式</strong>：<code>GetMap</code> 格式（<code>image/png</code>, <code>image/jpeg</code>, <code>image/svg+xml</code>）与 <code>GetFeatureInfo</code> 格式（<code>text/html</code>, <code>application/json</code>）；</li>
+<li><strong>样式与维度</strong>：图层关联的 SLD 样式名（<code>Style</code>）、时间维度（<code>Dimension name=&quot;time&quot;</code>）与高程维度（<code>elevation</code>）。</li>
+</ul>
+</li>
+</ul>
+<h4>2. <code>ol/format/WMSCapabilities</code> 的实战价值 * <strong>动态图层目录树生成</strong>：企业级 GIS 平台中，前端通常先请求并解析 <code>GetCapabilities</code>，自动在左侧侧边栏渲染多级图层树，用户勾选图层后才动态实例化 <code>TileWMS</code> 或 <code>ImageWMS</code>； * <strong>坐标系与范围自动校验</strong>：自动比对地图视图当前的投影是否包含在该图层的 <code>CRS</code> 支持列表中，以及自动调用 <code>view.fit(bbox)</code> 居中定位； * <strong>图例与查询能力自适应</strong>：提取图层的 LegendURL 与 Queryable 属性，决定是否启用点击要素查询（<code>GetFeatureInfo</code>）。</h4>
 </div>
       </div>
 
@@ -157,14 +172,20 @@
         <div class="row-fluid">
           <pre><code id="example-js-source" class="language-js">import WMSCapabilities from &#x27;ol/format/WMSCapabilities.js&#x27;;
 
+// Instantiate the WMSCapabilities parser
+// 实例化 WMSCapabilities 元数据解析器
 const parser &#x3D; new WMSCapabilities();
 
+// Fetch sample WMS Capabilities XML document and parse it into a JavaScript object
+// 请求示例 WMS Capabilities XML 文档并将其解析为结构化 JavaScript 对象
 fetch(&#x27;data/ogcsample.xml&#x27;)
   .then(function (response) {
     return response.text();
   })
   .then(function (text) {
     const result &#x3D; parser.read(text);
+    // Render formatted JSON in the pre container
+    // 将格式化后的 JSON 字符串呈现在 DOM 容器中
     document.getElementById(&#x27;log&#x27;).innerText &#x3D; JSON.stringify(result, null, 2);
   });
 </code></pre>
@@ -178,7 +199,7 @@ fetch(&#x27;data/ogcsample.xml&#x27;)
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;WMS Capabilities Parsing&lt;/title&gt;
+    &lt;title&gt;WMS Capabilities Parsing / WMS 服务元数据能力文档解析&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

@@ -1,5 +1,11 @@
 import { $n as VectorLayer, Cn as GeoJSON, Dr as Map, Kn as RenderFeature, Ni as View, Un as VectorSource, Y as proj4, ha as fromLonLat, nt as register, va as get, wa as toLonLat } from "./common.js";
 //#region examples/equal-earth-geojson.js
+/**
+* Equal Earth projection with dynamic center meridian. / 具备动态中央子午线的 Equal Earth 等面积投影定义函数
+* @param {Array<number>} center Current center coordinates / 当前中心点坐标 [lon, lat]
+* @param {number} round Meridian rounding interval in degrees / 中央子午线四舍五入步长（度）
+* @return {import('../src/ol/proj/Projection.js').default} Projection instance / 投影实例
+*/
 function dynEqualEarth(center, round = 15) {
 	const lon0 = Math.round(center[0] / round) * round;
 	const code = `EqualEarth${lon0}`;
@@ -28,6 +34,13 @@ var initialCenter = [11, 0];
 var initialProjection = dynEqualEarth(initialCenter, 1);
 (async () => {
 	const geojson = await (await fetch("https://openlayers.org/data/vector/ecoregions.json")).json();
+	/**
+	* Helper function to instantiate a VectorSource using lightweight RenderFeature.
+	* 使用轻量级 RenderFeature 构建高性能矢量数据源的工厂函数
+	* @param {Object} geojson GeoJSON data / GeoJSON 数据对象
+	* @param {import('../src/ol/proj/Projection.js').default} projection Target projection / 目标投影
+	* @return {VectorSource} Vector source instance / 矢量数据源实例
+	*/
 	function jsonSource(geojson, projection) {
 		return new VectorSource({
 			features: new GeoJSON({
@@ -37,47 +50,6 @@ var initialProjection = dynEqualEarth(initialCenter, 1);
 			overlaps: false
 		});
 	}
-	const vectorLayer = new VectorLayer({
-		source: jsonSource(clipPolygon(geojson, initialCenter[0]), initialProjection),
-		extent: initialProjection.getExtent(),
-		wrapX: false,
-		style: { "fill-color": [
-			"string",
-			["get", "COLOR"],
-			"#eee"
-		] }
-	});
-	const map = new Map({
-		layers: [vectorLayer],
-		target: "map",
-		view: new View({
-			projection: initialProjection,
-			center: initialCenter,
-			zoom: 0,
-			showFullExtent: true
-		})
-	});
-	function handleCenterChange() {
-		const degStep = 5;
-		const curView = map.getView();
-		const center = toLonLat(curView.getCenter(), curView.getProjection());
-		const newProjection = dynEqualEarth(center, degStep);
-		if (curView.getProjection().getCode() !== newProjection.getCode()) {
-			curView.un("change:center", handleCenterChange);
-			const lon0 = Math.round(center[0] / degStep) * degStep;
-			const clippedJson = clipPolygon(geojson, lon0);
-			vectorLayer.setSource(jsonSource(clippedJson, newProjection));
-			map.setView(new View({
-				projection: newProjection,
-				center: fromLonLat(center, newProjection),
-				zoom: curView.getZoom(),
-				rotation: curView.getRotation(),
-				showFullExtent: true
-			}));
-			map.getView().on("change:center", handleCenterChange);
-		}
-	}
-	map.getView().on("change:center", handleCenterChange);
 	function clipPolygon(geojson, lon0) {
 		function roundN(num, n = 10) {
 			return Math.round(num * Math.pow(10, n)) / Math.pow(10, n);
@@ -126,6 +98,47 @@ var initialProjection = dynEqualEarth(initialCenter, 1);
 		}
 		return clippedJson;
 	}
+	const vectorLayer = new VectorLayer({
+		source: jsonSource(clipPolygon(geojson, initialCenter[0]), initialProjection),
+		extent: initialProjection.getExtent(),
+		wrapX: false,
+		style: { "fill-color": [
+			"string",
+			["get", "COLOR"],
+			"#eee"
+		] }
+	});
+	const map = new Map({
+		layers: [vectorLayer],
+		target: "map",
+		view: new View({
+			projection: initialProjection,
+			center: initialCenter,
+			zoom: 0,
+			showFullExtent: true
+		})
+	});
+	function handleCenterChange() {
+		const degStep = 5;
+		const curView = map.getView();
+		const center = toLonLat(curView.getCenter(), curView.getProjection());
+		const newProjection = dynEqualEarth(center, degStep);
+		if (curView.getProjection().getCode() !== newProjection.getCode()) {
+			curView.un("change:center", handleCenterChange);
+			const lon0 = Math.round(center[0] / degStep) * degStep;
+			const clippedJson = clipPolygon(geojson, lon0);
+			vectorLayer.setSource(jsonSource(clippedJson, newProjection));
+			map.setView(new View({
+				projection: newProjection,
+				center: fromLonLat(center, newProjection),
+				zoom: curView.getZoom(),
+				rotation: curView.getRotation(),
+				showFullExtent: true
+			}));
+			map.getView().on("change:center", handleCenterChange);
+		}
+	}
+	map.getView().on("change:center", handleCenterChange);
 	const featureOverlay = new VectorLayer({
 		source: new VectorSource(),
 		map,
@@ -135,6 +148,10 @@ var initialProjection = dynEqualEarth(initialCenter, 1);
 		}
 	});
 	let highlight;
+	/**
+	* Display feature info and manage hover overlay / 探测要素信息并更新悬停高亮
+	* @param {import('../src/ol/pixel.js').Pixel} pixel Screen coordinates / 屏幕坐标
+	*/
 	const displayFeatureInfo = function(pixel) {
 		const feature = map.forEachFeatureAtPixel(pixel, function(feature) {
 			return feature;

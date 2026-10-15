@@ -88,7 +88,7 @@ function fillShapeSelect(shapeTypes) {
 	}).forEach(function(shape) {
 		const option = document.createElement("option");
 		const sightings = shapeTypes[shape];
-		option.text = `${shape} (${sightings} sighting${sightings === 1 ? "" : "s"})`;
+		option.text = `${shape === "all" ? "All shapes / 全部形态" : shape} (${sightings} sighting${sightings === 1 ? "" : "s"} / 次)`;
 		option.value = shape;
 		shapeSelect.appendChild(option);
 	});
@@ -125,8 +125,11 @@ var info = document.getElementById("info");
 map.on("pointermove", function(evt) {
 	if (map.getView().getInteracting() || map.getView().getAnimating()) return;
 	info.innerText = map.forEachFeatureAtPixel(evt.pixel, function(feature) {
-		return `On ${feature.get("datetime")}, lasted ${feature.get("duration")} seconds and had a "${feature.get("shape")}" shape.`;
-	}) || "";
+		const datetime = feature.get("datetime");
+		const duration = feature.get("duration");
+		const shape = feature.get("shape");
+		return `On ${datetime}, lasted ${duration} seconds and had a "${shape}" shape. / 时间：${datetime}，持续 ${duration} 秒，形态为 "${shape}"。`;
+	}) || "None / 暂无";
 });
 //#endregion
 

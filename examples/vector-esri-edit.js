@@ -45,7 +45,7 @@ var map = new Map({
 });
 var typeSelect = document.getElementById("type");
 /**
-* 处理用户交互模式切换（绘制新增 vs 选择修改）
+* Handle interaction mode change between Draw and Modify. / 处理用户交互模式切换（绘制新增 vs 选择修改）
 */
 typeSelect.onchange = function() {
 	draw.setActive(typeSelect.value === "DRAW");

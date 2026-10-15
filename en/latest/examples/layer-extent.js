@@ -1,5 +1,11 @@
 import { Dr as Map, Ni as View, V as TileJSON, ka as transformExtent, yr as TileLayer } from "./common.js";
 //#region examples/layer-extent.js
+/**
+* Transform extent from WGS84 (EPSG:4326) to Web Mercator (EPSG:3857).
+* 将 WGS84 经纬度包围盒转换为 Web 墨卡托投影坐标系包围盒。
+* @param {import("../src/ol/extent.js").Extent} extent WGS84 extent.
+* @return {import("../src/ol/extent.js").Extent} Projected extent.
+*/
 function transform(extent) {
 	return transformExtent(extent, "EPSG:4326", "EPSG:3857");
 }
@@ -48,7 +54,7 @@ new Map({
 		zoom: 1
 	})
 });
-for (const key in extents) document.getElementById(key).onclick = function(event) {
+for (const countryKey in extents) document.getElementById(countryKey).onclick = function(event) {
 	overlay.setExtent(extents[event.target.id]);
 };
 //#endregion

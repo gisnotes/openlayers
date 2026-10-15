@@ -36,7 +36,7 @@ function setup() {
 }
 
 function evaluatePixel(sample) {
-  // Normalized Difference Moisture Index
+  // Normalized Difference Moisture Index / 归一化差值水分指数
   const ndmi = (sample.B08 - sample.B11) / (sample.B08 + sample.B11);
   if (ndmi <= 0) {
     return [3 * sample.B04, 3 * sample.B03, 3 * sample.B02];

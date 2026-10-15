@@ -25,12 +25,18 @@ var popup = new Overlay({
 	stopEvent: false
 });
 map.addOverlay(popup);
+/**
+* Format longitude and latitude coordinates into an HTML table.
+* 将经纬度坐标格式化为 HTML 表格。
+* @param {Array<number>} coordinate Coordinate array [lon, lat].
+* @return {string} Formatted HTML.
+*/
 function formatCoordinate(coordinate) {
 	return `
     <table>
       <tbody>
-        <tr><th>lon</th><td>${coordinate[0].toFixed(2)}</td></tr>
-        <tr><th>lat</th><td>${coordinate[1].toFixed(2)}</td></tr>
+        <tr><th>lon / 经度</th><td>${coordinate[0].toFixed(2)}</td></tr>
+        <tr><th>lat / 纬度</th><td>${coordinate[1].toFixed(2)}</td></tr>
       </tbody>
     </table>`;
 }

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>CartoDB source example</title>
+    <title>CartoDB source example / CartoDB 云端空间数据源与动态 SQL 过滤 (CartoDB Source)</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">CartoDB source example</h4>
+        <h4 id="title">CartoDB source example / CartoDB 云端空间数据源与动态 SQL 过滤 (CartoDB Source)</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,13 +74,13 @@
               data-bs-target="#tag-example-list"
               data-title="simple"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cartodb.html&quot;&gt;CartoDB source example&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cartodb.html&quot;&gt;CartoDB source example / CartoDB 云端空间数据源与动态 SQL 过滤 (CartoDB Source)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles.html&quot;&gt;Mapbox Vector Tiles&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-wrapping.html&quot;&gt;Polygon map wrapping&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rectangle.html&quot;&gt;Rectangle&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./polygon-wrapping.html&quot;&gt;Polygon map wrapping / 多边形跨日界线循环环绕渲染&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rectangle.html&quot;&gt;Rectangle / 矩形几何（fromExtent）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./simple.html&quot;&gt;Simple Map&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer / WebGL 矢量切片图层（MVT 硬件加速渲染）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >7</a>
@@ -94,26 +94,26 @@
               data-bs-target="#tag-example-list"
               data-title="openstreetmap"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./center.html&quot;&gt;Advanced View Positioning&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./attributions.html&quot;&gt;Attributions&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./center.html&quot;&gt;Advanced View Positioning / 高级视口定位与居中 (centerOn &amp;amp; fit)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./attributions.html&quot;&gt;Attributions / 版权署名控件自适应折叠 (Attributions Responsive Collapsing)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-tiles.html&quot;&gt;Canvas Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cartodb.html&quot;&gt;CartoDB source example&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./export-pdf.html&quot;&gt;Export PDF example&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson.html&quot;&gt;GeoJSON&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geolocation.html&quot;&gt;Geolocation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping.html&quot;&gt;Layer Clipping&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cartodb.html&quot;&gt;CartoDB source example / CartoDB 云端空间数据源与动态 SQL 过滤 (CartoDB Source)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./export-pdf.html&quot;&gt;Export PDF example / 导出 PDF 地图示例&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson.html&quot;&gt;GeoJSON / GeoJSON 多几何类型标准解析与多态样式映射&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geolocation.html&quot;&gt;Geolocation / 地理定位服务&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping.html&quot;&gt;Layer Clipping / 图层几何遮罩裁切&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe / 图层卷帘对比&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./localized-openstreetmap.html&quot;&gt;Localized OpenStreetMap&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mouse-position.html&quot;&gt;Mouse Position&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mouse-position.html&quot;&gt;Mouse Position / 鼠标位置坐标控件 (MousePosition)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-wgs84.html&quot;&gt;OpenStreetMap 客户端 WGS84 重投影 (OpenStreetMap Reprojection)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./permalink.html&quot;&gt;Permalink&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scale-line.html&quot;&gt;Scale Line&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./permalink.html&quot;&gt;Permalink / 永久链接与历史状态同步 (Permalink &amp;amp; History API)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scale-line.html&quot;&gt;Scale Line / 比例尺与分段比例条控件 (ScaleLine / ScaleBar)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./simple.html&quot;&gt;Simple Map&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./static-attribution.html&quot;&gt;Static Attribution&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./teleport.html&quot;&gt;Teleporting Maps&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels.html&quot;&gt;Vector Labels&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels-justify-text.html&quot;&gt;Vector Labels - Justify Text&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./static-attribution.html&quot;&gt;Static Attribution / 静态常驻版权署名 (Static Attribution)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./teleport.html&quot;&gt;Teleporting Maps / 地图容器瞬态瞬移 (setTarget)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-clipping-vector.html&quot;&gt;Vector Clipping Layer / 矢量边界裁切图层&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels-justify-text.html&quot;&gt;Vector Labels - Justify Text / 矢量注记文本对齐与段落对齐解耦&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-labels.html&quot;&gt;Vector Labels / 矢量文本标注与全要素排版实战工作台&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rotation.html&quot;&gt;View Rotation&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./scaleline-indiana-east.html&quot;&gt;带比例尺控件的 OpenStreetMap 客户端重投影 (OpenStreetMap Reprojection with ScaleLine Control)&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -129,7 +129,7 @@
               data-bs-target="#tag-example-list"
               data-title="attribution"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cartodb.html&quot;&gt;CartoDB source example&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./cartodb.html&quot;&gt;CartoDB source example / CartoDB 云端空间数据源与动态 SQL 过滤 (CartoDB Source)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -152,7 +152,7 @@
 <form class="row">
   <div class="col-auto">
     <div class="input-group">
-      <label for="country-area" class="input-group-text">Show european countries larger than</label>
+      <label for="country-area" class="input-group-text">Show european countries larger than (展示面积大于此值的欧洲国家)</label>
       <select id="country-area" class="form-select">
         <option value="0" default>0 ㎢</option>
         <option value="5000">5000 ㎢</option>
@@ -164,14 +164,45 @@
   </div>
 </form>
 
+
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
           <input id="codesandbox-params" type="hidden" name="parameters">
         </form>
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of a cartodb map.</p>
-        <div id="docs"><p>A simple example with an anonymous cartodb map</p>
+        <p id="shortdesc">Example of a cartodb map. / 演示如何使用 CartoDB 瓦片数据源加载匿名地图（Anonymous Map），并结合 CartoCSS 渲染与动态 SQL 空间条件查询欧洲国家边界。</p>
+        <div id="docs"><p>
+  A simple example with an anonymous cartodb map.
+</p> <p>
+  此示例演示了如何通过 <code>ol/source/CartoDB</code> 接入云端空间数据库服务（CARTO / CartoDB 匿名地图 API）。
+  系统通过在前端动态构造包含 CartoCSS 样式规则与 PostGIS SQL 查询语句的配置对象（<code>mapConfig</code>），由云端服务器实时根据用户筛选的国土面积阈值进行空间过滤并动态渲染瓦片，前端调用 <code>setConfig()</code> 即可无缝实现切片热重载。
+</p> <hr> <h3>📚 学习记录与技术深度解读</h3>
+<h4>1. 核心架构与设计思想</h4> <ul>
+  <li><strong>云原生空间数据库动态切片渲染（Cloud CartoDB & Maps API）：</strong>
+    对于拥有数百万级复杂多边形或海量空间大数据的业务，直接向前端浏览器传输完整矢量数据（GeoJSON）会导致严重的内存溢出与渲染丢帧。
+    CartoDB 采用了“服务端数据库级渲染”架构：前端仅发送极轻量的 SQL 查询（<code>select * from european_countries_e where area > n</code>）与样式规则（CartoCSS），云端 PostGIS 引擎完成空间筛选与多边形光栅化切片，再以极轻量的 WebP/PNG 瓦片推流给 OpenLayers。
+  </li>
+  <li><strong>数据源配置热更新机制（Dynamic Config Hot-Reload）：</strong>
+    当用户改变筛选条件（如选择不同的国家面积阈值）时，不需要销毁并重新创建 <code>TileLayer</code> 或 <code>CartoDB</code> 实例。
+    直接调用 <code>cartoDBSource.setConfig(mapConfig)</code>，OpenLayers 内部会自动向 CartoDB Maps API 发起新的实例协商请求（Instantiation），获取全新的瓦片 URL 模板并以平滑过渡的方式刷新屏幕瓦片缓存。
+  </li>
+</ul>
+<h4>2. 源码与关键 API 剖析</h4> <ul>
+  <li><code>new CartoDB({ account: '...', config: mapConfig })</code>：初始化 CartoDB 瓦片源，<code>account</code> 对应空间数据库租户命名空间。</li>
+  <li><code>mapConfig.layers[0].options.cartocss</code>：基于类似 CSS 的声明式语法定义要素填充色、描边宽度与透明度。</li>
+  <li><code>cartoDBSource.setConfig(mapConfig)</code>：提交新配置并触发云端重新切片。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优</h4> <ul>
+  <li><strong>匿名地图（Anonymous Maps）权限隔离与 SQL 防注入：</strong>
+    由于匿名配置直接暴露在公网前端，后端的 CartoDB 数据表必须严格设定为只读视图（Read-only View），禁止对核心生产表开放写入权限。
+    在拼接 SQL 字符串时，必须对前端传入的数值参数进行类型校验（如 <code>parseInt(val, 10)</code>）以杜绝 SQL 注入。
+  </li>
+  <li><strong>切片热更新闪烁防御：</strong>
+    调用 <code>setConfig()</code> 时，旧瓦片会被清空并等待新瓦片加载完成，可能产生轻微白屏闪烁。
+    可通过在 <code>TileLayer</code> 配置 <code>cacheSize: 512</code> 以及适当的淡入淡出过渡（<code>transition: 200</code>）来大幅优化视觉平滑度。
+  </li>
+</ul>
 </div>
       </div>
 
@@ -184,6 +215,8 @@ import TileLayer from &#x27;ol/layer/Tile.js&#x27;;
 import CartoDB from &#x27;ol/source/CartoDB.js&#x27;;
 import OSM from &#x27;ol/source/OSM.js&#x27;;
 
+// CartoDB Anonymous Map configuration object with CartoCSS styling
+// CartoDB 匿名地图配置对象，定义基于 CartoCSS 的多边形渲染样式（红色填充）
 const mapConfig &#x3D; {
   &#x27;layers&#x27;: [
     {
@@ -196,6 +229,8 @@ const mapConfig &#x3D; {
   ],
 };
 
+// Helper function: dynamically construct SQL spatial query based on area threshold
+// 辅助函数：根据用户选择的国土面积阈值，动态拼接 PostGIS 空间过滤 SQL 语句
 function setArea(n) {
   mapConfig.layers[0].options.sql &#x3D;
     &#x27;select * from european_countries_e where area &gt; &#x27; + n;
@@ -203,16 +238,22 @@ function setArea(n) {
 const areaSelect &#x3D; document.getElementById(&#x27;country-area&#x27;);
 setArea(areaSelect.value);
 
+// Initialize CartoDB tile source pointing to the documentation account
+// 初始化 CartoDB 切片数据源，指向官方公开的 documentation 租户空间
 const cartoDBSource &#x3D; new CartoDB({
   account: &#x27;documentation&#x27;,
   config: mapConfig,
 });
 
+// Listen to select change event, update SQL query and trigger cloud re-tiling via setConfig
+// 监听下拉菜单变更事件，更新 SQL 查询并通过 setConfig 触发云端即时重新切片
 areaSelect.addEventListener(&#x27;change&#x27;, function () {
   setArea(this.value);
   cartoDBSource.setConfig(mapConfig);
 });
 
+// Initialize map with OpenStreetMap base layer and CartoDB overlay layer
+// 初始化地图，叠加 OpenStreetMap 底图与 CartoDB 空间分析业务图层
 const map &#x3D; new Map({
   layers: [
     new TileLayer({
@@ -239,7 +280,7 @@ const map &#x3D; new Map({
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;CartoDB source example&lt;/title&gt;
+    &lt;title&gt;CartoDB source example / CartoDB 云端空间数据源与动态 SQL 过滤 (CartoDB Source)&lt;/title&gt;
     &lt;link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css"&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
@@ -254,7 +295,7 @@ const map &#x3D; new Map({
     &lt;form class&#x3D;&quot;row&quot;&gt;
       &lt;div class&#x3D;&quot;col-auto&quot;&gt;
         &lt;div class&#x3D;&quot;input-group&quot;&gt;
-          &lt;label for&#x3D;&quot;country-area&quot; class&#x3D;&quot;input-group-text&quot;&gt;Show european countries larger than&lt;/label&gt;
+          &lt;label for&#x3D;&quot;country-area&quot; class&#x3D;&quot;input-group-text&quot;&gt;Show european countries larger than (展示面积大于此值的欧洲国家)&lt;/label&gt;
           &lt;select id&#x3D;&quot;country-area&quot; class&#x3D;&quot;form-select&quot;&gt;
             &lt;option value&#x3D;&quot;0&quot; default&gt;0 ㎢&lt;/option&gt;
             &lt;option value&#x3D;&quot;5000&quot;&gt;5000 ㎢&lt;/option&gt;
@@ -265,6 +306,7 @@ const map &#x3D; new Map({
         &lt;/div&gt;
       &lt;/div&gt;
     &lt;/form&gt;
+    
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
   &lt;/body&gt;

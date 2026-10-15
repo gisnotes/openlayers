@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Raster Source</title>
+    <title>Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Raster Source</h4>
+        <h4 id="title">Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,13 +75,13 @@
               data-bs-target="#tag-example-list"
               data-title="raster"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./contour-interpolation.html&quot;&gt;Interpolating Contours from a DEM&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./pmtiles-image.html&quot;&gt;PMTiles Image Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./raster.html&quot;&gt;Raster Source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sea-level.html&quot;&gt;Sea Level&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./shaded-relief.html&quot;&gt;Shaded Relief&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./contour-interpolation.html&quot;&gt;Interpolating Contours from a DEM / DEM 高程插值与动态等高线生成&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source / 使用 Raster 数据源计算 COG 的 NDVI&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./pmtiles-image.html&quot;&gt;PMTiles Image Tiles / PMTiles 单文件云原生切片归档读取&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./raster.html&quot;&gt;Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing / 种子点区域生长与交互式影像分割&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sea-level.html&quot;&gt;Sea Level / MapTiler Terrain-RGB 动态海平面上升模拟&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./shaded-relief.html&quot;&gt;Shaded Relief / 动态日照山体阴影（Hillshade）实时渲染&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >7</a>
@@ -95,7 +95,7 @@
               data-bs-target="#tag-example-list"
               data-title="pixel"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./raster.html&quot;&gt;Raster Source&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./raster.html&quot;&gt;Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoomify.html&quot;&gt;Zoomify 亿级超大图像金字塔 (Zoomify)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
@@ -111,31 +111,31 @@
               data-title="maptiler"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom / 视图缩放级别区间约束（minZoom 与 maxZoom）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop.html&quot;&gt;Drag-and-Drop / 拖拽加载文件&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector / 矢量图像图层拖拽加载&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen.html&quot;&gt;Full Screen Control&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./gpx.html&quot;&gt;GPX Data&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-filter.html&quot;&gt;Image Filters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml.html&quot;&gt;KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-spy.html&quot;&gt;Layer Spy&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./magnify.html&quot;&gt;Magnify&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen.html&quot;&gt;Full Screen Control / 全屏显示控件 (FullScreen)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom / 全屏联动拖拽旋转与复合缩放&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./gpx.html&quot;&gt;GPX Data / GPX 户外轨迹数据解析与多几何类型着色 (GPX Data)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-filter.html&quot;&gt;Image Filters / 图像滤镜&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml.html&quot;&gt;KML / KML 矢量图层加载与要素拾取 (KML Data)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-spy.html&quot;&gt;Layer Spy / 图层探照灯（透镜探查）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe / 图层卷帘对比&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./magnify.html&quot;&gt;Magnify / 局部放大镜（像素插值放大）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./raster.html&quot;&gt;Raster Source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./side-by-side.html&quot;&gt;Shared Views&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./raster.html&quot;&gt;Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing / 种子点区域生长与交互式影像分割&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection by Code / 坐标系搜索与栅格动态重投影 (Reprojection by Code)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./side-by-side.html&quot;&gt;Shared Views / 共享视图多屏联动 (Shared Views)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels / 沿线道路注记（线型文本跟随）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-style.html&quot;&gt;Vector tiles created from a Mapbox Style object / 使用 Mapbox 样式对象创建矢量切片地图&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-4326.html&quot;&gt;Vector tiles in EPSG:4326&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-retina.html&quot;&gt;XYZ Retina Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-4326.html&quot;&gt;Vector tiles in EPSG:4326 / EPSG:4326 坐标系矢量切片&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature / WFS 空间矢量要素过滤查询与叠加&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS / GeoServer WFS 视口 BBOX 动态要素加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates / 地理坐标系下的 WFS 瓦片化加载与 useGeographic&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-retina.html&quot;&gt;XYZ Retina Tiles / XYZ 视网膜高清切片 (@2x)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >26</a>
@@ -165,7 +165,7 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Demonstrates pixelwise operations with a raster source.</p>
+        <p id="shortdesc">Demonstrates pixelwise operations with a raster source. / 演示如何使用 ol/source/Raster 在 Web Worker 中对卫星航拍切片执行逐像素运算，实时计算植被绿度指数（VGI）并联动 D3 直方图进行面积统计与阈值过滤。</p>
         <div id="docs"><p>
   This example uses a <code>ol/source/Raster</code> to generate data
   based on another source.  The raster source accepts any number of
@@ -180,6 +180,57 @@
   those pixels based on a threshold value (values above the
   threshold are green and those below are transparent).
 </p>
+<p>
+  本示例演示了如何利用 <code>ol/source/Raster</code>（栅格数据源）对输入数据源执行客户端逐像素级算术运算。栅格数据源支持接收任意数量的输入图层（切片或单图），在后台 Web Worker 线程流水线中处理输入像素，并将运算结果直接作为输出图层的可视化像素流。
+</p> <p>
+  本例以卫星航拍影像切片作为输入源，针对视口内每个像素点，实时计算植被绿度指数（<a href="https://www.tandfonline.com/doi/abs/10.1080/10106040108542184#.Vb90ITBViko">VGI</a>）。通过与右侧 D3.js 动态频数直方图联动，根据用户鼠标悬停选定的动态阈值，将高于阈值的健康植被高亮着色为半透明荧光绿，同时基于地图分辨率即时解算出当前地表覆盖英亩面积。
+</p>
+---
+### 📚 学习记录与技术深度解读 (Learning Notes)
+#### 1. 核心架构与设计机制 (Core Architecture & Mechanics) - <strong>Web Worker 多线程栅格处理流水线</strong>：
+  在主线程执行全图数十万甚至数百万像素的数学计算会导致 UI 帧率断崖式下跌。<code>ol/source/Raster</code> 内部维护了多线程 Web Worker 池：
+  - 主线程准备当前视口各输入源的 <code>ImageData</code> 像素阵列；
+  - 将像素缓冲区通过 <code>postMessage</code> 传递给后台 Worker；
+  - Worker 内部无阻塞执行纯函数式数学变换并回传结果；
+  - 最终由 <code>ImageLayer</code> 作为动态光栅画布完成无缝渲染。
+- <strong>植被绿度指数（Vegetation Greenness Index, VGI）原理</strong>：
+  在没有近红外（NIR）波段的常规 RGB 航拍影像中，VGI 是一种经典的经验估算指数：
+  $$\text{VGI} = \frac{2G - R - B}{2G + R + B}$$
+  归一化后，绿色通道占比显著高于红蓝通道的像素点呈现出更高的 VGI 值（通常大于 0.2），代表地表覆盖有较高密度的健康绿色植被。<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns) - <strong>Worker 沙箱隔离与 <code>lib</code> 辅助函数注入</strong>：</h4>
+<pre><code class="language-javascript">const raster = new RasterSource({
+  sources: [aerial],
+  operation: function (pixels, data) {
+    const pixel = pixels[0];
+    const value = vgi(pixel);
+    summarize(value, data.counts); // 统计直方图分箱
+    if (value &gt;= data.threshold) {
+      pixel[0] = 0; pixel[1] = 255; pixel[2] = 0; pixel[3] = 128; // 高于阈值标绿
+    } else {
+      pixel[3] = 0; // 低于阈值完全透明
+    }
+    return pixel;
+  },
+  lib: {
+    vgi: vgi,
+    summarize: summarize, // 注入函数体至 Worker 全局上下文
+  },
+});
+</code></pre>
+<p>  由于 Web Worker 无法直接访问主线程闭包变量，必须通过 <code>lib</code> 属性显式注入依赖工具函数。</p>
+<ul>
+<li><strong>双向双向事件管道与响应式图表联动</strong>：<ul>
+<li><code>beforeoperations</code>：在计算启动前将主线程的状态（如 <code>threshold</code> 与空频数数组 <code>data.counts</code>）挂入事件上下文；</li>
+<li><code>afteroperations</code>：在计算完成时捕获 Worker 回传的聚合统计值，触发 <code>schedulePlot</code> 驱动 D3.js 绘制直方图柱状图与面积计算；</li>
+<li>直方图交互：鼠标滑过柱子时调用 <code>raster.set('threshold', threshold); raster.changed();</code>，触发光栅源以 60 FPS 重新计算渲染。</li>
+</ul>
+</li>
+</ul>
+<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices) - <strong>跨域 Canvas 像素污染（CORS Tainted Canvas）</strong>：</h4>
+<p>  <code>ol/source/Raster</code> 需要读取切片的底层二进制像素数组。输入切片源（<code>aerial</code>）必须显式声明 <code>crossOrigin: ''</code>。如果切片服务器未正确配置 <code>Access-Control-Allow-Origin: *</code>，浏览器 Canvas 会被标记为受污染，直接抛出 SecurityError 导致光栅运算崩溃。</p>
+<ul>
+<li><strong>直方图重绘节流防抖（Debounced Plotting）</strong>：
+在地图连续漫游平移时，每个渲染帧都会触发 <code>afteroperations</code>。代码中通过 <code>setTimeout(..., 1000 / 60)</code> 实现了基于 RAF 频率的轻量任务调度，避免高频 DOM 操作拖慢地图平移流畅度。</li>
+</ul>
 </div>
       </div>
 
@@ -202,10 +253,10 @@ const maxVgi &#x3D; 0.5;
 const bins &#x3D; 10;
 
 /**
- * Calculate the Vegetation Greenness Index (VGI) from an input pixel.  This
- * is a rough estimate assuming that pixel values correspond to reflectance.
- * @param {Array&lt;number&gt;} pixel An array of [R, G, B, A] values.
- * @return {number} The VGI value for the given pixel.
+ * Calculate the Vegetation Greenness Index (VGI) from an input pixel.
+ * 从输入像素计算植被绿度指数 (VGI)，基于地表反射率近似假定
+ * @param {Array&lt;number&gt;} pixel An array of [R, G, B, A] values. / 像素四通道值
+ * @return {number} The VGI value for the given pixel. / 像素对应的 VGI 指数值
  */
 function vgi(pixel) {
   const r &#x3D; pixel[0] / 255;
@@ -215,16 +266,16 @@ function vgi(pixel) {
 }
 
 /**
- * Summarize values for a histogram.
- * @param {number} value A VGI value.
- * @param {Object} counts An object for keeping track of VGI counts.
+ * Summarize values for a histogram. / 将 VGI 指数值归入直方图分箱统计中
+ * @param {number} value A VGI value. / 待统计的 VGI 指数值
+ * @param {Object} counts An object for keeping track of VGI counts. / 统计容器对象
  */
 function summarize(value, counts) {
   const min &#x3D; counts.min;
   const max &#x3D; counts.max;
   const num &#x3D; counts.values.length;
   if (value &lt; min) {
-    // do nothing
+    // do nothing / 低于最小值忽略
   } else if (value &gt;&#x3D; max) {
     counts.values[num - 1] +&#x3D; 1;
   } else {
@@ -233,15 +284,13 @@ function summarize(value, counts) {
   }
 }
 
-/**
- * Use aerial imagery as the input data for the raster source.
- */
-
+// MapTiler credentials and attributions / MapTiler 访问密钥与版权信息
 const key &#x3D; &#x27;Get your own API key at https://www.maptiler.com/cloud/&#x27;;
 const attributions &#x3D;
   &#x27;&lt;a href&#x3D;&quot;https://www.maptiler.com/copyright/&quot; target&#x3D;&quot;_blank&quot;&gt;&amp;copy; MapTiler&lt;/a&gt; &#x27; +
   &#x27;&lt;a href&#x3D;&quot;https://www.openstreetmap.org/copyright&quot; target&#x3D;&quot;_blank&quot;&gt;&amp;copy; OpenStreetMap contributors&lt;/a&gt;&#x27;;
 
+// Aerial imagery source for pixel manipulation / 用于像素运算的卫星正射影像数据源
 const aerial &#x3D; new ImageTile({
   attributions: attributions,
   url: &#x27;https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key&#x3D;&#x27; + key,
@@ -251,16 +300,16 @@ const aerial &#x3D; new ImageTile({
 });
 
 /**
- * Create a raster source where pixels with VGI values above a threshold will
- * be colored green.
+ * Raster source executing VGI operation and threshold coloring in Web Worker.
+ * 在 Web Worker 中执行 VGI 运算与阈值着色的光栅数据源
  */
 const raster &#x3D; new RasterSource({
   sources: [aerial],
   /**
-   * Run calculations on pixel data.
-   * @param {Array} pixels List of pixels (one per source).
-   * @param {Object} data User data object.
-   * @return {Array} The output pixel.
+   * Run calculations on pixel data. / 逐像素运算核心执行函数
+   * @param {Array&lt;Array&lt;number&gt;&gt;} pixels List of pixels (one per source). / 各输入源像素列表
+   * @param {Object} data User data object passed from beforeoperations. / 用户上下文数据
+   * @return {Array&lt;number&gt;} The output pixel. / 运算后输出的像素四通道值
    */
   operation: function (pixels, data) {
     const pixel &#x3D; pixels[0];
@@ -283,6 +332,13 @@ const raster &#x3D; new RasterSource({
 });
 raster.set(&#x27;threshold&#x27;, 0.25);
 
+/**
+ * Create histogram counting structure. / 创建直方图统计数据结构
+ * @param {number} min Minimum value / 最小值
+ * @param {number} max Maximum value / 最大值
+ * @param {number} num Number of bins / 分箱数量
+ * @return {Object} Counts container / 统计结构对象
+ */
 function createCounts(min, max, num) {
   const values &#x3D; new Array(num);
   for (let i &#x3D; 0; i &lt; num; ++i) {
@@ -296,15 +352,18 @@ function createCounts(min, max, num) {
   };
 }
 
+// Pass state to worker before operations start / 运算启动前将主线程状态传入 Worker 上下文
 raster.on(&#x27;beforeoperations&#x27;, function (event) {
   event.data.counts &#x3D; createCounts(minVgi, maxVgi, bins);
   event.data.threshold &#x3D; raster.get(&#x27;threshold&#x27;);
 });
 
+// Update D3 histogram after worker finishes / Worker 计算完成后更新 D3 直方图
 raster.on(&#x27;afteroperations&#x27;, function (event) {
   schedulePlot(event.resolution, event.data.counts, event.data.threshold);
 });
 
+// Initialize map with base satellite layer and computed raster overlay / 初始化地图
 const map &#x3D; new Map({
   layers: [
     new TileLayer({
@@ -324,6 +383,12 @@ const map &#x3D; new Map({
 });
 
 let timer &#x3D; null;
+/**
+ * Throttled plotting scheduler. / 节流调度直方图重绘以避免高频更新阻塞
+ * @param {number} resolution View resolution / 视图分辨率
+ * @param {Object} counts Histogram counts / 直方图统计数据
+ * @param {number} threshold Current VGI threshold / 当前阈值
+ */
 function schedulePlot(resolution, counts, threshold) {
   if (timer) {
     clearTimeout(timer);
@@ -343,6 +408,13 @@ const chartRect &#x3D; chart.node().getBoundingClientRect();
 
 const tip &#x3D; select(document.body).append(&#x27;div&#x27;).attr(&#x27;class&#x27;, &#x27;tip&#x27;);
 
+/**
+ * Render D3 SVG histogram and bind interactive threshold drag/hover.
+ * 渲染 D3 SVG 直方图并绑定柱条悬停动态调整阈值与面积气泡提示
+ * @param {number} resolution View resolution / 视图分辨率
+ * @param {Object} counts Histogram counts / 直方图统计数据
+ * @param {number} threshold Current VGI threshold / 当前阈值
+ */
 function plot(resolution, counts, threshold) {
   const yScale &#x3D; scaleLinear()
     .domain([0, max(counts.values)])
@@ -372,6 +444,7 @@ function plot(resolution, counts, threshold) {
     })
     .attr(&#x27;height&#x27;, yScale);
 
+  // Mousemove adjusts threshold in real time / 移动鼠标实时调整光栅源阈值并刷新
   bar.on(&#x27;mousemove&#x27;, function () {
     const index &#x3D; bar.nodes().indexOf(this);
     const threshold &#x3D; counts.min + index * counts.delta;
@@ -381,6 +454,7 @@ function plot(resolution, counts, threshold) {
     }
   });
 
+  // Mouseover shows tooltip with calculated acreage / 悬停显示估算的覆盖英亩面积
   bar.on(&#x27;mouseover&#x27;, function (event) {
     const index &#x3D; bar.nodes().indexOf(this);
     let area &#x3D; 0;
@@ -406,6 +480,12 @@ function plot(resolution, counts, threshold) {
   });
 }
 
+/**
+ * Format tooltip text with commas for thousands. / 格式化提示框英亩面积与千分位
+ * @param {number} value VGI threshold / VGI 阈值
+ * @param {number} area Area in square meters / 面积（平方米）
+ * @return {string} Formatted HTML string / 格式化后的 HTML 内容
+ */
 function message(value, area) {
   const acres &#x3D; (area / 4046.86)
     .toFixed(0)
@@ -423,7 +503,7 @@ function message(value, area) {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Raster Source&lt;/title&gt;
+    &lt;title&gt;Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Region Growing</title>
+    <title>Region Growing / 种子点区域生长与交互式影像分割</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Region Growing</h4>
+        <h4 id="title">Region Growing / 种子点区域生长与交互式影像分割</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,13 +75,13 @@
               data-bs-target="#tag-example-list"
               data-title="raster"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./contour-interpolation.html&quot;&gt;Interpolating Contours from a DEM&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./pmtiles-image.html&quot;&gt;PMTiles Image Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sea-level.html&quot;&gt;Sea Level&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./shaded-relief.html&quot;&gt;Shaded Relief&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./contour-interpolation.html&quot;&gt;Interpolating Contours from a DEM / DEM 高程插值与动态等高线生成&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-math-raster.html&quot;&gt;NDVI from a COG with a raster source / 使用 Raster 数据源计算 COG 的 NDVI&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./pmtiles-image.html&quot;&gt;PMTiles Image Tiles / PMTiles 单文件云原生切片归档读取&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing / 种子点区域生长与交互式影像分割&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./sea-level.html&quot;&gt;Sea Level / MapTiler Terrain-RGB 动态海平面上升模拟&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./shaded-relief.html&quot;&gt;Shaded Relief / 动态日照山体阴影（Hillshade）实时渲染&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >7</a>
@@ -95,7 +95,7 @@
               data-bs-target="#tag-example-list"
               data-title="regiongrowing"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing / 种子点区域生长与交互式影像分割&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -110,31 +110,31 @@
               data-title="maptiler"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cog-projection.html&quot;&gt;COG with automatic Projection Lookup / COG 自动投影查找与多投影叠加&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./zoom-constrained.html&quot;&gt;Constrained Zoom / 视图缩放级别区间约束（minZoom 与 maxZoom）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop.html&quot;&gt;Drag-and-Drop / 拖拽加载文件&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./drag-and-drop-image-vector.html&quot;&gt;Drag-and-Drop Image Vector / 矢量图像图层拖拽加载&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen.html&quot;&gt;Full Screen Control&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./gpx.html&quot;&gt;GPX Data&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-filter.html&quot;&gt;Image Filters&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml.html&quot;&gt;KML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-spy.html&quot;&gt;Layer Spy&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./magnify.html&quot;&gt;Magnify&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen.html&quot;&gt;Full Screen Control / 全屏显示控件 (FullScreen)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom / 全屏联动拖拽旋转与复合缩放&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./gpx.html&quot;&gt;GPX Data / GPX 户外轨迹数据解析与多几何类型着色 (GPX Data)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-filter.html&quot;&gt;Image Filters / 图像滤镜&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./kml.html&quot;&gt;KML / KML 矢量图层加载与要素拾取 (KML Data)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-spy.html&quot;&gt;Layer Spy / 图层探照灯（透镜探查）&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe / 图层卷帘对比&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./magnify.html&quot;&gt;Magnify / 局部放大镜（像素插值放大）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./side-by-side.html&quot;&gt;Shared Views&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./region-growing.html&quot;&gt;Region Growing / 种子点区域生长与交互式影像分割&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;Reprojection by Code / 坐标系搜索与栅格动态重投影 (Reprojection by Code)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./side-by-side.html&quot;&gt;Shared Views / 共享视图多屏联动 (Shared Views)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./street-labels.html&quot;&gt;Street Labels / 沿线道路注记（线型文本跟随）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-style.html&quot;&gt;Vector tiles created from a Mapbox Style object / 使用 Mapbox 样式对象创建矢量切片地图&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-4326.html&quot;&gt;Vector tiles in EPSG:4326&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-retina.html&quot;&gt;XYZ Retina Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-by-code.html&quot;&gt;坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-4326.html&quot;&gt;Vector tiles in EPSG:4326 / EPSG:4326 坐标系矢量切片&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-getfeature.html&quot;&gt;WFS - GetFeature / WFS 空间矢量要素过滤查询与叠加&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs.html&quot;&gt;WFS / GeoServer WFS 视口 BBOX 动态要素加载&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-wfs-geographic.html&quot;&gt;WFS with geographic coordinates / 地理坐标系下的 WFS 瓦片化加载与 useGeographic&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-retina.html&quot;&gt;XYZ Retina Tiles / XYZ 视网膜高清切片 (@2x)&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >26</a>
@@ -168,7 +168,7 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Grow a region from a seed pixel</p>
+        <p id="shortdesc">Grow a region from a seed pixel. / 演示如何使用 ol/source/Raster 在 Web Worker 中执行图像级（image operation）区域生长算法（Region Growing / 泛洪填充），根据点击种子点与颜色容差动态提取连通地物。</p>
         <div id="docs"><p>Click a region on the map. The computed region will be red.</p> <p>
   This example uses a <code>ol/source/Raster</code> to generate data
   based on another source.  The raster source accepts any number of
@@ -186,6 +186,44 @@
   This example also shows how an additional function can be made available
   to the operation.
 </p>
+<p>点击地图上的任意区域，系统将以该点击位置为种子点，动态计算并用红色渲染出连通分割区域。</p> <p>
+  本示例利用 <code>ol/source/Raster</code> 的 <code>operationType: 'image'</code> 整图运算模式，在后台 Web Worker 中运行经典的区域生长（Region Growing / Flood Fill）空间图像分割算法。
+  当用户点击地图时，地图坐标被转换为光栅像素种子，算法以广度优先搜索（BFS）向四周 4-邻域扩散；若相邻像素与种子像素的 RGB 颜色差异低于滑块设定的容差阈值（Threshold），则将其归入目标区域并高亮着色，实现纯前端、零服务端的交互式遥感水体或农田图斑提取。
+</p>
+---
+### 📚 学习记录与技术深度解读 (Learning Notes)
+#### 1. 核心架构与设计机制 (Core Architecture & Mechanics) - <strong>整图操作模式 (`operationType: 'image'`)</strong>：
+  通常的 `RasterSource` 采用逐像素模式（`pixel` 模式），每次函数调用只能访问单点孤立的像素数组 `[R, G, B, A]`，无法获知相邻像素信息。而将 `operationType` 设为 `'image'` 时：
+  - Web Worker 接收到完整的 `ImageData` 对象（包含 `width`、`height` 与连续紧凑的 `Uint8ClampedArray` 数据缓冲区）；
+  - 开发者可以自由实现依赖空间拓扑与邻域遍历的高级算子（如区域生长、Sobel 边缘检测、高斯模糊、腐蚀膨胀等）。
+- <strong>广度优先搜索（BFS）区域生长状态机</strong>：
+  算法采用双缓冲边缘队列（`edge` 与 `newedge`）：
+  1. 从种子像素索引 `seedIdx` 开始，读取基准色 $(R_{seed}, G_{seed}, B_{seed})$；
+  2. 弹出当前边缘像素，调用 `next4Edges` 检查上、下、左、右 4-邻域；
+  3. 判定颜色欧氏相似度：$|R - R_{seed}| < \Delta \land |G - G_{seed}| < \Delta \land |B - B_{seed}| < \Delta$；
+  4. 命中像素在输出缓冲区染为红色，并将其压入下一轮生长边界；
+  5. <strong>原地访问标记（In-place Visited Flag）</strong>：巧妙将输入像素的 Alpha 通道置零（`inputData[ci + 3] = 0`），无需额外分配庞大的布尔访问标记矩阵，彻底杜绝回溯死循环并优化垃圾回收。<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns) - <strong>视口坐标到光栅像素坐标的映射</strong>：</h4>
+<pre><code class="language-javascript">map.on(&#39;click&#39;, function (event) {
+  coordinate = event.coordinate; // 记录地理坐标
+  raster.changed();              // 触发光栅数据源重新执行计算
+});
+
+raster.on(&#39;beforeoperations&#39;, function (event) {
+  const data = event.data;
+  data.delta = thresholdControl.value;
+  if (coordinate) {
+    // 将地理投影坐标即时解算为当前视口屏幕像素坐标 [x, y]
+    data.pixel = map.getPixelFromCoordinate(coordinate);
+  }
+});
+</code></pre>
+<p>  通过在 <code>beforeoperations</code> 中完成坐标系换算，将轻量级的 <code>{pixel, delta}</code> 纯数据对象传递至后台 Worker，保持前后端数据交互契约解耦。</p>
+<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices) - <strong>长任务与大视口堆栈溢出防护</strong>：</h4>
+<p>  区域生长若采用传统递归实现，在高分辨率大屏幕（如 4K 屏幕，数百万像素）遇到大面积纯色湖泊或天空时，极易发生 <code>Maximum call stack size exceeded</code> 调用栈崩溃。本示例采用<strong>迭代式队列（while-loop BFS）</strong>与边缘数组双缓冲，完全规避了栈溢出风险。</p>
+<ul>
+<li><strong>跨视口重绘时种子点失效处理</strong>：
+当用户点击确定种子点后，若随后拖拽平移了地图视口，屏幕像素坐标对应的地理目标会发生偏移。生产项目中建议记录地理坐标（Coordinate），并在每次重绘时根据最新的视口位置重新调用 <code>map.getPixelFromCoordinate(coordinate)</code> 计算新的种子像素；若种子点已滑出当前视口，则直接提前返回原始图像，防止出现错误的定位投影。</li>
+</ul>
 </div>
       </div>
 
@@ -200,10 +238,17 @@ import {fromLonLat} from &#x27;ol/proj.js&#x27;;
 import ImageTile from &#x27;ol/source/ImageTile.js&#x27;;
 import RasterSource from &#x27;ol/source/Raster.js&#x27;;
 
+/**
+ * Region growing segmentation algorithm running as an image operation in Web Worker.
+ * 在 Web Worker 线程中运行的整图级区域生长空间分割算法
+ * @param {Array&lt;ImageData&gt;} inputs Input images / 输入图像数据数组
+ * @param {Object} data Context data from beforeoperations / 外部注入的上下文参数
+ * @return {ImageData|Object} Output image with segmented region highlighted / 标记高亮后的输出图像
+ */
 function growRegion(inputs, data) {
   const image &#x3D; inputs[0];
   let seed &#x3D; data.pixel;
-  const delta &#x3D; parseInt(data.delta);
+  const delta &#x3D; parseInt(data.delta, 10);
   if (!seed) {
     return image;
   }
@@ -221,9 +266,7 @@ function growRegion(inputs, data) {
   while (edge.length) {
     const newedge &#x3D; [];
     for (let i &#x3D; 0, ii &#x3D; edge.length; i &lt; ii; i++) {
-      // As noted in the Raster source constructor, this function is provided
-      // using the &#x60;lib&#x60; option. Other functions will NOT be visible unless
-      // provided using the &#x60;lib&#x60; option.
+      // Access next4Edges provided through the lib option / 访问通过 lib 注入的 4-邻域搜索纯函数
       const next &#x3D; next4Edges(edge[i]);
       for (let j &#x3D; 0, jj &#x3D; next.length; j &lt; jj; j++) {
         const s &#x3D; next[j][0];
@@ -234,7 +277,7 @@ function growRegion(inputs, data) {
           const cg &#x3D; inputData[ci + 1];
           const cb &#x3D; inputData[ci + 2];
           const ca &#x3D; inputData[ci + 3];
-          // if alpha is zero, carry on
+          // If alpha is zero, it was already visited / 若 Alpha 为 0，说明此前已访问过，直接跳过
           if (ca &#x3D;&#x3D;&#x3D; 0) {
             continue;
           }
@@ -243,13 +286,14 @@ function growRegion(inputs, data) {
             Math.abs(seedG - cg) &lt; delta &amp;&amp;
             Math.abs(seedB - cb) &lt; delta
           ) {
+            // Highlight region pixel with opaque red / 满足容差阈值时染成不透明纯红
             outputData[ci] &#x3D; 255;
             outputData[ci + 1] &#x3D; 0;
             outputData[ci + 2] &#x3D; 0;
             outputData[ci + 3] &#x3D; 255;
             newedge.push([s, t]);
           }
-          // mark as visited
+          // Mark as visited in-place by zeroing alpha / 原地将 Alpha 置零充当访问标记
           inputData[ci + 3] &#x3D; 0;
         }
       }
@@ -259,6 +303,12 @@ function growRegion(inputs, data) {
   return {data: outputData, width: width, height: height};
 }
 
+/**
+ * Return 4-connected neighbor pixel coordinates.
+ * 获取当前像素上下左右 4-邻域连通坐标
+ * @param {Array&lt;number&gt;} edge Pixel coordinates [x, y] / 当前像素坐标
+ * @return {Array&lt;Array&lt;number&gt;&gt;} 4-connected neighbors / 四邻域坐标数组
+ */
 function next4Edges(edge) {
   const x &#x3D; edge[0];
   const y &#x3D; edge[1];
@@ -270,11 +320,13 @@ function next4Edges(edge) {
   ];
 }
 
+// MapTiler key and attributions / MapTiler 访问凭证与版权声明
 const key &#x3D; &#x27;Get your own API key at https://www.maptiler.com/cloud/&#x27;;
 const attributions &#x3D;
   &#x27;&lt;a href&#x3D;&quot;https://www.maptiler.com/copyright/&quot; target&#x3D;&quot;_blank&quot;&gt;&amp;copy; MapTiler&lt;/a&gt; &#x27; +
   &#x27;&lt;a href&#x3D;&quot;https://www.openstreetmap.org/copyright&quot; target&#x3D;&quot;_blank&quot;&gt;&amp;copy; OpenStreetMap contributors&lt;/a&gt;&#x27;;
 
+// Base satellite imagery tile layer / 卫星遥感正射底图瓦片图层
 const imagery &#x3D; new TileLayer({
   source: new ImageTile({
     attributions: attributions,
@@ -284,22 +336,24 @@ const imagery &#x3D; new TileLayer({
   }),
 });
 
+// Raster source configured with image-level operation / 配置为整图运算模式的光栅数据源
 const raster &#x3D; new RasterSource({
   sources: [imagery.getSource()],
   operationType: &#x27;image&#x27;,
   operation: growRegion,
-  // Functions in the &#x60;lib&#x60; object will be available to the operation run in
-  // the web worker.
+  // Functions in the &#x60;lib&#x60; object are serialized to the web worker / lib 中的辅助函数会被序列化注入到 Web Worker
   lib: {
     next4Edges: next4Edges,
   },
 });
 
+// Semi-transparent overlay displaying computed segmented region / 半透明光栅图层展示计算得出的分割区域
 const rasterImage &#x3D; new ImageLayer({
   opacity: 0.7,
   source: raster,
 });
 
+// Initialize map centered near Grand Coulee, WA / 初始化地图并定位至华盛顿州大库力水库
 const map &#x3D; new Map({
   layers: [imagery, rasterImage],
   target: &#x27;map&#x27;,
@@ -311,6 +365,8 @@ const map &#x3D; new Map({
 
 let coordinate;
 
+// Click event records geographic seed coordinate and triggers re-computation
+// 点击地图记录种子地理坐标，并触发光栅数据源重新计算
 map.on(&#x27;click&#x27;, function (event) {
   coordinate &#x3D; event.coordinate;
   raster.changed();
@@ -318,8 +374,8 @@ map.on(&#x27;click&#x27;, function (event) {
 
 const thresholdControl &#x3D; document.getElementById(&#x27;threshold&#x27;);
 
+// Inject latest parameters into worker before operation execution / 在计算前将最新参数装配入 Worker 上下文
 raster.on(&#x27;beforeoperations&#x27;, function (event) {
-  // the event.data object will be passed to operations
   const data &#x3D; event.data;
   data.delta &#x3D; thresholdControl.value;
   if (coordinate) {
@@ -332,6 +388,7 @@ function updateControlValue() {
 }
 updateControlValue();
 
+// Threshold slider changes re-trigger region growing / 滑块调节颜色容差并即时重新执行分割
 thresholdControl.addEventListener(&#x27;input&#x27;, function () {
   updateControlValue();
   raster.changed();
@@ -347,7 +404,7 @@ thresholdControl.addEventListener(&#x27;input&#x27;, function () {
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Region Growing&lt;/title&gt;
+    &lt;title&gt;Region Growing / 种子点区域生长与交互式影像分割&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {

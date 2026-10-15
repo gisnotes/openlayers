@@ -109,6 +109,7 @@ var select = document.getElementById("kernel");
 var selectedKernel = normalize(kernels[select.value]);
 /**
 * Update the kernel and re-render on change.
+* 监听滤镜下拉选单变更：重新计算归一化卷积核并触发地图画布重绘
 */
 select.onchange = function() {
 	selectedKernel = normalize(kernels[select.value]);
@@ -116,6 +117,7 @@ select.onchange = function() {
 };
 /**
 * Apply a filter on "postrender" events.
+* 监听遥感图层的 postrender 事件：拦截光栅化后的 Canvas 像素应用空间卷积
 */
 imagery.on("postrender", function(event) {
 	convolve(event.context, selectedKernel);
@@ -123,6 +125,7 @@ imagery.on("postrender", function(event) {
 /**
 * Apply a convolution kernel to canvas.  This works for any size kernel, but
 * performance starts degrading above 3 x 3.
+* 对 Canvas 2D 绘图上下文应用空间卷积核：遍历每个像素的 3x3 邻域并加权合成
 * @param {CanvasRenderingContext2D} context Canvas 2d context.
 * @param {Array<number>} kernel Kernel.
 */
