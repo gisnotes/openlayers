@@ -11,6 +11,35 @@ docs: >
   <p>该多边形与一个 <code>ol/geom/Point</code> 中心点共同封装在一个 <code>ol/geom/GeometryCollection</code>（几何集合）中，从而允许 Modify 交互既能拖拽调整圆心位置，也能拖拽外圈顶点调整半径大小。自定义样式函数保证了在修改过程中始终正确呈现最终几何图形。</p>
   <p>示例还支持绘制与修改常规投影（平面）<code>ol/geom/Circle</code> 圆几何。在 Web 墨卡托投影下，当圆心在高纬度与赤道之间移动时，可以直观观察到测地线圆（大圆，随纬度变形为椭圆形以保证真实物理半径）与投影平面圆（图上保持正圆但真实地表面积剧烈膨胀）的本质区别。</p>
   <p>此外，还集成了 <code>ol/interaction/Snap</code> 捕捉吸附交互，可轻松绘制同心圆。</p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>测地圆（Geodesic Circle）与投影平面圆（Planar Circle）的本质差异：</strong>
+      在平面直角坐标系中，<code>ol/geom/Circle</code> 由一个圆心坐标和一个标量半径（米）定义，在图纸上始终保持正圆。但在 Web 墨卡托投影下，由于投影变形，高纬度的平面圆真实物理地表面积极度缩水。
+      测地圆则是通过 <code>Polygon.circular(center, radius, 64)</code> 在真实三维地球椭球面上构造的真实大圆。当将其投影到二维平面时，高纬度区域会自然展现为向东西两侧延展的横向椭圆形，从而保证地表真实覆盖半径绝对恒定。
+    </li>
+    <li><strong><code>GeometryCollection</code> 复合几何封装机制：</strong>
+      默认情况下，<code>Modify</code> 交互只能修改多边形的既有边界顶点，无法直接捕捉“圆心”。
+      示例巧妙地将生成的测地圆多边形与一个中心点（Point）共同包裹在 <code>ol/geom/GeometryCollection</code> 中。
+      修改交互识别到中心点后，拖动该点即触发整圆平移；拖动外圈顶点则重新计算 <code>getDistance()</code> 并动态重构圆环半径。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>circular(center, radius, 64)</code>：在球面上生成具有 64 个顶点的测地圆多边形。</li>
+    <li><code>getDistance(c1, c2)</code> 来自 <code>ol/sphere.js</code>：利用半正矢（Haversine）公式计算两经纬度点间的大圆地表距离。</li>
+    <li><code>feature.get('modifyGeometry')</code>：在修改过程中暂存实时形变几何，避免高频修改原始要素引起事件风暴。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>坐标投影反复转换开销：</strong>
+      测地距离计算必须在 EPSG:4326 经纬度空间下进行，而地图视口运行在 EPSG:3857 下。在拖拽高频触发的 <code>geometryFunction</code> 中，需尽量复用坐标对象，避免高频创建临时数组导致 GC 停顿。
+    </li>
+  </ul>
 tags: "draw, edit, modify, vector, circle, sphere, geodesic"
 ---
 <div id="map" class="map"></div>

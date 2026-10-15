@@ -1,10 +1,46 @@
 ---
 layout: example.html
-title: JSTS Integration
-shortdesc: Example on how to use JSTS with OpenLayers.
+title: JSTS Integration / JSTS 拓扑套件与空间缓冲区分析 (JSTS Buffer Analysis)
+shortdesc: Example on how to use JSTS with OpenLayers. / 演示如何在 OpenLayers 中集成 JSTS (JavaScript Topology Suite)，对道路线要素进行 40 米空间缓冲区分析与几何转换。
 docs: >
-  Example showing the integration of <a href="https://github.com/bjornharrtell/jsts">JSTS</a>
-  with OpenLayers.
+  <p>
+    Example showing the integration of <a href="https://github.com/bjornharrtell/jsts">JSTS</a>
+    with OpenLayers.
+  </p>
+  <p>
+    此示例演示了在 OpenLayers 中集成著名的 <a href="https://github.com/bjornharrtell/jsts">JSTS（JavaScript 拓扑分析套件）</a>。
+    系统加载首尔市道路网络 GeoJSON 数据，通过 <code>OL3Parser</code> 将 OpenLayers 矢量几何体桥接转换为 JSTS 拓扑几何，利用 <code>BufferOp</code> 对每条道路实时计算向外扩张 40 米的空间缓冲区多边形（Buffer），并将计算结果写回要素直接呈现于地图上。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>JTS / GEOS 家族在前端的工业级空间分析标准：</strong>
+      JSTS 是工业界著名的 Java Topology Suite（JTS）在前端的纯 JavaScript 移植版（类似于 C++ 领域的 GEOS 与 PostGIS 底层）。
+      它提供了最严密、符合 OGC Simple Features 规范的空间谓词判断（DE-9IM）与拓扑运算（缓冲区 Buffer、相交 Intersect、合并 Union、差异 Difference、对称差 SymDifference）。
+    </li>
+    <li><strong><code>OL3Parser</code> 内存结构无缝桥接管道：</strong>
+      OpenLayers 的几何类（如 <code>ol/geom/LineString</code>）与 JSTS 的几何类（<code>org.locationtech.jts.geom.Geometry</code>）属于不同对象体系。
+      通过 <code>parser.inject(Point, LineString, ...)</code> 进行依赖注入后，<code>parser.read()</code> 和 <code>parser.write()</code> 构成了零外部胶水代码的高速双向转换管道。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>const parser = new OL3Parser()</code>：声明几何序列化解析器。</li>
+    <li><code>BufferOp.bufferOp(jstsGeom, 40)</code>：以当前投影坐标系的单位（米）执行 40 米平滑缓冲区膨胀计算。</li>
+    <li><code>feature.setGeometry(parser.write(buffered))</code>：直接更新要素几何，自动触发矢量图层重绘。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>地理坐标系（EPSG:4326）下的缓冲区距离灾难：</strong>
+      <code>BufferOp.bufferOp(geom, distance)</code> 中的 <code>distance</code> 参数直接采用当前几何坐标系的原生单位。
+      若数据在 EPSG:4326（经纬度度数）下直接传入 <code>40</code>，将被算法视作扩大 $40^\circ$（跨越上千公里！）。
+      必须确保要素已先投影到投影坐标系（如 EPSG:3857 或 UTM），使得单位为真实的“米”。
+    </li>
+  </ul>
 tags: "vector, jsts, buffer"
 ---
 <div id="map" class="map"></div>

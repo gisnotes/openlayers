@@ -1,11 +1,48 @@
 ---
 layout: example.html
-title: turf.js
-shortdesc: Example on how to use turf.js with OpenLayers.
+title: turf.js / Turf.js 空间分析集成与等间距里程桩标注 (Turf.js Integration)
+shortdesc: Example on how to use turf.js with OpenLayers. / 演示如何在 OpenLayers 中集成 Turf.js 空间分析库，使用 along() 函数沿首尔街道每隔 200 米生成并标注里程桩点位。
 docs: >
-  Example showing the integration of <a href="https://turfjs.org/">turf.js</a>
-  with OpenLayers. The turf.js function <code>along</code> is used to
-  display a marker every 200 meters along a street.
+  <p>
+    Example showing the integration of <a href="https://turfjs.org/">turf.js</a>
+    with OpenLayers. The turf.js function <code>along</code> is used to
+    display a marker every 200 meters along a street.
+  </p>
+  <p>
+    此示例演示了在 OpenLayers 中集成现代化的地理空间分析库 <a href="https://turfjs.org/">Turf.js</a>。
+    系统使用 Turf.js 的 <code>length</code> 函数计算街道折线的实际物理总长度，并调用 <code>along</code> 函数沿该道路线段每隔 200 米（0.2 公里）精确计算并放置一个里程桩标记要素。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>Turf.js 模块化空间分析架构：</strong>
+      Turf.js 是现代 Web 开发中最流行的“云原生/前端轻量级空间分析引擎”。它完全基于标准 GeoJSON（RFC 7946）数据结构，无需加载笨重的 C++ 编译底座，支持按需引入模块（如 <code>@turf/along</code>、<code>@turf/length</code>）。
+    </li>
+    <li><strong>GeoJSON 标准总线作为对象互操作桥梁：</strong>
+      OpenLayers 与 Turf.js 之间通过内存级 GeoJSON 进行无缝数据交换：
+      1. <code>format.writeFeatureObject(feature)</code>：以零网络开销将 OpenLayers 内存要素转为标准的纯 JavaScript GeoJSON 字典对象送入 Turf；
+      2. Turf 内部基于球面大地测量学（WGS84 半正矢方程）执行高精度的 <code>length</code>（总测地长）与 <code>along</code>（沿线定长取点）；
+      3. <code>format.readFeature(turfPoint)</code>：将 Turf 输出的 GeoJSON 点转回 OpenLayers 要素，执行坐标转换后批量渲染。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>length(turfLine, { units: 'kilometers' })</code>：计算折线的真实大地测地物理长度（单位：千米）。</li>
+    <li><code>along(turfLine, distance, { units: 'kilometers' })</code>：沿指定线段路径测量距离，精准返回对应的经纬度航点（Point）。</li>
+    <li><code>marker.getGeometry().transform('EPSG:4326', 'EPSG:3857')</code>：将大地测量点重投影至墨卡托视图空间。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>Turf.js 严苛的坐标系要求（必须为 EPSG:4326 经纬度）：</strong>
+      Turf.js 的测地线几何运算库在底层假定坐标为 WGS84 经度与纬度（度数）。
+      如果错误地将已经转换为 EPSG:3857（以米为单位，数值动辄数百万）的 GeoJSON 传给 Turf，算法内部会由于度数严重溢出产生不可逆的计算错误。
+      规范流程：<strong>保持原始数据为 EPSG:4326 $\to$ 传入 Turf 分析 $\to$ 将结果 <code>transform('EPSG:4326', 'EPSG:3857')</code> 上屏渲染</strong>。
+    </li>
+  </ul>
 tags: "vector, turfjs, along, distance"
 ---
 <div id="map" class="map"></div>

@@ -11,8 +11,37 @@ docs: >
     <li>当边围成闭合区域时，拓扑引擎会自动计算并生成拓扑面（Face）；</li>
     <li><strong>删除边</strong>：绘制一条与现有某条边横穿相交的新线段，即可触发将该被跨越的边删除并自动合并相邻拓扑面。</li>
   </ul>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>拓扑数据模型（Topological Model） vs 简单要素模型（Simple Features）：</strong>
+      在传统的 GeoJSON / Simple Features 模型中，每一个面（Polygon）均独立存储自己的外环顶点数组。如果两个多边形相邻，其公共边界点被重复存储两遍，任何单点修改都会产生微观缝隙或重叠。
+      Topolis 实现了 ISO 13249-3 标准拓扑图结构：空间中仅存在**节点（Node）、有向边（Edge）和面（Face）**。
+      一条边被左右两个面所共享（Shared Edge），修改一条边会同步更新两侧的几何面，从数据结构底层确保了拓扑一致性。
+    </li>
+    <li><strong>动态拓扑重构与欧拉示性数维护：</strong>
+      当用户绘制一条新边闭合出新区域时，Topolis 自动遍历有向图的半边（Half-edge），计算并生成新的 <code>Face</code>；
+      当绘制一条新线横穿跨越旧边时，示例通过求交判定触发 <code>remEdgeNewFace()</code>，自动拆除隔离边并将两侧的面合并为一个大面，展示了高级拓扑编辑的强大魅力。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>topolis.createTopology()</code>：初始化内存中的拓扑图引擎。</li>
+    <li><code>new Snap({ source: edges })</code>：确保绘制顶点严格对齐到拓扑节点与边线上。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>拓扑容差（Tolerance）与悬挂节点（Dangling Nodes）：</strong>
+      在拓扑建网中，若容差过小，鼠标轻微晃动会产生极短的未闭合微线段（毛刺/悬挂线）；若容差过大，则会错误地将不同道路交汇在一起。生产环境中需设定严格的屏幕像素吸附阈值（通常为 10~15px）。
+    </li>
+  </ul>
 tags: "draw, edit, vector, topology, topolis"
 resources:
   - https://cdn.jsdelivr.net/npm/topolis@0.2.5/dist/topolis.js
+
 ---
 <div id="map" class="map"></div>

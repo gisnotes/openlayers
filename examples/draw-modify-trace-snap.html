@@ -7,6 +7,37 @@ docs: >
   <p><code>Draw</code> 和 <code>Modify</code> 交互均内置了 <code>trace</code> 选项，用于沿现有要素的边界拓扑进行自动追踪描摹。本示例配置了 <code>traceSource</code> 选项，实现从底图目标图层追踪要素轮廓，并将绘制结果存入独立的绘制图层中。</p>
   <p><strong>绘制模式（Drawing）</strong>：点击目标要素边缘上的某一点开始追踪，随后点击边缘上的第二点即可自动沿两点间最短拓扑边界完成描摹并结束追踪。</p>
   <p><strong>修改模式（Modifying）</strong>：将多边形的某一个顶点拖拽吸附到目标要素边界上，即可为下一次拖拽激活追踪状态；此时拖拽其相邻顶点到同一边界上，两顶点之间的整段线段便会自动吸附并紧贴目标边界进行拓扑追踪重合；若拖拽非相邻顶点，则不会触发追踪。</p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>边界拓扑追踪（Boundary Tracing）在 GIS 制图中的刚需：</strong>
+      在国土空间规划、地籍测绘和行政网格划分中，相邻地块必须严格“无缝拼接（Seamless Concurrency）”。
+      传统人工手动描点极易在边界之间产生微小的缝隙（Slivers）或重叠多边形（Overlaps），导致拓扑校验失败。
+      通过开启 <code>trace: true</code> 并指定 <code>traceSource</code>，绘制或修改交互能够在两点之间自动顺应参考图层要素的复杂几何曲线进行高精度拓扑跟随描摹。
+    </li>
+    <li><strong>双点最短拓扑寻径描摹状态机（Two-Click Tracing State Machine）：</strong>
+      在绘制（Draw）交互中：
+      1. 第一击：光标被 <code>Snap</code> 捕捉并吸附在目标多边形边缘时，确定追踪起点；
+      2. 移动漫游：系统在后台沿目标多边形环状点序列计算两点间的最短路径（Shortest Path）并绘制动态预览；
+      3. 第二击：点击边缘上的目标点，系统瞬间将中间沿途数十个顶点一次性注入当前绘制几何中，完成无缝贴合。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>new Draw({ trace: true, traceSource, type })</code>：启用追踪绘制，从 <code>traceSource</code> 参考源追踪边界并写入 <code>source</code>。</li>
+    <li><code>new Modify({ trace: true, traceSource, source })</code>：启用追踪编辑，支持相邻顶点吸附贴合。</li>
+    <li><code>new Snap({ source: traceSource })</code>：必须协同挂载 Snap 交互，确保鼠标能精准捕捉到参考边界的线段与顶点。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>环状多边形追踪顺逆时针歧义：</strong>
+      闭合多边形边界有两个方向可达。系统默认选择包含较少顶点的较短路径。若用户希望沿较长的一侧环绕追踪，可以在中间拐角处增加一次点击作为途经锚点（Via-point）。
+    </li>
+  </ul>
 tags: "draw, modify, trace, vector, snap, topology"
 ---
 <div id="map" class="map"></div>
