@@ -1,9 +1,47 @@
 ---
 layout: example.html
-title: Custom map element
-shortdesc: Example of a custom element with a map.
+title: Custom map element / 自定义地图 Web 组件 (<ol-map>)
+shortdesc: Example of a custom element with a map. / 基于 Web Components 标准与 Shadow DOM 封装原生 <ol-map> 自定义地图组件的示例。
 docs: >
-  The example creates and registers a custom element, `ol-map`, which contains a simple map. **Note:** Only works in browsers that supports `ShadowRoot`.
+  <p>
+    The example creates and registers a custom element, <code>ol-map</code>, which contains a simple map. <strong>Note:</strong> Only works in browsers that supports <code>ShadowRoot</code>.
+  </p>
+  <p>
+    本示例创建并注册了一个符合 W3C Web Components 标准的原生自定义元素 <code>&lt;ol-map&gt;</code>，其内部封装了一个完整的 OpenLayers 地图实例。<strong>注意：</strong>该特性依赖支持 <code>ShadowRoot</code>（影子根节点）的现代浏览器。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>框架无关的原生组件化（Framework-Agnostic Web Components）：</strong>
+      在微前端、多技术栈并存（React / Vue / Angular / Svelte / 原生 HTML）的大型企业系统中，将复杂地图封装为原生 Custom Element，无需依赖任何第三方框架运行时，即可像使用 <code>&lt;video&gt;</code>、<code>&lt;canvas&gt;</code> 一样在任意页面中声明式引入。
+    </li>
+    <li><strong>Shadow DOM 样式强力隔离（CSS Encapsulation）：</strong>
+      传统 OpenLayers 开发中，全局 CSS（如 Bootstrap、Tailwind、Ant Design 等）经常意外覆盖 OpenLayers 原生控件（<code>.ol-control</code>、<code>.ol-viewport</code>）的定位和盒模型。通过 <code>attachShadow({ mode: 'open' })</code> 创建独立的 Shadow DOM 边界，外部样式的任何规则均无法穿透渗透，地图内部样式也不会污染外部页面。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>class OLComponent extends HTMLElement</code>：标准 ES6 原生类继承，直接继承 DOM 节点的所有基础事件与属性体系。</li>
+    <li><code>:host { display: block; }</code>：在 Shadow DOM 的内置样式中至关重要。自定义 HTML 标签默认属于 <code>display: inline</code>，若不显式声明为块级元素，设置 <code>width: 100%; height: 100%</code> 将完全失效，导致地图无法撑开。</li>
+    <li><code>link.setAttribute('href', 'theme/ol.css')</code>：由于 Shadow DOM 的隔离性，宿主外层引入的 <code>ol.css</code> 无法生效，必须在 ShadowRoot 内部显式引入 OpenLayers 核心样式文件。</li>
+    <li><code>customElements.define('ol-map', OLComponent)</code>：W3C 规范要求自定义元素名称<strong>必须包含至少一个连字符（短横线 <code>-</code>）</strong>，以与未来的标准 HTML 原生标签区分。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>组件卸载与内存泄漏防护：</strong>
+      示例直接在 <code>constructor</code> 中初始化地图。在复杂的单页应用（SPA）中，组件被反复挂载与移除，必须在 <code>disconnectedCallback()</code> 生命周期钩子中显式调用 <code>this.map.setTarget(null)</code> 并注销事件监听器，避免未释放的闭包导致巨大的内存泄漏。
+    </li>
+    <li><strong>异步渲染与容器尺寸探测（Resize）：</strong>
+      若 <code>&lt;ol-map&gt;</code> 在 DOM 渲染树尚未完成布局（宽高为 0）时就实例化地图，会导致地图瓦片无法加载或视口扭曲。生产环境应在 <code>connectedCallback()</code> 中结合 <code>ResizeObserver</code>，在容器获得真实像素尺寸后触发 <code>this.map.updateSize()</code>。
+    </li>
+    <li><strong>数据绑定与属性监听（observedAttributes）：</strong>
+      可实现 <code>observedAttributes</code> 静态属性，监听 <code>zoom</code>、<code>center</code> 等 HTML 标签属性的变更，在 <code>attributeChangedCallback()</code> 中自动同步驱动视图更新。
+    </li>
+  </ul>
 tags: "es2015, web-component, custom-element, shadow-dom"
 ---
 <ol-map id="map" class="map"></ol-map>

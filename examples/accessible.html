@@ -1,16 +1,58 @@
 ---
 layout: example.html
-title: Accessible Map
-shortdesc: Example of an accessible map.
+title: Accessible Map / 无障碍访问地图 (A11y)
+shortdesc: Example of an accessible map. / 支持全键盘导航与无障碍辅助技术的地图交互示例。
 docs: >
-  This page's `map` element has its `tabindex` attribute set to `"0"`, that makes it focusable. To focus the map element you can either navigate to it using the "tab" key or use the skip link. When the `map` element is focused the + and - keys can be used to zoom in and out and the arrow keys can be used to pan.
+  <p>
+    This page's <code>map</code> element has its <code>tabindex</code> attribute set to <code>"0"</code>, that makes it focusable. To focus the map element you can either navigate to it using the "tab" key or use the skip link. When the <code>map</code> element is focused the + and - keys can be used to zoom in and out and the arrow keys can be used to pan.
+  </p>
+  <p>
+    Clicking on the "Zoom in" and "Zoom out" buttons below the map zooms the map in and out. You can navigate to the buttons using the "tab" key, and press the "enter" key to trigger the zooming action.
+  </p>
+  <p>
+    本页面的 <code>map</code> 容器元素将其 <code>tabindex</code> 属性显式设为 <code>"0"</code>，使其具备接收键盘焦点的能力。用户既可以通过键盘的 <code>Tab</code> 键逐步移动焦点，也可以使用页面顶部的跳跃链接（Skip link）直达地图。当地图容器获得焦点时，可通过 <code>+</code> 和 <code>-</code> 键进行放大缩小，使用方向键（<code>&uarr; &darr; &larr; &rarr;</code>）进行平移漫游。
+  </p>
+  <p>
+    点击下方的“放大”与“缩小”外部按钮可调整地图层级。这些按钮原生支持 <code>Tab</code> 导航，按下 <code>Enter</code> 或空格键即可触发缩放。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
 
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>Web 内容无障碍指南（WCAG 2.1）在地图中的落地：</strong>
+      由于电子地图高度依赖鼠标拖拽与双击缩放，肢体残障或视障用户极易面临数字鸿沟。通过为地图容器设置 <code>tabindex="0"</code>，将原本非交互的 <code>&lt;div&gt;</code> 容器纳入标准浏览器 DOM 焦点序列，使盲用读屏软件（如 NVDA、JAWS）与纯键盘用户均能无障碍接入地图。
+    </li>
+    <li><strong>跳跃导航链接（Skip Link 模式）：</strong>
+      页面顶部配置了 <code>&lt;a class="skiplink" href="#map"&gt;</code>，默认在视觉上隐藏，仅在用户按 <code>Tab</code> 键获取焦点时显现。这使视障用户无需逐项遍历页面顶部的成百上千个导航菜单，一键直达核心地图视口。
+    </li>
+    <li><strong>内置全键盘交互管线：</strong>
+      OpenLayers 的默认交互集（<code>defaults()</code>）中内置了 <code>ol/interaction/KeyboardPan</code> 和 <code>ol/interaction/KeyboardZoom</code>。当且仅当地图容器获得当前文档焦点（Focused）时，底层事件监听器被激活，拦截按键并执行平滑视口动画。
+    </li>
+  </ul>
 
-  Clicking on the "Zoom in" and "Zoom out" buttons below the map zooms the map in and out. You can navigate to the buttons using the "tab" key, and press the "enter" key to trigger the zooming action.
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>tabindex="0"</code>：指示元素可以通过键盘导航访问，并保留在文档流自然的 Tab 键导航顺序中（若设为 <code>-1</code> 则仅能通过 JS 代码 <code>focus()</code> 激活）。</li>
+    <li><code>view.setZoom(zoom &plusmn; 1)</code>：通过命令式调用 View 的层级操作接口，不仅支持鼠标点击，更能完美响应标准 <code>&lt;button&gt;</code> 的键盘 <code>Enter</code> / <code>Space</code> 击键。</li>
+    <li>按键步进参数：默认情况下，方向键每次移动当前视口宽/高的固定比例（通常为 128 像素）；在保持按下状态时会触发平滑加速平移。</li>
+  </ul>
 
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>切勿暴力移除焦点轮廓（<code>outline: none</code>）：</strong>
+      部分前端开发为了视觉美观滥用 <code>*:focus { outline: none; }</code>，导致键盘用户根本无法判断当前焦点是否落在地图上。应使用高对比度的焦点环（如 <code>outline: 3px solid #005fcc; outline-offset: 2px;</code>）。
+    </li>
+    <li><strong>全屏与弹窗焦点陷阱（Focus Trap）：</strong>
+      当地图包含弹窗或进入全屏状态时，键盘焦点切忌飘逸至底层被遮挡的网页元素，需配合 Focus Trap 逻辑将 Tab 循环限制在当前激活的地图控件内部。
+    </li>
+    <li><strong>ARIA 辅助属性补全：</strong>
+      生产环境中，地图容器建议显式补充 <code>role="region"</code> 和 <code>aria-label="交互式空间地理地图"</code>，以便屏幕阅读器在聚焦时能够清晰朗读其功能与用途。
+    </li>
+  </ul>
 tags: "accessibility, tabindex"
 ---
-<a class="skiplink" href="#map">Go to map</a>
+<a class="skiplink" href="#map">Go to map / 跳转到地图</a>
 <div id="map" class="map" tabindex="0"></div>
-<button id="zoom-out">Zoom out</button>
-<button id="zoom-in">Zoom in</button>
+<button id="zoom-out">Zoom out / 缩小</button>
+<button id="zoom-in">Zoom in / 放大</button>

@@ -1,11 +1,50 @@
 ---
 layout: example.html
-title: Custom map element with accessible map
-shortdesc: Example of a custom element with an accessible map, which can gain focus and allows keyboard based navigation.
+title: Custom map element with accessible map / 支持无障碍全键盘导航的自定义地图组件 (<ol-map>)
+shortdesc: Example of a custom element with an accessible map, which can gain focus and allows keyboard based navigation. / 结合 Web Components Shadow DOM 与 A11y 键盘导航（tabindex="0"）的自定义地图元素示例。
 docs: >
-  The example creates and registers a custom element, `ol-map`, which contains an accessible OpenLayers map. Therefore the `ol-map` element has its `tabindex` attribute set to `"0"`.
-  So the map can gain the focus and thus allows map navigation with the keyboard. Use the + and - keys to zoom in and out and the arrow keys to pan the map.
-  **Note:** Only works in browsers that supports `ShadowRoot`.
+  <p>
+    The example creates and registers a custom element, <code>ol-map</code>, which contains an accessible OpenLayers map. Therefore the <code>ol-map</code> element has its <code>tabindex</code> attribute set to <code>"0"</code>.
+    So the map can gain the focus and thus allows map navigation with the keyboard. Use the + and - keys to zoom in and out and the arrow keys to pan the map.
+    <strong>Note:</strong> Only works in browsers that supports <code>ShadowRoot</code>.
+  </p>
+  <p>
+    本示例创建并注册了一个包含无障碍 OpenLayers 地图的原生自定义元素 <code>&lt;ol-map&gt;</code>。为此，<code>&lt;ol-map&gt;</code> 宿主元素将其 <code>tabindex</code> 属性显式设为 <code>"0"</code>。
+    这使得自定义组件可以直接捕获键盘导航焦点，允许用户完全通过键盘操作地图：按 <code>+</code> 和 <code>-</code> 键进行缩放，按方向键进行平移漫游。
+    <strong>注意：</strong>该特性依赖支持 <code>ShadowRoot</code> 的现代浏览器环境。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>Shadow DOM 边界穿透与键盘事件聚焦（Focus Tunneling）：</strong>
+      当原生自定义元素封装了 Shadow DOM 时，外界默认无法直接访问其内部的实际渲染节点。通过在宿主元素 <code>&lt;ol-map tabindex="0"&gt;</code> 上配置可聚焦属性，键盘 <code>Tab</code> 聚焦动作直接落在组件外壳上，而键盘事件（KeyDown）原生具备 <code>composed: true</code> 特性，能够穿透 Shadow 边界下发给内部的 OpenLayers 地图引擎，实现无缝的键盘漫游。
+    </li>
+    <li><strong>无障碍（A11y）与组件化（Web Components）的合璧：</strong>
+      现代大型企业系统对无障碍合规性（如 Section 508、ADA、EN 301 549）有严格法律要求。将无障碍交互规范作为“内置契约”封装在 <code>&lt;ol-map&gt;</code> 标签内，使上层业务开发人员无需重复配置键盘快捷键或关注焦点流，极大降低了团队心智负担。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>tabindex="0"</code> 直接定义在自定义标签上：赋予自定义元素和标准按钮、输入框相同的焦点顺序。</li>
+    <li><code>:host(:focus)</code> 状态控制：在 Shadow DOM 的内部 CSS 中，可以通过 <code>:host(:focus) { outline: 2px solid #005fcc; }</code> 直接定义宿主获得焦点时的视觉高亮环，无需外部页面编写复杂的深度选择器。</li>
+    <li><code>ol/interaction/KeyboardPan</code> 与 <code>KeyboardZoom</code>：引擎底层通过监听当前处于聚焦状态的有效目标，无缝捕获用户的方向键与 <code>+/-</code> 按键指令并执行地图平滑插值移动。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>焦点重定向（DelegatesFocus）配置：</strong>
+      现代 Web Components 规范支持 <code>this.attachShadow({ mode: 'open', delegatesFocus: true })</code>，若开启此选项，点击组件空白处时浏览器会自动将焦点顺移至内部的第一个可聚焦元素，在某些包含复杂控件工具栏的地图组件中尤为好用。
+    </li>
+    <li><strong>移动端触屏与桌面键盘的双重体验保障：</strong>
+      在手机或平板等触控终端上，软键盘弹出可能会导致键盘事件冲突。应通过媒体查询或触控探测，仅在物理键盘设备或启用屏幕朗读时强化键盘交互监听。
+    </li>
+    <li><strong>清理未使用的冗余全局变量：</strong>
+      官方示例早期模板中可能残留未使用的顶层变量（如 <code>let map;</code>），在严格 ESLint 校验下会触发 <code>no-unused-vars</code> 告警，生产级组件应将实例妥善挂载在 <code>this.map</code> 上并导出公开接口方法。
+    </li>
+  </ul>
 tags: "es2015, web-component, custom-element, shadow-dom, accessibility, tabindex"
 ---
 <ol-map id="map" class="map" tabindex="0"></ol-map>
