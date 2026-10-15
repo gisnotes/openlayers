@@ -14,6 +14,7 @@ import Style from '../src/ol/style/Style.js';
 
 let map = null;
 
+// Style rules mapped by OSM tag keys and regular expressions / 按 OSM 标签键与正则表达式匹配的样式规则表
 const styles = {
   'amenity': {
     'parking': new Style({
@@ -76,9 +77,11 @@ const styles = {
   },
 };
 
+// Vector source with Overpass API bbox loader / 配置 Overpass API 视口范围加载器的矢量数据源
 const vectorSource = new VectorSource({
   format: new OSMXML(),
   loader: function (extent, resolution, projection, success, failure) {
+    // Transform extent from map projection to WGS84 / 将视口范围从当前地图投影转换为 EPSG:4326 经纬度
     const epsg4326Extent = transformExtent(extent, projection, 'EPSG:4326');
     const client = new XMLHttpRequest();
     client.open('POST', 'https://overpass-api.de/api/interpreter');
@@ -90,6 +93,8 @@ const vectorSource = new VectorSource({
       success(features);
     });
     client.addEventListener('error', failure);
+
+    // Build Overpass QL query bounded by longitude [-180, 180] / 构建带经度钳位保护的 Overpass QL 空间查询语句
     const query =
       '(node(' +
       epsg4326Extent[1] +
@@ -105,6 +110,7 @@ const vectorSource = new VectorSource({
   strategy: bboxStrategy,
 });
 
+// Vector layer with rule-based style matcher / 基于 OSM 标签属性规则匹配样式的矢量图层
 const vector = new VectorLayer({
   source: vectorSource,
   style: function (feature) {
@@ -122,6 +128,7 @@ const vector = new VectorLayer({
   },
 });
 
+// MapTiler satellite basemap / MapTiler 卫星影像底图
 const key = 'EPhPi7Zr1GTS500UybLu';
 const attributions =
   '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> ' +
@@ -136,6 +143,7 @@ const raster = new TileLayer({
   }),
 });
 
+// Initialize map centered on Lausanne, Switzerland / 初始化地图并定位至瑞士洛桑
 map = new Map({
   layers: [raster, vector],
   target: document.getElementById('map'),

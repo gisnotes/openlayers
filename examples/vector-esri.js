@@ -12,11 +12,13 @@ import Stroke from '../src/ol/style/Stroke.js';
 import Style from '../src/ol/style/Style.js';
 import {createXYZ} from '../src/ol/tilegrid.js';
 
+// ArcGIS Online Land Use feature service URL / ArcGIS Online 土地利用要素服务地址
 const serviceUrl =
   'https://services-eu1.arcgis.com/NPIbx47lsIiu2pqz/ArcGIS/rest/services/' +
   'Neptune_Coastline_Campaign_Open_Data_Land_Use_2014/FeatureServer/';
 const layer = '0';
 
+// Land use classification color map / 土地利用分类颜色映射表
 const fillColors = {
   'Lost To Sea Since 1965': [0, 0, 0, 1],
   'Urban/Built-up': [104, 104, 104, 1],
@@ -33,6 +35,7 @@ const fillColors = {
   'Inland Water': [0, 38, 115, 1],
 };
 
+// Base style object reused across features / 可复用的多边形基础样式对象
 const style = new Style({
   fill: new Fill(),
   stroke: new Stroke({
@@ -41,10 +44,11 @@ const style = new Style({
   }),
 });
 
+// Vector source configured with EsriJSON and tile strategy / 配置 EsriJSON 格式与空间切片加载策略的矢量数据源
 const vectorSource = new VectorSource({
   format: new EsriJSON(),
   url: function (extent, resolution, projection) {
-    // ArcGIS Server only wants the numeric portion of the projection ID.
+    // ArcGIS Server only wants the numeric portion of the projection ID. / ArcGIS Server 仅接收纯数字投影标识符
     const srid = projection
       .getCode()
       .split(/:(?=\d+$)/)
@@ -87,6 +91,7 @@ const vectorSource = new VectorSource({
     'd5f05b1dc3dd4d76906c421bc1727805">National Trust</a>)',
 });
 
+// Vector layer with dynamic style function / 采用动态样式函数的矢量图层
 const vector = new VectorLayer({
   source: vectorSource,
   style: function (feature) {
@@ -98,6 +103,7 @@ const vector = new VectorLayer({
   opacity: 0.7,
 });
 
+// ArcGIS Topographic basemap layer / ArcGIS 世界地形底图瓦片图层
 const raster = new TileLayer({
   source: new ImageTile({
     attributions:
@@ -109,6 +115,7 @@ const raster = new TileLayer({
   }),
 });
 
+// Initialize map centered on UK coastline / 初始化地图实例并定位至英国东部海岸
 const map = new Map({
   layers: [raster, vector],
   target: document.getElementById('map'),
@@ -118,6 +125,10 @@ const map = new Map({
   }),
 });
 
+/**
+ * Display feature attributes under the mouse cursor. / 探测并展示光标所在要素的属性信息
+ * @param {import('../src/ol/pixel.js').Pixel} pixel Screen coordinates / 屏幕像素坐标
+ */
 const displayFeatureInfo = function (pixel) {
   const feature = map.forEachFeatureAtPixel(pixel, function (feature) {
     return feature;
@@ -136,6 +147,7 @@ const displayFeatureInfo = function (pixel) {
   }
 };
 
+// Pointer move and click listener for hit detection / 监听光标移动与点击事件执行像素拾取
 map.on(['click', 'pointermove'], function (evt) {
   if (evt.dragging) {
     return;

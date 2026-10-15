@@ -9,6 +9,38 @@ docs: |
     <li><strong>绘制新增（Draw / Add）</strong>：选择 <code>Draw</code> 模式在地图上绘制多边形，在 <code>drawend</code> 事件中通过 <code>EsriJSON</code> 序列化，向服务端的 <code>addFeatures</code> 接口发送 POST 请求完成入库，并自动获取服务端分配的 <code>objectId</code>；</li>
     <li><strong>在线修改（Modify / Update）</strong>：选择 <code>Modify</code> 模式，先点击选中要素，拖拽顶点微调；通过脏检查（Dirty Check）机制，当要素取消选中时，自动将修改后的几何通过 <code>updateFeatures</code> 接口回写同步至远程服务。</li>
   </ul>
+
+  <hr>
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计机制 (Core Architecture & Mechanics)
+  - **瓦片化空间加载策略（Tile-based Loading Strategy）**：
+    数据源采用 <code>strategy: tileStrategy(createXYZ({tileSize: 512}))</code>。OpenLayers 将地图划分为虚拟的 512px 空间网格，仅在视口滑入未曾加载的瓦片区域时，才会按该切片的 BBOX 向 ArcGIS REST <code>/query</code> 接口发起增量请求。这样既避免了单次拉取海量要素导致浏览器内存暴涨，又防止了视口平移时全屏频繁刷新。
+  - **前后端事务同步闭环**：
+    与传统静态 GeoJSON 不同，在线要素编辑涉及严格的增量事务操作：
+    - <strong>新增入库</strong>：客户端生成临时矢量要素 &rarr; 序列化为 EsriJSON 报文 &rarr; POST <code>/addFeatures</code> &rarr; 接收服务端下发的权威 <code>objectId</code> 并回填至要素实例；
+    - <strong>微调更新</strong>：要素顶点被编辑 &rarr; 触发脏标记 &rarr; 离焦时 POST <code>/updateFeatures</code> 覆盖持久层几何与属性。
+
+  #### 2. 关键代码解析与 API 模式 (Code Deep Dive & API Patterns)
+  - **现代异步 Loader 规范**：
+    ```javascript
+    loader: async (extent, resolution, projection) => {
+      const url = serviceUrl + layer + '/query/?...';
+      const response = await fetch(url);
+      const json = await response.json();
+      return esrijsonFormat.readFeatures(json, {featureProjection: projection});
+    }
+    ```
+    在现代 OpenLayers 中，自定义 <code>loader</code> 支持原生 <code>async/await</code> 并直接返回 Feature 数组，底层自动完成空间 R-Tree 树索引注入与图层重绘。
+  - **脏检查与失焦写回（Dirty Checking on Deselection）**：
+    要素进入 <code>Modify</code> 状态时绑定 <code>modifyend</code> 标记 <code>isDirty = true</code>；当在地图空白处点击使其从 <code>Select</code> 集合中移除（<code>select.getFeatures().on('remove', ...)</code>）时，触发条件网络提交，有效降低并发网络 I/O 频次。
+
+  #### 3. 工程避坑与高可用实践 (Production Pitfalls & Best Practices)
+  - **投影代码格式清洗（SRID Striping）**：
+    ArcGIS REST 服务接口要求 <code>spatialReference</code> 必须是纯数字 WKID（如 <code>102100</code> 或 <code>4326</code>），严禁传递带 <code>EPSG:</code> 前缀的字符串，否则服务端会抛出解析错误。
+  - **主键绑定与唯一性约束**：
+    新增要素入库后必须同步调用 <code>feature.setId(result.objectId)</code>。若忽略这一步，后续再次修改该要素并提交 <code>/updateFeatures</code> 时，由于缺少服务端主键匹配，请求会被拒绝或演变为重复新增。
 tags: "vector, esri, ArcGIS, REST, Feature, Service, loading, server, edit, updateFeature, addFeature"
 ---
 <div id="map" class="map"></div>

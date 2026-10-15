@@ -7,9 +7,11 @@ import {bbox as bboxStrategy} from '../src/ol/loadingstrategy.js';
 import ImageTile from '../src/ol/source/ImageTile.js';
 import VectorSource from '../src/ol/source/Vector.js';
 
+// Vector source configured with GeoServer WFS and bbox strategy / 配置 GeoServer WFS 与视口 BBOX 范围加载策略的矢量数据源
 const vectorSource = new VectorSource({
   format: new GeoJSON(),
   url: function (extent) {
+    // Construct WFS 1.1.0 GetFeature query in EPSG:3857 / 构造基于 EPSG:3857 墨卡托投影坐标的 WFS 1.1.0 GetFeature 请求
     return (
       'https://ahocevar.com/geoserver/wfs?service=WFS&' +
       'version=1.1.0&request=GetFeature&typename=osm:water_areas&' +
@@ -22,6 +24,7 @@ const vectorSource = new VectorSource({
   strategy: bboxStrategy,
 });
 
+// Vector layer with flat style definition / 使用扁平样式对象定义的矢量图层
 const vector = new VectorLayer({
   source: vectorSource,
   style: {
@@ -31,6 +34,7 @@ const vector = new VectorLayer({
   },
 });
 
+// MapTiler satellite basemap / MapTiler 卫星影像底图
 const key = 'EPhPi7Zr1GTS500UybLu';
 const attributions =
   '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> ' +
@@ -45,6 +49,7 @@ const raster = new TileLayer({
   }),
 });
 
+// Initialize map centered near Syracuse, NY / 初始化地图并定位至纽约州锡拉丘兹附近
 const map = new Map({
   layers: [raster, vector],
   target: document.getElementById('map'),

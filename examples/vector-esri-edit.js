@@ -13,14 +13,14 @@ import ImageTile from '../src/ol/source/ImageTile.js';
 import VectorSource from '../src/ol/source/Vector.js';
 import {createXYZ} from '../src/ol/tilegrid.js';
 
-// ArcGIS Online 官方野火（Wildfire）要素服务地址
+// ArcGIS Online official wildfire feature service URL / ArcGIS Online 官方野火要素服务地址
 const serviceUrl =
   'https://sampleserver6.arcgisonline.com/arcgis/rest/services/Wildfire/FeatureServer/';
 const layer = '2';
 
 const esrijsonFormat = new EsriJSON();
 
-// 矢量数据源：根据当前视口瓦片范围向 ArcGIS REST query 接口动态拉取要素
+// Vector source with spatial tile loading strategy / 矢量数据源：根据视口瓦片范围向 ArcGIS REST query 接口动态拉取要素
 const vectorSource = new VectorSource({
   loader: async (extent, resolution, projection) => {
     const url =
@@ -47,7 +47,7 @@ const vectorSource = new VectorSource({
       alert(json.error.message + '\n' + json.error.details.join('\n'));
       throw new Error(json.error.message);
     } else {
-      // 依据数据文档自动读取投影信息
+      // Parse features with target map projection / 按照地图投影解析读取 EsriJSON 要素
       const features = esrijsonFormat.readFeatures(json, {
         featureProjection: projection,
       });
@@ -65,7 +65,7 @@ const vector = new VectorLayer({
   source: vectorSource,
 });
 
-// ArcGIS 世界地形底图瓦片图层
+// ArcGIS World Topo basemap layer / ArcGIS 世界地形底图瓦片图层
 const raster = new TileLayer({
   source: new ImageTile({
     attributions:
@@ -77,13 +77,13 @@ const raster = new TileLayer({
   }),
 });
 
-// 绘制交互：绘制新增多边形要素
+// Draw interaction for adding new polygon features / 绘制交互：绘制新增多边形要素
 const draw = new Draw({
   source: vectorSource,
   type: 'Polygon',
 });
 
-// 选择交互与修改交互：选中要素并激活顶点拖拽修改
+// Select and Modify interactions for updating features / 选择与修改交互：选中要素并激活顶点拖拽修改
 const select = new Select();
 select.setActive(false);
 const selected = select.getFeatures();
@@ -106,7 +106,7 @@ const map = new Map({
 const typeSelect = document.getElementById('type');
 
 /**
- * 处理用户交互模式切换（绘制新增 vs 选择修改）
+ * Handle interaction mode change between Draw and Modify. / 处理用户交互模式切换（绘制新增 vs 选择修改）
  */
 typeSelect.onchange = function () {
   draw.setActive(typeSelect.value === 'DRAW');
@@ -114,7 +114,7 @@ typeSelect.onchange = function () {
   modify.setActive(typeSelect.value === 'MODIFY');
 };
 
-// 脏检查标记：记录哪些被修改过的要素需要回写服务端
+// Dirty flag dictionary for tracking modified features / 脏检查标记：记录哪些被修改过的要素需要回写服务端
 const dirty = {};
 
 selected.on('add', function (evt) {
@@ -124,7 +124,7 @@ selected.on('add', function (evt) {
   });
 });
 
-// 当要素从选中集合中移除时，若存在脏标记，则向 updateFeatures 接口提交更新
+// When feature is deselected, commit update if dirty / 当要素从选中集合移除时，若存在脏标记则向 updateFeatures 提交更新
 selected.on('remove', function (evt) {
   const feature = evt.element;
   const fid = feature.get('objectid');
@@ -156,7 +156,7 @@ selected.on('remove', function (evt) {
   }
 });
 
-// 绘制结束回调：将新绘制的多边形提交至服务端的 addFeatures 接口入库
+// On draw completion, send feature to addFeatures endpoint / 绘制结束回调：将新绘制的多边形提交至服务端的 addFeatures 接口入库
 draw.on('drawend', function (evt) {
   const feature = evt.feature;
   const payload =

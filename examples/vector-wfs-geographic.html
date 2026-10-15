@@ -1,12 +1,57 @@
 ---
 layout: example.html
-title: WFS with geographic coordinates
-shortdesc: Example of using WFS with a Tile strategy.
+title: WFS with geographic coordinates / 地理坐标系下的 WFS 瓦片化加载与 useGeographic
+shortdesc: Example of using WFS with a Tile strategy. / 演示如何使用 tile 瓦片空间加载策略向 GeoServer WFS 请求水系要素，并结合 useGeographic 全局地理坐标模式无缝交互。
 docs: >
   This example loads new features from GeoServer WFS with a tile based loading strategy.
   Calling the <code>useGeographic</code> function in the <code>'ol/proj'</code> module
   makes it so the map view uses geographic coordinates (even if the view projection is
   not geographic).
+
+  本示例演示了如何使用基于瓦片网格的 <code>tile</code> 加载策略从 GeoServer WFS（Web 要素服务）按需分块拉取矢量要素。
+
+  通过调用 <code>ol/proj</code> 模块中的 <code>useGeographic()</code> 函数，使得整个地图视图和 API 接口直接采用 WGS 84 地理经纬度坐标（即使底层视口投影仍为 Web 墨卡托 EPSG:3857）。在此模式下，数据源的 <code>url</code> 函数接收到的 <code>extent</code> 参数直接就是 <code>EPSG:4326</code> 经纬度外包范围，无需繁琐的手动坐标转换，即可无缝拼装 WFS 1.1.0 空间过滤请求。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计机制 (Core Architecture & Mechanics)
+  - **<code>useGeographic()</code> 的底层穿透效应**：
+    通常情况下，OpenLayers 中所有坐标（View 中心、Feature 几何、Extent 范围等）均默认为用户当前 View 投影（如 EPSG:3857 投影米制坐标）。而调用 <code>useGeographic()</code> 后：
+    - 开发者在 View、Feature、Interaction 传入的 <code>[lon, lat]</code> 经纬度直接生效；
+    - <code>vectorSource.url(extent)</code> 接收到的 <code>extent</code> 自动变为 <code>[minLon, minLat, maxLon, maxLat]</code>；
+    - 底层渲染器在 WebGL/Canvas 绘制时在着色器或管线内透明完成快速重投影，兼顾开发直观性与渲染性能。
+  - **WFS 与 Tile 空间网格结合的高性能架构**：
+    常规 WFS 往往因全量拉取或者视口 BBOX 随拖拽连续刷新而产生性能瓶颈。引入 <code>tile(createXYZ({tileSize: 512}))</code> 策略后，OpenLayers 会像加载栅格底图一样，将要素空间切分为固定的空间瓦片桶（Buckets），每个瓦片只需拉取一次即可长久保留在内存中，平移漫游丝滑流畅。
+
+  #### 2. 关键代码解析与 API 模式 (Code Deep Dive & API Patterns)
+  - **WFS 1.1.0 经纬度请求参数拼装**：
+    ```javascript
+    useGeographic(); // 激活全局经纬度模式
+
+    const vectorSource = new VectorSource({
+      format: new GeoJSON(),
+      url: function (extent) {
+        return (
+          'https://ahocevar.com/geoserver/wfs?service=WFS&' +
+          'version=1.1.0&request=GetFeature&typename=osm:water_areas&' +
+          'outputFormat=application/json&srsname=EPSG:4326&' +
+          'bbox=' +
+          extent.join(',') +
+          ',EPSG:4326'
+        );
+      },
+      strategy: tile(createXYZ({tileSize: 512})),
+    });
+    ```
+    请求直接要求 GeoServer 返回 <code>application/json</code> 格式的 GeoJSON 报文，并强制指定输出坐标系为 <code>srsname=EPSG:4326</code>，从而完全省去客户端二次重投影的 CPU 开销。
+
+  #### 3. 工程避坑与高可用实践 (Production Pitfalls & Best Practices)
+  - **WFS 1.0.0 vs 1.1.0 / 2.0.0 的经纬度轴序陷阱**：
+    OGC WFS 规范中，WFS 1.0.0 的 BBOX 轴序固定为 `(minX, minY, maxX, maxY)` 即 `(lon, lat)`；但从 WFS 1.1.0 起，若投影为 EPSG:4326，官方规范轴序严格定义为 `(lat, lon)`。GeoServer 通过在其末尾指定 `,EPSG:4326` 或特定厂商参数可以显式声明轴序，但在对接非 GeoServer（如 MapServer、ArcGIS Server 或 QGIS Server）时需格外警惕轴序颠倒。
+  - **多边形跨切片重叠渲染（Tile Boundary Seams）**：
+    使用 <code>tile</code> 策略请求 WFS 面要素时，虽然 OpenLayers 会根据要素 ID 自动去重合并，但若要素样式带有透明度（如 <code>rgba(0, 0, 255, 0.5)</code>），不同瓦片请求先后注入图层时可能因图元渲染先后次序引发偶发的重绘闪烁。建议通过赋予确定性的主键（<code>id</code>）并确保 WFS 响应带全局稳定 <code>id</code>。
 tags: "geographic, vector, WFS, tile, strategy, loading, server, maptiler"
 ---
 <div id="map" class="map"></div>
