@@ -1,10 +1,47 @@
 ---
 layout: example.html
-title: Overview Map Control
-shortdesc: Example of OverviewMap control.
+title: Overview Map Control / 鹰眼微缩地图控件 (OverviewMap)
+shortdesc: Example of OverviewMap control. / 使用 OverviewMap 控件展示主地图与全局微缩鹰眼联动的示例。
 docs: >
-  This example demonstrates the use of the OverviewMap control. Both the main map and the overview map are configured with layers using the same source.
-  Please note that explicitly configuring layers for the overview map is mandatory.
+  <p>
+    This example demonstrates the use of the OverviewMap control. Both the main map and the overview map are configured with layers using the same source.
+    Please note that explicitly configuring layers for the overview map is mandatory.
+  </p>
+  <p>
+    本示例演示了 <code>OverviewMap</code>（鹰眼微缩地图）控件的基础用法。主地图与微缩鹰眼地图均配置了使用相同切片数据源的图层。
+    请注意：在 OpenLayers 中，为鹰眼微缩地图显式配置专属图层列表（<code>layers</code>）是强制要求的。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>双 Map 实例联动体系（Dual-Map Synchronization）：</strong>
+      <code>ol/control/OverviewMap</code> 在内部独立构建并维护了一个轻量级的无头 <code>ol/Map</code> 实例。当用户在主地图中漫游、缩放时，控件内部监听主地图 <code>View</code> 的 <code>change:center</code> 与 <code>change:resolution</code> 事件，自动计算主地图在当前视野下的物理边界盒（Extent），并在微缩地图上方绘制半透明矩形指示框。
+    </li>
+    <li><strong>强制独立的图层声明（Explicit Layer Configuration）：</strong>
+      在 OpenLayers 架构中，图层（<code>Layer</code>）对象无法同时隶属于两个不同的 <code>Map</code> 容器。因此，必须在实例化 <code>OverviewMap</code> 时单独为其传入图层数组（<code>layers: [new TileLayer(...)]</code>）。
+    </li>
+    <li><strong>数据源缓存复用（Source Sharing）：</strong>
+      虽然图层必须独立，但底层的瓦片数据源（<code>Source</code>）可以共享。通过让主地图与鹰眼地图共享同一个 <code>const source = new OSM()</code>，两个地图复用了同一套切片内存缓存（Tile Cache），彻底避免了瓦片的重复网络下载。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>defaultControls().extend([overviewMapControl])</code>：将鹰眼控件追加挂载到 OpenLayers 的默认控件集合中，自动享有浮层堆叠与定位能力。</li>
+    <li>内置折叠交互：控件右下角默认自带可折叠三角按钮，支持用户根据大屏可用面积自由收起或展开鹰眼窗口。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>避免在鹰眼加载海量重图层：</strong>
+      鹰眼地图窗口较小（通常为 150×150 像素），切忌将主地图上所有的复杂热力图、大型 GeoJSON 矢量图层全盘塞入鹰眼，这会造成双倍的渲染负担。生产环境建议鹰眼仅加载最简化的粗粒度低清栅格底图。
+    </li>
+    <li><strong>跨域与切片配额优化：</strong>
+      由于鹰眼地图处于较小缩放层级（Zoom 0~4），其请求的顶层瓦片数量极少，共享 Source 能有效控制商业切片 API 的调用量计费。
+    </li>
+  </ul>
 tags: "overview, overviewmap"
 ---
 <div id="map" class="map"></div>

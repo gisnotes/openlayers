@@ -1,13 +1,45 @@
 ---
 layout: example.html
-title: Navigation Controls
-shortdesc: Shows how to add navigation controls.
+title: Navigation Controls / 地图导航控件 (ZoomToExtent)
+shortdesc: Shows how to add navigation controls. / 展示如何添加导航控件及使用 ZoomToExtent 一键快速复位全图范围。
 docs: >
   <p>This example shows how to use the <code>ol/control/ZoomToExtent</code> control.</p>
   <p>The following navigation controls are added to the map:</p>
   <ul>
     <li><code>ol/control/Zoom</code> (added by default)</li>
     <li><code>ol/control/ZoomToExtent</code></li>
+  </ul>
+  <p>本示例展示了如何向地图中添加 <code>ol/control/ZoomToExtent</code>（缩放至指定范围）导航控件。</p>
+  <p>当前地图包含以下导航控件：</p>
+  <ul>
+    <li><code>ol/control/Zoom</code>（OpenLayers 默认已内置的放大/缩小按钮）</li>
+    <li><code>ol/control/ZoomToExtent</code>（一键定位至苏黎世核心地理范围）</li>
+  </ul>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>导航控件体系（Navigation Controls）：</strong>
+      在复杂的业务地图系统中，用户在经历多次平移缩放后极易“迷失”当前视野。OpenLayers 提供了 <code>ZoomToExtent</code> 控件，以极简的原生按钮形态嵌入缩放工具栏中，用户点击后瞬间将视口平滑适配到预设的最佳空间包围盒（Extent）。
+    </li>
+    <li><strong>默认控件集扩展模式：</strong>
+      OpenLayers 的 <code>defaultControls()</code> 函数返回一个 <code>Collection</code> 集合（包含缩放、旋转与版权控件），通过 <code>defaultControls().extend([new ZoomToExtent(...)])</code> 能够保持默认控件行为的同时，优雅无缝注入扩展控件。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>extent: [minX, minY, maxX, maxY]</code>：指定复位时的空间投影包围盒（本示例为瑞士苏黎世湖区的 EPSG:3857 墨卡托坐标）。若未指定，控件默认复位到当前投影的全局范围（<code>projection.getExtent()</code>）。</li>
+    <li><code>label: 'E'</code>（默认）：按钮上显示的文本或图标（生产环境常用 FontAwesome 的 <code>&lt;i class="fa fa-compress"&gt;&lt;/i&gt;</code> 全图复位图标进行美化）。</li>
+    <li><code>tipLabel</code>：鼠标悬停提示文本，对无障碍和用户指引非常关键。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>动态业务范围与硬编码陷阱：</strong>
+      静态写死 <code>extent</code> 仅适合行政区划固定的场景。在动态业务系统（如物流车辆监控、巡检任务追踪）中，应在数据加载完成后调用 <code>vectorSource.getExtent()</code>，并通过自定义按钮调用 <code>map.getView().fit(extent, { duration: 800, padding: [50, 50, 50, 50] })</code>，实现带平滑缓动动画与安全边距的视口自适应。
+    </li>
   </ul>
 tags: "control, navigation, extent"
 ---

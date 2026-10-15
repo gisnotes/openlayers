@@ -5,6 +5,8 @@ import {defaults as defaultControls} from '../src/ol/control/defaults.js';
 import TileLayer from '../src/ol/layer/Tile.js';
 import OSM from '../src/ol/source/OSM.js';
 
+// Initialize map with default controls extended with ZoomToExtent
+// 初始化地图，在默认控件基础上扩展 ZoomToExtent 控件
 const map = new Map({
   controls: defaultControls().extend([
     new ZoomToExtent({

@@ -9,8 +9,11 @@ import OSM from '../src/ol/source/OSM.js';
 
 const rotateWithView = document.getElementById('rotateWithView');
 
+// Initialize customized overview map control with Thunderforest layer
+// 初始化定制化鹰眼微缩地图控件，加载 Thunderforest 地形骑行图层
 const overviewMapControl = new OverviewMap({
   // see in overviewmap-custom.html to see the custom CSS used
+  // 自定义 CSS 样式类名
   className: 'ol-overviewmap ol-custom-overviewmap',
   layers: [
     new TileLayer({
@@ -26,10 +29,14 @@ const overviewMapControl = new OverviewMap({
   collapsed: false,
 });
 
+// Toggle rotate with view behavior
+// 切换是否随主视图同步旋转
 rotateWithView.addEventListener('change', function () {
   overviewMapControl.setRotateWithView(this.checked);
 });
 
+// Initialize map with custom overview and drag-rotate-and-zoom interaction
+// 初始化地图，挂载定制鹰眼控件与 Shift 键旋转缩放交互
 const map = new Map({
   controls: defaultControls().extend([overviewMapControl]),
   interactions: defaultInteractions().extend([new DragRotateAndZoom()]),

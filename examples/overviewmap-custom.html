@@ -1,11 +1,43 @@
 ---
 layout: example.html
-title: Custom Overview Map
-shortdesc: Example of OverviewMap control with advanced customization.
+title: Custom Overview Map / 高级定制鹰眼微缩地图
+shortdesc: Example of OverviewMap control with advanced customization. / 具备自定义样式、旋转同步（Rotate with view）与异构底图的高级鹰眼控件示例。
 docs: >
-  <p>This example demonstrates how you can customize the overviewmap control using its supported options as well as defining custom CSS.  You can also rotate the map using the shift key to see how the overview map reacts.</p>
-tags: "overview, overviewmap"
+  <p>This example demonstrates how you can customize the overviewmap control using its supported options as well as defining custom CSS. You can also rotate the map using the shift key to see how the overview map reacts.</p>
+  <p>本示例展示了如何通过 <code>OverviewMap</code> 控件的丰富配置项结合自定义 CSS 样式对其进行深度定制。同时演示了按住 <code>Shift</code> 键拖拽鼠标旋转主地图时，鹰眼地图在“视图跟随旋转（Rotate with view）”开关下的实时交互响应机制。</p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
 
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>主副地图的坐标方位解耦（Orientation Decoupling）：</strong>
+      在导航系统或施工规划中，用户经常需要旋转主地图朝向。此时微缩鹰眼面临两种选择：
+      1. <strong>保持指北模式（<code>rotateWithView: false</code>）</strong>：微缩地图永远“上北下南”，主地图视口以一个**带倾斜角度的旋转矩形框**呈现在鹰眼中，便于宏观辨别方位；
+      2. <strong>视角同步模式（<code>rotateWithView: true</code>）</strong>：鹰眼地图与主地图以完全相同的视角同步旋转，红框始终保持水平，便于直接对齐当前主视野。
+    </li>
+    <li><strong>异构底图融合（Heterogeneous Basemaps）：</strong>
+      主地图与鹰眼地图无需使用相同源。本示例中主地图使用标准 OSM 街道底图，而微缩鹰眼则使用了 Thunderforest 等高线骑行图，实现了“局部看建筑注记，宏观俯瞰地貌地形”的复合可视化层次。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>className: 'ol-overviewmap ol-custom-overviewmap'</code>：注入自定义 CSS 类名，覆盖默认圆角、边框、投影阴影与绝对定位间距。</li>
+    <li><code>collapseLabel: '\u00BB'</code>（&raquo;）与 <code>label: '\u00AB'</code>（&laquo;）：自定义收起与展开图标字符，增强 UI 视觉美感。</li>
+    <li><code>overviewMapControl.setRotateWithView(boolean)</code>：动态实时切换旋转同步模式，无需重新实例化控件。</li>
+    <li><code>DragRotateAndZoom</code>：追加旋转交互器，使用户按住 <code>Shift</code> 键拖拽即可自由旋转和缩放地图。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>三方商业切片 API Key 管理：</strong>
+      外部切片服务（如 Thunderforest、MapTiler）通常有严格的配额与域名防盗链。生产环境切忌硬编码公开密钥，应通过代理服务器注入或配置白名单域名。
+    </li>
+    <li><strong>旋转抖动防范：</strong>
+      在高频连续旋转过程中，如果鹰眼内图层过重，可能会出现不同步的卡顿。建议为鹰眼图层启用轻量切片源，或在旋转过程中适当降频重绘。
+    </li>
+  </ul>
+tags: "overview, overviewmap"
 ---
 <div id="map" class="map"></div>
-<div><label><input type="checkbox" id="rotateWithView"> Rotate with view</label></div>
+<div><label><input type="checkbox" id="rotateWithView"> Rotate with view / 随视图同步旋转</label></div>
