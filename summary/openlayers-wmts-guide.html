@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - OpenLayers WMTS 瓦片地图服务与时空多维切片全景实战指南</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">WMTS 瓦片地图服务指南</li></ol></nav>
+
+<h1 id="openlayers-wmts-瓦片地图服务与时空多维切片全景实战指南">OpenLayers WMTS 瓦片地图服务与时空多维切片全景实战指南</h1>
+<blockquote>
+<p>在开放地理空间信息联盟（OGC）标准体系中，<strong>WMTS（Web Map Tile Service，OGC 07-057r7）</strong> 是工业级预渲染栅格与矢量瓦片分发的核心标准。与动态实时计算渲染的 WMS 相比，WMTS 采用标准分层金字塔模型（TileMatrixSet），支持高并发缓存加速。</p>
+<p>OpenLayers 原生深度集成了 WMTS 规范，不仅支持手工配置复杂的瓦片矩阵金字塔，还提供了强大的 <strong><code>optionsFromCapabilities</code></strong> 自动元数据解析引擎，并支持多维时空切片（Dimensions）与跨国权威机构（如法国国家地理 IGN）投影金字塔对接。本文基于 4 个核心官方示例，系统解构 WMTS 架构模型、元数据解析机制与多维切片调度。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：4-个-wmts-核心官方示例矩阵">1. 架构总览：4 个 WMTS 核心官方示例矩阵</h2>
+<table>
+<thead>
+<tr>
+<th align="left">分类</th>
+<th align="left">示例标识</th>
+<th align="left">核心机制 / 关键 API</th>
+<th align="left">解决的典型生产场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>元数据自动解析</strong></td>
+<td align="left"><a href="../en/latest/examples/wmts-capabilities.html"><code>wmts-capabilities</code></a></td>
+<td align="left"><code>ol/format/WMTSCapabilities</code> + <code>optionsFromCapabilities</code></td>
+<td align="left">解析 XML 元数据，提取图层列表与矩阵集参数</td>
+</tr>
+<tr>
+<td align="left"><strong>全自动图层构建</strong></td>
+<td align="left"><a href="../en/latest/examples/wmts-layer-from-capabilities.html"><code>wmts-layer-from-capabilities</code></a></td>
+<td align="left"><code>optionsFromCapabilities</code> 一键生成 <code>TileLayer</code></td>
+<td align="left">零手动配置切片金字塔，自动化接入第三方 WMTS 服务</td>
+</tr>
+<tr>
+<td align="left"><strong>时空多维切片过滤</strong></td>
+<td align="left"><a href="../en/latest/examples/wmts-dimensions.html"><code>wmts-dimensions</code></a></td>
+<td align="left"><code>source.updateDimensions()</code> + 瓦片加载过渡（Transition）</td>
+<td align="left">气象时序雷达、历史遥感影像多时间轴平滑回放</td>
+</tr>
+<tr>
+<td align="left"><strong>权威测绘机构对接</strong></td>
+<td align="left"><a href="../en/latest/examples/wmts-ign.html"><code>wmts-ign</code></a></td>
+<td align="left">IGN Geoportail 官方矩阵集 + 分辨率与原点对齐</td>
+<td align="left">接入国家级基础测绘底图，解决自定义切片原点偏位</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-wmts-核心规范与切片金字塔数学模型">2. WMTS 核心规范与切片金字塔数学模型</h2>
+<h3 id="21-tilematrixset-瓦片矩阵集构成">2.1 TileMatrixSet 瓦片矩阵集构成</h3>
+<p>在 OGC WMTS 规范中，切片系统由三级逻辑实体构成：</p>
+<ol>
+<li><strong>Layer</strong>：业务图层单元，包含 Style（样式标识）与 Format（图像格式，如 <code>image/png</code>、<code>image/jpeg</code>）；</li>
+<li><strong>TileMatrixSet</strong>：瓦片矩阵集合，绑定特定的空间参考系（CRS，如 <code>EPSG:3857</code> 或 <code>EPSG:4326</code>）；</li>
+<li><strong>TileMatrix</strong>：每个缩放层级（Zoom Level）的具体矩阵定义，关键属性包括：<ul>
+<li><code>Identifier</code>：层级标识（如 <code>&quot;0&quot;</code>, <code>&quot;1&quot;</code> 或 <code>&quot;EPSG:3857:0&quot;</code>）；</li>
+<li><code>ScaleDenominator</code>：标准比例尺分母；</li>
+<li><code>TopLeftCorner</code>：切片网格左上角坐标原点 $[x_0, y_0]$；</li>
+<li><code>TileWidth</code> / <code>TileHeight</code>：单个切片像素尺寸（通常为 256 或 512）；</li>
+<li><code>MatrixWidth</code> / <code>MatrixHeight</code>：该层级切片网格的列数与行数。</li>
+</ul>
+</li>
+</ol>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph WMTSCapabilities [WMTS 元数据文档 GetCapabilities.xml]
+        direction TB
+        Layers[&quot;Contents -&gt; Layer (图层声明)&quot;]
+        TMS[&quot;Contents -&gt; TileMatrixSet (矩阵集声明)&quot;]
+    end
+
+    subgraph ClientParser [OpenLayers 客户端解析]
+        Parser[&quot;new WMTSCapabilities().read(xmlText)&quot;]
+        OptionsGenerator[&quot;optionsFromCapabilities(capabilities, {layer, matrixSet})&quot;]
+    end
+
+    subgraph SourceBuild [图层实例化]
+        WMTSSource[&quot;new WMTS(options)&quot;]
+        WMTSTileGrid[&quot;内部生成 WMTSTileGrid (绑定 resolutions, matrixIds)&quot;]
+    end
+
+    WMTSCapabilities --&gt; Parser --&gt; OptionsGenerator --&gt; SourceBuild
+</code></pre>
+<h3 id="22-比例尺分母与地面分辨率转换数学公式">2.2 比例尺分母与地面分辨率转换数学公式</h3>
+<p>OGC WMTS 规范将标准显示器像元尺寸定义为 **$0.28\text{ mm} = 0.00028\text{ m}$**（对应约 90.71 DPI）。
+分辨率 $R$（单位：米/像素）与比例尺分母 $S_D$（ScaleDenominator）之间的换算公式为：</p>
+<p>$$R = S_D \times 0.00028$$</p>
+<p>反之，若已知目标层级的米制分辨率 $R$，其对应的 OGC 比例尺分母为：</p>
+<p>$$S_D = \frac{R}{0.00028} \approx R \times 3571.42857$$</p>
+<hr>
+<h2 id="3-元数据解析实战：从-getcapabilities-到图层直显">3. 元数据解析实战：从 GetCapabilities 到图层直显</h2>
+<p>手动书写 20 个层级的 <code>resolutions</code> 与 <code>matrixIds</code> 极易因浮点数舍入误差导致切片错位或 404 错误。OpenLayers 提供了两步自动化方案：</p>
+<h3 id="31-核心解析范式（wmts-layer-from-capabilities）">3.1 核心解析范式（<code>wmts-layer-from-capabilities</code>）</h3>
+<pre><code class="language-javascript">import WMTS, { optionsFromCapabilities } from &quot;ol/source/WMTS&quot;;
+import WMTSCapabilities from &quot;ol/format/WMTSCapabilities&quot;;
+import TileLayer from &quot;ol/layer/Tile&quot;;
+
+const parser = new WMTSCapabilities();
+
+fetch(&quot;https://server.com/wmts?service=WMTS&amp;request=GetCapabilities&quot;)
+  .then((response) =&gt; response.text())
+  .then((text) =&gt; {
+    // 1. 将 XML 解析为结构化 JavaScript 对象
+    const result = parser.read(text);
+
+    // 2. 提取指定图层与矩阵集的完整切片配置
+    const options = optionsFromCapabilities(result, {
+      layer: &quot;layer-id&quot;,
+      matrixSet: &quot;EPSG:3857&quot;,
+      format: &quot;image/png&quot;,
+      style: &quot;default&quot;,
+    });
+
+    // 3. 构建 WMTS 数据源与图层
+    const wmtsLayer = new TileLayer({
+      opacity: 1,
+      source: new WMTS(options),
+    });
+
+    map.addLayer(wmtsLayer);
+  });
+</code></pre>
+<hr>
+<h2 id="4-时空多维切片过滤：动态-dimensions-与平滑过渡">4. 时空多维切片过滤：动态 Dimensions 与平滑过渡</h2>
+<p>气象预报、卫星遥感等高频动态数据通常按时间戳分块生成 WMTS 切片。</p>
+<h3 id="41-动态维度更新机制（wmts-dimensions）">4.1 动态维度更新机制（<code>wmts-dimensions</code>）</h3>
+<p>在 <code>ol/source/WMTS</code> 中，维度参数通过 <code>dimensions</code> 字典管理：</p>
+<pre><code class="language-javascript">const wmtsSource = new WMTS({
+  // ...基础切片配置
+  dimensions: {
+    Time: &quot;2026-10-15T00:00:00Z&quot;,
+    Elevation: &quot;500&quot;,
+  },
+});
+
+// 当用户拖动时间轴滑块时：
+function updateTime(newTimeIsoString) {
+  // 1. 动态更新维度参数
+  wmtsSource.updateDimensions({ Time: newTimeIsoString });
+  // 2. OpenLayers 内部会自动更新后续切片请求的 URL 模板参数
+}
+</code></pre>
+<h3 id="42-避免时间轴切换闪烁：过渡动效（tile-transitions）">4.2 避免时间轴切换闪烁：过渡动效（Tile Transitions）</h3>
+<p>快速切换时间戳时，若直接清空旧切片会导致地图短暂白屏。
+OpenLayers 通过切片过渡动画机制解决这一问题：</p>
+<ul>
+<li>在 <code>ol/layer/Tile</code> 中配置 <code>transition: 250</code>（毫秒）；</li>
+<li>新时间切片在后台下载解码完成前，旧切片保持显示；当新切片就绪后，通过 Alpha 透明度渐变交叉淡入，保证视觉连续性。</li>
+</ul>
+<hr>
+<h2 id="5-跨国权威测绘机构切片对接避坑（以法国-ign-为例）">5. 跨国权威测绘机构切片对接避坑（以法国 IGN 为例）</h2>
+<p>示例 <a href="../en/latest/examples/wmts-ign.html"><code>wmts-ign</code></a> 展现了对接国家级测绘系统时的关键技术点：</p>
+<ol>
+<li><strong>投影原点定义</strong>：部分欧洲测绘机构的切片网格原点设置在极西北方向（如 $[-20037508, 20037508]$ 甚至更大包围盒），切勿默认使用赤道或局部范围原点；</li>
+<li><strong>切片矩阵标识格式</strong>：IGN 等服务商的 <code>matrixIds</code> 往往采用特定前缀格式（如 <code>&quot;PM:0&quot;</code>, <code>&quot;PM:1&quot;</code>），必须与能力文档完全一致；</li>
+<li><strong>鉴权 Key 参数注入</strong>：许多商业与政府 WMTS 服务采用 URL 路径参数注入 API Key（如 <code>https://data.geopf.fr/wmts?apikey=...</code>），在构建请求模板时需统一携带。</li>
+</ol>
+<hr>
+<h2 id="附录：4-个官方-wmts-核心示例直达索引">附录：4 个官方 WMTS 核心示例直达索引</h2>
+<ol>
+<li><a href="../en/latest/examples/wmts-capabilities.html"><code>wmts-capabilities</code></a> &mdash; 解析 WMTS 元数据能力文档并提取图层矩阵集</li>
+<li><a href="../en/latest/examples/wmts-layer-from-capabilities.html"><code>wmts-layer-from-capabilities</code></a> &mdash; 从 GetCapabilities 自动构建 WMTSLayer 实例</li>
+<li><a href="../en/latest/examples/wmts-dimensions.html"><code>wmts-dimensions</code></a> &mdash; WMTS 多维时空切片切换与无缝过渡动效</li>
+<li><a href="../en/latest/examples/wmts-ign.html"><code>wmts-ign</code></a> &mdash; 法国国家地理 IGN 官方 WMTS 底图服务高精度对接</li>
+</ol>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMermaid() {
+          if (window.mermaid) {
+            if (window.__mermaidInitialized) {
+              return;
+            }
+            window.__mermaidInitialized = true;
+            mermaid.initialize({
+              startOnLoad: false,
+              theme: 'default',
+              securityLevel: 'loose'
+            });
+            const codeBlocks = document.querySelectorAll('pre code.language-mermaid, pre code.mermaid');
+            if (codeBlocks.length > 0) {
+              codeBlocks.forEach(function (el) {
+                const pre = el.parentElement;
+                const wrapper = pre.closest('.code-toolbar') || pre;
+                const div = document.createElement('div');
+                div.className = 'mermaid';
+                div.textContent = el.textContent;
+                wrapper.parentElement.replaceChild(div, wrapper);
+              });
+              mermaid.run();
+            }
+          } else {
+            setTimeout(renderMermaid, 50);
+          }
+        }
+        renderMermaid();
+      });
+    </script>
+  </body>
+</html>

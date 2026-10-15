@@ -986,7 +986,7 @@ function stringDivider(str, width, spaceReplacer) {
   &lt;/head&gt;
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
-
+    
     &lt;div class&#x3D;&quot;edit-form&quot;&gt;
       &lt;input id&#x3D;&quot;refresh-points&quot; type&#x3D;&quot;button&quot; value&#x3D;&quot;Refresh / 刷新点标注&quot; /&gt;
       &lt;h2&gt;Points / 点要素标注&lt;/h2&gt;
@@ -1097,7 +1097,7 @@ function stringDivider(str, width, spaceReplacer) {
         &lt;input type&#x3D;&quot;text&quot; value&#x3D;&quot;3&quot; id&#x3D;&quot;points-outline-width&quot; /&gt;
       &lt;/div&gt;
     &lt;/div&gt;
-
+    
     &lt;div class&#x3D;&quot;edit-form&quot;&gt;
       &lt;input id&#x3D;&quot;refresh-lines&quot; type&#x3D;&quot;button&quot; value&#x3D;&quot;Refresh / 刷新线标注&quot; /&gt;
       &lt;h2&gt;Lines / 线要素标注&lt;/h2&gt;
@@ -1209,7 +1209,7 @@ function stringDivider(str, width, spaceReplacer) {
         &lt;input type&#x3D;&quot;text&quot; value&#x3D;&quot;3&quot; id&#x3D;&quot;lines-outline-width&quot; /&gt;
       &lt;/div&gt;
     &lt;/div&gt;
-
+    
     &lt;div class&#x3D;&quot;edit-form&quot;&gt;
       &lt;input id&#x3D;&quot;refresh-polygons&quot; type&#x3D;&quot;button&quot; value&#x3D;&quot;Refresh / 刷新面标注&quot; /&gt;
       &lt;h2&gt;Polygons / 面要素标注&lt;/h2&gt;
@@ -1376,6 +1376,39 @@ function stringDivider(str, width, spaceReplacer) {
           }
         }
         renderMath();
+      });
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMermaid() {
+          if (window.mermaid) {
+            if (window.__mermaidInitialized) {
+              return;
+            }
+            window.__mermaidInitialized = true;
+            mermaid.initialize({
+              startOnLoad: false,
+              theme: 'default',
+              securityLevel: 'loose'
+            });
+            const codeBlocks = document.querySelectorAll('pre code.language-mermaid, pre code.mermaid');
+            if (codeBlocks.length > 0) {
+              codeBlocks.forEach(function (el) {
+                const pre = el.parentElement;
+                const wrapper = pre.closest('.code-toolbar') || pre;
+                const div = document.createElement('div');
+                div.className = 'mermaid';
+                div.textContent = el.textContent;
+                wrapper.parentElement.replaceChild(div, wrapper);
+              });
+              mermaid.run();
+            }
+          } else {
+            setTimeout(renderMermaid, 50);
+          }
+        }
+        renderMermaid();
       });
     </script>
     <script src="./resources/common.js"></script>

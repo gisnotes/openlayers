@@ -130,6 +130,12 @@
 <td align="left">纯前端图像处理、暗黑模式/夜景底图图标适配</td>
 </tr>
 <tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/icon-repeat.html"><code>icon-repeat</code></a></td>
+<td align="left"><code>Icon</code> 沿折线连续重复排布与切向旋转（<code>placement: &#39;line&#39;, repeat</code>）</td>
+<td align="left">航线流动箭头、单行道导向标识、铁路线枕木沿线切向自动排版</td>
+</tr>
+<tr>
 <td align="left"><strong>几何轮廓与高阶矢量</strong></td>
 <td align="left"><a href="../en/latest/examples/line-styles.html"><code>line-styles</code></a></td>
 <td align="left">多重 <code>Stroke</code> 复合渲染、<code>lineDash</code> 虚线、偏移描边</td>
@@ -267,7 +273,7 @@
 <p>从底层实现来看，OpenLayers 支持以下 8 种样式创建方式：</p>
 <pre><code class="language-mermaid">flowchart TD
     Data[&quot;地图数据 / 要素 / 像素&quot;] --&gt; Choice{&quot;根据场景选择样式机制&quot;}
-    
+
     Choice --&gt;|&quot;静态固定视觉&quot;| M1[&quot;1. 经典面向对象 API\n(new Style / Fill / Stroke / Icon)&quot;]
     Choice --&gt;|&quot;业务属性/视图变化&quot;| M2[&quot;2. 动态样式函数\n(styleFunction(feature, resolution))&quot;]
     Choice --&gt;|&quot;数据驱动 / 跨平台规格&quot;| M3[&quot;3. 声明式表达式\n([&#39;get&#39;], [&#39;interpolate&#39;], Flat JSON)&quot;]
@@ -282,15 +288,15 @@
 <p><strong>对应示例</strong>：<a href="https://gisnotes.github.io/openlayers/en/latest/examples/icon.html"><code>icon</code></a>、<a href="https://gisnotes.github.io/openlayers/en/latest/examples/regularshape.html"><code>regularshape</code></a>、<a href="https://gisnotes.github.io/openlayers/en/latest/examples/line-styles.html"><code>line-styles</code></a>、<a href="https://gisnotes.github.io/openlayers/en/latest/examples/polygon-styles.html"><code>polygon-styles</code></a></p>
 <p>通过组装 OpenLayers 提供的各类样式原子类构建静态样式：</p>
 <pre><code class="language-javascript">const style = new Style({
-  fill: new Fill({color: &#39;rgba(0, 102, 204, 0.6)&#39;}),
-  stroke: new Stroke({color: &#39;#ffffff&#39;, width: 2, lineDash: [4, 4]}),
+  fill: new Fill({ color: &quot;rgba(0, 102, 204, 0.6)&quot; }),
+  stroke: new Stroke({ color: &quot;#ffffff&quot;, width: 2, lineDash: [4, 4] }),
   image: new RegularShape({
     points: 5,
     radius: 10,
     radius2: 4,
-    fill: new Fill({color: &#39;orange&#39;})
+    fill: new Fill({ color: &quot;orange&quot; }),
   }),
-  text: new Text({text: &#39;标注名称&#39;, font: &#39;12px sans-serif&#39;})
+  text: new Text({ text: &quot;标注名称&quot;, font: &quot;12px sans-serif&quot; }),
 });
 </code></pre>
 <ul>
@@ -322,20 +328,28 @@
 <pre><code class="language-javascript">const layer = new VectorLayer({
   style: [
     {
-      filter: [&#39;&gt;&#39;, [&#39;get&#39;, &#39;population&#39;], 1000000],
+      filter: [&quot;&gt;&quot;, [&quot;get&quot;, &quot;population&quot;], 1000000],
       style: {
-        &#39;circle-radius&#39;: [&#39;interpolate&#39;, [&#39;linear&#39;], [&#39;get&#39;, &#39;population&#39;], 1000000, 4, 10000000, 16],
-        &#39;circle-fill-color&#39;: &#39;red&#39;
-      }
+        &quot;circle-radius&quot;: [
+          &quot;interpolate&quot;,
+          [&quot;linear&quot;],
+          [&quot;get&quot;, &quot;population&quot;],
+          1000000,
+          4,
+          10000000,
+          16,
+        ],
+        &quot;circle-fill-color&quot;: &quot;red&quot;,
+      },
     },
     {
       else: true,
       style: {
-        &#39;circle-radius&#39;: 3,
-        &#39;circle-fill-color&#39;: &#39;gray&#39;
-      }
-    }
-  ]
+        &quot;circle-radius&quot;: 3,
+        &quot;circle-fill-color&quot;: &quot;gray&quot;,
+      },
+    },
+  ],
 });
 </code></pre>
 <ul>
@@ -347,10 +361,10 @@
 <p>内置的 <code>RegularShape</code> 仅支持对称正多边形，无法直接绘制倾斜折线闪电、非对称标头等复杂矢量。如果预制静态 PNG 图片，在尺寸随属性连续变化时需要过多图片资源。
 <code>toContext</code> 允许在离屏 Canvas 上将矢量几何直接栅格化为位图：</p>
 <pre><code class="language-javascript">// 1. 创建离屏画布并包装为立即渲染器
-const canvas = document.createElement(&#39;canvas&#39;);
-const vectorContext = toContext(canvas.getContext(&#39;2d&#39;), {
+const canvas = document.createElement(&quot;canvas&quot;);
+const vectorContext = toContext(canvas.getContext(&quot;2d&quot;), {
   size: [width, height],
-  pixelRatio: DEVICE_PIXEL_RATIO // Retina 高分屏超采样
+  pixelRatio: DEVICE_PIXEL_RATIO, // Retina 高分屏超采样
 });
 
 // 2. 复用 OpenLayers 样式与几何 API 直接绘制到离屏 Canvas
@@ -361,8 +375,8 @@ vectorContext.drawGeometry(polygonOutline);
 const style = new Style({
   image: new Icon({
     img: canvas,
-    scale: 1 / DEVICE_PIXEL_RATIO // 缩回 CSS 逻辑像素，保证清晰度
-  })
+    scale: 1 / DEVICE_PIXEL_RATIO, // 缩回 CSS 逻辑像素，保证清晰度
+  }),
 });
 </code></pre>
 <ul>
@@ -394,12 +408,12 @@ const style = new Style({
 <p>OpenLayers 的 <code>Fill.color</code> 支持直接传入浏览器的 <code>CanvasGradient</code>（渐变对象）与 <code>CanvasPattern</code>（平铺图案对象）：</p>
 <pre><code class="language-javascript">// 创建跨越屏幕物理像素宽度的线性渐变
 const gradient = ctx.createLinearGradient(0, 0, 1024 * DEVICE_PIXEL_RATIO, 0);
-gradient.addColorStop(0, &#39;red&#39;);
-gradient.addColorStop(1, &#39;purple&#39;);
+gradient.addColorStop(0, &quot;red&quot;);
+gradient.addColorStop(1, &quot;purple&quot;);
 
 // 直接作为 Fill 颜色传入
 const style = new Style({
-  fill: new Fill({ color: gradient })
+  fill: new Fill({ color: gradient }),
 });
 </code></pre>
 <ul>
@@ -413,11 +427,14 @@ const style = new Style({
 <li><strong>热力图（<code>HeatmapLayer</code>）</strong>：在 WebGL 中将点位累加到离屏纹理，根据模糊半径（<code>blur</code>）与热力半径（<code>radius</code>）进行卷积运算，最后根据色谱查找表着色。</li>
 <li><strong>遥感多波段栅格（<code>WebGLTile</code>）</strong>：通过表达式直接在 GPU 中对像元执行波段代数运算：<pre><code class="language-javascript">const ndvi = {
   color: [
-    &#39;interpolate&#39;, [&#39;linear&#39;],
-    [&#39;/&#39;, [&#39;-&#39;, nir, red], [&#39;+&#39;, nir, red]], // (NIR - Red) / (NIR + Red)
-    -0.2, [191, 191, 191],
-    0.6, [46, 117, 34]
-  ]
+    &quot;interpolate&quot;,
+    [&quot;linear&quot;],
+    [&quot;/&quot;, [&quot;-&quot;, nir, red], [&quot;+&quot;, nir, red]], // (NIR - Red) / (NIR + Red)
+    -0.2,
+    [191, 191, 191],
+    0.6,
+    [46, 117, 34],
+  ],
 };
 </code></pre>
 </li>
@@ -494,10 +511,10 @@ const style = new Style({
 从 KML 或 GeoJSON 提取属性并写入要素时，调用 <code>feature.set(&#39;key&#39;, value)</code> 默认会触发要素的 <code>change</code> 事件并通知图层重绘。</p>
 </blockquote>
 <p><code>earthquake-custom-symbol</code> 中提供了标准处理方式：</p>
-<pre><code class="language-javascript">vector.getSource().on(&#39;featuresloadend&#39;, function (evt) {
+<pre><code class="language-javascript">vector.getSource().on(&quot;featuresloadend&quot;, function (evt) {
   evt.features.forEach((f) =&gt; {
     // 第三个参数传入 true（silent: true），静默更新属性，不派发 change 事件
-    f.set(&#39;magnitude&#39;, parseMagnitudeFromName(f.get(&#39;name&#39;)), true);
+    f.set(&quot;magnitude&quot;, parseMagnitudeFromName(f.get(&quot;name&quot;)), true);
   });
 });
 </code></pre>
@@ -561,6 +578,7 @@ const style = new Style({
 <li><a href="../en/latest/examples/geozarr-stretch.html">geozarr-stretch</a></li>
 <li><a href="../en/latest/examples/webgl-tile-style.html">webgl-tile-style</a></li>
 <li><a href="../en/latest/examples/zoomslider.html">zoomslider</a></li>
+<li><a href="../en/latest/examples/icon-repeat.html">icon-repeat</a></li>
 </ol>
 
     </div>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - OpenLayers 商业与第三方多源云地图服务集成实战指南 (Azure Maps, MapServer, MapGuide &amp; OpenSeaMap)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">第三方云服务集成指南</li></ol></nav>
+
+<h1 id="openlayers-商业与第三方多源云地图服务集成实战指南">OpenLayers 商业与第三方多源云地图服务集成实战指南</h1>
+<blockquote>
+<p>在企业级混合云 GIS 架构中，底图数据往往不仅来自公开通用的 OpenStreetMap，还需要跨平台集成<strong>商业云地图服务（如微软 Azure Maps / Bing Maps）</strong>、<strong>老牌开源空间服务器（MapServer、MapGuide）</strong>以及<strong>专业垂直行业底图（如 OpenSeaMap 国际航海标线图层）</strong>。</p>
+<p>不同的服务提供商在坐标系网格切分、Quadkey 四叉树索引、动态鉴权 Token 刷新以及 CGI 请求协议上存在显著差异。本文基于 4 个核心官方示例，系统解构商业与开源第三方地图服务的协议转换、请求定制与生产接入方案。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：4-个第三方服务集成官方示例矩阵">1. 架构总览：4 个第三方服务集成官方示例矩阵</h2>
+<table>
+<thead>
+<tr>
+<th align="left">分类</th>
+<th align="left">示例标识</th>
+<th align="left">核心机制 / 关键 API</th>
+<th align="left">解决的典型生产场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>微软商业云底图</strong></td>
+<td align="left"><a href="../en/latest/examples/azure-maps.html"><code>azure-maps</code></a></td>
+<td align="left"><code>ol/source/XYZ</code> + Azure Maps REST API 鉴权</td>
+<td align="left">企业级高分辨率全球卫星影像、合规路网底图快速集成</td>
+</tr>
+<tr>
+<td align="left"><strong>开源 CGI 地图服务</strong></td>
+<td align="left"><a href="../en/latest/examples/mapserver-cgi.html"><code>mapserver-cgi</code></a></td>
+<td align="left"><code>ol/source/ImageWMS</code> + MapServer CGI 传参</td>
+<td align="left">局域网自建高性能 C 语言 MapServer 单图即时渲染</td>
+</tr>
+<tr>
+<td align="left"><strong>Autodesk 空间服务器</strong></td>
+<td align="left"><a href="../en/latest/examples/mapguide-untiled.html"><code>mapguide-untiled</code></a></td>
+<td align="left"><code>ol/source/ImageMapGuide</code> + 动态会话管理</td>
+<td align="left">规划勘测行业 MapGuide 动态图层展示与视口同步</td>
+</tr>
+<tr>
+<td align="left"><strong>垂直航海多源叠加</strong></td>
+<td align="left"><a href="../en/latest/examples/localized-openstreetmap.html"><code>localized-openstreetmap</code></a></td>
+<td align="left">多层 <code>ol/layer/Tile</code> 复合堆叠 + 局部语言重写</td>
+<td align="left">航运港口、专业水文航标（OpenSeaMap）与街道图层融合</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-微软-azure-maps-云底图接入范式">2. 微软 Azure Maps 云底图接入范式</h2>
+<p>微软将其原有的 Bing Maps 服务全面升级并入了 <strong>Azure Maps</strong> 空间云生态。</p>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph AzurePortal [Azure 云控制台]
+        AuthKey[&quot;获取 Subscription Key / AAD Token&quot;]
+    end
+
+    subgraph OpenLayersClient [OpenLayers 客户端]
+        TileSource[&quot;ol/source/XYZ 数据源&quot;]
+        URLTemplate[&quot;URL: atlas.microsoft.com/map/tile?subscription-key=...&quot;]
+        TileLayer[&quot;ol/layer/WebGLTile / TileLayer&quot;]
+    end
+
+    AuthKey --&gt; URLTemplate --&gt; TileSource --&gt; TileLayer
+</code></pre>
+<h3 id="21-azure-maps-矢量影像瓦片标准请求模板（azure-maps）">2.1 Azure Maps 矢量/影像瓦片标准请求模板（<code>azure-maps</code>）</h3>
+<p>Azure Maps 采用标准的 Web 墨卡托 XYZ 切片网格。核心代码范式如下：</p>
+<pre><code class="language-javascript">import TileLayer from &quot;ol/layer/Tile&quot;;
+import XYZ from &quot;ol/source/XYZ&quot;;
+
+const subscriptionKey = &quot;YOUR_AZURE_MAPS_KEY&quot;;
+
+// 卫星影像图层
+const satelliteLayer = new TileLayer({
+  source: new XYZ({
+    url: `https://atlas.microsoft.com/map/tile?api-version=2.0&amp;tilesetId=microsoft.imagery&amp;x={x}&amp;y={y}&amp;zoom={z}&amp;subscription-key=${subscriptionKey}`,
+    maxZoom: 19,
+  }),
+});
+
+// 路网与行政区划标注图层
+const roadsLayer = new TileLayer({
+  source: new XYZ({
+    url: `https://atlas.microsoft.com/map/tile?api-version=2.0&amp;tilesetId=microsoft.base.labels.road&amp;x={x}&amp;y={y}&amp;zoom={z}&amp;subscription-key=${subscriptionKey}`,
+    maxZoom: 19,
+  }),
+});
+</code></pre>
+<hr>
+<h2 id="3-mapserver-cgi-传统服务端动态渲染（mapserver-cgi）">3. MapServer CGI 传统服务端动态渲染（<code>mapserver-cgi</code>）</h2>
+<p>MapServer 作为开源 GIS 领域的常青树，通过其高效的 C 语言核心支持原生 CGI 调用。</p>
+<pre><code class="language-javascript">import ImageLayer from &quot;ol/layer/Image&quot;;
+import ImageWMS from &quot;ol/source/ImageWMS&quot;;
+
+const mapserverLayer = new ImageLayer({
+  source: new ImageWMS({
+    // 指向服务器上的 mapserv 可执行 CGI 路径
+    url: &quot;https://demo.mapserver.org/cgi-bin/mapserv?&quot;,
+    params: {
+      map: &quot;/mapserver/apps/tutorial/htdocs/example1.map&quot;, // 服务端 .map 配置文件物理路径
+      LAYERS: &quot;states&quot;, // 目标图层名
+      MODE: &quot;map&quot;, // CGI 原生地图模式
+    },
+    ratio: 1,
+  }),
+});
+</code></pre>
+<hr>
+<h2 id="4-mapguide-空间服务器动态单图接入（mapguide-untiled）">4. MapGuide 空间服务器动态单图接入（<code>mapguide-untiled</code>）</h2>
+<p>在政企测绘工程中，Autodesk MapGuide 提供了专用的交互接口：</p>
+<pre><code class="language-javascript">import ImageMapGuide from &quot;ol/source/ImageMapGuide&quot;;
+import ImageLayer from &quot;ol/layer/Image&quot;;
+
+const mapguideSource = new ImageMapGuide({
+  url: &quot;http://server.com/mapguide/mapagent/mapagent.fcgi&quot;,
+  params: {
+    MAPDEFINITION: &quot;Library://Samples/Sheboygan/Maps/Sheboygan.MapDefinition&quot;,
+    FORMAT: &quot;PNG&quot;,
+  },
+  ratio: 1, // 单张整屏图像请求，避免接缝文本截断
+});
+
+const layer = new ImageLayer({ source: mapguideSource });
+</code></pre>
+<hr>
+<h2 id="5-垂直行业地图融合：航海标线图层叠加（localized-openstreetmap）">5. 垂直行业地图融合：航海标线图层叠加（<code>localized-openstreetmap</code>）</h2>
+<p>航运管理中，单一的地理底图无法满足安全通航要求，通常采用“基础街道/陆地底图 + 国际航海标线（OpenSeaMap）”复合图层堆叠结构：</p>
+<pre><code class="language-javascript">import TileLayer from &quot;ol/layer/Tile&quot;;
+import OSM from &quot;ol/source/OSM&quot;;
+import XYZ from &quot;ol/source/XYZ&quot;;
+
+// 1. 底层：基础地理地图
+const baseMap = new TileLayer({
+  source: new OSM(),
+});
+
+// 2. 顶层：OpenSeaMap 专业水文航标图层（透明 PNG 叠加）
+const seaMap = new TileLayer({
+  source: new XYZ({
+    url: &quot;https://tiles.openseamap.org/seamark/{z}/{x}/{y}.png&quot;,
+    maxZoom: 18,
+  }),
+});
+</code></pre>
+<hr>
+<h2 id="6-生产工程避坑指南">6. 生产工程避坑指南</h2>
+<ol>
+<li><strong>密钥暴露与反向代理</strong>：商业云（如 Azure Maps、MapTiler）的 <code>subscription-key</code> 直接暴露在前端 URL 中极易被盗刷；生产环境应配置反向代理服务器（Nginx），在转发切片请求时隐式注入 Token；</li>
+<li><strong>CGI 性能与超时防范</strong>：MapServer CGI 在高并发请求下单图渲染耗时较长；应配置 <code>ratio: 1</code> 并在服务端结合 MapCache 开启缓存加速；</li>
+<li><strong>HTTP 混杂内容（Mixed Content）</strong>：部分老旧内部 MapServer/MapGuide 服务仍采用 HTTP 协议；若现代 Web 应用部署在 HTTPS 域名下，浏览器将直接拦截请求，必须前置反向代理配置 SSL 证书。</li>
+</ol>
+<hr>
+<h2 id="附录：4-个官方第三方云服务核心示例直达索引">附录：4 个官方第三方云服务核心示例直达索引</h2>
+<ol>
+<li><a href="../en/latest/examples/azure-maps.html"><code>azure-maps</code></a> &mdash; 微软 Azure Maps 商业底图与图层切换接入</li>
+<li><a href="../en/latest/examples/mapserver-cgi.html"><code>mapserver-cgi</code></a> &mdash; MapServer CGI 原生动态地图接口集成</li>
+<li><a href="../en/latest/examples/mapguide-untiled.html"><code>mapguide-untiled</code></a> &mdash; MapGuide 动态单图服务接入与视口同步</li>
+<li><a href="../en/latest/examples/localized-openstreetmap.html"><code>localized-openstreetmap</code></a> &mdash; OpenStreetMap 与 OpenSeaMap 国际航海标线多源复合集成</li>
+</ol>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMermaid() {
+          if (window.mermaid) {
+            if (window.__mermaidInitialized) {
+              return;
+            }
+            window.__mermaidInitialized = true;
+            mermaid.initialize({
+              startOnLoad: false,
+              theme: 'default',
+              securityLevel: 'loose'
+            });
+            const codeBlocks = document.querySelectorAll('pre code.language-mermaid, pre code.mermaid');
+            if (codeBlocks.length > 0) {
+              codeBlocks.forEach(function (el) {
+                const pre = el.parentElement;
+                const wrapper = pre.closest('.code-toolbar') || pre;
+                const div = document.createElement('div');
+                div.className = 'mermaid';
+                div.textContent = el.textContent;
+                wrapper.parentElement.replaceChild(div, wrapper);
+              });
+              mermaid.run();
+            }
+          } else {
+            setTimeout(renderMermaid, 50);
+          }
+        }
+        renderMermaid();
+      });
+    </script>
+  </body>
+</html>

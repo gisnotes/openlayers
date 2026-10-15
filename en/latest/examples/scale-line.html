@@ -324,19 +324,19 @@ invertColorsCheckbox.addEventListener(&#x27;change&#x27;, onInvertColorsChange);
       &lt;option value&#x3D;&quot;nautical&quot;&gt;nautical mile (海里)&lt;/option&gt;
       &lt;option value&#x3D;&quot;metric&quot; selected&gt;metric (公制)&lt;/option&gt;
     &lt;/select&gt;
-
+    
     &lt;label for&#x3D;&quot;type&quot;&gt;Type / 标尺类型：&lt;/label&gt;
     &lt;select id&#x3D;&quot;type&quot;&gt;
       &lt;option value&#x3D;&quot;scaleline&quot;&gt;ScaleLine (经典线型)&lt;/option&gt;
       &lt;option value&#x3D;&quot;scalebar&quot;&gt;ScaleBar (分段条型)&lt;/option&gt;
     &lt;/select&gt;
-
+    
     &lt;div id&#x3D;&quot;scaleBarOptions&quot;&gt;
       &lt;label for&#x3D;&quot;steps&quot;&gt;Steps / 分段数：&lt;/label&gt;
       &lt;input id&#x3D;&quot;steps&quot; type&#x3D;&quot;range&quot; value&#x3D;&quot;4&quot; min&#x3D;&quot;1&quot; max&#x3D;&quot;8&quot;&gt;
-
+    
       &lt;label&gt;&lt;input type&#x3D;&quot;checkbox&quot; id&#x3D;&quot;showScaleText&quot; checked&gt; Show scale text / 显示刻度文本&lt;/label&gt;
-
+    
       &lt;label&gt;&lt;input type&#x3D;&quot;checkbox&quot; id&#x3D;&quot;invertColors&quot;&gt; Invert colors / 反转交替颜色&lt;/label&gt;
     &lt;/div&gt;
 
@@ -394,6 +394,39 @@ invertColorsCheckbox.addEventListener(&#x27;change&#x27;, onInvertColorsChange);
           }
         }
         renderMath();
+      });
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMermaid() {
+          if (window.mermaid) {
+            if (window.__mermaidInitialized) {
+              return;
+            }
+            window.__mermaidInitialized = true;
+            mermaid.initialize({
+              startOnLoad: false,
+              theme: 'default',
+              securityLevel: 'loose'
+            });
+            const codeBlocks = document.querySelectorAll('pre code.language-mermaid, pre code.mermaid');
+            if (codeBlocks.length > 0) {
+              codeBlocks.forEach(function (el) {
+                const pre = el.parentElement;
+                const wrapper = pre.closest('.code-toolbar') || pre;
+                const div = document.createElement('div');
+                div.className = 'mermaid';
+                div.textContent = el.textContent;
+                wrapper.parentElement.replaceChild(div, wrapper);
+              });
+              mermaid.run();
+            }
+          } else {
+            setTimeout(renderMermaid, 50);
+          }
+        }
+        renderMermaid();
       });
     </script>
     <script src="./resources/common.js"></script>

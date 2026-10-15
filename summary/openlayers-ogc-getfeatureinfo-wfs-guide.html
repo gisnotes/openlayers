@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>OpenLayers - </title>
+    <title>OpenLayers - OGC 空间服务高级交互：WMS GetFeatureInfo 属性穿透与 WFS 矢量过滤实战指南</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
   </head>
   <body>
     <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
@@ -72,10 +73,12 @@
     </header>
 
     <div class="container">
-      <h1 id="ogc-空间服务高级交互：wms-getfeatureinfo-属性穿透与-wfs-矢量过滤实战指南">OGC 空间服务高级交互：WMS GetFeatureInfo 属性穿透与 WFS 矢量过滤实战指南</h1>
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">OGC 交互与属性穿透指南</li></ol></nav>
+
+<h1 id="ogc-空间服务高级交互：wms-getfeatureinfo-属性穿透与-wfs-矢量过滤实战指南">OGC 空间服务高级交互：WMS GetFeatureInfo 属性穿透与 WFS 矢量过滤实战指南</h1>
 <blockquote>
 <p>在企业级 WebGIS 系统的空间数据服务架构中，开放地理空间信息联盟（OGC）制定的 <strong>WMS（Web Map Service）</strong> 与 <strong>WFS（Web Feature Service）</strong> 是最基础且最重要的工业标准。</p>
-<p>许多开发者往往只将 WMS 用于底图展示，忽视了其基于像素坐标穿透查询要素属性的 <strong><code>GetFeatureInfo</code></strong> 协议；而在需要精准查询实体几何并进行客户端高亮分析时，<strong>WFS <code>GetFeature</code></strong> 结合 <strong>OGC Filter Encoding（空间与属性复合过滤）</strong> 则构成了最强有力的矢量交互武器。本文基于 3 个核心官方示例（<code>getfeatureinfo-image.html</code>、<code>getfeatureinfo-tile.html</code>、<code>vector-wfs-getfeature.html</code>），全面解构 WMS 属性穿透与 WFS 矢量过滤查询的技术原理与生产实践。</p>
+<p>许多开发者往往只将 WMS 用于底图展示，忽视了其基于像素坐标穿透查询要素属性的 <strong><code>GetFeatureInfo</code></strong> 协议；而在需要精准查询实体几何并进行客户端高亮分析时，<strong>WFS <code>GetFeature</code></strong> 结合 <strong>OGC Filter Encoding（空间与属性复合过滤）</strong> 则构成了最强有力的矢量交互武器。本文基于 4 个核心官方示例（<a href="../en/latest/examples/getfeatureinfo-image.html"><code>getfeatureinfo-image</code></a>、<a href="../en/latest/examples/getfeatureinfo-tile.html"><code>getfeatureinfo-tile</code></a>、<a href="../en/latest/examples/getfeatureinfo-layers.html"><code>getfeatureinfo-layers</code></a>、<a href="../en/latest/examples/vector-wfs-getfeature.html"><code>vector-wfs-getfeature</code></a>），全面解构 WMS 属性穿透、多图层联合查询与 WFS 矢量过滤的技术原理与生产实践。</p>
 </blockquote>
 <hr>
 <h2 id="1-架构总览：ogc-webgis-空间交互的两大范式">1. 架构总览：OGC WebGIS 空间交互的两大范式</h2>
@@ -119,8 +122,8 @@
 </thead>
 <tbody><tr>
 <td align="left"><strong>典型示例</strong></td>
-<td align="left"><code>getfeatureinfo-image.html</code>、<code>getfeatureinfo-tile.html</code></td>
-<td align="left"><code>vector-wfs-getfeature.html</code></td>
+<td align="left"><a href="../en/latest/examples/getfeatureinfo-image.html"><code>getfeatureinfo-image</code></a>、<a href="../en/latest/examples/getfeatureinfo-tile.html"><code>getfeatureinfo-tile</code></a>、<a href="../en/latest/examples/getfeatureinfo-layers.html"><code>getfeatureinfo-layers</code></a></td>
+<td align="left"><a href="../en/latest/examples/vector-wfs-getfeature.html"><code>vector-wfs-getfeature</code></a></td>
 </tr>
 <tr>
 <td align="left"><strong>底层传输内容</strong></td>
@@ -158,19 +161,19 @@
 <li>点击点在当前图片内的像素坐标（<code>X, Y</code> 或 1.3.0 规范中的 <code>I, J</code>）。</li>
 </ol>
 <p>OpenLayers 的 <code>getFeatureInfoUrl()</code> 内部将地理空间投影坐标与当前缩放层级分辨率无缝换算：</p>
-<pre><code class="language-javascript">map.on(&#39;singleclick&#39;, function (evt) {
+<pre><code class="language-javascript">map.on(&quot;singleclick&quot;, function (evt) {
   const viewResolution = view.getResolution();
   const url = wmsSource.getFeatureInfoUrl(
     evt.coordinate,
     viewResolution,
-    &#39;EPSG:3857&#39;,
-    {&#39;INFO_FORMAT&#39;: &#39;text/html&#39;} // 或 &#39;application/json&#39;
+    &quot;EPSG:3857&quot;,
+    { INFO_FORMAT: &quot;text/html&quot; }, // 或 &#39;application/json&#39;
   );
   if (url) {
     fetch(url)
       .then((res) =&gt; res.text())
       .then((html) =&gt; {
-        document.getElementById(&#39;info&#39;).innerHTML = html;
+        document.getElementById(&quot;info&quot;).innerHTML = html;
       });
   }
 });
@@ -182,37 +185,41 @@
 </ul>
 <h3 id="23-零开销客户端光标手型切换（layergetdata）">2.3 零开销客户端光标手型切换（<code>layer.getData</code>）</h3>
 <p>为了在鼠标划过要素时显示手型，若频繁向后端发送 GetFeatureInfo 会导致服务器崩溃。OpenLayers 提供了毫秒级本地像素读取：</p>
-<pre><code class="language-javascript">map.on(&#39;pointermove&#39;, function (evt) {
+<pre><code class="language-javascript">map.on(&quot;pointermove&quot;, function (evt) {
   if (evt.dragging) return;
   // 直接从 Canvas 显存读取当前像素 RGBA
   const data = wmsLayer.getData(evt.pixel);
   const hit = data &amp;&amp; data[3] &gt; 0; // Alpha 通道大于 0 说明非透明、有要素
-  map.getTargetElement().style.cursor = hit ? &#39;pointer&#39; : &#39;&#39;;
+  map.getTargetElement().style.cursor = hit ? &quot;pointer&quot; : &quot;&quot;;
 });
 </code></pre>
 <hr>
 <h2 id="3-ogc-wfs-矢量要素过滤与动态查询（vector-wfs-getfeaturehtml）">3. OGC WFS 矢量要素过滤与动态查询（<code>vector-wfs-getfeature.html</code>）</h2>
 <p>当需要对河流、水系、道路进行复杂的 SQL 级复合条件过滤并获取真实几何体时，必须借助 WFS：</p>
 <h3 id="31-链式构建-ogc-复合过滤器">3.1 链式构建 OGC 复合过滤器</h3>
-<pre><code class="language-javascript">import WFS from &#39;ol/format/WFS.js&#39;;
-import {and as andFilter, equalTo as equalToFilter, like as likeFilter} from &#39;ol/format/filter.js&#39;;
+<pre><code class="language-javascript">import WFS from &quot;ol/format/WFS.js&quot;;
+import {
+  and as andFilter,
+  equalTo as equalToFilter,
+  like as likeFilter,
+} from &quot;ol/format/filter.js&quot;;
 
 // 动态构建 OGC 标准 Filter XML
 const featureRequest = new WFS().writeGetFeature({
-  srsName: &#39;EPSG:3857&#39;,                 // 目标坐标投影
-  featureNS: &#39;http://openstreemap.org&#39;, // GeoServer 工作区命名空间
-  featurePrefix: &#39;osm&#39;,                 // 图层前缀
-  featureTypes: [&#39;water_areas&#39;],        // 图层名称
-  outputFormat: &#39;application/json&#39;,     // 要求返回 GeoJSON
+  srsName: &quot;EPSG:3857&quot;, // 目标坐标投影
+  featureNS: &quot;http://openstreemap.org&quot;, // GeoServer 工作区命名空间
+  featurePrefix: &quot;osm&quot;, // 图层前缀
+  featureTypes: [&quot;water_areas&quot;], // 图层名称
+  outputFormat: &quot;application/json&quot;, // 要求返回 GeoJSON
   filter: andFilter(
-    likeFilter(&#39;name&#39;, &#39;Mississippi*&#39;), // 名称以 Mississippi 开头
-    equalToFilter(&#39;waterway&#39;, &#39;riverbank&#39;) // 且属性 waterway 为河岸
+    likeFilter(&quot;name&quot;, &quot;Mississippi*&quot;), // 名称以 Mississippi 开头
+    equalToFilter(&quot;waterway&quot;, &quot;riverbank&quot;), // 且属性 waterway 为河岸
   ),
 });
 </code></pre>
 <h3 id="32-http-post-提交与视口自适应">3.2 HTTP POST 提交与视口自适应</h3>
-<pre><code class="language-javascript">fetch(&#39;https://ahocevar.com/geoserver/wfs&#39;, {
-  method: &#39;POST&#39;,
+<pre><code class="language-javascript">fetch(&quot;https://ahocevar.com/geoserver/wfs&quot;, {
+  method: &quot;POST&quot;,
   body: new XMLSerializer().serializeToString(featureRequest),
 })
   .then((res) =&gt; res.json())
@@ -236,9 +243,9 @@ const featureRequest = new WFS().writeGetFeature({
 <ul>
 <li><strong>痛点</strong>：对于 1 像素宽度的细线道路或单点水文监测井，用户点击时若偏移 2 个像素，WMS 服务端默认返回空查询结果。</li>
 <li><strong>优化</strong>：在 <code>getFeatureInfoUrl</code> 的额外参数中注入服务端的专属缓冲容差：<pre><code class="language-javascript">const url = wmsSource.getFeatureInfoUrl(evt.coordinate, res, proj, {
-  &#39;INFO_FORMAT&#39;: &#39;application/json&#39;,
-  &#39;BUFFER&#39;: 10, // GeoServer: 像素外扩缓冲 10px
-  &#39;FEATURE_COUNT&#39;: 5, // 最多返回 5 个重叠要素
+  INFO_FORMAT: &quot;application/json&quot;,
+  BUFFER: 10, // GeoServer: 像素外扩缓冲 10px
+  FEATURE_COUNT: 5, // 最多返回 5 个重叠要素
 });
 </code></pre>
 </li>
@@ -254,6 +261,14 @@ const featureRequest = new WFS().writeGetFeature({
 </code></pre>
 </li>
 </ul>
+<hr>
+<h2 id="附录：核心官方示例列表">附录：核心官方示例列表</h2>
+<ol>
+<li><a href="../en/latest/examples/getfeatureinfo-image.html"><code>getfeatureinfo-image</code> (单张 ImageWMS 属性穿透查询与 HTML 弹窗解析)</a></li>
+<li><a href="../en/latest/examples/getfeatureinfo-tile.html"><code>getfeatureinfo-tile</code> (分块 TileWMS 属性穿透与 getData 像素透明度快速探测)</a></li>
+<li><a href="../en/latest/examples/getfeatureinfo-layers.html"><code>getfeatureinfo-layers</code> (多图层 WMS 属性穿透联合查询与分层结果解析)</a></li>
+<li><a href="../en/latest/examples/vector-wfs-getfeature.html"><code>vector-wfs-getfeature</code> (WFS 2.0 矢量要素动态检索与 OGC Filter 条件过滤)</a></li>
+</ol>
 
     </div>
     <footer>

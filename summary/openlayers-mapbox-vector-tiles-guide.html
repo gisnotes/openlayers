@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - OpenLayers Mapbox 矢量切片生态与样式引擎全景指南 (MVT, Style Spec &amp; Mapbox GL JS)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">Mapbox 矢量切片生态指南</li></ol></nav>
+
+<h1 id="openlayers-mapbox-矢量切片生态与样式引擎全景指南">OpenLayers Mapbox 矢量切片生态与样式引擎全景指南</h1>
+<blockquote>
+<p>基于 Protocol Buffers 二进制压缩的 <strong>Mapbox 矢量切片（MVT, Mapbox Vector Tile）</strong> 与 <strong>Mapbox 样式规范（Mapbox Style Specification）</strong> 是当今数字地图制图工业的事实标准。相比传统栅格瓦片，矢量切片体积降低达 80% 以上，并赋予防抖动高清注记、客户端自由样式变换与图元动态高亮能力。</p>
+<p>OpenLayers 拥有业内领先的矢量切片处理管线，从原生高效率的 <strong><code>ol/format/MVT</code></strong> 解析器，到多级切片缓存与跨层级复用优化，再到集成 <strong><code>ol-mapbox-style</code></strong> 样式转换器与嵌入 <strong>Mapbox GL JS</strong> 异构双核渲染引擎。本文立足 5 个核心官方示例，系统解构 OpenLayers 在 Mapbox 矢量切片生态中的全链路工程实践。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：5-个-mapbox-矢量切片核心示例矩阵">1. 架构总览：5 个 Mapbox 矢量切片核心示例矩阵</h2>
+<table>
+<thead>
+<tr>
+<th align="left">分类</th>
+<th align="left">示例标识</th>
+<th align="left">核心机制 / 关键 API</th>
+<th align="left">解决的典型生产场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>基础 MVT 切片加载</strong></td>
+<td align="left"><a href="../en/latest/examples/mapbox-vector-tiles.html"><code>mapbox-vector-tiles</code></a></td>
+<td align="left"><code>VectorTileLayer</code> + <code>ol/format/MVT</code></td>
+<td align="left">接入商业/自建 MVT 切片服务并使用 OpenLayers 样式函数渲染</td>
+</tr>
+<tr>
+<td align="left"><strong>跨层级复用与移动端优化</strong></td>
+<td align="left"><a href="../en/latest/examples/mapbox-vector-tiles-advanced.html"><code>mapbox-vector-tiles-advanced</code></a></td>
+<td align="left">自定义 <code>TileGrid</code> + 跨 Zoom 层级复用（Cache Re-use）</td>
+<td align="left">移动弱网环境下减少 60% 瓦片请求，节省设备流量与解码 CPU</td>
+</tr>
+<tr>
+<td align="left"><strong>样式规范一键映射</strong></td>
+<td align="left"><a href="../en/latest/examples/mapbox-vector-layer.html"><code>mapbox-vector-layer</code></a></td>
+<td align="left"><code>ol-mapbox-style</code> 工具库</td>
+<td align="left">直接加载 Mapbox Studio 设计好的 <code>style.json</code> 并在 OpenLayers 中完美呈现</td>
+</tr>
+<tr>
+<td align="left"><strong>双核渲染引擎混编</strong></td>
+<td align="left"><a href="../en/latest/examples/mapbox-layer.html"><code>mapbox-layer</code></a></td>
+<td align="left">自定义 <code>Layer</code> 包装 Mapbox GL Map 实例</td>
+<td align="left">在同一个地图视口内融合 OpenLayers 控制体系与 Mapbox GL 原生 WebGL 渲染</td>
+</tr>
+<tr>
+<td align="left"><strong>开源开源瓦片图层解构</strong></td>
+<td align="left"><a href="../en/latest/examples/osm-vector-tiles.html"><code>osm-vector-tiles</code></a></td>
+<td align="left">OSM / Mapzen 矢量切片分层（Water/Roads/Buildings）</td>
+<td align="left">剖析开源多源矢量图层结构，执行分图层样式与注记碰撞过滤</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-矢量切片加载管线与图层过滤">2. 矢量切片加载管线与图层过滤</h2>
+<h3 id="21-mvt-解码与图层按需选择">2.1 MVT 解码与图层按需选择</h3>
+<p>一个 MVT 文件内部打包了若干个逻辑图层（如 <code>water</code>、<code>landuse</code>、<code>road</code>、<code>building</code>）。若前端只关注特定图层，可在 <code>ol/format/MVT</code> 中通过 <code>layers</code> 参数执行前置过滤，避免无关图元进入内存：</p>
+<pre><code class="language-javascript">import VectorTileLayer from &quot;ol/layer/VectorTile&quot;;
+import VectorTileSource from &quot;ol/source/VectorTile&quot;;
+import MVT from &quot;ol/format/MVT&quot;;
+
+const vectorTileLayer = new VectorTileLayer({
+  source: new VectorTileSource({
+    format: new MVT({
+      // 仅解码并提取水体与道路图层，忽略大体积建筑物轮廓，大幅降低解码时间
+      layers: [&quot;water&quot;, &quot;road&quot;],
+      // 指定图元要素 ID 属性名，便于高效做状态追踪
+      idProperty: &quot;osm_id&quot;,
+    }),
+    url: &quot;https://api.maptiler.com/tiles/v3/{z}/{x}/{y}.pbf?key=YOUR_KEY&quot;,
+  }),
+});
+</code></pre>
+<hr>
+<h2 id="3-进阶切片网格与移动端流量调优（mapbox-vector-tiles-advanced）">3. 进阶切片网格与移动端流量调优（<code>mapbox-vector-tiles-advanced</code>）</h2>
+<p>在移动端或弱网环境下，用户快速捏合缩放（Pinch-to-zoom）会触发大量中间层级的切片请求，极易造成网络风暴与设备发热掉帧。</p>
+<pre><code class="language-mermaid">flowchart LR
+    subgraph RequestReduction [切片请求阻尼与跨层复用]
+        direction TB
+        ZoomLevel[&quot;用户连续缩放 (Zoom 10 -&gt; 12)&quot;]
+        TileGridLogic{&quot;TileGrid 策略&quot;}
+        CacheHit[&quot;复用 Zoom 10 已缓存矢量切片&lt;br/&gt;本地矩阵仿射放大，零网络请求&quot;]
+        NewFetch[&quot;仅到达关键断点时拉取高精切片&quot;]
+    end
+
+    ZoomLevel --&gt; TileGridLogic
+    TileGridLogic --&gt;|中间过渡帧| CacheHit
+    TileGridLogic --&gt;|稳定视口| NewFetch
+</code></pre>
+<h3 id="31-跨层级缓存复用核心配置">3.1 跨层级缓存复用核心配置</h3>
+<p>通过自定义 <code>TileGrid</code> 缩小请求层级分辨率阶梯，使相近的连续缩放优先复用已加载的切片数据：</p>
+<pre><code class="language-javascript">import TileGrid from &quot;ol/tilegrid/TileGrid&quot;;
+import { get as getProjection } from &quot;ol/proj&quot;;
+
+const projection = getProjection(&quot;EPSG:3857&quot;);
+const extent = projection.getExtent();
+
+// 仅在关键层级（如 0, 4, 8, 12, 14）定义切片网格断点
+const tileGrid = new TileGrid({
+  extent: extent,
+  resolutions: [
+    156543.03392804097, 9783.93962050256, 611.49622628141, 38.21851414258813,
+    9.554628535647032,
+  ],
+  tileSize: 512,
+});
+</code></pre>
+<hr>
+<h2 id="4-mapbox-样式规范（style-spec）集成方案对照">4. Mapbox 样式规范（Style Spec）集成方案对照</h2>
+<table>
+<thead>
+<tr>
+<th align="left">维度</th>
+<th align="left">方案 A：<code>ol-mapbox-style</code> (推荐)</th>
+<th align="left">方案 B：双核混编 (<code>mapbox-layer</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>实现机制</strong></td>
+<td align="left">将 Mapbox JSON 规则解析转化为 OpenLayers 原生 <code>StyleFunction</code></td>
+<td align="left">将 Mapbox GL JS 实例作为底图自定义图层挂入 OpenLayers 视口循环</td>
+</tr>
+<tr>
+<td align="left"><strong>底层渲染器</strong></td>
+<td align="left">纯 Canvas 2D / OpenLayers 内部 WebGL</td>
+<td align="left">Mapbox GL JS 原生 WebGL 着色器流水线</td>
+</tr>
+<tr>
+<td align="left"><strong>3D 地形与建筑</strong></td>
+<td align="left">支持 2.5D 平面透视</td>
+<td align="left"><strong>完整支持 3D 倾斜、阴影、三维建筑物与地形网格</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>交互与事件</strong></td>
+<td align="left">统一由 OpenLayers 责任链调度（Select/Modify 无缝协同）</td>
+<td align="left">需要在两个引擎之间手动同步视口中心与缩放级别</td>
+</tr>
+<tr>
+<td align="left"><strong>打包体积</strong></td>
+<td align="left">仅引入解析转换库（轻量）</td>
+<td align="left">需同时打包 OpenLayers 与 Mapbox GL JS 两个大型引擎</td>
+</tr>
+</tbody></table>
+<h3 id="41-使用-ol-mapbox-style-快速接入（mapbox-vector-layer）">4.1 使用 <code>ol-mapbox-style</code> 快速接入（<code>mapbox-vector-layer</code>）</h3>
+<pre><code class="language-javascript">import { apply } from &quot;ol-mapbox-style&quot;;
+import Map from &quot;ol/Map&quot;;
+
+// 一行代码将 Mapbox Studio 导出的样式 JSON 挂载到 OpenLayers Map 实例
+const map = new Map({ target: &quot;map&quot; });
+apply(map, &quot;https://api.maptiler.com/maps/basic/style.json?key=YOUR_KEY&quot;);
+</code></pre>
+<hr>
+<h2 id="5-生产工程避坑指南">5. 生产工程避坑指南</h2>
+<ol>
+<li><strong>Overzooming（超出最大切片层级）</strong>：公开 MVT 切片通常只生成到 Zoom 14。若用户放大至 Zoom 18，必须配置 <code>maxZoom: 14</code>，使 OpenLayers 在 Zoom 15~18 自动对 Zoom 14 的矢量数据进行客户端本地几何放大，避免 404 错误；</li>
+<li><strong>文本注记碰撞避让（Decluttering）</strong>：矢量切片包含密集注记，在 <code>VectorTileLayer</code> 上务必开启 <code>declutter: true</code>，开启 OpenLayers 全局 R-Tree 智能避让树，杜绝文字重叠覆盖；</li>
+<li><strong>要素跨瓦片接缝重复问题</strong>：道路线要素被瓦片切分成多段时，若端点样式带有平头（butt）线帽，在接缝处可能产生微小缝隙；在样式中推荐配置 <code>cap: &#39;round&#39;</code> 与 <code>join: &#39;round&#39;</code> 实现接缝自然贴合。</li>
+</ol>
+<hr>
+<h2 id="附录：5-个官方-mapbox-矢量切片核心示例直达索引">附录：5 个官方 Mapbox 矢量切片核心示例直达索引</h2>
+<ol>
+<li><a href="../en/latest/examples/mapbox-vector-tiles.html"><code>mapbox-vector-tiles</code></a> &mdash; Mapbox MVT 矢量切片基础加载与客户端样式函数</li>
+<li><a href="../en/latest/examples/mapbox-vector-tiles-advanced.html"><code>mapbox-vector-tiles-advanced</code></a> &mdash; 进阶切片网格、跨层级复用与移动端流量调优</li>
+<li><a href="../en/latest/examples/mapbox-vector-layer.html"><code>mapbox-vector-layer</code></a> &mdash; 使用 ol-mapbox-style 一键解析并渲染 Mapbox 样式规范</li>
+<li><a href="../en/latest/examples/mapbox-layer.html"><code>mapbox-layer</code></a> &mdash; 嵌入 Mapbox GL JS 实例实现双核异构 WebGL 混合渲染</li>
+<li><a href="../en/latest/examples/osm-vector-tiles.html"><code>osm-vector-tiles</code></a> &mdash; OpenStreetMap 矢量切片多图层解构与 TopoJSON 对比</li>
+</ol>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMermaid() {
+          if (window.mermaid) {
+            if (window.__mermaidInitialized) {
+              return;
+            }
+            window.__mermaidInitialized = true;
+            mermaid.initialize({
+              startOnLoad: false,
+              theme: 'default',
+              securityLevel: 'loose'
+            });
+            const codeBlocks = document.querySelectorAll('pre code.language-mermaid, pre code.mermaid');
+            if (codeBlocks.length > 0) {
+              codeBlocks.forEach(function (el) {
+                const pre = el.parentElement;
+                const wrapper = pre.closest('.code-toolbar') || pre;
+                const div = document.createElement('div');
+                div.className = 'mermaid';
+                div.textContent = el.textContent;
+                wrapper.parentElement.replaceChild(div, wrapper);
+              });
+              mermaid.run();
+            }
+          } else {
+            setTimeout(renderMermaid, 50);
+          }
+        }
+        renderMermaid();
+      });
+    </script>
+  </body>
+</html>

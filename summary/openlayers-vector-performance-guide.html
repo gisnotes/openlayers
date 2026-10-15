@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - OpenLayers 矢量渲染性能调优、动态数据流与海量压测实战指南</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">矢量渲染调优与压测指南</li></ol></nav>
+
+<h1 id="openlayers-矢量渲染性能调优、动态数据流与海量压测实战指南">OpenLayers 矢量渲染性能调优、动态数据流与海量压测实战指南</h1>
+<blockquote>
+<p>在物联网设备监控、大规模交通轨迹回放与高密测绘地理数据可视化中，浏览器前端往往需要承载数万至数十万个点、线、面图元的连续渲染与高频动态刷新。开发者经常面临两大性能痛点：<strong>地图漫游平移时的卡顿掉帧</strong>以及<strong>高频数据流写入导致的频繁垃圾回收（GC Thrashing）</strong>。</p>
+<p>OpenLayers 构建了分层的矢量渲染治理体系：从传统的实时几何绘制（<code>VectorLayer</code>），到预栅格化离屏缓存（<code>VectorImageLayer</code>），再到绕过 R-Tree 索引的即时渲染管线（<code>getVectorContext</code>）与切片过渡动效阻尼。本文基于 7 个核心官方示例，系统解构矢量渲染引擎的瓶颈定位、架构选型与极端压测实战。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：7-个矢量性能与动态数据核心官方示例矩阵">1. 架构总览：7 个矢量性能与动态数据核心官方示例矩阵</h2>
+<table>
+<thead>
+<tr>
+<th align="left">分类</th>
+<th align="left">示例标识</th>
+<th align="left">核心机制 / 关键 API</th>
+<th align="left">解决的典型生产场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>离屏缓存栅格化</strong></td>
+<td align="left"><a href="../en/latest/examples/image-vector-layer.html"><code>image-vector-layer</code></a></td>
+<td align="left"><code>ol/layer/VectorImage</code> 预渲染视口图片</td>
+<td align="left">复杂多边形海量图层在平移漫游时实现稳健 60 FPS</td>
+</tr>
+<tr>
+<td align="left"><strong>高频动态数据流</strong></td>
+<td align="left"><a href="../en/latest/examples/dynamic-data.html"><code>dynamic-data</code></a></td>
+<td align="left"><code>postrender</code> 动画循环 + <code>getVectorContext</code></td>
+<td align="left">绕过 VectorSource 索引重构开销，毫秒级更新复杂数学动效</td>
+</tr>
+<tr>
+<td align="left"><strong>海量折线性能压测</strong></td>
+<td align="left"><a href="../en/latest/examples/synthetic-lines.html"><code>synthetic-lines</code></a></td>
+<td align="left">批量合成数万条折线 + 共享样式对象单例</td>
+<td align="left">评估客户端在复杂线网（如电网、航线）压力下的渲染极限</td>
+</tr>
+<tr>
+<td align="left"><strong>海量离散点压测</strong></td>
+<td align="left"><a href="../en/latest/examples/synthetic-points.html"><code>synthetic-points</code></a></td>
+<td align="left">50,000+ 离散点 + 即时渲染帧驱动</td>
+<td align="left">超大规模点要素群（如浮标、共享单车）高吞吐渲染</td>
+</tr>
+<tr>
+<td align="left"><strong>属性数据驱动插值</strong></td>
+<td align="left"><a href="../en/latest/examples/populated-places.html"><code>populated-places</code></a></td>
+<td align="left">属性线性插值 + 空间密度自适应着色</td>
+<td align="left">全球百万级城市聚落属性映射与视觉梯度展示</td>
+</tr>
+<tr>
+<td align="left"><strong>数据源无缝重用</strong></td>
+<td align="left"><a href="../en/latest/examples/reusable-source.html"><code>reusable-source</code></a></td>
+<td align="left"><code>source.setUrl()</code> 平滑动态切换</td>
+<td align="left">动态图层切片源切换时避免白屏闪烁与内存泄露</td>
+</tr>
+<tr>
+<td align="left"><strong>切片过渡与透明度阻尼</strong></td>
+<td align="left"><a href="../en/latest/examples/tile-transitions.html"><code>tile-transitions</code></a></td>
+<td align="left"><code>transition</code> 参数控制切片加载渐显</td>
+<td align="left">改善网络抖动下瓦片骤现的突兀感，提升视觉舒适度</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-渲染模式决战：vectorlayer-vs-vectorimagelayer">2. 渲染模式决战：<code>VectorLayer</code> vs <code>VectorImageLayer</code></h2>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph Mode1 [模式一：ol/layer/Vector (实时矢量渲染)]
+        V1[&quot;平移/缩放每一帧&quot;] --&gt; V2[&quot;遍历视口内全部几何顶点&quot;]
+        V2 --&gt; V3[&quot;Canvas 2D 重新描边与填充&quot;]
+        V3 --&gt; V4[&quot;优点：文字永远锐利高清&lt;br/&gt;缺点：海量复杂面平移掉帧严重&quot;]
+    end
+
+    subgraph Mode2 [模式二：ol/layer/VectorImage (离屏栅格化预渲染)]
+        VI1[&quot;平移漫游&quot;] --&gt; VI2[&quot;将预先渲染好的离屏图片快速拉伸/位移&quot;]
+        VI2 --&gt; VI3[&quot;零几何计算，极速 blit 到屏幕&quot;]
+        VI3 --&gt; VI4[&quot;优点：平移漫游锁死 60 FPS&lt;br/&gt;缺点：连续快速缩放时偶有轻微模糊&quot;]
+    end
+</code></pre>
+<h3 id="21-典型选型代码范式（image-vector-layer）">2.1 典型选型代码范式（<code>image-vector-layer</code>）</h3>
+<p>当要素数量极大（如全国 3000 个行政区划复杂多边形）时，替换为 <code>VectorImageLayer</code> 可获得立竿见影的流畅度提升：</p>
+<pre><code class="language-javascript">import VectorImageLayer from &quot;ol/layer/VectorImage&quot;;
+import VectorSource from &quot;ol/source/Vector&quot;;
+import GeoJSON from &quot;ol/format/GeoJSON&quot;;
+
+const vectorImageLayer = new VectorImageLayer({
+  imageRatio: 2, // 预渲染超出当前视口 2 倍范围的图像，预留平移缓冲
+  source: new VectorSource({
+    url: &quot;data/geojson/countries.geojson&quot;,
+    format: new GeoJSON(),
+  }),
+  style: countryStyle,
+});
+</code></pre>
+<hr>
+<h2 id="3-高频数据流渲染：绕过-r-tree-的零-gc-策略（dynamic-data）">3. 高频数据流渲染：绕过 R-Tree 的零 GC 策略（<code>dynamic-data</code>）</h2>
+<h3 id="31-为什么高频更新不能调用-sourceaddfeature？">3.1 为什么高频更新不能调用 <code>source.addFeature()</code>？</h3>
+<p>在 OpenLayers 中，每个 <code>VectorSource</code> 内部维护了一棵用于空间加速查找的 <strong>R-Tree（R 树索引）</strong>。</p>
+<ul>
+<li>如果每秒 60 次清空并重新 <code>addFeature()</code>，会导致 R 树不断经历“销毁 -&gt; 内存重新分配 -&gt; 平衡调整”的过程，产生海量临时对象，直接引发浏览器垃圾回收器（GC）暂停，产生肉眼可见的顿挫。</li>
+</ul>
+<h3 id="32-getvectorcontext-即时渲染优化范式">3.2 <code>getVectorContext</code> 即时渲染优化范式</h3>
+<p>在 <code>postrender</code> 监听器中使用 <code>getVectorContext(event)</code> 直接向当前帧 Canvas 写入几何体，零 R-Tree 开销：</p>
+<pre><code class="language-javascript">import { getVectorContext } from &quot;ol/render&quot;;
+import Point from &quot;ol/geom/Point&quot;;
+
+// 单例几何与样式对象，全生命周期绝不重新 new
+const dynamicPoint = new Point([0, 0]);
+
+baseLayer.on(&quot;postrender&quot;, (event) =&gt; {
+  const vectorContext = getVectorContext(event);
+
+  // 1. 数学函数实时计算当前时间戳下的坐标
+  const time = event.frameState.time;
+  const newCoord = calculateTrajectory(time);
+  dynamicPoint.setCoordinates(newCoord);
+
+  // 2. 直接光栅化绘制，完全不进 VectorSource
+  vectorContext.setStyle(sharedDotStyle);
+  vectorContext.drawGeometry(dynamicPoint);
+
+  // 3. 请求下一帧连续重绘
+  map.render();
+});
+</code></pre>
+<hr>
+<h2 id="4-极端海量图元压测实战（synthetic-lines--synthetic-points）">4. 极端海量图元压测实战（<code>synthetic-lines</code> &amp; <code>synthetic-points</code>）</h2>
+<p>在压测 50,000+ 个离散点或折线段时，官方示例展现了两大核心原则：</p>
+<h3 id="41-样式单例化与批处理合并">4.1 样式单例化与批处理合并</h3>
+<p>严禁在样式函数内针对每个要素执行 <code>new Style()</code>。整个图层必须共享预先创建好的单例样式数组，使底层的批处理机制（Batch Renderer）能够一次性提交所有顶点的 WebGL / Canvas 上下文调用。</p>
+<h3 id="42-数据驱动空间插值（populated-places）">4.2 数据驱动空间插值（<code>populated-places</code>）</h3>
+<pre><code class="language-javascript">// 基于城市人口属性执行平滑线性插值推导渲染半径
+function getRadiusByPopulation(population) {
+  // 插值公式：R = 3 + Math.sqrt(population / 10000)
+  return Math.max(3, Math.min(25, 3 + Math.sqrt(population / 10000)));
+}
+</code></pre>
+<hr>
+<h2 id="5-切片平滑更新与渐显阻尼（reusable-source--tile-transitions）">5. 切片平滑更新与渐显阻尼（<code>reusable-source</code> &amp; <code>tile-transitions</code>）</h2>
+<p>在动态切换图层数据源 URL 时，直接销毁图层重建会引发白屏。</p>
+<ol>
+<li>**<code>source.setUrl(newUrl)</code>**：OpenLayers 内部会自动保留旧切片显示，直至新 URL 的切片下载并完成解码，实现零闪烁无缝平滑替换；</li>
+<li>**<code>transition: 250</code>**：在 <code>ol/layer/Tile</code> 中配置过渡时间（毫秒），通过 Alpha 透明度渐显机制消除网络抖动带来的生硬感。</li>
+</ol>
+<hr>
+<h2 id="附录：7-个官方矢量性能与动态数据核心示例直达索引">附录：7 个官方矢量性能与动态数据核心示例直达索引</h2>
+<ol>
+<li><a href="../en/latest/examples/image-vector-layer.html"><code>image-vector-layer</code></a> &mdash; VectorImageLayer 预栅格化图层：复杂矢量离屏缓存极速漫游</li>
+<li><a href="../en/latest/examples/dynamic-data.html"><code>dynamic-data</code></a> &mdash; 动态高频数据流与内旋轮线动效（postrender 驱动）</li>
+<li><a href="../en/latest/examples/synthetic-lines.html"><code>synthetic-lines</code></a> &mdash; 海量合成折线图元渲染性能压测与批处理优化</li>
+<li><a href="../en/latest/examples/synthetic-points.html"><code>synthetic-points</code></a> &mdash; 海量合成离散点图元压测与即时渲染动画</li>
+<li><a href="../en/latest/examples/populated-places.html"><code>populated-places</code></a> &mdash; 全球人口聚落分布：数据驱动样式与属性空间插值</li>
+<li><a href="../en/latest/examples/reusable-source.html"><code>reusable-source</code></a> &mdash; 瓦片数据源 URL 动态更新与平滑无缝切换</li>
+<li><a href="../en/latest/examples/tile-transitions.html"><code>tile-transitions</code></a> &mdash; 切片加载不透明度渐变过渡动效与视觉阻尼</li>
+</ol>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMermaid() {
+          if (window.mermaid) {
+            if (window.__mermaidInitialized) {
+              return;
+            }
+            window.__mermaidInitialized = true;
+            mermaid.initialize({
+              startOnLoad: false,
+              theme: 'default',
+              securityLevel: 'loose'
+            });
+            const codeBlocks = document.querySelectorAll('pre code.language-mermaid, pre code.mermaid');
+            if (codeBlocks.length > 0) {
+              codeBlocks.forEach(function (el) {
+                const pre = el.parentElement;
+                const wrapper = pre.closest('.code-toolbar') || pre;
+                const div = document.createElement('div');
+                div.className = 'mermaid';
+                div.textContent = el.textContent;
+                wrapper.parentElement.replaceChild(div, wrapper);
+              });
+              mermaid.run();
+            }
+          } else {
+            setTimeout(renderMermaid, 50);
+          }
+        }
+        renderMermaid();
+      });
+    </script>
+  </body>
+</html>

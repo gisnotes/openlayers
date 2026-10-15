@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - OpenLayers 新一代 OGC API 现代服务标准全景实战架构指南 (Maps, Tiles &amp; Features)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">OGC API 现代标准指南</li></ol></nav>
+
+<h1 id="openlayers-新一代-ogc-api-现代服务标准全景实战架构指南">OpenLayers 新一代 OGC API 现代服务标准全景实战架构指南</h1>
+<blockquote>
+<p>近年来，开放地理空间信息联盟（OGC）推动了一场彻底的现代 Web 标准重构，推出了以 OpenAPI 3.0、JSON/GeoJSON 与 RESTful 原生语义为核心的 <strong>OGC API 系列国际标准</strong>，旨在全面升级替代已有二十余年历史的传统 XML/OWS 架构（WMS、WFS、WMTS）。</p>
+<p>OpenLayers 率先在核心包中提供了原生的 <strong><code>ol/source/OGCMapTile</code></strong> 与 <strong><code>ol/source/OGCVectorTile</code></strong> 数据源，深度支持 OGC API - Maps、OGC API - Tiles 与 OGC API - Features。本文基于 6 个核心官方示例，系统解构新一代 OGC API 的服务拓扑、切片矩阵集合（TileMatrixSet）映射与生产实践。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：从传统-ows-到-ogc-api-的代际演进">1. 架构总览：从传统 OWS 到 OGC API 的代际演进</h2>
+<h3 id="11-传统-ows-vs-新一代-ogc-api-架构对比">1.1 传统 OWS vs 新一代 OGC API 架构对比</h3>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph LegacyOWS [传统 OWS 时代 (1999-2015)]
+        direction TB
+        WMS[&quot;WMS 1.3.0 (复杂 Key-Value-Pair / XML)&quot;]
+        WMTS[&quot;WMTS 1.0.0 (庞大 GetCapabilities XML)&quot;]
+        WFS[&quot;WFS 2.0 (Filter Encoding XML POST)&quot;]
+    end
+
+    subgraph ModernOGCAPI [现代 OGC API 时代 (OpenAPI / RESTful)]
+        direction TB
+        OGCMaps[&quot;OGC API - Maps (/collections/{id}/map)&quot;]
+        OGCTiles[&quot;OGC API - Tiles (/collections/{id}/tiles/{matrixSet}/{z}/{y}/{x})&quot;]
+        OGCFeatures[&quot;OGC API - Features (/collections/{id}/items?bbox=...)&quot;]
+    end
+
+    subgraph OpenLayersClient [OpenLayers 客户端支持]
+        SourceMapTile[&quot;ol/source/OGCMapTile (栅格切片)&quot;]
+        SourceVectorTile[&quot;ol/source/OGCVectorTile (MVT/GeoJSON 矢量切片)&quot;]
+        SourceVector[&quot;ol/source/Vector + GeoJSON (要素集合)&quot;]
+    end
+
+    OGCMaps -.-&gt; SourceMapTile
+    OGCTiles --&gt; SourceMapTile
+    OGCTiles --&gt; SourceVectorTile
+    OGCFeatures --&gt; SourceVector
+</code></pre>
+<h3 id="12-6-个核心-ogc-api-官方示例矩阵">1.2 6 个核心 OGC API 官方示例矩阵</h3>
+<table>
+<thead>
+<tr>
+<th align="left">分类</th>
+<th align="left">示例标识</th>
+<th align="left">核心机制 / 关键 API</th>
+<th align="left">解决的典型生产场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>现代栅格切片</strong></td>
+<td align="left"><a href="../en/latest/examples/ogc-map-tiles.html"><code>ogc-map-tiles</code></a></td>
+<td align="left"><code>ol/source/OGCMapTile</code> + <code>url</code></td>
+<td align="left">声明式对接标准 OGC API - Tiles 栅格切片服务</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/ogc-map-tiles-geographic.html"><code>ogc-map-tiles-geographic</code></a></td>
+<td align="left"><code>OGCMapTile</code> + <code>WorldCRS84Quad</code> 矩阵集</td>
+<td align="left">直接使用 EPSG:4326 经纬度地理切片金字塔</td>
+</tr>
+<tr>
+<td align="left"><strong>现代动态制图</strong></td>
+<td align="left"><a href="../en/latest/examples/ogc-maps.html"><code>ogc-maps</code></a></td>
+<td align="left"><code>OGCMapTile</code> 动态渲染模式</td>
+<td align="left">基于 OGC API - Maps 标准的动态多尺度出图</td>
+</tr>
+<tr>
+<td align="left"><strong>现代矢量切片</strong></td>
+<td align="left"><a href="../en/latest/examples/ogc-vector-tiles.html"><code>ogc-vector-tiles</code></a></td>
+<td align="left"><code>ol/source/OGCVectorTile</code> + <code>format: new MVT()</code></td>
+<td align="left">OGC API 矢量切片加载与客户端自适应样式渲染</td>
+</tr>
+<tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/ogc-vector-tiles-geographic.html"><code>ogc-vector-tiles-geographic</code></a></td>
+<td align="left"><code>OGCVectorTile</code> + <code>WorldCRS84Quad</code> 经纬度矩阵</td>
+<td align="left">全球等矩投影下的 OGC 矢量切片直读</td>
+</tr>
+<tr>
+<td align="left"><strong>现代要素服务</strong></td>
+<td align="left"><a href="../en/latest/examples/mapserver-ogc-features.html"><code>mapserver-ogc-features</code></a></td>
+<td align="left"><code>ol/source/Vector</code> + OGC API - Features (ISO 19168)</td>
+<td align="left">通过 MapServer 提供标准化 RESTful 要素检索与范围过滤</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-ogc-api---tiles-接入范式：olsourceogcmaptile">2. OGC API - Tiles 接入范式：<code>ol/source/OGCMapTile</code></h2>
+<p>传统 WMTS 接入需要先网络请求数百 KB 的 XML Capabilities 文档进行本地解析，而 OGC API - Tiles 采用标准化 URI 模板与 JSON 元数据，开销极大降低。</p>
+<h3 id="21-标准栅格切片代码范式（ogc-map-tiles）">2.1 标准栅格切片代码范式（<code>ogc-map-tiles</code>）</h3>
+<pre><code class="language-javascript">import TileLayer from &quot;ol/layer/Tile&quot;;
+import OGCMapTile from &quot;ol/source/OGCMapTile&quot;;
+
+const layer = new TileLayer({
+  source: new OGCMapTile({
+    // 指向 OGC API - Tiles 的基础 URL
+    url: &quot;https://maps.ecere.com/ogcapi/collections/NaturalEarth:cultural:ne_10m_admin_0_countries/tiles/WebMercatorQuad&quot;,
+  }),
+});
+</code></pre>
+<p>OpenLayers 内部会自动识别 <code>WebMercatorQuad</code> 矩阵规范，并在请求切片时自动拼接标准化 RESTful 路径：
+<code>.../tiles/WebMercatorQuad/{z}/{y}/{x}?f=image/png</code></p>
+<h3 id="22-经纬度切片矩阵支持（ogc-map-tiles-geographic）">2.2 经纬度切片矩阵支持（<code>ogc-map-tiles-geographic</code>）</h3>
+<p>若服务端切片以全球地理坐标（<code>EPSG:4326</code>）发布，则矩阵标识通常为 **<code>WorldCRS84Quad</code>**：</p>
+<pre><code class="language-javascript">import TileLayer from &quot;ol/layer/Tile&quot;;
+import OGCMapTile from &quot;ol/source/OGCMapTile&quot;;
+import View from &quot;ol/View&quot;;
+
+const map = new Map({
+  target: &quot;map&quot;,
+  layers: [
+    new TileLayer({
+      source: new OGCMapTile({
+        url: &quot;https://server.com/ogcapi/collections/dataset/tiles/WorldCRS84Quad&quot;,
+      }),
+    }),
+  ],
+  view: new View({
+    projection: &quot;EPSG:4326&quot;, // 视图必须与 WorldCRS84Quad 对齐
+    center: [0, 0],
+    zoom: 1,
+  }),
+});
+</code></pre>
+<hr>
+<h2 id="3-ogc-api---tiles-矢量切片：olsourceogcvectortile">3. OGC API - Tiles 矢量切片：<code>ol/source/OGCVectorTile</code></h2>
+<p>当需要对要素属性进行客户端动态样式过滤、悬停高亮或点击拾取时，采用矢量切片模式：</p>
+<pre><code class="language-javascript">import VectorTileLayer from &quot;ol/layer/VectorTile&quot;;
+import OGCVectorTile from &quot;ol/source/OGCVectorTile&quot;;
+import MVT from &quot;ol/format/MVT&quot;;
+
+const vectorTileLayer = new VectorTileLayer({
+  source: new OGCVectorTile({
+    url: &quot;https://server.com/ogcapi/collections/topography/tiles/WebMercatorQuad&quot;,
+    format: new MVT(), // 声明矢量切片反序列化格式为 Mapbox Vector Tile (PBF)
+  }),
+  style: (feature) =&gt; {
+    // 客户端根据要素属性实时渲染
+  },
+});
+</code></pre>
+<hr>
+<h2 id="4-ogc-api---features-接入：从-wfs-到-restful-geojson">4. OGC API - Features 接入：从 WFS 到 RESTful GeoJSON</h2>
+<p>在传统 WFS 2.0 中，空间检索需要手动构造 XML <code>&lt;wfs:GetFeature&gt;</code> 请求体；而在 OGC API - Features（ISO 19168-1）中，数据以纯 RESTful 路径获取。</p>
+<h3 id="41-结合-bbox-动态视口加载要素（mapserver-ogc-features）">4.1 结合 BBOX 动态视口加载要素（<code>mapserver-ogc-features</code>）</h3>
+<pre><code class="language-javascript">import VectorLayer from &quot;ol/layer/Vector&quot;;
+import VectorSource from &quot;ol/source/Vector&quot;;
+import GeoJSON from &quot;ol/format/GeoJSON&quot;;
+import { bbox as bboxStrategy } from &quot;ol/loadingstrategy&quot;;
+
+const vectorSource = new VectorSource({
+  format: new GeoJSON(),
+  // 结合视口包围盒动态按需拉取
+  strategy: bboxStrategy,
+  loader: function (extent, resolution, projection) {
+    const projCode = projection.getCode();
+    // 构造标准 OGC API - Features /items 查询 URL
+    const url =
+      `https://demo.mapserver.org/cgi-bin/mapserv/service/ogcapi/collections/countries/items?` +
+      `bbox=${extent.join(&quot;,&quot;)}&amp;bbox-crs=http://www.opengis.net/def/crs/EPSG/0/3857&amp;limit=100`;
+
+    fetch(url)
+      .then((res) =&gt; res.json())
+      .then((json) =&gt; {
+        vectorSource.addFeatures(
+          vectorSource.getFormat().readFeatures(json, {
+            dataProjection: &quot;EPSG:4326&quot;,
+            featureProjection: projection,
+          }),
+        );
+      });
+  },
+});
+</code></pre>
+<hr>
+<h2 id="5-生产避坑指南与架构建议">5. 生产避坑指南与架构建议</h2>
+<ol>
+<li><strong>矩阵标识匹配</strong>：OGC API 规范对矩阵集名称有严格标准定义（<code>WebMercatorQuad</code>、<code>WorldCRS84Quad</code>、<code>WorldMercatorWGS84Quad</code>），URL 中的大小写必须完全匹配服务端元数据声明；</li>
+<li><strong>内容协商（Content Negotiation）</strong>：若服务端支持多种格式，可通过追加 <code>?f=application/vnd.mapbox-vector-tile</code> 或在请求头中配置 <code>Accept: application/geo+json</code> 明确返回格式；</li>
+<li><strong>空间范围投影转换</strong>：OGC API - Features 规范默认入参 <code>bbox</code> 的坐标系为 WGS 84，若传入 Web 墨卡托米制坐标，必须显式附加 <code>bbox-crs</code> 参数声明。</li>
+</ol>
+<hr>
+<h2 id="附录：6-个官方-ogc-api-核心示例直达索引">附录：6 个官方 OGC API 核心示例直达索引</h2>
+<ol>
+<li><a href="../en/latest/examples/ogc-maps.html"><code>ogc-maps</code></a> &mdash; OGC API - Maps 现代动态出图标准集成</li>
+<li><a href="../en/latest/examples/ogc-map-tiles.html"><code>ogc-map-tiles</code></a> &mdash; OGC API - Tiles 现代栅格瓦片服务标准与集合接入</li>
+<li><a href="../en/latest/examples/ogc-map-tiles-geographic.html"><code>ogc-map-tiles-geographic</code></a> &mdash; OGC API - Tiles 经纬度地理切片矩阵集合（EPSG:4326）</li>
+<li><a href="../en/latest/examples/ogc-vector-tiles.html"><code>ogc-vector-tiles</code></a> &mdash; OGC API - Tiles 矢量切片服务与客户端样式映射</li>
+<li><a href="../en/latest/examples/ogc-vector-tiles-geographic.html"><code>ogc-vector-tiles-geographic</code></a> &mdash; OGC API 经纬度矢量切片与等矩投影渲染</li>
+<li><a href="../en/latest/examples/mapserver-ogc-features.html"><code>mapserver-ogc-features</code></a> &mdash; MapServer 驱动的 OGC API - Features 现代要素服务与 BBOX 加载</li>
+</ol>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMermaid() {
+          if (window.mermaid) {
+            if (window.__mermaidInitialized) {
+              return;
+            }
+            window.__mermaidInitialized = true;
+            mermaid.initialize({
+              startOnLoad: false,
+              theme: 'default',
+              securityLevel: 'loose'
+            });
+            const codeBlocks = document.querySelectorAll('pre code.language-mermaid, pre code.mermaid');
+            if (codeBlocks.length > 0) {
+              codeBlocks.forEach(function (el) {
+                const pre = el.parentElement;
+                const wrapper = pre.closest('.code-toolbar') || pre;
+                const div = document.createElement('div');
+                div.className = 'mermaid';
+                div.textContent = el.textContent;
+                wrapper.parentElement.replaceChild(div, wrapper);
+              });
+              mermaid.run();
+            }
+          } else {
+            setTimeout(renderMermaid, 50);
+          }
+        }
+        renderMermaid();
+      });
+    </script>
+  </body>
+</html>

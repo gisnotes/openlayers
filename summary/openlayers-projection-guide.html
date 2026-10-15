@@ -112,6 +112,12 @@
 <td align="left">解决墨卡托纬度拉伸导致的比例尺失真，动态平滑过渡视图物理尺度</td>
 </tr>
 <tr>
+<td align="left"></td>
+<td align="left"><a href="../en/latest/examples/epsg-4326.html"><code>epsg-4326</code></a></td>
+<td align="left">原生 <code>EPSG:4326</code> 视图直连与度数单位比例尺</td>
+<td align="left">原生经纬度底图直出，配合 <code>ScaleLine({units: &#39;degrees&#39;})</code> 呈现真实球面经纬度度数跨度</td>
+</tr>
+<tr>
 <td align="left"><strong>极简与轻量转换</strong></td>
 <td align="left"><a href="../en/latest/examples/wms-no-proj.html"><code>wms-no-proj</code></a></td>
 <td align="left">仅配置 <code>{code, units}</code> 的极简 Projection 对象</td>
@@ -214,13 +220,13 @@
 <p><strong>对应示例</strong>：<a href="../en/latest/examples/wms-no-proj.html"><code>wms-no-proj</code></a></p>
 <p><strong>业务痛点</strong>：公司内部或局域网部署了独立坐标系（如地方城市独立网格）的 GIS 服务，前端无需任何换算，仅需原样发送和渲染坐标。</p>
 <p><strong>实现机制</strong>：无需加载 Proj4js，直接声明最简 <code>Projection</code> 对象并注册：</p>
-<pre><code class="language-javascript">import Projection from &#39;ol/proj/Projection.js&#39;;
-import {addProjection} from &#39;ol/proj.js&#39;;
+<pre><code class="language-javascript">import Projection from &quot;ol/proj/Projection.js&quot;;
+import { addProjection } from &quot;ol/proj.js&quot;;
 
 // 仅声明 code 与 units，建立极简基准
 const projection = new Projection({
-  code: &#39;EPSG:21781&#39;,
-  units: &#39;m&#39;,
+  code: &quot;EPSG:21781&quot;,
+  units: &quot;m&quot;,
 });
 addProjection(projection);
 
@@ -228,8 +234,8 @@ const map = new Map({
   layers: [
     new TileLayer({
       source: new TileWMS({
-        url: &#39;https://...&#39;,
-        params: {&#39;LAYERS&#39;: &#39;water&#39;},
+        url: &quot;https://...&quot;,
+        params: { LAYERS: &quot;water&quot; },
         projection: projection, // 直接向服务端传递该坐标系
       }),
     }),
@@ -250,18 +256,18 @@ const map = new Map({
 <p><strong>对应示例</strong>：<a href="../en/latest/examples/wms-custom-proj.html"><code>wms-custom-proj</code></a></p>
 <p><strong>业务痛点</strong>：生产环境对前端打包体积要求严苛（如移动端或离线 SDK），只需在 <code>EPSG:4326</code> 与某一地方坐标系（如瑞士 CH1903）之间换算，引入整套 Proj4js 库性价比极低。</p>
 <p><strong>实现机制</strong>：利用高斯展开近似多项式正反算公式，通过 <code>addCoordinateTransforms</code> 注册双向转换函数：</p>
-<pre><code class="language-javascript">import Projection from &#39;ol/proj/Projection.js&#39;;
-import {addCoordinateTransforms, addProjection} from &#39;ol/proj.js&#39;;
+<pre><code class="language-javascript">import Projection from &quot;ol/proj/Projection.js&quot;;
+import { addCoordinateTransforms, addProjection } from &quot;ol/proj.js&quot;;
 
 const swissProjection = new Projection({
-  code: &#39;EPSG:21781&#39;,
-  units: &#39;m&#39;,
+  code: &quot;EPSG:21781&quot;,
+  units: &quot;m&quot;,
 });
 addProjection(swissProjection);
 
 // 注册从 EPSG:4326 到 EPSG:21781 的轻量数学正算函数
 addCoordinateTransforms(
-  &#39;EPSG:4326&#39;,
+  &quot;EPSG:4326&quot;,
   swissProjection,
   function (coordinate) {
     return [
@@ -274,7 +280,7 @@ addCoordinateTransforms(
       CHtoWGSlng(coordinate[0], coordinate[1]),
       CHtoWGSlat(coordinate[0], coordinate[1]),
     ];
-  }
+  },
 );
 </code></pre>
 <h4 id="瑞士测绘官方多项式近似公式">瑞士测绘官方多项式近似公式</h4>
@@ -293,9 +299,9 @@ $$x_{\text{CH}} = 200000 + 308807.95 X&#39; + 3745.25 Y&#39;^2 + 76.63 X&#39;^3 
 </code></pre>
 <p><strong>实现机制</strong>：</p>
 <pre><code class="language-javascript">const source = new Zoomify({
-  url: &#39;https://example.com/zoomify/&#39;,
-  size: [4000, 3000],   // 图像全部分辨率下的真实像素宽高
-  zDirection: -1,       // 渲染器优先选择当前或更高层级切片，避免放大时模糊
+  url: &quot;https://example.com/zoomify/&quot;,
+  size: [4000, 3000], // 图像全部分辨率下的真实像素宽高
+  zDirection: -1, // 渲染器优先选择当前或更高层级切片，避免放大时模糊
 });
 
 const map = new Map({
@@ -311,10 +317,10 @@ const map = new Map({
 <h4 id="retina-2x-高清屏适配奥秘">Retina 2x 高清屏适配奥秘</h4>
 <p>在 MacBook 或 4K 显示屏上，若直接渲染普通切片会显得模糊。通过巧妙搭配 <code>tilePixelRatio</code> 与半尺寸 <code>tileSize</code>，可无损榨干高分屏：</p>
 <pre><code class="language-javascript">const source = new Zoomify({
-  url: &#39;...&#39;,
+  url: &quot;...&quot;,
   size: [width, height],
-  tilePixelRatio: 2,  // 声明切片实际像素密度为两倍
-  tileSize: 128,      // 逻辑切片边长为 128px（实际拉取 256px 瓦片）
+  tilePixelRatio: 2, // 声明切片实际像素密度为两倍
+  tileSize: 128, // 逻辑切片边长为 128px（实际拉取 256px 瓦片）
 });
 </code></pre>
 <hr>
@@ -322,10 +328,10 @@ const map = new Map({
 <p><strong>对应示例</strong>：<a href="../en/latest/examples/cog-projection.html"><code>cog-projection</code></a></p>
 <p><strong>业务痛点</strong>：加载未知的云原生 GeoTIFF 影像时，其元数据可能包含任意小众地方投影代号（如 <code>EPSG:32636</code>），前端不可能预先全量打包全球数千种 Proj4 字符串。</p>
 <p><strong>实现机制</strong>：开启 <code>loadMissingProjection</code>，在运行时拦截未注册投影，自动向 <code>epsg.io</code> 发起跨域检索并动态注册：</p>
-<pre><code class="language-javascript">import {loadMissingProjection} from &#39;ol/proj.js&#39;;
+<pre><code class="language-javascript">import { loadMissingProjection } from &quot;ol/proj.js&quot;;
 
 const source = new GeoTIFF({
-  sources: [{url: &#39;https://example.com/unregistered-utm.tif&#39;}],
+  sources: [{ url: &quot;https://example.com/unregistered-utm.tif&quot; }],
 });
 
 // 当解析到未知投影代码时，后台自动拉取 https://epsg.io/&lt;code}.proj4
@@ -403,11 +409,13 @@ function setProjection(newProj) {
   const newRes = pointRes / targetPointRes;
 
   // 4. 重置视图，视角缩放与比例尺无缝衔接
-  map.setView(new View({
-    projection: newProj,
-    center: newCenter,
-    resolution: newRes,
-  }));
+  map.setView(
+    new View({
+      projection: newProj,
+      center: newCenter,
+      resolution: newRes,
+    }),
+  );
 }
 </code></pre>
 <hr>
@@ -419,9 +427,10 @@ function setProjection(newProj) {
 <li><strong>美制单位英尺换算陷阱</strong>：美国州平面（SPCS）广泛采用美制测量英尺（<code>us-ft</code>，定义为 $\frac{1200}{3937} \text{ m} \approx 0.3048006 \text{ m}$），切勿误设为国际英尺（<code>ft</code>，恒等于 $0.3048 \text{ m}$），在大范围工程坐标计算中该微小差异会导致数米级系统偏位。</li>
 </ol>
 <hr>
-<h2 id="附录：7-个官方-projection-核心示例源码导航">附录：7 个官方 Projection 核心示例源码导航</h2>
+<h2 id="附录：8-个官方-projection-核心示例源码导航">附录：8 个官方 Projection 核心示例源码导航</h2>
 <ol>
 <li><a href="../en/latest/examples/projection-and-scale.html"><code>projection-and-scale</code></a> &mdash; 投影切换与地表物理比例尺精准对齐</li>
+<li><a href="../en/latest/examples/epsg-4326.html"><code>epsg-4326</code></a> &mdash; 原生 EPSG:4326 经纬度视图直连与度数单位比例尺</li>
 <li><a href="../en/latest/examples/wms-no-proj.html"><code>wms-no-proj</code></a> &mdash; 纯直角坐标直传与零开销极简投影</li>
 <li><a href="../en/latest/examples/wms-custom-proj.html"><code>wms-custom-proj</code></a> &mdash; 基于多项式正反算的高精度轻量投影变换</li>
 <li><a href="../en/latest/examples/wms-image-custom-proj.html"><code>wms-image-custom-proj</code></a> &mdash; 单幅 ImageWMS 跨自定义投影请求与渲染</li>
