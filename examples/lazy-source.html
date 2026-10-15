@@ -1,7 +1,7 @@
 ---
 layout: example.html
-title: Lazy Source
-shortdesc: Example of setting a layer source after construction.
+title: Lazy Source / 数据源延迟加载与动态解绑 (Lazy Source)
+shortdesc: Example of setting a layer source after construction. / 演示如何在图层实例化后按需延迟装载或动态解绑数据源（setSource）。
 docs: >
   <p>Typically, the source for a layer is provided to the layer constructor.
   If you need to set a layer source after construction, this can be
@@ -9,8 +9,45 @@ docs: >
   <p>The layer in the map above is constructed with no source.  Use the
   links below to set/unset the layer source.  A layer is not rendered
   until its source is set.</p>
+  <p>
+    通常情况下，图层的数据源（Source）是在图层实例化构造时传入的。
+    如果在图层创建完成后需要动态替换或延迟设置数据源，可以通过 <code>layer.setSource()</code> 方法完成。
+    上方地图中的图层在初始创建时并未指定任何数据源（保持空白）。
+    点击下方按钮可动态挂载或卸载数据源，只有当图层成功关联数据源后，渲染引擎才会启动瓦片拉取与画面绘制。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>图层外壳（Layer）与数据流引擎（Source）的彻底解耦：</strong>
+      在 OpenLayers 中，<code>Layer</code> 负责的是渲染管线参数（不透明度、Z-Index、可见性、最大最小分辨率、CSS 类名），而 <code>Source</code> 负责几何要素或瓦片流的异步网络获取与解析。
+      这种设计允许图层容器独立于数据源存在。当 <code>source === null</code> 时，图层安全静默，不会触发任何绘制操作，也不会产生空指针异常。
+    </li>
+    <li><strong>按需懒加载与内存释放范式（Lazy Loading & GC Pattern）：</strong>
+      在含有成百上千个图层的复杂业务系统中，若在启动时将所有图层的数据源全部初始化，会导致并发网络请求拥塞与巨额内存消耗。
+      采用懒加载模式，图层树先展示结构外壳，待用户首次勾选时再动态执行 <code>layer.setSource(source)</code>。
+      而在长时间不使用或内存受限的移动端，调用 <code>layer.setSource(null)</code> 可迅速切断对海量切片和要素对象的强引用，辅助浏览器 V8 引擎进行垃圾回收（GC）。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>const layer = new TileLayer()</code>：创建一个空的切片图层容器。</li>
+    <li><code>layer.setSource(source)</code>：注入数据源，自动触发地图重排并派发切片请求。</li>
+    <li><code>layer.setSource(null)</code>：剥离数据源，图层瞬间转为空白，释放底层资源。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong><code>setVisible(false)</code> vs <code>setSource(null)</code> 的技术选型：</strong>
+      - <strong>频繁切换显隐：</strong> 优先使用 <code>layer.setVisible(false)</code>，切片和要素缓存驻留内存，再次勾选时实现毫秒级瞬间呈现，体验最佳；
+      - <strong>低频重度大图层：</strong> 建议在折叠或关闭时调用 <code>layer.setSource(null)</code>，彻底归还数百兆的切片或网格内存，避免移动端浏览器标签页因 OOM 闪退。
+    </li>
+  </ul>
 tags: "source"
 ---
 <div id="map" class="map"></div>
-<button id="set-source" class="code">layer.setSource(source)</button>
-<button id="unset-source" class="code">layer.setSource(null)</button>
+<button id="set-source" class="code">layer.setSource(source) (挂载数据源)</button>
+<button id="unset-source" class="code">layer.setSource(null) (卸载数据源)</button>
+

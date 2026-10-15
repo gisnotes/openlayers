@@ -1,22 +1,62 @@
 ---
 layout: example.html
-title: Layer Z-Index
-shortdesc: Example of ordering layers using Z-index.
+title: Layer Z-Index / 图层层级顺序与托管/非托管图层 (Layer Z-Index & Stacking Context)
+shortdesc: Example of ordering layers using Z-index. / 演示如何使用 Z-index 动态控制图层渲染堆叠顺序，以及受控托管图层（Managed）与独立非托管图层（Unmanaged）的渲染机制差异。
 docs: >
-  There are are two managed layers (square and triangle) and one unmanaged layer (star).</br>
-  The Z-index determines the rendering order; with {square: 1, triangle: 0, star: unmanaged} indices, the rendering order is triangle, square and star on top.
+  <p>
+    There are are two managed layers (square and triangle) and one unmanaged layer (star).</br>
+    The Z-index determines the rendering order; with {square: 1, triangle: 0, star: unmanaged} indices, the rendering order is triangle, square and star on top.
+  </p>
+  <p>
+    在此示例中，包含两个受控托管图层（蓝色正方形与红色三角形）和一个独立非托管图层（绿色五角星）。</br>
+    Z-index（层级索引）决定了图层的渲染先后顺序：当初始设置为 <code>{square: 1, triangle: 0, star: unmanaged}</code> 时，渲染管线将先绘制红色三角形、再覆盖蓝色正方形，而非托管的绿色五角星由于直接通过 <code>setMap()</code> 绑定，将始终常驻在所有托管图层的最顶层。
+    在下方数字输入框中修改 Z-index，可实时观察图形的遮挡覆盖层次变动。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
 
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>受控托管图层（Managed Layers）的层级排序管线：</strong>
+      传入 <code>new Map({ layers: [...] })</code> 或通过 <code>map.addLayer()</code> 添加的图层均由 OpenLayers 内置的 <code>ol/layer/Group</code> 容器统一管理。
+      渲染引擎在每一帧按以下规则对托管图层排序：
+      1. 优先按 <code>layer.getZIndex()</code> 升序排列（数值越小越先绘制，位于底层；数值越大越后绘制，覆盖在上方）；
+      2. 当两个图层的 Z-index 相同时（默认均为 0 或未指定），严格按照其在图层数组中的下标先后顺序绘制（后加入者在上）。
+    </li>
+    <li><strong>独立非托管图层（Unmanaged Layers）的特殊顶层特权：</strong>
+      通过直接调用 <code>layer.setMap(map)</code> 而未将其放入 <code>map.getLayers()</code> 集合的图层被称为“非托管图层”。
+      非托管图层绕过了 LayerGroup 的排序与生命周期管理，其 Canvas / DOM 容器会被渲染管线强制放置在所有普通托管图层之上。
+      这种模式非常适合作为高频擦除重绘的临时标绘层、测距/测面测量橡皮筋图层，避免污染业务图层树。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>vectorLayer.setZIndex(number)</code>：动态设置图层的 Z 轴渲染优先级，触发地图微任务队列重新排序并重绘。</li>
+    <li><code>layer0.setMap(map)</code>：将图层声明为非托管层绑定至目标地图。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>负数 Z-index 导致图层被底图湮没：</strong>
+      底图通常位于索引 0。若为业务矢量层赋予了负数（如 <code>zIndex: -1</code>），该图层将被底图切片彻底遮挡，在控制台无报错但屏幕完全不可见。
+    </li>
+    <li><strong>动态图层树层级跨度规范：</strong>
+      在复杂业务系统（如融合底图、热力图、网格面、轨迹线、POI 标记的多源一张图）中，建议采用步长为 10 或 100 的层级区间规划（如底图 0~9、面图层 10~19、线图层 20~29、点图标 30~39），预留足够的插槽，避免频繁动态计算排序。
+    </li>
+  </ul>
 tags: "layer, ordering, z-index"
 ---
 <div id="map" class="map"></div>
 <div>
   <label for="idx1">
+    Square layer Z-index (蓝色正方形图层 Z-index):
     <input type="number" id="idx1"></input>
-    Square layer Z-index
   </label></br>
 
   <label for="idx2">
+    Triangle layer Z-index (红色三角形图层 Z-index):
     <input type="number" id="idx2"></input>
-    Triangle layer Z-index
   </label>
 </div>
+

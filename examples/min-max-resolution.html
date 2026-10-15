@@ -1,11 +1,49 @@
 ---
 layout: example.html
-title: Layer Min/Max Resolution
-shortdesc: Show/hide layers depending on current view resolution.
+title: Layer Min/Max Resolution / 图层分辨率范围与多尺度分级显示 (Min/Max Resolution)
+shortdesc: Show/hide layers depending on current view resolution. / 演示如何使用 minResolution 与 maxResolution 控制图层在特定缩放分辨率区间内自动显示或隐藏。
 docs: >
   <p>Zoom in twice: the MapBox layer should hide and the OSM layer should be shown.</p>
   <p>If you continue to zoom in, you'll see the OSM layer also disappear.</p>
   <p>The rendering of the layers are here controlled using minResolution and maxResolution options.</p>
+  <p>
+    双击或使用鼠标滚轮连续放大地图两次：宏观的 MapBox 地貌图层将自动隐藏，同时精细的 OSM 街道图层将无缝展现出来。
+    如果继续深度放大，OSM 图层也会因超出其有效分辨率区间而自动隐藏。
+    本示例通过图层的 <code>minResolution</code>（最小分辨率）与 <code>maxResolution</code>（最大分辨率）选项，实现图层的多尺度分级自动调度。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>地理分辨率（Resolution）的物理本质与反向关系：</strong>
+      在数字地图中，<code>resolution</code>（分辨率）定义为“屏幕单个像素所代表的真实地理坐标跨度”（单位：米/像素）。
+      当用户<strong>放大地图（Zoom In / 级别变大）</strong>时，视野范围缩小，单个屏幕像素代表的实际地理距离减小，即<strong>分辨率数值变小</strong>；
+      反之，当用户<strong>缩小地图（Zoom Out / 级别变小）</strong>时，单像素覆盖广袤地域，<strong>分辨率数值变大</strong>。
+      因此：$$\text{大比例尺（街道微观视角）} \iff \text{小分辨率数值}$$
+    </li>
+    <li><strong>半开区间过滤准则（Half-Open Interval）：</strong>
+      OpenLayers 渲染引擎在每一帧判断图层是否可见的数学判定为：
+      $$\text{minResolution} \le \text{currentResolution} < \text{maxResolution}$$
+      当视口分辨率落在该闭开区间之外时，图层渲染器直接短路退出，<strong>既不发起网络切片拉取，也不进行任何 GPU/Canvas 绘制</strong>，从而在根源上节约了计算资源与带宽。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>minResolution: 200, maxResolution: 2000</code>：OSM 街道图层仅在精细局部尺度渲染。</li>
+    <li><code>minResolution: 2000, maxResolution: 20000</code>：MapBox 自然地貌宏观图层在粗粒度尺度渲染。</li>
+    <li><strong>无缝交接设计：</strong> 两图层的临界值均为 <code>2000</code>，确保缩放过程中不存在白屏盲区，平滑交接。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>分辨率与 Zoom 级别的换算误区：</strong>
+      开发者有时混淆 <code>minZoom/maxZoom</code> 与 <code>minResolution/maxResolution</code>。
+      OpenLayers 允许配置分数缩放级别（如 zoom: 5.4），若直接使用整数级别控制可能产生闪烁。
+      通过 <code>view.getResolutionForZoom(zoom)</code> 可精确计算当前投影下的理论分辨率。
+    </li>
+  </ul>
 tags: "minResolution, maxResolution, resolution"
 ---
 <div id="map" class="map"></div>

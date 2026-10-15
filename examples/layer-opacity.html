@@ -1,14 +1,47 @@
 ---
 layout: example.html
-title: Layer Opacity
-shortdesc: Adjust layer opacity based on user input
+title: Layer Opacity / 图层透明度动态调节 (Layer Opacity)
+shortdesc: Adjust layer opacity based on user input. / 演示通过滑块控件动态调用 setOpacity() 调节光栅切片图层透明度，实现多图层半透明叠加融合。
 docs: >
-  The `layer.setOpacity()` method can be called to adjust the opacity of a layer.
+  <p>
+    The <code>layer.setOpacity()</code> method can be called to adjust the opacity of a layer.
+  </p>
+  <p>
+    在此示例中，通过调用图层的 <code>layer.setOpacity()</code> 方法可以动态调节图层的不透明度。
+    拖动下方的滑动条控件（取值范围 0.0 ~ 1.0），可以实时改变上层 OpenStreetMap 矢量切片底图的透明度，从而清晰透视出下层的 MapTiler 高分辨率卫星航拍遥感影像。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>图层混合与 Alpha 通道渲染管线（Alpha Blending Pipeline）：</strong>
+      在 OpenLayers 的多图层复合架构中，每个图层均具备独立的不透明度属性（<code>opacity</code>）。
+      在传统的 2D Canvas 渲染器中，该值直接映射为画布上下文的 <code>ctx.globalAlpha</code>；在 WebGLTile 硬件加速渲染器中，它作为片元着色器（Fragment Shader）的 Uniform 变量传入，在 GPU 中完成极高帧率的像素级 Alpha 混合叠加。
+    </li>
+    <li><strong>属性观察者驱动的微任务渲染调度：</strong>
+      调用 <code>setOpacity()</code> 会派发 <code>change:opacity</code> 事件。OpenLayers 的地图宿主监听图层属性变化后，将其标记为脏区域（dirty），并利用 <code>requestAnimationFrame</code> 在浏览器的下一垂直同步帧中平滑刷新画面，避免无节制的重复同步重绘。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>layer.setOpacity(value)</code>：接收 <code>0.0</code>（完全透明）到 <code>1.0</code>（完全不透明）之间的浮点数值。</li>
+    <li><code>className: 'ol-layer-imagery'</code>：为图层 DOM 元素指定自定义 CSS 类名，便于精细化样式隔离与过渡控制。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>WebGL 与 2D Canvas 混合图层的合成开销：</strong>
+      若底层为 WebGLTile 图层（如示例中的 <code>WebGLTile</code> 遥感底图），而顶层为基于 2D Canvas 的传统 TileLayer，浏览器需要创建独立的复合图层进行软件/硬件层级混合。在低端移动设备上，建议尽量统一底图与业务图层的渲染器类型。
+    </li>
+  </ul>
 tags: "opacity"
 ---
 <div id="map" class="map"></div>
 <label>
-  Layer opacity
+  Layer opacity (图层不透明度):
   <input id="opacity-input" type="range" min="0" max="1" step="0.01" value="1" />
   <span id="opacity-output"></span>
 </label>
+
