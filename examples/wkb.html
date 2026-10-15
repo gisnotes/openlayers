@@ -1,9 +1,43 @@
 ---
 layout: example.html
-title: WKB
-shortdesc: Example of using the WKB parser.
+title: WKB / WKB 二进制几何解析与传输优化 (Well-Known Binary)
+shortdesc: Example of using the WKB parser. / 演示使用 ol/format/WKB 解析十六进制编码的 OGC Well-Known Binary (WKB) 二进制空间几何流并转换投影上屏。
 docs: >
-  Create features from geometries in WKB (Well Known Binary) format.
+  <p>
+    Create features from geometries in WKB (Well Known Binary) format.
+  </p>
+  <p>
+    此示例演示了如何使用 <code>ol/format/WKB</code> 解析器直接读取 OGC 标准的十六进制编码二进制空间几何流（Well-Known Binary），高效解算并转换为 OpenLayers 矢量要素（Feature），并在解析时完成坐标系投影重映射。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>OGC WKB (Well-Known Binary) 标准与二进制优势：</strong>
+      WKB 是 OGC 制定的与 WKT 逻辑等价的二进制序列化格式（ISO 19125）。
+      相比于 WKT 纯文本格式，WKB 具备两大决定性优势：
+      1. <strong>网络传输体积压缩：</strong> 二进制存储结构消除了 ASCII 字符冗余与空白字符，网络数据载荷体积平均精简 60% 以上；
+      2. <strong>浮点数绝对零精度损失：</strong> 坐标直接采用 IEEE 754 双精度浮点（8 字节）存储，完全避免了浮点数序列化为可读字符串时由四舍五入造成的空间拓扑微小漂移。
+    </li>
+    <li><strong>字节序（Endianness）自适应与 DataView 零拷贝：</strong>
+      WKB 数据流的第一个字节用于标识机器字节序（<code>00</code> 代表大端 Big-Endian/XDR，<code>01</code> 代表小端 Little-Endian/NDR）。
+      <code>ol/format/WKB</code> 内部根据首字节动态配置 JavaScript <code>DataView</code> 的读取标志，完美兼容不同架构后端数据库生成的数据。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>new WKB()</code>：实例化二进制格式解析器。</li>
+    <li><code>format.readFeature(wkb, { dataProjection, featureProjection })</code>：支持传入十六进制（Hex）字符串，或者直接传入 <code>ArrayBuffer</code> / <code>Uint8Array</code> 字节切片。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>零拷贝原生 ArrayBuffer 流式加载：</strong>
+      在微服务或 WebSocket 实时推送场景中，推荐直接以二进制流（Binary / Blob）下发 PostGIS 生成的原始 WKB 字节流，前端使用 <code>response.arrayBuffer()</code> 直接送入解析，彻底跳过 Hex/Base64 字符串的编码解码过程，大幅减少内存分配与 GC 压力。
+    </li>
+  </ul>
 tags: "wkb, well known binary"
 ---
 <div id="map" class="map"></div>

@@ -1,10 +1,52 @@
 ---
 layout: example.html
-title: IGC Data
-shortdesc: Example of tracks recorded from multiple paraglider flights on the same day, read from an IGC file.
+title: IGC Data / IGC 4D时空飞行航迹与时序动态回放 (IGC Glider Tracks & 4D Scrubbing)
+shortdesc: Example of tracks recorded from multiple paraglider flights on the same day, read from an IGC file. / 演示使用 ol/format/IGC 加载多架滑翔伞飞行航迹（近5万个时空坐标点），实现时间轴动态拖拽回放与最近几何要素吸附（Closest Feature）。
 docs: >
-  <p>The five tracks contain a total of 49,707 unique coordinates. Zoom in to see more detail. The background layer is from <a href="https://www.opencyclemap.org/">OpenCycleMap</a>.</p>
+  <p>
+    The five tracks contain a total of 49,707 unique coordinates. Zoom in to see more detail. The background layer is from <a href="https://www.opencyclemap.org/">OpenCycleMap</a>.
+  </p>
+  <p>
+    此示例演示了如何通过 <code>ol/format/IGC</code> 数据格式加载国际滑翔委员会（IGC）记录的多架滑翔伞飞行轨迹。
+    这 5 条复杂航迹共包含 49,707 个带有时间戳（$M$ 维度）的三维空间坐标点。
+    拖动下方的**时间滑块**，可在地图上动态回放所有飞行器在对应历史时刻的实时空中位置；
+    鼠标在地图上滑动时，系统会自动执行**空间垂足吸附计算（Closest Point）**，动态绘制红色吸附辅助线并反查该轨迹点的精确飞越时间。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>IGC 航空运动记录格式与 XYM 四维时空几何：</strong>
+      IGC 格式是国际航空联合会专用于记录无动力滑翔机、滑翔伞越野飞行的加密防作弊数据规范。
+      <code>ol/format/IGC</code> 在解析时将地理经纬度转化为投影坐标，并将 GPS 记录时刻（秒级时间戳）无损存入第三个维度（$M$ 维度），构建出高阶的 <code>[x, y, m]</code> 连续时空轨迹几何体。
+    </li>
+    <li><strong>时空轨迹插值回放算法（<code>getCoordinateAtM</code>）：</strong>
+      实现平滑轨迹回放通常需要大量的插值计算。OpenLayers 的 <code>LineString</code> 内置了高效的 <code>geometry.getCoordinateAtM(m, extrapolate)</code> 算法：
+      给定任意时间戳 $m$，底层通过二分查找快速定位前后相邻的两个离散 GPS 记录点，并根据时间差完成高精度的线性插值运算，返回该瞬间的精确平面坐标 <code>[x, y]</code>，无需手动遍历数十万数组。
+    </li>
+    <li><strong>空间最近要素吸附与即时矢量渲染（Immediate VectorContext）：</strong>
+      - <code>vectorSource.getClosestFeatureToCoordinate(coord)</code>：利用空间 R 树拓扑索引，在毫秒级时间内定位离鼠标光标最近的飞行航线；
+      - <code>geometry.getClosestPoint(coord)</code>：计算鼠标到空间多段线的正交垂足点，并取出该点携带的插值时间；
+      - 在图层的 <code>postrender</code> 事件中调用 <code>getVectorContext(evt).drawGeometry()</code> 直接在当前绘制上下文画出红色引导线，彻底避免向 VectorSource 中反复执行 <code>addFeature</code> / <code>removeFeature</code> 引起的重排抖动与垃圾回收（GC）丢帧。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>new IGC().readFeatures(data, { featureProjection: 'EPSG:3857' })</code>：批量解析 IGC 纯文本。</li>
+    <li><code>geometry.getFirstCoordinate()[2]</code> 与 <code>getLastCoordinate()[2]</code>：提取飞行起止全局时间区间。</li>
+    <li><code>geometry.getCoordinateAtM(m, true)</code>：基于时间戳插值定位轨迹点。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>超大规模线段的样式缓存（Style Cache）：</strong>
+      近 5 万个顶点在渲染时会产生高昂计算。示例中设计了 <code>styleCache[color]</code> 字典，确保相同颜色的飞行员轨迹共享同一个 <code>Style</code> 单例对象，极大降低了显存与内存分配压力。
+    </li>
+  </ul>
 tags: "complex-geometry, closest-feature, igc, opencyclemap"
+
 
 ---
 <div id="map" class="map"></div>

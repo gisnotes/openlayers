@@ -1,9 +1,43 @@
 ---
 layout: example.html
-title: WKT
-shortdesc: Example of using the WKT parser.
+title: WKT / WKT 文本几何解析与投影转换 (Well-Known Text)
+shortdesc: Example of using the WKT parser. / 演示使用 ol/format/WKT 将 OGC Well-Known Text (WKT) 文本几何字符串解析为矢量要素并完成坐标系转换。
 docs: >
-  Create features from geometries in WKT (Well Known Text) format.
+  <p>
+    Create features from geometries in WKT (Well Known Text) format.
+  </p>
+  <p>
+    此示例演示了如何使用 <code>ol/format/WKT</code> 解析器从 OGC 标准的纯文本几何描述（Well-Known Text, 如 <code>POLYGON((...))</code>）直接构造 OpenLayers 矢量要素（Feature），并在解析过程中一步完成从 WGS84 经纬度（EPSG:4326）到 Web 墨卡托（EPSG:3857）的投影变换。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>OGC WKT (Well-Known Text) 标准规范：</strong>
+      WKT 是一种由 OGC 制定、并被 ISO/IEC 13249-3 采纳的用于表示空间矢量几何对象的纯文本标记语言。
+      它是关系型空间数据库（PostgreSQL/PostGIS、MySQL Spatial、SpatiaLite）以及几何分析算法库（JSTS、GEOS）之间事实上的工业交换标准格式，支持 <code>POINT</code>、<code>LINESTRING</code>、<code>POLYGON</code>、<code>MULTIPOINT</code>、<code>GEOMETRYCOLLECTION</code> 等标准类型。
+    </li>
+    <li><strong>单步解析与坐标系重映射（Parse & Reproject Pipeline）：</strong>
+      在前端与空间数据库 API 交互时，数据库往往以 WGS84 经纬度返回 WKT 字符串。
+      <code>format.readFeature(wkt, { dataProjection, featureProjection })</code> 能够直接在词法/语法解析 AST 生成几何对象的过程中，无缝执行坐标系投影变换，省去了先生成 4326 要素再手动调用 <code>feature.getGeometry().transform()</code> 的额外计算开销。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>new WKT()</code>：实例化 WKT 词法解析器。</li>
+    <li><code>format.readFeature(text, options)</code>：解析单个要素；若文本为 <code>GEOMETRYCOLLECTION</code> 或包含多个要素，可使用 <code>readFeatures()</code>。</li>
+    <li><code>format.writeFeature(feature, options)</code>：反向序列化，将地图上的要素转为标准 WKT 文本提交给后端存储。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>X/Y（经度/纬度）坐标轴顺序陷阱：</strong>
+      WKT 标准严格规定坐标以 <code>X Y [Z] [M]</code> 顺序排列，在地理经纬度中必须先写经度（Longitude，X）、后写纬度（Latitude，Y）。
+      部分国内地图服务商接口偶尔会错误输出 <code>POINT(纬度 经度)</code>，直接传入解析会导致要素翻转倾斜，必须提前进行正则校验或坐标对调。
+    </li>
+  </ul>
 tags: "wkt, well known text"
 ---
 <div id="map" class="map"></div>

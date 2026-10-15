@@ -10,11 +10,15 @@ import Fill from '../src/ol/style/Fill.js';
 import Stroke from '../src/ol/style/Stroke.js';
 import Style from '../src/ol/style/Style.js';
 
+// MapTiler API Key and attribution notices
+// MapTiler API 访问密钥与版权信息
 const key = 'EPhPi7Zr1GTS500UybLu';
 const attributions =
   '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> ' +
   '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>';
 
+// Base raster imagery tile layer
+// 底层高分辨率卫星影像瓦片图层
 const raster = new TileLayer({
   source: new ImageTile({
     attributions: attributions,
@@ -24,6 +28,8 @@ const raster = new TileLayer({
   }),
 });
 
+// Style dictionary mapped by geometry type
+// 按几何图形类型（点、线段、多线段）区分的样式配置字典
 const style = {
   'Point': new Style({
     image: new CircleStyle({
@@ -51,6 +57,8 @@ const style = {
   }),
 };
 
+// Vector layer loading GPX data with dynamic style dispatcher
+// 加载 GPX 文件的矢量图层，应用基于几何类型的样式分流器
 const vector = new VectorLayer({
   source: new VectorSource({
     url: 'data/gpx/fells_loop.gpx',
@@ -61,6 +69,8 @@ const vector = new VectorLayer({
   },
 });
 
+// Initialize map instance stacking raster imagery and GPX track vector
+// 初始化地图实例，叠加底图与 GPX 运动轨迹矢量图层
 const map = new Map({
   layers: [raster, vector],
   target: document.getElementById('map'),
@@ -70,6 +80,8 @@ const map = new Map({
   }),
 });
 
+// Display feature description at the given screen pixel
+// 拾取并展示屏幕像素位置处要素的描述文本 (desc)
 const displayFeatureInfo = function (pixel) {
   const features = [];
   map.forEachFeatureAtPixel(pixel, function (feature) {
@@ -89,6 +101,8 @@ const displayFeatureInfo = function (pixel) {
   }
 };
 
+// Pointermove hover listener
+// 鼠标悬停漫游事件监听
 map.on('pointermove', function (evt) {
   if (evt.dragging) {
     return;
@@ -96,6 +110,8 @@ map.on('pointermove', function (evt) {
   displayFeatureInfo(evt.pixel);
 });
 
+// Click selection listener
+// 鼠标点击选择事件监听
 map.on('click', function (evt) {
   displayFeatureInfo(evt.pixel);
 });

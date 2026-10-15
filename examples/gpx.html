@@ -1,9 +1,45 @@
 ---
 layout: example.html
-title: GPX Data
-shortdesc: Example of using the GPX source.
+title: GPX Data / GPX 户外轨迹数据解析与多几何类型着色 (GPX Data)
+shortdesc: Example of using the GPX source. / 演示使用 ol/format/GPX 解析 GPS 轨迹交换格式文件，根据几何类型（点、折线、多折线）差异化着色并提取描述信息。
 docs: >
-  Example of using the GPX source.
+  <p>
+    Example of using the GPX source.
+  </p>
+  <p>
+    此示例演示了如何使用 <code>ol/format/GPX</code> 数据格式解析器加载标准的 GPS 轨迹交换文件（GPX）。
+    数据源包含户外徒步航点（Waypoints）与完整运动轨迹（Tracks）。系统通过几何类型识别函数为点要素与不同类型的连续线段分别应用差异化的样式渲染，并在鼠标悬停时提取展示要素描述信息（<code>desc</code>）。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>GPX (GPS Exchange Format) 协议结构：</strong>
+      GPX 是一种基于 XML 的通用 GPS 数据格式，定义了三类核心地理拓扑：
+      1. 航点（<code>&lt;wpt&gt;</code>）：离散的地标点，映射为 <code>ol/geom/Point</code>；
+      2. 路线（<code>&lt;rte&gt;</code>）：规划的目的地节点列表，映射为 <code>ol/geom/LineString</code>；
+      3. 轨迹（<code>&lt;trk&gt;</code>）：由若干轨迹段（<code>&lt;trkseg&gt;</code>）记录的真实行进连续点列，映射为 <code>ol/geom/MultiLineString</code>。
+    </li>
+    <li><strong>多几何类型样式分流路由（Geometry-Type Style Dispatcher）：</strong>
+      当单一矢量图层混合承载多种几何类型时，直接配置单一静态样式无法满足点与线的差异化视觉表现。
+      通过向 <code>VectorLayer</code> 传入样式回调函数 <code>style: feature => style[feature.getGeometry().getType()]</code>，OpenLayers 在渲染每一要素时能够以 $O(1)$ 时间复杂度快速分流映射至专用的点或线样式。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>new GPX()</code>：自动处理 GPX 命名空间并提取要素属性（如 <code>desc</code>、<code>name</code>、<code>sym</code>）。</li>
+    <li><code>feature.getGeometry().getType()</code>：获取几何类型字符串。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>三维/四维坐标空间（Z 与 M 维度）：</strong>
+      GPX 轨迹点通常包含 <code>&lt;ele&gt;</code>（海拔高程）和 <code>&lt;time&gt;</code>（UTC 时间戳）。
+      OpenLayers 的 GPX 格式解析器会将其保留在坐标数组中（格式为 <code>[x, y, z, m]</code>），可用于运动速度计算、海拔剖面高程图绘制等进阶分析。
+    </li>
+  </ul>
 tags: "GPX, maptiler"
 ---
 <div id="map" class="map"></div>

@@ -1,9 +1,44 @@
 ---
 layout: example.html
-title: KML
-shortdesc: Rendering KML with a vector source.
+title: KML / KML 矢量图层加载与要素拾取 (KML Data)
+shortdesc: Rendering KML with a vector source. / 演示使用 ol/format/KML 解析 Keyhole Markup Language (KML) 文件并通过矢量图层渲染与鼠标悬停信息提示。
 docs: >
-  This example uses the <code>ol/format/KML</code> to parse KML for rendering with a vector source.
+  <p>
+    This example uses the <code>ol/format/KML</code> to parse KML for rendering with a vector source.
+  </p>
+  <p>
+    此示例演示了如何使用 <code>ol/format/KML</code> 解析器加载并渲染 Google Earth 标准的 KML（Keyhole 标记语言）矢量文件。
+    将鼠标悬停在地图上的要素上时，通过 <code>map.forEachFeatureAtPixel()</code> 像素拾取算法，可在下方实时展示对应要素的名称属性（<code>name</code>）。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>KML (Keyhole Markup Language) 协议与解析管线：</strong>
+      KML 是一种基于 XML 语法的 OGC 开放地理标记语言，广泛应用于 Google Earth 与航拍无人机航线规划。
+      <code>ol/format/KML</code> 内部集成了标准 DOMParser，能够高效解析 <code>&lt;Placemark&gt;</code>、<code>&lt;LineString&gt;</code>、<code>&lt;Polygon&gt;</code> 等空间节点，并支持自动抽取 KML 内嵌的色彩描边样式（<code>&lt;Style&gt;</code> 与 <code>&lt;StyleMap&gt;</code>）。
+    </li>
+    <li><strong>地理坐标到投影平面的透明映射：</strong>
+      依据 OGC 规范，KML 文件内部的坐标必须且只能是 WGS84 经纬度（EPSG:4326）。
+      当在 <code>VectorSource</code> 中注入 <code>new KML()</code> 时，OpenLayers 内部在解析要素的同时自动将经纬度转换为目标视图投影（EPSG:3857），开发者无需手动编写遍历转换逻辑。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>new VectorSource({ url: '...', format: new KML() })</code>：声明异步加载并解析 KML 文件。</li>
+    <li><code>map.forEachFeatureAtPixel(pixel, callback)</code>：基于离屏命中检测（Hit-Detection）Canvas 快速检索光标下的要素集合。</li>
+    <li><code>map.getTargetElement().style.cursor = 'pointer'</code>：交互状态反馈。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>样式提取与 GC 内存开销：</strong>
+      KML 解析器默认 <code>extractStyles: true</code>。若 KML 包含上万个独立样式节点，会导致创建上万个 <code>ol/style/Style</code> 实例引发内存飙升。
+      生产中若不需要内嵌样式，建议显式设置 <code>new KML({ extractStyles: false })</code> 并通过统一的图层 <code>style</code> 函数进行批量渲染。
+    </li>
+  </ul>
 tags: "KML, maptiler"
 ---
 <div id="map" class="map"></div>
