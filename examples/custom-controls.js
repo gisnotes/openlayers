@@ -7,6 +7,7 @@ import OSM from '../src/ol/source/OSM.js';
 
 //
 // Define rotate to north control.
+// 定义“复位至正北”自定义控件。
 //
 
 const northArrow =
@@ -24,7 +25,7 @@ class RotateNorthControl extends Control {
 
     const button = document.createElement('button');
     button.type = 'button';
-    button.title = 'Rotate to north';
+    button.title = 'Rotate to north / 复位至正北';
     button.innerHTML = northArrow;
 
     const element = document.createElement('div');
@@ -38,6 +39,7 @@ class RotateNorthControl extends Control {
 
     /**
      * The north arrow, rotated together with the map.
+     * 指北箭头 SVG 元素，随地图旋转角度联动变换
      * @type {SVGElement}
      * @private
      */
@@ -45,6 +47,7 @@ class RotateNorthControl extends Control {
 
     /**
      * The rotation the arrow was last rendered with.
+     * 上一次渲染时记录的旋转弧度值，用于脏检查避免无效 DOM 更新
      * @type {number|undefined}
      * @private
      */
@@ -53,6 +56,10 @@ class RotateNorthControl extends Control {
     button.addEventListener('click', this.handleRotateNorth.bind(this), false);
   }
 
+  /**
+   * Animate the map view back to 0 rotation.
+   * 平滑缓动复位视角至 0 弧度（正北）
+   */
   handleRotateNorth() {
     this.getMap().getView().animate({rotation: 0, duration: 250});
   }
@@ -60,6 +67,7 @@ class RotateNorthControl extends Control {
   /**
    * Keep the arrow pointing north, and hide the control when the map is
    * already rotated to north.
+   * 保持箭头始终指向正北；当且仅当地图已处于正北（0弧度）时隐藏控件。
    * @param {import("../src/ol/MapEvent.js").default} mapEvent Map event.
    * @override
    */
@@ -80,6 +88,7 @@ class RotateNorthControl extends Control {
 //
 // Create map, giving it a rotate to north control instead of the default
 // rotate control.
+// 创建地图实例，并用自定义 RotateNorthControl 替代默认的 Rotate 控件。
 //
 
 const map = new Map({

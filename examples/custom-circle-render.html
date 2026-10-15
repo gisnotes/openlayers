@@ -1,9 +1,58 @@
 ---
 layout: example.html
-title: Custom Circle Render
-shortdesc: Example of a custom circle render.
+title: Custom Circle Render / 自定义圆渲染（Canvas 径向渐变）
+shortdesc: Example of a custom circle render. / 自定义圆形要素渲染示例（结合 Canvas 径向渐变）。
 docs: >
   This example demonstrates the use of 'ol/style/Style' render option function to render circle feature.
+
+  本示例展示如何利用 <code>ol/style/Style</code> 的 <code>renderer</code> 自定义渲染函数，直接接管底层 Canvas 2D 绘图上下文，为圆形要素（<code>Circle</code>）绘制高质感的径向渐变（Radial Gradient）光晕与描边特效。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构原理 (Core Architecture)
+  在常规 OpenLayers 矢量样式中，<code>Fill</code> 和 <code>Stroke</code> 仅支持纯色或简单的 Pattern 填充。对于需要复杂视觉表现（如雷达波束、发光粒子、能量光晕、动态脉冲）的场景，OpenLayers 提供了 <code>Style</code> 的 <code>renderer</code> 钩子函数：
+  - **坐标投影与像素转换**：传入 <code>renderer(coordinates, state)</code> 的 <code>coordinates</code> 已经由渲染引擎从地图投影坐标系转换并投影到当前视口的屏幕像素坐标（Pixel Coordinates）。对于 <code>Circle</code> 几何体，<code>coordinates</code> 数组包含两个像素点：<code>[[center.x, center.y], [perimeter.x, perimeter.y]]</code>，因此两点间的欧几里得距离即为当前缩放级别下圆在屏幕上的物理像素半径。
+  - **直接访问原生 Canvas 上下文**：<code>state.context</code> 是正在渲染该矢量图层的 <code>CanvasRenderingContext2D</code> 对象。在此上下文中绘制的任何图形都会直接合并到图层的当前帧缓冲中，无需额外的中间离屏 Canvas。
+  - **坐标状态传递与生命周期**：每本地图视口发生平移、缩放或旋转，OpenLayers 的矢量渲染流水线（<code>VectorContext</code>）均会触发重绘，并以最新屏幕像素参数调用 <code>renderer</code>。
+
+  #### 2. 关键实现与代码拆解 (Code Deep Dive)
+  ```javascript
+  new Style({
+    renderer(coordinates, state) {
+      // 1. 解构圆心与圆周上的像素坐标，动态计算屏幕物理半径
+      const [[x, y], [x1, y1]] = coordinates;
+      const ctx = state.context;
+      const dx = x1 - x;
+      const dy = y1 - y;
+      const radius = Math.sqrt(dx * dx + dy * dy);
+
+      // 2. 构建 Canvas 径向渐变（从内圈透明到外圈半透明红晕）
+      const innerRadius = 0;
+      const outerRadius = radius * 1.4;
+      const gradient = ctx.createRadialGradient(x, y, innerRadius, x, y, outerRadius);
+      gradient.addColorStop(0, 'rgba(255,0,0,0)');
+      gradient.addColorStop(0.6, 'rgba(255,0,0,0.2)');
+      gradient.addColorStop(1, 'rgba(255,0,0,0.8)');
+
+      // 3. 执行原生 Canvas 路径构建与填充描边
+      ctx.beginPath();
+      ctx.arc(x, y, radius, 0, 2 * Math.PI, true);
+      ctx.fillStyle = gradient;
+      ctx.fill();
+
+      ctx.arc(x, y, radius, 0, 2 * Math.PI, true);
+      ctx.strokeStyle = 'rgba(255,0,0,1)';
+      ctx.stroke();
+    },
+  });
+  ```
+
+  #### 3. 生产实战避坑与考量 (Production Pitfalls)
+  - **Context 状态污染防范**：在 <code>renderer</code> 中修改 Canvas 上下文属性（如 <code>ctx.fillStyle</code>、<code>ctx.strokeStyle</code>、<code>ctx.lineWidth</code> 等）时，虽然 OpenLayers 会在要素渲染间隙重置关键状态，但复杂定制绘制推荐使用 <code>ctx.save()</code> / <code>ctx.restore()</code> 妥善保护上下文状态栈。
+  - **设备像素比（HiDPI）**：<code>state.pixelRatio</code> 代表当前屏幕的设备像素比。在手动进行矩阵变换与阴影模糊计算时需按比例缩放，保证高分屏（Retina）下的锐利清晰度。
+  - **拾取命中同步**：单纯配置 <code>renderer</code> 不会自动改变鼠标点击测试的行为。如需让自定义外观与命中检测精准契合，需搭配 <code>hitDetectionRenderer</code>。
 tags: "circle, feature, vector, render, custom"
 ---
 <div id="map" class="map"></div>

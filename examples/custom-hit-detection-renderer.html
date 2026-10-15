@@ -1,12 +1,61 @@
 ---
 layout: example.html
-title: Custom Hit Detection Render
-shortdesc: Example of a custom hit detection renderer.
+title: Custom Hit Detection Render / 自定义命中检测渲染器
+shortdesc: Example of a custom hit detection renderer. / 示例展示如何利用 Style 的 hitDetectionRenderer 定制鼠标拾取灵敏区域。
 docs: >
-  This example demonstrates the use of 'ol/style/Style' hitDetectionRender option function in 
-  detecting if pointer is over a particular feature. 
-  Move pointer over the label for Columbus Circle feature and see that only label is used in
-  hit detection.
+  This example demonstrates the use of 'ol/style/Style' hitDetectionRender option function in detecting if pointer is over a particular feature. Move pointer over the label for Columbus Circle feature and see that only label is used in hit detection.
+
+  本示例展示如何利用 <code>ol/style/Style</code> 的 <code>hitDetectionRenderer</code> 选项函数精确定制要素的鼠标命中检测（Hit Detection）逻辑。当鼠标悬停在哥伦布圆环（Columbus Circle）的大范围渐变圆内时不会触发命中；仅当鼠标精确移动到中央的文字标签上方时，才会判定为选中并触发样式响应（文字边框高亮）。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构原理 (Core Architecture)
+  在 GIS 与复杂地图可视化中，视觉渲染外观与交互检测区域往往不对等：
+  - **视觉 vs 拾取分离**：一个要素可能附带大范围的半透明阴影、径向渐变缓冲区或粒子光晕，若这些大范围半透明像素也参与鼠标拾取，用户将极难点击下层要素，造成严重的“空间阻挡”与“误触”。
+  - **Hit-Detection 渲染管线机制**：OpenLayers 在执行 <code>map.forEachFeatureAtPixel(pixel, callback)</code> 时，并不会直接读取主渲染画布（主画布包含底图和其他图层，无法区分具体要素归属），而是启动一个临时的 1x1 像素离屏 Canvas，利用要素的样式将其单独绘制到离屏 Canvas 上，然后通过 <code>ctx.getImageData(0, 0, 1, 1)</code> 读取 Alpha 通道值。若 Alpha > 0，则判定为命中（Hit）。
+  - **`hitDetectionRenderer` 钩子作用**：如果样式中定义了 <code>hitDetectionRenderer</code>，OpenLayers 在离屏命中测试时会绕过常规的 <code>renderer</code>，专职执行 <code>hitDetectionRenderer</code>。在本例中，<code>renderer</code> 绘制了渐变圆与文字，而 <code>hitDetectionRenderer</code> **仅绘制文字**，从而将庞大的圆形范围从拾取测试中剥离，仅保留精准的文字轮廓响应。
+
+  #### 2. 关键实现与代码拆解 (Code Deep Dive)
+  ```javascript
+  circleFeature.setStyle(
+    new Style({
+      // 1. 视觉渲染器：绘制大半径径向渐变圆 + 文字标签
+      renderer(coordinates, state) {
+        const [[x, y], [x1, y1]] = coordinates;
+        const ctx = state.context;
+        // 绘制渐变圆...
+        renderLabelText(ctx, x, y, circleFeature.get('label-color'));
+      },
+      // 2. 命中检测渲染器：仅向离屏 Hit-test Canvas 绘制文字路径
+      hitDetectionRenderer(coordinates, state) {
+        const [x, y] = coordinates[0];
+        const ctx = state.context;
+        // 彻底略过渐变圆的绘制，只有文字区域才具有非零 Alpha 像素
+        renderLabelText(ctx, x, y, circleFeature.get('label-color'));
+      },
+    }),
+  );
+
+  // 3. 悬停拾取联动：指针在文字上方时变为白色描边高亮
+  map.on('pointermove', (evt) => {
+    const featureOver = map.forEachFeatureAtPixel(evt.pixel, (feature) => {
+      feature.set('label-color', 'rgba(255,255,255,1)');
+      return feature;
+    });
+
+    if (pointerOverFeature && pointerOverFeature != featureOver) {
+      pointerOverFeature.set('label-color', labelTextStroke);
+    }
+    pointerOverFeature = featureOver;
+  });
+  ```
+
+  #### 3. 生产实战避坑与考量 (Production Pitfalls)
+  - **Hit-Detection 画布性能**：由于离屏拾取每鼠标移动一次就可能执行多次重绘与 <code>getImageData</code>，在 <code>hitDetectionRenderer</code> 中应尽可能精简绘制指令（如省去渐变对象创建、阴影计算 <code>ctx.filter</code> 等无意义的视觉装饰），只绘制能够提供 Alpha 判定的实心填充。
+  - **文字外发光与透明度阈值**：如果文字带有极度扩散的半透明模糊阴影，阴影边缘微弱的 Alpha 也可能被系统判定为命中。如需绝对精准拾取，在 <code>hitDetectionRenderer</code> 中建议关闭 <code>filter</code> 或阴影，使用实体几何路径进行描绘。
+  - **`forEachFeatureAtPixel` 终止优化**：回调函数中返回非假值（如返回 <code>feature</code>）会立刻中断拾取遍历，避免无意义的全局图层深度遍历，显著提升 hover 性能。
 tags: "circle, feature, vector, render, custom, hitDetectionRenderer"
 ---
 <div id="map" class="map"></div>

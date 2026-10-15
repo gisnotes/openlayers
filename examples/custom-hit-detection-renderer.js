@@ -9,12 +9,16 @@ import OSM from '../src/ol/source/OSM.js';
 import VectorSource from '../src/ol/source/Vector.js';
 import Style from '../src/ol/style/Style.js';
 
+// Columbus Circle coordinates in Web Mercator
+// 哥伦布圆环（Columbus Circle）经纬度转为 Web 墨卡托投影坐标
 const columbusCircleCoords = fromLonLat([-73.98189, 40.76805]);
 const labelTextStroke = 'rgba(120, 120, 120, 1)';
 const labelText = 'Columbus Circle';
 
 let pointerOverFeature = null;
 
+// Helper to render label text on a Canvas 2D context
+// 辅助函数：在指定的 Canvas 2D 上下文上绘制标签文本与文字阴影
 const renderLabelText = (ctx, x, y, stroke) => {
   ctx.fillStyle = 'rgba(255,0,0,1)';
   ctx.strokeStyle = stroke;
@@ -27,14 +31,20 @@ const renderLabelText = (ctx, x, y, stroke) => {
   ctx.strokeText(labelText, x, y);
 };
 
+// Create circle feature with 50-meter radius
+// 创建半径为 50 米的圆形要素
 const circleFeature = new Feature({
   geometry: new Circle(columbusCircleCoords, 50),
 });
 
 circleFeature.set('label-color', labelTextStroke);
 
+// Attach style with separate renderer (visual) and hitDetectionRenderer (picking)
+// 挂载样式：将常规视觉渲染与命中检测拾取渲染分离
 circleFeature.setStyle(
   new Style({
+    // Standard visual renderer: draws radial gradient circle AND label text
+    // 标准视觉渲染器：同时绘制径向渐变大圆与中心文字
     renderer(coordinates, state) {
       const [[x, y], [x1, y1]] = coordinates;
       const ctx = state.context;
@@ -65,6 +75,8 @@ circleFeature.setStyle(
 
       renderLabelText(ctx, x, y, circleFeature.get('label-color'));
     },
+    // Hit detection renderer: ONLY draws the text label, excluding the circle
+    // 命中检测渲染器：仅向离屏 Hit-test 画布绘制文本，彻底排除圆周区域
     hitDetectionRenderer(coordinates, state) {
       const [x, y] = coordinates[0];
       const ctx = state.context;
@@ -92,6 +104,8 @@ const map = new Map({
   }),
 });
 
+// Detect pointer hover over feature and update dynamic label stroke color
+// 监听指针移动事件，命中检测成功时动态高亮文字描边
 map.on('pointermove', (evt) => {
   const featureOver = map.forEachFeatureAtPixel(evt.pixel, (feature) => {
     feature.set('label-color', 'rgba(255,255,255,1)');

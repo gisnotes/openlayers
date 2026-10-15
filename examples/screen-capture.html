@@ -1,12 +1,66 @@
 ---
 layout: example.html
-title: Screen Capture Control
-shortdesc: A custom control that captures the map as a PNG image.
+title: Screen Capture Control / 屏幕截屏控件（地图 Canvas 导出）
+shortdesc: A custom control that captures the map as a PNG image. / 自定义地图截屏控件，将当前地图视口导出为 PNG 图片。
 docs: >
   This example shows a custom control that captures the current map as an image. Click the camera button
   to render the map into a canvas and show a preview on top of the map. From the preview, the image can
   be downloaded as a PNG file with a time stamped file name, or discarded to return
   to the map. The layer attributions are drawn onto the captured image.
+
+  本示例展示一个将当前地图视口捕获为图片的自定义截屏控件（<code>ScreenCaptureControl</code>）。点击相机按钮可将地图临时重定向至独立离屏 Canvas 中渲染，并在地图上方弹出捕获预览层。在预览界面中，用户可点击将图片以带时间戳的文件名导出下载为 PNG 格式，或点击返回继续浏览地图。所有图层的版权归属（Attributions）信息均会自动绘制在导出图片的右下角。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构原理 (Core Architecture)
+  在 Web GIS 中导出高质量地图截图通常有两种思路：
+  - **直接拼合主画布（`map.getViewport().querySelector('canvas')`）**：该方式对多图层混合、WebGL 与 DOM 叠加（如 HTML 覆盖物、CSS 图标）往往需要复杂的 Canvas 2D <code>drawImage</code> 逐层合成，且跨域图片（CORS）易污染 Canvas 导致 <code>toBlob()</code> / <code>toDataURL()</code> 报安全异常。
+  - **动态 Target 重定向与一次性重绘机制（`map.setTarget(canvas)`）**：本例采用的是一种更为优雅原生的 OpenLayers 截屏架构：
+    1. 动态创建一个与地图视口物理分辨率严格一致的离屏 <code>canvas</code>。
+    2. 将地图渲染目标临时切换到该离屏画布：<code>map.setTarget(canvas)</code>。
+    3. 注册单次渲染完成监听器：<code>map.once('rendercomplete', ...)</code>。
+    4. 渲染完成后立即还原原始 DOM 容器：<code>map.setTarget(originalTarget); map.render()</code>。
+    5. 在离屏 Canvas 上利用 2D 上下文补画图层归属文本（Attributions），最后调用 <code>canvas.toBlob()</code> 生成 PNG 二进制流。
+
+  #### 2. 关键实现与代码拆解 (Code Deep Dive)
+  ```javascript
+  handleCapture() {
+    const map = this.getMap();
+    const target = map.getTargetElement();
+    const size = map.getSize();
+    const canvas = document.createElement('canvas');
+    canvas.width = size[0];
+    canvas.height = size[1];
+
+    // 1. 监听当前截屏重绘完成事件
+    map.once('rendercomplete', (event) => {
+      // 收集所有图层在此帧状态下的版权归属 Promise
+      const attributions = map
+        .getAllLayers()
+        .flatMap((layer) => layer.getAttributions(event.frameState));
+      
+      // 2. 立即将地图 Target 恢复为网页原有的 DOM 容器
+      map.setTarget(target);
+      map.render();
+
+      // 3. 异步解析图层版权文本并绘制到底部水印
+      Promise.all(attributions).then((resolved) => {
+        drawAttributions(canvas, resolved);
+        canvas.toBlob((blob) => this.showPreview_(blob, size), 'image/png');
+      });
+    });
+
+    // 4. 重定向地图渲染目标至离屏 canvas 触发即时绘制
+    map.setTarget(canvas);
+  }
+  ```
+
+  #### 3. 生产实战避坑与考量 (Production Pitfalls)
+  - **CORS 跨域画布污染**：若加载了外部未配置 <code>crossOrigin: 'anonymous'</code> 的瓦片或图片图层，<code>canvas.toBlob()</code> 会抛出 <code>DOMException: Failed to execute 'toBlob' on 'HTMLCanvasElement': Tainted canvases may not be exported</code>。所有底图数据源必须明确允许跨域资源共享。
+  - **内存管理与 Object URL 泄漏**：在创建图片预览与下载链接时，频繁使用 <code>URL.createObjectURL(blob)</code> 会在浏览器内存中建立常驻引用，关闭预览或下载触发后必须显式调用 <code>URL.revokeObjectURL(url)</code> 释放 Blob 内存。
+  - **高分屏（Retina / HiDPI）导出清晰度**：<code>map.getSize()</code> 获得的是 CSS 像素逻辑尺寸。若需导出高精细度打印级图片，Canvas 的实际尺寸需乘以 <code>window.devicePixelRatio</code>，并配合 <code>context.scale(pixelRatio, pixelRatio)</code> 绘图。
 tags: "custom, control, capture, export, png, screenshot, svg, button, canvas"
 ---
 <div id="map" class="map"></div>
