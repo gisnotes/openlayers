@@ -1,11 +1,51 @@
 ---
 layout: example.html
-title: Geographic Coordinates
-shortdesc: Using geographic coordinates for the map view.
+title: Geographic Coordinates / 地理坐标模式（useGeographic 全局经纬度透明映射）
+shortdesc: Using geographic coordinates for the map view. / 演示如何调用 useGeographic() 让视图中心、几何要素与浮层直接使用原生经纬度坐标，免去手动投影转换。
 docs: >
   Calling the <code>useGeographic</code> function in the <code>'ol/proj'</code> module
   makes it so the map view uses geographic coordinates (even if the view projection is
   not geographic).
+
+  本示例展示如何通过调用 <code>'ol/proj'</code> 模块中的 <code>useGeographic()</code> 函数，让 OpenLayers 的视图中心、几何图形（Point）、浮层（Overlay）以及鼠标事件坐标全面直接使用**地理坐标（经度、纬度，即 WGS84 / EPSG:4326）**。即使底层底图使用的是 Web 墨卡托（EPSG:3857），框架也会在 API 入口与出口处自动进行透明映射转换，开发者无需再手动编写繁琐的 <code>fromLonLat()</code> 与 <code>toLonLat()</code>。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构原理 (Core Architecture)
+  在 OpenLayers 6 之前，框架默认要求所有传入 API 的坐标必须匹配视口投影（通常为 Web 墨卡托的大数值米制坐标，如 `[-12245143, 5621521]`），开发者必须在各处调用 `fromLonLat([lon, lat])`，极易遗漏引发“坐标静默丢失”Bug。
+  - **`useGeographic()` 的 API 拦截机制**：调用此全局方法后，OpenLayers 重新配置了全局默认的用户投影体系（User Projection）。所有公开 API（包括 `view.getCenter()`、`view.setCenter()`、`new Point([lon, lat])`、`overlay.setPosition([lon, lat])`、`map.on('click', e => e.coordinate)`）均自动采用 `[经度, 纬度]`（以度为单位）。
+  - **底层渲染性能零妥协**：底层的切片流水线、WebGL 着色器和 Canvas 2D 绘图网格依然基于投影坐标系（EPSG:3857）运行，保证切片拼合与投影几何的高保真度，转换仅在用户交互与数据读写的边界毫秒级执行。
+
+  #### 2. 关键实现与代码拆解 (Code Deep Dive)
+  ```javascript
+  // 1. 全局启用地理坐标支持
+  useGeographic();
+
+  // 2. 直接以经纬度声明地点坐标与几何体，无需 fromLonLat
+  const place = [-110, 45]; // 经度 -110°, 纬度 45° (美国黄石国家公园附近)
+  const point = new Point(place);
+
+  const map = new Map({
+    view: new View({
+      center: place, // 直接传入 [lon, lat]
+      zoom: 8,
+    }),
+    layers: [
+      new TileLayer({ source: new OSM() }),
+      new VectorLayer({
+        source: new VectorSource({ features: [new Feature(point)] }),
+      }),
+    ],
+  });
+  ```
+
+  #### 3. 生产实战避坑与考量 (Production Pitfalls)
+  - **多世界平铺（World Wrapping）下的经度偏移补偿**：当用户横向连续拖拽地球穿过多周时，`event.coordinate[0]` 可能会大于 180° 或小于 -180°（例如点击第二圈的黄石公园，经度为 $250^\circ$）。示例通过：
+    `coordinate[0] + Math.round(event.coordinate[0] / 360) * 360`
+    巧妙计算出对应周期的平移量，确保 Bootstrap 弹窗精确吸附在当前视口所见的世界副本上。
+  - **GeoJSON 数据源自动对齐**：启用 `useGeographic()` 后，`new GeoJSON().readFeatures(data)` 无需再配置 `dataProjection: 'EPSG:4326'` 和 `featureProjection: 'EPSG:3857'`，格式解析器会自动将数据转换为用户投影。
 tags: "geographic"
 resources:
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css
@@ -15,4 +55,3 @@ resources:
   <div id="popup"></div>
 </div>
 <div id="info"></div>
-

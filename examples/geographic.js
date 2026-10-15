@@ -9,8 +9,12 @@ import {useGeographic} from '../src/ol/proj.js';
 import OSM from '../src/ol/source/OSM.js';
 import VectorSource from '../src/ol/source/Vector.js';
 
+// Globally configure OpenLayers to use geographic coordinates (lon, lat in degrees)
+// 全局配置 OpenLayers 启用地理坐标系模式（所有公开 API 直接使用经纬度数值）
 useGeographic();
 
+// Location in Yellowstone National Park: longitude -110, latitude 45
+// 坐标点：西经 110 度，北纬 45 度（美国黄石国家公园附近）
 const place = [-110, 45];
 
 const point = new Point(place);
@@ -18,7 +22,7 @@ const point = new Point(place);
 const map = new Map({
   target: 'map',
   view: new View({
-    center: place,
+    center: place, // Directly provide [longitude, latitude] / 直接使用经纬度居中
     zoom: 8,
   }),
   layers: [
@@ -45,12 +49,18 @@ const popup = new Overlay({
 });
 map.addOverlay(popup);
 
+/**
+ * Format longitude and latitude coordinates into an HTML table.
+ * 将经纬度坐标格式化为 HTML 表格。
+ * @param {Array<number>} coordinate Coordinate array [lon, lat].
+ * @return {string} Formatted HTML.
+ */
 function formatCoordinate(coordinate) {
   return `
     <table>
       <tbody>
-        <tr><th>lon</th><td>${coordinate[0].toFixed(2)}</td></tr>
-        <tr><th>lat</th><td>${coordinate[1].toFixed(2)}</td></tr>
+        <tr><th>lon / 经度</th><td>${coordinate[0].toFixed(2)}</td></tr>
+        <tr><th>lat / 纬度</th><td>${coordinate[1].toFixed(2)}</td></tr>
       </tbody>
     </table>`;
 }
@@ -63,6 +73,8 @@ map.on('moveend', function () {
 });
 
 let popover;
+// Click event returns event.coordinate directly in [lon, lat]
+// 监听地图点击，通过 event.coordinate 直接获取鼠标点击处的经纬度
 map.on('click', function (event) {
   if (popover) {
     popover.dispose();
@@ -73,6 +85,8 @@ map.on('click', function (event) {
     return;
   }
   const coordinate = feature.getGeometry().getCoordinates();
+  // Compensate for world wrapping by shifting x by multiple of 360 degrees
+  // 经度多世界平铺周期补偿：计算相近的 360 度整数倍平移，保证浮层在当前副本正常弹出
   popup.setPosition([
     coordinate[0] + Math.round(event.coordinate[0] / 360) * 360,
     coordinate[1],

@@ -1,15 +1,34 @@
 ---
 layout: example.html
-title: Geographic Editing
-shortdesc: Editing geometries with geographic coordinates.
+title: Geographic Editing / 地理坐标编辑
+shortdesc: Editing geometries with geographic coordinates. / 使用地理坐标（经纬度）编辑和绘制几何图形。
 docs: >
   Calling the <code>useGeographic</code> function in the <code>'ol/proj'</code> module
   makes it so the map view uses geographic coordinates (even if the view projection is
   not geographic).
+
+  调用 <code>'ol/proj'</code> 模块中的 <code>useGeographic</code> 函数，可以让地图视图及交互（绘制、修改、捕捉等）直接使用地理坐标（经纬度 `[lon, lat]`），即便视图底层投影仍是 Web 墨卡托投影（EPSG:3857）。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与全局地理模式 (Core Architecture & Global Geographic Mode)
+  - **用户投影全局重映射 (User Projection Remapping)**: OpenLayers 默认底层渲染采用 Web 墨卡托投影（`EPSG:3857`），传统开发中开发者在操作坐标时必须频繁调用 `fromLonLat([lon, lat])` 与 `toLonLat(coord)` 进行显式互转。调用 `useGeographic()` 后，OpenLayers 将全局“用户投影”（User Projection）设置为 `EPSG:4326`。
+  - **交互系统透明集成**: 所有矢量交互组件（`Draw` 绘制、`Modify` 节点修改、`Select` 选择、`Snap` 捕捉）的输入输出坐标均自动适配经纬度 `[lon, lat]`，而底层画布渲染仍然保持墨卡托投影的高性能切片与矩阵变换，兼顾了直观的开发体验与高效的渲染性能。
+
+  #### 2. 编辑与捕捉流水线设计 (Editing & Snapping Pipeline)
+  - **动态模式切换与交互互斥**: 在单地图页面中切换“绘制”与“修改”模式时，必须在添加新交互前卸载已有交互，避免鼠标事件流被竞争消费（例如绘制时的单击被 `Select` 拦截）。
+  - **吸附交互 (Snap) 的拓扑辅助**: `Snap` 交互必须关联矢量数据源 `source`，并通常作为最后一个交互加入地图（或在绘制/修改之后添加）。它在像素级别（默认 10px 容差）将鼠标指针吸附到最近的已有要素节点或边线上，吸附坐标计算完全受 `useGeographic()` 驱动，保证拓扑精度。
+
+  #### 3. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices)
+  - **全局污染与多实例隔离**: `useGeographic()` 是全局生效的单例配置函数。若在微前端或复杂 GIS 协同应用中，存在假定坐标为投影平面坐标（米制单位）的遗留模块或第三方插件，全局切换可能会导致计算异常。局部项目如需隔离，建议在矢量图层与格式化解析器中使用局部配置（如 `featureProjection` 与 `dataProjection`）。
+  - **坐标维度顺序严谨性**: 全局经纬度模式下遵循现代 GIS 规范 `[经度 longitude, 纬度 latitude]`（X 轴为经度，Y 轴为纬度）。绝对不可混淆为 Google Maps 早期 SDK 或部分移动端常见的 `[lat, lon]` 顺序。
+  - **跨日界线连续绘制 (World Wrapping)**: 在全球连续漫游视图下，用户可能在展开的相邻世界（经度大于 $180^\circ$ 或小于 $-180^\circ$）上进行绘制或编辑，此时要素顶点坐标可能出现例如 $195^\circ$。在向数据库（如 PostGIS / GeoJSON 服务）持久化提交前，需评估后端是否支持未经归一化的经度，必要时执行拓扑裁切或坐标归一化。
 tags: "geographic"
 ---
 <div id="map" class="map"></div>
 <select id="mode">
-  <option value="modify">select a feature to modify</option>
-  <option value="draw">draw new features</option>
+  <option value="modify">select a feature to modify / 选择要素进行修改</option>
+  <option value="draw">draw new features / 绘制新要素</option>
 </select>

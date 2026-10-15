@@ -1,7 +1,7 @@
 ---
 layout: example.html
-title: Immediate Rendering (Geographic)
-shortdesc: Using the immediate rendering API with geometries in geographic coordinates.
+title: Immediate Rendering (Geographic) / 即时渲染（地理坐标模式）
+shortdesc: Using the immediate rendering API with geometries in geographic coordinates. / 在地理坐标系（经纬度）下使用即时渲染 API（Immediate Rendering）。
 docs: >
   This example uses the "immediate" rendering API with geometries in geographic coordinates.
   The immediate rendering API lets you draw styled geometries without adding them to a layer first.
@@ -9,6 +9,28 @@ docs: >
   `context.drawGeometry()` and `context.setStyle()` methods on this rendering context, you can draw
   any geometry on each render frame.  The `useGeographic` function is used in this example so that
   geometries can be in geographic coordinates.
+
+  本示例演示了在地理坐标系（经纬度）下结合使用即时渲染（Immediate Rendering）API。即时渲染 API 允许开发者绕过矢量图层与要素生命周期管理，直接在画布渲染事件中绘制带有样式的几何体。通过在渲染帧事件中调用 <code>getVectorContext(event)</code> 创建矢量绘制上下文，利用其 <code>context.setStyle()</code> 和 <code>context.drawGeometry()</code> 方法，可以在每一帧以极高性能直接绘制几何图形。配合 <code>useGeographic()</code> 函数，所有传入的几何形体均可直接使用经纬度 `[lon, lat]` 坐标。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 即时渲染底层架构 (Immediate Rendering Architecture)
+  - **绕过要素生命周期的高性能管线**: OpenLayers 常规矢量渲染体系遵循 `VectorSource -> VectorLayer -> Renderer -> Canvas`，底层需要维护要素（Feature）的属性字典、几何变更事件监听、空间 R 树索引（RBush）以及脏矩形计算。即时渲染（Immediate Rendering）机制通过监听图层或地图的 `postrender` 渲染事件，直接使用 `getVectorContext(event)` 获取 Canvas 矢量上下文，跳过所有抽象层直接把几何形体光栅化到离屏画布上。
+  - **极致帧率与轻量开销**: 适用于高频粒子系统、气象雷达回波、实时 GPS 车辆拖尾、地震波扩散动画等需要每秒刷新数十次且无需长期要素状态管理的场景。
+
+  #### 2. 与 `useGeographic()` 的无缝结合
+  - 即使直接调用 `vectorContext.drawGeometry(geometry)`，底层渲染引擎依然会借助全局用户投影（User Projection）自动将地理经纬度 `[lon, lat]` 点坐标投影至当前视图的屏幕像素坐标系。
+  - 开发者无需在每一帧渲染循环中调用 `fromLonLat`，极大简化了数学计算与动态粒子生成的复杂度。
+
+  #### 3. 动画流与单例样式复用设计
+  - **单例样式避免 GC 抖动 (Garbage Collection)**: 在每帧遍历绘制 1000 个动态几何体的循环中，绝对不能在循环体内部反复调用 `new Style()` 或 `new Circle()`。示例中将 `image` 与 `style` 声明为模块级单例，仅在循环中动态更新其 `image.setOpacity(importance)` 与 `image.setScale(importance)`，避免产生大量短生命周期对象触发浏览器垃圾回收卡顿。
+  - **滑动队列与连续重绘**: 采用固定容量数组作为滑动窗口队列（通过 `geometries.push(...)` 添加新点、`geometries.shift()` 剔除陈旧点），并在 `postrender` 结尾调用 `map.render()` 调度下一帧重绘，形成流畅的粒子衰减尾迹效果。
+
+  #### 4. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices)
+  - **重绘风暴与 CPU 占用**: 在 `postrender` 内部无条件调用 `map.render()` 会触发恒定不间断的渲染循环（相当于 `requestAnimationFrame` 驱动全量地图重绘）。在生产环境中，当地图移出视口、容器不可见或用户暂停动画时，必须停用 `map.render()` 或注销事件监听器，否则会导致移动端设备电量迅速耗尽与 CPU/GPU 负载偏高。
+  - **缺少命中检测 (Hit Detection)**: 即时渲染绘制的内容不会注册到矢量图层的要素树中，因此无法通过 `map.forEachFeatureAtPixel` 进行鼠标悬浮、点击查询等交互。如果场景中需要交互，必须自行构建轻量数学包围盒索引或将关键节点作为实体 Feature 托管。
 tags: "immediate, geographic"
 ---
 <div id="map" class="map"></div>
