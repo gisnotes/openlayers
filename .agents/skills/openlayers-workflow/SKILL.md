@@ -144,6 +144,30 @@ openlayers/
   - **严禁**使用未声明 `flex-wrap` 的 `d-flex align-items-center` 硬塞 3 个以上带有较长中文标题或英文长模块名的徽章（卡片在 3 列栅格下可用内容宽度仅约 324px，3 个徽章不换行必定顶破右边界）。
   - `summary-card-badges` 已内置 `flex-wrap: wrap`、`gap: 0.35rem`、`margin-right: 0 !important` 与 `font-size: 0.75rem`，长标题徽章会自动平滑折行到底部，紧凑且绝对不溢出卡片。
 
+### 9. Mermaid 流程图与架构图渲染与排版规范（防止无法渲染与语法崩溃）
+- **全局原生渲染支持（严禁在 Markdown 头部注入冗余 head 脚本）**：
+  - 站点全局模板（`site/layouts/default.hbs`）和示例单页模板（`examples/templates/example.html`）已在底层全量集成了 Mermaid 10 引擎及 DOM 自动装配逻辑（自动探测 `<pre><code class="language-mermaid">`，解除 Prism 代码块包裹并无缝替换为 `<div class="mermaid">` 执行 `mermaid.run()`）。
+  - **红线要求**：在编写任何 `site/summary/*.md` 专题指南时，**严禁在 YAML frontmatter 中手动注入 `head: - '<script ...mermaid...>'` 冗余内嵌脚本**！Frontmatter 保持纯粹清爽的元数据即可：
+    ```yaml
+    ---
+    title: OpenLayers XXX 体系全景实战指南
+    layout: default.hbs
+    ---
+    ```
+- **节点文案双引号包裹铁律（杜绝 Mermaid 语法解析崩溃）**：
+  - 在 `flowchart`、`graph`、`stateDiagram-v2` 等图表中，只要节点文案包含**中文、半角圆括号 `()`、冒号 `:`、斜杠 `/`、加号 `+`、逗号 `,` 或空格**，**必须整体用英文双引号 `["..."]` 包裹**！
+  - **常见正确范式**：
+    - 矩形节点：`UseImage["选用 ImageArcGISRest (单图视口出图)"]`、`DrawInt["Draw 交互: 生成多边形"]`
+    - 菱形判断：`ActiveMode{"当前激活模式"}`、`HasCache{"服务端是否已生成静态切片缓存?"}`
+    - 圆角/药丸节点：`Start(["ArcGIS MapServer 接入需求"])`
+    - 圆柱体数据库节点：`Source[("VectorSource 数据源")]`（圆柱体内同样必须双引号）
+    - 复合说明节点：`HighPerf["优先采用 XYZ / ImageTile + WebGLTile"]`
+  - **高危错误警示**：
+    - ❌ `UseImage[选用 ImageArcGISRest (单图视口出图)]` —— 括号未加双引号，Mermaid 解析器将其误认为是嵌套语法，导致整个图表解析失败白屏！
+    - ❌ `DrawInt[Draw 交互: 生成多边形]` —— 冒号未加双引号，引发语法异常！
+- **响应式排版自适应**：
+  - 全局样式（`site/src/theme/site.css`）已为 `.mermaid` 容器内置了 `overflow-x: auto;`、中英文居中、主题自适应灰底及细边框。对于复杂大图，在移动端与较小视口下会自动出现水平平滑滑动条，绝不顶破主容器布局。
+
 ---
 
 ## 四、 Summary 专题体系与页面联动

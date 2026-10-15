@@ -176,11 +176,11 @@ const map = new Map({
 
 ```mermaid
 flowchart TD
-    Start([ArcGIS MapServer 接入需求]) --> HasCache{服务端是否已生成静态切片缓存?}
-    HasCache -->|是 (Cached)| HighPerf[优先采用 XYZ / ImageTile + WebGLTile]
-    HasCache -->|否 (Dynamic)| NeedDynamicFilter{业务是否需要动态图层/属性 SQL 过滤?}
-    NeedDynamicFilter -->|是| CheckQuality{对注记品质与网络要求?}
-    NeedDynamicFilter -->|否| BuildCache[建议管理员发布切片缓存]
-    CheckQuality -->|要求文字绝对不被切断| UseImage[选用 ImageArcGISRest (单图视口出图)]
-    CheckQuality -->|要求网络慢时渐进渲染| UseTile[选用 TileArcGISRest + extent 范围约束]
+    Start(["ArcGIS MapServer 接入需求"]) --> HasCache{"服务端是否已生成静态切片缓存?"}
+    HasCache -->|是 (Cached)| HighPerf["优先采用 XYZ / ImageTile + WebGLTile"]
+    HasCache -->|否 (Dynamic)| NeedDynamicFilter{"业务是否需要动态图层/属性 SQL 过滤?"}
+    NeedDynamicFilter -->|是| CheckQuality{"对注记品质与网络要求?"}
+    NeedDynamicFilter -->|否| BuildCache["建议管理员发布切片缓存"]
+    CheckQuality -->|要求文字绝对不被切断| UseImage["选用 ImageArcGISRest (单图视口出图)"]
+    CheckQuality -->|要求网络慢时渐进渲染| UseTile["选用 TileArcGISRest + extent 范围约束"]
 ```
