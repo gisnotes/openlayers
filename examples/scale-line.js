@@ -14,6 +14,8 @@ const invertColorsCheckbox = document.getElementById('invertColors');
 
 let control;
 
+// Factory function to create ScaleLine control based on current form options
+// 根据表单当前配置项创建比例尺/分段比例条控件的工厂函数
 function scaleControl() {
   if (typeSelect.value === 'scaleline') {
     control = new ScaleLine({
@@ -33,6 +35,9 @@ function scaleControl() {
   }
   return control;
 }
+
+// Initialize map with scale control
+// 初始化地图并挂载比例尺控件
 const map = new Map({
   controls: defaultControls().extend([scaleControl()]),
   layers: [
@@ -47,19 +52,28 @@ const map = new Map({
   }),
 });
 
+// Reconfigure and replace scale line control
+// 重新配置并替换比例尺控件实例
 function reconfigureScaleLine() {
   map.removeControl(control);
   map.addControl(scaleControl());
 }
+
+// Handle unit changes
+// 处理单位体系切换
 function onChangeUnit() {
   control.setUnits(unitsSelect.value);
 }
+
+// Handle scale bar color inversion
+// 处理分段比例条反相颜色切换
 function onInvertColorsChange() {
   control.element.classList.toggle(
     'ol-scale-bar-inverted',
     invertColorsCheckbox.checked,
   );
 }
+
 unitsSelect.addEventListener('change', onChangeUnit);
 typeSelect.addEventListener('change', reconfigureScaleLine);
 stepsRange.addEventListener('input', reconfigureScaleLine);

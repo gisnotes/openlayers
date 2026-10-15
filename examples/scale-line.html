@@ -1,32 +1,71 @@
 ---
 layout: example.html
-title: Scale Line
-shortdesc: Example of a scale line.
+title: Scale Line / 比例尺与分段比例条控件 (ScaleLine / ScaleBar)
+shortdesc: Example of a scale line. / 配置多种度量单位（公制/英制/美制/海里/度）及分段比例条（ScaleBar）的示例。
 docs: >
+  <p>
+    Example of a scale line and scale bar control. OpenLayers provides a versatile scale line control that supports multiple unit systems and interactive customization.
+  </p>
+  <p>
+    本示例展示了 OpenLayers 的比例尺（ScaleLine）与分段比例条（ScaleBar）控件的灵活配置。支持公制（metric）、英制（imperial）、美制（us）、海里（nautical）与经纬度（degrees）五大度量单位体系切换，并支持动态调整分段数（steps）、注记文本展示以及黑白交替色反相。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
 
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>地理尺度自适应与纬度动态修正：</strong>
+      由于 Web 墨卡托投影（EPSG:3857）在离开赤道向两极延展时存在显著的几何拉伸变形，固定像素长度对应的现实物理距离会随纬度剧烈变化。OpenLayers 的 <code>ol/control/ScaleLine</code> 内部在地图每次平移（Move）或缩放（Zoom）时，都会重新采样当前视口中心点的真实地理纬度，实时重算标尺长度，保证数值绝对真实可信。
+    </li>
+    <li><strong>经典线型（ScaleLine）vs 分段块型（ScaleBar）：</strong>
+      <ul>
+        <li><strong>ScaleLine</strong>：传统的单条折角线，结构紧凑轻量，适合常规日常网页地图。</li>
+        <li><strong>ScaleBar</strong>：黑白斑马交替分段块，常用于国家测绘标准图纸、规划出版物与海洋/军事制图，便于使用圆规或直尺进行多级目测估算。</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>units: 'metric' | 'imperial' | 'us' | 'nautical' | 'degrees'</code>：覆盖从民用陆地、航海运输到天文测绘的全场景单位转换。</li>
+    <li><code>bar: true</code>：激活分段条渲染模式。</li>
+    <li><code>steps: 4</code>：指定分段的格子数量（如 4 段式将 1000km 细分为 4 个 250km 的黑白方块）。</li>
+    <li><code>text: true</code>：在标尺各分段节点上标出具体的距离数值刻度。</li>
+    <li><code>ol-scale-bar-inverted</code>：CSS 反相类名，将白黑交替翻转为黑白交替，适配浅色或深色不同主题底图。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>动态切换配置的重构策略：</strong>
+      由于 <code>bar</code>、<code>steps</code> 等核心渲染模式由构造函数内部 DOM 结构决定，在运行时变更形态时不能只调用属性 setter，应遵循示例中的 <code>map.removeControl(control)</code> &rarr; <code>map.addControl(new ScaleLine(...))</code> 模式重新注入。</li>
+    <li><strong>高 DPI 打印支持（<code>setDpi</code>）：</strong>
+      在前端导出高清 PDF 时，默认 96 DPI 的比例尺会被缩小，必须通过 <code>scaleLine.setDpi(targetDpi)</code> 显式指定打印 DPI，以获得毫米级严格物理尺寸。</li>
+    <li><strong>全图层遮挡避让：</strong>
+      比例尺默认位于视口左下角。在移动端有底部导航栏或包含悬浮面板时，应通过 CSS 覆盖 <code>.ol-scale-line { bottom: 30px; left: 15px; }</code> 留出安全间距。</li>
+  </ul>
 tags: "scale-line, openstreetmap"
 ---
 <div id="map" class="map"></div>
-<label for="units">Units:</label>
+<label for="units">Units / 度量单位：</label>
 <select id="units">
-  <option value="degrees">degrees</option>
-  <option value="imperial">imperial inch</option>
-  <option value="us">us inch</option>
-  <option value="nautical">nautical mile</option>
-  <option value="metric" selected>metric</option>
+  <option value="degrees">degrees (度)</option>
+  <option value="imperial">imperial inch (英制)</option>
+  <option value="us">us inch (美制)</option>
+  <option value="nautical">nautical mile (海里)</option>
+  <option value="metric" selected>metric (公制)</option>
 </select>
 
-<label for="type">Type:</label>
+<label for="type">Type / 标尺类型：</label>
 <select id="type">
-  <option value="scaleline">ScaleLine</option>
-  <option value="scalebar">ScaleBar</option>
+  <option value="scaleline">ScaleLine (经典线型)</option>
+  <option value="scalebar">ScaleBar (分段条型)</option>
 </select>
 
 <div id="scaleBarOptions">
-  <label for="steps">Steps:</label>
+  <label for="steps">Steps / 分段数：</label>
   <input id="steps" type="range" value="4" min="1" max="8">
 
-  <label><input type="checkbox" id="showScaleText" checked> Show scale text</label>
+  <label><input type="checkbox" id="showScaleText" checked> Show scale text / 显示刻度文本</label>
 
-  <label><input type="checkbox" id="invertColors"> Invert colors</label>
+  <label><input type="checkbox" id="invertColors"> Invert colors / 反转交替颜色</label>
 </div>

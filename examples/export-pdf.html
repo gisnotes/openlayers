@@ -1,27 +1,63 @@
 ---
 layout: example.html
-title: Export PDF example
-shortdesc: Example of exporting a map as a PDF.
+title: Export PDF example / 导出 PDF 地图示例
+shortdesc: Example of exporting a map as a PDF. / 使用 jsPDF 库将当前地图导出为高质量 PDF 文档的示例。
 docs: >
-  Example of exporting a map as a PDF using the <a href="https://github.com/MrRio/jsPDF" target="_blank">jsPDF</a> library.
+  <p>
+    Example of exporting a map as a PDF using the <a href="https://github.com/MrRio/jsPDF" target="_blank">jsPDF</a> library.
+  </p>
+  <p>
+    本示例演示了如何使用 <a href="https://github.com/MrRio/jsPDF" target="_blank">jsPDF</a> 库将 OpenLayers 地图导出为标准矢量/光栅结合的 PDF 文件。支持从 A0 到 A5 的国际标准纸张尺寸选择，以及 72 DPI 至 300 DPI 的专业印刷分辨率设定。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>离屏高清多图层合流（Multi-Canvas Compositing）：</strong>
+      现代 OpenLayers 地图可能由多个图层叠加而成（如 OSM 瓦片 Canvas、矢量要素 Canvas、WebGL 纹理等），且各个 Canvas 可能具有独立的 CSS <code>opacity</code> 透明度与 CSS <code>transform</code> 变换矩阵。为了导出单张完整的图像，代码动态创建离屏 <code>mapCanvas</code>，通过遍历 <code>.ol-layer canvas</code> 节点并逐一提取 2D 仿射变换矩阵（<code>setTransform</code>），在内存中完整复现与屏幕视口 100% 一致的图层合成结果。
+    </li>
+    <li><strong>动态分辨率倍率放缩（Resolution Upscaling）：</strong>
+      屏幕常规显示仅需 72~96 DPI，而印刷输出通常要求 150 DPI（公文报表）甚至 300 DPI（高精出版物）。本示例通过计算物理纸张尺寸（毫米）与目标 DPI 换算出对应的超大物理像素分辨率：
+      $$\text{width (px)} = \text{round}\left(\frac{\text{dim[0] (mm)} \times \text{DPI}}{25.4}\right)$$
+      然后动态临时修改地图的 <code>map.setSize([width, height])</code>，迫使 OpenLayers 在后台请求更密集的高分切片并重绘，完成后再无缝恢复原始屏幕尺寸。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>map.once('rendercomplete', callback)</code>：单次渲染就绪监听器。在调用 <code>map.setSize()</code> 和 <code>view.setResolution()</code> 后，瓦片加载与渲染需要若干异步绘制帧，必须等待 <code>rendercomplete</code> 触发后才能提取 Canvas 像素。</li>
+    <li><code>matrix = transform.match(/^matrix\(([^\(]*)\)$/)[1]</code>：正则提取 DOM 上的 CSS transform 矩阵参数，并利用 <code>mapContext.setTransform.apply(mapContext, matrix)</code> 将位移与缩放矩阵无损注入离屏 Canvas。</li>
+    <li><code>pdf.addImage(dataUrl, 'JPEG', 0, 0, dim[0], dim[1])</code>：将离屏 Canvas 生成的图像数据嵌入 jsPDF 页面中，严格以毫米为单位映射到 A4/A3 纸张版面。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>CORS 跨域污染画布（Tainted Canvas）：</strong>
+      若地图底图瓦片未配置 <code>crossOrigin: 'anonymous'</code>，当调用 <code>canvas.toDataURL()</code> 时浏览器会抛出 <code>SecurityError: Failed to execute 'toDataURL' on 'HTMLCanvasElement': Tainted canvases may not be exported</code>。必须保证所有瓦片源服务器配置了 <code>Access-Control-Allow-Origin: *</code>。
+    </li>
+    <li><strong>超大纸张（A0 / 300 DPI）内存崩溃：</strong>
+      A0 尺寸（1189mm × 841mm）在 300 DPI 下对应的 Canvas 像素高达 $14043 \times 9933 \approx 1.39$ 亿像素，需消耗超过 550MB 内存，极易导致移动端或低配 PC 浏览器崩溃。生产环境建议设置合理的 DPI 上限，或在服务端使用 Headless Chrome / Node-Canvas 执行渲染。
+    </li>
+  </ul>
 tags: "export, pdf, openstreetmap"
 ---
 <div id="map" class="map"></div>
 <form class="form">
-  <label for="format">Page size </label>
+  <label for="format">Page size / 纸张尺寸：</label>
   <select id="format">
-    <option value="a0">A0 (slow)</option>
+    <option value="a0">A0 (slow / 较慢)</option>
     <option value="a1">A1</option>
     <option value="a2">A2</option>
     <option value="a3">A3</option>
-    <option value="a4" selected>A4</option>
-    <option value="a5">A5 (fast)</option>
+    <option value="a4" selected>A4 (default / 默认)</option>
+    <option value="a5">A5 (fast / 快速)</option>
   </select>
-  <label for="resolution">Resolution </label>
+  <label for="resolution">Resolution / 打印分辨率：</label>
   <select id="resolution">
-    <option value="72">72 dpi (fast)</option>
+    <option value="72">72 dpi (fast / 快速)</option>
     <option value="150">150 dpi</option>
-    <option value="300">300 dpi (slow)</option>
+    <option value="300">300 dpi (slow / 高精)</option>
   </select>
 </form>
-<button id="export-pdf">Export PDF</button>
+<button id="export-pdf">Export PDF / 导出 PDF</button>

@@ -7,10 +7,14 @@ import VectorLayer from '../src/ol/layer/Vector.js';
 import OSM from '../src/ol/source/OSM.js';
 import VectorSource from '../src/ol/source/Vector.js';
 
+// Base raster layer
+// 基础栅格瓦片图层
 const raster = new TileLayer({
   source: new OSM(),
 });
 
+// Create vector feature from WKT
+// 从 WKT 字符串创建矢量要素
 const format = new WKT();
 const feature = format.readFeature(
   'POLYGON((10.689697265625 -25.0927734375, 34.595947265625 ' +
@@ -26,6 +30,8 @@ const vector = new VectorLayer({
   opacity: 0.5,
 });
 
+// Initialize map
+// 初始化地图
 const map = new Map({
   layers: [raster, vector],
   target: 'map',
@@ -35,6 +41,8 @@ const map = new Map({
   }),
 });
 
+// Paper dimensions in millimeters
+// 标准打印纸张尺寸（单位：毫米）
 const dims = {
   a0: [1189, 841],
   a1: [841, 594],
@@ -46,6 +54,8 @@ const dims = {
 
 const exportButton = document.getElementById('export-pdf');
 
+// Handle export PDF click
+// 处理导出 PDF 点击事件
 exportButton.addEventListener(
   'click',
   function () {
@@ -60,6 +70,8 @@ exportButton.addEventListener(
     const size = map.getSize();
     const viewResolution = map.getView().getResolution();
 
+    // Listen for render completion to export image
+    // 监听渲染完成事件以导出离屏合成图像
     map.once('rendercomplete', function () {
       const mapCanvas = document.createElement('canvas');
       mapCanvas.width = width;
@@ -73,11 +85,13 @@ exportButton.addEventListener(
             mapContext.globalAlpha = opacity === '' ? 1 : Number(opacity);
             const transform = canvas.style.transform;
             // Get the transform parameters from the style's transform matrix
+            // 从 DOM 样式的变换矩阵中提取仿射参数
             const matrix = transform
               .match(/^matrix\(([^\(]*)\)$/)[1]
               .split(',')
               .map(Number);
             // Apply the transform to the export map context
+            // 将仿射变换应用到导出画布上下文
             CanvasRenderingContext2D.prototype.setTransform.apply(
               mapContext,
               matrix,
@@ -98,14 +112,17 @@ exportButton.addEventListener(
         dim[1],
       );
       pdf.save('map.pdf');
+
       // Reset original map size
+      // 恢复原始地图尺寸与分辨率
       map.setSize(size);
       map.getView().setResolution(viewResolution);
       exportButton.disabled = false;
       document.body.style.cursor = 'auto';
     });
 
-    // Set print size
+    // Set print size and scale
+    // 临时应用高分辨率打印尺寸与缩放比
     const printSize = [width, height];
     map.setSize(printSize);
     const scaling = Math.min(width / size[0], height / size[1]);

@@ -11,6 +11,8 @@ import {getPointResolution, get as getProjection} from '../src/ol/proj.js';
 import {register} from '../src/ol/proj/proj4.js';
 import WMTS, {optionsFromCapabilities} from '../src/ol/source/WMTS.js';
 
+// Define British National Grid projection (EPSG:27700)
+// 定义英国国家网格坐标投影 (EPSG:27700)
 proj4.defs(
   'EPSG:27700',
   '+proj=tmerc +lat_0=49 +lon_0=-2 +k=0.9996012717 ' +
@@ -46,6 +48,8 @@ fetch(url)
     raster.setSource(new WMTS(options));
   });
 
+// Initialize map with EPSG:27700 view
+// 初始化地图，采用 EPSG:27700 投影视图
 const map = new Map({
   layers: [raster],
   controls: defaultControls({
@@ -59,9 +63,13 @@ const map = new Map({
   }),
 });
 
+// Add scale line control with bar and text
+// 添加带分段标尺和文本的比例尺控件
 const scaleLine = new ScaleLine({bar: true, text: true, minWidth: 125});
 map.addControl(scaleLine);
 
+// Paper dimensions in millimeters
+// 纸张物理尺寸规格（单位：毫米）
 const dims = {
   a0: [1189, 841],
   a1: [841, 594],
@@ -71,8 +79,8 @@ const dims = {
   a5: [210, 148],
 };
 
-// export options for html2canvase.
-// See: https://html2canvas.hertzen.com/configuration
+// Export options for html2canvas
+// html2canvas 导出捕获配置选项
 const exportOptions = {
   useCORS: true,
   ignoreElements: function (element) {
@@ -88,6 +96,8 @@ const exportOptions = {
 
 const exportButton = document.getElementById('export-pdf');
 
+// Export map to PDF at specified scale
+// 按指定工程比例尺导出地图为 PDF
 exportButton.addEventListener(
   'click',
   function () {
@@ -101,6 +111,8 @@ exportButton.addEventListener(
     const width = Math.round((dim[0] * resolution) / 25.4);
     const height = Math.round((dim[1] * resolution) / 25.4);
     const viewResolution = map.getView().getResolution();
+    // Calculate scale resolution based on point resolution at view center
+    // 基于视图中心点的地理点分辨率反求工程比例尺分辨率
     const scaleResolution =
       scale /
       getPointResolution(
@@ -109,6 +121,8 @@ exportButton.addEventListener(
         map.getView().getCenter(),
       );
 
+    // Listen for render completion to export with html2canvas
+    // 监听渲染完成事件，使用 html2canvas 捕获视口与 DOM 控件
     map.once('rendercomplete', function () {
       exportOptions.width = width;
       exportOptions.height = height;
@@ -123,7 +137,9 @@ exportButton.addEventListener(
           dim[1],
         );
         pdf.save('map.pdf');
-        // Reset original map size
+
+        // Reset original map size and controls
+        // 恢复原始地图尺寸、分辨率与比例尺控件状态
         scaleLine.setDpi(undefined);
         map.getTargetElement().style.width = '';
         map.getTargetElement().style.height = '';
@@ -134,7 +150,8 @@ exportButton.addEventListener(
       });
     });
 
-    // Set print size
+    // Set print size and DPI
+    // 应用打印物理尺寸并同步比例尺 DPI
     scaleLine.setDpi(resolution);
     map.getTargetElement().style.width = width + 'px';
     map.getTargetElement().style.height = height + 'px';

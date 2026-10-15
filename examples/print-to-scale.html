@@ -1,36 +1,72 @@
 ---
 layout: example.html
-title: Print to scale example
-shortdesc: Example of printing a map to a specified scale.
+title: Print to scale example / 按指定比例尺高精打印导出 PDF
+shortdesc: Example of printing a map to a specified scale. / 按工程制图指定比例尺（如 1:10000 至 1:500000）将地图、比例尺与注记导出为 PDF。
 docs: >
-  Example of printing a map to a specified scale.
-  The print is exported as a PDF using the <a href="https://github.com/MrRio/jsPDF" target="_blank">jsPDF</a> library.
-  Unlike the <a href="export-pdf.html">Export PDF example</a> the on screen map is only used to set the center and rotation.
-  The extent printed depends on the scale and page size. To print the scale bar and attributions the example uses the
-  <a href="https://html2canvas.hertzen.com/" target="_blank">html2canvas</a> library.
+  <p>
+    Example of printing a map to a specified scale.
+    The print is exported as a PDF using the <a href="https://github.com/MrRio/jsPDF" target="_blank">jsPDF</a> library.
+    Unlike the <a href="export-pdf.html">Export PDF example</a> the on screen map is only used to set the center and rotation.
+    The extent printed depends on the scale and page size. To print the scale bar and attributions the example uses the
+    <a href="https://html2canvas.hertzen.com/" target="_blank">html2canvas</a> library.
+  </p>
+  <p>
+    本示例演示了如何按照工程测绘指定的精确比例尺（如 1:10000、1:25000、1:50000、1:100000、1:250000、1:500000）将地图打印导出为 PDF。
+    与常规的 <a href="export-pdf.html">Export PDF 示例</a> 不同，屏幕上的实时地图仅用于确定当前视图的中心点与旋转角度；最终打印的物理空间范围由用户选定的真实比例尺与纸张尺寸联合计算决定。此外，示例结合 <a href="https://html2canvas.hertzen.com/" target="_blank">html2canvas</a> 库，实现了将比例尺标尺（ScaleLine）和版权信息（Attribution）DOM 节点同步无损合成到 PDF 页面中。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>工程测绘级“按比例尺出图”（True Scale Cartographic Output）：</strong>
+      普通网页地图截图仅按屏幕物理视口截取，图上 1 厘米在现实中代表多少米是不确定的。而在自然资源调查、城市规划与土木测绘中，必须保证**打印在 A4/A3 纸张上的 1cm 严格对应现实中 100米（1:10,000）或 500米（1:50,000）**。
+    </li>
+    <li><strong>投影变形与真实点分辨率修正（<code>getPointResolution</code>）：</strong>
+      由于墨卡托等投影在不同纬度存在固有的面积与距离拉伸变形，不能直接使用简单的线性常数。OpenLayers 提供了 <code>getPointResolution(projection, resolution, point)</code>，能够根据当前地图中心点的地理纬度，精确求得该纬度下单位米对应的切片像素跨度，保证比例尺换算达到毫米级精度。
+    </li>
+    <li><strong>DOM 控件与 Canvas 画布混合捕获（html2canvas Pipeline）：</strong>
+      OpenLayers 的比例尺和版权信息是原生 HTML DOM，而地图内容是 Canvas 画布。通过 <code>html2canvas(map.getViewport(), exportOptions)</code> 将整个视口（包含 Canvas 与绝对定位的 DOM 控件）统一转译为高分辨率图像，实现了地图要素与辅助制图图饰的完美合一。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>scaleResolution = scale / getPointResolution(projection, resolution / 25.4, center)</code>：标准比例尺换算核心数学公式。将目标比例分母（如 25000）与每毫米像素数（DPI / 25.4）代入点分辨率函数，推导出地图 View 在该打印比例下必须设置的确切分辨率值。</li>
+    <li><code>scaleLine.setDpi(resolution)</code>：通知 <code>ol/control/ScaleLine</code> 控件当前目标物理 DPI，控件内部自动调整 CSS 像素跨度，使打印出的比例尺线段在实体纸张上测量时分毫不差。</li>
+    <li><code>exportOptions.ignoreElements</code>：利用样式类名过滤回调，智能屏蔽放大缩小等无关交互控件，仅保留 <code>.ol-scale</code> 比例尺与 <code>.ol-attribution</code> 版权标示。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>纸张高 DPI 与 DOM 布局延迟：</strong>
+      将 <code>map.getTargetElement().style.width = width + 'px'</code> 动态放大到数千像素后，必须调用 <code>map.updateSize()</code> 迫使引擎刷新视口尺寸，并必须在 <code>map.once('rendercomplete')</code> 回调中触发 <code>html2canvas</code>，否则会截取到空白或切片尚未完全加载的过渡画面。</li>
+    <li><strong>状态复原保护（Cleanup）：</strong>
+      PDF 生成完毕后，必须严格将容器的行内样式清空（<code>style.width = ''</code>）、重设 <code>scaleLine.setDpi(undefined)</code>，并恢复原始 <code>viewResolution</code>，防止屏幕主界面布局错乱。</li>
+  </ul>
 tags: "print, printing, scale, scaleline, export, pdf, grid"
 ---
 <div class="wrapper">
   <div id="map" class="map"></div>
 </div>
 <form class="form">
-  <label for="format">Page size </label>
+  <label for="format">Page size / 纸张规格：</label>
   <select id="format">
-    <option value="a0">A0 (slow)</option>
+    <option value="a0">A0 (slow / 较慢)</option>
     <option value="a1">A1</option>
     <option value="a2">A2</option>
     <option value="a3">A3</option>
-    <option value="a4" selected>A4</option>
-    <option value="a5">A5 (fast)</option>
+    <option value="a4" selected>A4 (default / 默认)</option>
+    <option value="a5">A5 (fast / 快速)</option>
   </select>
-  <label for="resolution">Resolution </label>
+  <label for="resolution">Resolution / 打印分辨率：</label>
   <select id="resolution">
-    <option value="72">72 dpi (fast)</option>
+    <option value="72">72 dpi (fast / 快速)</option>
     <option value="150">150 dpi</option>
-    <option value="200" selected>200 dpi</option>
-    <option value="300">300 dpi (slow)</option>
+    <option value="200" selected>200 dpi (standard / 标准)</option>
+    <option value="300">300 dpi (slow / 高精)</option>
   </select>
-  <label for="scale">Scale </label>
+  <label for="scale">Scale / 工程比例尺：</label>
   <select id="scale">
     <option value="500">1:500000</option>
     <option value="250" selected>1:250000</option>
@@ -40,4 +76,4 @@ tags: "print, printing, scale, scaleline, export, pdf, grid"
     <option value="10">1:10000</option>
   </select>
 </form>
-<button id="export-pdf">Export PDF</button>
+<button id="export-pdf">Export PDF / 导出 PDF</button>
