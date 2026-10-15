@@ -1,9 +1,28 @@
 ---
 layout: example.html
-title: OGC Maps
-shortdesc: Rendering maps from an OGC API – Maps service.
-docs: >
-  The <a href="https://ogcapi.ogc.org/maps/">OGC API – Maps</a> specification describes how a service can provide maps.
+title: OGC Maps / OGC API - Maps 现代动态单图地图服务
+shortdesc: Rendering maps from an OGC API – Maps service. / 演示如何使用 OGCMap 数据源结合 ImageLayer 接入新一代 OGC API - Maps 动态按需出图服务。
+docs: |
+  <p>The <a href="https://ogcapi.ogc.org/maps/" target="_blank">OGC API – Maps</a> specification describes how a service can provide maps.</p>
+  <p>本示例展示了如何渲染遵循现代 <a href="https://ogcapi.ogc.org/maps/" target="_blank">OGC API – Maps</a> 规范的单图服务。OGC API – Maps 是传统 WMS（Web Map Service）标准的现代 RESTful 升级版，专为按当前屏幕视口范围和分辨率动态请求整幅单图（ImageLayer）而设计。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **新一代动态按需出图协议**：
+    相比于切片服务（Tiles），动态单图服务适合数据更新极度频繁（如实时台风云图、雷达回波）、图层组合样式高度动态且不适合提前切片的业务场景。客户端每次缩放或平移停止时，服务端仅针对当前包围盒出图并返回一张图片。
+  - **<code>ol/source/OGCMap</code> 专职数据源**：
+    与传统 <code>ImageWMS</code> 需手动拼写长串参数不同，<code>OGCMap</code> 内部自动封装了基于 OGC API - Maps REST 端点格式的视口出图请求管线。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>ImageLayer</code> 与 <code>OGCMap</code> 联动：
+    URL 直接指向 collection 的 <code>/map</code> 资源端点，底层在每次视口平移缩放停止时，自动向服务端发起包含视口包围盒尺寸与比例尺的单图渲染拉取。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **动态单图 vs 瓦片切片的架构选型**：
+    单图服务每次都需要服务端现算渲染，高并发访问下服务端压力大；对于静态或更新频次低的基础底图，强烈建议优先选用 <code>OGCMapTile</code>，仅对高度动态或自定义渲染条件的专题数据采用 <code>OGCMap</code>。
 tags: "ogc"
 ---
 <div id="map" class="map"></div>

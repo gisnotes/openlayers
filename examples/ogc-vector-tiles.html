@@ -1,9 +1,30 @@
 ---
 layout: example.html
-title: OGC Vector Tiles
-shortdesc: Rendering vector tiles from an OGC API – Tiles service.
-docs: >
-  The <a href="https://ogcapi.ogc.org/tiles/">OGC API – Tiles</a> specification describes how a service can provide vector tiles.
+title: OGC Vector Tiles / OGC API - Tiles 矢量切片服务与客户端样式
+shortdesc: Rendering vector tiles from an OGC API – Tiles service. / 演示如何使用 OGCVectorTile 数据源加载基于 WebMercatorQuad 矩阵集的 OGC API 矢量切片并渲染国家边界。
+docs: |
+  <p>The <a href="https://ogcapi.ogc.org/tiles/" target="_blank">OGC API – Tiles</a> specification describes how a service can provide vector tiles.</p>
+  <p>本示例演示了如何通过 <code>ol/source/OGCVectorTile</code> 数据源接入遵循新一代 OGC API – Tiles 标准的矢量切片服务。以 Natural Earth 1:1000万全球国家行政区划边界数据为基础，请求 MVT 二进制格式的矢量几何并在客户端完成柔和的多边形填充与描边渲染。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **新一代开放标准矢量切片管道**：
+    OGC API - Tiles 为矢量切片制定了中立的开放协议标准，摒弃了传统厂商私有接口。服务端返回标准的 Protobuf MVT 切片，前端通过 <code>ol/format/MVT</code> 反序列化为矢量要素，实现完全自主可控的样式渲染与空间查询。
+  - **<code>VectorTileLayer</code> 专用图层**：
+    与普通 <code>VectorLayer</code> 每次视口平移都重新遍历全局要素不同，<code>VectorTileLayer</code> 按切片四叉树生命周期进行动态裁剪管理与 GPU 缓存，在大范围浏览时内存占用极小。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)`
+  - <code>OGCVectorTile({ url: '...', format: new MVT() })</code>：
+    自动根据 OGC 集合 URL 格式构建切片请求模板，<code>format: new MVT()</code> 指定使用二进制矢量瓦片解析器。
+  - 声明式样式配置：
+    简洁优雅的米黄色系国家多边形底色与灰色细腻境界线，并设置图层背景色 <code>background: '#d1d1d1'</code> 呈现海洋基调。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **跨域 CORS 配置**：
+    OGC API 矢量切片是通过浏览器 <code>fetch</code> 获取二进制数据流的，服务端必须在 HTTP 响应头中正确返回 <code>Access-Control-Allow-Origin: *</code>，否则浏览器将因跨域限制拦截切片下载。
 tags: "ogc, vector"
 ---
 <div id="map" class="map"></div>

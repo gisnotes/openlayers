@@ -1,14 +1,30 @@
 ---
 layout: example.html
-title: IGN WMTS
-shortdesc: Demonstrates displaying IGN (France) WMTS layers.
-docs: >
-    In this example an IGN WMTS layer is displayed.
-    For more information on IGN's WMTS service see the
-    [IGN Géoportail API web page](https://geoservices.ign.fr)
-    and
-    [Documentation de l’offre de données et services de l’IGN](https://geoservices.ign.fr/documentation/diffusion/documentation-offre.html)
-    (french).
+title: IGN WMTS / 法国国家地理 IGN 官方 WMTS 底图服务
+shortdesc: Demonstrates displaying IGN (France) WMTS layers. / 演示如何接入并展示法国国家地理信息与林业局（IGN Géoportail / Géoplateforme）官方 WMTS 影像与地图切片。
+docs: |
+  <p>In this example an IGN WMTS layer is displayed. For more information on IGN's WMTS service see the <a href="https://geoservices.ign.fr" target="_blank">IGN Géoportail API web page</a> and <a href="https://geoservices.ign.fr/documentation/diffusion/documentation-offre.html" target="_blank">Documentation de l’offre de données et services de l’IGN</a> (french).</p>
+  <p>本示例展示了如何接入法国国家地理与林业信息局（IGN - Institut national de l'information géographique et forestière）通过其国家地理平台（Géoplateforme / Géoportail）提供的官方标准 WMTS 瓦片服务。更多法国官方地理底图接口文档与数据说明，请参阅 <a href="https://geoservices.ign.fr" target="_blank">IGN Géoportail API 官网</a> 与 <a href="https://geoservices.ign.fr/documentation/diffusion/documentation-offre.html" target="_blank">IGN 数据与服务产品文档</a>（法语）。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **国家级 GIS 开放服务架构**：
+    法国 IGN 维护了欧洲最高精度且完全开放的国家地理基底数据，其全新平台（Géoplateforme <code>data.geopf.fr</code>）通过 OGC WMTS 向公众免费免 Key 提供高分辨率标准底图 <code>PLANIGNV2</code>。
+  - **切片网格与分辨率层级定义**：
+    IGN 采用标准的 Web 墨卡托投影（EPSG:3857），切片网格集合标识符为 <code>PM</code>（Pseudo-Mercator）。其瓦片网格矩阵集定义了从 0 级到 19 级的 20 个缩放金字塔层级，原点为标准墨卡托左上角 <code>[-20037508, 20037508]</code>。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>matrixSet: 'PM'</code>：
+    指定法国 IGN 服务端注册的墨卡托切片矩阵集名称（注意并非默认的 <code>EPSG:3857</code> 或 <code>GoogleMapsCompatible</code>，这是接入 IGN 服务最核心的协议参数）。
+  - <code>attributions</code> 品牌与法定义务合规标识：
+    根据法国知识产权法及开放数据条款，加载官方底图时必须渲染 IGN 官方标志与版权链接。OpenLayers 允许在 <code>attributions</code> 中直接传入富文本 HTML 标签，自动在地图右下角合规展示。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **旧版 API 域名迁移（wxs.ign.fr $\rightarrow$ data.geopf.fr）**：
+    早期 IGN 服务运行在 <code>wxs.ign.fr</code> 且需要申请专用 API Key 拼接在 URL 中；现已全面升级为法国国家地理云平台 <code>https://data.geopf.fr/wmts</code>，采用免 Key 开放访问模式，迁移时切勿继续沿用过时的旧域名。
 tags: "french, ign, geoportail, wmts, grid"
 ---
 <div id="map" class="map"></div>

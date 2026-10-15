@@ -1,9 +1,32 @@
 ---
 layout: example.html
-title: View Rotation
-shortdesc: Example of a rotated map.
-docs: >
+title: View Rotation / 视口自由旋转与快捷复位
+shortdesc: Example of a rotated map. / 演示如何使用 Alt+Shift+拖拽实现地图视口任意角度旋转并联动指北针指南重置。
+docs: |
   <p>Use <code>Alt+Shift+Drag</code> to rotate the map.</p>
+  <p>本示例展示了 OpenLayers 的视口任意角度旋转机制。在桌面端按住 <code>Alt + Shift</code> 组合键并用鼠标按住左键拖拽（或在移动触屏设备上使用双指旋转手势），即可将地图视口以当前中心点为轴心自由旋转。旋转后，右上角会自动浮现指北针控件，点击指北针图标可一键平滑复位至正北朝向。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **CSS 仿射矩阵视口变换**：
+    OpenLayers 的地图容器和切片层完全基于 CSS 3D/2D 矩阵变换 <code>matrix(...)</code> 驱动。旋转并不改变瓦片的几何本质，而是在渲染图层根容器上应用旋转角度 $\theta$（弧度制）。因此即使高速连续旋转，也不会触发任何多余的切片网络重载。
+  - **内置 <code>DragRotate</code> 交互组件**：
+    OpenLayers 的默认交互集（<code>defaults()</code>）中已预先打包了 <code>DragRotate</code> 交互。默认的触发条件即为 <code>altShiftKeysOnly</code>。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>view.getRotation()</code> 与 <code>view.setRotation(radians)</code>：
+    - 旋转角使用标准弧度制（逆时针为正，顺时针为负）；
+    - 正北朝向为 <code>0</code>；向东为 $-\pi/2$；
+    - 可以通过 <code>view.animate({ rotation: 0, duration: 250 })</code> 编写顺畅的动画归位逻辑。
+  - <code>autoHide: false</code> 指北针配置：
+    默认的 <code>Rotate</code> 控件在旋转角为 0 时会自动淡出隐藏；若需常驻显示，可设置 <code>autoHide: false</code>。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **文本与图标的 <code>rotateWithView</code> 属性**：
+    地图旋转时，矢量要素的图标（Icon）或文本注记（Text）默认是保持屏幕正立朝上的（<code>rotateWithView: false</code>）；若希望道路名称或车辆箭头跟随地图视角同步旋转，必须显式配置 <code>rotateWithView: true</code>。
 tags: "rotation, openstreetmap"
 ---
 <div id="map" class="map"></div>

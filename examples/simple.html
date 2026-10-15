@@ -1,9 +1,32 @@
 ---
 layout: example.html
-title: Simple Map
-shortdesc: Example of a simple map.
-docs: >
-  A simple map with an OSM source.
+title: Simple Map / 极简入门基础地图构建
+shortdesc: Example of a simple map. / 演示如何使用最少代码构建一个搭载 OpenStreetMap 底图的 OpenLayers 基础地图实例。
+docs: |
+  <p>A simple map with an OSM source.</p>
+  <p>这是 OpenLayers 最经典也是最精简的“Hello World”入门范例。仅需十几行代码，即可实例化一个完整的地图应用：绑定 DOM 容器、挂载 OpenStreetMap 瓦片图层并设置视图（View）的中心坐标与初始缩放层级。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **OpenLayers 三大核心抽象三角**：
+    每一个 OpenLayers 地图都由三个核心要素构成：
+    1. <code>ol/Map</code>：中央控制器与 DOM 容器事件宿主；
+    2. <code>ol/layer/Layer</code>（及 <code>ol/source/Source</code>）：负责空间数据的获取与视觉渲染；
+    3. <code>ol/View</code>：负责二维视口的投影、中心坐标、缩放层级与旋转姿态。
+    这种三权分立的清晰架构使视图与数据彻底解耦，为后续的多图层叠加、动态分析提供了极致的灵活性。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>target: 'map'</code>：
+    指定承载地图的 HTML 元素 ID，在 CSS 中通常需为 <code>#map</code> 赋予明确的物理宽度与高度（如 <code>width: 100%; height: 400px;</code>）。
+  - <code>view: new View({ center: [0, 0], zoom: 2 })</code>：
+    在默认 Web 墨卡托投影（EPSG:3857）下，<code>[0, 0]</code> 为大西洋几内亚湾（本初子午线与赤道交汇点），<code>zoom: 2</code> 恰好可在大多数屏幕中完整呈现全球五大洲轮廓。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **地图容器零高度导致白屏**：
+    刚入门的开发者最常踩的坑是忘记给 <code>&lt;div id="map"&gt;&lt;/div&gt;</code> 显式设置 CSS 高度。因为绝对或相对定位的地图 Canvas 不会自动支撑父容器高度，若没有 <code>height</code> 规则，容器高度为 0，地图在视觉上会呈现一片空白。
 tags: "simple, openstreetmap"
 ---
 <div id="map" class="map"></div>

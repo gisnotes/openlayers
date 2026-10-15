@@ -1,9 +1,30 @@
 ---
 layout: example.html
-title: Synthetic Lines
-shortdesc: Synthetic lines example.
-docs: >
+title: Synthetic Lines / 海量合成折线图元性能压测
+shortdesc: Synthetic lines example. / 演示如何使用数学螺旋算法动态合成 10000 条折线并测试矢量图层在大数据量下的渲染吞吐性能。
+docs: |
+  <p>Synthetic lines example creating a square spiral of 10,000 LineString features to benchmark vector rendering performance.</p>
+  <p>本示例是一个用于评估 OpenLayers 矢量引擎极限渲染能力的性能基准测试用例。通过算法在内存中动态生成包含 10,000 条线段要素（LineString）的正方形扩展螺旋线（Square Spiral），以极高密度的几何图元测试 Canvas 渲染器在平移缩放时的帧率表现。</p>
 
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **海量矢量要素批处理机制**：
+    在 GIS 监控大屏或轨迹回放业务中，经常需要一次性加载数万条轨迹线段。将要素直接一次性作为数组传入 <code>new VectorSource({ features: features })</code>，OpenLayers 会在底层使用空间 R 树（RBush）建立高效的空间范围索引，仅对落入当前屏幕可视区域内的线段发起路径绘制。
+  - **几何算法（正方形外扩螺旋线）**：
+    通过控制 <code>signX</code> 与 <code>signY</code> 的交替变号与步进增量（<code>delta = (i + 1) * 2500</code>），生成自中心向外无限嵌套延伸的方型回廊几何体。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>wrapX: false</code>：
+    禁用跨日界线循环复制，使空间索引树仅针对真实投影坐标构建，最大化渲染执行效率。
+  - 单例样式复用（Style Sharing）：
+    全局所有 10000 个要素共享同一个 <code>new Style({ stroke: new Stroke(...) })</code> 实例，杜绝了成千上万个重复样式对象的内存分配，使 GC 停顿时间几乎降为零。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **万级以上折线渲染方案选型**：
+    当要素规模达到 5 万~10 万以上时，Canvas 2D 渲染器会逐渐接近 CPU 瓶颈。生产中对于超大规模轨迹，可考虑使用 <code>WebGLVectorLayer</code>（WebGL 硬件加速矢量图层）或先将静态历史轨迹转为 MVT 矢量切片。
 tags: "vector"
 ---
 <div id="map" class="map"></div>

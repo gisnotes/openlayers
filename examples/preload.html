@@ -1,9 +1,32 @@
 ---
 layout: example.html
-title: Preload Tiles
-shortdesc: Example of tile preloading.
-docs: >
-  <p>The map on the top preloads low resolution tiles.  The map on the bottom does not use any preloading.  Try zooming out and panning to see the difference.</p>
+title: Preload Tiles / 瓦片低分辨率层级预加载与白屏消除
+shortdesc: Example of tile preloading. / 演示通过 preload 配置在上层与下层金字塔中预加载低分辨率瓦片以消除缩放平移时的留白现象。
+docs: |
+  <p>The map on the top preloads low resolution tiles. The map on the bottom does not use any preloading. Try zooming out and panning to see the difference.</p>
+  <p>本示例通过上下两个同步联动的对比地图，直观展示了切片图层 <code>preload</code>（预加载）特性的巨大视觉优势：上方地图开启了低分辨率瓦片预加载（<code>preload: Infinity</code>），下方地图则关闭预加载（<code>preload: 0</code>）。尝试快速缩放地图或拖拽漫游，可以明显看到上方地图绝无白屏撕裂，始终拥有清晰的过渡底图，而下方地图在新瓦片下载完毕前会出现空白区域。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **瓦片金字塔多分辨率插值渲染机制**：
+    当用户放大地图至当前层级（例如 Zoom 14）时，若服务器尚未返回 Zoom 14 的切片，如果配置了 <code>preload</code>，OpenLayers 会优先拉取并拉伸渲染上一级（Zoom 13、12 乃至 0 级）的低分辨率切片作为占位底图。虽然低分辨率瓦片被拉伸后稍显模糊，但能立刻给予用户清晰的空间地理方位感，杜绝白屏现象。
+  - **预加载层级参数数值**：
+    - <code>preload: 0</code>（默认）：仅请求当前视口所需的瓦片层级；
+    - <code>preload: 1</code>：同时预加载当前层级往上 1 级的更粗粒度切片；
+    - <code>preload: Infinity</code>：递归向上一直预加载到 0 级切片（由于 0~3 级总瓦片极少且极小，下载极快）。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>new TileLayer({ preload: Infinity, source: new OSM() })</code>：
+    在图层配置中注入 <code>preload</code> 参数。
+  - 视图事件同步联动：
+    上方地图与下方地图共享或同步绑定同一 <code>ol/View</code>，确保在鼠标拖拽与滚轮缩放时两个地图呈现完全一致的视口状态以供对照。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **网络并发与带宽消耗**：
+    在低端移动网络环境下，<code>preload: Infinity</code> 会并发产生额外的切片 HTTP 请求。通常移动端推荐配置 <code>preload: 1</code> 或 <code>preload: 2</code>，在流畅体验与流量节省之间取得均衡。
 tags: "preload, OSM"
 ---
 <div id="map1" class="map"></div>

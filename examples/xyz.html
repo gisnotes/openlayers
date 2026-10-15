@@ -1,10 +1,30 @@
 ---
 layout: example.html
-title: XYZ
-shortdesc: Example of an ImageTile source.
-docs: >
-  The ImageTile source is used for tile data that is accessed through URLs that include a zoom level and tile grid x/y coordinates.
-tags: "xyz"
+title: XYZ / ImageTile 与标准 XYZ 瓦片底图直连
+shortdesc: Example of an ImageTile source. / 演示如何使用现代 ImageTile 数据源直连标准 {z}/{x}/{y} 切片金字塔服务。
+docs: |
+  <p>The ImageTile source is used for tile data that is accessed through URLs that include a zoom level and tile grid x/y coordinates.</p>
+  <p>本示例展示了如何使用现代的 <code>ol/source/ImageTile</code> 数据源接入标准的 XYZ 瓦片切片服务。在 WebGIS 领域，XYZ（或 Slippy Map Tiles）是通过带有 <code>{z}</code>（缩放层级）、<code>{x}</code>（列号）与 <code>{y}</code>（行号）占位符的 URL 模板获取地图切片的事实标准，被 OpenStreetMap、Google、Mapbox、Carto 等全球各大地图服务商广泛采用。</p>
 
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **从 <code>ol/source/XYZ</code> 到 <code>ol/source/ImageTile</code> 的架构演化**：
+    在 OpenLayers 9+ 及最新版本中，传统的 <code>XYZ</code> 类已被底层更加统一的 <code>ImageTile</code> 所吸纳升级。<code>ImageTile</code> 能够无缝兼容 WebGLTile 硬件加速渲染管线与常规 Canvas 渲染，成为切片访问的核心基础基座。
+  - **Slippy Map 墨卡托切片金字塔规则**：
+    原点位于西北角（左上角），横轴 $x \in [0, 2^z - 1]$ 从西向东递增，纵轴 $y \in [0, 2^z - 1]$ 从北向南递增。在第 $z$ 层，全球被切分为 $2^z \times 2^z = 4^z$ 张 $256 \times 256$ 像素的小图片。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>url: 'https://tile.openstreetmap.org/{z}/{x}/{y}.png'</code>：
+    标准的切片请求模板，引擎根据当前视口边界自动计算每个瓦片的坐标三元组并发起网络请求。
+  - <code>attributions: '...'</code>：
+    展示版权信息，自动以徽章形式浮动在视口右下角。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **TMS 与 XYZ 的 Y 轴方向颠倒排查**：
+    若接入某些遗留 GIS 服务器（如 OSGeo TMS）时出现“全球底图上下翻转”的现象，是因为 TMS 的 Y 轴原点在西南角（自底向上增加）。此时只需在 URL 中使用 <code>{-y}</code> 占位符替代 <code>{y}</code>（例如 <code>{z}/{x}/{-y}.png</code>），OpenLayers 会自动将其转换为 TMS 的反向 Y 轴计算。
+tags: "xyz"
 ---
 <div id="map" class="map"></div>

@@ -1,14 +1,29 @@
 ---
 layout: example.html
-title: Populated Places
-shortdesc: Scaling and coloring points according to population.
-docs: >
-  The populated places dataset has a `pop_max` field that is used in rendering the style for each place.
-  The `interpolate` operator is used to scale the `circle-radius`, rendering a point with a radius of 3
-  for places with a population under 500 thousand, growing to a point with a radius of 10 for places with
-  a population of 10 million or more.  The same `interpolate` operator is used to generate a color ramp
-  for places based on the same `pop_max` field.
+title: Populated Places / 全球人口聚落分布：数据插值驱动样式（Data-driven Styling）
+shortdesc: Scaling and coloring points according to population. / 演示如何使用 interpolate 插值操作符根据 pop_max 人口字段动态缩放圆点半径与色彩渐变。
+docs: |
+  <p>The populated places dataset has a <code>pop_max</code> field that is used in rendering the style for each place. The <code>interpolate</code> operator is used to scale the <code>circle-radius</code>, rendering a point with a radius of 3 for places with a population under 500 thousand, growing to a point with a radius of 10 for places with a population of 10 million or more. The same <code>interpolate</code> operator is used to generate a color ramp for places based on the same <code>pop_max</code> field.</p>
+  <p>本示例展示了如何利用 OpenLayers 的声明式样式表达式实现数据驱动的专题制图（Data-driven Cartography）。数据集来源于全球主要人口聚落（Populated Places），包含最大常住人口数 <code>pop_max</code> 属性。示例使用 <code>interpolate</code>（线性插值）操作符动态控制 <code>circle-radius</code>（圆点半径，50万以下人口半径为 3px，平滑渐增至 1000万以上人口的 10px），并使用相同的插值函数生成渐变色带（从浅黄色平滑过渡至深红棕色）。</p>
 
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **声明式分级色彩与尺寸插值（Continuous Interpolation）**：
+    在传统样式函数中，为了实现数值到颜色或尺寸的平滑映射，开发者必须编写复杂的线性插值数学算法与颜色十六进制混合逻辑。OpenLayers 声明式表达式将 <code>interpolate</code> 直接下沉至底层原生引擎：
+    <code>['interpolate', ['linear'], ['get', 'pop_max'], 500000, 3, 10000000, 10]</code>，优雅且执行效率极高。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - 色彩渐变色阶插值：
+    引擎自动在 <code>'rgba(254, 237, 222, 0.6)'</code> 到 <code>'rgba(166, 54, 3, 0.6)'</code> 之间进行线性色彩空间过渡，形成半透明柔和的等级符号图。
+  - 鼠标悬停要素信息提取：
+    通过 <code>map.forEachFeatureAtPixel()</code> 实时获取当前光标指向的城市名称 <code>NAME</code> 与人口数 <code>pop_max</code>。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **指数增长数据的对数/分位数适配**：
+    城市人口往往符合长尾幂律分布（少数特大城市人口极多，大量中小城镇人口较少）。如果直接使用纯线性插值 <code>['linear']</code>，中间规模城市不易区分。对于跨越多个数量级的数据，可考虑先对数值取对数后再插值，或使用分段阶梯（<code>step</code>）操作符。
 tags: "vector, interpolate"
 ---
 <div id="map" class="map">

@@ -1,34 +1,57 @@
 ---
 layout: example.html
-title: PMTiles Shaded Relief
-shortdesc: Elevation data from PMTiles.
-docs: >
-  This example shows a shaded relief rendering of elevation data from
-  a [PMTiles](https://github.com/protomaps/PMTiles) source.
+title: PMTiles Shaded Relief / PMTiles 云原生高程栅格与动态山体阴影
+shortdesc: Elevation data from PMTiles. / 演示如何使用 WebGLTile 与 PMTiles 单文件归档直接读取 DEM 高程切片并实时计算山体阴影（Shaded Relief）。
+docs: |
+  <p>This example shows a shaded relief rendering of elevation data from a <a href="https://github.com/protomaps/PMTiles" target="_blank">PMTiles</a> source.</p>
+  <p>本示例展示了如何基于云原生无服务器的 <a href="https://github.com/protomaps/PMTiles" target="_blank">PMTiles</a> 单文件切片归档，直接在浏览器端提取数字高程模型（DEM）像素并利用 WebGL 着色器算法实时计算地表山体阴影（Shaded Relief）。支持动态调整垂直夸大比例（Vertical Exaggeration）、太阳高度角（Sun Elevation）与太阳方位角（Sun Azimuth），并在鼠标移动时实时反算并显示当前采样点的真实海拔米数。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **PMTiles 云原生单文件瓦片存储协议**：
+    PMTiles 由 Protomaps 发起，将原本由数百万个小切片文件组成的金字塔打包为单一的 <code>.pmtiles</code> 文件。它利用 HTTP Range 请求（字节范围读取），前端仅需读取文件头与两级目录索引，即可直接精准下载单个切片二进制，完全摆脱昂贵的切片数据库或后端切片服务器。
+  - **WebGLTile 硬件级高程解码与着色算法**：
+    地形切片采用 Terrarium 或 Mapbox RGB 编码格式，每个像素的 R、G、B 通道分量编码了绝对高程。OpenLayers 的 <code>WebGLTile</code> 利用 GPU 并行运行 Sobel 空间滤波算子计算地表法向量，结合设定的虚拟太阳光照矢量实时计算漫反射明暗光强。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>PMTilesRasterSource</code> 与 HTTP Range：
+    直接指定托管在 CDN 上的 <code>.pmtiles</code> 静态文件 URL，无需传统 API 服务中转。
+  - 动态参数着色器绑定：
+    通过滑动条动态调整变量并在 WebGL 样式表达式中实时更新：
+    - <code>vert</code>：地形起伏夸大系数（5x~50x）；
+    - <code>sunEl</code>：太阳入射仰角（0°~90°）；
+    - <code>sunAz</code>：太阳水平入射方位角（0°~360°）。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **HTTP Range 与静态对象存储（S3/OSS）配置**：
+    托管 PMTiles 的对象存储桶必须开启 <code>Accept-Ranges: bytes</code> 响应头支持，同时配置严格的 CORS 跨域规则，允许 <code>GET</code> 与 <code>HEAD</code> 方法并暴露 <code>Content-Range</code> 与 <code>Content-Length</code> 响应头。
 tags: "pmtiles, elevation, data tiles"
 ---
 <div id="map" class="map"></div>
 <table class="controls">
   <tr>
-    <td>elevation</td>
+    <td>当前海拔 (Elevation):</td>
     <td colspan="2" id="elevationOut"></td>
   </tr>
   <tr>
-    <td>location</td>
+    <td>当前经纬度 (Location):</td>
     <td colspan="2" id="locationOut"></td>
   </tr>
   <tr>
-    <td><label for="vert">vertical exaggeration:</label></td>
+    <td><label for="vert">垂直夸大比例 (Exaggeration):</label></td>
     <td><input id="vert" type="range" min="5" max="50" value="10"/></td>
-    <td><span id="vertOut"></span> x</td>
+    <td><span id="vertOut"></span> 倍 (x)</td>
   </tr>
   <tr>
-    <td><label for="sunEl">sun elevation:</label></td>
+    <td><label for="sunEl">太阳高度角 (Sun elevation):</label></td>
     <td><input id="sunEl" type="range" min="0" max="90" value="45"/></td>
     <td><span id="sunElOut"></span> °</td>
   </tr>
   <tr>
-    <td><label for="sunAz">sun azimuth:</label></td>
+    <td><label for="sunAz">太阳方位角 (Sun azimuth):</label></td>
     <td><input id="sunAz" type="range" min="0" max="360" value="45"/></td>
     <td><span id="sunAzOut"></span> °</td>
   </tr>

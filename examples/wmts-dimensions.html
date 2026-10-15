@@ -1,14 +1,35 @@
 ---
 layout: example.html
-title: WMTS Tile Transitions
-shortdesc: Example of smooth tile transitions when changing the dimension of a WMTS layer.
-docs: >
-  Demonstrates smooth reloading of layers when changing a dimension continuously. The demonstration layer is a global sea-level computation (flooding computation from <a href="https://scalgo.com/">SCALGO</a>, underlying data from <a href="https://cgiarcsi.community/data/srtm-90m-digital-elevation-database-v4-1">CGIAR-CSI SRTM</a>) where cells that are flooded if the sea-level rises to more than <em>x</em> m are colored blue. The user selects the sea-level dimension using a slider.
+title: WMTS Tile Transitions / WMTS 多维时空与平滑切片过渡
+shortdesc: Example of smooth tile transitions when changing the dimension of a WMTS layer. / 演示在动态切换 WMTS 维度参数（如海平面上升高度）时如何实现平滑瓦片过渡。
+docs: |
+  <p>Demonstrates smooth reloading of layers when changing a dimension continuously. The demonstration layer is a global sea-level computation (flooding computation from <a href="https://scalgo.com/">SCALGO</a>, underlying data from <a href="https://cgiarcsi.community/data/srtm-90m-digital-elevation-database-v4-1">CGIAR-CSI SRTM</a>) where cells that are flooded if the sea-level rises to more than <em>x</em> m are colored blue. The user selects the sea-level dimension using a slider.</p>
+  <p>本示例演示了在连续动态调整多维服务维度（Dimension）参数时，瓦片图层如何实现平滑无缝的重载过渡。演示图层为全球海平面上升淹没模拟计算（淹没算法由 <a href="https://scalgo.com/" target="_blank">SCALGO</a> 提供，高程基础数据源自 <a href="https://cgiarcsi.community/data/srtm-90m-digital-elevation-database-v4-1" target="_blank">CGIAR-CSI SRTM</a> 90 米数字高程数据库）。当海平面上升超过 <em>x</em> 米时被淹没的网格像元被着色为蓝色，用户可以通过滑动条动态改变海平面高程维度。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **WMTS 标准 Dimensions 维度扩展协议**：
+    OGC WMTS 规范除了标准的 <code>TileMatrix</code>, <code>TileRow</code>, <code>TileCol</code> 外，支持任意自定义业务维度（Dimensions），如时间序列 <code>TIME</code>、海拔高度 <code>ELEVATION</code>、垂直水深或自定义门槛阈值 <code>threshold</code>。
+  - **动态平滑过渡与瓦片缓存复用**：
+    频繁拖动滑动条时，若每次都直接销毁重建图层，会导致页面产生剧烈白屏闪烁。OpenLayers 提供了 <code>wmtsSource.updateDimensions(...)</code> 方法，在请求新维度瓦片的同时，旧维度的切片会保留在屏幕上作为临时过渡底图，直到新切片完全加载解码完毕后才无缝切换，实现丝滑流畅的视觉体验。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>dimensions: { 'threshold': 100 }</code> 初始绑定：
+    在构建 <code>ol/source/WMTS</code> 时通过 <code>dimensions</code> 字典声明自定义维度参数。OpenLayers 会自动将其拼接到 KVP（键值对）URL 请求参数中或根据 REST 模板注入路径变量。
+  - <code>wmtsSource.updateDimensions({ 'threshold': slider.value })</code>：
+    当滑动条触发 <code>input</code> 事件时动态更新维度值。内部会自动使受影响范围的缓存瓦片失效并排队发起新 URL 的切片并发拉取。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **高频滑动事件的请求风暴与节流**：
+    原生 <code>&lt;input type="range"&gt;</code> 的 <code>input</code> 事件在鼠标拖拽或触控滑动时以极高频率触发。如果服务端处理能力有限，过快的请求可能导致服务端瓦片生成拥堵甚至 503 报错。生产中建议结合 <code>requestAnimationFrame</code> 或 50~100ms 的防抖/节流函数（Throttle）来调度 <code>updateDimensions</code>。
 tags: "wmts, parameter, transition, grid"
 ---
 <div id="map" class="map"></div>
 <label>
-  Sea-level
+  海平面高程 (Sea-level):
   <input id="slider" type="range" value="10" max="100" min="-1">
 </label>
 <span id="theinfo"></span>

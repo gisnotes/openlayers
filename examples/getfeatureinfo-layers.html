@@ -1,26 +1,42 @@
 ---
 layout: example.html
-title: WMS GetFeatureInfo (Layers)
-shortdesc: >
-  Shows how to fetch features per layer name in a single WMS GetFeatureInfo
-  request
-docs: >
-  Demonstrates the use of the `layers` option in the
-  `ol/format/WMSGetFeatureInfo` format object, which allows features returned
-  by a single WMS GetFeatureInfo request that asks for more than one layer
-  to be read by layer name.
+title: WMS GetFeatureInfo (Layers) / WMS 多图层穿透属性查询与按层解析
+shortdesc: Shows how to fetch features per layer name in a single WMS GetFeatureInfo request / 演示如何使用 WMSGetFeatureInfo 格式解析器的 layers 选项在单次多图层查询响应中按图层名字隔离提取要素。
+docs: |
+  <p>Demonstrates the use of the <code>layers</code> option in the <code>ol/format/WMSGetFeatureInfo</code> format object, which allows features returned by a single WMS GetFeatureInfo request that asks for more than one layer to be read by layer name.</p>
+  <p>本示例演示了如何在 <code>ol/format/WMSGetFeatureInfo</code> 格式解析器中使用 <code>layers</code> 选项。当客户端通过单次 WMS <code>GetFeatureInfo</code> 请求同时查询多个图层（例如宾馆 <code>hotel</code> 与餐馆 <code>restaurant</code> 两个业务图层）时，该选项允许按照指定的图层名称分别对返回的 XML/GML 数据进行隔离过滤与定向反序列化，极大简化了多专题数据穿透查询的业务代码。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **一次网络 I/O 穿透多层**：
+    在 WMS 规范中，<code>GetFeatureInfo</code> 允许在 <code>QUERY_LAYERS</code> 参数中传入以逗号分隔的多个图层名称（如 <code>QUERY_LAYERS=hotel,restaurant</code>）。服务端会在点选位置垂直向下穿透，一次性返回所有命中图层的空间要素，显著减少网络往返耗时（RTT）。
+  - **客户端多层级语义过滤解析**：
+    早期解析方式通常一次性读取全局所有要素，开发者需手写二次循环遍历属性来区分所属图层。<code>WMSGetFeatureInfo</code> 内置的 <code>layers: ['hotel']</code> 参数在 XML 流式解析阶段即可完成节点路由与筛选，性能更优。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>new WMSGetFeatureInfo().readFeatures(response)</code>：
+    默认模式，读取响应文档中出现的所有图层的所有要素。
+  - <code>new WMSGetFeatureInfo({ layers: ['hotel'] }).readFeatures(response)</code>：
+    过滤模式，仅提取图层名称匹配 <code>hotel</code> 的要素数组，自动排除其他图层的干扰要素。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **INFO_FORMAT 格式与兼容性**：
+    <code>WMSGetFeatureInfo</code> 格式解析器专为解析 GML2 / GML3 格式设计（如请求参数 <code>INFO_FORMAT=application/vnd.ogc.gml</code>）。若服务端返回的是 <code>text/html</code> 或 <code>application/json</code>（GeoServer 扩展），则需使用对应的 HTML 容器或直接用 <code>ol/format/GeoJSON</code> 解析。
 ---
 <table id="info">
   <tr>
-    <td>All features:</td>
+    <td>全部要素总数 (All features):</td>
     <td id="all"></td>
   </tr>
   <tr>
-    <td>Hotel features:</td>
+    <td>宾馆酒店要素数 (Hotel features):</td>
     <td id="hotel"></td>
   </tr>
   <tr>
-    <td>Restaurant features:</td>
+    <td>餐饮美食要素数 (Restaurant features):</td>
     <td id="restaurant"></td>
   </tr>
 </table>

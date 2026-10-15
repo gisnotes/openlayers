@@ -1,9 +1,31 @@
 ---
 layout: example.html
-title: Clustered Features
-shortdesc: Example of using ol/source/Cluster.
-docs: >
-  This example shows how to do clustering on point features.
+title: Clustered Features / 点要素空间距离聚类与聚合分析
+shortdesc: Example of using ol/source/Cluster. / 演示如何使用 Cluster 数据源根据像素距离动态将相邻离散点聚合成聚合簇并联动滑动条调整聚合半径。
+docs: |
+  <p>This example shows how to do clustering on point features.</p>
+  <p>本示例展示了如何使用 <code>ol/source/Cluster</code> 对海量点要素进行动态空间距离聚合（Clustering）。聚类分析能够有效解决大比例尺下大量重叠要素造成的屏幕视觉遮挡与性能瓶颈。支持动态调整 <code>distance</code>（聚类判定像素半径）与 <code>minDistance</code>（聚合簇之间的最小间距阈值），并使用动画展示聚合数量气泡。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **<code>ol/source/Cluster</code> 代理设计模式**：
+    <code>Cluster</code> 是一个包装层（Wrapper Source），它包裹一个底层的 <code>VectorSource</code>（原始点要素源）。其内部根据当前视口分辨率将相邻点归并在一个虚拟的“聚合要素”中，该聚合要素的属性 <code>features</code> 包含了所有被收拢的原始要素数组。
+  - **<code>distance</code> 与 <code>minDistance</code> 协同机制**：
+    - <code>distance</code>：当两个点在屏幕上的像素距离小于该值时，自动合并为一个聚合簇；
+    - <code>minDistance</code>：聚合簇质心之间的最小允许间距，防止两个密集簇彼此挨得过近。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - 动态聚类样式函数：
+    通过 <code>feature.get('features').length</code> 读取聚合数量，数量为 1 时展示单个图钉，大于 1 时展示带有数量文本的圆形徽章气泡。
+  - <code>clusterSource.setDistance(value)</code> 与 <code>clusterSource.setMinDistance(value)</code>：
+    实时响应滑动条变动，触发内部重新空间分区索引计算。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **点击聚合簇展开动画（Cluster Spiderfy / Zoom to Cluster Extent）**：
+    在实际生产中，用户点击聚合簇通常期望“自动放大地图至恰好容纳该簇内所有原始点的包围盒范围”。可以通过 <code>map.getView().fit(ol.extent.boundingExtent(coords), { duration: 500, padding: [50, 50, 50, 50] })</code> 极简实现。
 tags: "cluster, vector"
 resources:
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css
@@ -11,17 +33,17 @@ resources:
 <div id="map" class="map"></div>
 <form>
   <div class="form-group">
-    <label for="distance" class="col-form-label pb-0">Cluster distance</label>
+    <label for="distance" class="col-form-label pb-0">聚类判定半径 (Cluster distance)</label>
     <input id="distance" class="form-range" type="range" min="0" max="200" step="1" value="40"/>
     <small class="form-text text-muted">
-      The distance within which features will be clustered together.
+      要素在该像素距离内将被自动合并为一个聚合簇 (Features clustered within this pixel radius)。
     </small>
   </div>
   <div class="form-group">
-    <label for="min-distance" class="col-form-label pb-0">Minimum distance</label>
+    <label for="min-distance" class="col-form-label pb-0">聚合簇最小间距 (Minimum distance)</label>
     <input id="min-distance" class="form-range" type="range" min="0" max="200" step="1" value="20"/>
     <small class="form-text text-muted">
-      The minimum distance between clusters. Can't be larger than the configured distance.
+      各聚合簇之间的最小像素间距，不得大于聚类判定半径 (Minimum distance between clusters)。
     </small>
   </div>
 </form>

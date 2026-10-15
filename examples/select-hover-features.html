@@ -1,10 +1,35 @@
 ---
 layout: example.html
-title: Select Features by Hover
-shortdesc: Example of selecting features by hovering.
-docs: >
-  In this example, the Select interaction reacts to the pointermove event for selection
+title: Select Features by Hover / 鼠标指针悬停要素高亮拾取
+shortdesc: Example of selecting features by hovering. / 演示如何使用 Select 交互结合 pointermove 条件实现鼠标悬浮即时拾取高亮要素。
+docs: |
+  <p>In this example, the Select interaction reacts to the <code>pointermove</code> event for selection.</p>
+  <p>在本示例中，<code>ol/interaction/Select</code> 交互组件被配置为响应 <code>pointermove</code>（鼠标指针移动）事件，当光标划过生态区域要素上方时，自动触发高亮样式并在底栏同步呈现该生态区名称。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **基于 `condition` 的交互触发解耦**：
+    `ol/interaction/Select` 默认监听 `singleclick`（单击选中）。通过配置 `condition: pointerMove`，OpenLayers 将交互的触发钩子从点击事件流无缝切换至高频的指针移动事件流。
+  - **独立内部要素集合（Features Collection）**：
+    `Select` 内部维护了一个 `ol/Collection<Feature>`。当指针移入要素时，要素被推入集合并应用 `select.style` 渲染覆盖层；当指针移出时，要素被自动从集合移除并恢复原始样式。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - `import {pointerMove} from 'ol/events/condition.js'`：
+    `ol/events/condition` 提供了丰富的内置断言函数（如 `singleClick`, `click`, `pointerMove`, `altKeyOnly`, `shiftKeyOnly`, `platformModifierKeyOnly`），可自由组合实现灵活交互。
+  - `colorStyle(selectStyle)` 动态样式函数传递：
+    本例为选中要素指定了专属的动态样式函数，复用要素自身的 `COLOR` 属性值作为填充色，同时叠加白色半透明描边（`rgba(255, 255, 255, 0.7)`，宽度 2px），形成鲜明的高亮聚焦轮廓。
+  - `select.on('select', (e) => ...)` 事件监听：
+    `e.selected` 包含本次新选中的要素数组，`e.deselected` 包含本次被取消选中的要素数组，便于实现精准的联动增量更新。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **高频 `pointermove` 与性能治理**：
+    `pointermove` 在鼠标快速晃动时每秒可触发数十次。OpenLayers 内部虽然进行了拾取像素的优化，但在图层包含大量复杂多边形要素时仍可能造成重绘开销。生产中建议为复杂要素设置 `filter` 限制拾取图层，或仅在需要悬停聚焦的图层上启用该交互。
+  - **移动端触控兼容注意**：
+    移动触屏设备没有原生的“光标悬浮”概念，`pointermove` 在触屏上通常会被识别为拖拽平移手势。在响应式开发中，若检测到移动触屏设备，建议将条件切换回 `singleClick`。
 tags: "select, vector"
 ---
 <div id="map" class="map"></div>
-<span id="status">&nbsp;</span>
+<span id="status">&nbsp;请将鼠标悬停在生态区域上方 (Hover over an eco-region)...</span>

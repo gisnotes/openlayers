@@ -1,9 +1,30 @@
 ---
 layout: example.html
-title: OGC Map Tiles
-shortdesc: Rendering map tiles from an OGC API – Tiles service.
-docs: >
-  The <a href="https://ogcapi.ogc.org/tiles/">OGC API – Tiles</a> specification describes how a service can provide map tiles.
+title: OGC Map Tiles / OGC API - Tiles 现代栅格瓦片服务集成
+shortdesc: Rendering map tiles from an OGC API – Tiles service. / 演示如何使用 OGCMapTile 数据源接入符合现代 OGC API - Tiles 规范的 Web 墨卡托栅格切片服务。
+docs: |
+  <p>The <a href="https://ogcapi.ogc.org/tiles/" target="_blank">OGC API – Tiles</a> specification describes how a service can provide map tiles.</p>
+  <p>本示例展示了如何渲染基于现代 <a href="https://ogcapi.ogc.org/tiles/" target="_blank">OGC API – Tiles</a> 国际标准的栅格地图瓦片。OGC API 系列是 OGC 组织全面拥抱 OpenAPI（RESTful JSON、资源化 URI）的新一代地理信息服务规范，取代了过去高度依赖复杂 XML 与长查询参数的传统 WMTS/WMS。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **新一代 OGC API - Tiles 规范**：
+    传统 WMTS 需要解析复杂的 Capabilities XML。而在 OGC API - Tiles 中，服务采用现代的 RESTful 路径组织：<code>/collections/{collectionId}/map/tiles/{tileMatrixSetId}/{tileMatrix}/{tileRow}/{tileCol}</code>。
+  - **<code>ol/source/OGCMapTile</code> 开箱即用**：
+    OpenLayers 内置了专用的 <code>OGCMapTile</code> 数据源类。开发者仅需指定包含切片矩阵集的基础 URL（如本例 GNOSIS Earth 的 <code>blueMarble</code> 集合的 <code>WebMercatorQuad</code> 矩阵集），内部自动完成切片元数据握手与动态请求组装。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>url: 'https://maps.gnosis.earth/ogcapi/collections/blueMarble/map/tiles/WebMercatorQuad'</code>：
+    指向特定图层集合与特定瓦片网格矩阵（<code>WebMercatorQuad</code> 对应标准的 Web 墨卡托四叉树网格）。
+  - <code>new TileLayer({ source: ... })</code>：
+    标准切片图层容器，具备与常规 XYZ 或 WMTS 完全一致的缓存与渲染性能表现。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **TileMatrixSet 标识符规范**：
+    OGC 官方对切片矩阵集制定了标准命名（如 <code>WebMercatorQuad</code> 对应 EPSG:3857，<code>WorldCRS84Quad</code> 对应 EPSG:4326）。调用服务前需查阅服务端 <code>/tiles</code> 端点返回的 JSON 元数据，确保所选的矩阵集与当前前端视图投影严格一致。
 tags: "ogc"
 ---
 <div id="map" class="map"></div>

@@ -1,9 +1,30 @@
 ---
 layout: example.html
-title: OGC Map Tiles (Geographic)
-shortdesc: Rendering map tiles from an OGC API – Tiles service.
-docs: >
-  The <a href="https://ogcapi.ogc.org/tiles/">OGC API – Tiles</a> specification describes how a service can provide map tiles.
+title: OGC Map Tiles (Geographic) / OGC API - Tiles 经纬度地理切片服务
+shortdesc: Rendering map tiles from an OGC API – Tiles service. / 演示如何使用 OGCMapTile 数据源接入基于 WorldCRS84Quad 经纬度矩阵集的 OGC API - Tiles 地理瓦片服务。
+docs: |
+  <p>The <a href="https://ogcapi.ogc.org/tiles/" target="_blank">OGC API – Tiles</a> specification describes how a service can provide map tiles.</p>
+  <p>本示例展示了如何加载基于 <code>WorldCRS84Quad</code> 地理经纬度（EPSG:4326 / WGS 84）矩阵集的 OGC API – Tiles 栅格切片服务。地图视口（View）直接运行在纯地理坐标系下，无需经过任何墨卡托投影变形。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **<code>WorldCRS84Quad</code> 与 <code>WebMercatorQuad</code> 的拓扑差异**：
+    Web 墨卡托投影全球范围是一个正方形（$X, Y \in [-20037508, 20037508]$），0 级仅需 1 张切片（$1 \times 1$）；而 WGS 84 地理坐标系经度范围为 $[-180^\circ, 180^\circ]$（宽 $360^\circ$），纬度范围为 $[-90^\circ, 90^\circ]$（高 $180^\circ$），宽高比为 $2:1$。在 0 级时包含 2 张切片（$2 \times 1$ 网格）。
+  - **地理坐标系下的原生无畸变呈现**：
+    特别适合气象卫星全景遥感云图、极地海冰监测或深空遥感影像，避免墨卡托投影在高纬度地区的极度面积放大失真。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>url: '.../tiles/WorldCRS84Quad'</code>：
+    请求地址精确指定为 OGC 标准的 WGS 84 四叉树切片集合。
+  - <code>view: new View({ projection: 'EPSG:4326', center: [0, 0], zoom: 1 })</code>：
+    视口显式声明 <code>projection: 'EPSG:4326'</code>，与瓦片网格原生对齐。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **两张切片起步的视口适配**：
+    由于 0 级是两张切片，在低分辨率（Zoom 0~1）下，视口渲染宽度至少为 512 像素方可完整呈现全球。在移动端小屏或窄容器中，建议设置合理的 <code>minZoom</code> 防止左右留白。
 tags: "ogc"
 ---
 <div id="map" class="map"></div>

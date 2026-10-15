@@ -1,9 +1,28 @@
 ---
 layout: example.html
-title: OGC Vector Tiles (Geographic)
-shortdesc: Rendering vector tiles from an OGC API – Tiles service.
-docs: >
-  The <a href="https://ogcapi.ogc.org/tiles/">OGC API – Tiles</a> specification describes how a service can provide vector tiles.
+title: OGC Vector Tiles (Geographic) / OGC API 经纬度矢量切片与等矩投影
+shortdesc: Rendering vector tiles from an OGC API – Tiles service. / 演示如何使用 OGCVectorTile 数据源加载基于 WorldCRS84Quad 地理经纬度矩阵集的 OGC API 矢量切片。
+docs: |
+  <p>The <a href="https://ogcapi.ogc.org/tiles/" target="_blank">OGC API – Tiles</a> specification describes how a service can provide vector tiles.</p>
+  <p>本示例展示了如何加载基于 <code>WorldCRS84Quad</code> 经纬度矩阵集（EPSG:4326）的 OGC API – Tiles 矢量切片。地图视图直接采用 EPSG:4326 经纬度投影，矢量多边形在地理坐标系下完成无投影转换的原生渲染。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **地理坐标系下的矢量切片几何处理**：
+    由于矢量切片内部坐标通常是基于瓦片局部范围 $[0, 4096]$ 进行归一化的，当矩阵集为 <code>WorldCRS84Quad</code> 时，切片的原生地理边界直接以经纬度度数（Degrees）定义。数据源无需进行复杂的球面墨卡托逆变换，直接在经纬度空间中解码点位坐标，显著节约解析算力。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>OGCVectorTile</code> 显式指定坐标系：
+    显式声明 <code>projection: 'EPSG:4326'</code> 确保数据源解析器知晓几何顶点的度数单位空间，配合 <code>view.projection: 'EPSG:4326'</code> 达到完全无缝吻合。
+  - 样式配置：
+    保持与 Web 墨卡托切片一致的高性能声明式样式配置，矢量切片在不同投影下均具备完全相同的样式表现能力。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **跨日界线矢量多边形割裂**：
+    在 EPSG:4326 投影下，跨越 $\pm 180^\circ$ 经线的要素如果不经过割裂处理，直接连接经度可能导致出现一条贯穿整个地图的横跨拉丝假面。切片生产端（如在数据库生成切片时）务必沿经度 $180^\circ$ 对跨日界线多边形进行拓扑切分。
 tags: "ogc, vector"
 ---
 <div id="map" class="map"></div>

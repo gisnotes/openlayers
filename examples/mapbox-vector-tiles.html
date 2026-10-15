@@ -1,9 +1,32 @@
 ---
 layout: example.html
-title: Mapbox Vector Tiles
-shortdesc: Example of a Mapbox vector tiles map.
-docs: >
-  A simple vector tiles map. **Note**: Make sure to get your own Mapbox API key when using this example. No map will be visible when the API key has expired.
+title: Mapbox Vector Tiles / Mapbox MVT 矢量切片与客户端样式表达式
+shortdesc: Example of a Mapbox vector tiles map. / 演示如何使用 VectorTileLayer 加载 Mapbox MVT 格式二进制协议切片并应用基于表达式的高性能矢量样式。
+docs: |
+  <p>A simple vector tiles map. <strong>Note</strong>: Make sure to get your own Mapbox API key when using this example. No map will be visible when the API key has expired.</p>
+  <p>这是一个经典的矢量切片地图示例。通过 <code>ol/layer/VectorTile</code> 与 <code>ol/source/VectorTile</code> 加载 Mapbox 托管的 MVT（Mapbox Vector Tiles）二进制 Protocol Buffers 格式矢量瓦片，并在前端客户端实时计算并渲染样式。<strong>注意</strong>：运行本示例需要有效的 Mapbox API Key（Access Token），若 Key 过期将无法请求到瓦片数据。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **MVT（Mapbox Vector Tile）二进制协议优势**：
+    MVT 采用 Google Protocol Buffers（Protobuf）进行矢量图元（点、线、多边形及属性字典）的极致压缩编码。与传统 GeoJSON 相比，数据体积通常缩减 70%~90%，且支持空间分块裁剪（Clipping）与几何简化。
+  - **客户端声明式样式表达式（Style Expressions）**：
+    本例采用了现代 OpenLayers 声明式样式语法。无需在每次图层渲染时执行庞大的 JavaScript 回调函数，而是通过 JSON 风格的表达式数组（如 <code>['==', ['get', 'class'], 'park']</code>）直接被 OpenLayers 底层样式引擎编译执行，大幅提升了数十万要素的着色帧率。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>format: new MVT()</code>：
+    专职负责反序列化 <code>.pbf</code> / <code>.vector.pbf</code> 格式二进制瓦片的格式解析器，直接解析出矢量要素对象。
+  - 表达式规则链：
+    通过 <code>filter</code>、<code>else: true</code> 与 <code>style: { 'fill-color': ... }</code> 组织成清晰的规则匹配瀑布流，精细区分 <code>park</code>（公园绿地）、<code>cemetery</code>（墓地）、<code>hospital</code>（医院）、<code>school</code>（学校）、<code>wood</code>（林地）等用地类型（landuse）。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **Token 泄漏与域名白名单**：
+    在公网生产环境中，Mapbox Access Token 必须在 Mapbox 控制台绑定生产域名白名单（URL Referrer），防止 Token 被第三方非法盗刷导致费用失控。
+  - **样式与切片属性层命名空间强依赖**：
+    MVT 切片内部包含多个命名的子图层（如 <code>landuse</code>, <code>water</code>, <code>road</code>, <code>building</code>）。客户端样式的 <code>['get', 'layer']</code> 必须与切片生产时定义的图层名完全一致，否则规则将全部失效导致地图一片空白。
 tags: "simple, mapbox, vector, tiles"
 resources:
   - resources/mapbox-streets-v6-style.js

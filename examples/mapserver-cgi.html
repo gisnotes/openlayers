@@ -1,14 +1,30 @@
 ---
 layout: example.html
-title: MapServer CGI
-shortdesc: Example of a MapServer CGI map.
-docs: >
-  Example of a map generated using the MapServer [CGI Controls](https://mapserver.org/cgi/controls.html).
-  The CGI interface allows testing a Mapfile without having to configure WMS services. The Mapfile
-  used in this example can be seen [here](https://demo.mapserver.org/itasca_legend/itasca3.txt).
+title: MapServer CGI / MapServer CGI 原生动态地图接口集成
+shortdesc: Example of a MapServer CGI map. / 演示如何使用 createLoader 接入 MapServer 传统的 CGI 模式直接调试渲染 Mapfile 地图配置。
+docs: |
+  <p>Example of a map generated using the MapServer <a href="https://mapserver.org/cgi/controls.html" target="_blank">CGI Controls</a>. The CGI interface allows testing a Mapfile without having to configure WMS services. The Mapfile used in this example can be seen <a href="https://demo.mapserver.org/itasca_legend/itasca3.txt" target="_blank">here</a>.</p>
+  <p>It is <strong>strongly</strong> recommended to configure MapServer to serve WMS and use the OpenLayers <a href="mapserver-wms.html">WMS loader</a>, rather than this older CGI approach.</p>
+  <p>本示例展示了如何通过 MapServer 的传统 <a href="https://mapserver.org/cgi/controls.html" target="_blank">CGI 控制参数接口</a> 生成并加载动态地图。CGI 接口允许开发者在没有完整配置标准 WMS 服务的情况下，直接快速测试和调试服务端的 <code>.map</code> 配置文件（Mapfile）。本例使用的 Mapfile 配置文件可在 <a href="https://demo.mapserver.org/itasca_legend/itasca3.txt" target="_blank">此处查看</a>。</p>
+  <p>在生产环境中，<strong>强烈建议</strong>将 MapServer 配置为标准的 OGC WMS 服务，并采用 OpenLayers 的标准 <a href="mapserver-wms.html">WMS 加载器（mapserver-wms）</a>，以获得更完备的标准协议兼容性与安全控制，而非采用较古早的 CGI 直传模式。</p>
 
-  It is **strongly** recommended to configure MapServer to serve WMS and use the OpenLayers
-  [WMS loader](mapserver-wms.html), rather than this older CGI approach.
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **MapServer CGI 工作原理**：
+    MapServer 是开源 WebGIS 领域历史悠久的高性能 C 语言地图引擎。在 OGC 规范诞生初期，它主要作为 Web 服务器的 CGI 二进制程序运行，通过 URL 查询参数（如 <code>map=/path/to/file.map</code> 与 <code>mode=map</code>）动态出图。
+  - **<code>createLoader</code> 视口适配加载器**：
+    由于传统 CGI 接口的参数名称与 OGC WMS（如 <code>BBOX</code> 的格式与分隔符）存在细微差异，OpenLayers 在 <code>ol/source/mapserver.js</code> 中内置了专用的 <code>createLoader</code> 适配器，专门负责将当前的视口包围盒转换为 MapServer CGI 能够直接识别的请求参数并获取图片。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>loader: createLoader({ url: mapserverUrl, params: { 'map': '...', 'layers': 'boundaries water roads other cities' } })</code>：
+    自动在每次地图平移缩放停止时，基于当前像素尺寸与空间范围组装出出图参数，由单图数据源拉取完整的渲染栅格并贴在屏幕上。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **安全注入与路径暴露风险**：
+    CGI 模式下若直接在前端 URL 中传递服务端的绝对路径（如 <code>map=/var/www/...</code>），存在服务器内部文件系统路径暴露与安全注入风险。生产环境中必须在 Web 服务器（Apache/Nginx）上配置 <code>MS_MAP_NO_PATH</code> 环境变量限制路径，或全面迁移至安全沙箱化包装的标准 WMS 服务。
 tags: "mapserver, cgi"
 ---
 <div id="map" class="map"></div>

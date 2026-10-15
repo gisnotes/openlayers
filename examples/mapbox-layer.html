@@ -1,11 +1,32 @@
 ---
 layout: example.html
-title: Mapbox-gl Layer
-shortdesc: Example of a Mapbox-gl-js layer integration.
-docs: >
-  Show how to add a mapbox-gl-js layer in an OpenLayers map.
-  **Note**: Make sure to get your own API key at https://www.maptiler.com/cloud/ when using this example. No map will be visible when the API key has expired.
-  mapbox-gl-js version 1.13.3 is used in this example as starting with version 2 a Mapbox access token is required.
+title: Mapbox-gl Layer / 深度集成 Mapbox GL JS 渲染引擎图层
+shortdesc: Example of a Mapbox-gl-js layer integration. / 演示如何使用自定义 Layer 渲染函数将 Mapbox GL JS 实例挂载为底图，并叠加 OpenLayers 热力图。
+docs: |
+  <p>Show how to add a mapbox-gl-js layer in an OpenLayers map. <strong>Note</strong>: Make sure to get your own API key at <a href="https://www.maptiler.com/cloud/" target="_blank">https://www.maptiler.com/cloud/</a> when using this example. No map will be visible when the API key has expired. mapbox-gl-js version 1.13.3 is used in this example as starting with version 2 a Mapbox access token is required.</p>
+  <p>本示例展示了如何将一个完全由 <code>mapbox-gl-js</code> 实例驱动的 WebGL 画布作为自定义图层无缝嵌入到 OpenLayers 的渲染管线中，并在上方完美叠加 OpenLayers 原生的地震震级热力图（HeatmapLayer）。<strong>注意</strong>：本示例使用 MapTiler 矢量样式底图，需配合有效的 MapTiler API Key 运行。出于开源许可兼容性，本例使用的是无需强制 Mapbox 商业鉴权的 mapbox-gl-js v1.13.3 版本。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **跨地图引擎的双核渲染同步架构**：
+    由 OpenLayers 掌管主视口事件（拖拽平移、滚轮缩放、旋转手势），Mapbox GL JS 仅作为“静默渲染从属节点（Interactive: false）”。在 OpenLayers 的每帧 <code>render(frameState)</code> 周期中，通过 <code>mbMap.jumpTo()</code> 强行将 Mapbox 的视口中心（<code>toLonLat</code>）、缩放层级（<code>zoom - 1</code>，注意 Mapbox 与 OpenLayers 的 Zoom 定义相差 1 级）以及旋转偏角（<code>bearing</code>）与 OpenLayers 保持绝对数学对齐。
+  - **同步渲染帧拦截（Synchronous Redraw Hook）**：
+    Mapbox GL JS 默认拥有独立的渲染时钟。为了彻底消除两者在快速拖拽时的视口抖动与撕裂，本例通过取消 Mapbox 的排队帧 <code>mbMap._frame.cancel()</code>，并强制调用其底层同步绘制接口 <code>mbMap._render()</code>，确保两者的画布在同一物理刷新帧中完成绘制。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>const mbLayer = new Layer({ render: function(frameState) { ... return canvas; } })</code>：
+    OpenLayers 的万能图层接入机制，返回第三方库的 HTML5 Canvas DOM 节点即可将其纳入 OpenLayers 容器树与层级管理。
+  - Zoom 级别换算校准：
+    <code>zoom: viewState.zoom - 1</code>，这是因为 OpenLayers 的瓦片切片尺寸基准通常为 256 像素，而 Mapbox GL 瓦片基准为 512 像素，二者层级在物理分辨率上恰好相差一倍（即差 1 个 Zoom 级别）。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **多 WebGL Context 显存与崩溃风险**：
+    浏览器对同一页面的 WebGL 上下文数量有严格上限（通常在移动端仅 8~16 个）。若页面同时创建了多个 Mapbox GL 实例或同时开启了 OpenLayers 的 WebGLTile 图层，需严格防范 WebGL Context Lost 崩溃。
+  - **私有 API 依赖维护警示**：
+    代码中调用的 <code>mbMap._frame</code> 和 <code>mbMap._render()</code> 属于 Mapbox GL JS 的内部私有方法。在升级 Mapbox GL JS 或切换为 MapLibre GL 时，应注意该内部调用的兼容性变更。
 tags: "simple, mapbox, vector, tiles, maptiler"
 experimental: true
 resources:

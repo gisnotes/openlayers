@@ -1,10 +1,30 @@
 ---
 layout: example.html
-title: Canvas Tiles
-shortdesc: Renders tiles with coordinates for debugging.
-docs: >
-  The black grid tiles are generated on the client with an HTML5 canvas. The
-  displayed tile coordinates are the XYZ tile coordinates.
+title: Canvas Tiles / Canvas 动态切片与网格坐标调试
+shortdesc: Renders tiles with coordinates for debugging. / 演示如何使用 tileUrlFunction 与 HTML5 Canvas 动态绘制带有 XYZ 坐标轴的网格切片用于排查切片定位偏差。
+docs: |
+  <p>The black grid tiles are generated on the client with an HTML5 canvas. The displayed tile coordinates are the XYZ tile coordinates.</p>
+  <p>本示例展示了如何利用客户端 HTML5 Canvas 纯前端即时绘制带有网格边框与清晰 <code>z/x/y</code> 编号的调试瓦片。该模式常用于 GIS 工程调试阶段，直观核验自定义 TileGrid 瓦片网格切分、瓦片偏移、投影原点对齐以及 TMS 与 XYZ 坐标系反转等疑难问题。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **动态切片调试技术（Debug Tile Pattern）**：
+    在接入第三方或自行切片的地图服务时，常会遇到“瓦片拼缝错位”、“偏移半个切片”、“上下颠倒（TMS vs XYZ）”等问题。通过叠加一层半透明且带有清晰网格线与坐标文字的 Canvas 动态切片，开发者可以一眼看出当前屏幕中心所对应的真实切片层级与行列号。
+  - **<code>canvas.toDataURL()</code> 数据流桥接**：
+    利用内存中的 Canvas 2D 绘图上下文绘制带有黑色 1 像素边框和中心文本的画布，直接将其导出为 Base64 DataURL 作为瓦片图像的来源。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>tileUrlFunction: function(tileCoord) { ... return canvas.toDataURL(); }</code>：
+    OpenLayers 的核心钩子。拦截每个请求瓦片的 <code>tileCoord</code> 坐标三元组 <code>[z, x, y]</code>，利用内存画布实时绘制并立即返回 DataURL，完全无需任何后端瓦片服务器介入。
+  - 双图层叠置：
+    底层加载 OSM 真实世界底图，上层以半透明叠加网格切片，实现业务底图与网格坐标的完美叠加比对。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **<code>toDataURL()</code> 字符串编码开销**：
+    Base64 字符串的编码与解析相对耗时。若需要极高帧率或生产级动态切片，现代架构更推荐采用 <code>ol/source/DataTile</code> 直接传递原始像素数组；但对于快速定位瓦片偏移的开发期调试，Canvas DataURL 简单直观且全端通用。
 tags: "layers, openstreetmap, canvas"
 ---
 <div id="map" class="map"></div>

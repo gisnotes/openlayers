@@ -1,10 +1,32 @@
 ---
 layout: example.html
-title: MapServer OGC Features
-shortdesc: Example of displaying features from an MapServer OGC Features API
-docs: >
-  This example loads features from a [MapServer OGC API Server](https://demo.mapserver.org/cgi-bin/mapserv/localdemo/ogcapi/collections?f=html)
-  using the [OGC API - Features](https://ogcapi.ogc.org/features/) specification.
+title: MapServer OGC Features / MapServer OGC API - Features 现代矢量要素服务接入
+shortdesc: Example of displaying features from an MapServer OGC Features API / 演示如何使用 VectorSource 结合 bboxStrategy 动态按需请求 MapServer OGC API - Features 矢量要素。
+docs: |
+  <p>This example loads features from a <a href="https://demo.mapserver.org/cgi-bin/mapserv/localdemo/ogcapi/collections?f=html" target="_blank">MapServer OGC API Server</a> using the <a href="https://ogcapi.ogc.org/features/" target="_blank">OGC API - Features</a> specification.</p>
+  <p>本示例展示了如何接入遵循现代 <a href="https://ogcapi.ogc.org/features/" target="_blank">OGC API - Features</a> 国际标准的 MapServer 服务端并加载空间矢量要素。与传统 WFS（Web Feature Service）复杂的 XML 过滤器相比，OGC API - Features 完全采用现代 RESTful 风格，直接通过 JSON / GeoJSON 提供要素集合与空间属性。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **新一代 OGC API - Features 规范（WFS 的现代化演化）**：
+    OGC API - Features（即 WFS 3.0）完全拥抱 Web 现代标准，采用简洁直观的 URL 结构：<code>/collections/{collectionId}/items?bbox={minX,minY,maxX,maxY}&amp;limit={n}&amp;f=json</code>。返回标准的 RFC 7946 GeoJSON FeatureCollection，免去客户端解析复杂 GML 的沉重开销。
+  - **<code>bboxStrategy</code> 空间包围盒视口策略**：
+    当地图平移或缩放时，<code>ol/loadingstrategy.bbox</code> 会自动计算出当前视口在目标投影下的实际边界四至，并将范围参数传入 <code>url</code> 函数，实现“看哪里、按需请求哪里”的空间动态加载，避免一次性下载超大体量全局数据。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>url: function(extent) { ... &amp;bbox=${extent.join(',')} }</code>：
+    动态构造带有当前空间包围盒四至参数的请求链接。
+  - <code>format: new GeoJSON()</code>：
+    直接无缝读取返回的 GeoJSON 数据并构建为 OpenLayers 要素集合。
+  - 湖泊水体半透明样式：
+    配置 <code>'fill-color': 'rgba(70, 130, 180, 0.6)'</code>（钢青蓝，半透明）与 <code>'stroke-color': 'rgba(25, 25, 112, 1)'</code>（深藏青描边），既能突出水系分布，又透出底图地貌。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **<code>limit</code> 分页参数上限**：
+    OGC API - Features 服务端通常设置了单次请求的最大要素上限（如 <code>limit=1000</code> 或默认 100）。在大范围视口浏览密集要素图层时，如果要素总数超过 <code>limit</code>，会导致部分要素未被拉取。生产方案中，可结合 <code>next</code> 链接进行递归分页请求，或者设置合理的 <code>minResolution</code> 仅在缩放到局部比例尺时才触发加载。
 tags: "mapserver, ogc, vector"
 ---
 <div id="map" class="map"></div>

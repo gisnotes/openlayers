@@ -1,10 +1,30 @@
 ---
 layout: example.html
-title: Localized OpenStreetMap
-shortdesc: Example of a localized OpenStreetMap map with a custom tile server and a custom attribution.
-docs: >
-  <p>The base layer is <a href="https://www.opencyclemap.org/">OpenCycleMap</a> with an overlay from <a href="https://www.openseamap.org/">OpenSeaMap</a>.
-tags: "localized-openstreetmap, openseamap, openstreetmap"
+title: Localized OpenStreetMap / OpenStreetMap 骑行与航海专业底图本地化集成
+shortdesc: Example of a localized OpenStreetMap map with a custom tile server and a custom attribution. / 演示如何使用自定义切片服务器与多版权标识叠加 OpenCycleMap 骑行路线底图与 OpenSeaMap 航海航标图层。
+docs: |
+  <p>The base layer is <a href="https://www.opencyclemap.org/" target="_blank">OpenCycleMap</a> with an overlay from <a href="https://www.openseamap.org/" target="_blank">OpenSeaMap</a>.</p>
+  <p>本示例展示了如何基于 OpenStreetMap 生态体系集成高度专业化的本地化专题切片图层：底图采用面向户外骑行与地形等高线优化的 <a href="https://www.opencyclemap.org/" target="_blank">OpenCycleMap（开放骑行地图）</a>，上层叠加由 <a href="https://www.openseamap.org/" target="_blank">OpenSeaMap（开放航海地图）</a> 提供的水深测绘、航标浮标、灯塔航道等专业航海信息图层。</p>
 
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **OSM 生态衍生专题瓦片服务**：
+    OpenStreetMap 拥有庞大的生态圈，除了官方标准渲染底图外，第三方专题服务商（如 Thunderforest、OpenSeaMap）利用其完整的路网、等高线与航海标签数据，专门渲染了适用于骑行探险（CycleMap）、徒步越野（Outdoors）、水上航行等独特业务场景的专用瓦片。
+  - **<code>ol/source/OSM</code> 的自定义 URL 扩展**：
+    虽然类名为 <code>OSM</code>，但其实质是预设了标准 Web 墨卡托切片网格与版权元数据的轻量级 <code>XYZ</code>。通过传入自定义 <code>url</code> 与 <code>attributions</code> 数组，可以极为轻量地复用其内部成熟机制。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>import OSM, {ATTRIBUTION} from 'ol/source/OSM.js'</code>：
+    <code>ATTRIBUTION</code> 是 OpenLayers 导出的标准 OSM 官方版权声明，将其与第三方特定版权（如 OpenCycleMap、OpenSeaMap）合并为数组，确保完全遵循开源地图数据的知识产权归属要求。
+  - 多域名子域并发加速：
+    利用 <code>{a-c}</code> 模板在 a, b, c 三个子域名间自动散列并发，突破浏览器连接数上限并加速瓦片并行拉取。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **第三方瓦片 API Key 与配额保护**：
+    Thunderforest（OpenCycleMap 运营方）对无 Key 或免费 Key 设置了严格的速率限制（Rate Limit）。商业生产应用务必在 Thunderforest 申请专属商业 Key，并在服务端做好代理或防盗链。
+tags: "localized-openstreetmap, openseamap, openstreetmap"
 ---
 <div id="map" class="map"></div>

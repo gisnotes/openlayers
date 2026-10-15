@@ -1,12 +1,32 @@
 ---
 layout: example.html
-title: Icon Repeat
-shortdesc: Example of repeating an icon along a line, rotated to follow the line.
-docs: >
-  Example of using `placement: 'line'` and `repeat` on an `Icon` style to draw
-  the icon repeatedly along a line string, rotated to follow the local
-  direction of the line. Draw a line string to see the icon placed and
-  rotated along it interactively.
+title: Icon Repeat / 沿折线折角切线重复排版与图标切向旋转
+shortdesc: Example of repeating an icon along a line, rotated to follow the line. / 演示如何使用 Icon 样式的 placement: 'line' 与 repeat 选项实现沿折线切线方向周期性重复排布旋转图标。
+docs: |
+  <p>Example of using <code>placement: 'line'</code> and <code>repeat</code> on an <code>Icon</code> style to draw the icon repeatedly along a line string, rotated to follow the local direction of the line. Draw a line string to see the icon placed and rotated along it interactively.</p>
+  <p>本示例展示了如何在 <code>ol/style/Icon</code> 图标样式中使用 <code>placement: 'line'</code> 与 <code>repeat</code>（重复间距）配置。图标会沿着折线（LineString）按照设定的像素步长周期性连续排布，且每个图标会自动计算其所在线段局部的切线航向角并自动旋转对齐。在地图中绘制一条折线，即可实时交互体验图标沿折线排布与切向旋转的渲染效果。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **沿线符号排版（Line Placement & Linear Referencing）**：
+    在传统地图学中，铁路线（枕木符号）、航线单行道（连续引导箭头）或国界线（特殊纹理）都需要沿线重复绘制特定符号。过去开发者只能手动按距离插值计算坐标并生成成百上千个点要素；现在，OpenLayers 内部样式引擎原生集成了沿线切线积分算法，只需一个 LineString 几何要素即可完成全自动排布。
+  - **切线偏角自动解算**：
+    渲染器在遍历折线各个线段时，根据 $\Delta x, \Delta y$ 实时计算局部线段方向角 $\theta = \text{atan2}(\Delta y, \Delta x)$，并将当前图标旋转至切向，在折角弯道处自然平滑过渡。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>Icon</code> 样式的核心配置：
+    - <code>placement: 'line'</code>：声明沿线排布模式；
+    - <code>repeat: 100</code>：沿线重复步长（单位：像素）；
+    - <code>rotateWithView: true</code>：视口旋转时图标同步跟随地图视角。
+  - <code>ol/interaction/Draw</code> 实时交互联动：
+    结合 <code>new Draw({ type: 'LineString', source: source })</code>，在鼠标动态延伸折线时，图标沿线排版实时动态更新。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **拐角尖点折叠与步长优化**：
+    如果 <code>repeat</code> 间隔设置过小（如小于 20px），在急转弯或折线密集抖动处图标可能发生拥挤重叠；设置过大则引导感不强。通常建议根据图标物理像素宽高（如 16~24px 箭头推荐 <code>repeat: 60~100</code> 像素）。
 tags: "icon, line, vector, draw, rotation, repeat"
 ---
 <div id="map" class="map"></div>

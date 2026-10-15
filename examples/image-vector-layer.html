@@ -1,9 +1,31 @@
 ---
 layout: example.html
-title: Vector Image Layer
-shortdesc: Example of rendering vector data as an image layer.
-docs: >
+title: Vector Image Layer / 矢量图层栅格化渲染缓存优化
+shortdesc: Example of rendering vector data as an image layer. / 演示如何使用 VectorImage 图层将海量矢量数据栅格化预渲染为单张位图，以获得极致平滑的拖拽平移与动画性能。
+docs: |
   <p>This example uses <code>ol/layer/VectorImage</code> for faster rendering during interaction and animations, at the cost of less accurate rendering.</p>
+  <p>本示例展示了如何使用 <code>ol/layer/VectorImage</code> 来优化大量复杂矢量要素的交互与动画帧率。与常规 <code>ol/layer/Vector</code> 在每次平移缩放都重新对所有线面顶点进行重绘不同，<code>VectorImage</code> 会在视图停止时将当前视口内的矢量图元一次性烘焙（Bake）为单张栅格位图缓存；在后续拖拽平移和缩放动画过程中，直接以 60FPS 极速变换该栅格位图，从而在略微牺牲缩放过程精度的前提下换取极致流畅的交互体验。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **<code>VectorLayer</code> vs <code>VectorImageLayer</code> 机制对决**：
+    - <code>VectorLayer</code>：每次地图平移哪怕 1 像素，都需要遍历成千上万个多边形顶点并调用 Canvas 2D 绘图上下文重新绘制。当要素数量庞大时，容易发生卡顿、掉帧。
+    - <code>VectorImageLayer</code>：在后台离屏 Canvas 中将矢量图层预先绘制成一张完整位图。当用户平移交互时，仅需通过 <code>drawImage()</code> 对这整张位图执行位移变换，运算复杂度从 $O(N)$ 暴降为 $O(1)$！
+  - **<code>imageRatio: 2</code> 视口外围缓冲区**：
+    指定预烘焙位图的尺寸为当前视口屏幕尺寸的 2 倍。当用户向四周轻微拖拽平移时，屏幕边缘不会出现白边，直到拖出缓冲区范围才会重新触发下一次离屏烘焙。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - 拾取兼容性：
+    尽管要素被栅格化为位图展示，<code>map.forEachFeatureAtPixel(pixel, ...)</code> **依然完全可用**！因为其底层数据源依然是真实的 <code>VectorSource</code>，保留了完备的空间拓扑索引与属性查询能力。
+  - 悬停高亮联动：
+    本例通过独立的轻量级 <code>featureOverlay</code>（常规 <code>VectorLayer</code>）动态挂载被选中的单个高亮要素，在保证底图高性能栅格化缓存的同时，实现了实时高精度的鼠标悬停聚焦反馈。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **缩放过程中文字注记拉伸**：
+    由于它将矢量要素缓存为图片，如果在大幅度连续缩放过程中（Zooming），位图会被拉伸或压缩，导致文字注记在缩放动画期间短暂模糊，缩放停止后才会触发重新渲染恢复清晰。若业务场景包含密集路名文本，需评估该视觉特性。
 tags: "vector, image"
 ---
 <div id="map" class="map"></div>

@@ -1,9 +1,32 @@
 ---
 layout: example.html
-title: WMTS Layer from Capabilities
-shortdesc: Example of a WMTS source created from a WMTS capabilities document.
-docs: >
-  This example shows how to create the configuration for accessing a WMTS from a GetCapabilities response. The [WMTS example](wmts.html) shows how to create the configuration manually.
+title: WMTS Layer from Capabilities / 从 GetCapabilities 自动构建 WMTS 图层
+shortdesc: Example of a WMTS source created from a WMTS capabilities document. / 演示如何利用 optionsFromCapabilities 辅助工具直接从能力文档生成 WMTS 数据源配置。
+docs: |
+  <p>This example shows how to create the configuration for accessing a WMTS from a GetCapabilities response. The <a href="wmts.html">WMTS example</a> shows how to create the configuration manually.</p>
+  <p>本示例展示了如何基于 <code>GetCapabilities</code> 响应文档自动生成访问 OGC WMTS 服务所需的图层与瓦片网格配置。对比 <a href="wmts.html">手动配置 WMTS 瓦片服务示例</a>，这种方式免去了开发者自行计算分辨率数组、原点坐标及 MatrixId 矩阵标识符的繁复数学工作。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **<code>optionsFromCapabilities</code> 自动化胶水函数**：
+    这是 OpenLayers 为 WMTS 设计的最具生产力的工具函数之一。它接收解析后的 Capabilities 对象以及目标图层名与矩阵集名，自动提取对应的原点、切片尺寸、比例尺分母换算分辨率、矩阵层级列表以及服务 URL 模板，一键构造出传递给 <code>new WMTS(options)</code> 所需的完整配置字典。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>optionsFromCapabilities(result, config)</code>：
+    - <code>result</code>：<code>WMTSCapabilities.prototype.read(text)</code> 的解析产物；
+    - <code>config.layer</code>：目标图层标识符（如 <code>'layer-7328'</code>）；
+    - <code>config.matrixSet</code>：匹配的切片矩阵集（如 <code>'EPSG:3857'</code>）。
+  - 返回对象结构：
+    内部自动生成了具备对应 <code>origin</code>, <code>resolutions</code>, <code>matrixIds</code> 的 <code>WMTSTileGrid</code>，并配置了 <code>urls</code>, <code>layer</code>, <code>matrixSet</code>, <code>format</code> 与 <code>style</code>。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **多矩阵集与当前视图坐标系匹配**：
+    大型 WMTS 服务（如天地图、法国 IGN）往往支持多个矩阵集（如 EPSG:4326、EPSG:3857、CGCS2000）。调用 <code>optionsFromCapabilities</code> 时，必须确保指定的 <code>matrixSet</code> 与当前地图视图 <code>ol/View</code> 的投影坐标系统保持一致，否则瓦片将无法正确投影渲染。
+  - **异步加载未就绪保护**：
+    能力文档是通过异步 <code>fetch</code> 获取的。在网络请求返回前，地图必须有优雅的骨架屏、底图加载态或占位提示，避免因网络延迟导致页面显示空白。
 tags: "wmts, capabilities, getcapabilities"
 ---
 <div id="map" class="map"></div>

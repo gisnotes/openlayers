@@ -1,15 +1,35 @@
 ---
 layout: example.html
-title: Tile Transitions
-shortdesc: Custom configuration for opacity transitions on tiles.
-docs: >
-  By default tiles are rendered with an opacity transition - fading in over
-  250 ms.  To disable this behavior, set the <code>transition</code> option
-  of the tile source to 0.
+title: Tile Transitions / 切片加载不透明度渐变过渡动效
+shortdesc: Custom configuration for opacity transitions on tiles. / 演示如何配置或禁用数据源的 transition 参数以控制切片加载完成时的 250ms 透明度淡入淡出动画。
+docs: |
+  <p>By default tiles are rendered with an opacity transition - fading in over 250 ms. To disable this behavior, set the <code>transition</code> option of the tile source to 0.</p>
+  <p>默认情况下，OpenLayers 中的瓦片切片在网络加载解码完成后，会自动播放一个持续 250 毫秒的不透明度淡入过渡动效（Fade in），使切片呈现柔和自然。若在特定场景（如高频动态切换、纯数据瓦片或对实时响应要求极高）需要彻底消除动效，只需将切片数据源的 <code>transition</code> 参数显式设置为 <code>0</code>。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **切片渲染动画时钟（Tile Transition Engine）**：
+    当一个新瓦片下载成功并转为可用状态时，OpenLayers 会记录当前的时间戳并将其初始绘制的不透明度设为 0。在后续的每一物理帧渲染循环中，根据公式 $\text{opacity} = \min(1.0, \Delta t / 250\text{ms})$ 线性递增，直到完全不透明，有效掩盖了切片拼接时的瞬时生硬割裂感。
+  - **动效开启与关闭场景抉择**：
+    - 开启（默认 250ms）：非常适合常规摄影影像与街道底图，视觉平缓柔和；
+    - 关闭（<code>transition: 0</code>）：特别适合包含独立文字标注的图层、动态生成网格的 <code>DataTile</code> 或带有大量半透明色块的叠加图层，避免在淡入过程中由于上下层同时半透明渲染产生文字重影或色彩叠加发黑。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>new XYZ({ transition: 0 })</code>：
+    禁用切片淡入动效的配置语法。
+  - 动态切换数据源：
+    通过复选框切换事件，动态为图层重新 <code>layer.setSource(withTransition ? sourceWithTransition : sourceWithoutTransition)</code>。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **连续缩放时的残影问题**：
+    如果过渡时间设置过长（如超过 500ms），在用户快速连续滚轮缩放时，上一级被放大的瓦片与正在淡入的新瓦片会长时间重合，导致视觉模糊。250ms 是官方经过大量心理物理学测试后的默认最佳平衡时间。
 tags: "fade, transition"
 ---
 <div id="map" class="map"></div>
 <label>
-  render with an opacity transition
+  启用切片淡入渐变动效 (Render with an opacity transition):
   <input id="transition" type="checkbox" checked>
 </label>

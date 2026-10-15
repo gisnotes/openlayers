@@ -1,10 +1,33 @@
 ---
 layout: example.html
-title: Select multiple Features
-shortdesc: Example of selecting multiple features.
-docs: >
-  In this example, a listener is registered on the map's <code>singleclick</code> event to add and remove features from an array.
+title: Select multiple Features / 要素连续多选与反选交互
+shortdesc: Example of selecting multiple features. / 演示如何使用 Select 交互组件配置 toggleCondition 连续点击选择多个矢量要素。
+docs: |
+  <p>In this example, the Select interaction is configured with <code>multi: true</code> and <code>toggleCondition: always</code> to allow selecting and deselecting multiple features with consecutive clicks.</p>
+  <p>在本示例中，<code>ol/interaction/Select</code> 交互组件被配置为 <code>multi: true</code> 并设置 <code>toggleCondition: always</code>。这意味着用户无需按住键盘 Shift 或 Ctrl 键，只需连续单击各个州要素，即可自由地将要素追加到选中集合中或再次点击以取消选中（切换反选）。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **`toggleCondition` 反选触发机制**：
+    默认情况下，`Select` 的 `toggleCondition` 是按住 `shiftKeyOnly`（Shift 键多选）。如果直接点击其他要素，原先选中的要素会被清除。本例将其重载为 `always`（永远触发切换），从而在单手触控或无键盘场景下实现极具亲和力的“点选累加/点选移除”多选体验。
+  - **`multi: true` 多重要素拾取**：
+    当一个像素点下方同时叠压多个要素（例如嵌套的州边界或密集重叠点）时，如果 `multi: false`（默认），每次点击只拾取最上层的一个要素；当 `multi: true` 时，该点命中的**所有重叠要素**都会被同时选中或同步反选。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - `import {always} from 'ol/events/condition.js'`：
+    `always` 是一个始终返回 `true` 的条件断言函数，确保每次点击事件都会执行选中切换（toggle）分支。
+  - `select.getFeatures()` 响应式集合：
+    返回 `ol/Collection<Feature>`。开发者可以直接监听该集合的各种事件（如 `add`、`remove`），或者在 `select` 事件回调中通过 `select.getFeatures().getLength()` 动态统计已选中的要素数量。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **重叠要素点选逻辑**：
+    生产业务中如果既需要点选多选，又希望通过点击地图空白处清除所有选择，建议设置 `removeCondition`（如点击空白区域清除）。本例中由于 `toggleCondition: always`，点击已被选中的要素会执行反选，点击空白处则不会清除已有选中集合。
+  - **图层混合场景中的 `layers` 过滤**：
+    在拥有多个矢量图层（例如既有基础行政区划，又有标注点）的地图中，强烈建议在 `Select` 配置中指定 `layers: [targetVectorLayer]`，防止误选到背景要素或辅助注记。
 tags: "select, vector"
 ---
 <div id="map" class="map"></div>
-<span id="status">&nbsp;0 selected features</span>
+<span id="status">&nbsp;已选中 0 个要素 (0 selected features)</span>

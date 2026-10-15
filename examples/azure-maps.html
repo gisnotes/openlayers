@@ -1,27 +1,47 @@
 ---
 layout: example.html
-title: Azure Maps
-shortdesc: Example of a Azure Maps layer.
-docs: >
-  This example renders a tile layer with a source that uses the Azure maps API (former Bing).
-  The Processing API requires a key. The form above can be used to provide YOUR primary key.
-  You can follow this documentation to get your own Azure Maps key:
-  <a href="https://learn.microsoft.com/en-us/azure/azure-maps/quick-demo-map-app" target="_blank">https://learn.microsoft.com/en-us/azure/azure-maps/quick-demo-map-app</a>
+title: Azure Maps / 微软 Azure Maps 商业底图与图层切换
+shortdesc: Example of a Azure Maps layer. / 演示如何使用 ImageTile 数据源接入微软 Azure Maps API，并在卫星影像、标准道路与暗色主题间平滑切换。
+docs: |
+  <p>This example renders a tile layer with a source that uses the Azure maps API (former Bing). The Processing API requires a key. The form above can be used to provide YOUR primary key. You can follow this documentation to get your own Azure Maps key: <a href="https://learn.microsoft.com/en-us/azure/azure-maps/quick-demo-map-app" target="_blank">https://learn.microsoft.com/en-us/azure/azure-maps/quick-demo-map-app</a></p>
+  <p>本示例展示了如何使用 <code>ol/source/ImageTile</code> 数据源接入微软企业级地理云服务 Azure Maps API（前身为 Bing Maps 必应地图）。Azure Maps 渲染与切片接口需要有效的主密钥（Primary Subscription Key）。您可以在上方表单中填入自己的密钥进行实时体验，密钥获取请参阅微软官方指南：<a href="https://learn.microsoft.com/zh-cn/azure/azure-maps/quick-demo-map-app" target="_blank">Azure Maps 快速入门与凭证指南</a>。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **微软企业级底图云接入架构**：
+    随着微软将传统的 Bing Maps 全面重构并升级为 Azure Maps，其底图瓦片接口迁移至 <code>atlas.microsoft.com/map/tile</code>，采用高标准的 API 版本号机制（<code>api-version=2.0</code>）与订阅鉴权。
+  - **平滑切图切换（Smooth Layer Switching）**：
+    在切换不同底图样式（卫星、道路、暗色）时，本例采用“先加载新图层、等待地图渲染完成事件 <code>rendercomplete</code> 触发后再卸载旧图层”的高级技巧，彻底杜绝了常规切换过程中由于新切片下载时滞造成的刺眼白屏。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>tilesetId</code> 样式集标识：
+    - <code>microsoft.imagery</code>：微软全球超高分辨率航空遥感卫星影像；
+    - <code>microsoft.base.road</code>：TomTom 数据加持的标准矢量道路路网；
+    - <code>microsoft.base.darkgrey</code>：现代化暗夜科技风格底图。
+  - <code>useGeographic()</code> 经纬度直传：
+    直接调用 <code>useGeographic()</code>，中心坐标 <code>center: [2.35, 48.85]</code> 可直接传入巴黎经纬度，无需 <code>fromLonLat</code> 手动换算。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **动态图层内存防泄漏**：
+    动态增删图层时，必须确保旧图层的监听器与数据源被正确解绑与 GC 回收，防止长时间切换图层后 GPU 纹理显存膨胀。
 tags: "azure, azure-maps, bing-maps"
 ---
 
   <div id="auth-interface">
     <form id="auth-form">
-      <input type="text" id="secret" placeholder="Your Azure Maps primary key" required>
-      <button type="submit">Ok show the map</button>
+      <input type="text" id="secret" placeholder="请输入您的 Azure Maps Primary Key (Your key)" required>
+      <button type="submit">确定并加载地图 (Ok show the map)</button>
     </form>
   </div>
 
   <div id="map-container">
     <div id="map"></div>
     <div class="layer-switcher">
-      <button class="layer-btn active" value="0">Satellite</button>
-      <button class="layer-btn" value="1">Roads</button>
-      <button class="layer-btn" value="2">Dark</button>
+      <button class="layer-btn active" value="0">卫星影像 (Satellite)</button>
+      <button class="layer-btn" value="1">道路交通 (Roads)</button>
+      <button class="layer-btn" value="2">暗色科技 (Dark)</button>
     </div>
   </div>

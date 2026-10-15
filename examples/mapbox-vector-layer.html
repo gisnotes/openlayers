@@ -1,13 +1,30 @@
 ---
 layout: example.html
-title: Mapbox Vector Layer
-shortdesc: Rendering a layer with a Mapbox-hosted style.
-docs: >
-  The MapboxVector layer from the [ol-mapbox-style](https://github.com/openlayers/ol-mapbox-style/)
-  package allows you to create a layer based on a Mapbox-hosted style using a single
-  vector source. If your style uses more than one source, use the `source` property to choose a single
-  vector source. Use the `layers` property if you only want to render a subset of the style's layers
-  (provided they all share the same source).
+title: Mapbox Vector Layer / 使用 ol-mapbox-style 一键接入 Mapbox 样式规范图层
+shortdesc: Rendering a layer with a Mapbox-hosted style. / 演示如何使用 ol-mapbox-style 库的 MapboxVectorLayer 根据 Mapbox 样式规范 JSON 自动化加载并渲染矢量切片图层。
+docs: |
+  <p>The MapboxVector layer from the <a href="https://github.com/openlayers/ol-mapbox-style/" target="_blank">ol-mapbox-style</a> package allows you to create a layer based on a Mapbox-hosted style using a single vector source. If your style uses more than one source, use the <code>source</code> property to choose a single vector source. Use the <code>layers</code> property if you only want to render a subset of the style's layers (provided they all share the same source).</p>
+  <p>通过引入 <a href="https://github.com/openlayers/ol-mapbox-style/" target="_blank">ol-mapbox-style</a> 扩展包提供的 <code>MapboxVectorLayer</code>，开发者可以直接传入 Mapbox 托管的 Style URL（或本地 Mapbox GL Style JSON 规范文件），自动化构建出对应的矢量切片数据源（VectorTileSource）并将其复杂的多图层着色与注记规则编译为 OpenLayers 原生样式。如果目标样式包含多个数据源，可通过 <code>source</code> 属性指定需要载入的单一数据源；如果只想渲染样式规则中的部分子集图层，可通过 <code>layers</code> 属性进行过滤筛选。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **Mapbox Style Specification（MBStyle）转换桥梁**：
+    Mapbox Style 规范已成为现代 Web 矢量地图的事实行业标准（包含 sources、layers、paint、layout、filter 等属性）。<code>ol-mapbox-style</code> 作为 OpenLayers 官方生态的核心扩展，充当了“转换编译器”角色，负责将复杂的 JSON 样式树自动转换为 OpenLayers 原生高性能渲染管线。
+  - **单图层轻量封装（MapboxVectorLayer）**：
+    继承自 OpenLayers 的 <code>VectorTileLayer</code>。相比于全量 <code>apply()</code> 函数直接接管整个地图实例，<code>MapboxVectorLayer</code> 允许以纯图层对象的形式无缝插入到已有的 OpenLayers 地图图层树中，与其他 WMS、XYZ、GeoJSON 图层自由混合叠置。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>styleUrl: 'mapbox://styles/mapbox/bright-v9'</code>：
+    支持直接使用 <code>mapbox://</code> 协议伪链接，底层会自动根据当前传入的 <code>accessToken</code> 请求 Mapbox 样式服务器；亦支持传入标准 HTTPS 地址（如 MapTiler 或自行托管的 TileServer-GL 样式 JSON）。
+  - <code>layers: ['water', 'landuse']</code>（可选）：
+    允许开发者精准挑选样式文档中需要被当前图层渲染的特定 layer id 列表，实现图层分离控制或按需剔除无关要素。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **字体文件（Glyphs）与雪碧图（Sprites）网络配置**：
+    Mapbox 样式通常依赖远端字形 PBF 文件（<code>glyphs</code> 属性）与图标雪碧图（<code>sprite</code> 属性）。在内网或离线部署时，必须同步将样式 JSON 中的 <code>glyphs</code> 与 <code>sprite</code> 地址重定向至内网本地静态资源服务器，否则图标与文字注记将全部渲染失败。
 tags: "mapbox, studio, vector, tiles"
 ---
 <div id="map" class="map"></div>

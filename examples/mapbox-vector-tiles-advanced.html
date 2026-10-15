@@ -1,9 +1,30 @@
 ---
 layout: example.html
-title: Advanced Mapbox Vector Tiles
-shortdesc: Example of a Mapbox vector tiles map with custom tile grid.
-docs: >
-  A vector tiles map which reuses the same source tiles for subsequent zoom levels to save bandwidth on mobile devices. **Note**: No map will be visible when the access token has expired.
+title: Advanced Mapbox Vector Tiles / Mapbox 矢量切片进阶：跨层级复用与移动端流量节省
+shortdesc: Example of a Mapbox vector tiles map with custom tile grid. / 演示如何使用自定义 TileGrid 与 tileUrlFunction 跨缩放层级复用矢量切片，节省移动设备网络带宽。
+docs: |
+  <p>A vector tiles map which reuses the same source tiles for subsequent zoom levels to save bandwidth on mobile devices. <strong>Note</strong>: No map will be visible when the access token has expired.</p>
+  <p>本示例展示了一个进阶的矢量切片架构模式：通过构建自定义瓦片网格（TileGrid）并在相邻层级间跨级复用源数据切片（例如只请求奇数层级 1, 3, 5, 7, 9, 11, 13, 15 的切片，在偶数层级通过客户端矢量无损放大复用渲染），极大缩减网络并发请求数并节省移动端流量。<strong>注意</strong>：需要有效的 Mapbox Access Token 方可正常加载底图。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **矢量切片的无损几何缩放特性**：
+    与栅格图片切片（放大后会变成模糊马赛克）本质不同，MVT 切片存储的是高精度的数学矢量坐标（在标准 4096 内部坐标系下）。因此，即使将一个 13 级的矢量切片直接放大 2 倍并在 14 级视口下渲染，其道路边线、文字与图标依然绝对锐利清晰，不会出现像素失真。
+  - **跨级复用（Tile Reusing）架构**：
+    在低带宽、弱网或流量敏感的移动端场景，通过将切片金字塔的步长从 $\times 2$ 改为 $\times 4$（跨两级），网络请求总量直接暴降 75% 以上，显著加速首屏呈现并减少移动端设备电量消耗。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - 自定义 <code>TileGrid</code> 分辨率计算：
+    通过 <code>resolutions.push(156543.03392804097 / Math.pow(2, i * 2))</code> 构造每级相差 4 倍分辨率的网格，并设置 <code>tileSize: 512</code>，成倍扩展单个瓦片的地理覆盖视野。
+  - <code>tileUrlFunction(tileCoord)</code> 自定义寻址与多 CDN 轮询：
+    重映射切片编号到 Mapbox 实际存在的层级，同时利用位运算 <code>((tileCoord[1] &lt;&lt; tileCoord[0]) + tileCoord[2]) % 4</code> 在 <code>a, b, c, d</code> 四个 CDN 子域名间实现域名散列分发，突破浏览器对同域单主机的并发 HTTP 连接限制。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **跨层级过度放大带来的要素粒度丢失**：
+    矢量切片生成端（如 Tippecanoe 或 Mapbox 后台）在较低层级往往会根据比例尺剪除次级小路或建筑面要素。过度跨级（如跨 3 级以上）复用虽然极省带宽，但可能导致用户放大至街区级时缺失次要道路。通常跨 1 级（$\times 4$）是兼顾细节与带宽的最优平衡。
 tags: "mapbox, vector, tiles, mobile, grid"
 resources:
   - resources/mapbox-streets-v6-style.js

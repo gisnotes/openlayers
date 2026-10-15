@@ -1,9 +1,30 @@
 ---
 layout: example.html
-title: Synthetic Points
-shortdesc: Synthetic points example.
-docs: >
+title: Synthetic Points / 海量合成离散点图元压测与即时渲染动画
+shortdesc: Synthetic points example. / 演示如何动态生成 20000 个带属性的散点要素，并使用 postrender 挂载即时矢量动画。
+docs: |
+  <p>Synthetic points example creating 20,000 Point features with custom styles to benchmark vector rendering performance and demonstrate animation effects.</p>
+  <p>本示例是一个用于评估点要素海量并发渲染与动画性能的基准测试。在内存中随机生成 20,000 个带有尺寸属性的 Point 点要素，采用预建样式字典查表避免 GC 抖动，并通过 <code>postrender</code> 事件拦截 Canvas 绘图上下文绘制旋转动态扫描线，验证在高负载状态下的动画平滑度。</p>
 
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **基于字典查表的动态样式函数（Lookup Style Pattern）**：
+    每个要素拥有不同的属性值（本例为 <code>size: 10</code> 或 <code>size: 20</code>）。初学者容易在样式函数中每次都 <code>new Style(...)</code>，这会导致浏览器在每秒 60 帧的渲染循环中创建和销毁数十万个对象，造成严重的内存泄漏与垃圾回收卡死。本例预先实例化 <code>styles = { '10': ..., '20': ... }</code>，函数内仅执行极其廉价的字典下标查询 <code>return styles[feature.get('size')]</code>。
+  - **<code>postrender</code> 驱动的每帧动画管线**：
+    利用地图层的 <code>postrender</code> 事件，调用 <code>getVectorContext(event)</code> 获取即时矢量绘图上下文（Immediate Rendering），将一根随时间旋转的扫描线直接绘制在顶层，并通过 <code>map.render()</code> 形成稳定的 60FPS 动画循环。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>getVectorContext(event)</code>：
+    轻量即时渲染接口，允许跳过数据源和要素树，直接将任意几何对象（LineString）瞬时投射在视口上。
+  - 极坐标扫描线旋转数学：
+    利用正弦和余弦函数：<code>x = Math.sin(angle) * radius</code>，<code>y = Math.cos(angle) * radius</code>，以视口几何中心为原点计算动态线段端点。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)`
+  - **海量离散点的技术选型演进**：
+    20,000 个点已达到普通 Canvas 2D 路径绘制的性能拐点。如果点位数量进一步增加（如 10万~100万点），在 OpenLayers 中应优先选用 <code>WebGLPointsLayer</code>（基于 GPU 实例化渲染，数百万点依旧 60FPS），或结合 <code>ol/source/Cluster</code> 进行基于屏幕像素距离的聚类聚合。
 tags: "vector"
 ---
 <div id="map" class="map"></div>

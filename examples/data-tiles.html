@@ -1,9 +1,30 @@
 ---
 layout: example.html
-title: Data Tiles
-shortdesc: Generating tile data from scratch.
-docs: >
-  This example generates RGBA tile data from scratch.
+title: Data Tiles / 内存原生 DataTileSource 动态切片生成
+shortdesc: Generating tile data from scratch. / 演示如何使用 DataTile 数据源从底层通过 Canvas 动态生成包含层级坐标的 RGBA 原始像素切片。
+docs: |
+  <p>This example generates RGBA tile data from scratch.</p>
+  <p>本示例展示了如何使用 <code>ol/source/DataTile</code> 从零开始纯代码动态生成 RGBA 瓦片像素流并传递给 <code>ol/layer/WebGLTile</code> 渲染。通过在客户端即时生成印有当前切片网格坐标（z/x/y）的半透明黑色信息瓦片，展示了 OpenLayers 对任意非网络图片、算法生成型原始切片数据的底层支持能力。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **<code>DataTile</code> 数据抽象引擎**：
+    传统的 <code>ImageTile</code> / <code>XYZ</code> 默认假定切片是来自网络的静态图片（<code>&lt;img&gt;</code> 元素）。而现代 WebGIS 经常涉及动态生成的矩阵数据（如内存科学计算数组、实时雷达回波、动态热力瓦片）。<code>ol/source/DataTile</code> 允许开发者在 <code>loader(z, x, y)</code> 中返回 <code>Uint8Array</code>、<code>Float32Array</code> 或 <code>ImageData</code>，直接作为 WebGL 纹理上传至 GPU。
+  - **零白屏与即时生成**：
+    由于切片是在客户端本地瞬时计算生成的，无网络延迟。配置 <code>transition: 0</code> 禁用淡入透明度过渡动画，避免在快速滚轮缩放时切片文本发生重叠残影。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>loader: function(z, x, y) { ... return context.getImageData(0, 0, size, size).data; }</code>：
+    利用离屏 Canvas 2D 上下文按切片坐标绘制辅助线与文字，随后通过 <code>getImageData().data</code> 提取出一维 <code>Uint8ClampedArray</code>（包含 $256 \times 256 \times 4$ 字节的 RGBA 原始色彩流）。
+  - <code>willReadFrequently: true</code>：
+    在 <code>canvas.getContext('2d', { willReadFrequently: true })</code> 中启用该标识，提示浏览器优化从 GPU 内存向 CPU 回读像素缓冲区的内存通道，避免控制台报出性能警告。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **对象分配与垃圾回收（GC）控制**：
+    在极高频缩放平移时，如果在 <code>loader</code> 内部反复 <code>new Uint8Array</code> 或重复创建 Canvas，会导致内存频繁抖动与垃圾回收掉帧。在性能敏感场景，推荐维护一个可复用的静态 Canvas 或 TypedArray 缓冲区。
 tags: "data tiles"
 ---
 <div id="map" class="map"></div>

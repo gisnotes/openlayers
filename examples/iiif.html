@@ -1,16 +1,38 @@
 ---
 layout: example.html
-title: IIIF Image API
-shortdesc: Example of a IIIF Image API source.
-docs: >
-  Example of a tile source for an International Image Interoperability Framework (IIIF) Image Service.
-  Try any Image API version 1 or 2 service.
+title: IIIF Image API / 国际图像互操作框架 IIIF 超高清金字塔图像集成
+shortdesc: Example of a IIIF Image API source. / 演示如何使用 IIIF 数据源结合 IIIFInfo 格式解析器接入文化遗产与超高清病理图谱的 IIIF 图像瓦片服务。
+docs: |
+  <p>Example of a tile source for an International Image Interoperability Framework (IIIF) Image Service. Try any Image API version 1 or 2 service.</p>
+  <p>本示例展示了如何将 OpenLayers 作为通用深层缩放（Deep Zoom）视口引擎，接入国际图像互操作框架（IIIF - International Image Interoperability Framework）标准图像服务。IIIF 广泛应用于世界各大图书馆、博物馆、艺术馆及数字人文典籍的高分辨率古籍书卷、亿级像素绘画及医疗病理切片浏览，支持 IIIF Image API v1 与 v2 版本规范。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **非地理像素坐标系与 IIIF 图像金字塔**：
+    IIIF 的底层是单张极高分辨率的原生数字图像（如宽 30000 像素、高 40000 像素的油画扫描件）。它没有真实的地球经纬度，其底层空间是纯笛卡尔像素直角坐标系。
+  - **<code>info.json</code> 自动配置发现**：
+    每个符合 IIIF 规范的图像都会提供一个 <code>info.json</code> 元数据端点。OpenLayers 通过 <code>ol/format/IIIFInfo</code> 自动解析该 JSON，提取原生图像宽度（<code>width</code>）、高度（<code>height</code>）、支持的切片尺寸（<code>tiles[].width</code>）以及可用的缩放比例（<code>scaleFactors</code>）。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>new IIIFInfo(imageInfo).getTileSourceOptions()</code>：
+    一键将标准的 IIIF 元数据对象转换为初始化 <code>ol/source/IIIF</code> 所需的 <code>tileGrid</code>、<code>resolutions</code> 与 URL 请求模板。
+  - <code>options.zDirection = -1</code>：
+    在缩放级别不完全匹配时，强制选择更低级别（分辨率数值更小、像素更细）的瓦片，保证图像展示始终锐利。
+  - <code>map.getView().fit(iiifTileSource.getTileGrid().getExtent())</code>：
+    根据整幅超高分辨率图像的物理包围盒边界，自适应居中缩放填满整个屏幕。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **跨域与 IIIF API 版本兼容性**：
+    IIIF 规范经历了 Image API 1.0、2.0、2.1 与 3.0 版本演进。<code>IIIFInfo</code> 深度支持主流的 v1 与 v2 格式。访问各公共机构的 IIIF 服务端时，需确保服务提供方已开放 CORS 跨域请求。
 tags: "IIIF, IIIF Image API, tile source"
 ---
 <div id="map" class="map"></div>
 <div class="controls">
   <div id="iiif-notification">&nbsp;</div>
-  <label for="imageInfoUrl">Enter <code>info.json</code> URL:</label>
+  <label for="imageInfoUrl">输入 <code>info.json</code> 元数据地址 (Enter info.json URL):</label>
   <input type="text" id="imageInfoUrl" value="https://iiif.ub.uni-leipzig.de/iiif/j2k/0000/0107/0000010732/00000072.jpx/info.json">
-  <button id="display">Display image</button>
+  <button id="display">加载图像 (Display image)</button>
 </div>

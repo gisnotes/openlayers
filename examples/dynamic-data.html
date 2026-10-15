@@ -1,9 +1,32 @@
 ---
 layout: example.html
-title: Dynamic Data
-shortdesc: Example of dynamic data.
-docs: >
-  Example of dynamic data.
+title: Dynamic Data / 动态高频数据流与内旋轮线（Hypotrochoid）动效
+shortdesc: Example of dynamic data. / 演示如何使用 postrender 事件与 getVectorContext 轻量级即时渲染实时计算的数学内旋轮线几何动画。
+docs: |
+  <p>Example of dynamic data.</p>
+  <p>本示例展示了如何在 OpenLayers 中实现极高帧率的动态数据实时渲染。利用切片图层的 <code>postrender</code> 钩子与 <code>getVectorContext</code> 即时渲染管线，通过数学内旋轮线（Hypotrochoid）公式，在每秒 60 帧刷新周期内实时计算并直接绘制包含 200 个黄色轨迹粒子与蓝黑交替龙头的动态流线。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **即时模式（Immediate Mode）渲染架构**：
+    在保留模式（Retained Mode，即常规 <code>VectorSource.addFeature()</code>）下，如果每秒钟有几百个实时坐标需要刷新（如雷达扫描、实时无人机轨迹），频繁向数据源增删要素会导致大量的要素分配、空间索引重构（RBush Rebuild）与图层失效，造成剧烈掉帧。而通过 <code>getVectorContext(event)</code>，开发者可以直接在每帧结束时向视口底层 Canvas 绘制瞬时几何，帧结束后自动销毁，零内存垃圾！
+  - **连续时间轴驱动（<code>frameState.time</code>）**：
+    <code>frameState.time</code> 记录了当前帧被浏览器调度的精准毫秒级时间戳。通过 <code>theta = (2 * Math.PI * frameState.time) / 30000</code> 将时间映射为旋转相位，配合 <code>map.render()</code> 形成自驱动的稳定 60FPS 动画循环。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - 内旋轮线（Hypotrochoid）几何公式：
+    $$x = (R - r)\cos(t) + p\cos\left(\frac{R - r}{r}t\right)$$
+    $$y = (R - r)\sin(t) - p\sin\left(\frac{R - r}{r}t\right)$$
+    其中 $R=7000\text{km}, r=2000\text{km}, p=2000\text{km}$，生成空间多叶花瓣轮廓。
+  - <code>vectorContext.drawGeometry(new MultiPoint(coordinates))</code>：
+    一次性绘制批量多点，极大减少原生 Canvas 上下文的状态切换开销。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **拾取交互与即时渲染权衡**：
+    即时渲染（Immediate Mode）绘制的图元不保存在 <code>VectorSource</code> 中，因此无法通过 <code>map.forEachFeatureAtPixel()</code> 进行常规拾取。生产中常将该技术用于“高频流动特效、雷达波纹、闪烁动画”，而可交互的真实业务实体仍采用常规要素源。
 tags: "dynamic-data"
 ---
 <div id="map" class="map"></div>

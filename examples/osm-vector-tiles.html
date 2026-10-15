@@ -1,9 +1,30 @@
 ---
 layout: example.html
-title: OSM Vector Tiles
-shortdesc: Using OpenStreetMap vector tiles.
-docs: >
-  A simple vector tiles map with Mapzen vector tiles. This example uses the TopoJSON format's `layerName` option to determine the layer ("water", "roads", "buildings") for styling. **Note**: [`ol/format/MVT`] is an even more efficient format for vector tiles.
+title: OSM Vector Tiles / OpenStreetMap 矢量切片与 TopoJSON 拓扑图层解构
+shortdesc: Using OpenStreetMap vector tiles. / 演示如何使用 TopoJSON 格式解析器加载 OSM 矢量切片并利用图层名称配置多层级要素样式。
+docs: |
+  <p>A simple vector tiles map with Mapzen vector tiles. This example uses the TopoJSON format's <code>layerName</code> option to determine the layer ("water", "roads", "buildings") for styling. <strong>Note</strong>: <code>ol/format/MVT</code> is an even more efficient format for vector tiles.</p>
+  <p>本示例演示了如何加载基于 OpenStreetMap 数据的 Mapzen TopoJSON 格式矢量切片。示例中借助 <code>ol/format/TopoJSON</code> 解析器的 <code>layerName</code> 属性提取出水系（<code>water</code>）、道路（<code>roads</code>）与建筑轮廓（<code>buildings</code>）等子图层，并通过声明式表达式为不同要素类别定制着色与叠置顺序。<strong>注意</strong>：在现代工业级应用中，推荐优先使用效率更高的二进制 <code>ol/format/MVT</code> 格式。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **TopoJSON 拓扑切片原理**：
+    TopoJSON 是 GeoJSON 的紧凑拓扑扩展，通过共享线段弧段（Arcs）消除相邻多边形共有边界的重复存储。当以瓦片形式发布时，单个切片内包含多个逻辑图层（如水体、铁路、高等级干道、普通小路、建筑面）。
+  - **基于 `z-index` 与 `sort_key` 的立体道路立交排版**：
+    道路网络存在高架桥、立交桥与地道等复杂的上下穿行关系。本例在样式中使用了 <code>'z-index': ['number', ['get', 'sort_key'], 0]</code> 表达式，直接将 OSM 数据中的拓扑排序键 <code>sort_key</code> 映射为 Canvas 图元的绘制层深，完美再现立交桥空间重叠关系。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>format: new TopoJSON({ layerName: 'layer', layers: ['water', 'roads', 'buildings'] })</code>：
+    指定从 TopoJSON 的 objects 集合中仅解析特定的目标子图层，并将图层名字段赋给要素的 <code>layer</code> 属性以供样式过滤器检索。
+  - <code>['match', ['get', 'kind'], 'major_road', '#776', 'minor_road', '#ccb', 'highway', '#f39', 'none']</code>：
+    使用 Mapbox 风格的分支模式匹配表达式，根据道路等级 <code>kind</code> 自动切换描边颜色与线宽，代码紧凑且性能远高于手写 if-else 函数。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **文本格式 vs 二进制格式性能损耗**：
+    TopoJSON 依然属于 JSON 文本，体积较大且需要大量字符串解析与对象分配开销。对于要素密集的大型城市街区，若客户端 CPU 性能有限易造成瓦片解析掉帧。生产中建议优先使用预先编译为 Protobuf 的 MVT 格式。
 tags: "vector, tiles, osm, mapzen"
 ---
 <div id="map" class="map"></div>

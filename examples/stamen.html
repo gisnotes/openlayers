@@ -1,9 +1,32 @@
 ---
 layout: example.html
-title: Stadia Maps (Stamen Tile Layer Composition)
-shortdesc: Example of composing layers with a Stadia Maps tile source.
-docs: >
-  Two layer groups are composed: the watercolor base layer with the terrain labels from Stamen.
+title: Stadia Maps (Stamen Tile Layer Composition) / Stadia Maps 水彩与地形标注多图层复合叠加
+shortdesc: Example of composing layers with a Stadia Maps tile source. / 演示如何使用 StadiaMaps 数据源将著名的 Stamen 水彩艺术底图与地形路网注记图层进行双层复合渲染。
+docs: |
+  <p>Two layer groups are composed: the watercolor base layer with the terrain labels from Stamen.</p>
+  <p>本示例展示了如何使用 <code>ol/source/StadiaMaps</code> 数据源进行精美的多底图复合叠加：底层采用经典的 Stamen Watercolor（水彩手绘风）底图作为地貌基调，上层叠加透明背景的 Stamen Terrain Labels（地形道路与地名注记），在保持强艺术观赏性的同时提供清晰的地理要素指引。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **Stamen 经典设计与 Stadia Maps 托管架构**：
+    由旧金山 Stamen Design 设计的水彩手绘风（Watercolor）、碳黑底图（Toner）是 WebGIS 历史上极具盛名的标志性视觉作品。目前该系列已由 Stadia Maps 提供官方永久高可用托管，OpenLayers 专门提供了 <code>ol/source/StadiaMaps</code> 类以简化其切片网格与版权元数据的集成。
+  - **透明地名注记分离设计（Label Separation Pattern）**：
+    现代底图设计的最佳实践是将“纯底图色块”与“文字注记”拆解为两个独立图层。这样业务矢量数据（如轨迹路线、区域多边形）可以插入在这两层之间，从而使业务多边形永远不会遮挡重要城市地名与道路标签。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>layer: 'stamen_watercolor'</code>：
+    请求纯手绘水彩渲染的陆地、海洋与绿色植物色块。
+  - <code>layer: 'stamen_terrain_labels'</code>：
+    仅包含文字、路名及透明背景的半透明叠加切片。
+  - <code>center: fromLonLat([-122.416667, 37.783333])</code>：
+    中心聚焦于水彩风起源地——旧金山市区。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **生产环境 API Key 配置**：
+    Stadia Maps 在 <code>localhost</code> 开发环境下完全免 Key；在生产域名上线时，建议注册免费或商业账户并将 <code>apiKey</code> 填入配置中，避免超出未认证配额导致切片返回水印或拒绝服务。
 tags: "stamen, watercolor, terrain-labels, two-layers, stadia-maps"
 ---
 <div id="map" class="map"></div>

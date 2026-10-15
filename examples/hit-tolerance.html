@@ -1,24 +1,44 @@
 ---
 layout: example.html
-title: Hit Tolerance
-shortdesc: Example using the hitTolerance parameter.
-docs: >
-  By default, the map.forEachFeatureAtPixel() function only considers features that are directly under the provided
-  pixel. This can make it difficult to interact with features on touch devices. To consider features within some
-  distance of the provided pixel, use the hitTolerance option. For example,
-  map.forEachFeatureAtPixel(pixel, callback, {hitTolerance: 3}) will call the callback with all features that are
-  within three pixels of the provided pixel.
+title: Hit Tolerance / 拾取容差与点击缓冲区
+shortdesc: Example using the hitTolerance parameter. / 演示如何使用 hitTolerance 参数为地图要素点击拾取设置像素容差与缓冲区半径。
+docs: |
+  <p>By default, the <code>map.forEachFeatureAtPixel()</code> function only considers features that are directly under the provided pixel. This can make it difficult to interact with features on touch devices. To consider features within some distance of the provided pixel, use the <code>hitTolerance</code> option. For example, <code>map.forEachFeatureAtPixel(pixel, callback, {hitTolerance: 3})</code> will call the callback with all features that are within three pixels of the provided pixel.</p>
+  <p>默认情况下，<code>map.forEachFeatureAtPixel()</code> 函数仅会检测严格位于鼠标/触控指针正下方的像素点要素。对于细线、细小图标或触屏移动设备（手指触控面积远大于单个屏幕物理像素），这会导致极难精准点击交互。通过配置 <code>hitTolerance</code>（点击容差）选项，可以将拾取判定区域向外扩展指定的像素半径。例如：<code>map.forEachFeatureAtPixel(pixel, callback, {hitTolerance: 3})</code> 会以点击坐标为中心、3 像素为半径的包围缓冲区内检索所有相交的几何要素并触发回调。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **基于离屏 Canvas 命中检测（Hit Detection Canvas）**：
+    OpenLayers 的矢量图层在渲染时，除了屏幕可见的主画布外，还会同步维护（或按需构建）轻量级的要素拾取数据结构与上下文。在默认 `hitTolerance: 0` 时，仅检测单个像素位置是否有要素；当指定 `hitTolerance: N` 时，引擎会以采样像素为中心扩展一个边长为 `(2N + 1)` 像素的矩形包围盒，并在此范围内进行空间相交测试。
+  - **移动端与触控交互最佳实践**：
+    桌面端鼠标指针精度可达到 1 像素，但移动设备或平板电脑的手指触摸半径通常在 8~12 像素以上。如果未设置 `hitTolerance`，用户需要反复尝试才能点中 1 像素宽的道路或境界线。设置合理的容差（如 5~10 像素）是保障移动端地图可用性的关键指标。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - `map.forEachFeatureAtPixel(pixel, callback, options)`：
+    - `options.hitTolerance`：拾取容差（单位：像素，默认 0）。该参数在 `ol/interaction/Select` 中同样支持透传（例如 `new Select({ hitTolerance: 5 })`）。
+    - `options.layerFilter`：可选的图层过滤器函数 `(layer) => boolean`，用于跳过底图切片或不需要交互的背景图层，显著降低检测开销。
+  - `circleCanvas.getContext('2d')` 动态缓冲区可视化：
+    本例通过动态绘制 `<canvas id="circle">` 直观展示了容差半径：当选择 5 像素时，实际生成的命中检测圆圈直径为 `2 * 5 + 1 = 11` 像素，直观反映了触控判定面的物理尺寸。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **容差过大带来的性能与误触惩罚**：
+    若容差设置过大（例如 20+ 像素），在高密度要素区域（如密集的 POI 点群或建筑轮廓）极易发生严重误触，同时引擎需要遍历半径内更多图元，导致检测帧率下降。通常推荐：桌面端 0~3 像素，移动端 5~8 像素。
+  - **密集重叠要素排序问题**：
+    `forEachFeatureAtPixel` 会按照渲染层叠顺序（从顶层到底层）逆序遍历相交要素。如果只想拾取最上方的一个要素，回调函数中直接 `return feature;` 即可终止后续遍历，节省运算时间。
 tags: "hitTolerance"
 ---
 <div id="map" class="map"></div>
-<span id="status">Try to click the line in the map.</span>
+<span id="status">请尝试点击地图中的水平黑线 (Try to click the line in the map)。</span>
 <form>
-  <label for="hitTolerance">Hit tolerance for selecting features: &nbsp;</label>
+  <label for="hitTolerance">要素拾取容差 (Hit tolerance): &nbsp;</label>
   <select id="hitTolerance">
-    <option value="0" selected>0 Pixels</option>
-    <option value="5">5 Pixels</option>
-    <option value="10">10 Pixels</option>
+    <option value="0" selected>0 像素 (0 Pixels)</option>
+    <option value="5">5 像素 (5 Pixels)</option>
+    <option value="10">10 像素 (10 Pixels)</option>
   </select>
-  &nbsp; Area: &nbsp;
+  &nbsp; 容差判定区域 (Area): &nbsp;
   <canvas id="circle" style="vertical-align: middle"></canvas>
 </form>

@@ -1,9 +1,31 @@
 ---
 layout: example.html
-title: WMTS Capabilities Parsing
-shortdesc: Example of parsing a WMTS GetCapabilities response.
-docs: >
-  This example shows the contents of the result object from parsing a WMTS capabilities response.
+title: WMTS Capabilities Parsing / 解析 WMTS 元数据能力文档
+shortdesc: Example of parsing a WMTS GetCapabilities response. / 演示如何使用 WMTSCapabilities 格式解析器读取 XML 能力文档并输出结构化 JSON 对象。
+docs: |
+  <p>This example shows the contents of the result object from parsing a WMTS capabilities response.</p>
+  <p>本示例展示了如何使用 <code>ol/format/WMTSCapabilities</code> 格式解析器，将 OGC WMTS 服务返回的标准 XML 格式 <code>GetCapabilities</code> 响应文档高效反序列化为易于前端程序访问的结构化 JavaScript/JSON 对象。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **OGC 元数据 XML 的客户端语义解析**：
+    WMTS 服务的 <code>GetCapabilities</code> XML 包含极其繁杂的命名空间（如 <code>ows:</code>, <code>xlink:</code> 等）与层级嵌套。OpenLayers 提供了轻量级的专用 XML 解析器，负责提取关键实体：图层列表（<code>Contents.Layer</code>）、瓦片矩阵集定义（<code>Contents.TileMatrixSet</code>）以及操作元数据（<code>OperationsMetadata</code>）。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>const parser = new WMTSCapabilities()</code>：
+    专职负责解析 WMTS 1.0.0 规范 XML 字符串的格式化解析类。
+  - <code>parser.read(text)</code>：
+    同步执行 DOM 解析与树状字典映射，返回包含 <code>version</code>, <code>ServiceIdentification</code>, <code>ServiceProvider</code>, <code>Contents</code> 等顶层字段的纯 JavaScript 对象。
+  - 核心提取字段：
+    - <code>Contents.Layer[]</code>：包含各个图层的标识符 <code>Identifier</code>、标题 <code>Title</code>、支持的 <code>TileMatrixSetLink</code>、样式 <code>Style</code> 与瓦片格式 <code>Format</code>。
+    - <code>Contents.TileMatrixSet[]</code>：包含坐标系定义 <code>SupportedCRS</code> 及各分辨率矩阵 <code>TileMatrix</code>（比例尺分母 <code>ScaleDenominator</code>、矩阵宽高、瓦片物理像素尺寸及左上角矩阵原点 <code>TopLeftCorner</code>）。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **首屏异步元数据加载开销**：
+    完整的 WMTS Capabilities XML 往往达到数百 KB 甚至数 MB。在企业级单页面应用（SPA）中，不建议在用户每次进入页面时都通过网络重新发起一次耗时的 <code>GetCapabilities</code> 请求。推荐在服务端代理缓存、构建期静态序列化或将解析后的轻量级配置保存在前端 LocalStorage / IndexedDB 中。
 tags: "wmts, capabilities, getcapabilities"
 ---
 <pre class="log-container"><code id="log"></code></pre>

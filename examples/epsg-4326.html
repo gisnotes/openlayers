@@ -1,9 +1,30 @@
 ---
 layout: example.html
-title: EPSG:4326
-shortdesc: Example of a map in EPSG:4326.
-docs: >
-  This example shows how to create a map in EPSG:4326.
+title: "EPSG:4326 / EPSG:4326 经纬度地理坐标系与度数比例尺"
+shortdesc: "Example of a map in EPSG:4326. / 演示如何构建原生 EPSG:4326 地理经纬度投影地图并挂载以“度(degrees)”为单位的比例尺控件。"
+docs: |
+  <p>This example shows how to create a map in EPSG:4326.</p>
+  <p>本示例展示了如何创建基于原生 <code>EPSG:4326</code>（WGS 84 大地坐标系）的地图视口。当地图运行在 EPSG:4326 下时，横轴为经度（-180° ~ 180°），纵轴为纬度（-90° ~ 90°），以等距圆柱投影（Equirectangular / Plate Carrée）铺展全图，并演示了如何配置以角度“度（degrees）”为测量单位的比例尺控件。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **EPSG:4326 原生支持与 Plate Carrée 投影**：
+    OpenLayers 内置对 <code>EPSG:3857</code> 与 <code>EPSG:4326</code> 的原生支持（无需加载 proj4js）。在 EPSG:4326 视图下，经纬度直接等比例映射为平面直角笛卡尔坐标 $(x, y)$。虽然在高纬度地区会出现横向拉伸变形，但在全球尺度统计、气候气象云图及遥感网格数据呈现中应用极为普遍。
+  - **角度单位比例尺适配**：
+    由于经纬度属于角坐标而非公制米，在不同纬度上 1 经度的实际物理地面距离不同（赤道约为 111km，极点为 0）。配置 <code>new ScaleLine({ units: 'degrees' })</code> 可以直接以度数展示空间标尺。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>view: new View({ projection: 'EPSG:4326', center: [0, 0], zoom: 2 })</code>：
+    视口明确声明采用 <code>EPSG:4326</code>。此时 <code>center</code> 的坐标直接以经纬度 <code>[lon, lat]</code> 解释，无需经过任何坐标转换函数。
+  - <code>TileWMS</code> 的坐标系协商：
+    OpenLayers 会自动向 GeoServer 发送匹配当前视图的 WMS 请求参数（如 <code>CRS=EPSG:4326</code>），服务端直接输出未经墨卡托投影的切片。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **与主流商业底图（OSM/Google）混用冲突**：
+    几乎所有公网主流商业切片原生均为 <code>EPSG:3857</code>。如果将它们直接放入 <code>EPSG:4326</code> 的地图中，OpenLayers 会启动客户端动态重投影（Reprojection），带来一定的性能开销。因此若需原生流畅呈现 EPSG:4326，底图服务最好直接支持 4326 切片。
 tags: "epsg4326"
 ---
 <div id="map" class="map"></div>

@@ -1,14 +1,30 @@
 ---
 layout: example.html
-title: Static Image
-shortdesc: Example of a static image layer.
-docs: >
-  <p>
-    This example uses a <a href="https://xkcd.com/256/">static image</a>
-    as a layer source.  The map view is configured with a custom
-    projection that translates image coordinates directly into map
-    coordinates.
-  </p>
+title: Static Image / 静态独立单张图片与自定义像素坐标系
+shortdesc: Example of a static image layer. / 演示如何使用 StaticImage 数据源将单张静态高分辨率图片（如漫画/手绘图）映射为自定义投影坐标地图。
+docs: |
+  <p>This example uses a <a href="https://xkcd.com/256/" target="_blank">static image</a> as a layer source. The map view is configured with a custom projection that translates image coordinates directly into map coordinates.</p>
+  <p>本示例展示了如何使用 <code>ol/source/ImageStatic</code> 数据源将单张静态位图（示例采用著名极客漫画 <a href="https://xkcd.com/256/" target="_blank">xkcd #256 互联网在线社区分布地图</a>）直接挂载为地图图层。通过定义一个纯平面直角像素投影坐标系（Projection），直接将图片的物理像素宽高 $[0, 0, 1024, 968]$ 映射为地图视口坐标，实现流畅的平移与深层缩放。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **非地理空间的平直笛卡尔投影定义**：
+    并不是所有地图都有真实经纬度。室内商场楼层平面图、游戏世界地图、高分辨率艺术图画或芯片显微图，本质上都是单张物理图片。OpenLayers 允许通过 <code>new Projection({ code: 'xkcd-image', units: 'pixels', extent: extent })</code> 创建基于像素单位的自定义坐标系，使地图视口与普通 GIS 工具链完全兼容。
+  - **<code>imageExtent</code> 空间四至锚定**：
+    通过 <code>imageExtent: [0, 0, 1024, 968]</code> 将单张位图的左下角固定在原点 <code>[0, 0]</code>，右上角固定在 <code>[1024, 968]</code>。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>ImageLayer</code> 与 <code>ImageStatic</code>：
+    专职负责展示单张静态图片的图层与数据源，相比复杂的切片瓦片，无需搭建切片服务，仅需一张普通 PNG/JPEG 即可呈现全屏可交互地图。
+  - <code>maxZoom: 8</code>：
+    设置视口最大缩放限制，防止在过度放大后由于图片本身像素被过度插值导致严重失真。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **单张大图的尺寸上限（Texture Size Limit）**：
+    由于 <code>ImageStatic</code> 是以整张图片完整送入 GPU 显存解码渲染的，图片的物理宽高受限于终端浏览器的 WebGL 纹理最大尺寸（一般桌面端为 16384px，低端移动端为 4096px）。如果图片分辨率超过 4096 像素，建议采用 Deep Zoom、Zoomify 或切片化（TileLayer）方案，避免移动端直接内存溢出。
 tags: "static image, xkcd"
 ---
 <div id="map" class="map"></div>

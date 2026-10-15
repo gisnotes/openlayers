@@ -1,9 +1,30 @@
 ---
 layout: example.html
-title: MapGuide Untiled
-shortdesc: Example of a untiled MapGuide map.
-docs: >
-  Example of a untiled MapGuide map.
+title: MapGuide Untiled / MapGuide 动态单图服务接入
+shortdesc: Example of a untiled MapGuide map. / 演示如何使用 ImageMapGuide 数据源结合 ImageLayer 接入 Autodesk MapGuide 动态非切片地图服务。
+docs: |
+  <p>Example of a untiled MapGuide map.</p>
+  <p>本示例展示了如何使用 <code>ol/source/ImageMapGuide</code> 数据源接入开源与企业级 Autodesk MapGuide（MapGuide Open Source）地理信息服务器。MapGuide 采用专有的 <code>mapagent.fcgi</code> 网关，根据当前屏幕包围盒与地图定义（MapDefinition）在服务端动态渲染单张图像并回传前端。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **MapGuide 架构与 FCGI 协议网关**：
+    MapGuide 是早期著名的 WebGIS 平台，核心服务通过 FastCGI 进程 <code>mapagent.fcgi</code> 提供。它采用 MapDefinition（MDF）XML 组织图层组、比例尺范围及符号库，客户端通过向 agent 提交 <code>OPERATION=GETDYNAMICMAPOVERLAYIMAGE</code> 等指令动态出图。
+  - **<code>metersPerUnit</code> 地表尺度换算因子**：
+    由于 MapGuide 内部采用基于物理打印比例尺（Scale）而非纯像素分辨率（Resolution）进行出图，必须提供 <code>metersPerUnit</code>（每地图单位代表的米数，EPSG:4326 经纬度通常约为 111319.49 米）以校准比例尺换算。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>ImageMapGuide</code> 核心参数：
+    - <code>params.MAPDEFINITION</code>：服务端地图定义库路径（如 <code>'Library://Samples/Sheboygan/Maps/Sheboygan.MapDefinition'</code>）；
+    - <code>ratio: 2</code>：请求略大于当前屏幕 2 倍面积的缓冲区单张图片，在轻微拖拽平移时复用已有图像，减少向 MapGuide 发起新请求的频次；
+    - <code>useOverlay: false</code>：指示获取完整底图而非仅透明覆盖层。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **凭据与会话管理（Session ID）**：
+    生产中 MapGuide 通常需要建立会话（<code>CreateSession</code>），生成临时 <code>SESSION</code> 凭据并在后续请求中携带，替代在每次请求中明文暴露用户名密码。
 tags: "mapguide"
 ---
 <div id="map" class="map"></div>

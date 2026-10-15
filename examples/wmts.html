@@ -1,9 +1,36 @@
 ---
 layout: example.html
-title: WMTS
-shortdesc: Example of a WMTS source.
-docs: >
-  This example shows how to manually create the configuration for accessing a WMTS. The [WMTS Layer from capabilities example](wmts-layer-from-capabilities.html) shows how to create the configuration from a GetCapabilities response.
+title: WMTS / 手动配置 WMTS 瓦片服务图层
+shortdesc: Example of a WMTS source. / 演示如何手动计算并构建 TileGrid 瓦片网格与分辨率金字塔以接入 OGC WMTS 切片地图服务。
+docs: |
+  <p>This example shows how to manually create the configuration for accessing a WMTS. The <a href="wmts-layer-from-capabilities.html">WMTS Layer from capabilities example</a> shows how to create the configuration from a GetCapabilities response.</p>
+  <p>本示例展示了如何纯手工计算并构建瓦片矩阵集配置来接入标准的 OGC WMTS（Web Map Tile Service）服务。如果服务端提供了元数据接口，推荐参考 <a href="wmts-layer-from-capabilities.html">从 GetCapabilities 自动构建 WMTS 图层示例</a>，体验由能力文档直接自动生成配置的便捷方式。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **WMTS（Web Map Tile Service）标准协议**：
+    OGC WMTS 标准通过预渲染的固定切片矩阵金字塔（TileMatrixSet）提供瓦片服务，相比传统 WMS 动态单图出图，具备极佳的 CDN 缓存命中率与高并发吞吐能力。
+  - **手动构建 `WMTSTileGrid` 的数学基石**：
+    WMTS 切片请求需要严格对齐服务器的瓦片网格定义。在 Web 墨卡托投影（EPSG:3857）下，全球总周长 $C = 2 \times 20037508.34$ 米。对于 256 像素的标准切片：
+    - 0 级最大分辨率：$R_0 = C / 256 \approx 156543.033928$ 米/像素；
+    - $z$ 级分辨率：$R_z = R_0 / 2^z$；
+    - 网格原点（Origin）：通常为投影范围的左上角点 `[-20037508.34, 20037508.34]`。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - `ol/source/WMTS` 核心参数：
+    - `matrixSet`：切片矩阵集标识符（如 `'GoogleMapsCompatible'`、`'EPSG:3857'`）。
+    - `tileGrid`：实例化的 `ol/tilegrid/WMTS`，内部包含预先计算的 `resolutions`（分辨率数组）与 `matrixIds`（切片矩阵层级标号）。
+    - `style: 'default'`：WMTS 规范强制要求的样式名称，必须与服务端元数据完全一致。
+    - `wrapX: true`：启用跨日界线世界水平连续环绕渲染。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **MatrixId 命名不匹配陷阱**：
+    不同 GIS 服务器（如 GeoServer、ArcGIS Server、MapProxy）生成的 `matrixIds` 命名规则各异。有的服务直接采用纯数字 `0, 1, 2...`，有的则带有命名空间前缀（如 `EPSG:3857:0` 或 `GoogleMapsCompatible:0`）。若手动配置的 `matrixIds` 与服务定义不符，会导致所有瓦片请求返回 404 或 400 InvalidParameterValue。
+  - **透明图层叠加**：
+    将 WMTS 业务专题图（如本例 USGS 地质图 `sgmc2`）作为上层图层叠加在 OSM 底图上时，设置 `opacity: 0.7` 可兼顾底层道路路网与上层地质色块的可读性。
 tags: "wmts, grid"
 ---
 <div id="map" class="map"></div>

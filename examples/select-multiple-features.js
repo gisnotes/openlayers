@@ -35,5 +35,9 @@ const status = document.getElementById('status');
 
 select.on('select', function () {
   status.innerHTML =
-    '&nbsp;' + select.getFeatures().getLength() + ' selected features';
+    '&nbsp;已选中 ' +
+    select.getFeatures().getLength() +
+    ' 个要素 (' +
+    select.getFeatures().getLength() +
+    ' selected features)';
 });

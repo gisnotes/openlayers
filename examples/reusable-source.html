@@ -1,12 +1,33 @@
 ---
 layout: example.html
-title: Reusable Source
-shortdesc: Updating a tile source by changing the URL.
-docs: >
-  You can call <code>source.setUrl()</code> to update the URL for a tile source.  Note that when you change the URL for a tile source, existing tiles will not be replaced until new tiles are loaded.  If you are interested instead in clearing currently rendered tiles, you can call the <code>source.refresh()</code> method.  Alternatively, you can use two separate sources if you want to remove rendered tiles and start over loading new tiles.
+title: Reusable Source / 瓦片数据源 URL 动态更新与平滑过渡
+shortdesc: Updating a tile source by changing the URL. / 演示如何使用 source.setUrl() 动态修改瓦片数据源服务地址，实现新旧瓦片无缝换图。
+docs: |
+  <p>You can call <code>source.setUrl()</code> to update the URL for a tile source. Note that when you change the URL for a tile source, existing tiles will not be replaced until new tiles are loaded. If you are interested instead in clearing currently rendered tiles, you can call the <code>source.refresh()</code> method. Alternatively, you can use two separate sources if you want to remove rendered tiles and start over loading new tiles.</p>
+  <p>通过调用 <code>source.setUrl()</code> 方法，可以在不销毁重建数据源实例的前提下，直接动态更新切片数据源的服务地址。注意：当改变数据源 URL 时，当前屏幕上已渲染的旧切片**不会立即被清除**，而是会继续保留在屏幕上作为临时过渡底图，直到新 URL 对应的切片下载解码完毕后才平滑替换。如果您希望立刻抹除当前屏幕切片并从空白开始加载，可显式调用 <code>source.refresh()</code> 方法；或者维护两个独立的数据源进行切换。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **原地数据源复用（In-place Source Reuse）**：
+    频繁更换底图（如切换月份时序影像、四季遥感图谱）时，频繁调用 <code>map.removeLayer()</code> / <code>map.addLayer()</code> 会导致图层树拓扑重排、重绘流水线重建以及强烈的白屏闪烁。直接调用 <code>source.setUrl()</code> 保持图层与数据源引用稳定，仅更新切片地址模板，是 OpenLayers 推荐的平滑换图模式。
+  - **切片缓存生命周期与过渡置换**：
+    在内部，OpenLayers 会为每个切片维护唯一键。更新 URL 会使缓存中现有切片标记为需要重新加载，但不会清空 GPU/内存中的位图像素，直到新网络请求完成，形成优雅的“原地交叉淡入”。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - <code>source.setUrl(newUrl)</code>：
+    更新服务模板地址，触发数据源变更事件并使相关切片重载。
+  - <code>source.refresh()</code>：
+    与 <code>setUrl()</code> 的温和过渡不同，<code>refresh()</code> 会主动清空内部所有的瓦片缓存，强制立刻从远端重新请求。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **时序数据源网格一致性前提**：
+    <code>source.setUrl()</code> 要求新旧两个服务的 <code>tileGrid</code>（瓦片网格切分标准、分辨率层级及原点）完全一致。如果两个底图一个是 256 像素墨卡托切片，另一个是 512 像素切片，或者原点不同，则不能复用同一数据源，必须使用独立图层或独立数据源。
 ---
 <div id="map" class="map"></div>
-<button class="switcher" value="0">January</button>
-<button class="switcher" value="1">January (with bathymetry)</button>
-<button class="switcher" value="2">July</button>
-<button class="switcher" value="3">July (with bathymetry)</button>
+<button class="switcher" value="0">一月影像 (January)</button>
+<button class="switcher" value="1">一月含水深 (Jan with bathymetry)</button>
+<button class="switcher" value="2">七月影像 (July)</button>
+<button class="switcher" value="3">七月含水深 (July with bathymetry)</button>
