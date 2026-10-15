@@ -1,11 +1,54 @@
 ---
 layout: example.html
-title: WFS - GetFeature
-shortdesc: Example of making a WFS GetFeature request with a filter.
+title: WFS - GetFeature / WFS 空间矢量要素过滤查询与叠加
+shortdesc: Example of making a WFS GetFeature request with a filter. / 使用 OGC WFS 协议结合属性复合过滤器执行 GetFeature 空间查询并将矢量要素动态叠加至地图的示例。
 docs: >
-  This example generates a `GetFeature` request which uses a `PropertyIsEqualTo`
-  and a `PropertyIsLike` filter, and then posts the request to load the features
-  that match the query.
+  <p>
+    This example generates a <code>GetFeature</code> request which uses a <code>PropertyIsEqualTo</code>
+    and a <code>PropertyIsLike</code> filter, and then posts the request to load the features
+    that match the query.
+  </p>
+  <p>
+    本示例演示了如何生成符合 OGC WFS 规范的 <code>GetFeature</code> 矢量要素查询请求。请求中组合了 <code>PropertyIsEqualTo</code>（属性完全等值）与 <code>PropertyIsLike</code>（通配符模糊匹配）复合空间过滤器，通过 HTTP POST 提交给服务后端，并将查询匹配的真实矢量要素反序列化加载到矢量图层中，自动缩放至要素包围盒范围。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>WMS vs WFS：光栅呈现与矢量互操作的质变：</strong>
+      WMS 服务向客户端传输的是“图片”，客户端无法修改图元样式或进行二次空间拓扑分析；而 WFS（Web Feature Service）直接分发包含完整点、线、面坐标几何与业务属性字典的真实矢量要素。客户端接收后可在前端执行富交互绘制、高亮选中、缓冲区分析甚至图形编辑后提交回写（WFS-T）。
+    </li>
+    <li><strong>OGC Filter Encoding 规范化 XML 生成：</strong>
+      传统 URL GET 请求受制于长度限制，无法承载极度复杂的空间几何或多重 SQL 逻辑。OpenLayers 提供了 <code>ol/format/WFS</code> 与 <code>ol/format/filter</code>，能够在内存中通过链式语法构建标准 XML 格式的 OGC Filter（包含逻辑运算符 <code>And / Or / Not</code>、空间比较符 <code>BBOX / Intersects / Within</code> 及属性比较符 <code>EqualTo / Like</code>），通过 POST 请求安全可靠地传递给 GIS 服务器。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>writeGetFeature(options)</code>：
+      <ul>
+        <li><code>srsName: 'EPSG:3857'</code>：告知 GIS 服务器按目标坐标系统投影输出坐标。</li>
+        <li><code>featureNS</code> 与 <code>featurePrefix</code>：对应 GeoServer 发布服务时绑定的 XML 命名空间 URI 与图层前缀。</li>
+        <li><code>outputFormat: 'application/json'</code>：要求服务端直接将矢量结果以 GeoJSON 格式返回，便于前端高效反序列化。</li>
+      </ul>
+    </li>
+    <li><code>andFilter(likeFilter('name', 'Mississippi*'), equalToFilter('waterway', 'riverbank'))</code>：在客户端构建条件表达式，筛选名称以“密西西比”开头且水系类型为“河岸”的水体要素。</li>
+    <li><code>map.getView().fit(vectorSource.getExtent())</code>：收到要素集合后，计算几何外包矩形，驱动视口平滑聚焦到查询结果区域。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>工作区命名空间（Namespace）严密对齐：</strong>
+      若 <code>featureNS</code> 或 <code>featurePrefix</code> 与 GeoServer 控制台配置存在大小写或拼写不一致，服务端将直接返回 <code>ServiceException: Feature type unknown</code>。
+    </li>
+    <li><strong>大数据量防爆保护（maxFeatures / resultType）：</strong>
+      WFS 涉及几何坐标明文传输，若 SQL 过滤未加约束导致返回数万个复杂多边形，不仅网络传输长达数秒，还会导致前端反序列化时浏览器卡死。生产调用必须显式设置 <code>maxFeatures: 100</code> 或 <code>count: 100</code> 进行分页保护。
+    </li>
+    <li><strong>CORS 跨域预检与 POST 预热：</strong>
+      POST XML 请求属于非简单请求（Non-Simple Request），浏览器会自动发起 <code>OPTIONS</code> 预检。GIS 服务器（如 GeoServer、ArcGIS Server）必须妥善配置 CORS Filter 允许 <code>Content-Type: application/xml</code> 与 <code>POST</code> 方法。
+    </li>
+  </ul>
 tags: "vector, WFS, GetFeature, filter, maptiler"
 ---
 <div id="map" class="map"></div>

@@ -14,6 +14,8 @@ import VectorSource from '../src/ol/source/Vector.js';
 import Stroke from '../src/ol/style/Stroke.js';
 import Style from '../src/ol/style/Style.js';
 
+// Vector source and layer for holding query results
+// 用于承载查询结果矢量要素的数据源与图层
 const vectorSource = new VectorSource();
 const vector = new VectorLayer({
   source: vectorSource,
@@ -30,6 +32,8 @@ const attributions =
   '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> ' +
   '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>';
 
+// Base satellite layer from MapTiler
+// MapTiler 卫星影像基础底图
 const raster = new TileLayer({
   source: new ImageTile({
     attributions: attributions,
@@ -39,6 +43,8 @@ const raster = new TileLayer({
   }),
 });
 
+// Initialize map view
+// 初始化地图视图
 const map = new Map({
   layers: [raster, vector],
   target: document.getElementById('map'),
@@ -49,7 +55,8 @@ const map = new Map({
   }),
 });
 
-// generate a GetFeature request
+// Generate a WFS GetFeature XML request with compound filters
+// 使用复合过滤器生成符合 OGC WFS 规范的 GetFeature XML 请求
 const featureRequest = new WFS().writeGetFeature({
   srsName: 'EPSG:3857',
   featureNS: 'http://openstreemap.org',
@@ -62,7 +69,8 @@ const featureRequest = new WFS().writeGetFeature({
   ),
 });
 
-// then post the request and add the received features to a layer
+// Post the request and add the received features to the vector layer
+// 提交 HTTP POST 请求并将接收到的要素添加至矢量图层
 fetch('https://ahocevar.com/geoserver/wfs', {
   method: 'POST',
   body: new XMLSerializer().serializeToString(featureRequest),

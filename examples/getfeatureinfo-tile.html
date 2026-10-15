@@ -1,9 +1,43 @@
 ---
 layout: example.html
-title: WMS GetFeatureInfo (Tile Layer)
-shortdesc: Issuing GetFeatureInfo requests with a WMS tiled source
+title: WMS GetFeatureInfo (Tile Layer) / WMS 瓦片要素属性查询与像素探测
+shortdesc: Issuing GetFeatureInfo requests with a WMS tiled source / 基于瓦片网格 WMS 数据源执行 GetFeatureInfo 点击查询与 getData 像素命中探测。
 docs: >
-  This example shows how to trigger WMS GetFeatureInfo requests on click for a WMS tile layer.  Additionally `layer.getData(pixel)` is used to change the mouse pointer when hovering a non-transparent pixel on the map.
+  <p>
+    This example shows how to trigger WMS GetFeatureInfo requests on click for a WMS tile layer. Additionally <code>layer.getData(pixel)</code> is used to change the mouse pointer when hovering a non-transparent pixel on the map.
+  </p>
+  <p>
+    本示例演示了如何为 WMS 瓦片图层（Tile Layer）绑定点击事件以触发 <code>GetFeatureInfo</code> 要素属性查询。此外，同样展示了利用 <code>layer.getData(pixel)</code> 在光标滑动时检测瓦片像素透明度，在悬停于有效要素上方时动态切换鼠标指针。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>网格分块切片下的 GetFeatureInfo 坐标定位：</strong>
+      与全屏单张图（<code>ImageWMS</code>）不同，瓦片化 WMS（<code>TileWMS</code>）在内部维护了多层切片网格（TileGrid）。当用户点击地图上的某一点时，<code>getFeatureInfoUrl()</code> 并不是直接以当前整屏视口请求服务端，而是计算出该点击点精确落在哪一张 $256 \times 256$（或 $512 \times 512$）的瓦片几何范围内，以该独立瓦片的局部 BBOX 与局部像素坐标 $(I, J)$ 向服务端请求属性。
+    </li>
+    <li><strong>多瓦片拼接下的像素探测（Tile Layer getData）：</strong>
+      在瓦片图层中，整个视口由几十张散列图片拼接而成。<code>wmsLayer.getData(pixel)</code> 抽象屏蔽了多张瓦片画布的边界与偏移，直接返回合成后的视口绝对像素颜色，使得像素级透明度判断与单图图层保持完全一致的 API 体验。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>params: {'LAYERS': 'ne:ne', 'TILED': true}</code>：在 WMS 参数中显式加入 <code>TILED: true</code> 是 GeoServer 的专用参数，通知服务端启用内置切片缓存（GeoWebCache）加速出图。</li>
+    <li><code>const viewResolution = view.getResolution()</code>：计算必须基于视图当前实际分辨率，确保服务端空间容差与客户端当前缩放层级一致。</li>
+    <li><code>layer.getData(evt.pixel)</code>：在指针悬浮时实时拾取颜色通道，检测是否命中非透明矢量要素。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>瓦片接缝边缘点击的盲区：</strong>
+      若点击位置刚好处于两张瓦片的接缝边缘，由于缓冲（Gutter）未开启，服务端切片引擎可能会由于图元被裁切而漏判要素。解决方案是在 <code>TileWMS</code> 中配置 <code>gutter: 20</code>，使每个瓦片向外多渲染 20 像素的缓冲区。
+    </li>
+    <li><strong>切片代理缓存（GWC）穿透限制：</strong>
+      许多经过 GeoWebCache 预烘焙的切片服务默认只开放静态文件下载，未配置动态转发 <code>GetFeatureInfo</code> 请求，会导致服务端返回 404 或 Unsupported 操作。生产部署时务必确保切片网关正确透传 WMS 属性查询端点。
+    </li>
+  </ul>
 tags: "getfeatureinfo, getData"
 ---
 <div id="map" class="map"></div>
