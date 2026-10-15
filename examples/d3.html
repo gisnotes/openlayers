@@ -1,9 +1,35 @@
 ---
 layout: example.html
-title: d3 Integration
-shortdesc: Example of using OpenLayers and d3 together.
+title: d3 Integration / D3.js 矢量可视化集成
+shortdesc: Example of using OpenLayers and d3 together. / 演示如何将 OpenLayers 与 D3.js（d3-geo）深度结合，将 TopoJSON 几何渲染到 SVG 图层中。
 docs: >
-  The example loads TopoJSON geometries and uses d3 (<code>d3.geo.path</code>) to render these geometries to a SVG element.
+  <p>The example loads TopoJSON geometries and uses d3 (<code>d3.geo.path</code>) to render these geometries to a SVG element.</p>
+  <p>本示例演示如何将 OpenLayers 强大的地理地图视口与 <strong>D3.js（d3-geo / d3-selection）</strong> 数据可视化生态无缝融合。通过继承基础 <code>Layer</code> 类构建自定义图层，在每帧渲染时动态将 OpenLayers 的视口分辨率、中心与旋转角度同步给 D3 的墨卡托投影投影器（<code>d3.geoMercator</code>），从而使用 <code>d3.geoPath</code> 将 TopoJSON 拓扑几何精准绘制在 SVG 画布上。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **OpenLayers 与 D3.js 的架构互补性**：
+    - OpenLayers 专精于**全尺度地图切片、坐标投影系统、视口缩放平移交互与空间数据源加载**；
+    - D3.js 专精于**数据驱动文档（Data-Driven Documents）、微观统计图表、精美贝塞尔连线与 SVG 动画过渡**。
+    - 通过将 D3 的 `geoPath` 包装在 OpenLayers 自定义图层的 `render` 生命周期中，既保留了瓦片底图的高速平移缩放体验，又获得了 D3 强大的矢量拓扑数据表达能力。
+  - **视图状态双向对齐算法**：
+    D3 的投影器拥有自身独立的缩放（`scale`）、中心点（`center`）、位移（`translate`）与旋转（`angle`）。OpenLayers 通过比较要素包围盒在地理空间下的实际跨度与在 D3 像素空间下的尺寸比例，动态解算出当前的绝对 `scale = r / frameState.viewState.resolution`，实现 100% 像素级贴合。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - 自定义 `CanvasLayer extends Layer`：
+    - `getSourceState()`：返回 `'ready'`，通知地图管线当前图层资源已就绪，无需等待外部数据源。
+    - `render(frameState)`：核心帧回调。从 `frameState` 中提取当前视口宽高 `size`、地理中心 `getCenter(extent)` 与旋转角度 `rotation`，并实时调用 `d3Projection.scale(...).center(...).translate(...).angle(...)`。
+  - `topojson-client` 与 `d3.geoPath`：
+    利用 `feature(us, 'counties')` 将高度压缩的 TopoJSON 拓扑弧段无损展开为 GeoJSON 要素集合，直接喂给 `d3Path` 生成 SVG `d` 路径字符串。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **连续缩放时的 DOM 更新开销**：
+    每当视口移动或缩放一帧，D3 都需要对成千上万个县级边界多边形重新执行投影数学计算并生成巨大的 SVG `d` 属性字符串，可能导致大范围动画时丢帧。生产中若多边形顶点极多，推荐将 D3 改为渲染到 `<canvas>` 上下文（`geoPath().context(ctx)`）以提升渲染帧率。
+  - **坐标系转换单位规范**：
+    D3 的 `d3.geoMercator()` 默认接受经纬度 `[lon, lat]`。因此必须使用 `toLonLat(getCenter(extent), projection)` 将 OpenLayers 内部的 3857 投影坐标逆转为经纬度后再传给 D3 的 `center()`。
 tags: "d3"
 ---
 <div id="map" class="map"></div>

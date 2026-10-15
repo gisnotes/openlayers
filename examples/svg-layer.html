@@ -1,10 +1,34 @@
 ---
 layout: example.html
-title: SVG Layer
-shortdesc: Example of a map with an interactive svg layer.
+title: SVG Layer / 交互式 SVG 图层与仿射矩阵同步
+shortdesc: Example of a map with an interactive svg layer. / 演示如何使用自定义 Layer 渲染函数结合 CSS 仿射变换矩阵加载并交互联动 SVG 矢量图层。
 docs: >
-  With a plain `ol/Layer` and a `render` function, we can use an interactive svg as layer. Hover over countries to see the interactivity that is defined purely with a css `:hover` pseudo-class.
-  Other layers can be added to the same map. The blue circle is a vector feature on a separate layer.
+  <p>With a plain `ol/Layer` and a `render` function, we can use an interactive svg as layer. Hover over countries to see the interactivity that is defined purely with a css `:hover` pseudo-class. Other layers can be added to the same map. The blue circle is a vector feature on a separate layer.</p>
+  <p>借助基础 <code>ol/layer/Layer</code> 以及自定义 <code>render</code> 渲染函数，我们可以直接将交互式 SVG 矢量图元挂载为 OpenLayers 地图图层。移动鼠标指针悬停在各国轮廓上方，即可观察到纯 CSS <code>:hover</code> 伪类驱动的高性能悬浮交互动画。地图中亦可同时叠加常规矢量与瓦片图层（例如本例中心位于 [0, 0] 的蓝色圆点即为独立矢量图层要素）。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **基于基础 `ol/layer/Layer` 的自定义渲染器机制**：
+    OpenLayers 的图层体系具有高度开放性。继承或实例化 `Layer` 并提供自定义 `render(frameState)` 方法，允许开发者跳过 Canvas 或 WebGL 内部渲染管线，直接将**任意外部 DOM 树（如富交互 SVG、Three.js 画布、D3 节点）**深度挂载到地图的图层堆叠树中。
+  - **`composeCssTransform` 视口矩阵投影对齐**：
+    SVG 是基于自身矢量画布像素构建的静态 DOM。为了让它随地图平移、缩放、旋转而精准锁定在地理坐标系上，OpenLayers 提供了 `composeCssTransform(dx, dy, sx, sy, angle, ox, oy)`。它根据每帧渲染状态 `frameState` 的视口尺寸（`size`）、分辨率（`resolution`）、中心坐标（`center`）与旋转弧度（`rotation`），实时解算出标准的 CSS `matrix(...)` 矩阵，直接施加到外部 SVG 容器上。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - `svgResolution = 360 / width`：
+    在 EPSG:4326 地理经纬度投影下，全球经度范围是 360°。若 SVG 底图的宽度是 2560 像素，则该 SVG 图像在 1:1 物理比例下的原生分辨率为 `360 / 2560 = 0.140625 度/像素`。
+  - 缩放比解算 `scale = svgResolution / frameState.viewState.resolution`：
+    当视口分辨率缩放变小时（地图放大），`scale` 成比例增大，驱动 CSS 矩阵等比缩放 SVG。
+  - 偏移量定位：
+    将地图中心坐标投影变换为 SVG 内的原生像素偏移：`-center[0] / svgResolution - width / 2` 与 `center[1] / svgResolution - height / 2`，确保地图旋转和缩放的锚点精准对齐视口几何中心。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **SVG 超大视口 GPU 纹理显存暴涨**：
+    当用户连续放大地图至高层级（如 Zoom 15）时，`scale` 可能达到几千倍。浏览器若尝试为尺寸数万像素的缩放 SVG 建立硬件加速合成层（Compositing Layer），可能导致显存耗尽甚至页面崩溃。生产方案中，对于高层级局部，建议切换为分块切片矢量（MVT）或限制图层的 `maxResolution`。
+  - **事件冒泡与平移穿透**：
+    由于 SVG 容器作为 DOM 挂载在地图内，其内部路径的鼠标事件可能会阻断 OpenLayers 原生的拖拽平移。通常可在 CSS 中针对不需要拦截事件的 SVG 元素设置 `pointer-events: none;`，仅对需要交互的高亮面设置 `pointer-events: auto;`。
 tags: "svg, layer, render, transform"
 ---
 <div id="map" class="map"></div>

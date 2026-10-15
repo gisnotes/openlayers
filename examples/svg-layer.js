@@ -7,6 +7,8 @@ import Vector from '../src/ol/layer/Vector.js';
 import VectorSource from '../src/ol/source/Vector.js';
 import {composeCssTransform} from '../src/ol/transform.js';
 
+// Initialize map with EPSG:4326 projection matching the world SVG extent
+// 初始化采用 EPSG:4326 投影坐标系的地图实例，契合全球 SVG 的经纬度范围
 const map = new Map({
   target: 'map',
   view: new View({
@@ -17,6 +19,8 @@ const map = new Map({
   }),
 });
 
+// Container element for holding the interactive SVG DOM
+// 存放交互式 SVG DOM 节点的容器元素
 const svgContainer = document.createElement('div');
 const xhr = new XMLHttpRequest();
 xhr.open('GET', 'data/world.svg');
@@ -27,6 +31,8 @@ xhr.addEventListener('load', function () {
 });
 xhr.send();
 
+// Native SVG dimensions and base geographic resolution (360 degrees / width)
+// SVG 原始物理像素尺寸以及基准地理分辨率（360度 / 像素宽度）
 const width = 2560;
 const height = 1280;
 const svgResolution = 360 / width;
@@ -36,6 +42,8 @@ svgContainer.style.transformOrigin = 'top left';
 svgContainer.className = 'svg-layer';
 svgContainer.style.position = 'absolute';
 
+// Add custom Layer with render function computing CSS transform matrix every frame
+// 添加自定义 Layer 图层，每帧根据 frameState 动态解算 CSS 仿射变换矩阵
 map.addLayer(
   new Layer({
     render: function (frameState) {
@@ -58,6 +66,8 @@ map.addLayer(
   }),
 );
 
+// Overlay a standard vector layer on top of the SVG layer
+// 在 SVG 图层上方叠加常规 OpenLayers 矢量图层以验证多层对齐
 map.addLayer(
   new Vector({
     source: new VectorSource({

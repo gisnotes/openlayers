@@ -5,8 +5,8 @@ import RasterSource from '../src/ol/source/Raster.js';
 import StadiaMaps from '../src/ol/source/StadiaMaps.js';
 
 /**
- * Color manipulation functions below are adapted from
- * https://github.com/d3/d3-color.
+ * Color manipulation functions below are adapted from https://github.com/d3/d3-color
+ * 以下颜色空间转换数学公式改编自 d3-color 开源算法库
  */
 const Xn = 0.95047;
 const Yn = 1;
@@ -18,9 +18,10 @@ const t3 = t1 * t1 * t1;
 const twoPi = 2 * Math.PI;
 
 /**
- * Convert an RGB pixel into an HCL pixel.
- * @param {Array<number>} pixel A pixel in RGB space.
- * @return {Array<number>} A pixel in HCL space.
+ * Convert an RGB pixel into an HCL pixel
+ * 将 RGB 像素转换为感知均匀的 HCL 色彩空间像素
+ * @param {Array<number>} pixel A pixel in RGB space / RGB 像素通道值数组
+ * @return {Array<number>} A pixel in HCL space / HCL 像素通道值数组
  */
 function rgb2hcl(pixel) {
   const red = rgb2xyz(pixel[0]);
@@ -55,9 +56,10 @@ function rgb2hcl(pixel) {
 }
 
 /**
- * Convert an HCL pixel into an RGB pixel.
- * @param {Array<number>} pixel A pixel in HCL space.
- * @return {Array<number>} A pixel in RGB space.
+ * Convert an HCL pixel into an RGB pixel
+ * 将 HCL 空间像素反向映射回用于硬件显示的 RGB 像素
+ * @param {Array<number>} pixel A pixel in HCL space / HCL 像素通道值数组
+ * @return {Array<number>} A pixel in RGB space / RGB 像素通道值数组
  */
 function hcl2rgb(pixel) {
   const h = pixel[0];
@@ -100,6 +102,8 @@ function xyz2rgb(x) {
   );
 }
 
+// Create RasterSource running pixel operations in Web Worker
+// 创建在后台 Web Worker 中运行像素级运算的栅格数据源
 const raster = new RasterSource({
   sources: [
     new StadiaMaps({
@@ -109,6 +113,8 @@ const raster = new RasterSource({
   operation: function (pixels, data) {
     const hcl = rgb2hcl(pixels[0]);
 
+    // Apply hue rotation
+    // 应用色相旋转
     let h = hcl[0] + (Math.PI * data.hue) / 180;
     if (h < 0) {
       h += twoPi;
@@ -117,6 +123,8 @@ const raster = new RasterSource({
     }
     hcl[0] = h;
 
+    // Apply chroma and lightness scaling
+    // 应用色度与亮度比例缩放
     hcl[1] *= data.chroma / 100;
     hcl[2] *= data.lightness / 100;
 
@@ -142,6 +150,8 @@ const raster = new RasterSource({
 
 const controls = {};
 
+// Send current UI slider values into worker before each operation pass
+// 在每次像素运算轮次前将 UI 滑动条当前值打包传递给 Worker 线程
 raster.on('beforeoperations', function (event) {
   const data = event.data;
   for (const id in controls) {
@@ -149,6 +159,8 @@ raster.on('beforeoperations', function (event) {
   }
 });
 
+// Main map instance rendering the dynamic raster source
+// 地图主实例，呈现经过动态像素色彩变换的栅格图层
 const map = new Map({
   layers: [
     new ImageLayer({
@@ -163,6 +175,8 @@ const map = new Map({
   }),
 });
 
+// Wire slider event listeners to update labels and trigger raster recomputation
+// 绑定滑动条监听事件以同步更新数值标注并触发栅格重算
 const controlIds = ['hue', 'chroma', 'lightness'];
 controlIds.forEach(function (id) {
   const control = document.getElementById(id);
