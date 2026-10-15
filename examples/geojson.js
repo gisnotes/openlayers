@@ -12,12 +12,14 @@ import Fill from '../src/ol/style/Fill.js';
 import Stroke from '../src/ol/style/Stroke.js';
 import Style from '../src/ol/style/Style.js';
 
+// Default circle marker style for points / 点要素的默认红色圆圈符号样式
 const image = new CircleStyle({
   radius: 5,
   fill: null,
   stroke: new Stroke({color: 'red', width: 1}),
 });
 
+// Style dictionary mapped by geometry types / 按照几何图元类型映射的样式规则字典
 const styles = {
   'Point': new Style({
     image: image,
@@ -83,10 +85,17 @@ const styles = {
   }),
 };
 
+/**
+ * Polymorphic style function resolving style by geometry type.
+ * 根据要素运行时几何类型动态匹配样式的多态样式函数
+ * @param {import('../src/ol/Feature.js').default} feature Vector feature / 矢量要素
+ * @return {Style} Style instance / 样式对象
+ */
 const styleFunction = function (feature) {
   return styles[feature.getGeometry().getType()];
 };
 
+// In-memory GeoJSON FeatureCollection containing various geometry types / 包含各种几何类型的内存 GeoJSON 数据集
 const geojsonObject = {
   'type': 'FeatureCollection',
   'features': [
@@ -223,17 +232,21 @@ const geojsonObject = {
   ],
 };
 
+// Create VectorSource by reading GeoJSON object / 从 GeoJSON 对象读取要素并初始化矢量数据源
 const vectorSource = new VectorSource({
   features: new GeoJSON().readFeatures(geojsonObject),
 });
 
+// Add an OpenLayers native analytic Circle geometry / 额外添加一个 OpenLayers 原生解析圆几何要素
 vectorSource.addFeature(new Feature(new Circle([5e6, 7e6], 1e6)));
 
+// Vector layer with polymorphic style function / 绑定多态样式函数的矢量图层
 const vectorLayer = new VectorLayer({
   source: vectorSource,
   style: styleFunction,
 });
 
+// Initialize map with OSM basemap and vector layer / 初始化包含 OSM 底图与矢量图层的地图实例
 const map = new Map({
   layers: [
     new TileLayer({

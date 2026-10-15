@@ -4,6 +4,7 @@ import GeoJSON from '../src/ol/format/GeoJSON.js';
 import VectorLayer from '../src/ol/layer/Vector.js';
 import VectorSource from '../src/ol/source/Vector.js';
 
+// Ecoregions vector layer with attribute-based fill styling / 基于 GeoJSON 属性着色的全球生态区矢量图层
 const vectorLayer = new VectorLayer({
   background: '#1a2b39',
   source: new VectorSource({
@@ -15,6 +16,7 @@ const vectorLayer = new VectorLayer({
   },
 });
 
+// Initialize map instance / 初始化地图实例
 const map = new Map({
   layers: [vectorLayer],
   target: 'map',
@@ -24,6 +26,7 @@ const map = new Map({
   }),
 });
 
+// Dedicated vector overlay for fast hover highlighting / 用于悬停快速高亮的专用矢量覆盖层
 const featureOverlay = new VectorLayer({
   source: new VectorSource(),
   map: map,
@@ -34,7 +37,14 @@ const featureOverlay = new VectorLayer({
 });
 
 let highlight;
+
+/**
+ * Display feature information and update hover overlay.
+ * 检测像素位置的要素信息并更新高亮图层状态
+ * @param {import('../src/ol/pixel.js').Pixel} pixel Screen pixel coordinate / 屏幕像素坐标
+ */
 const displayFeatureInfo = function (pixel) {
+  // Use high-performance layer-level hit detection / 调用图层级的高性能拾取方法
   vectorLayer.getFeatures(pixel).then(function (features) {
     const feature = features.length ? features[0] : undefined;
     const info = document.getElementById('info');
@@ -44,6 +54,7 @@ const displayFeatureInfo = function (pixel) {
       info.innerHTML = '&nbsp;';
     }
 
+    // Toggle highlight feature in overlay / 在覆盖层中切换高亮要素
     if (feature !== highlight) {
       if (highlight) {
         featureOverlay.getSource().removeFeature(highlight);
@@ -56,6 +67,7 @@ const displayFeatureInfo = function (pixel) {
   });
 };
 
+// Pointer move listener with dragging guard / 监听光标悬停移动并过滤拖拽过程
 map.on('pointermove', function (evt) {
   if (evt.dragging) {
     return;
@@ -63,6 +75,7 @@ map.on('pointermove', function (evt) {
   displayFeatureInfo(evt.pixel);
 });
 
+// Click listener for feature selection / 监听地图点击拾取
 map.on('click', function (evt) {
   displayFeatureInfo(evt.pixel);
 });

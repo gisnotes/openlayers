@@ -1,9 +1,64 @@
 ---
 layout: example.html
-title: GeoJSON
-shortdesc: Example of GeoJSON features.
+title: GeoJSON / GeoJSON 多几何类型标准解析与多态样式映射
+shortdesc: Example of GeoJSON features. / 演示如何使用 GeoJSON 格式加载并渲染 OGC 简单要素（Point、LineString、Polygon、Multi- 族系与 GeometryCollection）全几何类型及动态样式函数。
 docs: >
   Example of GeoJSON features.
+
+  本示例演示了如何通过 OpenLayers 的 `ol/format/GeoJSON` 解析器反序列化包含 OGC 简单要素规范（Simple Feature Specification）全谱系几何类型的标准 GeoJSON 格式数据对象。
+
+  示例中展示了点（Point）、多点（MultiPoint）、折线（LineString）、多折线（MultiLineString）、多边形（Polygon）、多多边形（MultiPolygon）以及复合几何集合（GeometryCollection）在同一个矢量图层中的统一加载；同时结合动态样式函数（`styleFunction`），根据各要素的运行时几何类型应用不同风格的描边、填充与点符号样式，并兼容了 OpenLayers 内置的解析圆（Circle）要素。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计机制 (Core Architecture & Mechanics)
+  - **RFC 7946 GeoJSON 标准几何模型**：
+    IETF RFC 7946 规范定义了地理信息交互的核心载体：
+    - **单体要素**：`Point`（`[x, y]`）、`LineString`（`[[x, y], ...]`）、`Polygon`（外环与若干内环孔洞 `[[[x, y], ...], ...]`）；
+    - **复合要素**：`MultiPoint`、`MultiLineString`、`MultiPolygon`，用于将空间上离散但语义唯一的实体（如群岛国家）聚合为单一要素；
+    - **异构集合**：`GeometryCollection`，可在同一个几何容器中打包线段、点与多边形。
+  - **OpenLayers 超集几何图元拓展**：
+    除 RFC 7946 标准外，OpenLayers 额外支持数学解析圆（`ol/geom/Circle`）。虽然标准 GeoJSON 并不包含圆形定义（通常由 GIS 软件离散化为正多边形），但 OpenLayers 的 `VectorSource` 可以无缝混用标准要素与解析圆对象，兼顾标准化互操作性与高精度交互。
+
+  #### 2. 关键代码解析与 API 模式 (Code Deep Dive & API Patterns)
+  - **基于几何类型的多态样式字典（Polymorphic Style Dictionary）**：
+    ```javascript
+    const styles = {
+      'Point': new Style({ image: ... }),
+      'LineString': new Style({ stroke: ... }),
+      'Polygon': new Style({ stroke: ..., fill: ... }),
+      'GeometryCollection': new Style({ stroke: ..., fill: ..., image: ... }),
+      'Circle': new Style({ stroke: ..., fill: ... }),
+    };
+
+    const styleFunction = function (feature) {
+      // 通过 feature.getGeometry().getType() 动态命中样式规则
+      return styles[feature.getGeometry().getType()];
+    };
+    ```
+    相较于为每个几何类型分别创建不同的图层，通过单一样式函数动态分发，极大减少了图层管理成本与 WebGL/Canvas 状态切换开销。
+  - **从内存对象同步读取要素**：
+    ```javascript
+    const vectorSource = new VectorSource({
+      features: new GeoJSON().readFeatures(geojsonObject),
+    });
+    ```
+    当 GeoJSON 已在前端内存中就绪（如来自 WebSocket 推送或本地配置）时，直接通过 `readFeatures()` 读取数组传入 `features` 配置项，瞬间完成空间 R-Tree 树索引构建。
+
+  #### 3. 工程避坑与高可用实践 (Production Pitfalls & Best Practices)
+  - **坐标投影参数的声明时机**：
+    本示例中的 GeoJSON 坐标已预先换算为 Web 墨卡托米制单位（如 `[4e6, -2e6]`）。但在实际生产中，99% 的 GeoJSON 数据均为 WGS 84 经纬度（`EPSG:4326`）。在读取外部 GeoJSON 时，**必须显式指定投影转换选项**：
+    ```javascript
+    new GeoJSON().readFeatures(geojson, {
+      dataProjection: 'EPSG:4326',      // 原始数据投影
+      featureProjection: 'EPSG:3857',   // 当前地图视图投影
+    });
+    ```
+    否则要素将直接被当作米制坐标绘制在非洲几内亚湾的微小范围内（呈现为“地图空白”）。
+  - **GeometryCollection 样式穿透**：
+    当样式应用于 `GeometryCollection` 时，该样式必须同时包含 `stroke`、`fill` 与 `image`，否则其中的子图元（如点或线）将由于缺少对应子样式而隐形。
 tags: "geojson, vector, openstreetmap"
 ---
 <div id="map" class="map"></div>

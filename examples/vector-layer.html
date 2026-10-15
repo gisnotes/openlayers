@@ -1,9 +1,59 @@
 ---
 layout: example.html
-title: Vector Layer
-shortdesc: Example of a countries vector layer with country information.
+title: Vector Layer / 声明式矢量图层与属性驱动注记避让
+shortdesc: Example of a countries vector layer with country information. / 演示如何使用基于 JSON 表达式的声明式样式（Flat Style）渲染生态区 GeoJSON 图层，配合注记避让（declutter）与鼠标悬停属性探测。
 docs: >
   The countries are loaded from a GeoJSON file. Information about countries is shown on hover and click.
+
+  本示例演示了如何从 GeoJSON 文件加载全球生态区矢量图层，并在鼠标光标悬停与点击时探测并显示地物属性。
+
+  图层采用了 OpenLayers 现代的声明式样式表达式（Flat Style Expressions），直接利用 `['get', 'COLOR']` 和 `['coalesce', ['get', 'ECO_NAME'], 'unknown']` 等语法从 GeoJSON 属性中动态计算多边形填充色与注记文本；同时开启了 `declutter: true` 全局标注碰撞避让，避免海量地名相互重叠堆叠。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计机制 (Core Architecture & Mechanics)
+  - **声明式扁平样式表达式（Flat Style Expressions）**：
+    自 OpenLayers 7 起，矢量样式支持类 Mapbox GL 风格的 AST 数组表达式。相较于传统 JavaScript 回调函数，声明式样式具有显著架构优势：
+    - **平台序列化友好**：样式完全由 JSON 表达，可直接存储在数据库或从后端微服务动态下发；
+    - **着色器编译与并发加速**：声明式表达式可被 OpenLayers 内部 AST 解析器直接编译为高效的评估函数或 WebGL 着色器指令；
+    - **健壮的空值兜底机制**：利用 `['coalesce', expr1, expr2, fallback]` 提供了类似 SQL 的多级空值防御，防止属性缺失导致图层崩溃。
+  - **空间标注碰撞避让引擎（Declutter Engine）**：
+    在 `VectorLayer` 配置中设置 `declutter: true`，并在文本样式中指定 `'text-declutter-mode': 'declutter'`。OpenLayers 会在当前视口构建一个屏幕空间的碰撞 R 树：
+    - 按要素的优先级或渲染顺序依次放入注记包络盒（Bounding Box）；
+    - 若新注记与已放置注记发生几何重叠，则自动静默丢弃次要注记；
+    - 在缩放漫游过程中动态刷新，彻底消除文字交错重叠的混乱杂音。
+
+  #### 2. 关键代码解析与 API 模式 (Code Deep Dive & API Patterns)
+  - **属性驱动样式配置**：
+    ```javascript
+    const vectorLayer = new VectorLayer({
+      background: '#1a2b39',
+      source: new VectorSource({
+        url: 'https://openlayers.org/data/vector/ecoregions.json',
+        format: new GeoJSON(),
+      }),
+      style: {
+        'fill-color': ['string', ['get', 'COLOR'], '#eee'],
+        'text-value': ['coalesce', ['get', 'ECO_NAME'], 'unknown'],
+        'text-font': 'bold 12px "Open Sans", "Arial Unicode MS", sans-serif',
+        'text-fill-color': '#333',
+        'text-stroke-color': 'rgba(255,255,255,0.8)',
+        'text-stroke-width': 2,
+        'text-overflow': true,
+        'text-declutter-mode': 'declutter',
+      },
+      declutter: true, // 开启图层级避让
+    });
+    ```
+    通过一行配置即可完成多边形着色、文字投影、文本光晕（Halo Stroke）以及避让开关的全套生产级样式。
+
+  #### 3. 工程避坑与高可用实践 (Production Pitfalls & Best Practices)
+  - **背景色与无底图模式融合**：
+    示例中配置了 `background: '#1a2b39'` 作为图层自身底色。在不需要加载庞大光栅瓦片底图（如卫星图或 OSM）的纯专题矢量场景中，直接通过图层 `background` 渲染海洋底色，能够节省数十个网络 HTTP 请求并极大加快首屏首帧呈现速度。
+  - **declutter 模式下的层叠顺序（Z-Index）控制**：
+    开启标注避让后，默认按要素在图层中的原始索引顺序进行碰撞挤占。若某些关键要素（如首都、重点保护区）必须优先展示，应在要素或样式中显式配置 `z-index` 或通过声明式表达式赋予更高的 `text-z-index`，确保高权重地标始终胜出。
 tags: "vector, geojson"
 ---
 <div id="map" class="map"></div>

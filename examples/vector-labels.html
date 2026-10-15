@@ -1,30 +1,76 @@
 ---
 layout: example.html
-title: Vector Labels
-shortdesc: Example of GeoJSON features with labels.
+title: Vector Labels / 矢量文本标注与全要素排版实战工作台
+shortdesc: Example of GeoJSON features with labels. / 演示如何针对 GeoJSON 中的点、线、面要素进行深度文本样式（Text Style）定制，涵盖沿线排版、折行截断、字重偏移与字体动态加载。
 docs: >
   This example showcases a number of options that can be set on text styles.
   When "Text/Wrap" is chosen (for example for the line features), the label is
   wrapped by inserting the character `\n`, which will create a multi-line
   label. The "Open Sans" web font will be loaded on demand, to show dynamic font
   loading.
+
+  本示例是一个全功能的矢量文本标注（Text Style）交互实验工作台，全面展示了 OpenLayers 对点（Points）、折线（Lines）与多边形（Polygons）三类核心地理图元的丰富注记排版能力。
+
+  通过右侧面板，你可以实时调整文本对齐（Align）、基线（Baseline）、旋转角度（Rotation）、字重（Weight）、沿线布局（Placement: line vs point）、最大转折弯角（Max Angle）、超出长度限制（Overflow）以及描边光晕（Outline）。当选择“Wrap（换行）”时，代码通过算法在词间自动插入 `\n` 实现多行排版；同时演示了按需动态注入外部 Web 字体（Open Sans）的工程方案。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计机制 (Core Architecture & Mechanics)
+  - **`ol/style/Text` 排版引擎双模式**：
+    - **点/质心模式 (`placement: 'point'`)**：
+      适用于点要素以及面要素的中心标注。OpenLayers 会自动计算多边形内部最宽敞的内切区域或几何质心（Interior Point），将文本锚定在此位置，配合 `offsetX` 与 `offsetY` 实现避让偏移。
+    - **沿线蜿蜒模式 (`placement: 'line'`)**：
+      专为道路、河流、航线等线要素设计。文字不再保持水平，而是计算线段切线斜率，使每个字元紧贴线几何蜿蜒排列；当线段急剧拐角时，若转折角度超过 `maxAngle`（默认 45°），排版引擎会自动抑制此标注以防止文字严重重叠挤压变形。
+  - **动态分辨率过滤（Resolution-based Level of Detail）**：
+    地图标注是造成视觉杂乱（Clutter）的主要根源。代码在样式函数中通过 `resolution > maxResolution` 判定当前缩放层级：当视口处于宏观比例尺时自动返回空字符串（`text = ''`），仅在微观缩放时呈现详细文字，实现清晰优雅的无级缩放注记（LOD）。
+
+  #### 2. 关键代码解析与 API 模式 (Code Deep Dive & API Patterns)
+  - **字符串动态分词折行算法**：
+    ```javascript
+    function stringDivider(str, width, spaceReplacer) {
+      if (str.length > width) {
+        let p = width;
+        // 向左寻找空格或破折号作为天然分词断点
+        while (p > 0 && str[p] != ' ' && str[p] != '-') {
+          p--;
+        }
+        if (p > 0) {
+          const left = str.substring(0, p + (str[p] == '-' ? 1 : 0));
+          const right = str.substring(p + 1);
+          return left + spaceReplacer + stringDivider(right, width, spaceReplacer);
+        }
+      }
+      return str;
+    }
+    ```
+    通过算法在单词边界插入换行符 `\n`，配合 `lineHeight` 实现优雅的多行折行，杜绝硬切断单词导致语义断裂。
+  - **Web 字体异步注入与重绘**：
+    Canvas 文本绘制要求对应字体必须在浏览器本地就绪。通过动态创建 `<link rel="stylesheet">` 引入 Google Fonts，并在字体就绪后调用 `vectorLayer.changed()` 或重新应用样式函数，即可完成高品质个性化字体渲染。
+
+  #### 3. 工程避坑与高可用实践 (Production Pitfalls & Best Practices)
+  - **沿线标注字形方向反向颠倒防护**：
+    折线要素在绘制时方向可能自西向东或自东向西。若直接按顶点顺序排列，会导致自东向西的道路注记呈现“倒立文字”。OpenLayers 内置了智能翻转机制，但在极端近乎垂直（90° 附近）的线段上，微小的视口旋转可能导致文字在正反向之间跳动闪烁。推荐在线要素处理中统一线拓扑流向。
+  - **文本光晕（Text Halo / Outline）性能优化**：
+    为了保证文字在复杂底图背景上的清晰辨识度，配置高对比度的白色描边（`stroke: new Stroke({color: '#fff', width: 3})`）是制图标准做法。但需注意：Canvas 2D 在绘制每个字元的描边时开销是纯填充的两倍。对于海量点位，建议开启图层的 `declutter: true`（标注避让）机制，自动剔除重叠冲突的文字。
 tags: "geojson, vector, openstreetmap, label"
 ---
 <div id="map" class="map"></div>
 
 <div class="edit-form">
-  <input id="refresh-points" type="button" value="Refresh" />
-  <h2>Points</h2>
+  <input id="refresh-points" type="button" value="Refresh / 刷新点标注" />
+  <h2>Points / 点要素标注</h2>
   <div class="edit-form-elem">
-    <label for="points-text">Text: </label>
+    <label for="points-text">Text / 文本策略: </label>
     <select id="points-text">
-      <option value="hide">Hide</option>
-      <option value="normal">Normal</option>
-      <option value="shorten" selected="selected">Shorten</option>
-      <option value="wrap">Wrap</option>
+      <option value="hide">Hide / 隐藏</option>
+      <option value="normal">Normal / 正常完整</option>
+      <option value="shorten" selected="selected">Shorten / 截断</option>
+      <option value="wrap">Wrap / 自动折行</option>
     </select>
     <br />
-    <label for="points-maxreso" title="Max Resolution Denominator">MaxReso.: </label>
+    <label for="points-maxreso" title="Max Resolution Denominator">MaxReso / 最大分辨率: </label>
     <select id="points-maxreso">
       <option value="38400">38,400</option>
       <option value="19200">19,200</option>
@@ -41,33 +87,33 @@ tags: "geojson, vector, openstreetmap, label"
       <option value="8">8</option>
     </select>
     <br />
-    <label for="points-align">Align: </label>
+    <label for="points-align">Align / 对齐方式: </label>
     <select id="points-align">
-      <option value="center" selected="selected">Center</option>
-      <option value="end">End</option>
-      <option value="left">Left</option>
-      <option value="right">Right</option>
-      <option value="start">Start</option>
+      <option value="center" selected="selected">Center / 居中</option>
+      <option value="end">End / 尾部</option>
+      <option value="left">Left / 居左</option>
+      <option value="right">Right / 居右</option>
+      <option value="start">Start / 起始</option>
     </select>
     <br />
-    <label for="points-baseline">Baseline: </label>
+    <label for="points-baseline">Baseline / 基线: </label>
     <select id="points-baseline">
-      <option value="alphabetic">Alphabetic</option>
-      <option value="bottom">Bottom</option>
-      <option value="hanging">Hanging</option>
-      <option value="ideographic">Ideographic</option>
-      <option value="middle" selected="selected">Middle</option>
-      <option value="top">Top</option>
+      <option value="alphabetic">Alphabetic / 字母基线</option>
+      <option value="bottom">Bottom / 底部</option>
+      <option value="hanging">Hanging / 悬挂</option>
+      <option value="ideographic">Ideographic / 表意字</option>
+      <option value="middle" selected="selected">Middle / 居中</option>
+      <option value="top">Top / 顶部</option>
     </select>
     <br />
-    <label for="points-rotation">Rotation: </label>
+    <label for="points-rotation">Rotation / 旋转角度: </label>
     <select id="points-rotation">
       <option value="0">0°</option>
       <option value="0.785398164">45°</option>
       <option value="1.570796327">90°</option>
     </select>
     <br />
-    <label for="points-font">Font: </label>
+    <label for="points-font">Font / 字体族: </label>
     <select id="points-font">
       <option value="Arial" selected="selected">Arial</option>
       <option value="'Courier New'">Courier New</option>
@@ -75,67 +121,67 @@ tags: "geojson, vector, openstreetmap, label"
       <option value="Verdana">Verdana</option>
     </select>
     <br />
-    <label for="points-weight">Weight: </label>
+    <label for="points-weight">Weight / 粗细: </label>
     <select id="points-weight">
-      <option value="bold">Bold</option>
-      <option value="normal" selected="selected">Normal</option>
+      <option value="bold">Bold / 加粗</option>
+      <option value="normal" selected="selected">Normal / 正常</option>
     </select>
     <br />
-    <label for="points-placement">Placement: </label>
+    <label for="points-placement">Placement / 布局位置: </label>
     <select disabled id="points-placement">
-      <option value="line">Line</option>
-      <option value="point" selected="selected">Point</option>
+      <option value="line">Line / 沿线</option>
+      <option value="point" selected="selected">Point / 点位置</option>
     </select>
     <br />
-    <label for="points-maxangle">Max Angle: </label>
+    <label for="points-maxangle">Max Angle / 最大弯折角: </label>
     <select disabled id="points-maxangle">
       <option value="0.7853981633974483" selected="selected">45°</option>
       <option value="2.0943951023931953">120°</option>
       <option value="6.283185307179586">360°</option>
     </select>
     <br />
-    <label for="points-overflow">Exceed Len: </label>
+    <label for="points-overflow">Exceed Len / 允许超长: </label>
     <select disabled id="points-overflow">
-      <option value="true">True</option>
-      <option value="false" selected="selected">False</option>
+      <option value="true">True / 是</option>
+      <option value="false" selected="selected">False / 否</option>
     </select>
     <br />
-    <label for="points-size">Size: </label>
+    <label for="points-size">Size / 字号: </label>
     <input type="text" value="12px" id="points-size" />
     <br />
-    <label for="points-height">Line height: </label>
+    <label for="points-height">Line height / 行高: </label>
     <input type="text" value="1" id="points-height" />
     <br />
-    <label for="points-offset-x">Offset X: </label>
+    <label for="points-offset-x">Offset X / X偏移: </label>
     <input type="text" value="0" id="points-offset-x" />
     <br />
-    <label for="points-offset-y">Offset Y: </label>
+    <label for="points-offset-y">Offset Y / Y偏移: </label>
     <input type="text" value="0" id="points-offset-y" />
     <br />
-    <label for="points-color">Color: </label>
+    <label for="points-color">Color / 文字颜色: </label>
     <input type="text" value="#aa3300" id="points-color" />
     <br />
-    <label for="points-outline" title="Outline Color">O. Color: </label>
+    <label for="points-outline" title="Outline Color">O. Color / 描边颜色: </label>
     <input type="text" value="#ffffff" id="points-outline" />
     <br />
-    <label for="points-outline-width" title="Outline Width">O. Width: </label>
+    <label for="points-outline-width" title="Outline Width">O. Width / 描边宽度: </label>
     <input type="text" value="3" id="points-outline-width" />
   </div>
 </div>
 
 <div class="edit-form">
-  <input id="refresh-lines" type="button" value="Refresh" />
-  <h2>Lines</h2>
+  <input id="refresh-lines" type="button" value="Refresh / 刷新线标注" />
+  <h2>Lines / 线要素标注</h2>
   <div class="edit-form-elem">
-    <label for="lines-text">Text: </label>
+    <label for="lines-text">Text / 文本策略: </label>
     <select id="lines-text">
-      <option value="hide">Hide</option>
-      <option value="normal">Normal</option>
-      <option value="shorten">Shorten</option>
-      <option value="wrap" selected="selected">Wrap</option>
+      <option value="hide">Hide / 隐藏</option>
+      <option value="normal">Normal / 正常完整</option>
+      <option value="shorten">Shorten / 截断</option>
+      <option value="wrap" selected="selected">Wrap / 自动折行</option>
     </select>
     <br />
-    <label for="lines-maxreso" title="Max Resolution Denominator">MaxReso.: </label>
+    <label for="lines-maxreso" title="Max Resolution Denominator">MaxReso / 最大分辨率: </label>
     <select id="lines-maxreso">
       <option value="38400">38,400</option>
       <option value="19200">19,200</option>
@@ -152,34 +198,34 @@ tags: "geojson, vector, openstreetmap, label"
       <option value="8">8</option>
     </select>
     <br />
-    <label for="lines-align">Align: </label>
+    <label for="lines-align">Align / 对齐方式: </label>
     <select id="lines-align">
       <option value="" selected="selected"></option>
-      <option value="center">Center</option>
-      <option value="end">End</option>
-      <option value="left">Left</option>
-      <option value="right">Right</option>
-      <option value="start">Start</option>
+      <option value="center">Center / 居中</option>
+      <option value="end">End / 尾部</option>
+      <option value="left">Left / 居左</option>
+      <option value="right">Right / 居右</option>
+      <option value="start">Start / 起始</option>
     </select>
     <br />
-    <label for="lines-baseline">Baseline: </label>
+    <label for="lines-baseline">Baseline / 基线: </label>
     <select id="lines-baseline">
-      <option value="alphabetic">Alphabetic</option>
-      <option value="bottom">Bottom</option>
-      <option value="hanging">Hanging</option>
-      <option value="ideographic">Ideographic</option>
-      <option value="middle" selected="selected">Middle</option>
-      <option value="top">Top</option>
+      <option value="alphabetic">Alphabetic / 字母基线</option>
+      <option value="bottom">Bottom / 底部</option>
+      <option value="hanging">Hanging / 悬挂</option>
+      <option value="ideographic">Ideographic / 表意字</option>
+      <option value="middle" selected="selected">Middle / 居中</option>
+      <option value="top">Top / 顶部</option>
     </select>
     <br />
-    <label for="lines-rotation">Rotation: </label>
+    <label for="lines-rotation">Rotation / 旋转角度: </label>
     <select id="lines-rotation">
       <option value="0">0°</option>
       <option value="0.785398164">45°</option>
       <option value="1.570796327">90°</option>
     </select>
     <br />
-    <label for="lines-font">Font: </label>
+    <label for="lines-font">Font / 字体族: </label>
     <select id="lines-font">
       <option value="Arial">Arial</option>
       <option value="'Courier New'" selected="selected">Courier New</option>
@@ -187,67 +233,67 @@ tags: "geojson, vector, openstreetmap, label"
       <option value="Verdana">Verdana</option>
     </select>
     <br />
-    <label for="lines-weight">Weight: </label>
+    <label for="lines-weight">Weight / 粗细: </label>
     <select id="lines-weight">
-      <option value="bold" selected="selected">Bold</option>
-      <option value="normal">Normal</option>
+      <option value="bold" selected="selected">Bold / 加粗</option>
+      <option value="normal">Normal / 正常</option>
     </select>
     <br />
-    <label for="lines-placement">Placement: </label>
+    <label for="lines-placement">Placement / 布局位置: </label>
     <select id="lines-placement">
-      <option value="line">Line</option>
-      <option value="point" selected="selected">Point</option>
+      <option value="line">Line / 沿线</option>
+      <option value="point" selected="selected">Point / 质心点</option>
     </select>
     <br />
-    <label for="lines-maxangle">Max Angle: </label>
+    <label for="lines-maxangle">Max Angle / 最大弯折角: </label>
     <select id="lines-maxangle">
       <option value="0.7853981633974483" selected="selected">45°</option>
       <option value="2.0943951023931953">120°</option>
       <option value="6.283185307179586">360°</option>
     </select>
     <br />
-    <label for="lines-overflow">Exceed Len: </label>
+    <label for="lines-overflow">Exceed Len / 允许超长: </label>
     <select id="lines-overflow">
-      <option value="true">True</option>
-      <option value="false" selected="selected">False</option>
+      <option value="true">True / 是</option>
+      <option value="false" selected="selected">False / 否</option>
     </select>
     <br />
-    <label for="lines-size">Size: </label>
+    <label for="lines-size">Size / 字号: </label>
     <input type="text" value="12px" id="lines-size" />
     <br />
-    <label for="lines-height">Line height: </label>
+    <label for="lines-height">Line height / 行高: </label>
     <input type="text" value="1.2" id="lines-height" />
     <br />
-    <label for="lines-offset-x">Offset X: </label>
+    <label for="lines-offset-x">Offset X / X偏移: </label>
     <input type="text" value="0" id="lines-offset-x" />
     <br />
-    <label for="lines-offset-y">Offset Y: </label>
+    <label for="lines-offset-y">Offset Y / Y偏移: </label>
     <input type="text" value="0" id="lines-offset-y" />
     <br />
-    <label for="lines-color">Color: </label>
+    <label for="lines-color">Color / 文字颜色: </label>
     <input type="text" value="green" id="lines-color" />
     <br />
-    <label for="lines-outline" title="Outline Color">O. Color: </label>
+    <label for="lines-outline" title="Outline Color">O. Color / 描边颜色: </label>
     <input type="text" value="#ffffff" id="lines-outline" />
     <br />
-    <label for="lines-outline-width" title="Outline Width">O. Width: </label>
+    <label for="lines-outline-width" title="Outline Width">O. Width / 描边宽度: </label>
     <input type="text" value="3" id="lines-outline-width" />
   </div>
 </div>
 
 <div class="edit-form">
-  <input id="refresh-polygons" type="button" value="Refresh" />
-  <h2>Polygons</h2>
+  <input id="refresh-polygons" type="button" value="Refresh / 刷新面标注" />
+  <h2>Polygons / 面要素标注</h2>
   <div class="edit-form-elem">
-    <label for="polygons-text">Text: </label>
+    <label for="polygons-text">Text / 文本策略: </label>
     <select id="polygons-text">
-      <option value="hide">Hide</option>
-      <option value="normal" selected="selected">Normal</option>
-      <option value="shorten">Shorten</option>
-      <option value="wrap">Wrap</option>
+      <option value="hide">Hide / 隐藏</option>
+      <option value="normal" selected="selected">Normal / 正常完整</option>
+      <option value="shorten">Shorten / 截断</option>
+      <option value="wrap">Wrap / 自动折行</option>
     </select>
     <br />
-    <label for="polygons-maxreso" title="Max Resolution Denominator">MaxReso.: </label>
+    <label for="polygons-maxreso" title="Max Resolution Denominator">MaxReso / 最大分辨率: </label>
     <select id="polygons-maxreso">
       <option value="38400">38,400</option>
       <option value="19200">19,200</option>
@@ -264,34 +310,34 @@ tags: "geojson, vector, openstreetmap, label"
       <option value="8">8</option>
     </select>
     <br />
-    <label for="polygons-align">Align: </label>
+    <label for="polygons-align">Align / 对齐方式: </label>
     <select id="polygons-align">
       <option value="" selected="selected"></option>
-      <option value="center">Center</option>
-      <option value="end">End</option>
-      <option value="left">Left</option>
-      <option value="right">Right</option>
-      <option value="start">Start</option>
+      <option value="center">Center / 居中</option>
+      <option value="end">End / 尾部</option>
+      <option value="left">Left / 居左</option>
+      <option value="right">Right / 居右</option>
+      <option value="start">Start / 起始</option>
     </select>
     <br />
-    <label for="polygons-baseline">Baseline: </label>
+    <label for="polygons-baseline">Baseline / 基线: </label>
     <select id="polygons-baseline">
-      <option value="alphabetic">Alphabetic</option>
-      <option value="bottom">Bottom</option>
-      <option value="hanging">Hanging</option>
-      <option value="ideographic">Ideographic</option>
-      <option value="middle" selected="selected">Middle</option>
-      <option value="top">Top</option>
+      <option value="alphabetic">Alphabetic / 字母基线</option>
+      <option value="bottom">Bottom / 底部</option>
+      <option value="hanging">Hanging / 悬挂</option>
+      <option value="ideographic">Ideographic / 表意字</option>
+      <option value="middle" selected="selected">Middle / 居中</option>
+      <option value="top">Top / 顶部</option>
     </select>
     <br />
-    <label for="polygons-rotation">Rotation: </label>
+    <label for="polygons-rotation">Rotation / 旋转角度: </label>
     <select id="polygons-rotation">
       <option value="0">0°</option>
       <option value="0.785398164">45°</option>
       <option value="1.570796327">90°</option>
     </select>
     <br />
-    <label for="polygons-font">Font: </label>
+    <label for="polygons-font">Font / 字体族: </label>
     <select id="polygons-font">
       <option value="Arial">Arial</option>
       <option value="'Courier New'">Courier New</option>
@@ -299,50 +345,50 @@ tags: "geojson, vector, openstreetmap, label"
       <option value="Verdana" selected="selected">Verdana</option>
     </select>
     <br />
-    <label for="polygons-weight">Weight: </label>
+    <label for="polygons-weight">Weight / 粗细: </label>
     <select id="polygons-weight">
-      <option value="bold" selected="selected">Bold</option>
-      <option value="normal">Normal</option>
+      <option value="bold" selected="selected">Bold / 加粗</option>
+      <option value="normal">Normal / 正常</option>
     </select>
     <br />
-    <label for="polygons-placement">Placement: </label>
+    <label for="polygons-placement">Placement / 布局位置: </label>
     <select id="polygons-placement">
-      <option value="line">Line</option>
-      <option value="point" selected="selected">Point</option>
+      <option value="line">Line / 沿线</option>
+      <option value="point" selected="selected">Point / 质心点</option>
     </select>
     <br />
-    <label for="polygons-maxangle">Max Angle: </label>
+    <label for="polygons-maxangle">Max Angle / 最大弯折角: </label>
     <select id="polygons-maxangle">
       <option value="0.7853981633974483" selected="selected">45°</option>
       <option value="2.0943951023931953">120°</option>
       <option value="6.283185307179586">360°</option>
     </select>
     <br />
-    <label for="polygons-overflow">Exceed Len: </label>
+    <label for="polygons-overflow">Exceed Len / 允许超长: </label>
     <select id="polygons-overflow">
-      <option value="true">True</option>
-      <option value="false" selected="selected">False</option>
+      <option value="true">True / 是</option>
+      <option value="false" selected="selected">False / 否</option>
     </select>
     <br />
-    <label for="polygons-size">Size: </label>
+    <label for="polygons-size">Size / 字号: </label>
     <input type="text" value="10px" id="polygons-size" />
     <br />
-    <label for="polygons-height">Line height: </label>
+    <label for="polygons-height">Line height / 行高: </label>
     <input type="text" value="1" id="polygons-height" />
     <br />
-    <label for="polygons-offset-x">Offset X: </label>
+    <label for="polygons-offset-x">Offset X / X偏移: </label>
     <input type="text" value="0" id="polygons-offset-x" />
     <br />
-    <label for="polygons-offset-y">Offset Y: </label>
+    <label for="polygons-offset-y">Offset Y / Y偏移: </label>
     <input type="text" value="0" id="polygons-offset-y" />
     <br />
-    <label for="polygons-color">Color: </label>
+    <label for="polygons-color">Color / 文字颜色: </label>
     <input type="text" value="blue" id="polygons-color" />
     <br />
-    <label for="polygons-outline" title="Outline Color">O. Color: </label>
+    <label for="polygons-outline" title="Outline Color">O. Color / 描边颜色: </label>
     <input type="text" value="#ffffff" id="polygons-outline" />
     <br />
-    <label for="polygons-outline-width" title="Outline Width">O. Width: </label>
+    <label for="polygons-outline-width" title="Outline Width">O. Width / 描边宽度: </label>
     <input type="text" value="3" id="polygons-outline-width" />
   </div>
 </div>

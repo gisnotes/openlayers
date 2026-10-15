@@ -1,7 +1,7 @@
 ---
 layout: example.html
-title: Vector Layer Hit Detection
-shortdesc: Example of hit detection on an ecoregions vector layer with protection status.
+title: Vector Layer Hit Detection / 矢量图层拾取检测与高性能 getFeatures 算法
+shortdesc: Example of hit detection on an ecoregions vector layer with protection status. / 演示如何使用图层级高性能 getFeatures(pixel) 方法在生态区 GeoJSON 图层上执行悬停与点击拾取，对比逐像素碰撞算法的性能权衡。
 docs: >
   The ecoregions are loaded from a GeoJSON file. Information about features is
   retrieved using the layer's `getFeatures()` method on hover and click. For
@@ -9,6 +9,62 @@ docs: >
   feature. It uses an efficient hit detection algorithm, at the cost of
   accuracy. For pixel exact hit detection, when performance is not a concern,
   use the map's `getFeaturesAtPixel()` or `forEachFeatureAtPixel()` methods.
+
+  本示例演示了如何从 GeoJSON 文件加载全球生态区及保护状态数据，并在光标悬停与点击时通过矢量图层的 `getFeatures(pixel)` 方法检索要素属性并高亮显示。
+
+  针对矢量图层，`vectorLayer.getFeatures(pixel)` 采用高效的启发式空间拾取算法，异步返回仅包含最顶层单一要素的 Promise 数组。与地图级别的逐像素回读算法（`forEachFeatureAtPixel`）相比，该方法极大地削减了拾取耗时，特别适合高频光标漫游交互。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计机制 (Core Architecture & Mechanics)
+  - **图层级拾取 vs 地图级拾取性能对比**：
+    | 维度 | `vectorLayer.getFeatures(pixel)` | `map.forEachFeatureAtPixel(pixel)` |
+    | :--- | :--- | :--- |
+    | **API 级别** | 图层级别 (`ol/layer/Vector`) | 地图实例级别 (`ol/Map`) |
+    | **返回值** | Promise，仅返回最顶层要素 `[feature]` | 同步遍历回调，可访问所有层叠要素与所属图层 |
+    | **算法底层** | 空间索引 R-Tree 粗筛 + 快速几何外包估算 | 离屏 Canvas 像素颜色渲染探测或点在多边形内严格测试 |
+    | **CPU 开销** | 极低（数微秒级），不阻塞帧渲染 | 较高（需准备离屏上下文与像素采样） |
+    | **最佳场景** | `pointermove` 悬停提示、大范围复杂矢量要素拾取 | 精确鼠标点击选择、多图层穿透判定、精确微小图元拾取 |
+  - **高亮覆盖层架构（Feature Overlay Pattern）**：
+    在地图可视化中，频繁修改要素原有样式以实现悬停高亮是造成性能衰退的常见反模式。最佳实践是建立一个专用的轻量覆盖图层（`featureOverlay`）：
+    - 仅配置高亮样式（如亮白描边）；
+    - 悬停命中时将目标要素直接挂入覆盖层（`overlaySource.addFeature(feature)`）；
+    - 光标移出时立即移除，主矢量图层完全不需要重新编译或重绘底层渲染缓冲区。
+
+  #### 2. 关键代码解析与 API 模式 (Code Deep Dive & API Patterns)
+  - **异步 Promise 拾取链路**：
+    ```javascript
+    vectorLayer.getFeatures(pixel).then(function (features) {
+      const feature = features.length ? features[0] : undefined;
+      // 提取 GeoJSON 属性渲染信息看板
+      if (feature) {
+        info.innerHTML = feature.get('ECO_NAME') + ': ' + feature.get('NNH_NAME');
+      }
+      // 维护高亮覆盖层状态
+      if (feature !== highlight) {
+        if (highlight) featureOverlay.getSource().removeFeature(highlight);
+        if (feature) featureOverlay.getSource().addFeature(feature);
+        highlight = feature;
+      }
+    });
+    ```
+    通过 Promise 异步处理，避免长时间占用主线程动画循环（requestAnimationFrame），保障平移缩放时的 60 FPS 流畅度。
+
+  #### 3. 工程避坑与高可用实践 (Production Pitfalls & Best Practices)
+  - **拖拽过程中的防误触过滤**：
+    ```javascript
+    map.on('pointermove', function (evt) {
+      if (evt.dragging) {
+        return; // 用户正在按住鼠标拖拽平移地图时，忽略要素拾取
+      }
+      displayFeatureInfo(evt.pixel);
+    });
+    ```
+    严禁在 `evt.dragging === true` 时触发像素拾取。在拖拽过程中，视口剧烈变动，执行拾取不仅浪费计算资源，还会在移动端产生恼人的属性闪烁。
+  - **精度权衡与边缘容差**：
+    由于 `layer.getFeatures(pixel)` 追求极致性能，对于极其复杂的自相交多边形或尖锐拐角，可能会有极微小的拾取容差。若业务场景涉及资产确权、地块裁决等高严苛场景，建议在点击（`click`）事件中降级使用 `map.forEachFeatureAtPixel(pixel, ...)` 进行像素级精确回读。
 tags: "vector, geojson, click, hover, hit detection"
 ---
 <div id="map" class="map"></div>

@@ -1,9 +1,62 @@
 ---
 layout: example.html
-title: Equal Earth projection with dynamic center meridian
-shortdesc: Example of a vector layer in Equal Earth projection with dynamic center meridian.
+title: Equal Earth projection with dynamic center meridian / 动态中央子午线 Equal Earth 投影与 GeoJSON 多边形裁剪
+shortdesc: Example of a vector layer in Equal Earth projection with dynamic center meridian. / 演示如何在 Equal Earth 等面积伪圆柱投影下根据视图中心动态切换中央子午线，并实时裁剪跨日界线 GeoJSON 多边形以防止渲染撕裂。
 docs: >
   The countries are loaded from a GeoJSON file. Information about countries is shown on hover and click.
+
+  本示例演示了如何在 Equal Earth（等面积伪圆柱投影）坐标系下加载全球生态区/国家 GeoJSON 矢量数据，并在鼠标悬停与点击时高亮并显示要素信息。
+
+  为了在用户水平平移漫游时保持全球大圆投影的视觉连贯性，代码根据当前视口中心经度以 5° 为步长动态重新计算中央子午线（`lon_0`）并注册新的 Proj4 投影。同时通过前端多边形裁剪算法（`clipPolygon`）在反子午线处切分多边形，完美解决了非柱面投影跨越日界线时常见的几何撕裂与拉丝飞线渲染缺陷。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计机制 (Core Architecture & Mechanics)
+  - **Equal Earth 等面积投影特性**：
+    Equal Earth（由 Tom Patterson、Bernhard Jenny 等于 2018 年提出）是一种专门用于展示世界地图的伪圆柱等面积投影，它不仅严格保持了陆地与海洋的相对面积比例，而且视觉外观高度优雅，是替代墨卡托高纬度夸大效应的现代化制图首选。
+  - **动态中央子午线（Dynamic Central Meridian）**：
+    通常世界投影固定以 0° 经线（本初子午线）或 150°E 太平洋为中心。当用户左右拖拽地图时，固定的外包椭圆会脱离视口中心。本示例通过监听 `change:center`，动态生成带有对应 `+lon_0=${lon0}` 的 Proj4 投影定义，并即时调用 `register(proj4)`，使地图视角始终以视口中心经线为投影对称轴。
+  - **反子午线多边形切分（Antimeridian Polygon Clipping）**：
+    在具有有限边界的非圆柱投影（如 Equal Earth、Robinson、Mollweide）中，如果一个国家或生态区跨越了当前投影的截断边线（即 `lon_0 ± 180°`），其连续坐标在屏幕像素空间会被解释为一条跨越整个画面的长线段（产生贯穿画面的撕裂伪影）。必须在坐标流输入图层前，将跨界几何沿切线拆分为两个独立的子多边形，分别绘制在投影的两侧。
+
+  #### 2. 关键代码解析与 API 模式 (Code Deep Dive & API Patterns)
+  - **Proj4js 动态注册与全局范围设定**：
+    ```javascript
+    function dynEqualEarth(center, round = 15) {
+      const lon0 = Math.round(center[0] / round) * round;
+      const code = `EqualEarth${lon0}`;
+      let prj = getProjection(code);
+      if (!prj) {
+        proj4.defs(
+          code,
+          `+proj=eqearth +lon_0=${lon0} +x_0=0 +y_0=0 +R=6371008.7714 +units=m +no_defs +type=crs`,
+        );
+        register(proj4);
+        prj = getProjection(code);
+        prj.setGlobal(true);
+        prj.setExtent([-17243959.06, -8392927.6, 17243959.06, 8392927.6]);
+        prj.setWorldExtent([-180, -90, 180, 90]);
+      }
+      return prj;
+    }
+    ```
+    通过为每个离散步长（如 5°）生成唯一命名投影代码，避免重复定义开销。
+  - **RenderFeature 极速轻量渲染图元**：
+    ```javascript
+    new GeoJSON({
+      featureProjection: projection,
+      featureClass: RenderFeature, // 关键：使用只读轻量渲染要素
+    }).readFeatures(geojson)
+    ```
+    通常 `readFeatures` 会生成拥有完整属性访问器和事件机制的 `ol/Feature` 对象，在包含数万个顶点的复杂多边形数据集下会带来可观的内存压力。传入 `featureClass: RenderFeature` 可直接输出高度紧凑的扁平内存坐标数组，渲染性能提升数倍。
+
+  #### 3. 工程避坑与高可用实践 (Production Pitfalls & Best Practices)
+  - **视口变更监听防死循环**：
+    在 `handleCenterChange` 中，当检测到需要切换投影时，必须在更新视图前通过 `curView.un('change:center', handleCenterChange)` 解绑事件监听；新 View 实例化完成后，再重新挂载监听器，防止视图重置触发的连续嵌套递归。
+  - **多边形拓扑简并防御**：
+    在进行坐标钳位（Clamping）处理时，某些细长岛屿或海岬被裁切后可能退化为共线点甚至单点。代码中通过 `if (clamped < ncoords)` 进行了防御性校验，主动丢弃简并图元，避免底层 Canvas 渲染管线抛出拓扑异常。
 tags: "vector, geojson, equal-earth"
 ---
 

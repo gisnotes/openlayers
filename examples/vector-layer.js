@@ -4,6 +4,7 @@ import GeoJSON from '../src/ol/format/GeoJSON.js';
 import VectorLayer from '../src/ol/layer/Vector.js';
 import VectorSource from '../src/ol/source/Vector.js';
 
+// Vector layer configured with declarative flat style and decluttering / 配置声明式扁平样式与文字避让的矢量图层
 const vectorLayer = new VectorLayer({
   background: '#1a2b39',
   source: new VectorSource({
@@ -24,6 +25,7 @@ const vectorLayer = new VectorLayer({
   declutter: true,
 });
 
+// Initialize map instance / 初始化地图实例
 const map = new Map({
   layers: [vectorLayer],
   target: 'map',
@@ -33,6 +35,7 @@ const map = new Map({
   }),
 });
 
+// Feature overlay layer for hover highlighting / 用于悬停高亮的专用矢量覆盖层
 const featureOverlay = new VectorLayer({
   source: new VectorSource(),
   map: map,
@@ -43,6 +46,12 @@ const featureOverlay = new VectorLayer({
 });
 
 let highlight;
+
+/**
+ * Display feature attribute information and update hover overlay.
+ * 检测像素位置的要素属性信息并更新高亮图层状态
+ * @param {import('../src/ol/pixel.js').Pixel} pixel Screen coordinates / 屏幕像素坐标
+ */
 const displayFeatureInfo = function (pixel) {
   const feature = map.forEachFeatureAtPixel(pixel, function (feature) {
     return feature;
@@ -55,6 +64,7 @@ const displayFeatureInfo = function (pixel) {
     info.innerHTML = '&nbsp;';
   }
 
+  // Update highlight feature in overlay / 在高亮覆盖层中替换目标要素
   if (feature !== highlight) {
     if (highlight) {
       featureOverlay.getSource().removeFeature(highlight);
@@ -66,6 +76,7 @@ const displayFeatureInfo = function (pixel) {
   }
 };
 
+// Pointer move listener with dragging check / 监听光标悬停移动并过滤拖拽操作
 map.on('pointermove', function (evt) {
   if (evt.dragging) {
     return;
@@ -73,6 +84,7 @@ map.on('pointermove', function (evt) {
   displayFeatureInfo(evt.pixel);
 });
 
+// Click listener for feature inspection / 监听地图点击交互
 map.on('click', function (evt) {
   displayFeatureInfo(evt.pixel);
 });

@@ -13,6 +13,7 @@ import Text from '../src/ol/style/Text.js';
 
 let openSansAdded = false;
 
+// DOM element references for form controls / 表单控件 DOM 元素引用字典
 const myDom = {
   points: {
     text: document.getElementById('points-text'),
@@ -70,6 +71,14 @@ const myDom = {
   },
 };
 
+/**
+ * Resolve display text based on resolution and strategy.
+ * 根据地图分辨率及截断/换行策略获取最终标注文本
+ * @param {import('../src/ol/Feature.js').default} feature Feature / 矢量要素
+ * @param {number} resolution View resolution / 视图分辨率
+ * @param {Object} dom Control DOMs / 表单 DOM 控件对象
+ * @return {string} Processed text / 处理后的文本字符串
+ */
 const getText = function (feature, resolution, dom) {
   const type = dom.text.value;
   const maxResolution = dom.maxreso.value;
@@ -77,13 +86,13 @@ const getText = function (feature, resolution, dom) {
 
   if (resolution > maxResolution) {
     text = '';
-  } else if (type == 'hide') {
+  } else if (type === 'hide') {
     text = '';
-  } else if (type == 'shorten') {
+  } else if (type === 'shorten') {
     text = truncate(text, 12);
   } else if (
-    type == 'wrap' &&
-    (!dom.placement || dom.placement.value != 'line')
+    type === 'wrap' &&
+    (!dom.placement || dom.placement.value !== 'line')
   ) {
     text = stringDivider(text, 16, '\n');
   }
@@ -91,6 +100,14 @@ const getText = function (feature, resolution, dom) {
   return text;
 };
 
+/**
+ * Create dynamic ol/style/Text instance from user controls.
+ * 根据界面表单配置动态创建 ol/style/Text 文本样式对象
+ * @param {import('../src/ol/Feature.js').default} feature Feature / 矢量要素
+ * @param {number} resolution View resolution / 视图分辨率
+ * @param {Object} dom Control DOMs / 表单 DOM 控件对象
+ * @return {Text} Text style instance / 文本样式实例
+ */
 const createTextStyle = function (feature, resolution, dom) {
   const align = dom.align.value;
   const baseline = dom.baseline.value;
@@ -101,9 +118,11 @@ const createTextStyle = function (feature, resolution, dom) {
   const weight = dom.weight.value;
   const placement = dom.placement ? dom.placement.value : undefined;
   const maxAngle = dom.maxangle ? parseFloat(dom.maxangle.value) : undefined;
-  const overflow = dom.overflow ? dom.overflow.value == 'true' : undefined;
+  const overflow = dom.overflow ? dom.overflow.value === 'true' : undefined;
   const rotation = parseFloat(dom.rotation.value);
-  if (dom.font.value == "'Open Sans'" && !openSansAdded) {
+
+  // Dynamically load Google Open Sans font if requested / 按需动态注入 Open Sans Web 字体
+  if (dom.font.value === "'Open Sans'" && !openSansAdded) {
     const openSans = document.createElement('link');
     openSans.href = 'https://fonts.googleapis.com/css?family=Open+Sans';
     openSans.rel = 'stylesheet';
@@ -116,7 +135,7 @@ const createTextStyle = function (feature, resolution, dom) {
   const outlineWidth = parseInt(dom.outlineWidth.value, 10);
 
   return new Text({
-    textAlign: align == '' ? undefined : align,
+    textAlign: align === '' ? undefined : align,
     textBaseline: baseline,
     font: font,
     text: getText(feature, resolution, dom),
@@ -131,7 +150,7 @@ const createTextStyle = function (feature, resolution, dom) {
   });
 };
 
-// Polygons
+// Polygons style function / 多边形要素样式函数
 function polygonStyleFunction(feature, resolution) {
   return new Style({
     stroke: new Stroke({
@@ -153,7 +172,7 @@ const vectorPolygons = new VectorLayer({
   style: polygonStyleFunction,
 });
 
-// Lines
+// Lines style function / 折线要素样式函数
 function lineStyleFunction(feature, resolution) {
   return new Style({
     stroke: new Stroke({
@@ -172,7 +191,7 @@ const vectorLines = new VectorLayer({
   style: lineStyleFunction,
 });
 
-// Points
+// Points style function / 点要素样式函数
 function pointStyleFunction(feature, resolution) {
   return new Style({
     image: new CircleStyle({
@@ -192,6 +211,7 @@ const vectorPoints = new VectorLayer({
   style: pointStyleFunction,
 });
 
+// Initialize map instance / 初始化地图实例
 const map = new Map({
   layers: [
     new TileLayer({
@@ -208,6 +228,7 @@ const map = new Map({
   }),
 });
 
+// Event listeners to refresh styles / 绑定表单按钮点击事件刷新对应图层样式
 document
   .getElementById('refresh-points')
   .addEventListener('click', function () {
@@ -225,24 +246,31 @@ document
   });
 
 /**
- * @param {string} string String
- * @param {number} n The max number of characters to keep.
- * @return {string} Truncated string.
+ * Truncate long string and append ellipsis. / 截断超出长度的字符串并追加省略号
+ * @param {string} string Input string / 输入字符串
+ * @param {number} n Max character count / 最大保留字符数
+ * @return {string} Truncated string / 截断后字符串
  */
 function truncate(string, n) {
   return string.length > n ? string.slice(0, n - 1) + '…' : string.slice();
 }
 
-// https://stackoverflow.com/questions/14484787/wrap-text-in-javascript
+/**
+ * Wrap string at whitespace or hyphen boundaries. / 在空格或破折号处自动分词折行
+ * @param {string} str Input string / 输入字符串
+ * @param {number} width Line wrap threshold / 折行宽度阈值
+ * @param {string} spaceReplacer Separator character (e.g. \n) / 换行替换符
+ * @return {string} Wrapped multi-line text / 折行后多行文本
+ */
 function stringDivider(str, width, spaceReplacer) {
   if (str.length > width) {
     let p = width;
-    while (p > 0 && str[p] != ' ' && str[p] != '-') {
+    while (p > 0 && str[p] !== ' ' && str[p] !== '-') {
       p--;
     }
     if (p > 0) {
       let left;
-      if (str.substring(p, p + 1) == '-') {
+      if (str.substring(p, p + 1) === '-') {
         left = str.substring(0, p + 1);
       } else {
         left = str.substring(0, p);
