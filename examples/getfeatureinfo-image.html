@@ -14,8 +14,8 @@ docs: >
 
   <h4>1. 核心架构与设计思想</h4>
   <ul>
-    <li><strong>光栅服务端要素穿透查询（WMS GetFeatureInfo）：</strong>
-      WMS 服务向客户端分发的是已经光栅化的图片（PNG/JPEG），客户端 Canvas 本身并不包含矢量几何对象。为了实现“点击地图查询图斑属性”，OGC 制定了 <code>GetFeatureInfo</code> 协议规范。OpenLayers 提供了 <code>getFeatureInfoUrl()</code>，能够根据用户点击的地理坐标、当前视图分辨率与投影，精确反算出对应的像素点与视口 BBOX 请求参数，向服务端发起反查。
+    <li><strong>栅格服务端要素穿透查询（WMS GetFeatureInfo）：</strong>
+      WMS 服务向客户端分发的是已经栅格化的图片（PNG/JPEG），客户端 Canvas 本身并不包含矢量几何对象。为了实现“点击地图查询图斑属性”，OGC 制定了 <code>GetFeatureInfo</code> 协议规范。OpenLayers 提供了 <code>getFeatureInfoUrl()</code>，能够根据用户点击的地理坐标、当前视图分辨率与投影，精确反算出对应的像素点与视口 BBOX 请求参数，向服务端发起反查。
     </li>
     <li><strong>客户端即时像素拾取（Client-Side Pixel Probing）：</strong>
       若每次 <code>pointermove</code> 都向后端发送网络请求以判断是否显示手型指针，网络开销将极其庞大。OpenLayers 提供了 <code>layer.getData(pixel)</code>，直接从当前已渲染的 Canvas 像素缓冲区中同步提取 RGBA 四通道数值。通过判断 Alpha 透明度 <code>data[3] &gt; 0</code>，零网络延迟实现光标手型悬停高亮。

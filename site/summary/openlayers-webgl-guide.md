@@ -18,7 +18,7 @@ head:
 2. **多波段遥感与科学栅格分析**：云原生 GeoTIFF（COG）、16 位高动态深度的数字高程（DEM）或气象多维网格（Zarr/NetCDF），若在 CPU 端逐像素计算植被指数（NDVI）或坡度坡向，处理延迟通常以秒计；
 3. **时序动态模拟与毫秒级高频交互**：在气象雷达回波、航班动态轨迹或海平面上升淹没模拟中，滑块每拖动一次都需要即时响应，重新切图或遍历样式开销巨大。
 
-OpenLayers 从底层重构并推出了现代化的 **WebGL 渲染体系**（包括 `WebGLTile`、`WebGLVector`、`WebGLVectorTile` 与 `Heatmap`）。它将运算从 CPU 转移到 GPU 显卡硬件，通过高度优化的着色器表达式（Expression AST）提供实时光栅化与计算能力。
+OpenLayers 从底层重构并推出了现代化的 **WebGL 渲染体系**（包括 `WebGLTile`、`WebGLVector`、`WebGLVectorTile` 与 `Heatmap`）。它将运算从 CPU 转移到 GPU 显卡硬件，通过高度优化的着色器表达式（Expression AST）提供实时栅格化与计算能力。
 
 本文基于官方示例库中精选的 **19 个 WebGL 核心示例**，系统梳理 OpenLayers WebGL 的技术架构、表达式设计模型与生产落地实践。
 

@@ -2,7 +2,7 @@
 layout: example.html
 title: Image Load Events / 单张图像加载事件与进度指示
 shortdesc: Example using image load events. / 演示如何监听单张图像（ImageWMS）数据源的加载生命周期事件并渲染动态进度条。
-docs: >
+docs: |
   Image sources fire events related to image loading.  You can
   listen for <code>imageloadstart</code>, <code>imageloadend</code>,
   and <code>imageloaderror</code> type events to monitor image loading
@@ -21,7 +21,7 @@ docs: >
 
   #### 1. 核心架构与设计机制 (Core Architecture & Mechanics)
   - **单张图像与瓦片加载生命周期的差异**：
-    瓦片数据源（TileSource）一次视口变更是由数十个切片并发请求组成的，而单张图像数据源（ImageSource，如 `ImageWMS`、`ImageStatic` 等）在每次平移或缩放停顿后向服务端请求单张覆盖当前视口 BBOX 的大幅面光栅图。
+    瓦片数据源（TileSource）一次视口变更是由数十个切片并发请求组成的，而单张图像数据源（ImageSource，如 `ImageWMS`、`ImageStatic` 等）在每次平移或缩放停顿后向服务端请求单张覆盖当前视口 BBOX 的大幅面栅格图。
   - **双层生命周期协同管道**：
     - **Map 容器层**：`loadstart` 与 `loadend` 标志着地图视口渲染任务的开始与结束（包括所有图层的所有渲染队列），常用于全局蒙版、骨架屏或顶层指示器的显示与隐藏。
     - **Source 数据源层**：`imageloadstart` 标志着底层创建图像请求并向网络发起调用；`imageloadend` 标志着图像二进制完全下载并解码完毕；`imageloaderror` 则在 4xx/5xx 或跨域 CORS 拦截时触发，避免 UI 卡死在 Loading 状态。

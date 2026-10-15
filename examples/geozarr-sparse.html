@@ -2,7 +2,7 @@
 layout: example.html
 title: GeoZarr Resampling / GeoZarr 稀疏分辨率跨层级重采样
 shortdesc: A GeoZarr source displaying Sentinel-2 imagery with resampling. / 演示当 GeoZarr 数据集中不同波段的最大分辨率层级不同时，客户端自动从最近层级重采样并融合成瓦片。
-docs: >
+docs: |
   The GeoZarr dataset used in this example doesn't have all bands available at all zoom levels. When
   this is the case, band data from the nearest resolution level will be resampled in composing a
   data tile. The example shows a false-color composite composed of blue (`b02`), green (`b03`), and

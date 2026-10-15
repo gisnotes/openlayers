@@ -2,7 +2,7 @@
 layout: example.html
 title: Tile Load Events / 瓦片加载事件与精细进度监控
 shortdesc: Example using tile load events. / 演示如何监听 ImageTile 瓦片加载生命周期事件并构建高精度的动态加载进度条。
-docs: >
+docs: |
   Image tile sources fire events related to tile loading.  You can
   listen for <code>tileloadstart</code>, <code>tileloadend</code>,
   and <code>tileloaderror</code> type events to monitor tile loading
@@ -11,7 +11,7 @@ docs: >
   progress bar is shown and hidden according to the map's <code>loadstart</code>
   and <code>loadend</code> events.
 
-  切片光栅数据源（如 ImageTile、XYZ、TileWMS 等）在网格瓦片拉取时会触发细粒度生命周期事件。你可以通过监听 <code>tileloadstart</code>、<code>tileloadend</code> 以及 <code>tileloaderror</code> 事件，精确量化瓦片请求池的队列状态与下载完成比率。
+  切片栅格数据源（如 ImageTile、XYZ、TileWMS 等）在网格瓦片拉取时会触发细粒度生命周期事件。你可以通过监听 <code>tileloadstart</code>、<code>tileloadend</code> 以及 <code>tileloaderror</code> 事件，精确量化瓦片请求池的队列状态与下载完成比率。
 
   本示例在地图视口底部渲染了一个响应式进度条，将各个瓦片的加载推进过程转化为平滑的百分比宽度增长；同时利用地图实例的 <code>loadstart</code> 与 <code>loadend</code> 事件管理进度条的生命周期显隐与复位。
 

@@ -7,7 +7,7 @@ docs: >
     The tiles of the map in this example are rendered in a web worker, using <code>OffscreenCanvas</code>. This can be improved by using a pool of workers to enable parallel, multi-threaded rendering.
   </p>
   <p>
-    在此示例中，地图的各个瓦片都在 Web Worker 后台子线程中通过 <code>OffscreenCanvas</code> 进行离屏渲染。通过在主线程自定义 <code>ImageTileSource</code> 的 <code>loader</code> 拦截瓦片请求，由 Worker 内部运行的无头地图完成光栅化并以 <code>ImageBitmap</code> 零拷贝返回。在生产环境中，还可以通过 Worker 线程池（Worker Pool）实现多核并行多线程出图。
+    在此示例中，地图的各个瓦片都在 Web Worker 后台子线程中通过 <code>OffscreenCanvas</code> 进行离屏渲染。通过在主线程自定义 <code>ImageTileSource</code> 的 <code>loader</code> 拦截瓦片请求，由 Worker 内部运行的无头地图完成栅格化并以 <code>ImageBitmap</code> 零拷贝返回。在生产环境中，还可以通过 Worker 线程池（Worker Pool）实现多核并行多线程出图。
   </p>
   <hr>
   <h3>📚 学习记录与技术深度解读</h3>

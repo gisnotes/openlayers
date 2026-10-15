@@ -136,7 +136,7 @@ sequenceDiagram
     participant VC as VectorContext (即时绘制上下文)
     participant GPU as Canvas2D / WebGL 像素缓冲区
 
-    Engine->>Layer: 执行切片或底图光栅化
+    Engine->>Layer: 执行切片或底图栅格化
     Layer->>Event: 触发 postrender 事件
     Event->>VC: getVectorContext(event)
     loop 遍历 1000+ 动态几何体

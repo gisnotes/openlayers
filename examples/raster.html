@@ -2,7 +2,7 @@
 layout: example.html
 title: Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析
 shortdesc: Demonstrates pixelwise operations with a raster source. / 演示如何使用 ol/source/Raster 在 Web Worker 中对卫星航拍切片执行逐像素运算，实时计算植被绿度指数（VGI）并联动 D3 直方图进行面积统计与阈值过滤。
-docs: >
+docs: |
   <p>
     This example uses a <code>ol/source/Raster</code> to generate data
     based on another source.  The raster source accepts any number of
@@ -36,7 +36,7 @@ docs: >
     - 主线程准备当前视口各输入源的 <code>ImageData</code> 像素阵列；
     - 将像素缓冲区通过 <code>postMessage</code> 传递给后台 Worker；
     - Worker 内部无阻塞执行纯函数式数学变换并回传结果；
-    - 最终由 <code>ImageLayer</code> 作为动态光栅画布完成无缝渲染。
+    - 最终由 <code>ImageLayer</code> 作为动态栅格画布完成无缝渲染。
   - **植被绿度指数（Vegetation Greenness Index, VGI）原理**：
     在没有近红外（NIR）波段的常规 RGB 航拍影像中，VGI 是一种经典的经验估算指数：
     $$\text{VGI} = \frac{2G - R - B}{2G + R + B}$$
@@ -68,11 +68,11 @@ docs: >
   - **双向双向事件管道与响应式图表联动**：
     - <code>beforeoperations</code>：在计算启动前将主线程的状态（如 <code>threshold</code> 与空频数数组 <code>data.counts</code>）挂入事件上下文；
     - <code>afteroperations</code>：在计算完成时捕获 Worker 回传的聚合统计值，触发 <code>schedulePlot</code> 驱动 D3.js 绘制直方图柱状图与面积计算；
-    - 直方图交互：鼠标滑过柱子时调用 <code>raster.set('threshold', threshold); raster.changed();</code>，触发光栅源以 60 FPS 重新计算渲染。
+    - 直方图交互：鼠标滑过柱子时调用 <code>raster.set('threshold', threshold); raster.changed();</code>，触发栅格源以 60 FPS 重新计算渲染。
 
   #### 3. 工程避坑与高可用实践 (Production Pitfalls & Best Practices)
   - **跨域 Canvas 像素污染（CORS Tainted Canvas）**：
-    <code>ol/source/Raster</code> 需要读取切片的底层二进制像素数组。输入切片源（<code>aerial</code>）必须显式声明 <code>crossOrigin: ''</code>。如果切片服务器未正确配置 <code>Access-Control-Allow-Origin: *</code>，浏览器 Canvas 会被标记为受污染，直接抛出 SecurityError 导致光栅运算崩溃。
+    <code>ol/source/Raster</code> 需要读取切片的底层二进制像素数组。输入切片源（<code>aerial</code>）必须显式声明 <code>crossOrigin: ''</code>。如果切片服务器未正确配置 <code>Access-Control-Allow-Origin: *</code>，浏览器 Canvas 会被标记为受污染，直接抛出 SecurityError 导致栅格运算崩溃。
   - **直方图重绘节流防抖（Debounced Plotting）**：
     在地图连续漫游平移时，每个渲染帧都会触发 <code>afteroperations</code>。代码中通过 <code>setTimeout(..., 1000 / 60)</code> 实现了基于 RAF 频率的轻量任务调度，避免高频 DOM 操作拖慢地图平移流畅度。
 tags: "raster, pixel, maptiler"

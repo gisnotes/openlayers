@@ -69,7 +69,7 @@ flowchart TD
     Choice -->|"静态固定视觉"| M1["1. 经典面向对象 API\n(new Style / Fill / Stroke / Icon)"]
     Choice -->|"业务属性/视图变化"| M2["2. 动态样式函数\n(styleFunction(feature, resolution))"]
     Choice -->|"数据驱动 / 跨平台规格"| M3["3. 声明式表达式\n(['get'], ['interpolate'], Flat JSON)"]
-    Choice -->|"复杂异形矢量符号"| M4["4. 离屏 Canvas + toContext\n(ImmediateRenderer 矢量光栅化)"]
+    Choice -->|"复杂异形矢量符号"| M4["4. 离屏 Canvas + toContext\n(ImmediateRenderer 矢量栅格化)"]
     Choice -->|"底层像素/画布直控"| M5["5. 自定义 Renderer 钩子\n(Style.renderer / Context.clip)"]
     Choice -->|"渐变与纹理填充"| M6["6. Canvas 原生材质\n(CanvasGradient / CanvasPattern)"]
     Choice -->|"海量连续场 / 卫星遥感"| M7["7. WebGL 片元着色器\n(Heatmap / WebGLTile / Band Math)"]
@@ -152,7 +152,7 @@ const layer = new VectorLayer({
 **对应示例**：[`earthquake-custom-symbol`](https://gisnotes.github.io/openlayers/en/latest/examples/earthquake-custom-symbol.html)、[`animated-gif`](https://gisnotes.github.io/openlayers/en/latest/examples/animated-gif.html)
 
 内置的 `RegularShape` 仅支持对称正多边形，无法直接绘制倾斜折线闪电、非对称标头等复杂矢量。如果预制静态 PNG 图片，在尺寸随属性连续变化时需要过多图片资源。
-`toContext` 允许在离屏 Canvas 上将矢量几何直接光栅化为位图：
+`toContext` 允许在离屏 Canvas 上将矢量几何直接栅格化为位图：
 ```javascript
 // 1. 创建离屏画布并包装为立即渲染器
 const canvas = document.createElement('canvas');

@@ -111,7 +111,7 @@ $$\text{ScaleDenominator} = \frac{\text{Resolution} \times \text{DPI}}{0.0254}$$
   若屏幕的 `devicePixelRatio = 2.0`，实际物理像素密度达到 $96 \times 2 = 192 \text{ DPI}$。
   当在 OpenLayers 中配置 `hidpi: true` 且 `serverType: 'mapserver'` 时（[`mapserver-wms`](../en/latest/examples/mapserver-wms.html)）：
   $$\text{MAP\_RESOLUTION} = 96 \times \text{devicePixelRatio}$$
-  OpenLayers 会自动向请求参数中追加 `&MAP_RESOLUTION=192`。MapServer 收到此参数后，会将线宽和字体尺寸成倍光栅化，确保高清屏上文字清晰锐利且保持相同的物理尺寸。
+  OpenLayers 会自动向请求参数中追加 `&MAP_RESOLUTION=192`。MapServer 收到此参数后，会将线宽和字体尺寸成倍栅格化，确保高清屏上文字清晰锐利且保持相同的物理尺寸。
 
 ---
 
@@ -171,7 +171,7 @@ function stepTime() {
 ```
 
 * **双缓冲渲染机制**：
-  OpenLayers 在显存中继续保留前一个时间帧的旧瓦片；后台异步加载新时间帧的所有瓦片，直至视口内新瓦片全部下载并光栅化完成后，才在一帧内完成图层原子级交替，杜绝任何白屏跳闪。
+  OpenLayers 在显存中继续保留前一个时间帧的旧瓦片；后台异步加载新时间帧的所有瓦片，直至视口内新瓦片全部下载并栅格化完成后，才在一帧内完成图层原子级交替，杜绝任何白屏跳闪。
 
 ---
 

@@ -1,6 +1,6 @@
 # OpenLayers 异步加载策略与资源生命周期体系全景实战指南 (Loading Strategies & Resource Lifecycle)
 
-> 本指南基于 OpenLayers 官方 **loading** 核心专题群的 8 个代表性示例，深度解构地图容器、切片网格与光栅图像的多级加载生命周期事件流，剖析 `all`、`bbox` 与 `tile` 三大空间矢量加载策略的算法机制，并实战演示对接 ArcGIS REST FeatureServer、OGC WFS 与 Overpass OSM XML 远程要素服务的完整架构方案。
+> 本指南基于 OpenLayers 官方 **loading** 核心专题群的 8 个代表性示例，深度解构地图容器、切片网格与栅格图像的多级加载生命周期事件流，剖析 `all`、`bbox` 与 `tile` 三大空间矢量加载策略的算法机制，并实战演示对接 ArcGIS REST FeatureServer、OGC WFS 与 Overpass OSM XML 远程要素服务的完整架构方案。
 
 ---
 
@@ -108,7 +108,7 @@ source.on(['tileloadend', 'tileloaderror'], () => progress.addLoaded());
 
 ### 3. 单张图像数据源事件 (`ol/source/Image` / `ImageWMS`)
 
-如 [`examples/image-load-events.html`](file:///d:/Users/Downloads/openlayers/examples/image-load-events.html) 所示，单张图像源在每次视口停顿时向服务端请求单张大幅面光栅图片：
+如 [`examples/image-load-events.html`](file:///d:/Users/Downloads/openlayers/examples/image-load-events.html) 所示，单张图像源在每次视口停顿时向服务端请求单张大幅面栅格图片：
 - 细粒度事件：`imageloadstart`、`imageloadend`、`imageloaderror`；
 - 配合延迟重置机制（`setTimeout(..., 250)`），使进度条在跑满 100% 后平滑淡出并归零，避免视觉反向闪烁。
 

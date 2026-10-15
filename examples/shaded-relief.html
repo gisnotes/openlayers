@@ -2,7 +2,7 @@
 layout: example.html
 title: Shaded Relief / 动态日照山体阴影（Hillshade）实时渲染
 shortdesc: Calculate shaded relief from elevation data. / 演示如何使用 ol/source/Raster 在 Web Worker 中通过 3x3 邻域梯度计算坡度与坡向，结合太阳高度角与方位角实时解算朗伯日照山体阴影。
-docs: >
+docs: |
   <p>
     This example uses a <code>ol/source/Raster</code> to generate data
     based on another source.  The raster source accepts any number of
@@ -45,7 +45,7 @@ docs: >
     - $\text{Slope}$：当前地表的坡度斜角；
     - $\text{Aspect}$：当前地表下坡方向的坡向角。
   - **$3 \times 3$ 邻域有限差分梯度解算**：
-    为了在离散光栅网格中计算地表法向量，算法在 $X$（东西）和 $Y$（南北）方向进行中心有限差分近似求偏导：
+    为了在离散栅格网格中计算地表法向量，算法在 $X$（东西）和 $Y$（南北）方向进行中心有限差分近似求偏导：
     $$\frac{\partial z}{\partial x} = \frac{z(x+1, y) - z(x-1, y)}{2 \times \text{Resolution}}$$
     $$\frac{\partial z}{\partial y} = \frac{z(x, y+1) - z(x, y-1)}{2 \times \text{Resolution}}$$
     坡度为梯度幅值：$\text{Slope} = \arctan\left(\sqrt{(\frac{\partial z}{\partial x})^2 + (\frac{\partial z}{\partial y})^2}\right)$；坡向为方位角：$\text{Aspect} = \text{atan2}(\frac{\partial z}{\partial y}, -\frac{\partial z}{\partial x})$。

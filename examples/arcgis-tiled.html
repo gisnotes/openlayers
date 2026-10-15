@@ -2,7 +2,7 @@
 layout: example.html
 title: Tiled ArcGIS MapServer / ArcGIS 瓦片化地图服务（TileArcGISRest）
 shortdesc: Example of a tiled ArcGIS layer. / 使用瓦片金字塔网格按需加载 ArcGIS REST 地图服务。
-docs: >
+docs: |
   This example shows how to use an ArcGIS REST MapService as tiles.
   This source type supports Map and Image Services. For cached ArcGIS
   services, better performance is available by using
@@ -25,7 +25,7 @@ docs: >
   - **消除冗余请求**: OpenLayers 渲染器会自动忽略位于该范围外部的切片请求，避免因向全球无数据区域发送数以百计的无效 `/export` 请求而拖垮 GIS 服务端。
 
   #### 3. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices)
-  - **瓦片边界文字截断与标签重复**: 动态瓦片模式下，每个瓦片是服务端隔离光栅化的。位于瓦片边界线上的城市标注可能会被一刀切断，且相邻切片中可能出现重复地名。若应用对制图标注美观度有强迫性要求，优先考虑单图 `ImageArcGISRest` 或直接升级为矢量切片（Vector Tiles）。
+  - **瓦片边界文字截断与标签重复**: 动态瓦片模式下，每个瓦片是服务端隔离栅格化的。位于瓦片边界线上的城市标注可能会被一刀切断，且相邻切片中可能出现重复地名。若应用对制图标注美观度有强迫性要求，优先考虑单图 `ImageArcGISRest` 或直接升级为矢量切片（Vector Tiles）。
   - **与静态缓存瓦片 (`XYZ`) 的选型鉴别**: 若 ArcGIS 管理员已经在服务端执行了 Manage Map Server Cache Tiles（生成了紧凑缓存），切勿使用 `TileArcGISRest`，而应使用 `.../MapServer/tile/{z}/{y}/{x}` 模板通过 `ol/source/ImageTile` 加载，性能提升可达一个数量级。
 tags: "arcgis, tile, tilelayer"
 ---

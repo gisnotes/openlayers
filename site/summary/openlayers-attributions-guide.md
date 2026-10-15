@@ -29,7 +29,7 @@ graph TD
 
     subgraph CloudEngine["云原生空间数据库服务 (CARTO / PostGIS)"]
         Config["mapConfig (CartoCSS + SQL 查询)"]
-        CloudPostGIS["云端 PostGIS 空间过滤与光栅化切片"]
+        CloudPostGIS["云端 PostGIS 空间过滤与栅格化切片"]
         Token["匿名地图会话协商 (Instantiation Token)"]
     end
 
@@ -51,7 +51,7 @@ graph TD
 | **典型示例** | `attributions.html` | `static-attribution.html` | `cartodb.html` |
 | **核心 API** | `attribution.setCollapsible()`, `change:size` | `new Attribution({ attributions })` | `new CartoDB()`, `setConfig()` |
 | **生命周期依赖** | 依赖地图 DOM 容器像素尺寸 | 绑定控件自身，完全与图层显隐解耦 | 依赖云端 Maps API 实例协商生命周期 |
-| **渲染形态** | 桌面端文本展开 / 移动端 "i" 图标 | 常驻在原生控件内，与图层版权合并 | 透明 PNG/WebP 光栅切片覆盖层 |
+| **渲染形态** | 桌面端文本展开 / 移动端 "i" 图标 | 常驻在原生控件内，与图层版权合并 | 透明 PNG/WebP 栅格切片覆盖层 |
 | **核心业务价值** | 满足商用底图法律合规同时优化移动端体验 | 统一平台 ICP 备案与法律资质，零冗余 DOM | 海量多边形服务端渲染，毫秒级 SQL 过滤 |
 
 ---
@@ -149,7 +149,7 @@ document.getElementById('toggleLayerButton').addEventListener('click', () => {
 ### 4.1 空间大数据切片渲染流水线
 
 在处理大规模矢量数据（如全欧洲所有行政区划多边形）时，前端若加载完整的 GeoJSON，网络包体积往往数十兆，解析与 Canvas 绘制极易引起主线程崩溃。
-CARTO（原 CartoDB）提供了服务端矢量动态光栅化方案：
+CARTO（原 CartoDB）提供了服务端矢量动态栅格化方案：
 
 ```mermaid
 sequenceDiagram
@@ -166,7 +166,7 @@ sequenceDiagram
     MapsAPI->>PostGIS: 执行 SELECT ... WHERE area > 50000
     PostGIS-->>MapsAPI: 返回过滤后的空间要素
     MapsAPI-->>Client: 返回图层会话 layergroup_id 与瓦片 URL 模板
-    Client->>MapsAPI: GET /tiles/{z}/{x}/{y}.png (带透明通道光栅切片)
+    Client->>MapsAPI: GET /tiles/{z}/{x}/{y}.png (带透明通道栅格切片)
     MapsAPI-->>Client: 高速下发预渲染切片，完成 60FPS 平滑上屏
 ```
 

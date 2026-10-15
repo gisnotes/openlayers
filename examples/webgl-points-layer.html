@@ -35,7 +35,7 @@ docs: |
   * **`triangles`**：利用 `shape-points: 3` 参数化生成正三角形，颜色根据人口从绿色平滑过渡到橙色；
   * **`circles-zoom`**：使用底数为 2 的指数插值 `['interpolate', ['exponential', 2], ['zoom'], 5, 1.5, 15, 1536]`，使得圆形在地图缩放时能够严格保持真实地理物理尺寸（固定米制大小），而非固定屏幕像素；
   * **`rotating-bars`**：利用 `shape-rotation: ['*', ['time'], 0.13]` 驱动条形根据时间匀速自转，高度与位移随人口指数放大，实现生动的三维柱状可视化效果；
-  * **`circles-text`**：在 WebGL 中同时绘制几何圆与文字注记（`text-value`），底层依托 SDF（有向距离场）或动态文字图集在 GPU 中光栅化渲染。
+  * **`circles-text`**：在 WebGL 中同时绘制几何圆与文字注记（`text-value`），底层依托 SDF（有向距离场）或动态文字图集在 GPU 中栅格化渲染。
 tags: "webgl, point, layer, feature"
 experimental: true
 ---

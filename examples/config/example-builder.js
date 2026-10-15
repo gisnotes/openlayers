@@ -35,8 +35,14 @@ handlebars.registerHelper('md', (str) => {
   if (!str) {
     return '';
   }
-  // 解决中文与 ** 无空格相邻时，CommonMark 词内分隔符规则导致加粗解析失效的问题
-  const processed = str.replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>');
+  // 1. 确保在 </p> 或普通文本与 --- 之间、以及 --- 与 ### 标题之间均有标准双换行，彻底消除 YAML 折叠标量 (>) 吞噬空行导致的大字体/未闭合问题
+  let processed = str
+    .replace(/(<\/p>|[^\n])\n---(\n|$)/g, '$1\n\n---\n\n')
+    .replace(/\n---\n(#{1,6}\s)/g, '\n\n---\n\n$1')
+    .replace(/\n(#{1,6}[^\n]+)\n(```)/g, '\n$1\n\n$2')
+    .replace(/\n(#{1,6}[^\n]+)\n([^\n#\s-])/g, '\n$1\n\n$2');
+  // 2. 解决中文与 ** 无空格相邻时，CommonMark 词内分隔符规则导致加粗解析失效的问题
+  processed = processed.replace(/\*\*([^*\n]+?)\*\*/g, '<strong>$1</strong>');
   return new handlebars.SafeString(marked(processed, {async: false}));
 });
 

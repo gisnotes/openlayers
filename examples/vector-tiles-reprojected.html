@@ -2,7 +2,7 @@
 layout: example.html
 title: Vector tiles reprojected / 矢量切片客户端动态重投影
 shortdesc: Demonstrates client-side reprojection of EPSG:4326 vector tiles into polar projection. / 演示将 EPSG:4326 地理坐标系的矢量切片动态重投影为北极极地投影（ESRI:102017）渲染。
-docs: >
+docs: |
   <p>Vector tile layers support reprojection to other projections. This example shows EPSG:4326 vector tiles reprojected to North Pole Lambert Azimuthal Equal Area (ESRI:102017). For polar regions, vector tiles in a geographic projection are preferred, because web mercator tiles are severely distorted or truncated past 85 degrees latitude.</p>
   <p>矢量切片图层（VectorTileLayer）原生支持动态重投影到任意目标坐标系。本示例演示如何将地理坐标系（EPSG:4326）下的矢量切片动态重投影为北极朗伯等面积方位投影（ESRI:102017，North Pole Lambert Azimuthal Equal Area）。</p>
   <p>对于极地高纬度区域，强烈推荐使用基于地理坐标系的矢量切片作为数据源，因为常规 Web 墨卡托切片（EPSG:3857）在纬度超过南北纬 85.05° 后会发生极端形变乃至直接截断。</p>

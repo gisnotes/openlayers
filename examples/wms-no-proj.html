@@ -2,7 +2,7 @@
 layout: example.html
 title: WMS without Projection / 无投影转换定义的 WMS
 shortdesc: Example of two WMS layers using the projection EPSG:21781, which is unknown to the client. / 本例展示两个使用 EPSG:21781 投影的 WMS 图层，该投影在客户端未定义任何 Proj4js 转换参数。
-docs: >
+docs: |
   As long as no coordinate transformations are required, OpenLayers works fine with projections that are only configured with a `code` and `units`.
 
   只要**不需要在客户端进行坐标转换**（Coordinate Transformation），OpenLayers 即可直接使用仅配置了 `code`（投影代号）和 `units`（距离单位）的轻量级投影对象正常工作。

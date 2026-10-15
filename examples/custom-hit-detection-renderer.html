@@ -2,7 +2,7 @@
 layout: example.html
 title: Custom Hit Detection Render / 自定义命中检测渲染器
 shortdesc: Example of a custom hit detection renderer. / 示例展示如何利用 Style 的 hitDetectionRenderer 定制鼠标拾取灵敏区域。
-docs: >
+docs: |
   This example demonstrates the use of 'ol/style/Style' hitDetectionRender option function in detecting if pointer is over a particular feature. Move pointer over the label for Columbus Circle feature and see that only label is used in hit detection.
 
   本示例展示如何利用 <code>ol/style/Style</code> 的 <code>hitDetectionRenderer</code> 选项函数精确定制要素的鼠标命中检测（Hit Detection）逻辑。当鼠标悬停在哥伦布圆环（Columbus Circle）的大范围渐变圆内时不会触发命中；仅当鼠标精确移动到中央的文字标签上方时，才会判定为选中并触发样式响应（文字边框高亮）。

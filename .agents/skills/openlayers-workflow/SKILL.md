@@ -94,21 +94,44 @@ openlayers/
     - 文末附录列表：`1. [icon](../en/latest/examples/icon.html)`
   - 相对路径优势：保证本地静态调试（`localhost:3000`）与 GitHub Pages 线上（`/openlayers/`）均能无缝正确跳转，无需做二次字符串替换。
 
-### 4. Markdown 语法与排版避坑
-- **CommonMark 解析规范**：列表项加粗标志 `**` 避免直接贴紧中文全角冒号 `：`（如 ``**`name`**：`` 在某些解析器下会导致加粗失效）。推荐使用直接的链接格式：`1. [name](url)`。
-- **专业词汇标准**：
-  - GIS 专用术语规范翻译（例如：`Vector` 矢量、`Feature` 要素、`Extent` 范围/包络、`Cluster` 聚类/聚合、`Projection` 投影、`Style Function` 动态样式函数）。
-  - 保留英文类名与 API 原貌（如 `ol/style/Icon`、`CircleStyle`、`toContext`、`WebGLTile`）。
+### 4. 专业词汇翻译规范（红线要求）
+- **Raster 术语红线**：`Raster` 必须统一严格翻译为“**栅格**”（**严禁翻译为“光栅”**！例如：`RasterSource` 栅格数据源、`Raster Layer` 栅格图层、`Raster Operation` 栅格像素运算、`Raster Tiles` 栅格切片）。
+- **GIS 专用术语标准**：
+  - `Vector` 矢量、`Feature` 要素、`Extent` 范围/包络、`Cluster` 聚类/聚合、`Projection` 投影、`Style Function` 动态样式函数、`Declutter` 避让/整理、`Hit Detection` 拾取碰撞检测。
+  - 保留英文类名与 API 原貌（如 `ol/style/Icon`、`CircleStyle`、`toContext`、`WebGLTile`、`RasterSource`）。
 
-### 5. 数学公式排版规范（已支持 LaTeX / KaTeX）
-- **公式支持现状**：示例全局模板（`examples/templates/example.html`）已集成轻量极速的 KaTeX 渲染引擎与自动渲染插件。
+### 5. YAML Frontmatter 与 Markdown 排版规范（防止正文字体异常变大）
+- **标量语法红线（`docs: |` vs `docs: >`）**：
+  - 示例 HTML 中包含学习记录、代码块（```` ```javascript ````）、多级标题（`###`、`####`）或多段落时，YAML frontmatter 的 `docs:` **必须使用字面标量 `docs: |`**，**严禁使用折叠标量 `docs: >`**！
+  - **根因警示**：YAML 折叠标量 `>` 会吞噬合并相邻空行。如果使用 `docs: >`，正文段落与下方的 `---` 会被拼成一行 `正文\n---`，触发 CommonMark 的 Setext 二级标题语法，导致整段正文渲染为超大号标题字体；同时代码块首行也会被拼接破坏。
+  - 示例文档引言部分统一规范：
+    ```yaml
+    docs: |
+      <p>English description...</p>
+
+      <p>中文说明段落...</p>
+
+      ---
+
+      ### 📚 学习记录与技术深度解读 (Learning Notes)
+    ```
+- **标量与标题间距**：各级标题（`###`、`####`）与正文、代码块之间必须保留标准独立空行。
+- **YAML 冒号转义**：如果 `title:` 或 `shortdesc:` 的内容包含英文半角冒号加空格（`: `），必须整体用双引号包裹（例如：`shortdesc: "Render street names. / 使用 placement: 'line' 沿道路渲染。"`），防止 YAML 解析器误认为是嵌套键值对报错。
+- **CommonMark 解析规范**：列表项加粗标志 `**` 避免直接贴紧中文全角冒号 `：`（如 ``**`name`**：`` 在某些解析器下会导致加粗失效）。推荐使用直接的链接格式：`1. [name](url)`。
+
+### 6. 表格边框与排版规范
+- **内容表格完整边框**：站点三级专题指南（`site/summary/*.md`）以及示例正文（`#docs`）中的所有内容表格，必须展示完整清晰的细边框（`border: 1px solid #d0d7de`，表头具有浅灰底色 `var(--ol-accent-background-color, #f6f8fa)` 与加粗下底线）。
+- **表单布局表格隔离**：示例操作区中的控件表单表格（如 `<table class="controls">`）保持无边框，避免被内容表格样式污染。
+
+### 7. 数学公式排版规范（LaTeX / KaTeX 全局支持）
+- **双端环境支持**：示例单页模板（`examples/templates/example.html`）与站点全局模板（`site/layouts/default.hbs`）均已完整集成 KaTeX 渲染引擎。
 - **书写规范**：
-  - 行内公式：使用 `$ ... $` 或 `\( ... \)` 包裹，例如：`$\sec(\varphi) = 1 / \cos(\varphi)$`；
+  - 行内公式：使用 `$ ... $` 或 `\( ... \)` 包裹，例如：`$X \in [-20037508.34, 20037508.34]$`、`$1/4$`、`$3/4$`；
   - 块级独立公式：使用 `$$ ... $$` 或 `\[ ... \]` 包裹，例如：
     ```latex
-    $$R_{\text{new}} = \frac{R_{\text{current}} \times \text{currentPointResolution}}{\text{newPointResolution}}$$
+    $$Q_i = \frac{3}{4}P_i + \frac{1}{4}P_{i+1}$$
     ```
-  - KaTeX 会自动忽略 `code` 和 `pre` 标签，代码块中的 `$` 变量符号不受干扰。
+  - KaTeX 自动忽略 `code` 和 `pre` 标签，代码块中的 `$` 变量符号不受干扰。
 
 ---
 

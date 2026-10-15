@@ -2,7 +2,7 @@
 layout: example.html
 title: GeoZarr Multi-Group / GeoZarr 多群组跨路径波段加载与云层遮罩
 shortdesc: Cloud-masked Sentinel-2 imagery using bands from multiple Zarr groups. / 从 Zarr 存储的多群组中同时拉取反射率与云概率质量波段，在 GPU 中实现动态阈值去云遮罩。
-docs: >
+docs: |
   The GeoZarr source supports loading bands from multiple groups within the same Zarr hierarchy.
   In this example, a true-color composite is rendered from B02 (blue), B03 (green), and B04 (red)
   reflectance values from the `measurements/reflectance` group.  The cloud probability (`cld`) from

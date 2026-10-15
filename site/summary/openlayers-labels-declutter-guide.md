@@ -8,9 +8,9 @@
 
 ## 1. 架构总览：OpenLayers 文本渲染与避让冲突检测管线
 
-### 1.1 文本光栅化与避让仲裁拓扑
+### 1.1 文本栅格化与避让仲裁拓扑
 
-在 OpenLayers 中，文本注记并不是简单的 HTML DOM 覆盖物，而是由矢量构建器（`TextBuilder`）计算排版后直接光栅化到 Canvas 纹理图集中：
+在 OpenLayers 中，文本注记并不是简单的 HTML DOM 覆盖物，而是由矢量构建器（`TextBuilder`）计算排版后直接栅格化到 Canvas 纹理图集中：
 
 ```mermaid
 flowchart TD
@@ -34,7 +34,7 @@ flowchart TD
         Collide -->|否 (成功占位)| Accept[注册包围盒并准予绘制]
     end
 
-    subgraph CanvasOutput [Canvas 光栅化输出]
+    subgraph CanvasOutput [Canvas 栅格化输出]
         Accept --> RenderEngine[Canvas 2D TextBuilder / GPU 纹理]
     end
 ```
@@ -59,7 +59,7 @@ flowchart TD
 当矢量图层配置 `declutter: true` 时，OpenLayers 在渲染通道启动一个基于二维 R-Tree（RBush）的空间索引：
 1. 按照图层渲染顺序，先绘制的文字被量化为屏幕像素包围盒（Bounding Box）；
 2. 引擎在 R 树中查询该包围盒是否与之前已注册的包围盒相交；
-3. 若无碰撞，则将当前包围盒插入 R 树，并将文字光栅化；若发生碰撞，直接跳过当前文字绘制。
+3. 若无碰撞，则将当前包围盒插入 R 树，并将文字栅格化；若发生碰撞，直接跳过当前文字绘制。
 
 ### 2.2 命名分组隔离 (`declutter: 'separate'`) 解决业务冲突
 
@@ -201,7 +201,7 @@ const style = new Style({
 
 ### 7.1 空白空格丢失陷阱
 - **现象**：富文本数组拼接后，州代号与地名紧挨在一起（如 `US-CANew York`）。
-- **根因**：数组项紧邻时光栅化引擎不会自动注入空格。
+- **根因**：数组项紧邻时栅格化引擎不会自动注入空格。
 - **解决**：在后续片段首位显式加空格：`' ' + name`。
 
 ### 7.2 矢量要素线段碎片化导致的注记缺失

@@ -2,7 +2,7 @@
 layout: example.html
 title: Semi-Transparent Layer / 半透明专题图层叠加与 CSS 黑白滤镜
 shortdesc: Example of a map with a semi-transparent layer. / 演示如何将半透明 TileJSON 专题图层叠加在 OSM 底图上，并使用 CSS 滤镜将底图转为灰度黑白。
-docs: >
+docs: |
   This example will display a tiled MaxBox layer semi-transparently over an OSM background. The OSM layer is changed to black and white by using a CSS filter.
 
   本示例展示如何将带有半透明属性的 TileJSON 专题切片图层（维吉尼亚地震灾情热力图）叠加在 OpenStreetMap 底图之上。通过为底图图层配置 <code>className: 'bw'</code> 并结合纯 CSS 的 <code>filter: grayscale(100%)</code> 滤镜，将原本色彩斑斓的道路底图降级为低调的黑白基调，从而凸显上层专题数据的色彩对比；同时配置 <code>transition: 0</code> 彻底消除半透明切片在加载淡入时的频闪重影。

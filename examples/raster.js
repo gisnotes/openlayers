@@ -62,7 +62,7 @@ const aerial = new ImageTile({
 
 /**
  * Raster source executing VGI operation and threshold coloring in Web Worker.
- * 在 Web Worker 中执行 VGI 运算与阈值着色的光栅数据源
+ * 在 Web Worker 中执行 VGI 运算与阈值着色的栅格数据源
  */
 const raster = new RasterSource({
   sources: [aerial],
@@ -205,7 +205,7 @@ function plot(resolution, counts, threshold) {
     })
     .attr('height', yScale);
 
-  // Mousemove adjusts threshold in real time / 移动鼠标实时调整光栅源阈值并刷新
+  // Mousemove adjusts threshold in real time / 移动鼠标实时调整栅格源阈值并刷新
   bar.on('mousemove', function () {
     const index = bar.nodes().indexOf(this);
     const threshold = counts.min + index * counts.delta;

@@ -2,7 +2,7 @@
 layout: example.html
 title: Layer Swipe / 图层卷帘对比
 shortdesc: Example of a Layer swipe map. / 使用滑动卷帘对比矢量路网底图与遥感影像图层。
-docs: >
+docs: |
   Example of a Layer swipe map. Demonstrates clipping a layer dynamically using a range slider.
 
   本示例演示了如何通过监听图层的 <code>prerender</code> 和 <code>postrender</code> 事件，利用 HTML5 Canvas 2D 的 <code>ctx.clip()</code> 实现图层卷帘（Swipe）对比。通过拖动底部的滑动条（Range Slider），动态计算上层卫星影像图层的可见矩形区域，实现左侧显示 OpenStreetMap 矢量街道、右侧显示 MapTiler 高清卫星影像的平滑无缝卷帘对比效果。

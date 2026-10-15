@@ -51,7 +51,7 @@ const elevation = new ImageTile({
   interpolate: false,
 });
 
-// Raster source running flood calculation in Web Worker / 执行海平面泛洪运算的光栅数据源
+// Raster source running flood calculation in Web Worker / 执行海平面泛洪运算的栅格数据源
 const raster = new RasterSource({
   sources: [elevation],
   operation: flood,

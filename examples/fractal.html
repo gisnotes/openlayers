@@ -2,7 +2,7 @@
 layout: example.html
 title: Fractal Rendering / 分形几何（科赫雪花）高密度图元极限渲染
 shortdesc: Example of a fractal. / 演示科赫雪花分形算法生成海量顶点要素并在 OpenLayers 矢量图层中进行高效渲染。
-docs: >
+docs: |
   <p>This example demonstrates how features with many vertices can be efficiently rendered.</p>
   <p>本示例演示 OpenLayers 矢量图层在面对包含成千上万个连续顶点（海量高密度几何折线）时的极限渲染性能。通过基于链表数据结构的<strong>科赫雪花（Koch Snowflake）分形算法</strong>，滑动表单调节递归深度（0~9 级），可动态生成高达数十万个顶点的复杂分形几何，并展示防抖更新与流畅缩放机制。</p>
 
@@ -29,7 +29,7 @@ docs: >
 
   #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
   - **超高密度线段的 Canvas 描边性能瓶颈**：
-    当顶点数量超过 10 万时，Canvas 原生 `ctx.stroke()` 会消耗大量 GPU/CPU 光栅化时间。生产中对于高密度折线，可采用 WebGL 矢量渲染器（`WebGLVectorLayer`）或在视口缩放时结合拓扑抽稀（Simplify）。
+    当顶点数量超过 10 万时，Canvas 原生 `ctx.stroke()` 会消耗大量 GPU/CPU 栅格化时间。生产中对于高密度折线，可采用 WebGL 矢量渲染器（`WebGLVectorLayer`）或在视口缩放时结合拓扑抽稀（Simplify）。
 tags: "fractal, vector"
 ---
 <div id="map" class="map"></div>

@@ -2,7 +2,7 @@
 layout: example.html
 title: Street Labels / 沿线道路注记（线型文本跟随）
 shortdesc: "Render street names. / 使用 placement: 'line' 沿道路线状几何体弯曲渲染街道名称。"
-docs: >
+docs: |
   Example showing the use of a text style with `placement: 'line'` to render text along a path.
 
   本示例展示了如何使用 <code>placement: 'line'</code> 文本样式沿道路线状几何路径弯曲渲染街道名称。通过启用智能避让（<code>declutter: true</code>），沿线注记会自动根据道路曲率与视口空间进行动态排版与防冲突抽稀，实现清晰自然的城市路网制图注记效果。
@@ -12,7 +12,7 @@ docs: >
   ### 📚 学习记录与技术深度解读 (Learning Notes)
 
   #### 1. 沿线切线排版与弯曲文字渲染 (`placement: 'line'`)
-  - **切线分段与逐字旋转**: 当配置 `placement: 'line'` 时，OpenLayers 放弃传统的水平轴对齐光栅化策略，转为对道路线段进行长度参数化采样。引擎计算每个字符在折线骨架上的瞬时切线斜率与法向量，并对每个字形执行仿射旋转变换，实现文字如水流般顺滑贴合道路曲率。
+  - **切线分段与逐字旋转**: 当配置 `placement: 'line'` 时，OpenLayers 放弃传统的水平轴对齐栅格化策略，转为对道路线段进行长度参数化采样。引擎计算每个字符在折线骨架上的瞬时切线斜率与法向量，并对每个字形执行仿射旋转变换，实现文字如水流般顺滑贴合道路曲率。
   - **正向阅读角度保障 (Keep Upright)**: 现实路网走向复杂多样（自东向西、自北向南等）。引擎内部内置了防颠倒算法，当线段方向可能导致文字出现倒挂翻转时，算法会自动反转排版采样矢量，确保始终符合从左至右或人眼正常自上而下的阅读习惯。
 
   #### 2. 曲率约束与沿线避让控制

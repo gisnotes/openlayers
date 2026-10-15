@@ -77,7 +77,7 @@ layer.on('postrender', function (event) {
     image.setScale(importance);
     vectorContext.setStyle(style);
     // Draw geometry immediately into the canvas context
-    // 将几何图形直接光栅化绘制到当前画布上下文中
+    // 将几何图形直接栅格化绘制到当前画布上下文中
     vectorContext.drawGeometry(geometries[i]);
   }
 

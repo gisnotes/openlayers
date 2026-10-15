@@ -104,7 +104,7 @@ const imagery = new TileLayer({
   }),
 });
 
-// Raster source configured with image-level operation / 配置为整图运算模式的光栅数据源
+// Raster source configured with image-level operation / 配置为整图运算模式的栅格数据源
 const raster = new RasterSource({
   sources: [imagery.getSource()],
   operationType: 'image',
@@ -115,7 +115,7 @@ const raster = new RasterSource({
   },
 });
 
-// Semi-transparent overlay displaying computed segmented region / 半透明光栅图层展示计算得出的分割区域
+// Semi-transparent overlay displaying computed segmented region / 半透明栅格图层展示计算得出的分割区域
 const rasterImage = new ImageLayer({
   opacity: 0.7,
   source: raster,
@@ -134,7 +134,7 @@ const map = new Map({
 let coordinate;
 
 // Click event records geographic seed coordinate and triggers re-computation
-// 点击地图记录种子地理坐标，并触发光栅数据源重新计算
+// 点击地图记录种子地理坐标，并触发栅格数据源重新计算
 map.on('click', function (event) {
   coordinate = event.coordinate;
   raster.changed();

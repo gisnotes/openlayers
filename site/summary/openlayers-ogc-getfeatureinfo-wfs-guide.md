@@ -16,7 +16,7 @@ flowchart TD
         WFSQuery["复杂属性/空间条件检索"]
     end
 
-    subgraph WMSPipeline [范式一：WMS 光栅渲染与属性穿透]
+    subgraph WMSPipeline [范式一：WMS 栅格渲染与属性穿透]
         GetPixel["layer.getData(pixel)<br/>Alpha 通道检测 (零网络开销)"]
         GetInfoUrl["wmsSource.getFeatureInfoUrl()<br/>计算切片/视口局部 BBOX 与 (I, J)"]
     end

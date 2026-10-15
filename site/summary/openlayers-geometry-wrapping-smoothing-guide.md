@@ -39,7 +39,7 @@ flowchart TD
 
     subgraph Problem3["3. 脱机即时渲染 API"]
         ToCtx["ol/render.toContext(ctx2d, size)<br/>脱离 Map 实例的即时 VectorContext"]
-        CanvasDirect["Canvas 2D 直接光栅化输出 (图例/图标)"]
+        CanvasDirect["Canvas 2D 直接栅格化输出 (图例/图标)"]
     end
 
     subgraph Problem4["4. 曲线细分平滑"]

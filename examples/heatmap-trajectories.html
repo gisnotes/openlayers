@@ -15,7 +15,7 @@ docs: |
 
   #### 1. 折线要素（Linear Geometries）热力场渲染机制
   * **不仅支持点要素**：传统 GIS 热力图通常仅针对点要素计算高斯核密度（Kernel Density Estimation）。OpenLayers 的 `HeatmapLayer` 同样支持线几何要素（LineString）。
-  * **线采样与离屏合成**：底层渲染管线将折线按像素分辨率抽样或利用阴影模糊算法将线段光栅化到离屏 Canvas/Texture 中，各线段交汇与重叠区域的透明度通道（Alpha）进行线性叠加累加，再通过内置或自定义调色板（Color Gradient Ramp）进行最终上色。
+  * **线采样与离屏合成**：底层渲染管线将折线按像素分辨率抽样或利用阴影模糊算法将线段栅格化到离屏 Canvas/Texture 中，各线段交汇与重叠区域的透明度通道（Alpha）进行线性叠加累加，再通过内置或自定义调色板（Color Gradient Ramp）进行最终上色。
 
   #### 2. WebGL 动态样式变量联动（`updateStyleVariables`）
   * **核半径与模糊半径的动态调优**：

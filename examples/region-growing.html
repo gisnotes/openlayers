@@ -2,7 +2,7 @@
 layout: example.html
 title: Region Growing / 种子点区域生长与交互式影像分割
 shortdesc: Grow a region from a seed pixel. / 演示如何使用 ol/source/Raster 在 Web Worker 中执行图像级（image operation）区域生长算法（Region Growing / 泛洪填充），根据点击种子点与颜色容差动态提取连通地物。
-docs: >
+docs: |
   <p>Click a region on the map. The computed region will be red.</p>
   <p>
     This example uses a <code>ol/source/Raster</code> to generate data
@@ -27,7 +27,7 @@ docs: >
   <p>点击地图上的任意区域，系统将以该点击位置为种子点，动态计算并用红色渲染出连通分割区域。</p>
   <p>
     本示例利用 <code>ol/source/Raster</code> 的 <code>operationType: 'image'</code> 整图运算模式，在后台 Web Worker 中运行经典的区域生长（Region Growing / Flood Fill）空间图像分割算法。
-    当用户点击地图时，地图坐标被转换为光栅像素种子，算法以广度优先搜索（BFS）向四周 4-邻域扩散；若相邻像素与种子像素的 RGB 颜色差异低于滑块设定的容差阈值（Threshold），则将其归入目标区域并高亮着色，实现纯前端、零服务端的交互式遥感水体或农田图斑提取。
+    当用户点击地图时，地图坐标被转换为栅格像素种子，算法以广度优先搜索（BFS）向四周 4-邻域扩散；若相邻像素与种子像素的 RGB 颜色差异低于滑块设定的容差阈值（Threshold），则将其归入目标区域并高亮着色，实现纯前端、零服务端的交互式遥感水体或农田图斑提取。
   </p>
 
   ---
@@ -48,11 +48,11 @@ docs: >
     5. **原地访问标记（In-place Visited Flag）**：巧妙将输入像素的 Alpha 通道置零（`inputData[ci + 3] = 0`），无需额外分配庞大的布尔访问标记矩阵，彻底杜绝回溯死循环并优化垃圾回收。
 
   #### 2. 关键代码解析与 API 模式 (Code Deep Dive & API Patterns)
-  - **视口坐标到光栅像素坐标的映射**：
+  - **视口坐标到栅格像素坐标的映射**：
     ```javascript
     map.on('click', function (event) {
       coordinate = event.coordinate; // 记录地理坐标
-      raster.changed();              // 触发光栅数据源重新执行计算
+      raster.changed();              // 触发栅格数据源重新执行计算
     });
 
     raster.on('beforeoperations', function (event) {

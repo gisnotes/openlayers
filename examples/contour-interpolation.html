@@ -2,7 +2,7 @@
 layout: example.html
 title: Interpolating Contours from a DEM / DEM 高程插值与动态等高线生成
 shortdesc: Example of WebGL data interpolation. / 演示如何使用 WebGL 对数字高程模型（DEM）瓦片执行双线性重采样插值，消除接缝，并结合 RasterSource 动态计算生成平滑等高线与高程探测。
-docs: >
+docs: |
   <p>
     Example of data resampling when using raster DEM (digital elevation model) data with WebGL.
     Mapzen Terrarium tiles with gutter are used which allow interpolation across tile edges.
@@ -57,7 +57,7 @@ docs: >
       contourData[offset + 3] = 255;
     }
     ```
-    通过整数阶跃比对（`Math.floor(z / interval)`），只要中心像素与四周任意邻居处于不同的等高距区间，即证明等高线恰好穿过该像素，算法无需构建复杂的三角网（TIN）即可实现全视口毫秒级动态等高线光栅化。
+    通过整数阶跃比对（`Math.floor(z / interval)`），只要中心像素与四周任意邻居处于不同的等高距区间，即证明等高线恰好穿过该像素，算法无需构建复杂的三角网（TIN）即可实现全视口毫秒级动态等高线栅格化。
   - **自适应视口等高距调度 (Dynamic Contour LOD)**：
     在 `beforeoperations` 事件中，根据当前地图视口分辨率动态缩放等高距：
     - 大比例尺（`resolution < 5`）：等高距设为 `10m`；
@@ -68,7 +68,7 @@ docs: >
   - **移动端 WebGL 浮点纹理扩展兼容防护**：
     部分低端移动端 GPU 不支持 `OES_texture_float_linear` 扩展。代码在 `postrender` 中进行了探测拦截（`gl.getSupportedExtensions().includes('OES_texture_float_linear')`），在生产项目中若不支持该扩展，应优雅降级为 Canvas 2D 离线重采样或使用预切好的栅格等高线底图。
   - **多 RasterSource 共享图层的并发隔离**：
-    示例中同时需要绘制等高线（`contourLayer`）和捕获鼠标高程（`elevationLayer`）。若两个 `RasterSource` 共享同一个底层图层实例，会导致 WebGL 帧缓冲区读写冲突。生产中必须如示例中声明两个独立图层实例（`elevation1` 与 `elevation2`）分别供给不同的光栅运算管道。
+    示例中同时需要绘制等高线（`contourLayer`）和捕获鼠标高程（`elevationLayer`）。若两个 `RasterSource` 共享同一个底层图层实例，会导致 WebGL 帧缓冲区读写冲突。生产中必须如示例中声明两个独立图层实例（`elevation1` 与 `elevation2`）分别供给不同的栅格运算管道。
 tags: "image-interpolation, contours, raster, mouse-position, mapzen"
 ---
 <div id="map" class="map"></div>

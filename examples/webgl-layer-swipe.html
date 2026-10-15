@@ -20,7 +20,7 @@ docs: |
 
   #### 1. 为什么 WebGL 卷帘要用 `gl.scissor()` 而不是 Canvas 2D 的 `clip()`？
   * **零栅格化开销**：传统 Canvas 2D 卷帘通过在每帧构建矩形路径并调用 `ctx.clip()`，底层依靠 CPU/GPU 进行软件掩模计算。
-  * **GPU 硬件级视口剪裁（Scissor Test）**：WebGL 的 `gl.scissor(x, y, width, height)` 是显卡固化管线支持的基础功能。启用 `gl.SCISSOR_TEST` 后，GPU 在光栅化测试阶段直接剔除指定矩形窗口之外的所有片元（Fragments），完全不产生额外的像素计算或纹理拷贝开销，无论图层瓦片多么庞大，帧率均保持绝对稳定。
+  * **GPU 硬件级视口剪裁（Scissor Test）**：WebGL 的 `gl.scissor(x, y, width, height)` 是显卡固化管线支持的基础功能。启用 `gl.SCISSOR_TEST` 后，GPU 在栅格化测试阶段直接剔除指定矩形窗口之外的所有片元（Fragments），完全不产生额外的像素计算或纹理拷贝开销，无论图层瓦片多么庞大，帧率均保持绝对稳定。
 
   #### 2. 坐标转换细节：CSS 像素与物理渲染设备像素
   * **`getRenderPixel` 的必要性**：在高分屏（Retina / devicePixelRatio > 1）下，地图 DOM 的 CSS 尺寸与 WebGL 画布的物理像素分辨率并不一致。

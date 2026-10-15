@@ -21,7 +21,7 @@ const map = new Map({
 });
 
 // Hook into prerender to establish the Bézier heart clipping mask
-// 监听底图的 prerender 事件：在切片光栅化之前构建贝塞尔心形裁切蒙版
+// 监听底图的 prerender 事件：在切片栅格化之前构建贝塞尔心形裁切蒙版
 osm.on('prerender', function (event) {
   const ctx = event.context;
 

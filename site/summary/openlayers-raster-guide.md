@@ -1,17 +1,17 @@
-# OpenLayers 光栅像素处理与地形分析全景实战架构指南 (Raster Manipulation & Topographic Analysis Architecture)
+# OpenLayers 栅格像素处理与地形分析全景实战架构指南 (Raster Manipulation & Topographic Analysis Architecture)
 
 > 本指南基于 OpenLayers 官方 **raster** 核心专题群的代表性示例，深度解构 `ol/source/Raster` 依托多线程 Web Worker 实现的客户端逐像素与整图级运算流水线，详解 Mapbox Terrain-RGB 与 Mapzen Terrarium 两大数字高程模型（DEM）编解码标准，剖析基于 3x3 邻域梯度的朗伯日照山体阴影（Hillshade）物理模型，并系统演示动态等高线插值、区域生长分割、植被绿度指数（VGI）双向统计与云原生 PMTiles 单文件切片读取的高阶工程实践。
 
 ---
 
-## 一、光栅运算流水线全景架构 (Architectural Overview)
+## 一、栅格运算流水线全景架构 (Architectural Overview)
 
-在现代 WebGIS 中，面对海量数字高程模型（DEM）与多光谱遥感影像，传统依赖 GIS 服务端重绘切片的模式延迟高、吞吐瓶颈明显。`ol/source/Raster` 通过在浏览器后台开辟 Web Worker 线程池，开创了纯客户端、零服务器运算的分布式空间光栅分析架构：
+在现代 WebGIS 中，面对海量数字高程模型（DEM）与多光谱遥感影像，传统依赖 GIS 服务端重绘切片的模式延迟高、吞吐瓶颈明显。`ol/source/Raster` 通过在浏览器后台开辟 Web Worker 线程池，开创了纯客户端、零服务器运算的分布式空间栅格分析架构：
 
 ```mermaid
 flowchart TD
     subgraph InputStage["1. 输入源采集与准备 (Input Acquisition)"]
-        TileSource["光栅切片源 (ImageTile / DataTile)"]
+        TileSource["栅格切片源 (ImageTile / DataTile)"]
         DEMSource["Terrain-RGB / Terrarium DEM 切片"]
         TileSource --> BufferGutter["3x3 切片缓冲区 (Gutter: 消除跨切片接缝裂痕)"]
         DEMSource --> BufferGutter
@@ -36,7 +36,7 @@ flowchart TD
         PixelWorker --> Composite["组装生成目标 ImageData"]
         ImageWorker --> Composite
         Composite --> AfterOps
-        Composite --> ImageLayer["ImageLayer 动态光栅画布呈现"]
+        Composite --> ImageLayer["ImageLayer 动态栅格画布呈现"]
         ImageLayer --> InteractiveProbe["raster.getData(coord) 毫秒级空间坐标反查"]
     end
 ```

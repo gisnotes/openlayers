@@ -208,27 +208,40 @@ a>img {
   margin-top: 1em;
 }
 
-#docs table {
-  border-collapse: collapse;
+/* Markdown 内容表格全局边框样式：同时适配示例 #docs、站点专题 .container 以及 Markdown 生成的所有内容表格 */
+#docs table:not(.controls),
+.container table:not(.controls):not(.table-borderless),
+table.markdown-table {
+  border-collapse: collapse !important;
   width: 100%;
-  margin: 1em 0;
+  margin: 1.25em 0;
   font-size: 0.95em;
+  border: 1px solid #d0d7de !important;
 }
 
-#docs th,
-#docs td {
-  border: 1px solid #d0d7de;
-  padding: 8px 12px;
+#docs table:not(.controls) th,
+#docs table:not(.controls) td,
+.container table:not(.controls):not(.table-borderless) th,
+.container table:not(.controls):not(.table-borderless) td,
+table.markdown-table th,
+table.markdown-table td {
+  border: 1px solid #d0d7de !important;
+  padding: 8px 14px;
   vertical-align: top;
 }
 
-#docs thead th {
-  background-color: var(--ol-accent-background-color);
+#docs table:not(.controls) thead th,
+.container table:not(.controls):not(.table-borderless) thead th,
+table.markdown-table thead th {
+  background-color: var(--ol-accent-background-color, #f6f8fa);
   font-weight: 700;
+  border-bottom: 2px solid #d0d7de !important;
 }
 
-#docs tbody tr:nth-child(even) {
-  background-color: #fafbfc;
+#docs table:not(.controls) tbody tr:nth-child(even),
+.container table:not(.controls):not(.table-borderless) tbody tr:nth-child(even),
+table.markdown-table tbody tr:nth-child(even) {
+  background-color: #fcfdfe;
 }
 
 ul.inline,

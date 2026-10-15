@@ -2,7 +2,7 @@
 layout: example.html
 title: Sea Level / MapTiler Terrain-RGB 动态海平面上升模拟
 shortdesc: Render sea level at different elevations. / 演示如何使用 ol/source/Raster 对 MapTiler Terrain-RGB 地形切片进行像素级高程解算，动态渲染不同海平面淹没高度并进行实时交互。
-docs: >
+docs: |
   <p>
     This example uses a <code>ol/source/Raster</code> with
     <a href="https://documentation.maptiler.com/hc/en-us/articles/4405444055313-RGB-Terrain-by-MapTiler">MapTiler Terrain-RGB tiles</a>
@@ -13,7 +13,7 @@ docs: >
     本示例演示了如何利用 <code>ol/source/Raster</code> 对 <a href="https://documentation.maptiler.com/hc/en-us/articles/4405444055313-RGB-Terrain-by-MapTiler">MapTiler Terrain-RGB 地形瓦片</a> 执行客户端逐像素高程解码，并动态模拟海平面上升（Sea Level Rise）的淹没泛洪效果。
   </p>
   <p>
-    通过滑动条调节海平面相对上升高度（0 ~ 100 米），光栅数据源在后台 Web Worker 中实时将地表海拔低于该阈值的陆地区域渲染为半透明水体；同时监听光标移动，调用 <code>raster.getData(coordinate)</code> 实时提取并显示鼠标指针所在位置的亚米级真实地表海拔，并提供旧金山、纽约、孟买、上海等沿海重点城市的快速视角跳转。
+    通过滑动条调节海平面相对上升高度（0 ~ 100 米），栅格数据源在后台 Web Worker 中实时将地表海拔低于该阈值的陆地区域渲染为半透明水体；同时监听光标移动，调用 <code>raster.getData(coordinate)</code> 实时提取并显示鼠标指针所在位置的亚米级真实地表海拔，并提供旧金山、纽约、孟买、上海等沿海重点城市的快速视角跳转。
   </p>
 
   ---
@@ -59,7 +59,7 @@ docs: >
       }
     });
     ```
-    `raster.getData()` 能够精准从底层光栅图层的当前离屏像素缓存中提取坐标处输入源的原始 RGBA 值，实现零网络二次请求的即时海拔点选拾取。
+    `raster.getData()` 能够精准从底层栅格图层的当前离屏像素缓存中提取坐标处输入源的原始 RGBA 值，实现零网络二次请求的即时海拔点选拾取。
 
   #### 3. 工程避坑与高可用实践 (Production Pitfalls & Best Practices)
   - **地形切片最大层级与超视口拉伸**：

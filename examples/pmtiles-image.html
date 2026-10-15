@@ -2,7 +2,7 @@
 layout: example.html
 title: PMTiles Image Tiles / PMTiles 单文件云原生切片归档读取
 shortdesc: Displaying image tiles from a PMTiles archive. / 演示如何使用 PMTiles JavaScript API 通过 HTTP Range 范围请求直接读取单一归档文件中的栅格图像切片。
-docs: >
+docs: |
   This example shows image tiles from a [PMTiles](https://github.com/protomaps/PMTiles) source.
   A PMTiles archive can contain tiled data in a variety of formats. In this example, the PMTiles
   archive contains image-encoded tiles. The [PMTiles JavaScript API](https://pmtiles.io/typedoc/)
@@ -11,7 +11,7 @@ docs: >
   in this example converts the PMTiles response data into a [data URL](https://developer.mozilla.org/en-US/docs/Web/URI/Schemes/data)
   and then uses the browser's built-in image decoder to turn the data URL into an image.
 
-  本示例演示了如何从云原生单文件格式 [PMTiles](https://github.com/protomaps/PMTiles) 归档包中直接按需读取光栅切片。
+  本示例演示了如何从云原生单文件格式 [PMTiles](https://github.com/protomaps/PMTiles) 归档包中直接按需读取栅格切片。
 
   PMTiles 是由 Protomaps 发起的一种专为云对象存储（S3/OSS/R2）设计的单一文件金字塔切片容器。通过调用 `pmtiles` 官方 JavaScript API，代码根据视口所需的切片坐标 `(z, x, y)` 发起精细的 HTTP Range（字节范围）请求；在 `ImageTile` 的自定义异步 `loader` 中，将返回的二进制切片数据封装为内存 Blob 对象并利用浏览器原生图像解码器渲染呈现，彻底告别传统 GIS 服务器。
 

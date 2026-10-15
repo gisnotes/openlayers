@@ -19,7 +19,7 @@ flowchart TD
         StartRender([开始当前图层渲染]) --> PreHook["触发 prerender 事件 (event.context)"]
         PreHook --> SaveState["ctx.save() 保存上下文初始状态"]
         SaveState --> ApplyClip["应用裁剪区 / 几何蒙版 (ctx.clip())"]
-        ApplyClip --> Rasterize["OpenLayers 内核: 切片光栅化 / 矢量绘制"]
+        ApplyClip --> Rasterize["OpenLayers 内核: 切片栅格化 / 矢量绘制"]
         Rasterize --> PostHook["触发 postrender 事件 (event.context)"]
         PostHook --> PostProcess["像素后处理 / 混合模式 / 边框高亮"]
         PostProcess --> RestoreState["ctx.restore() 恢复上下文状态栈"]
@@ -38,7 +38,7 @@ flowchart TD
 
 ## 2. 空间卷积核图像滤镜与 CPU 像素后处理
 
-在 `image-filter.html` 示例中，遥感卫星影像在光栅化完成后，通过 `postrender` 拦截器接管像素缓冲区，应用 $3 \times 3$ 空间卷积核进行数字图像处理。
+在 `image-filter.html` 示例中，遥感卫星影像在栅格化完成后，通过 `postrender` 拦截器接管像素缓冲区，应用 $3 \times 3$ 空间卷积核进行数字图像处理。
 
 ### 2.1 二维离散卷积数学模型
 
@@ -107,7 +107,7 @@ sequenceDiagram
     ImgLayer->>Canvas: ctx.save()
     ImgLayer->>Canvas: ctx.arc(centerX, centerY, radius, 0, 2π)
     ImgLayer->>Canvas: ctx.clip() 开启圆形物理裁剪
-    Map->>ImgLayer: 瓦片光栅化（仅圆内像素被实际写入）
+    Map->>ImgLayer: 瓦片栅格化（仅圆内像素被实际写入）
     Map->>ImgLayer: 触发 postrender 事件
     ImgLayer->>Canvas: ctx.restore() 恢复全局上下文
 ```
@@ -171,7 +171,7 @@ flowchart LR
     end
 
     subgraph Stamping [矢量要素冲压流水线]
-        BaseCanvas -->|postrender| Step1["底图瓦片已光栅化 (Destination)"]
+        BaseCanvas -->|postrender| Step1["底图瓦片已栅格化 (Destination)"]
         Step1 --> Step2["globalCompositeOperation = 'destination-in'"]
         Step2 --> Step3["vectorContext.drawFeature(瑞士国界, style)"]
         Step3 --> Step4["仅重叠多边形部分被保留，其余透明"]

@@ -2,7 +2,7 @@
 layout: example.html
 title: WMS loader with SVG format / 采用 SVG 矢量格式的 WMS 加载器
 shortdesc: Using the WMS loader to use SVG images with an Image source. / 使用 WMS 自定义 loader 加载 SVG 矢量图像，在地图连续缩放时保持无限矢量清晰度。
-docs: >
+docs: |
   The Image source can be configured with service specific loaders. By default, the loader returns the image
   as decoded `ImageBitmap`. When using the `ol/source/Image.load()` function instead, SVG images will scale during
   zooming, because they will be used as `HTMLImageElement` directly instead of an `ImageBitmap`.
@@ -34,7 +34,7 @@ docs: >
       load: load, // 强制以 HTMLImageElement 模式装载
     }),
     ```
-    通过直接使用 `HTMLImageElement`，浏览器内核的矢量栅格化引擎会在每次画布缩放时重新对 SVG 进行矢量插值光栅化，在缩放过渡期间保持极高清晰度。
+    通过直接使用 `HTMLImageElement`，浏览器内核的矢量栅格化引擎会在每次画布缩放时重新对 SVG 进行矢量插值栅格化，在缩放过渡期间保持极高清晰度。
 tags: "wms, image, svg"
 ---
 <div id="map" class="map"></div>

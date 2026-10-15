@@ -2,7 +2,7 @@
 layout: example.html
 title: Immediate Rendering (Geographic) / 即时渲染（地理坐标模式）
 shortdesc: Using the immediate rendering API with geometries in geographic coordinates. / 在地理坐标系（经纬度）下使用即时渲染 API（Immediate Rendering）。
-docs: >
+docs: |
   This example uses the "immediate" rendering API with geometries in geographic coordinates.
   The immediate rendering API lets you draw styled geometries without adding them to a layer first.
   Use the `getVectorContext` function to create a rendering context from a render event.  Using the
@@ -17,7 +17,7 @@ docs: >
   ### 📚 学习记录与技术深度解读 (Learning Notes)
 
   #### 1. 即时渲染底层架构 (Immediate Rendering Architecture)
-  - **绕过要素生命周期的高性能管线**: OpenLayers 常规矢量渲染体系遵循 `VectorSource -> VectorLayer -> Renderer -> Canvas`，底层需要维护要素（Feature）的属性字典、几何变更事件监听、空间 R 树索引（RBush）以及脏矩形计算。即时渲染（Immediate Rendering）机制通过监听图层或地图的 `postrender` 渲染事件，直接使用 `getVectorContext(event)` 获取 Canvas 矢量上下文，跳过所有抽象层直接把几何形体光栅化到离屏画布上。
+  - **绕过要素生命周期的高性能管线**: OpenLayers 常规矢量渲染体系遵循 `VectorSource -> VectorLayer -> Renderer -> Canvas`，底层需要维护要素（Feature）的属性字典、几何变更事件监听、空间 R 树索引（RBush）以及脏矩形计算。即时渲染（Immediate Rendering）机制通过监听图层或地图的 `postrender` 渲染事件，直接使用 `getVectorContext(event)` 获取 Canvas 矢量上下文，跳过所有抽象层直接把几何形体栅格化到离屏画布上。
   - **极致帧率与轻量开销**: 适用于高频粒子系统、气象雷达回波、实时 GPS 车辆拖尾、地震波扩散动画等需要每秒刷新数十次且无需长期要素状态管理的场景。
 
   #### 2. 与 `useGeographic()` 的无缝结合

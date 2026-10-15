@@ -2,7 +2,7 @@
 layout: example.html
 title: Vector Tile Info / 矢量切片要素属性交互探测
 shortdesc: Getting feature information from vector tiles. / 从 MVT 矢量切片中实时拾取并展示地理要素属性信息。
-docs: >
+docs: |
   <p>Move your pointer over rendered features to display feature properties.</p>
   <p>移动鼠标指针悬停在已渲染的地图矢量要素上方，可在悬浮面板中实时探测并展示该要素的完整 JSON 属性字典。</p>
 
@@ -18,7 +18,7 @@ docs: >
 
   #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
   - `map.getFeaturesAtPixel(pixel, [options])`：
-    基于硬件/Canvas 渲染上下文拾取视口指定像素下的要素。与 `ol/source/Vector` 不同，矢量切片在默认 `renderMode: 'hybrid'` 下切片会被光栅化到离屏 Canvas，但 OpenLayers 依然在内部保留切片图元索引树，可精确提取几何与 properties。
+    基于硬件/Canvas 渲染上下文拾取视口指定像素下的要素。与 `ol/source/Vector` 不同，矢量切片在默认 `renderMode: 'hybrid'` 下切片会被栅格化到离屏 Canvas，但 OpenLayers 依然在内部保留切片图元索引树，可精确提取几何与 properties。
   - `pointerleave` 视口越界生命周期兜底：
     监听地图容器外层的原生 `pointerleave` 事件，确保当光标离开地图窗口时主动隐藏信息面板（`opacity: 0`），避免视口边缘残留幽灵悬浮窗。
   - 防抖与拖拽节流守卫：

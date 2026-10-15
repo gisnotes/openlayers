@@ -2,7 +2,7 @@
 layout: example.html
 title: Image Filters / 图像滤镜
 shortdesc: Apply a filter to imagery / 对遥感影像图层应用卷积图像滤镜（锐化、模糊、浮雕、边缘检测等）。
-docs: >
+docs: |
   <p>Layer rendering can be manipulated in <code>prerender</code> and <code>postrender</code> event listeners.
   These listeners get an event with a reference to the Canvas rendering context.
   In this example, the <code>postrender</code> listener applies a filter to the image data.</p>
@@ -14,7 +14,7 @@ docs: >
   ### 📚 学习记录与技术深度解读 (Learning Notes)
 
   #### 1. 渲染事件拦截与 Canvas 上下文 (Render Hooks & Canvas Context)
-  - **后处理拦截机制**: 当切片图层触发 `postrender` 事件时，当前视口范围内的切片已全部光栅化绘制到图层独享或共享的 HTML5 Canvas 画布上。此时挂载于事件参数中的 `event.context` 允许开发者直接调用原生 2D Canvas 上下文方法。
+  - **后处理拦截机制**: 当切片图层触发 `postrender` 事件时，当前视口范围内的切片已全部栅格化绘制到图层独享或共享的 HTML5 Canvas 画布上。此时挂载于事件参数中的 `event.context` 允许开发者直接调用原生 2D Canvas 上下文方法。
   - **像素级数据读写**: 通过 `context.getImageData(0, 0, width, height)` 可以提取视口当前帧的 RGBA 原始字节流（`Uint8ClampedArray`），并在经过数学变换后通过 `context.putImageData(output, 0, 0)` 将新像素阵列写回，实现任意基于 CPU 的着色器后处理效果。
 
   #### 2. 图像空间卷积核与亮度归一化原理 (Convolution & Normalization)

@@ -2,7 +2,7 @@
 layout: example.html
 title: Vector Label Decluttering / 矢量注记智能避让
 shortdesc: Label decluttering on polygons. / 面状几何要素上的文本注记智能避让与溢出显示（Decluttering & Overflow）。
-docs: >
+docs: |
   Decluttering is used to avoid overlapping labels. The `overflow: true` setting on the text style makes it so labels that do not fit within the bounds of a polygon are also considered for decluttering.
 
   避让机制（Decluttering）用于防止地图缩放漫游时文本注记发生相互重叠混乱。在文本样式中配置 <code>overflow: true</code>，可以允许那些超出多边形几何自身包围盒的较长文本标签依然能够被绘制出来，并由全局避让算法统一进行防碰撞裁决，确保文字清晰可读的同时兼顾高注记展示率。

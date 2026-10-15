@@ -2,7 +2,7 @@
 layout: example.html
 title: Layer Spy / 图层探照灯（透镜探查）
 shortdesc: View a portion of one layer over another / 使用圆形探照灯在底图上方透视查阅另一图层内容。
-docs: >
+docs: |
   <p>Layer rendering can be manipulated in <code>prerender</code> and <code>postrender</code> event listeners.
   These listeners get an event with a reference to the Canvas rendering context.
   In this example, the <code>prerender</code> listener sets a clipping mask around the most
@@ -21,7 +21,7 @@ docs: >
   - **Canvas 裁切蒙版流水线 (Clip Pipeline)**:
     1. 在 `imagery.on('prerender')` 阶段调用 `ctx.save()` 将画布初始坐标系与剪切区入栈；
     2. 基于当前鼠标光标位置调用 `ctx.arc(...)` 绘制圆形矢量轮廓，并执行 `ctx.clip()`；
-    3. OpenLayers 内部仅把位于圆形裁切路径内的卫星瓦片光栅化到画布上；
+    3. OpenLayers 内部仅把位于圆形裁切路径内的卫星瓦片栅格化到画布上；
     4. 在 `imagery.on('postrender')` 阶段必须立即调用 `ctx.restore()` 弹出状态栈，释放剪切区约束，使后续图层与 UI 控件可正常绘制。
 
   #### 2. 高分屏（HiDPI / Retina）物理像素自适应

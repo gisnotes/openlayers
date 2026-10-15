@@ -2,7 +2,7 @@
 layout: example.html
 title: TileJSON / TileJSON 瓦片元数据规范与自动解析
 shortdesc: Example of a TileJSON layer. / 展示如何加载符合 TileJSON 规范的切片服务，自动解析瓦片模板 URL、边界与缩放级别。
-docs: >
+docs: |
   Example of a TileJSON layer.
 
   本示例展示如何通过 `ol/source/TileJSON` 直接接入符合 TileJSON 标准协议的切片服务（此处使用 Gnosis Map Server 的 Natural Earth 栅格切片）。OpenLayers 会自动解析服务元数据中的切片 URL 模板、空间范围（Bounds）、最小与最大缩放级别以及版权归属（Attributions），无需开发者手动拼接切片网格与投影参数。

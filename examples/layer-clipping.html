@@ -2,7 +2,7 @@
 layout: example.html
 title: Layer Clipping / 图层几何遮罩裁切
 shortdesc: Layer clipping example / 使用贝塞尔曲线与 Canvas 路径对图层进行几何蒙版裁切。
-docs: >
+docs: |
   Layer clipping example. Demonstrates clipping a layer using arbitrary Canvas 2D paths.
 
   本示例演示了如何通过监听图层的 <code>prerender</code> 事件，利用 HTML5 Canvas 2D 上下文的 <code>ctx.clip()</code> 方法对瓦片底图进行几何蒙版裁切。示例中使用贝塞尔曲线（Bézier Curves）在屏幕中心构造了一个爱心形状的矢量剪切蒙版，并根据地图的像素比（PixelRatio）与旋转角（Rotation）对变换矩阵进行反向抵消与动态校准，使裁切轮廓稳定居中显示。
@@ -20,7 +20,7 @@ docs: >
 
   #### 2. 三次贝塞尔曲线路径与 `ctx.clip()`
   - **参数化路径造型**: 利用 `ctx.moveTo` 与 6 段 `ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)` 构建闭合心形矢量轮廓。
-  - **硬件级像素裁剪**: 调用 `ctx.clip()` 将当前 Canvas 上下文的绘制限制在闭合路径之内。随后的切片光栅化渲染只在心形蒙版区域生效，其余部分保持透明。
+  - **硬件级像素裁剪**: 调用 `ctx.clip()` 将当前 Canvas 上下文的绘制限制在闭合路径之内。随后的切片栅格化渲染只在心形蒙版区域生效，其余部分保持透明。
 
   #### 3. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices)
   - **成对的 `save` 与 `restore`**: 状态保护至关重要。`prerender` 中调用的 `ctx.save()` 必须与 `postrender` 中的 `ctx.restore()` 一一严格配对。如果因代码异常中断未执行 `restore()`，裁剪蒙版将永久驻留，后续绘制的任何图层都将被裁切。

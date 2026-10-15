@@ -3,7 +3,7 @@
 > 地球是一个不规则的三维旋转椭球体，而屏幕与纸张是二维平坦介质。从球面到平面的数学映射过程，构成了地图学（Cartography）最古老而又最核心的学科支柱：
 > 1. **空间地理基准（Graticule Coordinate Grid）**：如何在任意投影平面下自适应绘制经纬度网格线，并将经纬度度数标签智能吸附在视口边缘？
 > 2. **等面积伪圆柱投影（Sphere Mollweide / ESRI:53009）**：如何利用 Proj4js 拓展非墨卡托投影，通过精确的数学椭圆半轴边界（$x_{\max}=2\sqrt{2}R, y_{\max}=\sqrt{2}R$）与 `worldExtent` 配置，实现全无畸变的全球大区面积对比？
-> 3. **客户端即时任意投影转换（Reprojection by Code）**：如何动态检索 EPSG 代号，利用自适应三角网（Adaptive Triangulated Mesh）将标准 Web 墨卡托光栅瓦片在浏览器 Canvas 中实时扭曲重投影？
+> 3. **客户端即时任意投影转换（Reprojection by Code）**：如何动态检索 EPSG 代号，利用自适应三角网（Adaptive Triangulated Mesh）将标准 Web 墨卡托栅格瓦片在浏览器 Canvas 中实时扭曲重投影？
 > 4. **投影失真几何可视化（Tissot's Indicatrix / 蒂索变形椭圆）**：如何利用大圆测地多边形（`circularPolygon`），通过在真实地球表面铺设等径圆，科学定量地揭示等角投影的“面积膨胀”与等距柱面投影的“横向拉伸”？
 >
 > 本文基于 4 个官方核心示例（`graticule.html`、`sphere-mollweide.html`、`reprojection-by-code.html`、`tissot.html`），系统解构投影几何学、经纬网格网以及客户端重采样引擎的底层奥秘。
@@ -212,5 +212,5 @@ for (x = -180; x < 180; x += 30) {
 | 考量维度 | 踩坑现象 | 底层原因 | 解决方案与最佳实践 |
 | :--- | :--- | :--- | :--- |
 | **极地投影断裂** | 经纬网在两极断裂或飞线 | 极点数学计算溢出（$\tan(90^\circ)=\infty$） | 显式配置 `worldExtent: [-179, -89.99, 179, 89.99]` |
-| **重投影瓦片模糊** | 转换投影后光栅文字模糊 | 双线性插值在多级重采样中的像素虚化 | 开启 `source.setInterpolation(true)` 并配置 `maxZoom` 适当过度缩放 |
+| **重投影瓦片模糊** | 转换投影后栅格文字模糊 | 双线性插值在多级重采样中的像素虚化 | 开启 `source.setInterpolation(true)` 并配置 `maxZoom` 适当过度缩放 |
 | **高纬度测距失真** | 在墨卡托地图上用直尺量算距离偏大数十倍 | 墨卡托投影面积膨胀因子极大 | 严禁使用平面欧几里得距离，必须调用 `ol/sphere` 中的 `getLength()` 与 `getArea()` 测地线算法 |

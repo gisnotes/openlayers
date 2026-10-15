@@ -2,7 +2,7 @@
 layout: example.html
 title: Image ArcGIS MapServer / ArcGIS 动态图像服务（ImageArcGISRest）
 shortdesc: Example of an image ArcGIS layer. / 加载 Esri ArcGIS REST 动态地图服务（单张视口出图）。
-docs: >
+docs: |
   This example shows how to use a dynamic ArcGIS REST MapService.
   This source type supports Map and Image Services. For dynamic ArcGIS
   services.
@@ -14,7 +14,7 @@ docs: >
   ### 📚 学习记录与技术深度解读 (Learning Notes)
 
   #### 1. 动态出图原理与 `/export` 接口机制 (Dynamic Export Pipeline)
-  - **动态地图服务本质**: 与静态切片（Tiled Cache）不同，ArcGIS 动态地图服务在每次请求时由 GIS 服务器（ArcGIS Enterprise / Server）现场读取数据库图层并执行符号化光栅化渲染。
+  - **动态地图服务本质**: 与静态切片（Tiled Cache）不同，ArcGIS 动态地图服务在每次请求时由 GIS 服务器（ArcGIS Enterprise / Server）现场读取数据库图层并执行符号化栅格化渲染。
   - **单张图像自适应请求**: `ol/source/ImageArcGISRest` 配合 `ol/layer/Image`，在每次地图视图变化后自动拼接参数并发起 HTTP GET 请求：
     `.../MapServer/export?bbox={minx,miny,maxx,maxy}&size={w,h}&dpi=96&f=image&format=png32&transparent=true`。
   - **无瓦片缝隙与动态注记优势**: 单张图像渲染彻底避免了切片边界上的文字截断、图标撕裂问题，是复杂专题制图与高保真制图输出的理想选择。

@@ -147,7 +147,7 @@ const elevation = new ImageTile({
     '<a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md" target="_blank">Data sources and attribution</a>',
 });
 
-// Raster source with image operation running in worker / 在 Worker 中执行光照运算的光栅数据源
+// Raster source with image operation running in worker / 在 Worker 中执行光照运算的栅格数据源
 const raster = new Raster({
   sources: [elevation],
   operationType: 'image',

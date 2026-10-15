@@ -2,7 +2,7 @@
 layout: example.html
 title: SVG Layer / 交互式 SVG 图层与仿射矩阵同步
 shortdesc: Example of a map with an interactive svg layer. / 演示如何使用自定义 Layer 渲染函数结合 CSS 仿射变换矩阵加载并交互联动 SVG 矢量图层。
-docs: >
+docs: |
   <p>With a plain `ol/Layer` and a `render` function, we can use an interactive svg as layer. Hover over countries to see the interactivity that is defined purely with a css `:hover` pseudo-class. Other layers can be added to the same map. The blue circle is a vector feature on a separate layer.</p>
   <p>借助基础 <code>ol/layer/Layer</code> 以及自定义 <code>render</code> 渲染函数，我们可以直接将交互式 SVG 矢量图元挂载为 OpenLayers 地图图层。移动鼠标指针悬停在各国轮廓上方，即可观察到纯 CSS <code>:hover</code> 伪类驱动的高性能悬浮交互动画。地图中亦可同时叠加常规矢量与瓦片图层（例如本例中心位于 [0, 0] 的蓝色圆点即为独立矢量图层要素）。</p>
 

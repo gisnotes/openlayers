@@ -2,7 +2,7 @@
 layout: example.html
 title: Vector Clipping Layer / 矢量边界裁切图层
 shortdesc: Vector Clipping Layer example / 基于 GeoJSON 矢量多边形边界对瓦片底图进行精确地理蒙版裁切。
-docs: >
+docs: |
   Example of a clipping layer based on a vector source. Demonstrates using vector polygon geometries
   with Canvas 2D `globalCompositeOperation = 'destination-in'` to mask a tile layer.
 
@@ -18,7 +18,7 @@ docs: >
 
   #### 2. `destination-in` 图像混合与矢量冲压裁切 (Vector Stamping)
   - **后处理图层混合 (Composite Operation)**: 在基础图层 `base` 的 `postrender` 阶段，底图瓦片已作为目标图像（Destination）绘制完成。
-  - **矢量要素光栅化裁切**:
+  - **矢量要素栅格化裁切**:
     1. 设置 `context.globalCompositeOperation = 'destination-in'`（仅保留与后续新绘制内容重叠的现有像素）；
     2. 获取轻量级 `vectorContext`，并调用 `vectorContext.drawFeature(feature, style)` 实时绘制 GeoJSON 多边形；
     3. 目标底图瞬间被精确裁切为瑞士国界的轮廓形状；
@@ -27,7 +27,7 @@ docs: >
   #### 3. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices)
   - **`className` 遗漏引发的穿透误裁**: 若未给背景底图指定唯一的 `className`，背景图层与待裁切底图将绘制在同一张 Canvas 上，执行 `'destination-in'` 会连同背景图层一并裁切成空白。
   - **空间范围约束优化 (`setExtent`)**: 代码中在 `clipLayer.getSource().on('addfeature')` 监听器里调用 `base.setExtent(clipLayer.getSource().getExtent())`，使得 OpenLayers 引擎不会在矢量要素包围盒之外请求多余的无用瓦片，大幅节省网络带宽。
-  - **矢量图层自身不可见配置**: 用于蒙版裁切的 `clipLayer` 将 `style: null`，使其自身不进行冗余的常规矢量光栅化，仅作为数据源由 `vectorContext.drawFeature` 在合成阶段手动驱动。
+  - **矢量图层自身不可见配置**: 用于蒙版裁切的 `clipLayer` 将 `style: null`，使其自身不进行冗余的常规矢量栅格化，仅作为数据源由 `vectorContext.drawFeature` 在合成阶段手动驱动。
 tags: "clipping, openstreetmap, vector"
 ---
 <div id="map" class="map"></div>

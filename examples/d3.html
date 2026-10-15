@@ -2,7 +2,7 @@
 layout: example.html
 title: d3 Integration / D3.js 矢量可视化集成
 shortdesc: Example of using OpenLayers and d3 together. / 演示如何将 OpenLayers 与 D3.js（d3-geo）深度结合，将 TopoJSON 几何渲染到 SVG 图层中。
-docs: >
+docs: |
   <p>The example loads TopoJSON geometries and uses d3 (<code>d3.geo.path</code>) to render these geometries to a SVG element.</p>
   <p>本示例演示如何将 OpenLayers 强大的地理地图视口与 <strong>D3.js（d3-geo / d3-selection）</strong> 数据可视化生态无缝融合。通过继承基础 <code>Layer</code> 类构建自定义图层，在每帧渲染时动态将 OpenLayers 的视口分辨率、中心与旋转角度同步给 D3 的墨卡托投影投影器（<code>d3.geoMercator</code>），从而使用 <code>d3.geoPath</code> 将 TopoJSON 拓扑几何精准绘制在 SVG 画布上。</p>
 

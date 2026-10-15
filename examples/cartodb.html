@@ -17,7 +17,7 @@ docs: >
   <ul>
     <li><strong>云原生空间数据库动态切片渲染（Cloud CartoDB & Maps API）：</strong>
       对于拥有数百万级复杂多边形或海量空间大数据的业务，直接向前端浏览器传输完整矢量数据（GeoJSON）会导致严重的内存溢出与渲染丢帧。
-      CartoDB 采用了“服务端数据库级渲染”架构：前端仅发送极轻量的 SQL 查询（<code>select * from european_countries_e where area > n</code>）与样式规则（CartoCSS），云端 PostGIS 引擎完成空间筛选与多边形光栅化切片，再以极轻量的 WebP/PNG 瓦片推流给 OpenLayers。
+      CartoDB 采用了“服务端数据库级渲染”架构：前端仅发送极轻量的 SQL 查询（<code>select * from european_countries_e where area > n</code>）与样式规则（CartoCSS），云端 PostGIS 引擎完成空间筛选与多边形栅格化切片，再以极轻量的 WebP/PNG 瓦片推流给 OpenLayers。
     </li>
     <li><strong>数据源配置热更新机制（Dynamic Config Hot-Reload）：</strong>
       当用户改变筛选条件（如选择不同的国家面积阈值）时，不需要销毁并重新创建 <code>TileLayer</code> 或 <code>CartoDB</code> 实例。

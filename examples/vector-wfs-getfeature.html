@@ -16,7 +16,7 @@ docs: >
 
   <h4>1. 核心架构与设计思想</h4>
   <ul>
-    <li><strong>WMS vs WFS：光栅呈现与矢量互操作的质变：</strong>
+    <li><strong>WMS vs WFS：栅格呈现与矢量互操作的质变：</strong>
       WMS 服务向客户端传输的是“图片”，客户端无法修改图元样式或进行二次空间拓扑分析；而 WFS（Web Feature Service）直接分发包含完整点、线、面坐标几何与业务属性字典的真实矢量要素。客户端接收后可在前端执行富交互绘制、高亮选中、缓冲区分析甚至图形编辑后提交回写（WFS-T）。
     </li>
     <li><strong>OGC Filter Encoding 规范化 XML 生成：</strong>

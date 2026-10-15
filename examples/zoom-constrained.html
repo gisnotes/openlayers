@@ -2,7 +2,7 @@
 layout: example.html
 title: Constrained Zoom / 视图缩放级别区间约束（minZoom 与 maxZoom）
 shortdesc: Example of a zoom constrained view. / 示例展示如何使用 minZoom 与 maxZoom 限制视图缩放区间。
-docs: >
+docs: |
   This map has a view that is constrained between zoom levels 9 and 13.  This is done using the `minZoom` and `maxZoom` view options.
 
   本示例展示如何为视图配置静态的缩放级别区间约束。通过在 <code>ol/View</code> 中配置 <code>minZoom: 9</code> 与 <code>maxZoom: 13</code>，将用户的缩放交互严格钳制在 9 级（区域概览）到 13 级（街区细节）之间，禁止无意义的过大视野与超出瓦片分辨率的过度放大。

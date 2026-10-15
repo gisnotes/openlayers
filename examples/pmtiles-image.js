@@ -27,7 +27,7 @@ function loadImage(src) {
   });
 }
 
-// Configure ImageTile source using custom PMTiles loader / 配置使用 PMTiles 异步加载器的光栅瓦片数据源
+// Configure ImageTile source using custom PMTiles loader / 配置使用 PMTiles 异步加载器的栅格瓦片数据源
 const source = new Source({
   async loader(z, x, y, {signal}) {
     // Issue HTTP Range request for tile z, x, y / 发起精确的 HTTP Range 字节范围请求获取切片
