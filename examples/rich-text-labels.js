@@ -8,6 +8,8 @@ import Stroke from '../src/ol/style/Stroke.js';
 import Style from '../src/ol/style/Style.js';
 import Text from '../src/ol/style/Text.js';
 
+// Initialize map with a constrained extent over the contiguous United States
+// 初始化地图实例：视图限制在美国本土空间范围并启用全视口自适应
 const map = new Map({
   target: 'map',
   view: new View({
@@ -18,6 +20,8 @@ const map = new Map({
   }),
 });
 
+// Reusable text label style singleton with high-contrast white stroke halo
+// 可复用的文本注记样式单例：配置黑色填充与 4px 白色高对比度文字描边
 const labelStyle = new Style({
   text: new Text({
     font: '13px Calibri,sans-serif',
@@ -30,6 +34,9 @@ const labelStyle = new Style({
     }),
   }),
 });
+
+// Reusable polygon boundary and fill style
+// 可复用的多边形边界描边与半透明填充样式
 const countryStyle = new Style({
   fill: new Fill({
     color: 'rgba(255, 255, 255, 0.6)',
@@ -41,6 +48,8 @@ const countryStyle = new Style({
 });
 const style = [countryStyle, labelStyle];
 
+// Vector layer loading US states GeoJSON and applying dynamic rich text labels
+// 矢量图层：加载美国各州边界 GeoJSON 数据，并在要素样式回调中动态组装富文本注记
 const vectorLayer = new VectorLayer({
   background: 'white',
   source: new VectorSource({
@@ -48,6 +57,8 @@ const vectorLayer = new VectorLayer({
     format: new GeoJSON(),
   }),
   style: function (feature) {
+    // Pass an array of alternating [text, font] segments to build rich typography
+    // 传入交替的 [文本片段, 字体描述] 数组以构建多行、多粗细字号的富文本排版
     labelStyle
       .getText()
       .setText([

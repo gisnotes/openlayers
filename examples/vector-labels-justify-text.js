@@ -14,6 +14,8 @@ import Stroke from '../src/ol/style/Stroke.js';
 import Style from '../src/ol/style/Style.js';
 import Text from '../src/ol/style/Text.js';
 
+// Matrix of 9 feature configurations testing combinations of textAlign and justify
+// 9 组要素配置矩阵：测试 textAlign（几何锚点定位）与 justify（段落内部对齐）的正交组合
 const features = [
   {
     geometry: new Point([-8300000, 6095000]),
@@ -59,6 +61,8 @@ const features = [
   },
 ];
 
+// Helper to create a composite style with red anchor circle and multi-line justified text card
+// 辅助函数：创建复合样式，包含用于指示几何真值的红色锚点圆圈及多行段落对齐文本卡片
 function createStyle({textAlign, justify = undefined}) {
   return new Style({
     image: new CircleStyle({
@@ -84,6 +88,8 @@ function createStyle({textAlign, justify = undefined}) {
   });
 }
 
+// Vector layer containing all 9 point features
+// 矢量图层：承载 9 个不同排版组合的点要素
 const vectorPoints = new VectorLayer({
   source: new VectorSource({
     features: new Collection(
@@ -99,6 +105,8 @@ const vectorPoints = new VectorLayer({
   }),
 });
 
+// Initialize map with OSM base and vector points layer
+// 初始化地图实例：挂载 OSM 底图与矢量注记图层
 const map = new Map({
   layers: [
     new TileLayer({

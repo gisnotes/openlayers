@@ -1,12 +1,30 @@
 ---
 layout: example.html
-title: Vector Labels - Justify Text
-shortdesc: Example of text justification within a label.
+title: Vector Labels - Justify Text / 矢量注记文本对齐与段落对齐解耦
+shortdesc: Example of text justification within a label. / 演示在注记框内独立设置文本段落对齐（justify）与锚点对齐（textAlign）。
 docs: >
   This example showcases how the text can be justified within the label box.
   By default, the text is justified according to the `textAlign` option.
   However, this option justifies also the label itself according to `textAlign` setting.
   To decouple the label placement from text placement (within the label box) use `justify`.
+
+  本示例展示了如何在注记框内部对多行文本进行段落对齐（Justification）。默认情况下，文本段落对齐完全由 <code>textAlign</code> 选项控制，但 <code>textAlign</code> 同时决定了整个注记框相对于几何锚点的摆放位置（如左对齐、居中、右对齐）。若要将**注记框自身的空间摆放位置**与**框内多行文字的排版对齐方式**彻底解耦，可以使用 <code>justify</code> 属性（可选 <code>'left'</code>、<code>'center'</code>、<code>'right'</code>）。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 空间锚定 (`textAlign`) 与框内段落排版 (`justify`) 的解耦
+  - **`textAlign` 的双重历史包袱**: 在早期的 OpenLayers 版本中，`textAlign` 同时承担了两项职责：既决定整个注记包围盒相对于点几何坐标的锚接基准（如 `left` 表示注记框贴在点右侧），又控制框内多行文本是左对齐还是居中。这使得“注记整体贴在点右侧、但框内文字希望居中”的需求无法实现。
+  - **`justify` 属性的专业化**: 引入 `justify` 属性后，`textAlign` 仅负责外层锚点定位，而 `justify: 'left' | 'center' | 'right'` 则专门负责多行文本在文字气泡框内的段落排版，两者形成了清晰的二维正交控制体系（支持 $3 \times 3 = 9$ 种排版变体）。
+
+  #### 2. 文本背景气泡卡片设计 (`backgroundFill` 与 `padding`)
+  - **免除切图标负担的纯样式气泡**: 通过 `Text` 样式的 `backgroundFill: new Fill({color: '...'})` 属性，引擎会自动根据当前文本渲染尺寸动态生成自适应的矩形背景色块。
+  - **精确内边距盒模型**: 配合 `padding: [top, right, bottom, left]`（类似于 CSS 盒模型规范），能为文字四周提供均匀舒适的视觉留白，有效提升密集文字在复杂卫星底图上的视觉可辨识度。
+
+  #### 3. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices)
+  - **`justify` 的多行必要条件**: `justify` 的行内排版特性仅在文本存在换行符 `'\n'` 形成多行文本块时生效。若为单行文本，注记框宽度紧贴文本，`justify` 的视觉差异不可见。
+  - **与 `textBaseline` 的协同搭配**: 在调整水平定位的同时，若需对竖直方向进行控制，应配合 `textBaseline`（如 `'top'`、`'middle'`、`'bottom'`、`'alphabetic'`）使用，以达到像素级严谨的图文对齐。
 tags: "vector, openstreetmap, label"
 ---
 <div id="map" class="map"></div>

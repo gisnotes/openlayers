@@ -1,9 +1,27 @@
 ---
 layout: example.html
-title: Vector Label Decluttering
-shortdesc: Label decluttering on polygons.
+title: Vector Label Decluttering / 矢量注记智能避让
+shortdesc: Label decluttering on polygons. / 面状几何要素上的文本注记智能避让与溢出显示（Decluttering & Overflow）。
 docs: >
   Decluttering is used to avoid overlapping labels. The `overflow: true` setting on the text style makes it so labels that do not fit within the bounds of a polygon are also considered for decluttering.
+
+  避让机制（Decluttering）用于防止地图缩放漫游时文本注记发生相互重叠混乱。在文本样式中配置 <code>overflow: true</code>，可以允许那些超出多边形几何自身包围盒的较长文本标签依然能够被绘制出来，并由全局避让算法统一进行防碰撞裁决，确保文字清晰可读的同时兼顾高注记展示率。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 面状注记几何容纳机制与 `overflow: true`
+  - **默认几何约束**: 针对 `Polygon` 与 `MultiPolygon` 要素，OpenLayers 内部默认会对注记外框像素尺寸与多边形内部可用空间执行几何包容检测。若文本长度超出多边形（在小比例尺或微小区域如特拉华州、康涅狄格州），引擎将默认隐藏该文本。
+  - **`overflow: true` 的突破**: 将文字的绘制决策权从“多边形内部容纳测试”交还给“屏幕像素级空间避让树（RBush）”。即使地名文字显著长于多边形本身，依然会被放行至避让管线，极大增强了密集微小行政区的地名显示率。
+
+  #### 2. 空格换行压缩包围盒优化
+  - 代码中采用 `feature.get('name').split(' ').join('\n')` 将多单词地名拆解为垂直多行注记。
+  - **避让空间利用率提升**: 地图上的碰撞检测基于像素包围盒（AABB）。将横向扁长的单行文字重塑为紧凑的近正方形多行文本，能显著减少横向与相邻省州文字相交的概率，在有限的视口空间中容纳更多有效标注。
+
+  #### 3. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices)
+  - **小多边形归属歧义**: 当文字因 `overflow: true` 溢出多边形本体时，视口中漂浮的文本可能产生歧义（用户难以分清该文字对应哪个相邻的小色块）。在严肃 GIS 生产项目中，应配合中心点圆圈标记（Center Marker）、引线（Leader Line）或鼠标悬浮联动高亮（Hover Highlight）来辅助空间定位。
+  - **白色文字光晕 (Halo) 的必要性**: 示例中配置了 `stroke: new Stroke({color: '#fff', width: 3})`。在复杂多彩的专题多边形背景上，文字描边光晕是防止文字与背景底色同化、保障注记通过 Web 内容无障碍指南（WCAG）对比度标准的关键设计。
 tags: "vector, decluttering, declutter, labels"
 ---
 <div id="map" class="map"></div>

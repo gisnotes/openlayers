@@ -9,6 +9,8 @@ import Stroke from '../src/ol/style/Stroke.js';
 import Style from '../src/ol/style/Style.js';
 import Text from '../src/ol/style/Text.js';
 
+// Initialize map centered on North America in Web Mercator
+// 初始化地图实例：中心定位至北美大陆上空
 const map = new Map({
   target: 'map',
   view: new View({
@@ -17,6 +19,8 @@ const map = new Map({
   }),
 });
 
+// Text label style with overflow: true to allow labels exceeding polygon bounds to participate in decluttering
+// 文本注记样式：启用 overflow: true，使得超出多边形几何包围盒的注记也能参与全局避让管线
 const labelStyle = new Style({
   text: new Text({
     font: '12px Calibri,sans-serif',
@@ -30,6 +34,9 @@ const labelStyle = new Style({
     }),
   }),
 });
+
+// Boundary and fill style for state polygons
+// 州行政区划多边形的面填充与边界描边样式
 const countryStyle = new Style({
   fill: new Fill({
     color: 'rgba(255, 255, 255, 0.6)',
@@ -41,6 +48,8 @@ const countryStyle = new Style({
 });
 const style = [countryStyle, labelStyle];
 
+// Vector layer with declutter: true enabled to prevent text label overlap
+// 矢量图层：启用 declutter: true，通过 R 树空间索引自动避让重叠的文本注记
 const vectorLayer = new VectorLayer({
   background: 'white',
   source: new VectorSource({
@@ -48,6 +57,8 @@ const vectorLayer = new VectorLayer({
     format: new GeoJSON(),
   }),
   style: function (feature) {
+    // Split space-separated names into multi-line labels for compact bounding boxes
+    // 将包含空格的多单词地名按空格换行，形成更紧凑的像素包围盒以提升避让容纳率
     const label = feature.get('name').split(' ').join('\n');
     labelStyle.getText().setText(label);
     return style;
