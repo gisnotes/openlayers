@@ -1,13 +1,48 @@
 ---
 layout: example.html
-title: Static Attribution
-shortdesc: Example of an attributions control with a static attribution
+title: Static Attribution / 静态常驻版权署名 (Static Attribution)
+shortdesc: Example of an attributions control with a static attribution. / 演示如何配置与图层生命周期完全解耦、即使隐藏所有图层也始终常驻展示的静态版权署名控件。
 docs: >
-  This example shows how to add an attribution that never disappears from the map. 
-  It works by passing a static string or HTML string into the attribution options, which is not linked to the layers. 
-  Click the 'Toggle layer' button to show that, even with no layers on, the static attribution remains on screen.
+  <p>
+    This example shows how to add an attribution that never disappears from the map. 
+    It works by passing a static string or HTML string into the attribution options, which is not linked to the layers. 
+    Click the 'Toggle layer' button to show that, even with no layers on, the static attribution remains on screen.
+  </p>
+  <p>
+    此示例演示了如何向地图添加一个永不消失的常驻版权署名。
+    其实现原理是直接将静态字符串或 HTML 片段注入到 <code>ol/control/Attribution</code> 控件的配置选项中，使其与具体图层解绑。
+    点击下方的“切换图层显隐（Toggle layer）”按钮，可以看到即使地图中的所有业务图层均被隐藏，该静态版权署名依然清晰常驻在屏幕右下角。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>动态图层聚合版权 vs 控件静态常驻版权：</strong>
+      OpenLayers 的 <code>Attribution</code> 控件具备双源合流机制：
+      1. <strong>动态图层流：</strong> 自动收集当前视口范围内、处于可见状态（<code>layer.getVisible() === true</code>）的所有图层源的版权说明；
+      2. <strong>控件静态流：</strong> 通过控件自身的 <code>attributions</code> 选项注入。该部分版权属于宿主平台自身，与任何单一图层的加载、隐藏或销毁彻底解耦。
+    </li>
+    <li><strong>统一 UI 规范与零额外 DOM 开销：</strong>
+      许多前端开发者习惯在地图容器外编写自定义的 <code>&lt;div class="icp-footer"&gt;</code>，这往往导致层级穿透、移动端缩放遮挡或与地图原生控件冲突。
+      利用 <code>Attribution</code> 控件的静态属性，可以将平台法律免责声明、企业资质、ICP 备案号以及底图版权统一整合进原生控件，共享折叠动画与无障碍辅助特性。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>new Attribution({ attributions: '&lt;a href="..."&gt;...&lt;/a&gt;' })</code>：注入静态 HTML 署名。</li>
+    <li><code>l.setVisible(l.getVisible() ? false : true)</code>：图层显隐切换。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>HTML 注入与 XSS 安全防御：</strong>
+      由于 <code>attributions</code> 支持直接渲染 HTML 字符串（如超链接和图标），若版权内容由后端 API 提供或来源于不可信第三方配置，必须经过严格的 HTML 清洗与安全转义，防止潜在的跨站脚本注入（XSS）。
+    </li>
+  </ul>
 tags: "attributions, openstreetmap"
 ---
 <div id="map" class="map"></div>
 
-<button id="toggleLayerButton">Toggle layer</button>
+<button id="toggleLayerButton">Toggle layer (切换图层显隐)</button>

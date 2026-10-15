@@ -1,11 +1,50 @@
 ---
 layout: example.html
-title: Attributions
-shortdesc: Example of a attributions visibility change on map resize, to collapse them on small maps.
+title: Attributions / 版权署名控件自适应折叠 (Attributions Responsive Collapsing)
+shortdesc: Example of a attributions visibility change on map resize, to collapse them on small maps. / 演示如何根据地图容器尺寸变化自适应切换版权署名（Attribution）控件的展开与折叠状态。
 docs: >
-  When the map gets too small because of a resize, the attribution will be collapsed.
-  This is because the <code>collapsible</code> option is set to true if the width
-  of the map gets smaller than 600 pixels.
+  <p>
+    When the map gets too small because of a resize, the attribution will be collapsed.
+    This is because the <code>collapsible</code> option is set to true if the width
+    of the map gets smaller than 600 pixels.
+  </p>
+  <p>
+    当由于窗口缩放或设备旋转导致地图容器宽度过小时，版权署名控件会自动折叠为一个信息提示图标（"i" 图标）。
+    这是通过监听地图的尺寸变更事件并在容器宽度小于 600 像素时将 <code>collapsible</code>（可折叠）与 <code>collapsed</code>（默认折叠）属性动态设置为 true 实现的。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>地理数据法律合规与移动端有限视口的权衡：</strong>
+      无论是 OpenStreetMap 还是商业瓦片服务商（Mapbox、Google、Bing），其数据服务协议均严格规定必须保留地图数据源的版权署名（Attribution）。
+      但在移动端或紧凑分屏布局中，长达数十字符的版权文本会严重侵占宝贵的地图交互空间。
+      OpenLayers 提供的 <code>ol/control/Attribution</code> 控件支持将署名文本收拢为一个极简的圆形信息按钮（"i"），点击后向左滑出完整版权声明，在法律合规与移动端 UI 体验之间取得了完美平衡。
+    </li>
+    <li><strong>响应式视口监听机制（Responsive Viewport Observer）：</strong>
+      地图的尺寸不仅受浏览器窗口 resize 影响，在 SPA 单页应用中还会因侧边栏展开/折叠、微前端弹窗浮动而动态改变。
+      监听 <code>map.on('change:size')</code> 能够捕获地图物理像素尺寸的每一次实质性变化，以此驱动 UI 控件的状态机流转。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>defaultControls({ attribution: false }).extend([attribution])</code>：显式禁用 OpenLayers 默认自带的版权控件，替换注入由开发者完全掌控的自定义实例。</li>
+    <li><code>attribution.setCollapsible(small)</code> 与 <code>attribution.setCollapsed(small)</code>：动态切换控件是否允许折叠以及当前是否强制折叠。</li>
+    <li><code>map.getSize()[0] < 600</code>：基于像素宽度的媒体断点阈值判断。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>默认控件重复挂载陷阱：</strong>
+      若实例化 <code>Map</code> 时传入了自定义 <code>attribution</code> 但未在 <code>defaultControls</code> 中将 <code>attribution: false</code> 关闭，地图右下角将会并存两个版权控件，造成样式重叠错乱。
+    </li>
+    <li><strong>动态数据源加载时的版权更新抖动：</strong>
+      图层的版权信息来源于 <code>source.getAttributions()</code>。当多个图层异步加载时，版权列表会频繁触发 DOM 重排。
+      在复杂业务大屏中，建议配置静态版权或通过 CSS 绝对定位固定控件容器尺寸，避免频繁的文本重排影响地图 60FPS 渲染性能。
+    </li>
+  </ul>
 tags: "attributions, openstreetmap"
 ---
 <div id="map" class="map"></div>

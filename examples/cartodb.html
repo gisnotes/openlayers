@@ -1,9 +1,48 @@
 ---
 layout: example.html
-title: CartoDB source example
-shortdesc: Example of a cartodb map.
+title: CartoDB source example / CartoDB 云端空间数据源与动态 SQL 过滤 (CartoDB Source)
+shortdesc: Example of a cartodb map. / 演示如何使用 CartoDB 瓦片数据源加载匿名地图（Anonymous Map），并结合 CartoCSS 渲染与动态 SQL 空间条件查询欧洲国家边界。
 docs: >
-  A simple example with an anonymous cartodb map
+  <p>
+    A simple example with an anonymous cartodb map.
+  </p>
+  <p>
+    此示例演示了如何通过 <code>ol/source/CartoDB</code> 接入云端空间数据库服务（CARTO / CartoDB 匿名地图 API）。
+    系统通过在前端动态构造包含 CartoCSS 样式规则与 PostGIS SQL 查询语句的配置对象（<code>mapConfig</code>），由云端服务器实时根据用户筛选的国土面积阈值进行空间过滤并动态渲染瓦片，前端调用 <code>setConfig()</code> 即可无缝实现切片热重载。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>云原生空间数据库动态切片渲染（Cloud CartoDB & Maps API）：</strong>
+      对于拥有数百万级复杂多边形或海量空间大数据的业务，直接向前端浏览器传输完整矢量数据（GeoJSON）会导致严重的内存溢出与渲染丢帧。
+      CartoDB 采用了“服务端数据库级渲染”架构：前端仅发送极轻量的 SQL 查询（<code>select * from european_countries_e where area > n</code>）与样式规则（CartoCSS），云端 PostGIS 引擎完成空间筛选与多边形光栅化切片，再以极轻量的 WebP/PNG 瓦片推流给 OpenLayers。
+    </li>
+    <li><strong>数据源配置热更新机制（Dynamic Config Hot-Reload）：</strong>
+      当用户改变筛选条件（如选择不同的国家面积阈值）时，不需要销毁并重新创建 <code>TileLayer</code> 或 <code>CartoDB</code> 实例。
+      直接调用 <code>cartoDBSource.setConfig(mapConfig)</code>，OpenLayers 内部会自动向 CartoDB Maps API 发起新的实例协商请求（Instantiation），获取全新的瓦片 URL 模板并以平滑过渡的方式刷新屏幕瓦片缓存。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>new CartoDB({ account: '...', config: mapConfig })</code>：初始化 CartoDB 瓦片源，<code>account</code> 对应空间数据库租户命名空间。</li>
+    <li><code>mapConfig.layers[0].options.cartocss</code>：基于类似 CSS 的声明式语法定义要素填充色、描边宽度与透明度。</li>
+    <li><code>cartoDBSource.setConfig(mapConfig)</code>：提交新配置并触发云端重新切片。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>匿名地图（Anonymous Maps）权限隔离与 SQL 防注入：</strong>
+      由于匿名配置直接暴露在公网前端，后端的 CartoDB 数据表必须严格设定为只读视图（Read-only View），禁止对核心生产表开放写入权限。
+      在拼接 SQL 字符串时，必须对前端传入的数值参数进行类型校验（如 <code>parseInt(val, 10)</code>）以杜绝 SQL 注入。
+    </li>
+    <li><strong>切片热更新闪烁防御：</strong>
+      调用 <code>setConfig()</code> 时，旧瓦片会被清空并等待新瓦片加载完成，可能产生轻微白屏闪烁。
+      可通过在 <code>TileLayer</code> 配置 <code>cacheSize: 512</code> 以及适当的淡入淡出过渡（<code>transition: 200</code>）来大幅优化视觉平滑度。
+    </li>
+  </ul>
 tags: "simple, openstreetmap, attribution"
 resources:
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css
@@ -12,7 +51,7 @@ resources:
 <form class="row">
   <div class="col-auto">
     <div class="input-group">
-      <label for="country-area" class="input-group-text">Show european countries larger than</label>
+      <label for="country-area" class="input-group-text">Show european countries larger than (展示面积大于此值的欧洲国家)</label>
       <select id="country-area" class="form-select">
         <option value="0" default>0 ㎢</option>
         <option value="5000">5000 ㎢</option>
@@ -23,3 +62,4 @@ resources:
     </div>
   </div>
 </form>
+
