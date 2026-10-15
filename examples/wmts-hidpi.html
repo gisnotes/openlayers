@@ -1,9 +1,47 @@
 ---
 layout: example.html
-title: High DPI WMTS
-shortdesc: Example of a WMTS based HiDPI layer.
+title: High DPI WMTS / 高分辨率 WMTS 服务 (HiDPI)
+shortdesc: Example of a WMTS based HiDPI layer. / 基于 WMTS 规范的高分视网膜瓦片图层加载与像素比动态自适应示例。
 docs: >
-  The WMTS source has a `tilePixelRatio` option. A HiDPI capable WMTS could provide tiles with 512x512 pixel tiles, but use them in a 256x256 pixel tile grid. In this case `tilePixelRatio` needs to be set to `2`.
+  <p>
+    The WMTS source has a `tilePixelRatio` option. A HiDPI capable WMTS could provide tiles with 512x512 pixel tiles, but use them in a 256x256 pixel tile grid. In this case `tilePixelRatio` needs to be set to `2`.
+  </p>
+  <p>
+    OpenLayers 的 <code>WMTS</code> 数据源提供了 <code>tilePixelRatio</code> 选项。支持 HiDPI（高分辨率）的 WMTS 服务可以提供 512×512 物理像素的瓦片，但将其安置在 256×256 逻辑像素的标准切片网格中。在这种情况下，只需将 <code>tilePixelRatio</code> 显式指定为 <code>2</code> 即可实现高清自适应渲染。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>OGC WMTS 规范与高分切片的冲突与调和：</strong>
+      传统 OGC WMTS 规范假定切片矩阵（TileMatrixSet）的标准像素大小为 0.28mm（约 90.7 DPI），切片尺寸多为 256×256。当高清设备普及后，服务端有两种扩展方式：一是提供更深层级的切片，但会导致注记字体缩水微小无法阅读；二是保持地理网格比例尺不变，将瓦片图像的像素密度提升为 512×512（2× HiDPI），并在元数据中提供专属高清图层（如奥地利国家地图 <code>bmaphidpi</code>）。
+    </li>
+    <li><strong>端侧动态自适应机制（Adaptive Pixel Ratio）：</strong>
+      本示例通过 OpenLayers 内置常量 <code>DEVICE_PIXEL_RATIO</code> 实时探测用户的显示环境。在普通显示器（DPR = 1）上请求常规 <code>geolandbasemap</code> 图层以节省带宽；在视网膜屏幕（DPR &gt; 1）上无缝切换为 <code>bmaphidpi</code> 高分图层并配置 <code>tilePixelRatio: 2</code>，达到最佳视觉清晰度与加载性能的平衡。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>DEVICE_PIXEL_RATIO</code>：封装了 <code>window.devicePixelRatio || 1</code>，安全处理不同宿主环境与旧版浏览器的兼容性。</li>
+    <li><code>WMTSCapabilities().read(xmlText)</code>：OpenLayers 的 XML 自动化反序列化解析器，能从复杂的 OGC XML 中提取图层标识、切片格式、坐标系、边界范围及切片矩阵列表。</li>
+    <li><code>optionsFromCapabilities(capabilities, config)</code>：便捷提取工具，快速从 Capabilities 对象中筛选出指定 <code>layer</code>（图层名）与 <code>matrixSet</code>（切片矩阵集）对应的构造参数。</li>
+    <li><code>options.tilePixelRatio = 2</code>：核心参数，通知 OpenLayers 当前瓦片图片应按照 <code>1 / tilePixelRatio</code>（即 0.5 倍）缩小排布在逻辑网格上，确保几何坐标与高分辨率切片严丝合缝。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>GetCapabilities 元数据高频请求隐患：</strong>
+      WMTS Capabilities XML 文本通常长达数十甚至数百 KB。每次前端初始化都通过 <code>fetch()</code> 动态拉取会严重影响首屏加载速度。生产环境推荐在编译期（Build Time）或服务端网关层预先将 Capabilities 结果缓存转为 JSON，直接传入配置对象。
+    </li>
+    <li><strong>双屏跨越（DPR 切换）陷阱：</strong>
+      当用户将浏览器窗口从 Retina 笔记本屏幕拖拽到外接普通 1080P 显示器时，<code>window.devicePixelRatio</code> 会发生跃迁。若需极致体验，可监听 <code>window.matchMedia('(resolution: ...)')</code> 变化，在跨屏时动态重建瓦片数据源。
+    </li>
+    <li><strong>TileMatrix 标识符对齐：</strong>
+      不同 GIS 商业软件发布的 WMTS 切片矩阵 ID 各异（有的为 <code>0, 1, 2...</code>，有的为 <code>google3857:0, google3857:1...</code>）。使用 <code>optionsFromCapabilities</code> 时务必确认 <code>matrixSet</code> 属性与服务端元数据完全一致。
+    </li>
+  </ul>
 tags: "hidpi, retina, wmts"
 ---
 <div id="map" class="map"></div>

@@ -1,9 +1,50 @@
 ---
 layout: example.html
-title: Stadia Maps (Retina Tiles)
-shortdesc: Example of retina/HiDPI layers with a Stadia Maps tile source.
+title: Stadia Maps (Retina Tiles) / Stadia Maps 视网膜高清瓦片
+shortdesc: Example of retina/HiDPI layers with a Stadia Maps tile source. / 使用 Stadia Maps 数据源加载 Retina / HiDPI 视网膜高清暗黑主题瓦片的示例。
 docs: >
-  Example showing the Alidade Smooth Dark theme from Stadia Maps, using the retina (HiDPI) tiles.
+  <p>
+    Example showing the Alidade Smooth Dark theme from Stadia Maps, using the retina (HiDPI) tiles.
+  </p>
+  <p>
+    本示例展示了如何使用 Stadia Maps 数据源加载 Alidade Smooth Dark 暗黑平滑主题，并开启 Retina（HiDPI）视网膜高清切片渲染。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>高度封装的商业级数据源（StadiaMaps Source）：</strong>
+      Stadia Maps 作为 Stamen 地图设计风格的官方托管服务商，提供了专用的 <code>ol/source/StadiaMaps</code>。相比于手动拼接 XYZ URL 模板，该专用数据源内置了多套经典精美主题（如 <code>alidade_smooth_dark</code>、<code>outdoors</code>、<code>stamen_toner</code>、<code>stamen_watercolor</code> 等），并对高清切片与矢量注记进行了高度优化。
+    </li>
+    <li><strong>一键开启的高清视网膜适配（retina 开关）：</strong>
+      开发者仅需设置 <code>retina: true</code>，底层数据源将自动在瓦片请求路径后追加 <code>@2x</code> 后缀，并自动将图层的 <code>tilePixelRatio</code> 设为 <code>2</code>，免去了手动管理切片网格与分辨率换算的复杂度。
+    </li>
+    <li><strong>暗黑主题与视觉对比度：</strong>
+      暗色主题（Dark Mode）在夜间监控大屏、智慧园区大屏中应用极广。在 2× Retina 高分屏下，微细的等高线、细支路注记能保持极其锐利的对比度，杜绝了常规切片在放大后的虚焦发灰现象。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>layer: 'alidade_smooth_dark'</code>：指定 Stadia Maps 的主题标识符，包含道路等级着色、水体着色与暗黑背景色。</li>
+    <li><code>retina: true</code>：自动化高分参数，驱动内部的 <code>Urls</code> 构造器拼接 512×512 物理分辨率的高清图片流。</li>
+    <li><code>fromLonLat([24.75, 59.44])</code>：将爱沙尼亚首都塔林的 WGS84 经纬度投影转换为 EPSG:3857 墨卡托平面坐标。</li>
+    <li><code>apiKey</code> 选项：开发阶段在 <code>localhost</code> 下无需任何 API Key 即可自由调用；生产环境部署需传入注册的商业鉴权 Key。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>商业调用量配额与风控拦截：</strong>
+      生产环境部署如果未配置 <code>apiKey</code> 或未在控制台绑定线上域名白名单，服务端将返回 403 错误或注入带水印的水印瓦片。必须通过安全配置管理环境变量注入密钥。
+    </li>
+    <li><strong>暗黑底图上的矢量要素配色规范：</strong>
+      使用深色底图时，上层叠加的业务要素（如点标注、面图层）切忌使用深蓝、灰黑等低明度色彩；应采用高饱和度发光色系（如青色 <code>#00f0ff</code>、亮橙色 <code>#ff7700</code>、荧光绿 <code>#00ff66</code>），并配合 <code>rgba()</code> 外发光阴影以确保视觉辨识度。
+    </li>
+    <li><strong>全球服务访问延迟（CDN 网络）：</strong>
+      Stadia Maps 在全球部署了分布式 Edge CDN，但某些企业内网或特定地域可能存在延迟。跨国或离线内网项目建议在内网架设切片代理缓存或部署开源离线瓦片服务器。
+    </li>
+  </ul>
 tags: "stadia-maps, retina, dark, hidpi"
 ---
 <div id="map" class="map"></div>
