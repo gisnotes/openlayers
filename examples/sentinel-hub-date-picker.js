@@ -6,6 +6,8 @@ import SentinelHub from '../src/ol/source/SentinelHub.js';
 
 useGeographic();
 
+// Initialize source with true-color RGB band extraction (Red B04, Green B03, Blue B02)
+// 初始化数据源：订阅真彩色波段（红 B04、绿 B03、蓝 B02）并进行对比度增强
 const source = new SentinelHub({
   evalscript: {
     setup: () => ({
@@ -35,6 +37,10 @@ document.getElementById('auth-form').addEventListener('submit', (event) => {
 
 const picker = document.getElementById('to-date');
 
+/**
+ * Compute 7-day rolling time range and update input data filter on Sentinel Hub source.
+ * 计算当前选定日期往前推移 7 天的滑动时间窗口，并通过 source.setData() 更新时空数据过滤参数。
+ */
 function updateInputData() {
   const toDate = new Date(picker.value);
   const fromDate = new Date(toDate.getTime());

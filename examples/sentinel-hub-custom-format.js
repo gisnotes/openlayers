@@ -6,6 +6,8 @@ import SentinelHub from '../src/ol/source/SentinelHub.js';
 
 useGeographic();
 
+// Configure Sentinel Hub source with default PNG format
+// 配置 Sentinel Hub 数据源，初始默认使用 PNG 格式
 const source = new SentinelHub({
   data: [
     {
@@ -43,6 +45,8 @@ const map = new Map({
   }),
 });
 
+// Authenticate via OAuth form
+// 监听认证表单提交，设置鉴权密钥
 document.getElementById('auth-form').addEventListener('submit', (event) => {
   const clientId = event.target.elements['id'].value;
   const clientSecret = event.target.elements['secret'].value;
@@ -51,6 +55,10 @@ document.getElementById('auth-form').addEventListener('submit', (event) => {
 
 const format = document.getElementById('format');
 
+/**
+ * Update image format on the Sentinel Hub source dynamically.
+ * 动态调用 source.setFormat() 切换目标切片压缩格式。
+ */
 function updateInputData() {
   source.setFormat(format.value);
 }

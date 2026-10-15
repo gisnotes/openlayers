@@ -1,35 +1,65 @@
 ---
 layout: example.html
-title: Sentinel Hub Custom Format
-shortdesc: Updating the format used by the Sentinel Hub source.
+title: Sentinel Hub Custom Format / 哨兵影像切片格式动态切换（WebP / PNG / JPEG）
+shortdesc: Updating the format used by the Sentinel Hub source. / 演示如何动态更新 Sentinel Hub 数据源的切片图像压缩格式以优化传输带宽与加载延迟。
 docs: >
   This example demonstrates how a custom format can be used to render tiles from Sentinel Hub.
   Select a format from the dropdown and click the update button to change the format.
-  See the Sentinel Hub [Examples](https://docs.sentinel-hub.com/api/latest/data/sentinel-2-l2a/examples/#true-color-multi-part-reponse-different-formats-and-sampletype) for more information.
+  See the Sentinel Hub <a href="https://docs.sentinel-hub.com/api/latest/data/sentinel-2-l2a/examples/#true-color-multi-part-reponse-different-formats-and-sampletype">Examples</a> for more information.
+
+  本示例展示如何在运行时动态配置 Sentinel Hub Processing API 返回的切片图像压缩格式。通过下拉菜单选择目标格式（PNG、JPEG 或现代化高效压缩的 WebP）并提交，OpenLayers 会调用 <code>source.setFormat()</code> 动态更新请求头与载荷结构，刷新并重新加载切片。不同格式在传输带宽消耗、加载解码时延与图像保真度之间提供不同的工程权衡方案。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构原理 (Core Architecture)
+  海量高分辨率多光谱卫星影像的瓦片网络传输是制约 WebGIS 交互流畅度的核心瓶颈：
+  - **切片格式特征对比**：
+    - **`image/png`**：无损压缩，完整保留透明通道（Alpha），是包含云掩膜（Cloud Mask）或无数据区（NoData）专题切片的理想格式，但体积相对庞大；
+    - **`image/jpeg`**：高压缩比有损格式，不支持 Alpha 透明通道，适合纯陆地真彩色卫星正射影像；
+    - **`image/webp`**：新一代图像压缩标准，兼具微小体积与 Alpha 透明通道支持，比相同质量的 JPEG 节省 25%~34% 字节，比 PNG 节省 26%~70% 带宽。
+  - **`source.setFormat()` 动态热更流水线**：调用该方法会同步重构内部发送给 Sentinel Hub Processing API 的 JSON 载荷中的 `output.responses[0].format.type`，并自动清空当前图层切片缓存（`tileCache.clear()`），触发全图以新格式无缝重载。
+
+  #### 2. 关键实现与代码拆解 (Code Deep Dive)
+  ```javascript
+  const format = document.getElementById('format');
+
+  function updateInputData() {
+    // 动态更新请求格式，并自动刷新切片重绘
+    source.setFormat(format.value);
+  }
+
+  format.addEventListener('change', () => updateInputData());
+  ```
+
+  #### 3. 生产实战避坑与考量 (Production Pitfalls)
+  - **透明通道丢失陷阱**：若您的 `evalscript` 脚本中使用了透明度逻辑（如将水体或云层标记为透明），千万不要切换到 `image/jpeg` 格式，否则原本透明的区域会被强制填充为黑色或白色纯色背景。
+  - **浮点数据格式延伸**：除了前端直接可见的 RGB 栅格图，Sentinel Hub 还支持 `image/tiff`（配合 16 位整型或 32 位浮点），可在前端结合 `GeoTIFF` 解码器直接读取原始地表反射率数值并开展科学分析。
 tags: "Sentinel Hub, process"
 ---
 <div id="map" class="map"></div>
 <form id="format-form">
-  <label>Image format:
+  <label>Image format / 图像格式:
     <br>
     <select name="format" id="format">
-      <option value="image/png">image/png</option>
-      <option value="image/jpeg">image/jpeg</option>
-      <option value="image/webp">image/webp</option>
+      <option value="image/png">image/png (无损透明)</option>
+      <option value="image/jpeg">image/jpeg (高压缩有损)</option>
+      <option value="image/webp">image/webp (新一代高效压缩)</option>
     </select>
   </label>
-  <input type="submit" value="update">
+  <input type="submit" value="update / 更新格式">
 </form>
 <dialog id="auth-dialog" open>
   <form method="dialog" id="auth-form">
-    <label>Client id
+    <label>Client id / 客户端 ID:
       <br>
       <input type="text" name="id" autofocus value="fa02a066-fc80-4cb4-af26-aae0af26cbf1">
     </label>
-    <label>Client secret
+    <label>Client secret / 客户端密钥:
       <br>
       <input type="password" name="secret" value="rate_limit_secret">
     </label>
-    <input type="submit" value="show map">
+    <input type="submit" value="show map / 加载卫星地图">
   </form>
 </dialog>

@@ -8,6 +8,8 @@ import SentinelHub from '../src/ol/source/SentinelHub.js';
 
 useGeographic();
 
+// Initialize Sentinel Hub source over the Nile River delta / Faiyum Oasis, Egypt
+// 初始化 Sentinel Hub 数据源（定位至埃及尼罗河与法尤姆绿洲）
 const source = new SentinelHub({
   data: [
     {
@@ -39,6 +41,8 @@ document.getElementById('auth-form').addEventListener('submit', (event) => {
   source.setAuth({clientId, clientSecret});
 });
 
+// Default Evalscript computing Normalized Difference Moisture Index (NDMI)
+// 默认 Evalscript：计算归一化差值水分指数 (NDMI)
 const script = `//VERSION=3
 function setup() {
   return {
@@ -48,7 +52,7 @@ function setup() {
 }
 
 function evaluatePixel(sample) {
-  // Normalized Difference Moisture Index
+  // Normalized Difference Moisture Index / 归一化差值水分指数
   const ndmi = (sample.B08 - sample.B11) / (sample.B08 + sample.B11);
   if (ndmi <= 0) {
     return [3 * sample.B04, 3 * sample.B03, 3 * sample.B02];
@@ -62,12 +66,16 @@ function evaluatePixel(sample) {
   return [0, 0, 0.7];
 }`;
 
+// Instantiate CodeMirror 6 code editor
+// 初始化嵌入式 CodeMirror 6 代码编辑器
 const editor = new EditorView({
   doc: script,
   extensions: [basicSetup, javascript()],
   parent: document.getElementById('evalscript'),
 });
 
+// Update Evalscript dynamically upon form submission
+// 提交表单时动态将编辑器内的代码赋给数据源并触发重绘
 document
   .getElementById('evalscript-form')
   .addEventListener('submit', (event) => {

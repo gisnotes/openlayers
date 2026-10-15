@@ -1,29 +1,73 @@
 ---
 layout: example.html
-title: Sentinel Hub Date Picker
-shortdesc: Updating a Sentinel Hub source with new input data.
+title: Sentinel Hub Date Picker / 哨兵时序卫星影像与日期选择联动（source.setData）
+shortdesc: Updating a Sentinel Hub source with new input data. / 演示如何使用 HTML5 日期选择器动态调用 source.setData() 切换卫星过境观测时间窗口，实现多时相遥感回溯。
 docs: >
   This example renders tiles from Sentinel Hub based on imagery in a user-selected date range.
   Changing the date picker above calls `source.setData()` with an updated time range in the data filter.
 
-  See the [basic Sentinel Hub example](./sentinel-hub.html) for details on authentication.
+  See the <a href="./sentinel-hub.html">basic Sentinel Hub example</a> for details on authentication.
+
+  <p>
+    本示例展示如何将 HTML5 原生日期选择器与 Sentinel Hub 数据源深度联动。用户调整右上角的观测日期时，程序会自动计算该日期前 7 天的滑动时间窗口，并调用 <code>source.setData()</code> 动态更新请求过滤器中的时空时间范围（<code>timeRange</code>），实现历史多时相（Multi-temporal）卫星影像的瞬时切换与环境时序演变回溯。
+  </p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构原理 (Core Architecture)
+  地球表面随季节更替、自然灾害（洪涝、干旱、森林火灾）与人类活动时刻发生变化：
+  - **卫星重访周期与时间窗口宽容度**：Sentinel-2 由 A、B 两颗互补卫星构成，赤道地区重访周期约为 5 天，中纬度地区可达 2~3 天。若仅将 `timeRange` 限定在单一某一天，若该日卫星未过境或恰逢恶劣天气云层覆盖，切片将呈现大面积黑色无数据（NoData）。设置一个 7 天的滑动窗口（`fromDate.setDate(toDate.getDate() - 7)`），Sentinel Hub 云端会在该区间内自动执行时间最近（Mosaicking: most recent）切片镶嵌合成。
+  - **`source.setData()` 响应式更新模型**：调用 `source.setData(newDataArray)` 无需销毁重建图层或数据源对象，OpenLayers 底层会就地对比配置差异，保留当前视口与认证凭证，平滑替换切片加载任务并更新 WebGL 纹理。
+
+  #### 2. 关键实现与代码拆解 (Code Deep Dive)
+  ```javascript
+  const picker = document.getElementById('to-date');
+
+  function updateInputData() {
+    const toDate = new Date(picker.value);
+    const fromDate = new Date(toDate.getTime());
+    // 动态回溯 7 天作为观测窗口
+    fromDate.setDate(fromDate.getDate() - 7);
+
+    // 格式化为严格的 ISO 8601 UTC 字符串并更新数据源
+    source.setData([
+      {
+        type: 'sentinel-2-l2a',
+        dataFilter: {
+          timeRange: {
+            from: fromDate.toISOString(),
+            to: toDate.toISOString(),
+          },
+        },
+      },
+    ]);
+  }
+
+  picker.addEventListener('change', () => updateInputData());
+  ```
+
+  #### 3. 生产实战避坑与考量 (Production Pitfalls)
+  - **时区与 UTC 零点陷阱**：HTML `<input type="date">` 读取的值是本地时间的 `YYYY-MM-DD`。若直接将其传给未指定时区的 Date 构造函数，在东八区等非零时区可能会产生 8 小时偏移，进而导致查询到前一天的时空数据。建议使用 `new Date(picker.value + 'T00:00:00Z')` 或严格显式格式化为完整的 UTC ISO 8601 字符串。
+  - **时间切片多云时的最少云量镶嵌**：默认的时间镶嵌策略为 `mostRecent`。在汛期或多雨季节，可以在 `dataFilter` 中配合 `mosaickingOrder: 'leastCC'`（Least Cloud Coverage），优先采纳窗口期内云量最少的那一次过境观测切片。
 tags: "Sentinel Hub, process"
 ---
 <div id="map" class="map"></div>
 <dialog id="auth-dialog" open>
   <form method="dialog" id="auth-form">
-    <label>Client id
+    <label>Client id / 客户端 ID:
       <br>
       <input type="text" name="id" autofocus>
     </label>
-    <label>Client secret
+    <label>Client secret / 客户端密钥:
       <br>
       <input type="password" name="secret">
     </label>
-    <input type="submit" value="show map">
+    <input type="submit" value="show map / 加载卫星地图">
   </form>
 </dialog>
 <label>
-  Show imagery from the week before&nbsp;
+  Show imagery from the week before / 显示截止日前一周内的卫星影像:&nbsp;
   <input type="date" id="to-date" value="2024-06-01">
 </label>

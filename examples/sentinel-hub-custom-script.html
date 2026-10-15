@@ -1,30 +1,70 @@
 ---
 layout: example.html
-title: Sentinel Hub Custom Script
-shortdesc: Updating the Evalscript used by the Sentinel Hub source.
+title: Sentinel Hub Custom Script / 哨兵影像 Evalscript 在线波段解译与水分指数（NDMI）
+shortdesc: Updating the Evalscript used by the Sentinel Hub source. / 演示如何使用 CodeMirror 在线编辑并在客户端动态热更 Sentinel Hub Evalscript 脚本，计算归一化差值水分指数（NDMI）。
 docs: >
   This example demonstrates how a custom script can be used to render tiles from Sentinel Hub.
   Edit the `setup()` and `evaluatePixel()` functions above and click the update button to change the visualization.
-  See the Sentinel Hub [documentation on Evalscript](https://docs.sentinel-hub.com/api/latest/evalscript/) for more information.
+  See the Sentinel Hub <a href="https://docs.sentinel-hub.com/api/latest/evalscript/">documentation on Evalscript</a> for more information.
 
-  See the [basic Sentinel Hub example](./sentinel-hub.html) for details on authentication.
+  See the <a href="./sentinel-hub.html">basic Sentinel Hub example</a> for details on authentication.
+
+  <p>
+    本示例展示如何利用集成在界面顶部的 CodeMirror 6 代码编辑器，实时在线编写并在服务端即时编译执行 Sentinel Hub <a href="https://docs.sentinel-hub.com/api/latest/evalscript/">Evalscript 算法脚本</a>。用户可自由修改 <code>setup()</code>（订阅光谱波段）与 <code>evaluatePixel()</code>（像素级波段代数与分类色带映射）逻辑，点击提交后通过 <code>source.setEvalscript()</code> 即时更新瓦片。
+  </p>
+  <p>
+    内置默认脚本演示了**归一化差值水分指数（NDMI = (B08 - B11) / (B08 + B11)）**的计算：通过比对近红外（B08）与短波红外（B11）的吸收反射差异，将地表水体、湿润植被与干燥裸土以冷暖色阶鲜明区分。
+  </p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构原理 (Core Architecture)
+  在传统卫星遥感处理流程中，波段代数运算需要在本地桌面软件（如 ENVI、QGIS、ArcGIS）中经历重重投影、拼接、裁剪与栅格重分类，周期长且无法直接用于 Web 端交付。
+  - **Evalscript 实时边缘解译体系**：Sentinel Hub 允许将 JavaScript 函数作为请求载荷的一部分发送至云端。在瓦片生成的毫秒级窗口内，服务端 V8 引擎直接将算法注入到原始多光谱像素流中，就地执行代数运算并即时返回渲染后的 RGB/RGBA 瓦片。
+  - **NDMI 水分指数机理**：
+    $$\text{NDMI} = \frac{\text{B08(NIR)} - \text{B11(SWIR)}}{\text{B08(NIR)} + \text{B11(SWIR)}}$$
+    - $\text{NDMI} > 0.4$：高含水量水体或茂密多汁植被（渲染为深蓝色 `[0, 0, 0.7]`）；
+    - $0 < \text{NDMI} \le 0.4$：中低水分草木（渲染为不同饱和度的青蓝色）；
+    - $\text{NDMI} \le 0$：干燥裸露地表与岩石（按 $3 \times \text{RGB}$ 真彩色正常输出）。
+
+  #### 2. 关键实现与代码拆解 (Code Deep Dive)
+  ```javascript
+  // 1. 初始化 CodeMirror 6 现代化代码编辑器
+  const editor = new EditorView({
+    doc: defaultEvalscriptString,
+    extensions: [basicSetup, javascript()],
+    parent: document.getElementById('evalscript'),
+  });
+
+  // 2. 表单提交时热更 Evalscript 并触发切片重绘
+  document.getElementById('evalscript-form').addEventListener('submit', (event) => {
+    event.preventDefault();
+    source.setEvalscript(editor.state.doc.toString());
+  });
+  ```
+
+  #### 3. 生产实战避坑与考量 (Production Pitfalls)
+  - **`//VERSION=3` 头部语法约束**：Sentinel Hub 要求现代 Evalscript 脚本首行必须显式声明 `//VERSION=3`，否则会被旧版引擎判定为过时的 V1/V2 格式而直接抛出解析语法错误。
+  - **实时编辑防抖与限流保护**：在线编辑脚本时切勿将更新绑定在 `input` 或实时按键事件上，每次修改脚本都会导致全图切片重新向云端请求，高频重发极易耗尽 Sentinel Hub Processing API 的月度 Processing Units（PU）免费配额并触发 429 速率限制。使用明确的“提交按钮”是最佳防线。
 tags: "Sentinel Hub, process, Evalscript"
 ---
 <div id="map" class="map"></div>
 <form id="evalscript-form">
   <div id="evalscript"></div>
-  <input type="submit" value="update">
+  <input type="submit" value="update / 更新解译脚本">
 </form>
 <dialog id="auth-dialog" open>
   <form method="dialog" id="auth-form">
-    <label>Client id
+    <label>Client id / 客户端 ID:
       <br>
       <input type="text" name="id" autofocus>
     </label>
-    <label>Client secret
+    <label>Client secret / 客户端密钥:
       <br>
       <input type="password" name="secret">
     </label>
-    <input type="submit" value="show map">
+    <input type="submit" value="show map / 加载卫星地图">
   </form>
 </dialog>
