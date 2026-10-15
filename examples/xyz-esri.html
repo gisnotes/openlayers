@@ -1,9 +1,31 @@
 ---
 layout: example.html
-title: XYZ Esri
-shortdesc: Example of a XYZ source using Esri tiles.
+title: XYZ Esri / ArcGIS REST 静态切片服务（XYZ / WebGLTile）
+shortdesc: Example of a XYZ source using Esri tiles. / 使用 WebGLTile 硬件加速与 XYZ 模板直接加载 Esri ArcGIS 预切片服务。
 docs: >
-  ArcGIS REST tile services are supported by `ol/source/XYZ`.
+  ArcGIS REST tile services are supported by `ol/source/XYZ` (or `ol/source/ImageTile`).
+  This example demonstrates loading cached Esri ArcGIS MapServer tiles using WebGLTile acceleration.
+
+  本示例展示了如何使用标准切片模板加载 ArcGIS REST 紧凑切片缓存（Cached MapServer）。通过采用 <code>ol/source/ImageTile</code>（或 <code>ol/source/XYZ</code>）配合切片 URL 模板 <code>/MapServer/tile/{z}/{y}/{x}</code>，可以直接绕过动态出图服务端的实时渲染管线，从 CDN 或缓存服务器直接按金字塔层级拉取静态瓦片；结合 <code>ol/layer/WebGLTile</code> 与 <code>useGeographic()</code>，实现 GPU 硬件加速的超平滑漫游体验。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. ArcGIS 静态切片 URL 寻址与性能优势 (Tile REST Addressing Scheme)
+  - **紧凑缓存（Compact Cache）标准化**: ArcGIS Server 在预发布阶段通过切片工具生成紧凑格式缓存（Bundle 压缩存储），其对外暴露的标准 REST 访问模板为：
+    `https://<server>/ArcGIS/rest/services/<ServiceName>/MapServer/tile/{z}/{y}/{x}`。
+  - **静态直连性能倍增**: 与动态出图的 `/export` 相比，XYZ 静态切片请求完全不经过 GIS 空间引擎的动态渲染计算，直接由 Web 服务器（Nginx / IIS）或 CDN 分发静态二进制流，吞吐能力提升 10 到 50 倍以上，适合作为高并发企业级生产系统的基础底图。
+
+  #### 2. WebGLTile 硬件加速与地理坐标系
+  - **GPU 纹理加速 (`WebGLTile`)**: 示例中采用现代 `ol/layer/WebGLTile` 图层，切片位图作为纹理直接上传至 GPU 显存，依托片元着色器进行视口矩阵变换，缩放过渡极其细腻丝滑，彻底告别 Canvas 2D 的重绘拖影。
+  - **`useGeographic()` 简化业务坐标**: 调用全局 `useGeographic()` 使得视图中心点直接传入地理经纬度 `[-121.1, 47.5]`（美国华盛顿州喀斯喀特山脉），兼顾直观的地理开发体验与强大的 GPU 底层渲染。
+
+  #### 3. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices)
+  - **切片方案（TileGrid）自适应与自定义原点**:
+    - Esri 官方公开底图（如 World_Topo_Map、World_Street_Map）严格兼容标准 Web 墨卡托方案（切片大小 256×256，左上原点位于 `[-20037508.34, 20037508.34]`），OpenLayers 默认构造即可无缝对其；
+    - 若加载企业内部或专网发布的 ArcGIS 切片，其切片方案可能自定义了 `tileOrigin`（例如以某个地方坐标系的原点为切片基准）或特定的分辨率等级列表（`resolutions`）。此时**严禁直接使用默认 XYZ**，必须请求 `.../MapServer?f=pjson` 读取元数据，并显式构建 `new TileGrid({ origin, resolutions })` 传入数据源，否则瓦片将大面积发生偏移、乱序或频繁返回 HTTP 404。
+  - **Token 鉴权与安全访问**: 企业内网受保护的 ArcGIS 资源通常需要 Token。可在 URL 末尾追加 `?token={accessToken}` 或在 `source.setTileLoadFunction` 中注入自定义 Header 请求拦截。
 tags: "xyz, esri, ArcGIS, REST"
 ---
 <div id="map" class="map"></div>

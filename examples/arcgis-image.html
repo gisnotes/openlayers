@@ -1,11 +1,37 @@
 ---
 layout: example.html
-title: Image ArcGIS MapServer
-shortdesc: Example of an image ArcGIS layer.
+title: Image ArcGIS MapServer / ArcGIS 动态图像服务（ImageArcGISRest）
+shortdesc: Example of an image ArcGIS layer. / 加载 Esri ArcGIS REST 动态地图服务（单张视口出图）。
 docs: >
   This example shows how to use a dynamic ArcGIS REST MapService.
   This source type supports Map and Image Services. For dynamic ArcGIS
   services.
+
+  本示例展示了如何集成 Esri ArcGIS REST 动态地图服务（Dynamic MapService）。<code>ol/source/ImageArcGISRest</code> 数据源专为 ArcGIS MapServer 与 ImageServer 动态服务设计，它在每次地图平移、缩放结束时向服务端的 <code>/export</code> 接口发起请求，动态获取与当前视口范围（Bounding Box）及分辨率严格匹配的单张高保真地图图片。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 动态出图原理与 `/export` 接口机制 (Dynamic Export Pipeline)
+  - **动态地图服务本质**: 与静态切片（Tiled Cache）不同，ArcGIS 动态地图服务在每次请求时由 GIS 服务器（ArcGIS Enterprise / Server）现场读取数据库图层并执行符号化光栅化渲染。
+  - **单张图像自适应请求**: `ol/source/ImageArcGISRest` 配合 `ol/layer/Image`，在每次地图视图变化后自动拼接参数并发起 HTTP GET 请求：
+    `.../MapServer/export?bbox={minx,miny,maxx,maxy}&size={w,h}&dpi=96&f=image&format=png32&transparent=true`。
+  - **无瓦片缝隙与动态注记优势**: 单张图像渲染彻底避免了切片边界上的文字截断、图标撕裂问题，是复杂专题制图与高保真制图输出的理想选择。
+
+  #### 2. 核心参数调优与动态过滤
+  - **`ratio` 缓存比率权衡**:
+    - `ratio: 1`：生成的图片像素尺寸与视口严格 $1:1$ 一致，内存开销最低，但每次平移都会露出短暂空白并触发新请求；
+    - `ratio: 1.5`：请求超出视口 1.5 倍的外扩图像，在微小拖拽平移时复用已有图像，视觉体验更为平滑。
+  - **动态图层与条件过滤 (`params`)**:
+    可在 `params` 中动态配置 ArcGIS REST 规范参数：
+    - `LAYERS: 'show:0,2,4'`：动态显隐特定子图层；
+    - `LAYERDEFS: '{"0": "POPULATION > 1000000"}'`：以 SQL 形式进行属性过滤；
+    - `TIME: '1609459200000,1640995200000'`：时序数据滑动过滤。
+
+  #### 3. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices)
+  - **服务器计算压力与并发瓶颈**: 动态地图服务对服务器 CPU/GPU 消耗显著高于静态切片。对于数万人并发的大型互联网应用，不可将动态 MapServer 作为公共底图，而应仅在需要实时过滤、属性驱动着色的业务专题层使用。
+  - **高分屏（HiDPI / Retina）清晰度**: 在 Retina 屏幕上，默认 96 DPI 请求的图像可能显得模糊。可通过设置 `hidpi: true` 并在参数中将 `dpi` 提高为物理点距（如 192 或 288），使 ArcGIS 服务端输出高精图像。
 tags: "arcgis, image, dynamiclayer"
 ---
 <div id="map" class="map"></div>

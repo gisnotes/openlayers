@@ -1,12 +1,32 @@
 ---
 layout: example.html
-title: Tiled ArcGIS MapServer
-shortdesc: Example of a tiled ArcGIS layer.
+title: Tiled ArcGIS MapServer / ArcGIS 瓦片化地图服务（TileArcGISRest）
+shortdesc: Example of a tiled ArcGIS layer. / 使用瓦片金字塔网格按需加载 ArcGIS REST 地图服务。
 docs: >
   This example shows how to use an ArcGIS REST MapService as tiles.
   This source type supports Map and Image Services. For cached ArcGIS
   services, better performance is available by using
   <code>ol/source/XYZ</code> instead.
+
+  本示例展示了如何将 ArcGIS REST MapService 以瓦片流形式（Tile Grid）进行并发加载。<code>ol/source/TileArcGISRest</code> 会将当前视口划分为标准的切片网格，并向服务端的 <code>/export</code> 接口并发请求各个瓦片区域。对于已经在 ArcGIS 服务端预先渲染生成了紧凑切片缓存（Cached Services）的地图服务，直接使用 <code>ol/source/XYZ</code> 或 <code>ol/source/ImageTile</code> 将获得更高性能。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 瓦片化动态请求架构 (TileGrid-Driven Export)
+  - **基于瓦片金字塔的并发请求**: `ol/source/TileArcGISRest` 将视图空间按照标准瓦片网格（TileGrid，默认 256×256 像素）切分为独立的切片单元。每个瓦片独立计算其空间包围盒，并向 ArcGIS REST 接口请求导出图片。
+  - **渐进加载与缓存优势**:
+    - **渐进显示**: 瓦片并发加载，优先渲染已下载完成的部分，大幅减少初次加载时的白屏等待时间；
+    - **HTTP 级别缓存**: 访问过的切片会自动保存在浏览器本地缓存与 CDN 节点中，在用户反复漫游时无需重新计算。
+
+  #### 2. 空间外包范围裁剪优化 (`extent`)
+  - 示例中在 `TileLayer` 构造函数中显式指定了 `extent: [-13884991, 2870341, -7455066, 6338219]`（严格覆盖美国本土）。
+  - **消除冗余请求**: OpenLayers 渲染器会自动忽略位于该范围外部的切片请求，避免因向全球无数据区域发送数以百计的无效 `/export` 请求而拖垮 GIS 服务端。
+
+  #### 3. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices)
+  - **瓦片边界文字截断与标签重复**: 动态瓦片模式下，每个瓦片是服务端隔离光栅化的。位于瓦片边界线上的城市标注可能会被一刀切断，且相邻切片中可能出现重复地名。若应用对制图标注美观度有强迫性要求，优先考虑单图 `ImageArcGISRest` 或直接升级为矢量切片（Vector Tiles）。
+  - **与静态缓存瓦片 (`XYZ`) 的选型鉴别**: 若 ArcGIS 管理员已经在服务端执行了 Manage Map Server Cache Tiles（生成了紧凑缓存），切勿使用 `TileArcGISRest`，而应使用 `.../MapServer/tile/{z}/{y}/{x}` 模板通过 `ol/source/ImageTile` 加载，性能提升可达一个数量级。
 tags: "arcgis, tile, tilelayer"
 ---
 <div id="map" class="map"></div>
