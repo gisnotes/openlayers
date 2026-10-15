@@ -1,9 +1,32 @@
 ---
 layout: example.html
-title: Layer Swipe
-shortdesc: Example of a Layer swipe map.
+title: Layer Swipe / 图层卷帘对比
+shortdesc: Example of a Layer swipe map. / 使用滑动卷帘对比矢量路网底图与遥感影像图层。
 docs: >
-  Example of a Layer swipe map.
+  Example of a Layer swipe map. Demonstrates clipping a layer dynamically using a range slider.
+
+  本示例演示了如何通过监听图层的 <code>prerender</code> 和 <code>postrender</code> 事件，利用 HTML5 Canvas 2D 的 <code>ctx.clip()</code> 实现图层卷帘（Swipe）对比。通过拖动底部的滑动条（Range Slider），动态计算上层卫星影像图层的可见矩形区域，实现左侧显示 OpenStreetMap 矢量街道、右侧显示 MapTiler 高清卫星影像的平滑无缝卷帘对比效果。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 卷帘动态裁切核心原理 (Swipe Clipping Architecture)
+  - **图层堆叠设计**: 底层为完整的 OpenStreetMap 矢量街道切片图层（`osm`），上层为 MapTiler 卫星遥感切片图层（`aerial`）。
+  - **动态视口矩形裁切流水线**:
+    1. 根据用户滑块的百分比 `swipe.value` 计算分割线横坐标：`width = mapSize[0] * (Number(swipe.value) / 100)`；
+    2. 构造右侧可见矩形的四个顶点：左上 `[width, 0]`、右上 `[mapSize[0], 0]`、右下 `mapSize`、左下 `[width, mapSize[1]]`；
+    3. 在 `aerial.on('prerender')` 阶段通过 `getRenderPixel` 将四个顶点换算为 Canvas 物理像素；
+    4. 执行 `ctx.save()`, `ctx.beginPath()`, `ctx.clip()` 构建矩形遮罩，使卫星遥感影像仅在右侧被渲染，左侧自然显露底层的道路图层；
+    5. 在 `aerial.on('postrender')` 阶段执行 `ctx.restore()` 恢复上下文。
+
+  #### 2. 高分屏（HiDPI / Retina）精确像素映射
+  - 必须使用 `getRenderPixel(event, coordinate)` 进行坐标换算。如果直接使用 CSS 逻辑像素 `width` 设置 Canvas 裁切路径，在设备像素比大于 1（如 MacBook 或移动手机）的屏幕上，卷帘分界线会出现半屏偏移或比例失真。
+
+  #### 3. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices)
+  - **`input` 事件调度高效重绘**: 监听 `<input type="range">` 的 `input` 事件并调用 `map.render()`。OpenLayers 仅需在现有缓存瓦片上重新执行 Canvas 2D 路径裁切，完全无需重新发送网络瓦片请求，帧率可轻松达到 60FPS。
+  - **垂直卷帘与双轴四分屏扩展**: 该算法不仅可支持水平左右卷帘，还可轻松改造为垂直上下卷帘（修改 Y 轴分界点）或对角线/四象限多图层对比。
+  - **交互分割条（Splitter Handle）增强**: 生产环境中可在视口上方定位一个带箭头的拖动手柄 DOM 元素，同步监听鼠标拖拽手势，并加入触控移动端适配。
 tags: "swipe, openstreetmap, maptiler"
 ---
 <div id="map" class="map"></div>

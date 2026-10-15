@@ -1,13 +1,37 @@
 ---
 layout: example.html
-title: Layer Spy
-shortdesc: View a portion of one layer over another
+title: Layer Spy / 图层探照灯（透镜探查）
+shortdesc: View a portion of one layer over another / 使用圆形探照灯在底图上方透视查阅另一图层内容。
 docs: >
   <p>Layer rendering can be manipulated in <code>prerender</code> and <code>postrender</code> event listeners.
   These listeners get an event with a reference to the Canvas rendering context.
   In this example, the <code>prerender</code> listener sets a clipping mask around the most
   recent mouse position, giving you a spyglass effect for viewing one layer over another.</p>
   <p>Move around the map to see the effect.  Use the ↑ up and ↓ down arrow keys to adjust the spyglass size.</p>
+
+  <p>图层的渲染流程可通过 <code>prerender</code> 与 <code>postrender</code> 事件进行拦截。事件对象携带了底层的 Canvas 2D 绘图上下文（<code>event.context</code>）。本示例中，上层的遥感卫星图层在 <code>prerender</code> 阶段基于鼠标实时光标位置创建圆形剪切蒙版（Clipping Mask），实现了圆形探照灯（透镜）透视下方矢量路网图层的对比效果。</p>
+  <p>在地图上移动鼠标即可观察探照灯透视效果。按键盘的 ↑（向上）和 ↓（向下）方向键可以动态调节透镜的探照半径（25px ~ 150px）。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 探照灯透视核心技术原理 (Spyglass Clipping Architecture)
+  - **双图层叠置与选择性裁切**: 底图为普通矢量道路图层（`roads`），顶层为全覆盖的卫星遥感影像（`imagery`）。在默认渲染机制下，卫星图层将遮蔽下层的所有道路信息。
+  - **Canvas 裁切蒙版流水线 (Clip Pipeline)**:
+    1. 在 `imagery.on('prerender')` 阶段调用 `ctx.save()` 将画布初始坐标系与剪切区入栈；
+    2. 基于当前鼠标光标位置调用 `ctx.arc(...)` 绘制圆形矢量轮廓，并执行 `ctx.clip()`；
+    3. OpenLayers 内部仅把位于圆形裁切路径内的卫星瓦片光栅化到画布上；
+    4. 在 `imagery.on('postrender')` 阶段必须立即调用 `ctx.restore()` 弹出状态栈，释放剪切区约束，使后续图层与 UI 控件可正常绘制。
+
+  #### 2. 高分屏（HiDPI / Retina）物理像素自适应
+  - **物理像素坐标对齐**: 浏览器 DOM 事件返回的 `event.clientX/Y` 属于 CSS 像素，而在视网膜屏幕或设置了特定缩放的设备上，Canvas 的真实画布尺寸为 CSS 尺寸乘以设备像素比（`devicePixelRatio`）。
+  - **`getRenderPixel` 工具函数的关键作用**: 代码中调用 `getRenderPixel(event, mousePosition)` 与其相邻偏移点，能精准把逻辑像素转换为物理像素坐标及真实物理半径，彻底避免高分屏下探照灯圆心偏移、圆弧锯齿或半径比例失调的问题。
+
+  #### 3. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices)
+  - **Canvas 状态栈泄漏风险**: 若在 `prerender` 执行了 `ctx.save()` 但在 `postrender` 中未成功执行 `ctx.restore()`（例如中间发生抛错），残留的裁剪区会持续收缩全局上下文，导致整张地图最终黑屏或完全空白。
+  - **鼠标移出重绘清理**: 当鼠标移出地图容器时（`mouseout` 事件），务必将 `mousePosition` 置为 `null` 并触发 `map.render()`，此时裁切逻辑将由于无光标坐标而隐藏整层卫星图，确保无光标时不残留冻结的圆形残影。
+  - **移动端多点触控与手势兼容**: 原生 `mousemove` 仅适用于传统桌面鼠标。在移动平板或手机端开发时，需改用 PointerEvent（`pointerdown` / `pointermove`）或 TouchEvent，并为单指拖拽探照灯与双指缩放地图做好手势冲突防范。
 tags: "spy, image manipulation, maptiler"
 ---
 <div id="map" class="map"></div>

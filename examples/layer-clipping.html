@@ -1,9 +1,30 @@
 ---
 layout: example.html
-title: Layer Clipping
-shortdesc: Layer clipping example
+title: Layer Clipping / 图层几何遮罩裁切
+shortdesc: Layer clipping example / 使用贝塞尔曲线与 Canvas 路径对图层进行几何蒙版裁切。
 docs: >
-  Layer clipping example
+  Layer clipping example. Demonstrates clipping a layer using arbitrary Canvas 2D paths.
+
+  本示例演示了如何通过监听图层的 <code>prerender</code> 事件，利用 HTML5 Canvas 2D 上下文的 <code>ctx.clip()</code> 方法对瓦片底图进行几何蒙版裁切。示例中使用贝塞尔曲线（Bézier Curves）在屏幕中心构造了一个爱心形状的矢量剪切蒙版，并根据地图的像素比（PixelRatio）与旋转角（Rotation）对变换矩阵进行反向抵消与动态校准，使裁切轮廓稳定居中显示。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 逆像素变换矩阵与屏幕空间锚定 (Inverse Pixel Transform & Rotation Decoupling)
+  - **动态矩阵解析**: 当地图发生平移、旋转（Rotation）或运行在高分屏（Retina / HiDPI）时，Canvas 2D 上下文已被 OpenLayers 预先施加了仿射变换。`event.inversePixelTransform` 提供了当前变换的逆矩阵 $[a, b, c, d, e, f]$。
+  - **几何参数提取**:
+    $$\text{canvasPixelRatio} = \sqrt{a^2 + b^2}, \quad \text{canvasRotation} = -\text{atan2}(b, a)$$
+    通过矩阵元素提取画布真实的物理像素比与视口旋转弧度，为屏幕空间固定形状的裁切提供了数学依据。
+  - **居中对齐与旋转抵消**: 通过 `ctx.translate(width/2, height/2)` 配合 `ctx.rotate(-canvasRotation)`，将坐标系锚定在屏幕绝对几何中心并抵消地图旋转角度，使蒙版无论地图如何旋转拖拽，始终端正居中。
+
+  #### 2. 三次贝塞尔曲线路径与 `ctx.clip()`
+  - **参数化路径造型**: 利用 `ctx.moveTo` 与 6 段 `ctx.bezierCurveTo(cp1x, cp1y, cp2x, cp2y, x, y)` 构建闭合心形矢量轮廓。
+  - **硬件级像素裁剪**: 调用 `ctx.clip()` 将当前 Canvas 上下文的绘制限制在闭合路径之内。随后的切片光栅化渲染只在心形蒙版区域生效，其余部分保持透明。
+
+  #### 3. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices)
+  - **成对的 `save` 与 `restore`**: 状态保护至关重要。`prerender` 中调用的 `ctx.save()` 必须与 `postrender` 中的 `ctx.restore()` 一一严格配对。如果因代码异常中断未执行 `restore()`，裁剪蒙版将永久驻留，后续绘制的任何图层都将被裁切。
+  - **矩阵变换逆操作顺序**: 在执行 `ctx.clip()` 之后，如果需要恢复或继续在该图层上绘制其他内容，必须严格按照正向变换的逆顺序撤销平移和缩放（`scale(1/scale)` -> `rotate` -> `translate`），否则容易造成局部坐标系污染。
 tags: "clipping, openstreetmap"
 ---
 <div id="map" class="map"></div>
