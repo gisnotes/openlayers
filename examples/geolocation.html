@@ -1,21 +1,41 @@
 ---
 layout: example.html
-title: Geolocation
-shortdesc: Using geolocation to control a map view.
+title: Geolocation / 地理定位服务
+shortdesc: Using geolocation to control a map view. / 使用 HTML5 Geolocation API 获取设备定位与精度圈并联动地图视图。
 docs: >
   This example uses the Geolocation API to control the view.
+
+  本示例展示了如何使用 OpenLayers 的 <code>ol/Geolocation</code> 组件封装 W3C HTML5 Geolocation 定位服务。通过开启位置跟踪（Tracking），可以实时获取设备的地理坐标、定位精度范围（Accuracy Polygon）、海拔高度、运动航向角（Heading）以及移动速度，并以动态点标与精度圆的形式直观呈现在地图上。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. `ol/Geolocation` 核心架构与坐标转换
+  - **跨投影坐标自动映射**: 原生浏览器 `navigator.geolocation` 返回的经纬度恒为 WGS84（`EPSG:4326`）椭球坐标。在构造 `new Geolocation({projection: view.getProjection()})` 时绑定视图投影，OpenLayers 会在内部管线中透明完成向视图投影（如 Web 墨卡托）的实时数学转换，`geolocation.getPosition()` 直接输出视图坐标。
+  - **高精度模式与航向获取 (`enableHighAccuracy`)**:
+    配置 `trackingOptions: { enableHighAccuracy: true }` 是移动设备开启物理 GPS/北斗卫星芯片的必要条件。只有开启高精度模式且设备处于位移运动中时，浏览器才会返回有效的 `heading`（航向弧度）与 `speed`（速度 m/s）。
+
+  #### 2. 精度范围多边形几何体 (`accuracyGeometry`)
+  - **自动生成米制精度圆**: `geolocation.getAccuracyGeometry()` 依据 GPS 报告的水平精度半径（米）与当前经纬度，在投影坐标系内直接构造一个圆形面多边形（Polygon）。
+  - **响应式几何数据绑定**: 通过监听 `change:accuracyGeometry` 与 `change:position`，将几何体实时绑定至静态要素 `accuracyFeature` 与 `positionFeature`，实现与地图矢量渲染管线的解耦联动。
+
+  #### 3. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices)
+  - **HTTPS 强制安全上下文 (Secure Context)**: 所有主流现代移动端浏览器均将 Geolocation API 限制在 HTTPS 协议下运行。在未经 SSL 证书加密的 HTTP 生产站点中调用，将直接触发用户权限拒绝或被浏览器静默拦截。
+  - **能耗控制与生命周期管理**: 持续开启高精度追踪会使移动终端的 GPS 射频模块处于高功耗唤醒状态。业务中应在用户最小化应用、锁屏或离开当前页面时调用 `geolocation.setTracking(false)` 及时挂起定位，按需恢复。
+  - **室内弱信号与降级处理**: 监听 `error` 事件（包含 `PERMISSION_DENIED` 权限被拒、`POSITION_UNAVAILABLE` 信号丢失、`TIMEOUT` 请求超时），并在 UI 界面提供用户友好提示或降级采用 IP 粗略定位。
 tags: "geolocation, openstreetmap"
 ---
 <div id="map" class="map"></div>
 <div id="info" style="display: none;"></div>
 <label for="track">
-  track position
+  track position / 开启位置追踪
   <input id="track" type="checkbox"/>
 </label>
 <p>
-  position accuracy : <code id="accuracy"></code>&nbsp;&nbsp;
-  altitude : <code id="altitude"></code>&nbsp;&nbsp;
-  altitude accuracy : <code id="altitudeAccuracy"></code>&nbsp;&nbsp;
-  heading : <code id="heading"></code>&nbsp;&nbsp;
-  speed : <code id="speed"></code>
+  position accuracy / 定位精度 : <code id="accuracy"></code>&nbsp;&nbsp;
+  altitude / 海拔高度 : <code id="altitude"></code>&nbsp;&nbsp;
+  altitude accuracy / 海拔精度 : <code id="altitudeAccuracy"></code>&nbsp;&nbsp;
+  heading / 航向角 : <code id="heading"></code>&nbsp;&nbsp;
+  speed / 速度 : <code id="speed"></code>
 </p>

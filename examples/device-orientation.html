@@ -1,11 +1,32 @@
 ---
 layout: example.html
-title: Device Orientation
-shortdesc: Listen to DeviceOrientation events.
+title: Device Orientation / 移动设备姿态传感（陀螺仪联动）
+shortdesc: Listen to DeviceOrientation events. / 监听设备陀螺仪与加速度传感器（DeviceOrientation）事件以倾斜平移地图。
 docs: >
   This example shows how to track changes in device orientation.
   [gyronorm.js](https://github.com/dorukeker/gyronorm.js) library is used to access and
   normalize the events from the browser.
+
+  本示例展示了如何监听移动终端设备的物理姿态变化。通过引入 <a href="https://github.com/dorukeker/gyronorm.js" target="_blank">gyronorm.js</a> 传感器归一化库，跨平台统一解析手机的陀螺仪与重力加速度事件（$\alpha$、$\beta$、$\gamma$ 欧拉角），并将手机倾斜角度实时映射为地图视图的平移矢量，实现体感操控漫游地图。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 设备空间姿态欧拉角动力学 (Euler Angles Model)
+  - **三维旋转参考系**: W3C 姿态规范定义了设备坐标系相对于地球参考坐标系的变换：
+    - $\alpha$（Yaw / 航向角）：绕垂直于屏幕向外的 Z 轴旋转，范围 $[0, 2\pi)$，表征地理北极或罗盘朝向；
+    - $\beta$（Pitch / 俯仰角）：绕屏幕横向水平的 X 轴旋转，范围 $[-\pi, \pi]$，表征手机前后仰合；
+    - $\gamma$（Roll / 滚转角）：绕屏幕纵向纵轴的 Y 轴旋转，范围 $[-\pi/2, \pi/2]$，表征手机左右侧翻。
+
+  #### 2. 尺度自适应平移映射算法
+  - **分辨率相关动力学公式**:
+    $$\Delta X = -\text{resolution} \times \gamma \times 25, \quad \Delta Y = \text{resolution} \times \beta \times 25$$
+  - 算法中将倾斜弧度与当前视图的分辨率（`view.getResolution()`）相乘，确保无论用户在大比例尺（城市微观街道）还是小比例尺（全国宏观）下，晃动手机相同的物理手感角度，屏幕地图内容均发生恒定适中的视觉位移。
+
+  #### 3. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices)
+  - **iOS 13+ 权限交互前置要求**: 在苹果 Safari 浏览器中，未经用户直接点击（如点击“开启体感”按钮）直接调用传感器接口会被静默拒绝。必须先执行 `DeviceOrientationEvent.requestPermission()` 并获取 `'granted'` 授权承诺。
+  - **防抖与死区（Deadzone）控制**: 移动终端传感器普遍存在微小的静态电磁噪声与手部生理颤抖。生产级工程应设置死区过滤（例如当 $|\beta| < 2^\circ$ 或 $|\gamma| < 2^\circ$ 时视为零位移），配合低通滤波（Low-pass Filter）消除高频微震，保障视觉平稳。
 tags: "device, orientation, gyronorm"
 resources:
   - https://cdn.jsdelivr.net/npm/gyronorm@2.0.6/dist/gyronorm.complete.min.js
@@ -13,7 +34,7 @@ resources:
 <div id="map" class="map"></div>
 <p>
   <div id="unsupported" style="background-color: lightcoral; text-align: center;"></div>
-  <div>α : <code id="alpha"></code></div>
-  <div>β : <code id="beta"></code></div>
-  <div>γ : <code id="gamma"></code></div>
+  <div>α (Yaw / 航向) : <code id="alpha"></code></div>
+  <div>β (Pitch / 俯仰) : <code id="beta"></code></div>
+  <div>γ (Roll / 滚转) : <code id="gamma"></code></div>
 </p>
