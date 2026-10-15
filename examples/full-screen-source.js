@@ -10,6 +10,8 @@ const view = new View({
   zoom: 14,
 });
 
+// Initialize map with FullScreen control targeting outer container
+// 初始化地图，配置全屏控件目标为包含侧边栏的外层父级容器
 const map = new Map({
   controls: defaultControls().extend([
     new FullScreen({

@@ -1,11 +1,38 @@
 ---
 layout: example.html
-title: Teleporting Maps
-shortdesc: Example of moving a map from one target to another.
+title: Teleporting Maps / 地图容器瞬态瞬移 (setTarget)
+shortdesc: Example of moving a map from one target to another. / 演示在不同 DOM 目标容器之间无损、零重绘瞬移迁移地图实例的示例。
 docs: >
   <p>Click on the teleport button the map to move the map from one target to another.</p>
+  <p>点击“瞬移”按钮，将地图实例从一个 DOM 目标容器无缝迁移至另一个容器。在整个迁移过程中，地图的当前中心点、层级比例尺、瓦片内存缓存与图层加载状态完全保持不变，实现真正的零销毁重用。</p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>单例复用与容器动态瞬移（Zero-Destruction Portal）：</strong>
+      在包含“多标签页切换（Tab Switch）”、“主分屏对比（Split Screen）”或“悬浮小窗/全屏主图切换”的复杂业务系统中，传统前端往往在切换标签时销毁旧地图并在新容器中 <code>new Map()</code>。这种做法不仅消耗大量 CPU/GPU 资源重新加载数十张底图切片，还会导致用户当前缩放位置丢失。
+      OpenLayers 提供了 <code>map.setTarget(newTarget)</code>，直接将当前 Map 内部维护的 <code>.ol-viewport</code> DOM 节点从旧父容器中摘取并挂载到新父容器中，瞬时完成“瞬移”。
+    </li>
+    <li><strong>完全保持活跃的状态机：</strong>
+      由于 <code>Map</code> 实例未被销毁，所有图层对象、矢量要素数据源、切片缓存池（TileCache）以及视图 <code>View</code>（包含当前的平滑动画、中心点与旋转角）全部完好无损地持续运行，页面毫无白屏闪烁。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>map.setTarget(target)</code>：支持传入 DOM 元素 ID 字符串或直接传入 <code>HTMLElement</code> 引用。若传入 <code>null</code> 或 <code>undefined</code>，则彻底解绑挂载，进入无头（Headless）挂起状态。</li>
+    <li><code>map.getTarget()</code>：返回当前正在挂载的目标容器 ID 或节点。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>容器尺寸突变后的自适应（`map.updateSize`）：</strong>
+      若两个目标容器的物理宽高不同（例如从 400×300 的侧边微缩框瞬移到 1920×1080 的全屏主窗口），虽然 OpenLayers 会尝试自动侦测，但在复杂 CSS 动画或弹性布局下，推荐在 <code>setTarget</code> 后手动调用一次 <code>map.updateSize()</code>，确保瓦片调度网格立即刷新。
+    </li>
+  </ul>
 tags: "teleport, openstreetmap"
 ---
 <div id="map1" class="map"></div>
 <div id="map2" class="map"></div>
-<button id="teleport">Teleport</button>
+<button id="teleport">Teleport / 瞬移地图</button>

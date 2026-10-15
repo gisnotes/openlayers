@@ -1,16 +1,42 @@
 ---
 layout: example.html
-title: Full Screen Control with extended source element
-shortdesc: Example of a full screen control with a source option definition.
+title: Full Screen Control with extended source element / 全屏控件外扩父级容器 (source)
+shortdesc: Example of a full screen control with a source option definition. / 使用 FullScreen 控件的 source 选项将包含侧边栏的父容器整体带入全屏的示例。
 docs: >
-  <p>Click the control in the top right corner to go full screen.  Click it again to exit full screen.</p>
+  <p>Click the control in the top right corner to go full screen. Click it again to exit full screen.</p>
   <p>If there is no button on the map, your browser does not support the <a href="https://caniuse.com/fullscreen">Full Screen API</a>.</p>
+  <p>点击地图右上角的全屏控件可进入全屏模式。再次点击可退出全屏。</p>
+  <p>本示例通过为全屏控件配置 <code>source: 'fullscreen'</code>，使得点击全屏时，不仅是将地图自身放大，而是将包含**侧边面板（Side Panel）**在内的整个外层父级容器一同带入全屏，非常适合包含控制仪表盘的综合监控大屏场景。</p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>父级容器委托全屏（Fullscreen Container Delegation）：</strong>
+      若直接使用默认的 <code>new FullScreen()</code>，浏览器仅将 <code>#map</code> 元素提升到屏幕顶层，原本位于地图旁边的侧边栏、工具栏和数据表格会被浏览器自动剥离并遮挡在视口之外。通过指定 <code>source: 'fullscreen'</code>（或传入 DOM 元素节点），OpenLayers 能够把指定的父容器整体提升为全屏渲染上下文，实现了地图与业务看板的整体全屏。
+    </li>
+    <li><strong>CSS 弹性布局协同（Flex Layout）：</strong>
+      外层容器采用 <code>display: flex</code>，地图占据弹性扩展区（<code>flex: 1</code>），侧边栏采用固定宽度。在进入全屏模式后，地图自动撑满剩余全屏宽度，侧边栏保持优雅停靠，UI 布局极度稳固。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>new FullScreen({ source: 'fullscreen' })</code>：<code>source</code> 参数可传入元素 ID 字符串或 HTML 节点引用，指示具体哪个 DOM 节点应接收 <code>requestFullscreen()</code> 指令。</li>
+    <li><code>:-webkit-full-screen</code> / <code>:fullscreen</code> 伪类适配：为外层容器注入全屏伪类样式，确保全屏下具备背景色与高度撑满。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>弹窗（Modal / Popup）全屏可见性问题：</strong>
+      进入全屏后，如果业务弹窗挂载在 <code>document.body</code> 下而非 <code>#fullscreen</code> 内部，弹窗会被浏览器顶层全屏元素彻底盖住不可见。生产环境必须将所有动态弹窗与提示浮层的宿主容器放置在 <code>source</code> 元素内部。
+    </li>
+  </ul>
 tags: "full-screen, source, fullScreenSource, osm, osm-maps"
 ---
 <div id="fullscreen" class="fullscreen">
   <div id="map" class="map"></div>
   <div class="sidepanel">
-    <span class="sidepanel-title">Side Panel</span>
+    <span class="sidepanel-title">Side Panel / 侧边业务面板</span>
   </div>
 </div>
-

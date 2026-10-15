@@ -15,6 +15,8 @@ const attributions =
   '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> ' +
   '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>';
 
+// Initialize map with FullScreen control and WebGLTile satellite layer
+// 初始化地图，挂载全屏控件与 WebGLTile 卫星影像图层
 const map = new Map({
   controls: defaultControls().extend([new FullScreen()]),
   layers: [

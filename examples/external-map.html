@@ -1,13 +1,48 @@
 ---
 layout: example.html
-title: External map
-shortdesc: Move a map to a separate window.
+title: External map / 外部弹窗独立地图与双屏漫游
+shortdesc: Move a map to a separate window. / 将地图实例无缝迁移至外部独立浏览器子窗口运行，并在主窗口关闭时自动同步销毁的示例。
 docs: >
-  Move a map to a separate window.
+  <p>Move a map to a separate window.</p>
+  <p>将当前地图无缝迁移至独立的外部浏览器弹窗中运行。适合多显示器监控中心、双屏协同指挥场景。点击按钮可在弹出的新窗口中继续平移缩放地图；当外部弹窗关闭时，地图实例会自动无损归还给主窗口容器。</p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>渲染载体与逻辑状态的解耦（Target Portals）：</strong>
+      在 OpenLayers 中，<code>Map</code> 对象与其渲染的 DOM 目标容器（<code>target</code>）是完全解耦的。只要保持在同一个浏览器进程中，通过 <code>window.open()</code> 打开的子窗口可以直接与父窗口共享同一个 JavaScript 堆内存环境。通过调用 <code>map.setTarget(childWindow.document.getElementById('map'))</code>，可以在不销毁任何图层、不重置视口中心和缩放等级的前提下，将地图 Canvas 画布瞬间瞬移到子窗口中。
+    </li>
+    <li><strong>双向生命周期管理与孤儿窗口防御：</strong>
+      多窗口交互最容易引发内存泄漏或窗口失去控制。本示例设计了严密的生命周期闭环：
+      1. 主窗口监听 <code>pagehide</code> 事件，在主窗口关闭或刷新时，主动触发 <code>childWindow.close()</code>，杜绝孤儿僵尸窗口；
+      2. 监听子窗口的 <code>unload</code> 事件，当用户点击子窗口右上角红叉关闭时，立即触发 <code>resetMapTarget()</code>，将地图丝滑还原回主窗口原位置。
+    </li>
+    <li><strong>主窗口状态掩模（State Masking）：</strong>
+      当控制权转移给外部子窗口时，主窗口原位置通过自定义控件 <code>UnusableMask</code> 覆盖半透明遮罩，直观告知用户“地图正在外部窗口运行”，避免在主窗口发生误操作或空白露怯。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>map.setTarget(element)</code>：不仅支持传入本页面 ID 字符串，还支持直接传入由 <code>childWindow.document.getElementById('map')</code> 拿到的外部 DOM 节点。</li>
+    <li><code>UnusableMask extends Control</code>：派生自 <code>ol/control/Control</code>，利用原生控件机制优雅实现图层上方的信息遮罩。</li>
+    <li><code>window.open(url, name, 'menubar=no,toolbar=no,...')</code>：以纯净应用窗口模式打开外部弹窗。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>浏览器弹窗拦截（Popup Blocker）：</strong>
+      <code>window.open</code> 必须严格由用户的物理点击手势（如 <code>button.onclick</code>）同步触发，若置于异步 Promise 回调中执行，会被绝大多数现代浏览器直接拦截。示例中提供了 <code>#blocker-notice</code> 提示文案指导用户解除拦截。
+    </li>
+    <li><strong>样式隔离与 CSS 同步：</strong>
+      子窗口必须引入与主页面完全相同的 <code>theme/ol.css</code> 与地图基础样式，否则移动到子窗口的地图控件、缩放按钮和标尺将因为缺少 CSS 规则而发生错位。
+    </li>
+  </ul>
 tags: "external, window"
 sources:
   - path: resources/external-map-map.html
 ---
 <div id="map" class="map"></div>
-<input id="external-map-button" type="button" value="Open external map"></input>
-<span id="blocker-notice" hidden>Could not open map in external window. If you are using a popup or ad blocker you may need to disable it for this example.</span>
+<input id="external-map-button" type="button" value="Open external map / 打开外部独立地图窗口"></input>
+<span id="blocker-notice" hidden>Could not open map in external window. If you are using a popup or ad blocker you may need to disable it for this example. / 无法在外部窗口打开地图。如果您启用了弹窗拦截插件，请在本示例中允许弹窗。</span>

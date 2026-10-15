@@ -1,10 +1,40 @@
 ---
 layout: example.html
-title: Full Screen Control
-shortdesc: Example of a full screen control.
+title: Full Screen Control / 全屏显示控件 (FullScreen)
+shortdesc: Example of a full screen control. / 使用 FullScreen 控件将地图容器一键切换为沉浸式全屏视图的示例。
 docs: >
-  <p>Click the control in the top right corner to go full screen.  Click it again to exit full screen.</p>
+  <p>Click the control in the top right corner to go full screen. Click it again to exit full screen.</p>
   <p>If there is no button on the map, your browser does not support the <a href="https://caniuse.com/fullscreen">Full Screen API</a>.</p>
+  <p>点击地图右上角的全屏控件按钮可进入全屏沉浸式体验。再次点击该按钮（或按下 <code>Esc</code> 键）即可退出全屏模式。</p>
+  <p>如果地图上未出现全屏按钮，说明当前运行环境或浏览器不支持 <a href="https://caniuse.com/fullscreen">Full Screen API</a>，或处于未授予权限的 iframe 沙箱中。</p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>W3C Fullscreen API 原生封装：</strong>
+      OpenLayers 的 <code>ol/control/FullScreen</code> 封装了底层各大浏览器的全屏能力（包括 <code>requestFullscreen</code>、<code>webkitRequestFullscreen</code> 及对应的退出全屏方法），屏蔽了厂商前缀与老旧设备差异，并具备运行时设备能力自检机制（若不支持则自动隐藏 DOM 按钮）。
+    </li>
+    <li><strong>视口尺寸响应式重算（Automatic Resize）：</strong>
+      当进入或退出全屏时，浏览器视口尺寸瞬间发生巨大跃迁。FullScreen 控件内部监听了标准的 <code>fullscreenchange</code> 原生事件，并自动调用 <code>map.updateSize()</code>，迫使 WebGL 渲染管线与瓦片队列重新按全屏分辨率调度出图，杜绝任何黑边拉伸。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>controls: defaultControls().extend([new FullScreen()])</code>：挂载全屏控件，默认采用经典的外向四角箭头图标。</li>
+    <li><code>className: 'ol-full-screen'</code>：默认 CSS 类名，利用绝对定位固定于右上角（<code>top: .5em; right: .5em;</code>）。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>iframe 嵌入场景权限阻断：</strong>
+      若地图嵌入在第三方平台的 <code>&lt;iframe&gt;</code> 中，iframe 标签必须显式追加 <code>allow="fullscreen"</code>（或历史属性 <code>allowfullscreen="true"</code>），否则浏览器控制台将抛出 <code>Permissions policy violation: fullscreen is not allowed in this document</code> 并导致全屏失效。
+    </li>
+    <li><strong>全屏状态下的 CSS 层叠上下文：</strong>
+      当元素进入全屏状态时，浏览器会创建一个顶层堆叠层（Top Layer），常规页面的 <code>z-index</code> 将全部失效。所有需要随地图一起在全屏下可见的自定义业务面板，必须隶属于全屏容器内部。
+    </li>
+  </ul>
 tags: "full-screen, xyz, maptiler"
 ---
 <div id="map" class="map"></div>
