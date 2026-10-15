@@ -1,9 +1,43 @@
 ---
 layout: example.html
-title: Map Graticule
-shortdesc: This example shows how to add a graticule layer to a map.
+title: Map Graticule / 经纬网格网图层 (Map Graticule)
+shortdesc: This example shows how to add a graticule layer to a map. / 演示如何向地图添加经纬网图层（Graticule），自定义经纬度网格线型与刻度度数标注。
 docs: >
-  This example shows how to add a graticule layer to a map.
+  <p>
+    This example shows how to add a graticule layer to a map.
+  </p>
+  <p>
+    此示例演示了如何向地图中添加 <code>ol/layer/Graticule</code> 经纬网图层。
+    经纬网图层根据当前视口的缩放级别自适应计算经纬度间隔，动态绘制虚线网格并在视口边缘渲染出经纬度刻度标签（如 4°E, 48°N 等），为空间数据提供直观的球面基准坐标参考。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>球面经纬度网格与投影平面的动态映射：</strong>
+      地理坐标系（WGS84）的经线汇聚于南北两极，而投影坐标系（如 Web 墨卡托 EPSG:3857）将其拉伸展开为平面正交网格。
+      <code>ol/layer/Graticule</code> 内部具备动态自适应分级算法，根据当前视图的分辨率（Resolution）在视口中自动选取最合适的经纬线间隔步长（如 $0.1^\circ$、$1^\circ$、$5^\circ$ 或 $10^\circ$），并生成带曲率的平滑线段。
+    </li>
+    <li><strong>视口边缘吸附式刻度标注（Viewport-Edge Labels）：</strong>
+      开启 <code>showLabels: true</code> 后，经纬网不会在整个地图中央无序堆叠文字，而是智能计算经纬线与当前视口矩形四条边缘的几何交点，将度数标签牢牢“钉扎”在视口的上、下、左、右边界，极大提升了专业制图可读性。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>new Graticule({ strokeStyle, showLabels: true, wrapX: false })</code>：初始化经纬网图层。</li>
+    <li><code>strokeStyle: new Stroke({ color, width, lineDash })</code>：自定义虚线间隔与颜色。</li>
+    <li><code>wrapX: false</code>：限制经纬网仅在单一世界范围（$-180^\circ \sim +180^\circ$）内生成，防止多世界副本重复绘制消耗性能。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>异构投影下的极地与日界线破损：</strong>
+      在非墨卡托投影（如兰勃特、极射赤平或摩尔威特等面积投影）下使用 Graticule 时，必须确保 <code>ol/proj/Projection</code> 实例中显式配置了 <code>worldExtent: [-179, -89.99, 179, 89.99]</code>，避开 $\pm 90^\circ$ 与 $\pm 180^\circ$ 的数学计算极值，否则经纬线在极点可能发生断裂或渲染异常。
+    </li>
+  </ul>
 tags: "graticule"
 ---
 <div id="map" class="map"></div>
+

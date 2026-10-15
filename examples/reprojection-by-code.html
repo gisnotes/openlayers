@@ -1,9 +1,15 @@
 ---
 layout: example.html
-title: 坐标系搜索与栅格动态重投影 (Reprojection with coordinate system search)
-shortdesc: 演示通过检索任意投影坐标系，在客户端将 OSM (EPSG:3857) 栅格瓦片实时重投影显示。
+title: Reprojection by Code / 坐标系搜索与栅格动态重投影 (Reprojection by Code)
+shortdesc: Demonstrates client-side raster reprojection of OSM tiles to arbitrary projection codes. / 演示通过检索任意投影坐标系，在客户端将 OSM (EPSG:3857) 栅格瓦片实时重投影显示。
 docs: >
-  本例展示了 OpenLayers 强大的**客户端栅格重投影（Client-side Raster Reprojection）**能力。用户通过检索 [MapTiler Cloud Coordinates API](https://docs.maptiler.com/cloud/api/coordinates/) 动态获取任意坐标系的 WKT/Proj4 定义并注册到前端，底图（EPSG:3857 Web 墨卡托）将自动在浏览器画布上实时解算、重采样并扭曲适配为目标投影。
+  <p>
+    This example demonstrates OpenLayers' powerful client-side raster reprojection capabilities. By querying coordinate system definitions (WKT/Proj4) from the MapTiler Cloud Coordinates API, base OSM tiles (EPSG:3857 Web Mercator) are reprojected, resampled, and warped in real time directly inside the browser canvas.
+  </p>
+  <p>
+    本例展示了 OpenLayers 强大的<strong>客户端栅格重投影（Client-side Raster Reprojection）</strong>能力。用户通过检索 <a href="https://docs.maptiler.com/cloud/api/coordinates/">MapTiler Cloud Coordinates API</a> 动态获取任意坐标系的 WKT/Proj4 定义并注册到前端，底图（EPSG:3857 Web 墨卡托）将自动在浏览器画布上实时解算、重采样并扭曲适配为目标投影。
+  </p>
+
 
   **注意**：在您自己的生产项目中使用本功能时，请前往 [https://www.maptiler.com/cloud/](https://www.maptiler.com/cloud/) 申请并替换为您自己的 API Key。
 

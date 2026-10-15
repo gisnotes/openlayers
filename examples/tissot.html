@@ -1,12 +1,48 @@
 ---
 layout: example.html
-title: Tissot Indicatrix
-shortdesc: Draw Tissot's indicatrices on maps.
+title: Tissot Indicatrix / 蒂索变形椭圆与投影失真分析 (Tissot's Indicatrix)
+shortdesc: Draw Tissot's indicatrices on maps. / 在 EPSG:4326 等经纬度投影与 EPSG:3857 Web 墨卡托投影中绘制真实测地等径圆（蒂索变形椭圆），可视化分析投影的面积膨胀与角度变形。
 docs: >
-  Example of [Tissot indicatrix](https://en.wikipedia.org/wiki/Tissot's_indicatrix) maps. The map on the top is an `EPSG:4326` map. The one on the bottom is `EPSG:3857`.
+  <p>
+    Example of <a href="https://en.wikipedia.org/wiki/Tissot's_indicatrix" target="_blank">Tissot indicatrix</a> maps. The map on the top is an <code>EPSG:4326</code> map. The one on the bottom is <code>EPSG:3857</code>.
+  </p>
+  <p>
+    此示例展示了制图学中经典的<a href="https://en.wikipedia.org/wiki/Tissot's_indicatrix" target="_blank">蒂索变形指示线（Tissot's Indicatrix / 蒂索椭圆）</a>。
+    上方地图采用 <code>EPSG:4326</code>（WGS84 板块方格等距圆柱投影），下方地图采用 <code>EPSG:3857</code>（Web 墨卡托等角正形投影）。
+    通过在两个地图中均匀绘制半径同为 800 公里的球面真实测地圆，可以清晰直观地对比不同地图投影在不同纬度所造成的面积膨胀与几何形状形变。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>蒂索变形指示线（Tissot's Indicatrix）数学定理：</strong>
+      德国与法国制图学家证明：任何将三维不可展球面投射至二维平面的转换必然产生形变（长度、面积或角度至少有一项发生畸变）。
+      在地球表面取一个理论上的无穷小微元圆，经过平面投影映射后，在二维图纸上必然呈现为一个椭圆。
+      通过观察该椭圆的**长半轴（$a$）、短半轴（$b$）与旋转主轴方向**，可以精确量化该投影在各纬度的形变特征。
+    </li>
+    <li><strong>等角正形投影（Conformal） vs 等距柱面投影（Equirectangular）的几何差异：</strong>
+      - <strong>EPSG:3857 (Web 墨卡托)</strong>：属于**等角正形投影（Conformal）**，在任意局部点上的各个方向比例尺均严格相等（$a = b$）。因此，所有的球面测地圆在平面上依然呈现为**完美的正圆形**；但其代价是面积严重失真，面积放大因子随纬度 $\varphi$ 呈 $\sec^2(\varphi)$ 指数级膨胀（格陵兰岛在视觉上看起来与非洲面积相当）。
+      - <strong>EPSG:4326 (Plate Carrée 等距柱面)</strong>：经线与纬线均被强制展开为均匀正方形格网。随着纬度向极地升高，纬线圈周长急速收缩，但在投影图上依然被拉扯得与赤道一样宽，导致原本对称的圆形被横向强烈拉长，呈现为**扁平椭圆**。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>circularPolygon([x, y], radius, 64)</code> 来自 <code>ol/geom/Polygon.js</code>：利用球面大圆测地线（Geodesic）数学算法，在真实三维球体表面生成具有真实物理半径（800,000 米）的正多边形测地圆。</li>
+    <li><code>circle4326.clone().transform('EPSG:4326', 'EPSG:3857')</code>：将球面坐标动态转换投影至墨卡托平面空间。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>极地纬度不可达性（Mercator Singularity）：</strong>
+      墨卡托投影在 $\pm 90^\circ$ 极点处的数学展开值为无穷大，Web 墨卡托的有效纬度被限定在 $\pm 85.051129^\circ$ 以内。在循环生成测地圆时，高纬度圆的边缘可能会跨越极限纬度，导致计算异常，生产中需控制采样纬度上限。
+    </li>
+  </ul>
 tags: "tissot, circle"
 ---
-<h4>EPSG:4326</h4>
+<h4>EPSG:4326 (WGS84 等距矩形投影 / Plate Carrée)</h4>
 <div id="map4326" class="map"></div>
-<h4>EPSG:3857</h4>
+<h4>EPSG:3857 (Web 墨卡托正形等角投影 / Web Mercator)</h4>
 <div id="map3857" class="map"></div>
+
