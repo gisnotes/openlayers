@@ -1,10 +1,40 @@
 ---
 layout: example.html
-title: Cloud Optimized GeoTIFF (COG) from a Blob
-shortdesc: Rendering a COG as a tiled layer from a Blob.
+title: Cloud Optimized GeoTIFF (COG) from a Blob / 从二进制 Blob 对象加载云优化 GeoTIFF
+shortdesc: Rendering a COG as a tiled layer from a Blob. / 将内存中的二进制 Blob 对象（如本地文件或动态获取的字节流）渲染为 COG 瓦片图层。
 docs: >
   Tiled data from a Cloud Optimized GeoTIFF (COG) can be rendered as a layer.  In this
   example, a single 3-band GeoTIFF is used to render RGB data from a Blob.
+
+  云优化 GeoTIFF（COG）中的平铺数据可以直接从二进制 Blob 对象渲染为图层。在本示例中，从服务端抓取二进制文件并转换为内存 `Blob`，由 `ol/source/GeoTIFF` 解析其三波段 RGB 像元并在客户端呈现。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么支持直接传入 Blob 对象？
+  在生产场景中，并非所有的 GeoTIFF 都是公开托管在支持 HTTP Range 请求的公共云存储（如 S3）上的。很多时候数据来源于：
+  * **用户本地文件拖拽或选定**：利用 HTML5 `<input type="file">` 或拖拽放置读取用户的本地 `.tif` 文件（直接生成 `File` 对象，`File` 继承自 `Blob`），**无需先上传到后台服务器**，纯前端即可在地图上秒级预览！
+  * **前端加密解密流**：通过自定义接口获取加密二进制流，前端解密后生成的内存 `Blob`。
+  * **动态合成二进制流**：由前端 Canvas、WebAssembly 计算管线（如 GDAL.js）直接导出的栅格内存块。
+
+  #### 2. `sources: [{ blob: blob }]` 的内部机制
+  当给 `ol/source/GeoTIFF` 传入 `blob` 而不是 `url` 时：
+  * 底层的 `geotiff.js` 会通过 `fromBlob(blob)` 创建客户端读取句柄。
+  * 相比于基于 HTTP Range 的远程分块请求，`fromBlob` 会在内存中使用 `Blob.slice()` 进行像元切片读取。
+  * **注意与权衡**：
+    * 优势：零网络延迟，完全离线可用，不需要配置 CORS 跨域响应头。
+    * 权衡：因为整个文件必须先完整存在于浏览器内存中（或者通过 File API 访问本地磁盘），所以对于数十 GB 级别的海量数据，仍推荐托管在云端使用 URL 进行 HTTP Range 局部按需读取。
+
+  #### 3. 异步配置：`source.getView().then((viewConfig) => ...)`
+  当通过 `source.getView()` 异步初始化视口时：
+  ```javascript
+  view: source.getView().then((viewConfig) => {
+    viewConfig.showFullExtent = true;
+    return viewConfig;
+  }),
+  ```
+  * `showFullExtent: true`：确保视图在缩放和漫游时，始终限制并展示影像的完整边界，避免用户在放大或平移时地图漫游到影像之外的空白未知区域。
 tags: "cog"
 ---
 <div id="map" class="map"></div>

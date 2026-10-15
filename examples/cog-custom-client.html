@@ -1,12 +1,31 @@
 ---
 layout: example.html
-title: Cloud Optimized GeoTIFF (COG) with Custom Loader
-shortdesc: Rendering a COG with a custom loader function.
+title: Cloud Optimized GeoTIFF (COG) with Custom Loader / 自定义网络加载器的云优化 GeoTIFF
+shortdesc: Rendering a COG with a custom loader function. / 通过自定义 loader 函数为 COG 遥感切片请求注入认证头 (Token/Bearer) 或重试/缓存逻辑。
 docs: >
   Tiled data from a Cloud Optimized GeoTIFF (COG) can be rendered as a layer.  In this
   example, a custom loader function is provided to handle requests with custom headers
   or authentication logic. The loader receives the URL, headers, and an abort signal,
   and must return a Response object.
+
+  云优化 GeoTIFF（COG）中的平铺数据可以通过图层进行呈现。在本示例中，配置了一个自定义的加载函数（`loader`），用于处理带有自定义请求头（Headers）或认证授权逻辑的网络请求。加载函数接收目标 URL、请求头信息和中止信号（`AbortSignal`），并且必须返回一个原生的 `Response` 对象。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么需要自定义 `loader` 函数？
+  在商业 GIS 与企业级遥感项目中，遥感影像通常存储在受严格权限保护的对象存储中（如 AWS S3 私有存储桶、Google Cloud Storage、Azure Blob 或带有鉴权网关的反向代理服务）。
+  * **Bearer 令牌与 API 密钥**：请求每个切片时必须携带 `Authorization: Bearer <token>` 或专有签名头。
+  * **自定义缓存与离线代理**：结合 ServiceWorker 或 Cache API 进行瓦片持久化。
+  * **网络重试与熔断机制**：对因为临时网络波动（如 503/429 限流）失败的 Range 请求执行指数退避重试（Exponential Backoff）。
+
+  #### 2. `loader(url, headers, abortSignal)` 规范
+  `ol/source/GeoTIFF` 中的 `loader` 拥有清晰严谨的签名契约：
+  * **`url`**：请求的目标切片或元数据文件的完整 URI。
+  * **`headers`**：OpenLayers 和 geotiff.js 自动生成的默认请求头（最关键的是包含类似 `Range: bytes=1024-4095` 的字节范围头）。**开发者必须保留这些头信息**（例如通过展开运算符 `{...headers, 'Authorization': '...'}`），否则无法按需拉取局部字节！
+  * **`abortSignal`**：一个 `AbortSignal` 实例。当用户快速拖拽平移或连续滚轮缩放地图时，先前视口内尚未完成下载的瓦片会瞬间失效。OpenLayers 会触发中止信号，`fetch` 自动将未完成的 HTTP 连接切断，避免带宽挤占与无效等待。
+  * **返回值**：必须返回一个 Promise，且 resolve 的内容必须是标准 Web API 的 `Response` 实例。
 tags: "cog"
 ---
 <div id="map" class="map"></div>

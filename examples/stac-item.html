@@ -1,7 +1,7 @@
 ---
 layout: example.html
-title: STAC support
-shortdesc: Rendering a STAC Item with geometry and COG.
+title: STAC support / STAC 时空资产目录支持
+shortdesc: Rendering a STAC Item with geometry and COG. / 解析 STAC Item 规范并渲染其空间矢量足迹与云原生 GeoTIFF (COG) 资产图层组。
 docs: >
   This example uses the npm package [`ol-stac`](https://moregeo-it.github.io/ol-stac/) which
   adds [STAC](https://stacspec.org) support to OpenLayers.
@@ -9,6 +9,34 @@ docs: >
   It can for example show geometries and assets from SpatioTemporal Asset Catalog (STAC) Items as a layer group.
 
   For more examples visit <https://moregeo-it.github.io/ol-stac/en/latest/examples/>.
+
+  本示例使用 npm 扩展包 [`ol-stac`](https://moregeo-it.github.io/ol-stac/)，为 OpenLayers 提供原生的 [STAC（SpatioTemporal Asset Catalog，时空资产目录）](https://stacspec.org) 支持。
+  它可以直接将 STAC Item（时空数据项）中的空间矢量多边形足迹（Footprint Geometry）与其关联的 COG 遥感资产解析为一个图层组（LayerGroup）。
+  更多实战范例请访问 <https://moregeo-it.github.io/ol-stac/en/latest/examples/>。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 什么是 STAC（时空资产目录规范）？
+  * **传统遥感检索的困境**：不同卫星（Landsat、Sentinel、Planet、MODIS）、不同机构（NASA、ESA、USGS）的数据发布格式各异，API 标准碎片化，查找与加载影像极难自动化。
+  * **STAC 统一元数据标准**：
+    * **STAC Item**：一个 JSON 对象，描述在特定时间采集的单景时空资产；
+    * 包含该景影像的地理外包几何（`geometry`: GeoJSON 多边形）、拍摄时间戳（`datetime`）、云量属性（`eo:cloud_cover`）以及资产清单（`assets`）；
+    * 资产清单中包含各个波段的 COG 访问链接（`image/tiff; application=geotiff; profile=cloud-optimized`）、缩略图和元数据。
+
+  #### 2. `ol-stac` 的自动化图层构建机制
+  OpenLayers 开发者只需一行代码：
+  ```javascript
+  const layer = new STAC({
+    url: 'https://.../S2A_10TES_20220726_0_L2A.json',
+  });
+  ```
+  `ol-stac` 会自动执行：
+  1. 拉取并解析 STAC Item JSON；
+  2. 提取 `geometry` 创建矢量边界图层，用多边形勾勒出卫星扫描过境的精确足迹；
+  3. 遍历 `assets`，筛选视觉影像或真彩色组合资产，自动创建 `ol/source/GeoTIFF` 与 `ol/layer/WebGLTile`；
+  4. 将矢量层与 COG 栅格层打包为 `ol/layer/Group`，并在就绪时触发 `sourceready` 事件，方便通过 `view.fit(layer.getExtent())` 一键缩放居中。
 tags: "stac, geotiff, cog, layergroup"
 ---
 <div id="map" class="map"></div>

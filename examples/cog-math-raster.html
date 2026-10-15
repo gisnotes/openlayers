@@ -1,7 +1,7 @@
 ---
 layout: example.html
-title: NDVI from a COG with a raster source
-shortdesc: Running a pixel operation over multi-band data tiles.
+title: NDVI from a COG with a raster source / 使用 Raster 数据源计算 COG 的 NDVI
+shortdesc: Running a pixel operation over multi-band data tiles. / 基于 ol/source/Raster 在 Web Worker 多线程中执行像素级运算计算 NDVI。
 docs: >
   This example computes the Normalized Difference Vegetation Index (NDVI) from two Sentinel 2 bands
   using an <code>ol/source/Raster</code> operation.  The raster source takes a <code>GeoTIFF</code> data
@@ -11,7 +11,46 @@ docs: >
   Compare with the <a href="../cog-math.html">NDVI from a Sentinel 2 COG</a> example, which uses a WebGL
   layer style instead.  Move the pointer over the map to read the NDVI value from the source's
   <code>getData()</code> lookup.
+
+  本示例使用 <code>ol/source/Raster</code> 像元算子从两个哨兵 2 号波段中计算归一化植被指数（NDVI）。
+  栅格数据源将 <code>GeoTIFF</code> 数据瓦片源作为输入，按其原生瓦片分辨率进行像元采样，并在后台线程执行像素级算法，将计算出的 NDVI 映射到色带中。
+  地图视图采用 Web 墨卡托投影（EPSG:3857），运算在数据源自身投影（UTM）中执行，运算结果动态重投影至地图视图——底部的 OSM 图层印证了严密的坐标吻合度。
+  可与 <a href="../cog-math.html">基于哨兵 2 号 COG 计算 NDVI</a> 示例进行对比，后者采用 WebGL 图层声明式着色器实现。
+  移动鼠标指针，可以通过数据源的 <code>getData()</code> 查询当前坐标下的实际 NDVI 数值。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 架构对比：`ol/layer/WebGLTile` (GPU) vs `ol/source/Raster` (CPU Web Worker)
+  在 OpenLayers 中处理遥感影像像元计算有两种经典技术架构：
+
+  | 对比维度 | WebGL 着色器架构 (`WebGLTile`) | 栅格算子流水线 (`RasterSource`) |
+  | :--- | :--- | :--- |
+  | **计算单元** | **GPU 显卡片元着色器 (Fragment Shader)** | **CPU 多线程 Web Worker** |
+  | **算法表达方式** | 声明式 AST 表达式树（编译为 GLSL） | 原生 JavaScript 任意数学函数与逻辑 |
+  | **算法复杂度上限** | 适合纯数学/矩阵运算，难以执行复杂循环、递归或图搜索 | **无限制**，支持任意复杂算法（如区域生长、连通域分析、形态学滤波） |
+  | **性能特点** | 百万像素每秒 60 FPS 瞬时刷新，适合交互调参 | 后台异步计算，计算密集时可能有轻微延迟，适合复杂特征提取 |
+  | **投影与图层类型** | 直接在 GPU 贴图中采样重投影 | 输出为客户端单张动态图像 (`ol/layer/Image`) |
+
+  #### 2. `ol/source/Raster` 的 Web Worker 通信机制
+  * **代码注入与序列化**：
+    由于 Web Worker 运行在独立的 JavaScript 线程中，无法直接访问主线程的作用域。
+    `RasterSource` 提供了专门的 `lib` 选项：
+    ```javascript
+    const raster = new RasterSource({
+      sources: [cog],
+      operation: ndviToColor,
+      lib: { colorFromRamp: colorFromRamp }, // 注入到 Worker 内部的辅助函数
+    });
+    ```
+    OpenLayers 会在 Worker 启动时将 `operation` 与 `lib` 内的函数转为字符串传输并在子线程中 `eval` 恢复。
+  * **`beforeoperations` 事件**：
+    用于在每轮瓦片计算前，向 Worker 传递外部数据字典（如颜色渐变阈值数组 `data.stops`）。
+
+  #### 3. 拾取像元数值：`raster.getData(coordinate)`
+  通过 `raster.getData(event.coordinate)`，直接传入地理坐标，OpenLayers 会自动定位到底层对应的 Float32Array 像元数组，取得 Red 与 NIR 原始辐射反射率，在主线程实时算出精确浮点 NDVI。
 tags: "cog, ndvi, raster"
 ---
 <div id="map" class="map"></div>
-<div>NDVI at pointer: <span id="output">&nbsp;</span></div>
+<div>NDVI at pointer / 光标处 NDVI 数值: <span id="output">&nbsp;</span></div>

@@ -1,13 +1,56 @@
 ---
 layout: example.html
-title: NDVI from a Sentinel 2 COG
-shortdesc: Calculating NDVI and applying a custom color map.
+title: NDVI from a Sentinel 2 COG / 基于哨兵 2 号 COG 计算归一化植被指数 (NDVI)
+shortdesc: Calculating NDVI and applying a custom color map. / 基于哨兵 2 号红光与近红外波段在客户端实时计算 NDVI 植被指数并映射伪彩色色带。
 docs: >
   The GeoTIFF layer in this example draws from two Sentinel 2 sources: a red band and a near-infrared band.
   The layer style includes a `color` expression that calculates the Normalized Difference Vegetation Index (NDVI)
   from values in the two bands.  The `interpolate` expression is used to map NDVI values to colors.
   The `layer.getData()` method can be used to retrieve pixel values from the GeoTIFF.  Move your mouse
   or tap on the map to see calculated NDVI values based on the red and near-infrared pixel values.
+
+  本示例中的 GeoTIFF 图层从两个独立的哨兵 2 号（Sentinel-2）云优化数据源中拉取数据：红光波段（B04）与近红外波段（B08）。
+  图层样式使用 `color` 声明式着色器表达式，在 GPU 中逐像素计算归一化植被指数（NDVI）。通过 `interpolate` 线性插值表达式将 NDVI 指数映射为连续的绿色渐变色带。
+  通过 `layer.getData()` 方法可以在前端拾取鼠标光标所在像元的真实反射率值。移动鼠标或轻触地图即可实时查看计算得出的 NDVI 植被健康度指数。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 遥感科学原理：归一化植被指数 (NDVI)
+  * **物理反射机理**：
+    * 健康绿色植物叶肉细胞内的叶绿素强烈吸收**可见光红光（Red, 约 0.66 μm）**进行光合作用；
+    * 细胞海绵组织结构对**近红外光（NIR, 约 0.86 μm）**具有极强的散射与高反射率。
+    * 水体、裸土或干枯植被在这两个波段的反射率差异很小。
+  * **数学计算公式**：
+    $$\text{NDVI} = \frac{\text{NIR} - \text{Red}}{\text{NIR} + \text{Red}}$$
+    * **数值范围**：严格介于 $[-1.0, +1.0]$ 之间。
+    * **解译标准**：
+      * $\text{NDVI} < 0$：水体、雪地、云层（可见光反射高于近红外）；
+      * $0 \le \text{NDVI} \le 0.1$：裸土、岩石、道路；
+      * $0.2 \le \text{NDVI} \le 0.4$：稀疏草原、农田出苗期；
+      * $\text{NDVI} > 0.6$：茂密热带雨林、生长旺盛的森林。
+
+  #### 2. 多源融合与 WebGL 片元着色器计算
+  在 `ol/source/GeoTIFF` 中配置了两个单独的单波段 COG 文件：
+  ```javascript
+  const source = new GeoTIFF({
+    sources: [
+      { url: '.../B04.tif', max: 10000 }, // 红光 -> 在样式中对应 ['band', 1]
+      { url: '.../B08.tif', max: 10000 }, // 近红外 -> 在样式中对应 ['band', 2]
+    ],
+  });
+  ```
+  在 `ol/layer/WebGLTile` 的样式中，直接使用 AST 数学表达式：
+  ```javascript
+  ['/', ['-', ['band', 2], ['band', 1]], ['+', ['band', 2], ['band', 1]]]
+  ```
+  该表达式被 OpenLayers 实时编译为 GPU 的 GLSL 片元着色器代码，显卡在渲染每帧画面的同时对屏幕数百万个像元进行超高速并行运算！
+
+  #### 3. 拾取真实像元数据：`layer.getData(event.pixel)`
+  不同于传统切片底图只能看到最终渲染的 RGB 颜色，`WebGLTile` 图层提供了极其强大的 `getData(pixel)` 接口：
+  * 它返回当前屏幕像素对应的**原始源波段数值数组** `[band1_val, band2_val]`。
+  * 前端可以在 JavaScript 中直接进行二次科学统计、弹出像元光谱探针（Pixel Inspector）或绘制时序曲线。
 tags: "cog, ndvi"
 ---
 <div id="map" class="map"></div>

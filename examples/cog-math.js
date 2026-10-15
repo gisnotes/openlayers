@@ -2,29 +2,37 @@ import Map from '../src/ol/Map.js';
 import TileLayer from '../src/ol/layer/WebGLTile.js';
 import GeoTIFF from '../src/ol/source/GeoTIFF.js';
 
+// Define a multi-source GeoTIFF combining two independent Sentinel-2 single-band COG files
+// 定义一个多数据源 GeoTIFF，将两个独立的哨兵 2 号单波段 COG 文件组合在一起
 const source = new GeoTIFF({
   sources: [
     {
-      // visible red, band 1 in the style expression above
+      // Visible red band (B04), corresponding to ['band', 1] in style expressions
+      // 可见光红光波段 (B04)，在着色器样式表达式中对应 ['band', 1]
       url: 'https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/36/Q/WD/2020/7/S2A_36QWD_20200701_0_L2A/B04.tif',
       max: 10000,
     },
     {
-      // near infrared, band 2 in the style expression above
+      // Near infrared band (B08), corresponding to ['band', 2] in style expressions
+      // 近红外波段 (B08)，在着色器样式表达式中对应 ['band', 2]
       url: 'https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/36/Q/WD/2020/7/S2A_36QWD_20200701_0_L2A/B08.tif',
       max: 10000,
     },
   ],
 });
 
+// Create a WebGLTile layer with GPU-evaluated NDVI formula and linear color ramp
+// 创建 WebGLTile 图层，使用 GPU 实时计算 NDVI 指数并应用线性颜色阶梯插值
 const layer = new TileLayer({
   style: {
     color: [
       'interpolate',
       ['linear'],
-      // calculate NDVI, bands come from the sources below
+      // Calculate NDVI: (NIR - Red) / (NIR + Red)
+      // 计算 NDVI: (近红外 - 红光) / (近红外 + 红光)
       ['/', ['-', ['band', 2], ['band', 1]], ['+', ['band', 2], ['band', 1]]],
-      // color ramp for NDVI values, ranging from -1 to 1
+      // Color ramp for NDVI values ranging from -1 to 1
+      // NDVI 颜色渐变阶梯映射（取值范围 -1 到 1）
       -0.2,
       [191, 191, 191],
       -0.1,
@@ -76,6 +84,8 @@ const map = new Map({
   view: source.getView(),
 });
 
+// Display calculated NDVI value from raw pixel reflectance under cursor
+// 拾取光标所在位置的原始像元反射率，动态计算并展示 NDVI 数值
 const output = document.getElementById('output');
 function displayPixelValue(event) {
   const data = layer.getData(event.pixel);

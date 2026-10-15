@@ -1,7 +1,7 @@
 ---
 layout: example.html
-title: GeoZarr datacubes
-shortdesc: GeoZarr sources rendering bands from a single n-dimensional data array.
+title: GeoZarr datacubes / GeoZarr 多维科学数据立方体
+shortdesc: GeoZarr sources rendering bands from a single n-dimensional data array. / 从高维 (N-D) 单一科学数据数组 (如 time, band, y, x) 中切片提取并渲染多波段遥感与气候模型数据。
 docs: >
 
   Besides one array per band, the GeoZarr source supports datacubes where all bands are
@@ -18,6 +18,42 @@ docs: >
   fill the gap. Data with non-square pixels (CMIP6) and south-up rows (Delta FG CO2)
   is handled transparently.
 
+  除了“每个波段一个独立数组”的结构外，GeoZarr 数据源还深度支持将所有波段打包在**单一高维（N 维）科学数据数组**中的数据立方体（Datacubes，例如 `(time, band, y, x)` 形式）：
+  通过 `variable` 选项指定目标变量数组名称；通过 `dimensions` 选项按数值索引或坐标标签锁定其非空间维度，并支持在某一维度中同时拾取多个波段进行多通道合成。
+
+  上方下拉列表汇聚了来自不同科学机构的真实世界 Zarr v2 与 v3 存储，涵盖多种投影坐标系与多尺度组织形态。
+  空间范围（Extent）、分辨率、投影和 Y 轴朝向既可直接从存储元数据（`proj:`/`spatial:` 规范、`bounds`/`proj4`/`spatial_ref` 属性）中读取，也可从经纬度坐标数组中自动推导；
+  当存储未提供元数据时（如 Delta FG CO2 全球碳通量），可通过 `extent` 与 `flipY` 选项补充。
+  非正方形像元（CMIP6 气候模型）与南向朝上（South-up）网格均由 OpenLayers 底层透明、自动地完成校正与贴图渲染。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 什么是数据立方体（Datacube）与高维科学张量？
+  在气象学（ERA5、ECMWF）、海洋学、冰川监测与地球系统科学（CMIP6）中，观测数据通常是高阶张量：
+  $$\mathbf{D} \in \mathbb{R}^{T \times C \times Z \times Y \times X}$$
+  * $T$：时间轴（逐小时/逐月/逐年预报）；
+  * $C$：物理波段/变量轴（气压、风速、地表温度、湿度）；
+  * $Z$：垂直高程/气压层（1000 hPa 到 10 hPa）；
+  * $Y, X$：空间纬度与经度。
+  传统 WebGIS 必须在后端将这些高维数据切片为死板的 RGB 图片；而 **OpenLayers GeoZarr 能够在浏览器端直接穿透高维数组**，按需拉取指定时刻、指定高度层的空间切片！
+
+  #### 2. `dimensions` 维度切片语法
+  * **按整型索引切片（Index-based Slicing）**：
+    ```javascript
+    dimensions: { band: [0, 1, 2], time: 1 } // 取第 1 个时间片的前 3 个波段作为 RGB
+    ```
+  * **按物理坐标标签切片（Coordinate Label Slicing）**：
+    ```javascript
+    dimensions: { band: ['tavg'], month: 0 } // 直接按变量名 'tavg'（月平均温）拾取
+    ```
+  * OpenLayers 会自动解析 Zarr 内部的坐标轴元数据，将非空间轴降维锁定为 2D 空间切片，交付 GPU 片元着色器实时插值渲染。
+
+  #### 3. 应对科学数据的异构性：`flipY`、非正方形像元与极地投影
+  * **`flipY: true`（南向朝上修正）**：某些海洋和气候模型在 NetCDF 转换至 Zarr 时数组行方向从南向北存储（纬度从小到大），OpenLayers 通过 `flipY` 自动在纹理映射中翻转 Y 轴。
+  * **非正方形像元（Non-square pixels）**：气候模型（如 CMIP6 ACCESS-CM2）纬度方向分辨率为 1.25°，经度方向为 1.875°。OpenLayers 自适应网格生成器能够精确根据非等比步长构建瓦片网格。
+  * **极地投影支持**：斯维茨冰川（Thwaites Glacier）采用南极极地立体投影（EPSG:3031），配合 Proj4js 即可无缝展开与漫游。
 tags: "zarr, geozarr, datacube, multiscale"
 experimental: true
 ---
@@ -25,18 +61,18 @@ experimental: true
 <div class="row mt-2">
   <div class="col-auto">
     <div class="input-group">
-      <label class="input-group-text" for="dataset-select">Dataset</label>
+      <label class="input-group-text" for="dataset-select">Dataset / 数据集</label>
       <select class="form-select" id="dataset-select">
-        <option value="ftw-rgb" selected>FTW Field Predictions 2025 (RGB, multiscale v3)</option>
-        <option value="ftw-field-2024">FTW Field Probability 2024 (single band, multiscale v3)</option>
-        <option value="usgs-dem">USGS CONUS DEM 10m (multiscale v3)</option>
-        <option value="hurricane">Hurricane Florence — ERA5 surface pressure (v3)</option>
-        <option value="antarctic-era5">Antarctic ERA5 wind speed (v3, polar stereographic)</option>
-        <option value="polar">Thwaites Glacier ice velocity (v2, EPSG:3031)</option>
-        <option value="fgco2">Delta FG CO2 (v2, south-up)</option>
-        <option value="carbonplan-4d">Monthly average temperature (v2 pyramid, EPSG:3857)</option>
-        <option value="cmip6-tasmax">CMIP6 max. temperature (v2 pyramid)</option>
-        <option value="tos-con">Ocean surface temperature (v3 pyramid, EPSG:3857)</option>
+        <option value="ftw-rgb" selected>FTW Field Predictions 2025 全球农田地块预测 (RGB, multiscale v3)</option>
+        <option value="ftw-field-2024">FTW Field Probability 2024 农田置信概率 (单波段, multiscale v3)</option>
+        <option value="usgs-dem">USGS CONUS DEM 10m 全美高程模型 (multiscale v3)</option>
+        <option value="hurricane">Hurricane Florence 佛罗伦萨飓风 — ERA5 海平面气压 (v3)</option>
+        <option value="antarctic-era5">Antarctic ERA5 南极地表风速 (v3, 极地立体投影)</option>
+        <option value="polar">Thwaites Glacier 思韦茨末日冰川流速 (v2, EPSG:3031)</option>
+        <option value="fgco2">Delta FG CO2 全球地表碳通量 (v2, 南向朝上)</option>
+        <option value="carbonplan-4d">Monthly average temperature 月平均气温 (v2 pyramid, EPSG:3857)</option>
+        <option value="cmip6-tasmax">CMIP6 max. temperature 全球最高气温预测 (v2 pyramid, 非正方形像元)</option>
+        <option value="tos-con">Ocean surface temperature 全球海洋表层水温 (v3 pyramid, EPSG:3857)</option>
       </select>
     </div>
   </div>

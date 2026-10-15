@@ -1,12 +1,52 @@
 ---
 layout: example.html
-title: Map Export
-shortdesc: Export a map as a GeoTIFF or PNG image.
+title: Map Export / 地图导出 (GeoTIFF / PNG / Worldfile)
+shortdesc: Export a map as a GeoTIFF or PNG image. / 将当前地图视口导出为带有地理参考的 GeoTIFF 文件、普通 PNG 图片或带有 Worldfile 坐标定位文件的 ZIP 压缩包。
 docs: >
   Example of exporting a map, using a HTMLCanvasElement as temporary map target. PNG is easy to export,
   without using an external library. The GeoTIFF export is georeferenced with the correct projection.
   The PNG + <a href="https://web.archive.org/web/20230304183331/https://support.esri.com/en/technical-article/000002860">worldfile</a> ZIP is also georeferenced, but users of the image will have to know (or guess)
   the projection.
+
+  本示例演示如何通过将临时 `HTMLCanvasElement` 设定为地图渲染目标来导出地图。
+  导出普通 PNG 非常直接，无需依赖任何第三方外部库；
+  导出 GeoTIFF 则会内嵌完整的投影坐标系和地理参考参数（Tiepoint 与 PixelScale）；
+  导出 PNG + <a href="https://web.archive.org/web/20230304183331/https://support.esri.com/en/technical-article/000002860">Worldfile</a>（.pgw 坐标定标文件）打包为 ZIP，同样具备地理参考能力，但使用者需要自行知晓对应的投影坐标系。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 离屏 Canvas 重定向渲染架构
+  * **传统 DOM 截图的痛点**：直接截取屏幕地图可能会受到 CSS 变换、视网膜屏幕 DPR 缩放、HTML 控件（按钮、缩放滑块）遮挡等干扰。
+  * **`map.setTarget(mapCanvas)` 临时重定向模式**：
+    1. 动态创建一个与地图当前像素尺寸相同的离屏 `<canvas>` 元素；
+    2. 执行 `map.setTarget(mapCanvas)` 将渲染管线切换至离屏画布；
+    3. 监听 `map.once('rendercomplete', ...)` 事件，确保所有矢量图层与热力图层完全重绘完成；
+    4. 提取像素字节并生成下载，最后调用 `map.setTarget('map')` 恢复屏幕正常展示。整个过程在几十毫秒内完成，用户视觉几乎无感知。
+
+  #### 2. 前端纯 JavaScript 生成 GeoTIFF：`geotiff.js` 规范
+  * 通过 `geotiff` 库的 `writeArrayBuffer` 函数，直接将 Canvas 的 RGBA 像素矩阵编码为符合 TIFF/GeoTIFF 标准的二进制字节数组：
+    ```javascript
+    const tiff = writeGeotiff(imageData.data, {
+      width: size[0],
+      height: size[1],
+      ModelPixelScale: [resolution, resolution, 0], // X 与 Y 方向的像元地面分辨率
+      ModelTiepoint: [0, 0, 0, extent[0], extent[3], 0], // 左上角像元 (0,0) 对应的真实地图投影坐标 (Xmin, Ymax)
+      GTRasterTypeGeoKey: 1, // 像元定位类型：RasterPixelIsArea (像元表示面积区域)
+      ProjectedCSTypeGeoKey: parseInt(epsgCode), // 投影代码（如 3857）
+    });
+    ```
+  * 导出的 `.tiff` 文件可以直接拖入 QGIS、ArcGIS 或任何专业遥感软件，位置分毫不差！
+
+  #### 3. Worldfile 定标文件原理 (.pgw / .tfw)
+  Worldfile 是一种历史悠久但兼容性极广的栅格定位文本文件（例如 `map.png` 对应 `map.pgw`）。它由 6 行纯文本数字构成：
+  1. 行 1：$X$ 方向的像素分辨率；
+  2. 行 2：$Y$ 轴旋转项（通常为 0）；
+  3. 行 3：$X$ 轴旋转项（通常为 0）；
+  4. 行 4：$Y$ 方向的像素分辨率（通常为负数，因为图像 Y 轴向下，而地理坐标 Y 轴向上）；
+  5. 行 5：左上角中心像元的 $X$ 地理坐标；
+  6. 行 6：左上角中心像元的 $Y$ 地理坐标。
 tags: "export, png, geotiff, worldfile"
 resources:
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css
@@ -15,11 +55,11 @@ resources:
 ---
 <div id="map" class="map"></div>
 <div class="btn-group">
-  <a id="export-map" class="btn btn-outline-dark" role="button"><i class="fa fa-download"></i> Download</a>
-  <select id="export-format" class="form-select" style="max-width: 180px;">
-    <option value="geotiff">GeoTIFF</option>
-    <option value="png">PNG</option>
-    <option value="png-world">PNG + Worldfile (ZIP)</option>
+  <a id="export-map" class="btn btn-outline-dark" role="button"><i class="fa fa-download"></i> Download / 下载地图</a>
+  <select id="export-format" class="form-select" style="max-width: 260px;">
+    <option value="geotiff">GeoTIFF (内嵌坐标参考)</option>
+    <option value="png">PNG (标准位图)</option>
+    <option value="png-world">PNG + Worldfile (ZIP 压缩包)</option>
   </select>
 </div>
 <a id="image-download" download="map.png"></a>

@@ -1,12 +1,45 @@
 ---
 layout: example.html
-title: GeoTIFF per band statistics
-shortdesc: Demonstrates how a GeoTIFF can be rendered with different min and max values for each band.
+title: GeoTIFF per band statistics / GeoTIFF 单波段统计拉伸
+shortdesc: Demonstrates how a GeoTIFF can be rendered with different min and max values for each band. / 演示如何为 GeoTIFF 的每个波段独立配置不同的 min 与 max 统计极值，无需编写着色器即可实现动态对比度拉伸。
 docs: >
   <p>
     This example demonstrates how a GeoTIFF can be rendered with different min and max values for each band to improve visualization of the data without using styles. The <code>GeoTIFF</code> source supports an array of values for <code>min</code>, <code>max</code> and <code>nodata</code>, so each band can be configured independently.
   </p>
 
+  <p>
+    本示例演示如何通过为每个波段配置独立的 <code>min</code> 和 <code>max</code> 极值来渲染 GeoTIFF，从而无需编写复杂的 WebGL 样式表达式即可直接改善遥感影像的可视化效果。<code>ol/source/GeoTIFF</code> 支持为 <code>min</code>、<code>max</code> 和 <code>nodata</code> 属性传入数组，使每个多光谱波段都可以独立配置统计参数。
+  </p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么多波段遥感影像必须独立拉伸？
+  * 真实世界中的多光谱遥感影像（如 SpaceNet 高分辨率巴黎卫星图），不同光谱波段的物理传感器响应与反射率范围差异极大：
+    * 例如红光通道的真实像元值可能集中在 `110 ~ 586`；
+    * 绿光通道可能集中在 `216 ~ 579`；
+    * 蓝光通道可能集中在 `217 ~ 432`。
+  * 如果采用统一的全局全局拉伸，会导致画面严重偏色（如色彩发暗、蓝天泛灰或绿色地表饱和度失真）。
+
+  #### 2. `ol/source/GeoTIFF` 的内置多波段数组语法
+  以往开发者必须手写 WebGLTile 表达式对每个波段执行 `['/', ['-', ['band', 1], min1], ['-', max1, min1]]`。
+  现在 `ol/source/GeoTIFF` 原生支持直接传入数组：
+  ```javascript
+  const source = new GeoTIFF({
+    sources: [
+      {
+        url: '.../img101.tif',
+        nodata: 0,
+        min: [110, 216, 217], // 分别对应 Band 1 (R), Band 2 (G), Band 3 (B) 的最小值
+        max: [586, 579, 432], // 分别对应 Band 1 (R), Band 2 (G), Band 3 (B) 的最大值
+      },
+    ],
+  });
+  ```
+  * 底层渲染管线会自动将每个波段分别按其专属的线性拉伸区间公式：
+    $$\text{normalized} = \frac{\text{raw} - \text{min}_i}{\text{max}_i - \text{min}_i}$$
+    归一化到 $[0.0, 1.0]$ 区间，不仅代码极为清爽优雅，而且执行效率极高！
 tags: "geotiff, statistics, visualization"
 ---
 <div id="map" class="map"></div>

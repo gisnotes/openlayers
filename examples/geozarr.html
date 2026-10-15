@@ -1,7 +1,7 @@
 ---
 layout: example.html
-title: GeoZarr
-shortdesc: A GeoZarr source displaying Sentinel-2 imagery.
+title: GeoZarr / GeoZarr 多维多尺度遥感数据立方体
+shortdesc: A GeoZarr source displaying Sentinel-2 imagery. / 使用 GeoZarr 数据源加载并渲染遵循 Multiscales 规范的哨兵 2 号云原生多维科学数组。
 docs: >
 
   The GeoZarr source can be used to read groups of multi-band data from Zarr files following the [GeoZarr specification](https://github.com/zarr-developers/geozarr-spec).
@@ -15,6 +15,46 @@ docs: >
   To try different scenes, browse to the [Sentinel-2 Level-2A](https://api.explorer.eopf.copernicus.eu/browser/external/api.explorer.eopf.copernicus.eu/stac/collections/sentinel-2-l2a) catalog of the EOPF Explorer, find a Zarr store, and paste the url including the group path (e.g. `store.zarr/measurements/reflectance`) after selecting "Custom..." from the dropdown above.
   Note that only GeoZarrs with bands 'b02', 'b03', and 'b04' will work without changes to the source code.
 
+  GeoZarr 数据源用于从遵循 [GeoZarr 规范](https://github.com/zarr-developers/geozarr-spec) 的 Zarr 存储中读取多波段数组群组。
+  支持遵循 [Multiscales 多尺度约定](https://github.com/zarr-conventions/multiscales) 的 GeoZarr 格式，同时兼容带有 OGC TileMatrixSet 瓦片矩阵集定义的传统多尺度 GeoZarr。
+
+  在本示例中，从哨兵 2 号（Sentinel-2 L2A）波段 B02（蓝）、B03（绿）和 B04（红）的辐射反射率数值中合成真彩色图像。
+  将 0 到 0.5 之间的物理反射率拉伸映射至 0 到 255 的 RGB 颜色分量，并应用伽马校正（`gamma: 1.5`）以提亮暗部、增强视觉通透感。
+
+  若想体验不同场景，可访问 EOPF Explorer 的 [Sentinel-2 Level-2A](https://api.explorer.eopf.copernicus.eu/browser/external/api.explorer.eopf.copernicus.eu/stac/collections/sentinel-2-l2a) 目录查找 Zarr 存储，在上方下拉菜单中选择 "Custom..." 并粘贴包含群组路径的 URL（例如 `store.zarr/measurements/reflectance`）。
+  请注意：在不修改源码的前提下，仅包含 'b02', 'b03', 'b04' 波段的 GeoZarr 数据集可直接展示。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么在 COG 之外还需要 GeoZarr？
+  * **COG 的局限**：COG（GeoTIFF）是为 2D 平面图像设计的。面对**高维时空科学数据**（例如包含：经度 $\times$ 纬度 $\times$ 垂直高度/深度 $\times$ 时间序列 $\times$ 物理变量等多维张量），TIFF 的单文件标签结构难以优雅表达。
+  * **Zarr 的架构优势**：
+    * **云原生 N 维分块压缩数组**：由 Zarr 社区（NumFocus）发起，将多维张量切分成规则的分块（Chunks），各分块独立压缩（Blosc/Zstandard/Gzip），并以对象存储的键值对存储（如 `.zarr/0/0/1`）。
+    * **GeoZarr 规范**：在 Zarr 根目录的 `.zattrs` 元数据中定义投影坐标系（CRS）、空间仿射变换矩阵（Affine Transform）与维度映射（Dimensions: `['time', 'band', 'y', 'x']`），实现科学计算与地理可视化的统一。
+
+  #### 2. 波段按名独立点菜加载：`bands: ['b04', 'b03', 'b02']`
+  在 `ol/source/GeoZarr` 中：
+  * 无需下载一整套庞大的遥感数据集；
+  * 只需声明所需的波段名称数组，OpenLayers 会根据 Zarr 元数据直接只向云端请求这三个波段对应的独立数据分块。
+
+  #### 3. 伽马校正与浮点线性插值
+  卫星传感器测得的地表物理反射率通常介于 $0.0 \sim 0.5$ 之间的小数：
+  ```javascript
+  style: {
+    gamma: 1.5,
+    color: [
+      'color',
+      ['interpolate', ['linear'], ['band', 1], 0, 0, 0.5, 255],
+      ['interpolate', ['linear'], ['band', 2], 0, 0, 0.5, 255],
+      ['interpolate', ['linear'], ['band', 3], 0, 0, 0.5, 255],
+    ],
+  }
+  ```
+  `gamma: 1.5` 触发非线性伽马曲线映射：
+  $$V_{\text{out}} = V_{\text{in}}^{1 / \gamma} = V_{\text{in}}^{1 / 1.5}$$
+  使地球表面原本处于暗调的农田、植被和阴影细节被自然提亮，避免画面发死发黑。
 tags: "zarr, geozarr, sentinel-2"
 experimental: true
 ---
@@ -22,14 +62,14 @@ experimental: true
 <div class="row mt-2">
   <div class="col-auto">
     <div class="input-group">
-      <label class="input-group-text" for="url-select">URL</label>
+      <label class="input-group-text" for="url-select">URL / 数据源地址</label>
       <select class="form-select" id="url-select">
-        <option value="https://s3.explorer.eopf.copernicus.eu/esa-zarr-sentinel-explorer-fra/tests-output/sentinel-2-l2a/S2C_MSIL2A_20260120T084301_N0511_R064_T36UXA_20260120T122910.zarr/measurements/reflectance">Sentinel-2 L2A (Krasnokuts'k)</option>
-        <option value="https://s3.explorer.eopf.copernicus.eu/esa-zarr-sentinel-explorer-fra/tests-output/sentinel-2-l2a/S2B_MSIL2A_20260120T125339_N0511_R138_T27VWL_20260120T131151.zarr/measurements/reflectance">Sentinel-2 L2A (Hvolsvöllur)</option>
-        <option value="custom">Custom...</option>
+        <option value="https://s3.explorer.eopf.copernicus.eu/esa-zarr-sentinel-explorer-fra/tests-output/sentinel-2-l2a/S2C_MSIL2A_20260120T084301_N0511_R064_T36UXA_20260120T122910.zarr/measurements/reflectance">Sentinel-2 L2A (Krasnokuts'k 乌克兰森林农田)</option>
+        <option value="https://s3.explorer.eopf.copernicus.eu/esa-zarr-sentinel-explorer-fra/tests-output/sentinel-2-l2a/S2B_MSIL2A_20260120T125339_N0511_R138_T27VWL_20260120T131151.zarr/measurements/reflectance">Sentinel-2 L2A (Hvolsvöllur 冰岛火山冰川)</option>
+        <option value="custom">Custom... / 自定义 URL</option>
       </select>
-      <input type="text" class="form-control" id="custom-url" placeholder="Enter Zarr URL" style="display: none; width: 300px;">
-      <button class="btn btn-outline-secondary" id="load-url" type="button">Load</button>
+      <input type="text" class="form-control" id="custom-url" placeholder="Enter Zarr URL / 输入 Zarr 数据集路径" style="display: none; width: 300px;">
+      <button class="btn btn-outline-secondary" id="load-url" type="button">Load / 加载</button>
     </div>
   </div>
 </div>

@@ -1,10 +1,40 @@
 ---
 layout: example.html
-title: GeoTIFF with Overviews
-shortdesc: Rendering a GeoTIFF with external overviews as a layer.
+title: GeoTIFF with Overviews / 挂载外部金字塔文件的 GeoTIFF
+shortdesc: Rendering a GeoTIFF with external overviews as a layer. / 为无内置金字塔的普通 GeoTIFF 挂载外部概览文件 (.ovr / .ovr.tif) 实现平滑多级缩放。
 docs: >
   In some cases, a GeoTIFF may have external overviews.  This example uses the
   `overviews` property to provide URL for a file containing external overviews.
+
+  在某些场景中，GeoTIFF 文件的多级分辨率概览金字塔可能存储在外部文件中（如 `.ovr` 或 `.ovr.tif`）。本示例演示如何通过 `overviews` 属性指定外部概览文件的 URL，使 OpenLayers 能够无缝拉取各级缩小视口下的瓦片。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么会有“外部金字塔文件”？
+  * 在遥感与 GIS 生产中（如使用 GDAL、ArcGIS 或 QGIS），处理一个数十吉字节的原始 TIFF 文件时，直接向原文件内部写入内嵌金字塔需要修改原始文件结构，风险较高或操作耗时。
+  * 行业通用方案通常使用 GDAL 命令行：
+    ```bash
+    gdaladdo -ro input.tif 2 4 8 16 32
+    ```
+    参数 `-ro`（Read-Only）会在原文件旁边生成一个名为 `input.tif.ovr` 或 `input.ovr.tif` 的外部金字塔文件，原始 TIFF 保持只读且不被修改。
+  * **OpenLayers 的 `overviews` 配置**：
+    ```javascript
+    sources: [
+      {
+        url: 'https://openlayers.org/data/raster/no-overviews.tif',
+        overviews: ['https://openlayers.org/data/raster/no-overviews.ovr.tif'],
+      },
+    ]
+    ```
+    OpenLayers 的 `GeoTIFF` source 会同时解析主文件与其对应的 `.ovr` 概览文件，自动在内存中拼接成完整的瓦片金字塔索引映射表。
+
+  #### 2. 如果缺少 Overviews 会发生什么灾难？
+  * 当用户在宏观尺度（小缩放级别，如全国或全球视野）查看影像时：
+    * **如果存在 Overviews**：只需下载 1~2 张极小的 256×256 概览瓦片（几 KB 数据）。
+    * **如果缺少 Overviews**：OpenLayers 必须被迫读取全分辨率原始影像的数万个瓦片并在前端逐像素计算降采样，导致成百上千个网络请求瞬时发出，直接造成浏览器内存溢出（OOM）或网络瘫痪！
+  * 因此，对于生产级云上栅格可视化，无论采用“内置 COG 金字塔”还是“外部 `.ovr`”，金字塔索引都是必不可少的基石。
 tags: "cog, overview"
 ---
 <div id="map" class="map"></div>

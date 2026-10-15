@@ -1,7 +1,7 @@
 ---
 layout: example.html
-title: GeoZarr storytelling
-shortdesc: Exploring Sentinel-1 event scenarios across orbit groups and time in GeoZarr cubes.
+title: GeoZarr storytelling / GeoZarr 地球时空雷达大事件漫游
+shortdesc: Exploring Sentinel-1 event scenarios across orbit groups and time in GeoZarr cubes. / 漫游哨兵 1 号多维雷达数据立方体中的历史大事件场景，跨升降轨观测视角与时间轴探索地表宏观动态变迁。
 docs: >
 
   A tour of Sentinel-1 radar imaging through a set of event scenarios stored as GeoZarr cubes. Pick
@@ -39,6 +39,32 @@ docs: >
   *Bay of Bothnia sea ice (34WET, descending)*, Feb–Mar 2025: landfast ice locks the Luleå archipelago
   while floes drift offshore; smooth new ice reads dark, ridged ice bright, shifting pass to pass.
 
+  本示例以 GeoZarr 格式存储的哨兵 1 号（Sentinel-1）雷达多维数据立方体为载体，带您全方位领略雷达遥感地球科学的非凡魅力：
+  从 **URL** 下拉菜单中选择目标场景，在包含双向轨道的立方体中通过 **Group** 下拉菜单切换卫星视线方向（`ascending` 升轨与 `descending` 降轨），并拖动 **Time** 滑块逐步见证双极化雷达多维时序中记录的宏大地理演变：
+
+  * **瑞士阿尔卑斯山脉 — 瓦莱州（Valais, 32TLS）**：默认场景，也是唯一同时包含升轨和降轨群组的场景。从日内瓦湖沿罗纳河谷蜿蜒延伸至阿尔卑斯高山，辐射地形校正（RTC）消除了原始合成孔径雷达因陡坡引起的局部过曝，水体呈暗色，而森林、裸岩与冰雪根据地表粗糙度清晰分层。切换 Group 即可对比东西不同侧照视角下峡谷的几何阴影变化。
+  * **西班牙瓦伦西亚 DANA 极端强降雨特大洪灾（30SYJ, 升轨，2024年10月）**：滔滔洪水淹没平原，阿尔布费拉潟湖迅速扩张呈暗黑色，而混凝土建筑依然明亮——雷达微波完全无视致盲光学卫星的厚重暴雨风暴云层，直击水淹核心区。
+  * **拉帕尔马岛老峰火山喷发（28RBS, 降轨，2021年秋）**：滚烫崎岖的熔岩流具有极高后向散射，在雷达视野中高亮闪烁，记录熔岩填海造陆形成的崭新熔岩三角洲。
+  * **霍尔木兹海峡 — 富查伊拉油轮锚地（40RDN, 降轨，2026年）**：波斯湾咽喉要道与全球最大的远洋船舶加油锚地之一。在平静雷达暗色海面上，每一艘巨型钢铁油轮都是一个极其璀璨的强散射点源目标。无论黑夜、浓雾还是沙尘暴，雷达都能洞察整个船队的停泊态势。
+  * **波的尼亚湾极地海冰（34WET, 降轨，2025年冬）**：固定冰封锁吕勒奥群岛，浮冰在近海随洋流漂移；光滑新生冰呈暗色，受挤压隆起的高粗糙度冰脊呈亮白色。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 轨道方向（Orbit Passes）：升轨 (Ascending) vs 降轨 (Descending)
+  * **侧视雷达的固有透视形变**：
+    合成孔径雷达（SAR）是倾斜向下侧视成像的（Side-looking）。
+    * **升轨（Ascending）**：卫星自南向北运行，雷达天线向东照射；
+    * **降轨（Descending）**：卫星自北向南运行，雷达天线向西照射。
+  * 在阿尔卑斯山等复杂高山峡谷区，东坡与西坡会分别产生**透视收缩（Foreshortening）**与**雷达阴影（Shadow）**。
+  * 通过在 GeoZarr 根目录下切换 `ascending` 和 `descending` 群组，OpenLayers 允许科研人员在毫秒内交叉对比两个完全反向的雷达视线，消除单一视角的观测盲区！
+
+  #### 2. 时空交互故事线（Storytelling Engine）架构
+  本示例展示了顶级 WebGIS 故事讲述系统的架构设计：
+  * **元数据动态探针**：当用户选择不同 URL 时，系统动态拉取其 Zarr 顶层元数据；
+  * **自动化维度 UI 生成**：根据探测到的非空间维度（如 `time`），自动构建带日期解析标签的滑块或下拉框；
+  * **无刷新图层更新**：利用 `source.updateDimensions()` 在显存中原地热替换时间切片，保证动画般流畅的浏览体验。
 tags: "zarr, geozarr, sentinel-1, time, dimensions"
 experimental: true
 ---
@@ -47,22 +73,22 @@ experimental: true
 <div class="row mt-2 g-2">
   <div class="col-auto">
     <div class="input-group">
-      <label class="input-group-text" for="url-select">URL</label>
+      <label class="input-group-text" for="url-select">URL / 故事场景</label>
       <select class="form-select" id="url-select">
-        <option value="https://s3.explorer.eopf.copernicus.eu/esa-zarr-sentinel-explorer-fra/tests-output/sentinel-1-grd-rtc-staging/s1-rtc-32TLS.zarr">S1 — Swiss Alps / Valais (32TLS, asc + desc)</option>
-        <option value="https://s3.explorer.eopf.copernicus.eu/esa-zarr-sentinel-explorer-fra/tests-output/sentinel-1-grd-rtc-staging/s1-rtc-30SYJ.zarr">S1 — Valencia DANA flood, Oct 2024 (30SYJ, ascending)</option>
-        <option value="https://s3.explorer.eopf.copernicus.eu/esa-zarr-sentinel-explorer-fra/tests-output/sentinel-1-grd-rtc-staging/s1-rtc-40RDN.zarr">S1 — Strait of Hormuz / Fujairah tanker anchorage, 2026 (40RDN, descending)</option>
-        <option value="https://s3.explorer.eopf.copernicus.eu/esa-zarr-sentinel-explorer-fra/tests-output/sentinel-1-grd-rtc-staging/s1-rtc-28RBS.zarr">S1 — La Palma lava delta, 2021 (28RBS, descending)</option>
-        <option value="https://s3.explorer.eopf.copernicus.eu/esa-zarr-sentinel-explorer-fra/tests-output/sentinel-1-grd-rtc-staging/s1-rtc-34WET.zarr">S1 — Bay of Bothnia sea ice, 2025 (34WET, descending)</option>
-        <option value="custom">Custom...</option>
+        <option value="https://s3.explorer.eopf.copernicus.eu/esa-zarr-sentinel-explorer-fra/tests-output/sentinel-1-grd-rtc-staging/s1-rtc-32TLS.zarr">S1 — Swiss Alps 瑞士阿尔卑斯山脉 (32TLS, 升轨+降轨)</option>
+        <option value="https://s3.explorer.eopf.copernicus.eu/esa-zarr-sentinel-explorer-fra/tests-output/sentinel-1-grd-rtc-staging/s1-rtc-30SYJ.zarr">S1 — Valencia DANA flood 瓦伦西亚特大洪灾 (30SYJ, 升轨)</option>
+        <option value="https://s3.explorer.eopf.copernicus.eu/esa-zarr-sentinel-explorer-fra/tests-output/sentinel-1-grd-rtc-staging/s1-rtc-40RDN.zarr">S1 — Strait of Hormuz 霍尔木兹海峡富查伊拉油轮锚地 (40RDN, 降轨)</option>
+        <option value="https://s3.explorer.eopf.copernicus.eu/esa-zarr-sentinel-explorer-fra/tests-output/sentinel-1-grd-rtc-staging/s1-rtc-28RBS.zarr">S1 — La Palma volcano lava delta 拉帕尔马火山熔岩三角洲 (28RBS, 降轨)</option>
+        <option value="https://s3.explorer.eopf.copernicus.eu/esa-zarr-sentinel-explorer-fra/tests-output/sentinel-1-grd-rtc-staging/s1-rtc-34WET.zarr">S1 — Bay of Bothnia sea ice 波的尼亚湾海冰漂移 (34WET, 降轨)</option>
+        <option value="custom">Custom... / 自定义 Zarr URL</option>
       </select>
-      <input type="text" class="form-control" id="custom-url" placeholder="Enter Zarr URL" style="display: none; width: 300px;">
-      <button class="btn btn-outline-secondary" id="load-url" type="button">Load</button>
+      <input type="text" class="form-control" id="custom-url" placeholder="Enter Zarr URL / 输入 Zarr 存储路径" style="display: none; width: 300px;">
+      <button class="btn btn-outline-secondary" id="load-url" type="button">Load / 加载</button>
     </div>
   </div>
   <div class="col-auto" id="group-col" style="display: none;">
     <div class="input-group">
-      <label class="input-group-text" for="group-select">Group</label>
+      <label class="input-group-text" for="group-select">Group / 轨道群组</label>
       <select class="form-select" id="group-select"></select>
     </div>
   </div>

@@ -1,7 +1,7 @@
 ---
 layout: example.html
-title: GeoZarr Multi-Group
-shortdesc: Cloud-masked Sentinel-2 imagery using bands from multiple Zarr groups.
+title: GeoZarr Multi-Group / GeoZarr 多群组跨路径波段加载与云层遮罩
+shortdesc: Cloud-masked Sentinel-2 imagery using bands from multiple Zarr groups. / 从 Zarr 存储的多群组中同时拉取反射率与云概率质量波段，在 GPU 中实现动态阈值去云遮罩。
 docs: >
   The GeoZarr source supports loading bands from multiple groups within the same Zarr hierarchy.
   In this example, a true-color composite is rendered from B02 (blue), B03 (green), and B04 (red)
@@ -18,13 +18,58 @@ docs: >
   Since the cloud probability data is only available at 20 m resolution, it is resampled at higher
   zoom levels to match the 10 m reflectance bands.
 
+  GeoZarr 数据源支持从同一个 Zarr 层级树中的多个不同群组（Groups）中组合加载波段。
+  在本示例中，真彩色合成影像拉取自 `measurements/reflectance` 群组中的 B02（蓝）、B03（绿）和 B04（红）波段；
+  同时从 `quality/probability` 群组中拉取云概率波段（`cld`），用于动态剔除云层覆盖区域，透出下方的基础 OSM 底图。
+
+  当各波段源自不同群组时，每个波段可以声明为一个包含 `name`（波段名）与 `group`（群组相对路径）的对象。
+  `group` 路径相对于主 `url` 进行解析，`url` 可以是 Zarr 层级中的任何公共祖先节点，不强制要求必须指向存储根目录。
+
+  由于云概率波段仅具备 20 米空间分辨率，而在大比例尺高缩放级别下，OpenLayers 会自动将其上采样重采样，使其与 10 米分辨率的反射率波段精准贴合。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. Zarr 树状层级群组架构（Hierarchy Groups）
+  * 在现代卫星产品（如 ESA Copernicus Sentinel-2 L2A Zarr）中，数据不是平铺的，而是类似于操作系统的文件目录树：
+    * `measurements/reflectance/`：存放地表辐射反射率波段（`b01` ~ `b12`）；
+    * `quality/probability/`：存放质量控制与掩膜波段（云概率 `cld`、冰雪概率 `snw`）；
+    * `conditions/geometry/`：存放太阳与卫星天顶角、方位角等几何参数。
+  * **OpenLayers 的对象式波段配置**：
+    ```javascript
+    bands: [
+      { name: 'b04', group: 'measurements/reflectance' }, // Band 1
+      { name: 'b03', group: 'measurements/reflectance' }, // Band 2
+      { name: 'b02', group: 'measurements/reflectance' }, // Band 3
+      { name: 'cld', group: 'quality/probability' },      // Band 4 (云概率)
+    ]
+    ```
+
+  #### 2. GPU 动态云掩膜逻辑：`case` 条件过滤
+  在 WebGLTile 样式中，巧妙将第 4 波段作为 Alpha 遮罩权重：
+  ```javascript
+  style: {
+    variables: { threshold: 50 },
+    gamma: 1.5,
+    color: [
+      'color',
+      ['interpolate', ['linear'], ['band', 1], 0, 0, 0.5, 255],
+      ['interpolate', ['linear'], ['band', 2], 0, 0, 0.5, 255],
+      ['interpolate', ['linear'], ['band', 3], 0, 0, 0.5, 255],
+      // 当云概率大于用户设置的阈值时，Alpha 设为 0（完全透明），否则设为 1（完全不透明）
+      ['case', ['>', ['band', 4], ['var', 'threshold']], 0, 1],
+    ],
+  }
+  ```
+  通过滑块调用 `layer.updateStyleVariables({threshold: val})`，用户可任意调节容差，瞬间消除云块或观察厚云边界！
 tags: "zarr, geozarr, sentinel-2, cloud, masking"
 experimental: true
 ---
 <div id="map" class="map"></div>
 <div class="row mt-2">
   <div class="col-auto">
-    <label class="form-label" for="threshold">Cloud threshold: <span id="threshold-value">50</span>%</label>
+    <label class="form-label" for="threshold">Cloud threshold / 云概率过滤阈值: <span id="threshold-value">50</span>%</label>
     <input type="range" class="form-range" id="threshold" min="0" max="100" value="50">
   </div>
 </div>

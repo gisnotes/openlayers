@@ -20,6 +20,7 @@ const errorBox = document.getElementById('error');
 
 /**
  * Show a non-fatal error message above the map.
+ * 在地图上方展示非致命错误提示信息。
  * @param {Error} error The error to display.
  */
 function showError(error) {
@@ -27,28 +28,33 @@ function showError(error) {
   errorBox.style.display = '';
 }
 
-/** Clear any displayed error message. */
+/**
+ * Clear any displayed error message.
+ * 清空并隐藏所有错误信息。
+ */
 function hideError() {
   errorBox.textContent = '';
   errorBox.style.display = 'none';
 }
 
 // The two polarization bands composited by compositeStyle().
+// compositeStyle() 所合成的双极化雷达波段 (VV 与 VH)
 const BANDS = ['vv', 'vh'];
 
 // Fixed [low, high] value range per composite channel, each mapped to [0, 255].
+// 每个合成通道的固定数值范围 [最小值, 最大值]，分别映射到显示器 [0, 255] 区间
 const COMPOSITE_RESCALE = {
-  vv: [0, 0.4], // red
-  vh: [0, 0.1], // green
-  ratio: [1, 15], // blue (vv / vh)
+  vv: [0, 0.4], // red / 红色通道 (VV)
+  vh: [0, 0.1], // green / 绿色通道 (VH)
+  ratio: [1, 15], // blue (vv / vh) / 蓝色通道 (VV 与 VH 散射比)
 };
 
 let map;
-/* The composite layer; its dimensions are updated in place */
+/* The composite layer; its dimensions are updated in place / 复合雷达图层，其非空间维度支持原地热更新 */
 let dataLayer;
-/* The entered store url, opened in multi-group mode */
+/* The entered store url, opened in multi-group mode / 当前加载的 Zarr 存储根地址 */
 let rootUrl = '';
-/* Selected orbit group ('' = the root is the multiscales group) */
+/* Selected orbit group ('' = the root is the multiscales group) / 当前选中的轨道群组 */
 let groupPath = '';
 
 function getUrl() {
@@ -65,6 +71,7 @@ urlSelect.addEventListener('change', () => {
 
 /**
  * Current index selected in each dimension dropdown.
+ * 获取各个维度下拉框当前选中的索引字典。
  * @return {Object<string, number>} The selected index per dimension name.
  */
 function currentDimensions() {
@@ -77,9 +84,10 @@ function currentDimensions() {
 
 /**
  * Convert a CF time value to milliseconds since the Unix epoch.
- * @param {number|bigint} value The encoded time value.
- * @param {string} units A CF units string, e.g. `'nanoseconds since 1970-01-01'`.
- * @return {number|null} Milliseconds since the epoch, or null if not decodable.
+ * 将符合 CF 约定格式的时间数值转换为自 Unix 纪元以来的毫秒时间戳。
+ * @param {number|bigint} value The encoded time value / 编码的时间数值
+ * @param {string} units A CF units string, e.g. `'nanoseconds since 1970-01-01'` / CF 规范单位字符串
+ * @return {number|null} Milliseconds since the epoch, or null if not decodable / 毫秒时间戳，解码失败返回 null
  */
 function cfTimeToMs(value, units) {
   const match = /^\s*(\w+)\s+since\s+(.+?)\s*$/i.exec(units || '');
@@ -121,11 +129,12 @@ function cfTimeToMs(value, units) {
  * the dropdown lists them in ascending (e.g. chronological) order even when the
  * cube stores the slices unsorted. Falls back to the plain index when a value is
  * missing (a dimension without a coordinate array).
- * @param {GeoZarr} source The source.
- * @param {string} name The dimension name.
- * @param {number} size The dimension length.
- * @param {Object|null} attributes The dimension's coordinate array attributes.
- * @return {Promise<Array<{index: number, label: string}>>} Entries sorted by value.
+ * 读取指定维度的坐标数组值并转化为下拉选项，将 CF 时间解码为易读日期。
+ * @param {GeoZarr} source The source / 数据源
+ * @param {string} name The dimension name / 维度名称
+ * @param {number} size The dimension length / 维度长度
+ * @param {Object|null} attributes The dimension's coordinate array attributes / 维度属性字典
+ * @return {Promise<Array<{index: number, label: string}>>} Entries sorted by value / 按时序升序排序的选项列表
  */
 async function dimensionEntries(source, name, size, attributes) {
   const units = attributes?.units;
@@ -151,9 +160,10 @@ async function dimensionEntries(source, name, size, attributes) {
 /**
  * Build one dropdown per non-spatial dimension, labeling each option with the
  * real coordinate value (e.g. a date) when available.
- * @param {GeoZarr} source The source.
- * @param {Object<string, {size: number, attributes: Object|null}>} dimensions The selectable dimensions.
- * @return {Promise<void>} Resolves when the selectors are built.
+ * 为每个非空间维度动态构建下拉选择器，展示真实的坐标标签（如格式化日期）。
+ * @param {GeoZarr} source The source / 数据源
+ * @param {Object<string, {size: number, attributes: Object|null}>} dimensions The selectable dimensions / 可选维度
+ * @return {Promise<void>} Resolves when the selectors are built
  */
 async function buildDimensionSelectors(source, dimensions) {
   const columns = [];
@@ -187,7 +197,8 @@ async function buildDimensionSelectors(source, dimensions) {
 /**
  * WebGL style for the dual-polarization composite: vv -> red, vh -> green,
  * vv/vh -> blue, each rescaled from its fixed [low, high] range to [0, 255].
- * @return {Object} The WebGLTile style.
+ * 双极化雷达复合合成 WebGL 样式：VV -> 红，VH -> 绿，VV/VH -> 蓝。
+ * @return {Object} The WebGLTile style / WebGLTile 样式配置
  */
 function compositeStyle() {
   const channel = (value, [low, high]) => [
@@ -213,7 +224,9 @@ function compositeStyle() {
  * (Re)render the map. A dimension change (`rebuildDimensions` false) reloads the
  * current cube's slice in place; a group change or the first load opens a fresh
  * source and rebuilds the dimension selectors and the map.
- * @param {boolean} rebuildDimensions Rebuild the dimension selectors.
+ * (重新)渲染地图。仅维度切换时 (rebuildDimensions 为 false) 原地更新当前立方体切片；
+ * 轨道群组变更或初次加载时开启全新数据源并重新构建维度下拉框和地图。
+ * @param {boolean} rebuildDimensions Rebuild the dimension selectors / 是否重建维度下拉选择器
  */
 async function render(rebuildDimensions) {
   if (!rootUrl) {
@@ -222,11 +235,13 @@ async function render(rebuildDimensions) {
   if (!rebuildDimensions) {
     // Same cube, different slice: reload in place, keeping the map (and the
     // user's pan/zoom).
+    // 同一数据立方体的不同切片：原地热更新，保留当前视口位置与缩放级别
     dataLayer.getSource().updateDimensions(currentDimensions());
     return;
   }
   // Open the store root in multi-group mode when a group is selected, so the
   // bands carry their orbit group.
+  // 选定轨道群组时，以多群组模式打开存储根目录，波段继承所在轨道路径
   const bands = groupPath
     ? BANDS.map((name) => ({name, group: groupPath}))
     : BANDS;
@@ -234,10 +249,11 @@ async function render(rebuildDimensions) {
   try {
     // getDimensions() resolves once the source is ready (and rejects on error),
     // so it doubles as the readiness gate.
+    // getDimensions() 在数据源就绪后兑现，可作为就绪监听网关
     const dimensions = await source.getDimensions();
     await buildDimensionSelectors(source, dimensions);
-    // Match the source to the (chronological) default selection before it is
-    // first rendered.
+    // Match the source to the (chronological) default selection before it is first rendered.
+    // 在首次渲染前将数据源同步至按时间顺序排序的默认切片
     source.updateDimensions(currentDimensions());
     hideError();
     if (map) {
@@ -264,8 +280,9 @@ async function render(rebuildDimensions) {
  * Discover the renderable groups in a store: the store's own group when it is a
  * multiscales group, otherwise its immediate child groups that are multiscales
  * groups (e.g. the `ascending`/`descending` orbit groups of an S1 RTC cube).
- * @param {Object} group The parsed store-root group zarr.json.
- * @return {Array<string>} Group paths relative to the entered url ('' = the url itself).
+ * 自动探测存储中可渲染的多尺度群组（如升降轨群组）。
+ * @param {Object} group The parsed store-root group zarr.json / 解析出的 zarr.json 对象
+ * @return {Array<string>} Group paths relative to the entered url ('' = the url itself) / 群组相对路径列表
  */
 function discoverGroups(group) {
   if (group.attributes?.multiscales?.layout) {
@@ -285,13 +302,13 @@ function discoverGroups(group) {
   return groups.length > 0 ? groups : [''];
 }
 
-/** Select the current group and render. */
+/** Select the current group and render / 选择当前选中的群组并执行渲染 */
 async function loadGroup() {
   groupPath = groupSelect.value;
   await render(true);
 }
 
-/** Load the entered store: read its root metadata, discover groups, render. */
+/** Load the entered store: read its root metadata, discover groups, render / 读取存储根元数据，探测群组并加载 */
 async function load() {
   rootUrl = getUrl();
   if (!rootUrl) {
@@ -315,6 +332,7 @@ async function load() {
     }
     // Show the group selector only when there is a real choice (2+ groups); a
     // single group is auto-selected.
+    // 仅在存在 2 个以上群组可供切换时显示群组下拉框，单个群组自动默认选择
     groupCol.style.display = groups.length < 2 ? 'none' : '';
     await loadGroup();
   } catch (error) {

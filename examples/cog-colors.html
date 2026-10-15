@@ -1,7 +1,7 @@
 ---
 layout: example.html
-title: NDVI with a Dynamic Color Ramp
-shortdesc: NDVI from a COG with a dynamic color ramp
+title: NDVI with a Dynamic Color Ramp / 动态色带交互调整的 NDVI 渲染
+shortdesc: NDVI from a COG with a dynamic color ramp. / 基于云优化 GeoTIFF 实时计算 NDVI，并通过色板与滑块动态更新 WebGL 色带与分段区间。
 docs: >
   The GeoTIFF layer in this example draws from two Sentinel 2 sources: a red band and a near infrared band.
   The layer style includes a `color` expression that calculates the Normalized Difference Vegetation Index (NDVI)
@@ -9,19 +9,53 @@ docs: >
   for the color ramp are derived from application provided style variables.  Using the inputs above, the min and max
   colors and values can be adjusted.  The `layer.updateStyleVariables()` method is called to update the
   variables used in the interpolated color expression.
+
+  本示例中的 GeoTIFF 图层从两个哨兵 2 号（Sentinel-2）数据源中提取红光波段与近红外波段。
+  图层样式使用 `color` 声明式表达式在 GPU 中计算归一化植被指数（NDVI），并使用 `interpolate` 表达式将 NDVI 映射为颜色。
+  色带的关键阶梯值（Stop values）由应用程序注入的动态样式变量（Style Variables）生成。使用下方的控制面板，可以随意调整最小/最大 NDVI 阈值和对应的端点颜色。
+  通过调用 `layer.updateStyleVariables()` 方法，可以在不重新编译着色器的情况下瞬时刷新 GPU 渲染效果。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. Chroma.js 与感知均匀色彩空间 (Lab Color Space)
+  * **RGB 线性插值的视觉缺陷**：
+    在计算机常见的 RGB 空间中进行颜色渐变插值（如从蓝色 `#0300AD` 直接渐变到绿色 `#00FF00`），中间往往会出现暗沉、发灰的过渡带（俗称“死区”或“灰泥泞区”）。
+  * **Lab 感知均匀色彩空间**：
+    代码中引入了 `chroma-js` 库，并指定采用 Lab 模式插值：
+    ```javascript
+    const scale = chromaScale([minColor, maxColor]).mode('lab');
+    ```
+    $L^*a^*b^*$ 是人类视觉感知完全均匀的色彩空间。在 Lab 空间中计算分段梯度，生成的中间渐变色在明度与饱和度上过渡极其自然平滑，非常契合科学遥感制图的专业标准。
+
+  #### 2. GPU 动态变量数组与分段表达式拼接
+  * **着色器构建阶段**：
+    `colors()` 函数根据分段数（`segments = 10`）构造一个包含 11 个动态锚点的数组：
+    ```javascript
+    stops[i * 2] = ['var', `value${i}`];
+    stops[i * 2 + 1] = ['color', ['var', `red${i}`], ['var', `green${i}`], ['var', `blue${i}`]];
+    ```
+    它作为展开参数传入 `['interpolate', ['linear'], ndvi, ...colors()]`。
+  * **运行时交互阶段**：
+    当用户拖拽阈值滑块或选择调色板时，只需在 JavaScript 中计算出新的分段数值，然后调用：
+    ```javascript
+    layer.updateStyleVariables(getVariables());
+    ```
+    显卡底层的 Uniform 缓冲区即时更新，无需重新编译 GLSL，无任何卡顿掉帧，实现完全丝滑的 60 FPS 实时交互！
 tags: "cog, ndvi"
 ---
 <div id="map" class="map"></div>
-<table>
+<table class="table table-sm mt-2" style="max-width: 500px;">
   <tbody>
     <tr>
-      <td>Min NDVI</td>
+      <td>Min NDVI / 最小 NDVI 阈值</td>
       <td><input type="range" id="min-value-input" min="-1.0" max="-0.1" step="0.01"></td>
       <td class="data" id="min-value-output"></td>
       <td><input type="color" id="min-color"></td>
     </tr>
     <tr>
-      <td>Max NDVI</td>
+      <td>Max NDVI / 最大 NDVI 阈值</td>
       <td><input type="range" id="max-value-input" min="0.1" max="1.0" step="0.01"></td>
       <td class="data" id="max-value-output"></td>
       <td><input type="color" id="max-color"></td>

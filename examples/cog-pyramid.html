@@ -1,12 +1,57 @@
 ---
 layout: example.html
-title: GeoTIFF tile pyramid
-shortdesc: Rendering a COG tile pyramid as layer group.
+title: GeoTIFF tile pyramid / GeoTIFF 瓦片金字塔 (STACTA)
+shortdesc: Rendering a COG tile pyramid as layer group. / 将符合 STACTA 规范的云优化 GeoTIFF 瓦片金字塔目录按需渲染为图层集合。
 docs: >
   Data from a Cloud Optimized GeoTIFF (COG) tile pyramid can be rendered as a set of layers.  In this
   example, a pyramid of 3-band GeoTIFFs is used to render RGB data. The `ol/source.sourcesFromTileGrid`
   helper function creates sources from this pyramid on demand. The GeoTIFFs used by those sources have
   a resolution range that matches the range of a single z of the pyramid tile grid.
+
+  来自云优化 GeoTIFF（COG）瓦片金字塔目录的数据可以作为图层集合进行按需渲染。
+  在本示例中，采用三波段 GeoTIFF 组成的瓦片金字塔渲染 RGB 影像。通过 `ol/source.sourcesFromTileGrid` 辅助函数，可以根据金字塔瓦片网格动态创建数据源。
+  每个数据源所使用的 GeoTIFF 文件，其适用的分辨率区间精确对应金字塔瓦片网格中的单个缩放层级（$z$）。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 什么是 STACTA / COG 瓦片金字塔？
+  * **单文件 COG 的边界**：对于大范围（如洲际或全球级）卫星底图，即使制作成单文件 COG，文件大小也会达到上百 GB 乃至数十 TB，而且单文件的 IFD 头部索引膨胀后也会消耗大量初始网络解析时间。
+  * **STACTA (STAC Tile Access) 与瓦片目录**：
+    * 将全球影像按照标准瓦片网格切分为规则的单个独立小 COG 文件（每个瓦片自身依然是合法的 `.tif`，具有内嵌金字塔和地理元数据）。
+    * 文件目录路径按 `/{z}/{y}/{x}.tif` 规则组织。
+    * 这样既继承了传统 TMS/WMTS 瓦片服务横向无限扩展的优势，又保留了 GeoTIFF 的 16 位/浮点真值、多光谱波段与客户端 WebGL 实时着色的科学属性！
+
+  #### 2. `sourcesFromTileGrid(tileGrid, tileUrlFunction)` 核心机制
+  传统 `ol/layer/WebGLTile` 通常接收单个 `source`。而面对全球海量独立 TIFF 瓦片时：
+  ```javascript
+  const pyramid = new WebGLTileLayer({
+    sources: sourcesFromTileGrid(
+      tileGrid,
+      ([z, x, y]) =>
+        new GeoTIFF({
+          sources: [{ url: `.../${z}/${y}/${x}.tif` }],
+        }),
+    ),
+  });
+  ```
+  * `sourcesFromTileGrid` 是一个极高水准的工厂函数，它监听地图当前视图的缩放层级和可见范围；
+  * 根据自定义的 `TileGrid` 网格参数，**按需、懒加载实例化**目标层级的 `GeoTIFF` source；
+  * 各层级独立管理各自的 TIFF 头部缓存与像元请求，极大降低了前端初始内存开销。
+
+  #### 3. 灵活的 `tileSizes` 与非正方形瓦片
+  观察本例中的 `tileGrid` 配置：
+  ```javascript
+  tileSizes: [
+    [512, 256],
+    [1024, 512],
+    [2048, 1024],
+    [4096, 2048],
+    [4096, 4096],
+  ]
+  ```
+  不同于传统 Web 墨卡托固定 256×256 的正方形切片，EPSG:4326（WGS 84 经纬度）全球长宽比为 2:1（经度 360°，纬度 180°）。OpenLayers 完美支持按层级动态定义矩形瓦片尺寸，使高层级能够成倍减少 HTTP 请求数量，显著提升大图吞吐性能。
 tags: "cog, tilepyramid, stac"
 ---
 <div id="map" class="map"></div>

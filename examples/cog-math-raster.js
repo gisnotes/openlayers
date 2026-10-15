@@ -5,21 +5,23 @@ import RasterSource from '../src/ol/source/Raster.js';
 
 // `normalize: false` keeps the raw 16-bit reflectance as Float32Array data, so
 // the operation runs the NDVI math on the actual band values.
+// `normalize: false` 保留原始 16 位反射率数据为 Float32Array，使像素算子能够基于真实辐射度数值计算 NDVI。
 const cog = new GeoTIFF({
   normalize: false,
   sources: [
     {
-      // visible red
+      // Visible red / 可见光红光
       url: 'https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/36/Q/WD/2020/7/S2A_36QWD_20200701_0_L2A/B04.tif',
     },
     {
-      // near infrared
+      // Near infrared / 近红外
       url: 'https://sentinel-cogs.s3.us-west-2.amazonaws.com/sentinel-s2-l2a-cogs/36/Q/WD/2020/7/S2A_36QWD_20200701_0_L2A/B08.tif',
     },
   ],
 });
 
 // NDVI color ramp, handed to the operation in "beforeoperations".
+// NDVI 颜色渐变阶梯，在 "beforeoperations" 事件中传递给后台算子。
 const ndviStops = [
   -0.2,
   [191, 191, 191],
@@ -64,9 +66,8 @@ const ndviStops = [
 ];
 
 /**
- * Map a value to an `[r, g, b, a]` color using a ramp of `value, [r, g, b]`
- * stops.  Provided to the operation with the `lib` option so it is available in
- * the worker.
+ * Map a value to an `[r, g, b, a]` color using a ramp of `value, [r, g, b]` stops.
+ * 将数值通过 `[value, [r, g, b]]` 梯度插值为 `[r, g, b, a]` 颜色。
  * @param {number} value The value to map.
  * @param {Array<number|Array<number>>} stops Flat `value, color` ramp stops.
  * @return {Array<number>} The `[r, g, b, a]` color.
@@ -97,9 +98,9 @@ function colorFromRamp(value, stops) {
 
 /**
  * Compute NDVI from the two input bands and map it through the color ramp.
- * @param {Array<Array<number>>} pixels One pixel per input source; the first
- *     (and only) input carries the red and near-infrared bands.
- * @param {Object} data The object populated in the "beforeoperations" event.
+ * 从两个输入波段中计算 NDVI 并通过色带映射出颜色。
+ * @param {Array<Array<number>>} pixels One pixel per input source / 每个输入源的一个像素
+ * @param {Object} data The object populated in the "beforeoperations" event / 在 beforeoperations 中注入的数据
  * @return {Array<number>} An `[r, g, b, a]` pixel.
  */
 function ndviToColor(pixels, data) {
@@ -107,16 +108,19 @@ function ndviToColor(pixels, data) {
   const nir = pixels[0][1];
   const sum = nir + red;
   if (!sum) {
-    // transparent outside the data
+    // Transparent outside the data / 数据有效范围之外设为全透明
     return [0, 0, 0, 0];
   }
   return colorFromRamp((nir - red) / sum, data.stops);
 }
 
+// Create RasterSource running calculation in Web Workers
+// 创建在 Web Worker 多线程中执行像元算子的 RasterSource
 const raster = new RasterSource({
   sources: [cog],
   operation: ndviToColor,
   // Functions in the `lib` object are available to the operation in the worker.
+  // lib 中的辅助函数会被序列化并注入到 Web Worker 子线程中供算子调用
   lib: {
     colorFromRamp: colorFromRamp,
   },
@@ -134,6 +138,7 @@ const map = new Map({
 
 // getData() returns the input band values at a coordinate, so we can compute
 // and show the NDVI value the color above was derived from.
+// getData() 返回指定地理坐标处的输入波段值，供主线程计算并展示光标下的精确 NDVI 数值
 const output = document.getElementById('output');
 map.on(['pointermove', 'click'], function (event) {
   const pixels = raster.getData(event.coordinate);

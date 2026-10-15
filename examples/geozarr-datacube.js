@@ -14,6 +14,7 @@ import OSM from '../src/ol/source/OSM.js';
 register(proj4);
 
 // A single-band color ramp style with evenly spaced color stops.
+// 单波段颜色渐变阶梯样式，生成等间距的插值颜色 stops 数组
 function ramp(min, max, colors) {
   const stops = [];
   for (let i = 0; i < colors.length; i++) {
@@ -23,6 +24,7 @@ function ramp(min, max, colors) {
 }
 
 // An RGB composite style stretching each band from [min, max] to 0..255.
+// RGB 复合波段合成样式，将每个波段从 [min, max] 线性拉伸至 0..255
 function rgb(min, max) {
   const stretch = (band) => [
     'interpolate',
@@ -39,12 +41,15 @@ function rgb(min, max) {
 const FTW_URL =
   'https://data.source.coop/ftw/global-data/predictions/zarr/alpha/global.zarr';
 
+// Collection of real-world scientific datasets (Zarr v2 and v3)
+// 真实世界科学数据集配置字典（包含 Zarr v2 与 v3 规范）
 const datasets = {
   'ftw-rgb': {
     source: {
       url: FTW_URL,
       variable: 'variables',
       // The three class probabilities as RGB, for the most recent year
+      // 三类农田概率作为 RGB 合成，选取最近年份
       dimensions: {band: [0, 1, 2], time: 1},
     },
     style: rgb(0, 0.5),
@@ -53,7 +58,7 @@ const datasets = {
     source: {
       url: FTW_URL,
       variable: 'variables',
-      dimensions: {band: [1], time: 0}, // band 1 is the `field` probability
+      dimensions: {band: [1], time: 0}, // band 1 is the `field` probability / 波段 1 为农田置信概率
     },
     style: ramp(0, 1, [
       [255, 255, 178],
@@ -113,6 +118,7 @@ const datasets = {
       dimensions: {time: 0},
       // The store has neither spatial metadata nor coordinate arrays, so the
       // extent and the south-up orientation have to be provided.
+      // 存储不含空间元数据和坐标数组，因此手动提供 extent 范围和 flipY 南向朝上朝向
       extent: [-180, -90, 180, 90],
       flipY: true,
     },
@@ -127,6 +133,7 @@ const datasets = {
       url: 'https://carbonplan-maps.s3.us-west-2.amazonaws.com/v2/demo/4d/tavg-prec-month',
       variable: 'climate',
       // Bands can also be selected by coordinate label
+      // 波段也支持通过坐标标签名称拾取
       dimensions: {band: ['tavg'], month: 0},
     },
     style: ramp(-30, 30, [

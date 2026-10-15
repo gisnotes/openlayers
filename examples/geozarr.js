@@ -29,12 +29,16 @@ select.addEventListener('change', () => {
 
 let map;
 
+// Render GeoZarr source with WebGL true-color composite and gamma correction
+// 加载并渲染 GeoZarr 数据源，使用 WebGL 真彩色波段合成与伽马校正
 function render() {
   const url = getUrl();
   if (!url) {
     return;
   }
 
+  // Request specific bands by name from the remote Zarr store
+  // 按波段名称从远程 Zarr 存储中按需加载特定波段
   const source = new GeoZarr({
     url: url,
     bands: ['b04', 'b03', 'b02'],
@@ -44,6 +48,8 @@ function render() {
     map.setTarget(null);
   }
 
+  // Initialize Map with OSM base and WebGLTile GeoZarr layer
+  // 初始化地图实例，配置基础 OSM 图层与 WebGLTile GeoZarr 遥感图层
   map = new Map({
     layers: [
       new TileLayer({

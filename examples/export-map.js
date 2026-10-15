@@ -51,6 +51,8 @@ const map = new Map({
   }),
 });
 
+// Handle export button click by redirecting map rendering to an offscreen canvas
+// 点击导出按钮时，将地图渲染重定向到离屏 Canvas 画布中
 document.getElementById('export-map').addEventListener('click', () => {
   const format = document.getElementById('export-format').value;
   const mapCanvas = document.createElement('canvas');
@@ -73,10 +75,14 @@ document.getElementById('export-map').addEventListener('click', () => {
       exportPNGWithWorldfile(mapCanvas, extent, resolution);
     }
 
+    // Restore map rendering back to DOM element
+    // 将地图重新挂载回 DOM 元素
     map.setTarget('map');
   });
 });
 
+// Export canvas as georeferenced GeoTIFF with projection and tiepoint metadata
+// 将 Canvas 画布导出为内嵌投影和控制点元数据的 GeoTIFF 文件
 function exportGeoTIFF(canvas, size, extent, resolution, projection) {
   const context = canvas.getContext('2d');
   const imageData = context.getImageData(0, 0, size[0], size[1]);
@@ -95,6 +101,8 @@ function exportGeoTIFF(canvas, size, extent, resolution, projection) {
   downloadFile(blob, 'map-export.tiff');
 }
 
+// Export canvas as standard PNG image
+// 将 Canvas 画布导出为标准 PNG 图片
 function exportPNG(canvas) {
   const link = document.createElement('a');
   link.href = canvas.toDataURL('image/png');
@@ -104,18 +112,22 @@ function exportPNG(canvas) {
   document.body.removeChild(link);
 }
 
+// Export canvas as PNG along with a 6-parameter Worldfile (.pgw) compressed into ZIP
+// 将 Canvas 导出为 PNG 并附加包含 6 参数的 Worldfile (.pgw)，打包为 ZIP
 function exportPNGWithWorldfile(canvas, extent, resolution) {
-  // Create worldfile content
+  // Create worldfile content (A, D, B, E, C, F affine parameters)
+  // 创建 Worldfile 纯文本定标内容（A, D, B, E, C, F 仿射六参数）
   const worldfileContent = [
-    resolution.toFixed(6), // pixel width
-    '0.000000', // rotation
-    '0.000000', // rotation
-    (-resolution).toFixed(6), // pixel height (negative)
-    extent[0].toFixed(6), // upper-left X
-    extent[3].toFixed(6), // upper-left Y
+    resolution.toFixed(6), // pixel width / X 方向像素宽度
+    '0.000000', // rotation / 旋转项
+    '0.000000', // rotation / 旋转项
+    (-resolution).toFixed(6), // pixel height (negative) / Y 方向像素高度（负值）
+    extent[0].toFixed(6), // upper-left X / 左上角 X 坐标
+    extent[3].toFixed(6), // upper-left Y / 左上角 Y 坐标
   ].join('\n');
 
   // Convert canvas to blob and create zip
+  // 将 Canvas 转换为 Blob 并构建 ZIP 压缩文件
   canvas.toBlob((pngBlob) => {
     pngBlob.arrayBuffer().then((pngBuffer) => {
       const files = {
@@ -138,6 +150,8 @@ function exportPNGWithWorldfile(canvas, extent, resolution) {
   });
 }
 
+// Helper to trigger browser file download from Blob
+// 辅助函数：触发浏览器从 Blob 下载文件
 function downloadFile(blob, filename) {
   const link = document.createElement('a');
   link.href = URL.createObjectURL(blob);

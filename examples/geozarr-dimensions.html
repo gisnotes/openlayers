@@ -1,7 +1,7 @@
 ---
 layout: example.html
-title: GeoZarr dimensions
-shortdesc: Stepping through the time dimension of a GeoZarr cube with a slider.
+title: GeoZarr dimensions / GeoZarr 时间序列与高维切片
+shortdesc: Stepping through the time dimension of a GeoZarr cube with a slider. / 使用滑块动态步进 GeoZarr 科学数据立方体的时间轴，实时更新雷达双极化复合遥感影像。
 docs: >
 
   A GeoZarr array can have non-spatial dimensions such as `time`. This example steps through the
@@ -14,18 +14,49 @@ docs: >
   VV and VH bands (vertical transmit, vertical vs. horizontal receive) map to red and green, and
   their ratio to blue.
 
+  GeoZarr 数组可以包含非空间维度，例如 `time`（时间轴）。
+  本示例演示如何通过滑块沿哨兵 1 号（Sentinel-1）雷达数据立方体的时间轴逐步漫游：
+  调用 `getDimensions()` 获取维度的轴长度与物理单位，调用 `updateDimensions()` 原地重载所选时间切片，调用 `getValue()` 读取时间戳数值并格式化为卫星过境采集日期。
+
+  该数据立方体完整记录了 2021 年西班牙拉帕尔马岛老峰火山（Cumbre Vieja）喷发的动态演变过程，采用双极化复合图呈现：
+  VV 波段（同向垂直极化）映射至红通道，VH 波段（交叉极化）映射至绿通道，它们的比值 VV/VH 则映射至蓝通道。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 合成孔径雷达（SAR）双极化特征与火山熔岩解译
+  * **光学卫星 vs 雷达卫星**：
+    * 当拉帕尔马火山喷发时，火山口浓烟滚滚遮天蔽日，传统光学卫星（如 Sentinel-2、Landsat）视线完全被黑烟和火山灰阻挡；
+    * 哨兵 1 号（Sentinel-1）搭载 C 波段合成孔径雷达（SAR），微波能够**无视昼夜与浓烟，全天候穿透烟羽**直达地表！
+  * **双极化合成机理**：
+    * `VV`（垂直发射、垂直接收）：主要反映粗糙地表的镜面散射与面散射强度，红通道呈现明亮背景；
+    * `VH`（垂直发射、水平接收）：主要反映植被冠层、碎屑与复杂粗糙岩石的体散射与去极化散射；
+    * `VV / VH` 比值：对地表粗糙度极其敏感。滚烫、崎岖不平的新生玄武岩熔岩流具有极高的比值，在图像中呈现高亮荧光蓝色，清晰勾勒出熔岩侵入大西洋造就的“新熔岩三角洲”！
+
+  #### 2. 原地时间切片重载：`source.updateDimensions({time: index})`
+  * 传统 WebGIS 切换时间序列时通常需要销毁重建图层或切换 WMS/WMTS URL，伴随剧烈的白屏闪烁。
+  * `GeoZarr` 提供了轻量级的 `updateDimensions({time: index})` 原地切片方法：
+    * 图层实例与 WebGL 着色器完全保持不变；
+    * 数据源直接复用已建立的 Zarr 索引句柄，仅向云端发起目标时间切片对应分块的局部 HTTP 请求；
+    * 配合滑块拖拽，犹如在浏览器中翻阅卫星雷达电影！
+
+  #### 3. CF 元数据时间解码：`getDimensions()` 与 `getValue('time', index)`
+  * 气候与预测元数据规范（CF Conventions）通常将时间记录为相对起算点，例如：
+    `"nanoseconds since 1970-01-01"`
+  * `source.getValue('time', index)` 异步读取目标时间维度的标量浮点值，代码通过 `Date(epoch + value / 1e6)` 转化为标准 ISO 日期展示给用户。
 tags: "zarr, geozarr, sentinel-1, time, dimensions"
 experimental: true
 ---
 <div id="map" class="map"></div>
 <div class="row mt-2 g-2 align-items-center">
   <div class="col-auto">
-    <label class="col-form-label" for="time">Time</label>
+    <label class="col-form-label" for="time">Time / 观测时间</label>
   </div>
   <div class="col-auto">
     <input type="range" class="form-range align-middle" id="time" min="0" max="0" value="0" step="1" style="width: 220px;" disabled>
   </div>
   <div class="col-auto">
-    <span id="time-label" class="text-body-secondary">loading…</span>
+    <span id="time-label" class="text-body-secondary">loading… / 正在加载元数据...</span>
   </div>
 </div>
