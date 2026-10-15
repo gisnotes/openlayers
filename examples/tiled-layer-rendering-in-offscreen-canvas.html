@@ -105,12 +105,12 @@
               data-bs-target="#tag-example-list"
               data-title="tiles"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles-advanced.html&quot;&gt;Advanced Mapbox Vector Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles-advanced.html&quot;&gt;Advanced Mapbox Vector Tiles / Mapbox 矢量切片进阶：跨层级复用与移动端流量节省&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson-vt.html&quot;&gt;geojson-vt integration / geojson-vt 浏览器端实时切片矢量瓦片&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-layer.html&quot;&gt;Mapbox Vector Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles.html&quot;&gt;Mapbox Vector Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./osm-vector-tiles.html&quot;&gt;OSM Vector Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-layer.html&quot;&gt;Mapbox Vector Layer / 使用 ol-mapbox-style 一键接入 Mapbox 样式规范图层&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles.html&quot;&gt;Mapbox Vector Tiles / Mapbox MVT 矢量切片与客户端样式表达式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer / 深度集成 Mapbox GL JS 渲染引擎图层&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./osm-vector-tiles.html&quot;&gt;OSM Vector Tiles / OpenStreetMap 矢量切片与 TopoJSON 拓扑图层解构&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./tiled-layer-rendering-in-offscreen-canvas.html&quot;&gt;Tiled Layer Rendering in an Offscreen Canvas / OffscreenCanvas 离屏瓦片图层渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer / WebGL 矢量切片图层（MVT 硬件加速渲染）&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -143,7 +143,7 @@
         <div id="docs"><p>
   The tiles of the map in this example are rendered in a web worker, using <code>OffscreenCanvas</code>. This can be improved by using a pool of workers to enable parallel, multi-threaded rendering.
 </p> <p>
-  在此示例中，地图的各个瓦片都在 Web Worker 后台子线程中通过 <code>OffscreenCanvas</code> 进行离屏渲染。通过在主线程自定义 <code>ImageTileSource</code> 的 <code>loader</code> 拦截瓦片请求，由 Worker 内部运行的无头地图完成光栅化并以 <code>ImageBitmap</code> 零拷贝返回。在生产环境中，还可以通过 Worker 线程池（Worker Pool）实现多核并行多线程出图。
+  在此示例中，地图的各个瓦片都在 Web Worker 后台子线程中通过 <code>OffscreenCanvas</code> 进行离屏渲染。通过在主线程自定义 <code>ImageTileSource</code> 的 <code>loader</code> 拦截瓦片请求，由 Worker 内部运行的无头地图完成栅格化并以 <code>ImageBitmap</code> 零拷贝返回。在生产环境中，还可以通过 Worker 线程池（Worker Pool）实现多核并行多线程出图。
 </p> <hr> <h3>📚 学习记录与技术深度解读</h3>
 <h4>1. 核心架构与设计思想</h4> <ul>
   <li><strong>瓦片级微任务架构（Tile-Level Worker Pipeline）：</strong>
@@ -365,16 +365,28 @@ worker.addEventListener(&#x27;message&#x27;, async ({data: {action, tile}}) &#x3
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

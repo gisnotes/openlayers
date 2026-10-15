@@ -38,7 +38,7 @@ var select = new Select({
 map.addInteraction(select);
 select.on("select", function(e) {
 	if (e.selected.length > 0) status.innerHTML = e.selected[0].get("ECO_NAME");
-	else status.innerHTML = "&nbsp;";
+	else status.innerHTML = "&nbsp;请将鼠标悬停在生态区域上方 (Hover over an eco-region)...";
 });
 //#endregion
 

@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
     <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
   </head>
@@ -99,7 +100,7 @@
 
     subgraph CloudEngine[&quot;云原生空间数据库服务 (CARTO / PostGIS)&quot;]
         Config[&quot;mapConfig (CartoCSS + SQL 查询)&quot;]
-        CloudPostGIS[&quot;云端 PostGIS 空间过滤与光栅化切片&quot;]
+        CloudPostGIS[&quot;云端 PostGIS 空间过滤与栅格化切片&quot;]
         Token[&quot;匿名地图会话协商 (Instantiation Token)&quot;]
     end
 
@@ -145,7 +146,7 @@
 <td align="left"><strong>渲染形态</strong></td>
 <td align="left">桌面端文本展开 / 移动端 &quot;i&quot; 图标</td>
 <td align="left">常驻在原生控件内，与图层版权合并</td>
-<td align="left">透明 PNG/WebP 光栅切片覆盖层</td>
+<td align="left">透明 PNG/WebP 栅格切片覆盖层</td>
 </tr>
 <tr>
 <td align="left"><strong>核心业务价值</strong></td>
@@ -227,7 +228,7 @@ document.getElementById(&#39;toggleLayerButton&#39;).addEventListener(&#39;click
 <h2 id="4-云原生-cartodb-空间数据源与动态-sql-过滤（cartodbhtml）">4. 云原生 CartoDB 空间数据源与动态 SQL 过滤（<code>cartodb.html</code>）</h2>
 <h3 id="41-空间大数据切片渲染流水线">4.1 空间大数据切片渲染流水线</h3>
 <p>在处理大规模矢量数据（如全欧洲所有行政区划多边形）时，前端若加载完整的 GeoJSON，网络包体积往往数十兆，解析与 Canvas 绘制极易引起主线程崩溃。
-CARTO（原 CartoDB）提供了服务端矢量动态光栅化方案：</p>
+CARTO（原 CartoDB）提供了服务端矢量动态栅格化方案：</p>
 <pre><code class="language-mermaid">sequenceDiagram
     autonumber
     actor User as 用户交互 (下拉框)
@@ -242,7 +243,7 @@ CARTO（原 CartoDB）提供了服务端矢量动态光栅化方案：</p>
     MapsAPI-&gt;&gt;PostGIS: 执行 SELECT ... WHERE area &gt; 50000
     PostGIS--&gt;&gt;MapsAPI: 返回过滤后的空间要素
     MapsAPI--&gt;&gt;Client: 返回图层会话 layergroup_id 与瓦片 URL 模板
-    Client-&gt;&gt;MapsAPI: GET /tiles/{z}/{x}/{y}.png (带透明通道光栅切片)
+    Client-&gt;&gt;MapsAPI: GET /tiles/{z}/{x}/{y}.png (带透明通道栅格切片)
     MapsAPI--&gt;&gt;Client: 高速下发预渲染切片，完成 60FPS 平滑上屏
 </code></pre>
 <h3 id="42-配置热重载模式（setconfig）">4.2 配置热重载模式（<code>setConfig</code>）</h3>
@@ -310,5 +311,28 @@ controls: defaultControls({ attribution: false }).extend([myAttribution])
       <a href="https://www.netlify.com">This site is powered by Netlify.</a>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
   </body>
 </html>

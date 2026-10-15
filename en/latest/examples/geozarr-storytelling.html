@@ -207,27 +207,57 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Exploring Sentinel-1 event scenarios across orbit groups and time in GeoZarr cubes. / 漫游哨兵 1 号多维雷达数据立方体中的历史大事件场景，跨升降轨观测视角与时间轴探索地表宏观动态变迁。</p>
-        <div id="docs"><p>A tour of Sentinel-1 radar imaging through a set of event scenarios stored as GeoZarr cubes. Pick a scene from the <strong>URL</strong> dropdown, switch look direction with the <strong>Group</strong> dropdown where a cube has both <code>ascending</code> and <code>descending</code> orbit passes, and step through <strong>time</strong> to watch each one unfold as a dual-polarization radar composite.</p>
-<p><em>Swiss Alps — the Valais (32TLS)</em>: the default scene, and the only one here carrying both <code>ascending</code> and <code>descending</code> groups. Over the Rhône valley from Lake Geneva up into the high Alps, radiometric terrain correction (RTC) evens out the slope-driven brightness of raw SAR, so the lakes read radar-dark while forest, rock and snow separate by surface roughness. Switch the <strong>Group</strong> to compare how the two look directions light the valleys.</p>
+        <div id="docs"><p>A tour of Sentinel-1 radar imaging through a set of event scenarios stored as GeoZarr cubes. Pick
+a scene from the <strong>URL</strong> dropdown, switch look direction with the <strong>Group</strong> dropdown where a cube
+has both <code>ascending</code> and <code>descending</code> orbit passes, and step through <strong>time</strong> to watch each one
+unfold as a dual-polarization radar composite.</p>
+<p><em>Swiss Alps — the Valais (32TLS)</em>: the default scene, and the only one here carrying both <code>ascending</code>
+and <code>descending</code> groups. Over the Rhône valley from Lake Geneva up into the high Alps, radiometric
+terrain correction (RTC) evens out the slope-driven brightness of raw SAR, so the lakes read radar-dark
+while forest, rock and snow separate by surface roughness. Switch the <strong>Group</strong> to compare how the two
+look directions light the valleys.</p>
 <p>The <strong>URL</strong> dropdown also offers four event scenarios; step through <strong>time</strong> to watch each unfold:</p>
-<p><em>Valencia DANA flood (30SYJ, ascending)</em>, 26 → 31 Oct 2024: floodwater across the plain and the Albufera lagoon turns radar-dark while the built-up city stays bright, imaged straight through the storm cloud that blinded optical satellites.</p>
-<p><em>La Palma — Cumbre Vieja eruption (28RBS, descending)</em>, Sep–Dec 2021: fresh, rough lava scatters radar strongly and glows bright as the new lava delta grows into the Atlantic, day or night.</p>
-<p><em>Strait of Hormuz — Fujairah anchorage (40RDN, descending)</em>, 2026: the Gulf&#39;s main tanker anchorage just outside the Strait of Hormuz, one of the world&#39;s busiest bunkering hubs. Every frame reveals the fleet at anchor — on the radar-dark sea each tanker is a bright point target, with Fujairah port at the coast. SAR sees the whole fleet through cloud and darkness, day or night, when optical imagery and AIS can&#39;t.</p>
-<p><em>Bay of Bothnia sea ice (34WET, descending)</em>, Feb–Mar 2025: landfast ice locks the Luleå archipelago while floes drift offshore; smooth new ice reads dark, ridged ice bright, shifting pass to pass.
-本示例以 GeoZarr 格式存储的哨兵 1 号（Sentinel-1）雷达多维数据立方体为载体，带您全方位领略雷达遥感地球科学的非凡魅力： 从 <strong>URL</strong> 下拉菜单中选择目标场景，在包含双向轨道的立方体中通过 <strong>Group</strong> 下拉菜单切换卫星视线方向（<code>ascending</code> 升轨与 <code>descending</code> 降轨），并拖动 <strong>Time</strong> 滑块逐步见证双极化雷达多维时序中记录的宏大地理演变：</p>
+<p><em>Valencia DANA flood (30SYJ, ascending)</em>, 26 → 31 Oct 2024: floodwater across the plain and the
+Albufera lagoon turns radar-dark while the built-up city stays bright, imaged straight through the
+storm cloud that blinded optical satellites.</p>
+<p><em>La Palma — Cumbre Vieja eruption (28RBS, descending)</em>, Sep–Dec 2021: fresh, rough lava scatters
+radar strongly and glows bright as the new lava delta grows into the Atlantic, day or night.</p>
+<p><em>Strait of Hormuz — Fujairah anchorage (40RDN, descending)</em>, 2026: the Gulf&#39;s main tanker anchorage
+just outside the Strait of Hormuz, one of the world&#39;s busiest bunkering hubs. Every frame reveals the
+fleet at anchor — on the radar-dark sea each tanker is a bright point target, with Fujairah port at the
+coast. SAR sees the whole fleet through cloud and darkness, day or night, when optical imagery and AIS
+can&#39;t.</p>
+<p><em>Bay of Bothnia sea ice (34WET, descending)</em>, Feb–Mar 2025: landfast ice locks the Luleå archipelago
+while floes drift offshore; smooth new ice reads dark, ridged ice bright, shifting pass to pass.</p>
+<p>本示例以 GeoZarr 格式存储的哨兵 1 号（Sentinel-1）雷达多维数据立方体为载体，带您全方位领略雷达遥感地球科学的非凡魅力：
+从 <strong>URL</strong> 下拉菜单中选择目标场景，在包含双向轨道的立方体中通过 <strong>Group</strong> 下拉菜单切换卫星视线方向（<code>ascending</code> 升轨与 <code>descending</code> 降轨），并拖动 <strong>Time</strong> 滑块逐步见证双极化雷达多维时序中记录的宏大地理演变：</p>
 <ul>
-<li><strong>瑞士阿尔卑斯山脉 — 瓦莱州（Valais, 32TLS）</strong>：默认场景，也是唯一同时包含升轨和降轨群组的场景。从日内瓦湖沿罗纳河谷蜿蜒延伸至阿尔卑斯高山，辐射地形校正（RTC）消除了原始合成孔径雷达因陡坡引起的局部过曝，水体呈暗色，而森林、裸岩与冰雪根据地表粗糙度清晰分层。切换 Group 即可对比东西不同侧照视角下峡谷的几何阴影变化。 * <strong>西班牙瓦伦西亚 DANA 极端强降雨特大洪灾（30SYJ, 升轨，2024年10月）</strong>：滔滔洪水淹没平原，阿尔布费拉潟湖迅速扩张呈暗黑色，而混凝土建筑依然明亮——雷达微波完全无视致盲光学卫星的厚重暴雨风暴云层，直击水淹核心区。 * <strong>拉帕尔马岛老峰火山喷发（28RBS, 降轨，2021年秋）</strong>：滚烫崎岖的熔岩流具有极高后向散射，在雷达视野中高亮闪烁，记录熔岩填海造陆形成的崭新熔岩三角洲。 * <strong>霍尔木兹海峡 — 富查伊拉油轮锚地（40RDN, 降轨，2026年）</strong>：波斯湾咽喉要道与全球最大的远洋船舶加油锚地之一。在平静雷达暗色海面上，每一艘巨型钢铁油轮都是一个极其璀璨的强散射点源目标。无论黑夜、浓雾还是沙尘暴，雷达都能洞察整个船队的停泊态势。 * <strong>波的尼亚湾极地海冰（34WET, 降轨，2025年冬）</strong>：固定冰封锁吕勒奥群岛，浮冰在近海随洋流漂移；光滑新生冰呈暗色，受挤压隆起的高粗糙度冰脊呈亮白色。</li>
+<li><strong>瑞士阿尔卑斯山脉 — 瓦莱州（Valais, 32TLS）</strong>：默认场景，也是唯一同时包含升轨和降轨群组的场景。从日内瓦湖沿罗纳河谷蜿蜒延伸至阿尔卑斯高山，辐射地形校正（RTC）消除了原始合成孔径雷达因陡坡引起的局部过曝，水体呈暗色，而森林、裸岩与冰雪根据地表粗糙度清晰分层。切换 Group 即可对比东西不同侧照视角下峡谷的几何阴影变化。</li>
+<li><strong>西班牙瓦伦西亚 DANA 极端强降雨特大洪灾（30SYJ, 升轨，2024年10月）</strong>：滔滔洪水淹没平原，阿尔布费拉潟湖迅速扩张呈暗黑色，而混凝土建筑依然明亮——雷达微波完全无视致盲光学卫星的厚重暴雨风暴云层，直击水淹核心区。</li>
+<li><strong>拉帕尔马岛老峰火山喷发（28RBS, 降轨，2021年秋）</strong>：滚烫崎岖的熔岩流具有极高后向散射，在雷达视野中高亮闪烁，记录熔岩填海造陆形成的崭新熔岩三角洲。</li>
+<li><strong>霍尔木兹海峡 — 富查伊拉油轮锚地（40RDN, 降轨，2026年）</strong>：波斯湾咽喉要道与全球最大的远洋船舶加油锚地之一。在平静雷达暗色海面上，每一艘巨型钢铁油轮都是一个极其璀璨的强散射点源目标。无论黑夜、浓雾还是沙尘暴，雷达都能洞察整个船队的停泊态势。</li>
+<li><strong>波的尼亚湾极地海冰（34WET, 降轨，2025年冬）</strong>：固定冰封锁吕勒奥群岛，浮冰在近海随洋流漂移；光滑新生冰呈暗色，受挤压隆起的高粗糙度冰脊呈亮白色。</li>
 </ul>
 <hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 轨道方向（Orbit Passes）：升轨 (Ascending) vs 降轨 (Descending) * <strong>侧视雷达的固有透视形变</strong>：</h4>
-<p>  合成孔径雷达（SAR）是倾斜向下侧视成像的（Side-looking）。</p>
+<h4>1. 轨道方向（Orbit Passes）：升轨 (Ascending) vs 降轨 (Descending)</h4>
 <ul>
+<li><strong>侧视雷达的固有透视形变</strong>：
+合成孔径雷达（SAR）是倾斜向下侧视成像的（Side-looking）。<ul>
 <li><strong>升轨（Ascending）</strong>：卫星自南向北运行，雷达天线向东照射；</li>
 <li><strong>降轨（Descending）</strong>：卫星自北向南运行，雷达天线向西照射。</li>
-<li>在阿尔卑斯山等复杂高山峡谷区，东坡与西坡会分别产生<strong>透视收缩（Foreshortening）</strong>与<strong>雷达阴影（Shadow）</strong>。 * 通过在 GeoZarr 根目录下切换 <code>ascending</code> 和 <code>descending</code> 群组，OpenLayers 允许科研人员在毫秒内交叉对比两个完全反向的雷达视线，消除单一视角的观测盲区！</li>
 </ul>
-<h4>2. 时空交互故事线（Storytelling Engine）架构 本示例展示了顶级 WebGIS 故事讲述系统的架构设计： * <strong>元数据动态探针</strong>：当用户选择不同 URL 时，系统动态拉取其 Zarr 顶层元数据； * <strong>自动化维度 UI 生成</strong>：根据探测到的非空间维度（如 <code>time</code>），自动构建带日期解析标签的滑块或下拉框； * <strong>无刷新图层更新</strong>：利用 <code>source.updateDimensions()</code> 在显存中原地热替换时间切片，保证动画般流畅的浏览体验。</h4>
+</li>
+<li>在阿尔卑斯山等复杂高山峡谷区，东坡与西坡会分别产生<strong>透视收缩（Foreshortening）</strong>与<strong>雷达阴影（Shadow）</strong>。</li>
+<li>通过在 GeoZarr 根目录下切换 <code>ascending</code> 和 <code>descending</code> 群组，OpenLayers 允许科研人员在毫秒内交叉对比两个完全反向的雷达视线，消除单一视角的观测盲区！</li>
+</ul>
+<h4>2. 时空交互故事线（Storytelling Engine）架构</h4>
+<p>本示例展示了顶级 WebGIS 故事讲述系统的架构设计：</p>
+<ul>
+<li><strong>元数据动态探针</strong>：当用户选择不同 URL 时，系统动态拉取其 Zarr 顶层元数据；</li>
+<li><strong>自动化维度 UI 生成</strong>：根据探测到的非空间维度（如 <code>time</code>），自动构建带日期解析标签的滑块或下拉框；</li>
+<li><strong>无刷新图层更新</strong>：利用 <code>source.updateDimensions()</code> 在显存中原地热替换时间切片，保证动画般流畅的浏览体验。</li>
+</ul>
 </div>
       </div>
 
@@ -662,16 +692,28 @@ load();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

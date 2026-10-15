@@ -145,16 +145,32 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example of a tiled ArcGIS layer. / 使用瓦片金字塔网格按需加载 ArcGIS REST 地图服务。</p>
-        <div id="docs"><h2>This example shows how to use an ArcGIS REST MapService as tiles. This source type supports Map and Image Services. For cached ArcGIS services, better performance is available by using <code>ol/source/XYZ</code> instead.
-本示例展示了如何将 ArcGIS REST MapService 以瓦片流形式（Tile Grid）进行并发加载。<code>ol/source/TileArcGISRest</code> 会将当前视口划分为标准的切片网格，并向服务端的 <code>/export</code> 接口并发请求各个瓦片区域。对于已经在 ArcGIS 服务端预先渲染生成了紧凑切片缓存（Cached Services）的地图服务，直接使用 <code>ol/source/XYZ</code> 或 <code>ol/source/ImageTile</code> 将获得更高性能。</h2>
+        <div id="docs"><p>This example shows how to use an ArcGIS REST MapService as tiles.
+This source type supports Map and Image Services. For cached ArcGIS
+services, better performance is available by using
+<code>ol/source/XYZ</code> instead.</p>
+<p>本示例展示了如何将 ArcGIS REST MapService 以瓦片流形式（Tile Grid）进行并发加载。<code>ol/source/TileArcGISRest</code> 会将当前视口划分为标准的切片网格，并向服务端的 <code>/export</code> 接口并发请求各个瓦片区域。对于已经在 ArcGIS 服务端预先渲染生成了紧凑切片缓存（Cached Services）的地图服务，直接使用 <code>ol/source/XYZ</code> 或 <code>ol/source/ImageTile</code> 将获得更高性能。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 瓦片化动态请求架构 (TileGrid-Driven Export) - <strong>基于瓦片金字塔的并发请求</strong>: <code>ol/source/TileArcGISRest</code> 将视图空间按照标准瓦片网格（TileGrid，默认 256×256 像素）切分为独立的切片单元。每个瓦片独立计算其空间包围盒，并向 ArcGIS REST 接口请求导出图片。 - <strong>渐进加载与缓存优势</strong>:</h4>
+<h4>1. 瓦片化动态请求架构 (TileGrid-Driven Export)</h4>
 <ul>
+<li><strong>基于瓦片金字塔的并发请求</strong>: <code>ol/source/TileArcGISRest</code> 将视图空间按照标准瓦片网格（TileGrid，默认 256×256 像素）切分为独立的切片单元。每个瓦片独立计算其空间包围盒，并向 ArcGIS REST 接口请求导出图片。</li>
+<li><strong>渐进加载与缓存优势</strong>:<ul>
 <li><strong>渐进显示</strong>: 瓦片并发加载，优先渲染已下载完成的部分，大幅减少初次加载时的白屏等待时间；</li>
 <li><strong>HTTP 级别缓存</strong>: 访问过的切片会自动保存在浏览器本地缓存与 CDN 节点中，在用户反复漫游时无需重新计算。</li>
 </ul>
-<h4>2. 空间外包范围裁剪优化 (<code>extent</code>) - 示例中在 <code>TileLayer</code> 构造函数中显式指定了 <code>extent: [-13884991, 2870341, -7455066, 6338219]</code>（严格覆盖美国本土）。 - <strong>消除冗余请求</strong>: OpenLayers 渲染器会自动忽略位于该范围外部的切片请求，避免因向全球无数据区域发送数以百计的无效 <code>/export</code> 请求而拖垮 GIS 服务端。</h4>
-<h4>3. 生产实践陷阱与避坑指南 (Production Pitfalls &amp; Best Practices) - <strong>瓦片边界文字截断与标签重复</strong>: 动态瓦片模式下，每个瓦片是服务端隔离光栅化的。位于瓦片边界线上的城市标注可能会被一刀切断，且相邻切片中可能出现重复地名。若应用对制图标注美观度有强迫性要求，优先考虑单图 <code>ImageArcGISRest</code> 或直接升级为矢量切片（Vector Tiles）。 - <strong>与静态缓存瓦片 (<code>XYZ</code>) 的选型鉴别</strong>: 若 ArcGIS 管理员已经在服务端执行了 Manage Map Server Cache Tiles（生成了紧凑缓存），切勿使用 <code>TileArcGISRest</code>，而应使用 <code>.../MapServer/tile/{z}/{y}/{x}</code> 模板通过 <code>ol/source/ImageTile</code> 加载，性能提升可达一个数量级。</h4>
+</li>
+</ul>
+<h4>2. 空间外包范围裁剪优化 (<code>extent</code>)</h4>
+<ul>
+<li>示例中在 <code>TileLayer</code> 构造函数中显式指定了 <code>extent: [-13884991, 2870341, -7455066, 6338219]</code>（严格覆盖美国本土）。</li>
+<li><strong>消除冗余请求</strong>: OpenLayers 渲染器会自动忽略位于该范围外部的切片请求，避免因向全球无数据区域发送数以百计的无效 <code>/export</code> 请求而拖垮 GIS 服务端。</li>
+</ul>
+<h4>3. 生产实践陷阱与避坑指南 (Production Pitfalls &amp; Best Practices)</h4>
+<ul>
+<li><strong>瓦片边界文字截断与标签重复</strong>: 动态瓦片模式下，每个瓦片是服务端隔离栅格化的。位于瓦片边界线上的城市标注可能会被一刀切断，且相邻切片中可能出现重复地名。若应用对制图标注美观度有强迫性要求，优先考虑单图 <code>ImageArcGISRest</code> 或直接升级为矢量切片（Vector Tiles）。</li>
+<li><strong>与静态缓存瓦片 (<code>XYZ</code>) 的选型鉴别</strong>: 若 ArcGIS 管理员已经在服务端执行了 Manage Map Server Cache Tiles（生成了紧凑缓存），切勿使用 <code>TileArcGISRest</code>，而应使用 <code>.../MapServer/tile/{z}/{y}/{x}</code> 模板通过 <code>ol/source/ImageTile</code> 加载，性能提升可达一个数量级。</li>
+</ul>
 </div>
       </div>
 
@@ -256,16 +272,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

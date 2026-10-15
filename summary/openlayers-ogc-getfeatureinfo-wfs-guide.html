@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
     <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
   </head>
@@ -85,7 +86,7 @@
         WFSQuery[&quot;复杂属性/空间条件检索&quot;]
     end
 
-    subgraph WMSPipeline [范式一：WMS 光栅渲染与属性穿透]
+    subgraph WMSPipeline [范式一：WMS 栅格渲染与属性穿透]
         GetPixel[&quot;layer.getData(pixel)&lt;br/&gt;Alpha 通道检测 (零网络开销)&quot;]
         GetInfoUrl[&quot;wmsSource.getFeatureInfoUrl()&lt;br/&gt;计算切片/视口局部 BBOX 与 (I, J)&quot;]
     end
@@ -263,5 +264,28 @@ const featureRequest = new WFS().writeGetFeature({
       <a href="https://www.netlify.com">This site is powered by Netlify.</a>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
   </body>
 </html>

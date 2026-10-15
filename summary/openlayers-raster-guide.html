@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
     <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
   </head>
@@ -71,16 +72,16 @@
     </header>
 
     <div class="container">
-      <h1 id="openlayers-光栅像素处理与地形分析全景实战架构指南-raster-manipulation--topographic-analysis-architecture">OpenLayers 光栅像素处理与地形分析全景实战架构指南 (Raster Manipulation &amp; Topographic Analysis Architecture)</h1>
+      <h1 id="openlayers-栅格像素处理与地形分析全景实战架构指南-raster-manipulation--topographic-analysis-architecture">OpenLayers 栅格像素处理与地形分析全景实战架构指南 (Raster Manipulation &amp; Topographic Analysis Architecture)</h1>
 <blockquote>
 <p>本指南基于 OpenLayers 官方 <strong>raster</strong> 核心专题群的代表性示例，深度解构 <code>ol/source/Raster</code> 依托多线程 Web Worker 实现的客户端逐像素与整图级运算流水线，详解 Mapbox Terrain-RGB 与 Mapzen Terrarium 两大数字高程模型（DEM）编解码标准，剖析基于 3x3 邻域梯度的朗伯日照山体阴影（Hillshade）物理模型，并系统演示动态等高线插值、区域生长分割、植被绿度指数（VGI）双向统计与云原生 PMTiles 单文件切片读取的高阶工程实践。</p>
 </blockquote>
 <hr>
-<h2 id="一、光栅运算流水线全景架构-architectural-overview">一、光栅运算流水线全景架构 (Architectural Overview)</h2>
-<p>在现代 WebGIS 中，面对海量数字高程模型（DEM）与多光谱遥感影像，传统依赖 GIS 服务端重绘切片的模式延迟高、吞吐瓶颈明显。<code>ol/source/Raster</code> 通过在浏览器后台开辟 Web Worker 线程池，开创了纯客户端、零服务器运算的分布式空间光栅分析架构：</p>
+<h2 id="一、栅格运算流水线全景架构-architectural-overview">一、栅格运算流水线全景架构 (Architectural Overview)</h2>
+<p>在现代 WebGIS 中，面对海量数字高程模型（DEM）与多光谱遥感影像，传统依赖 GIS 服务端重绘切片的模式延迟高、吞吐瓶颈明显。<code>ol/source/Raster</code> 通过在浏览器后台开辟 Web Worker 线程池，开创了纯客户端、零服务器运算的分布式空间栅格分析架构：</p>
 <pre><code class="language-mermaid">flowchart TD
     subgraph InputStage[&quot;1. 输入源采集与准备 (Input Acquisition)&quot;]
-        TileSource[&quot;光栅切片源 (ImageTile / DataTile)&quot;]
+        TileSource[&quot;栅格切片源 (ImageTile / DataTile)&quot;]
         DEMSource[&quot;Terrain-RGB / Terrarium DEM 切片&quot;]
         TileSource --&gt; BufferGutter[&quot;3x3 切片缓冲区 (Gutter: 消除跨切片接缝裂痕)&quot;]
         DEMSource --&gt; BufferGutter
@@ -105,7 +106,7 @@
         PixelWorker --&gt; Composite[&quot;组装生成目标 ImageData&quot;]
         ImageWorker --&gt; Composite
         Composite --&gt; AfterOps
-        Composite --&gt; ImageLayer[&quot;ImageLayer 动态光栅画布呈现&quot;]
+        Composite --&gt; ImageLayer[&quot;ImageLayer 动态栅格画布呈现&quot;]
         ImageLayer --&gt; InteractiveProbe[&quot;raster.getData(coord) 毫秒级空间坐标反查&quot;]
     end
 </code></pre>
@@ -342,5 +343,28 @@ const source = new ImageTileSource({
       <a href="https://www.netlify.com">This site is powered by Netlify.</a>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
   </body>
 </html>

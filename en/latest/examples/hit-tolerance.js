@@ -27,10 +27,10 @@ map.on("singleclick", function(e) {
 	}, { hitTolerance });
 	if (hit) {
 		style.getStroke().setColor("green");
-		statusElement.innerHTML = "A feature got hit!";
+		statusElement.innerHTML = "已成功命中并拾取要素！(A feature got hit!)";
 	} else {
 		style.getStroke().setColor("black");
-		statusElement.innerHTML = "No feature got hit.";
+		statusElement.innerHTML = "未命中任何要素。(No feature got hit.)";
 	}
 	feature.changed();
 });

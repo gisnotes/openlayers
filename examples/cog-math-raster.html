@@ -155,26 +155,73 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Running a pixel operation over multi-band data tiles. / 基于 ol/source/Raster 在 Web Worker 多线程中执行像素级运算计算 NDVI。</p>
-        <div id="docs"><h2>This example computes the Normalized Difference Vegetation Index (NDVI) from two Sentinel 2 bands using an <code>ol/source/Raster</code> operation.  The raster source takes a <code>GeoTIFF</code> data tile source as input, samples it at its native tile resolution, and runs a pixel operation that maps NDVI to a color ramp.  The map view is in Web Mercator, so the operation runs in the source&#39;s own projection and its result is reprojected to the view - the OSM base layer shows the alignment. Compare with the <a href="../cog-math.html">NDVI from a Sentinel 2 COG</a> example, which uses a WebGL layer style instead.  Move the pointer over the map to read the NDVI value from the source&#39;s <code>getData()</code> lookup.
-本示例使用 <code>ol/source/Raster</code> 像元算子从两个哨兵 2 号波段中计算归一化植被指数（NDVI）。 栅格数据源将 <code>GeoTIFF</code> 数据瓦片源作为输入，按其原生瓦片分辨率进行像元采样，并在后台线程执行像素级算法，将计算出的 NDVI 映射到色带中。 地图视图采用 Web 墨卡托投影（EPSG:3857），运算在数据源自身投影（UTM）中执行，运算结果动态重投影至地图视图——底部的 OSM 图层印证了严密的坐标吻合度。 可与 <a href="../cog-math.html">基于哨兵 2 号 COG 计算 NDVI</a> 示例进行对比，后者采用 WebGL 图层声明式着色器实现。 移动鼠标指针，可以通过数据源的 <code>getData()</code> 查询当前坐标下的实际 NDVI 数值。</h2>
+        <div id="docs"><p>This example computes the Normalized Difference Vegetation Index (NDVI) from two Sentinel 2 bands
+using an <code>ol/source/Raster</code> operation.  The raster source takes a <code>GeoTIFF</code> data
+tile source as input, samples it at its native tile resolution, and runs a pixel operation that maps
+NDVI to a color ramp.  The map view is in Web Mercator, so the operation runs in the source&#39;s own
+projection and its result is reprojected to the view - the OSM base layer shows the alignment.
+Compare with the <a href="../cog-math.html">NDVI from a Sentinel 2 COG</a> example, which uses a WebGL
+layer style instead.  Move the pointer over the map to read the NDVI value from the source&#39;s
+<code>getData()</code> lookup.</p>
+<p>本示例使用 <code>ol/source/Raster</code> 像元算子从两个哨兵 2 号波段中计算归一化植被指数（NDVI）。
+栅格数据源将 <code>GeoTIFF</code> 数据瓦片源作为输入，按其原生瓦片分辨率进行像元采样，并在后台线程执行像素级算法，将计算出的 NDVI 映射到色带中。
+地图视图采用 Web 墨卡托投影（EPSG:3857），运算在数据源自身投影（UTM）中执行，运算结果动态重投影至地图视图——底部的 OSM 图层印证了严密的坐标吻合度。
+可与 <a href="../cog-math.html">基于哨兵 2 号 COG 计算 NDVI</a> 示例进行对比，后者采用 WebGL 图层声明式着色器实现。
+移动鼠标指针，可以通过数据源的 <code>getData()</code> 查询当前坐标下的实际 NDVI 数值。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 架构对比：<code>ol/layer/WebGLTile</code> (GPU) vs <code>ol/source/Raster</code> (CPU Web Worker) 在 OpenLayers 中处理遥感影像像元计算有两种经典技术架构：</h4>
-<p>| 对比维度 | WebGL 着色器架构 (<code>WebGLTile</code>) | 栅格算子流水线 (<code>RasterSource</code>) | | :--- | :--- | :--- | | <strong>计算单元</strong> | <strong>GPU 显卡片元着色器 (Fragment Shader)</strong> | <strong>CPU 多线程 Web Worker</strong> | | <strong>算法表达方式</strong> | 声明式 AST 表达式树（编译为 GLSL） | 原生 JavaScript 任意数学函数与逻辑 | | <strong>算法复杂度上限</strong> | 适合纯数学/矩阵运算，难以执行复杂循环、递归或图搜索 | <strong>无限制</strong>，支持任意复杂算法（如区域生长、连通域分析、形态学滤波） | | <strong>性能特点</strong> | 百万像素每秒 60 FPS 瞬时刷新，适合交互调参 | 后台异步计算，计算密集时可能有轻微延迟，适合复杂特征提取 | | <strong>投影与图层类型</strong> | 直接在 GPU 贴图中采样重投影 | 输出为客户端单张动态图像 (<code>ol/layer/Image</code>) |</p>
-<h4>2. <code>ol/source/Raster</code> 的 Web Worker 通信机制 * <strong>代码注入与序列化</strong>：</h4>
-<p>  由于 Web Worker 运行在独立的 JavaScript 线程中，无法直接访问主线程的作用域。
-  <code>RasterSource</code> 提供了专门的 <code>lib</code> 选项：</p>
-<pre><code class="language-javascript">const raster = new RasterSource({
+<h4>1. 架构对比：<code>ol/layer/WebGLTile</code> (GPU) vs <code>ol/source/Raster</code> (CPU Web Worker)</h4>
+<p>在 OpenLayers 中处理遥感影像像元计算有两种经典技术架构：</p>
+<table>
+<thead>
+<tr>
+<th align="left">对比维度</th>
+<th align="left">WebGL 着色器架构 (<code>WebGLTile</code>)</th>
+<th align="left">栅格算子流水线 (<code>RasterSource</code>)</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>计算单元</strong></td>
+<td align="left"><strong>GPU 显卡片元着色器 (Fragment Shader)</strong></td>
+<td align="left"><strong>CPU 多线程 Web Worker</strong></td>
+</tr>
+<tr>
+<td align="left"><strong>算法表达方式</strong></td>
+<td align="left">声明式 AST 表达式树（编译为 GLSL）</td>
+<td align="left">原生 JavaScript 任意数学函数与逻辑</td>
+</tr>
+<tr>
+<td align="left"><strong>算法复杂度上限</strong></td>
+<td align="left">适合纯数学/矩阵运算，难以执行复杂循环、递归或图搜索</td>
+<td align="left"><strong>无限制</strong>，支持任意复杂算法（如区域生长、连通域分析、形态学滤波）</td>
+</tr>
+<tr>
+<td align="left"><strong>性能特点</strong></td>
+<td align="left">百万像素每秒 60 FPS 瞬时刷新，适合交互调参</td>
+<td align="left">后台异步计算，计算密集时可能有轻微延迟，适合复杂特征提取</td>
+</tr>
+<tr>
+<td align="left"><strong>投影与图层类型</strong></td>
+<td align="left">直接在 GPU 贴图中采样重投影</td>
+<td align="left">输出为客户端单张动态图像 (<code>ol/layer/Image</code>)</td>
+</tr>
+</tbody></table>
+<h4>2. <code>ol/source/Raster</code> 的 Web Worker 通信机制</h4>
+<ul>
+<li><strong>代码注入与序列化</strong>：
+由于 Web Worker 运行在独立的 JavaScript 线程中，无法直接访问主线程的作用域。
+<code>RasterSource</code> 提供了专门的 <code>lib</code> 选项：<pre><code class="language-javascript">const raster = new RasterSource({
   sources: [cog],
   operation: ndviToColor,
   lib: { colorFromRamp: colorFromRamp }, // 注入到 Worker 内部的辅助函数
 });
 </code></pre>
-<p>  OpenLayers 会在 Worker 启动时将 <code>operation</code> 与 <code>lib</code> 内的函数转为字符串传输并在子线程中 <code>eval</code> 恢复。</p>
-<ul>
+OpenLayers 会在 Worker 启动时将 <code>operation</code> 与 <code>lib</code> 内的函数转为字符串传输并在子线程中 <code>eval</code> 恢复。</li>
 <li><strong><code>beforeoperations</code> 事件</strong>：
 用于在每轮瓦片计算前，向 Worker 传递外部数据字典（如颜色渐变阈值数组 <code>data.stops</code>）。</li>
 </ul>
-<h4>3. 拾取像元数值：<code>raster.getData(coordinate)</code> 通过 <code>raster.getData(event.coordinate)</code>，直接传入地理坐标，OpenLayers 会自动定位到底层对应的 Float32Array 像元数组，取得 Red 与 NIR 原始辐射反射率，在主线程实时算出精确浮点 NDVI。</h4>
+<h4>3. 拾取像元数值：<code>raster.getData(coordinate)</code></h4>
+<p>通过 <code>raster.getData(event.coordinate)</code>，直接传入地理坐标，OpenLayers 会自动定位到底层对应的 Float32Array 像元数组，取得 Red 与 NIR 原始辐射反射率，在主线程实时算出精确浮点 NDVI。</p>
 </div>
       </div>
 
@@ -391,16 +438,28 @@ map.on([&#x27;pointermove&#x27;, &#x27;click&#x27;], function (event) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

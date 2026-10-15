@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Static Image</title>
+    <title>Static Image / 静态独立单张图片与自定义像素坐标系</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Static Image</h4>
+        <h4 id="title">Static Image / 静态独立单张图片与自定义像素坐标系</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,7 +74,7 @@
               data-bs-target="#tag-example-list"
               data-title="staticimage"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./static-image.html&quot;&gt;Static Image&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./static-image.html&quot;&gt;Static Image / 静态独立单张图片与自定义像素坐标系&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -88,7 +88,7 @@
               data-bs-target="#tag-example-list"
               data-title="xkcd"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./static-image.html&quot;&gt;Static Image&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./static-image.html&quot;&gt;Static Image / 静态独立单张图片与自定义像素坐标系&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -115,13 +115,29 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of a static image layer.</p>
-        <div id="docs"><p>
-  This example uses a <a href="https://xkcd.com/256/">static image</a>
-  as a layer source.  The map view is configured with a custom
-  projection that translates image coordinates directly into map
-  coordinates.
-</p>
+        <p id="shortdesc">Example of a static image layer. / 演示如何使用 StaticImage 数据源将单张静态高分辨率图片（如漫画/手绘图）映射为自定义投影坐标地图。</p>
+        <div id="docs"><p>This example uses a <a href="https://xkcd.com/256/" target="_blank">static image</a> as a layer source. The map view is configured with a custom projection that translates image coordinates directly into map coordinates.</p>
+<p>本示例展示了如何使用 <code>ol/source/ImageStatic</code> 数据源将单张静态位图（示例采用著名极客漫画 <a href="https://xkcd.com/256/" target="_blank">xkcd #256 互联网在线社区分布地图</a>）直接挂载为地图图层。通过定义一个纯平面直角像素投影坐标系（Projection），直接将图片的物理像素宽高 $[0, 0, 1024, 968]$ 映射为地图视口坐标，实现流畅的平移与深层缩放。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
+<ul>
+<li><strong>非地理空间的平直笛卡尔投影定义</strong>：
+并不是所有地图都有真实经纬度。室内商场楼层平面图、游戏世界地图、高分辨率艺术图画或芯片显微图，本质上都是单张物理图片。OpenLayers 允许通过 <code>new Projection({ code: 'xkcd-image', units: 'pixels', extent: extent })</code> 创建基于像素单位的自定义坐标系，使地图视口与普通 GIS 工具链完全兼容。</li>
+<li><strong><code>imageExtent</code> 空间四至锚定</strong>：
+通过 <code>imageExtent: [0, 0, 1024, 968]</code> 将单张位图的左下角固定在原点 <code>[0, 0]</code>，右上角固定在 <code>[1024, 968]</code>。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>ImageLayer</code> 与 <code>ImageStatic</code>：
+专职负责展示单张静态图片的图层与数据源，相比复杂的切片瓦片，无需搭建切片服务，仅需一张普通 PNG/JPEG 即可呈现全屏可交互地图。</li>
+<li><code>maxZoom: 8</code>：
+设置视口最大缩放限制，防止在过度放大后由于图片本身像素被过度插值导致严重失真。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
+<ul>
+<li><strong>单张大图的尺寸上限（Texture Size Limit）</strong>：
+由于 <code>ImageStatic</code> 是以整张图片完整送入 GPU 显存解码渲染的，图片的物理宽高受限于终端浏览器的 WebGL 纹理最大尺寸（一般桌面端为 16384px，低端移动端为 4096px）。如果图片分辨率超过 4096 像素，建议采用 Deep Zoom、Zoomify 或切片化（TileLayer）方案，避免移动端直接内存溢出。</li>
+</ul>
 </div>
       </div>
 
@@ -175,7 +191,7 @@ const map &#x3D; new Map({
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Static Image&lt;/title&gt;
+    &lt;title&gt;Static Image / 静态独立单张图片与自定义像素坐标系&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -221,16 +237,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

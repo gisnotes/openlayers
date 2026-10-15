@@ -174,46 +174,66 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Shows how to create custom controls. / 展示如何继承 ol/control/Control 封装自定义地图控件。</p>
-        <div id="docs"><h2>This example creates a &quot;rotate to north&quot; control with an inline SVG north arrow. The control&#39;s <code>render</code> method rotates the arrow together with the map, so it always points north, and hides the control with the <code>ol-hidden</code> class when the map is not rotated. The control replaces the default <code>ol/control/Rotate</code> control, which is left out of the map&#39;s controls. Use <code>Alt+Shift+Drag</code> to rotate the map.
-本示例通过继承基类 <code>ol/control/Control</code> 实现一个带有内联 SVG 指针的“一键复位指北针”自定义控件。该控件重写了 <code>render</code> 渲染帧回调方法，使指北针图标随着地图视口旋转同步变换，始终指向正北方向；并在地图回归正北（旋转角为 0）时通过 <code>ol-hidden</code> 样式类自动隐藏。该控件替换了默认的 <code>ol/control/Rotate</code> 控件。可按住 <code>Alt + Shift + 鼠标拖拽</code> 旋转地图测试效果。</h2>
+        <div id="docs"><p>This example creates a &quot;rotate to north&quot; control with an inline SVG north arrow. The control&#39;s
+<code>render</code> method rotates the arrow together with the map, so it always points north, and
+hides the control with the <code>ol-hidden</code> class when the map is not rotated. The control
+replaces the default <code>ol/control/Rotate</code> control, which is left out of the map&#39;s controls.
+Use <code>Alt+Shift+Drag</code> to rotate the map.</p>
+<p>本示例通过继承基类 <code>ol/control/Control</code> 实现一个带有内联 SVG 指针的“一键复位指北针”自定义控件。该控件重写了 <code>render</code> 渲染帧回调方法，使指北针图标随着地图视口旋转同步变换，始终指向正北方向；并在地图回归正北（旋转角为 0）时通过 <code>ol-hidden</code> 样式类自动隐藏。该控件替换了默认的 <code>ol/control/Rotate</code> 控件。可按住 <code>Alt + Shift + 鼠标拖拽</code> 旋转地图测试效果。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 核心架构原理 (Core Architecture) OpenLayers 控件（Control）是浮动在地图视口之上的 DOM UI 组件（如缩放按钮、比例尺、版权归属等），与基于 Canvas 绘制的图层不同，控件完全由 HTML/CSS/DOM 事件模型驱动： - <strong>继承基类 <code>ol/control/Control</code></strong>：自定义控件通过 ES6 <code>class MyControl extends Control</code> 继承基类。在构造函数中通过 <code>super({ element, target })</code> 将自定义创建的 DOM 根节点注入 OpenLayers 控件管理体系。 - <strong>视口动画与平滑交互</strong>：控件通过 <code>this.getMap()</code> 访问关联的地图实例，获取其 <code>View</code> 并调用 <code>animate({ rotation: 0, duration: 250 })</code> 触发平滑过渡的视角复位动画。 - <strong>每帧渲染钩子 <code>render(mapEvent)</code></strong>：每当地图视口触发一次重绘（平移、缩放、惯性旋转），地图都会向所有注册的控件广播 <code>render(mapEvent)</code>。控件可从 <code>mapEvent.frameState.viewState.rotation</code> 中读取当前帧精确到弧度的旋转值，实现 60fps 无滞后的 CSS Transform 硬件加速同步更新。</h4>
-<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript class RotateNorthControl extends Control {</h4>
-<p>  constructor(opt_options) {
+<h4>1. 核心架构原理 (Core Architecture)</h4>
+<p>OpenLayers 控件（Control）是浮动在地图视口之上的 DOM UI 组件（如缩放按钮、比例尺、版权归属等），与基于 Canvas 绘制的图层不同，控件完全由 HTML/CSS/DOM 事件模型驱动：</p>
+<ul>
+<li><strong>继承基类 <code>ol/control/Control</code></strong>：自定义控件通过 ES6 <code>class MyControl extends Control</code> 继承基类。在构造函数中通过 <code>super({ element, target })</code> 将自定义创建的 DOM 根节点注入 OpenLayers 控件管理体系。</li>
+<li><strong>视口动画与平滑交互</strong>：控件通过 <code>this.getMap()</code> 访问关联的地图实例，获取其 <code>View</code> 并调用 <code>animate({ rotation: 0, duration: 250 })</code> 触发平滑过渡的视角复位动画。</li>
+<li><strong>每帧渲染钩子 <code>render(mapEvent)</code></strong>：每当地图视口触发一次重绘（平移、缩放、惯性旋转），地图都会向所有注册的控件广播 <code>render(mapEvent)</code>。控件可从 <code>mapEvent.frameState.viewState.rotation</code> 中读取当前帧精确到弧度的旋转值，实现 60fps 无滞后的 CSS Transform 硬件加速同步更新。</li>
+</ul>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive)</h4>
+<pre><code class="language-javascript">class RotateNorthControl extends Control {
+  constructor(opt_options) {
     const options = opt_options || {};
     const button = document.createElement(&#39;button&#39;);
     button.type = &#39;button&#39;;
     button.title = &#39;Rotate to north / 复位至正北&#39;;
-    button.innerHTML = northArrowSvg;</p>
-<pre><code>const element = document.createElement(&#39;div&#39;);
-element.className = &#39;rotate-north ol-unselectable ol-control&#39;;
-element.appendChild(button);
+    button.innerHTML = northArrowSvg;
 
-super({ element: element, target: options.target });
+    const element = document.createElement(&#39;div&#39;);
+    element.className = &#39;rotate-north ol-unselectable ol-control&#39;;
+    element.appendChild(button);
 
-this.arrow_ = button.querySelector(&#39;svg&#39;);
-this.rotation_ = undefined;
+    super({ element: element, target: options.target });
 
-button.addEventListener(&#39;click&#39;, this.handleRotateNorth.bind(this), false);
-</code></pre>
-<p>  }</p>
-<p>  handleRotateNorth() {
+    this.arrow_ = button.querySelector(&#39;svg&#39;);
+    this.rotation_ = undefined;
+
+    button.addEventListener(&#39;click&#39;, this.handleRotateNorth.bind(this), false);
+  }
+
+  handleRotateNorth() {
     // 触发 250ms 优雅回弹缓动动画
     this.getMap().getView().animate({rotation: 0, duration: 250});
-  }</p>
-<p>  render(mapEvent) {
+  }
+
+  render(mapEvent) {
     const frameState = mapEvent.frameState;
     if (!frameState) return;
     const rotation = frameState.viewState.rotation;
     // 仅在旋转角变动时更新 DOM，避免多余重排重绘
     if (rotation !== this.rotation_) {
-      this.arrow_.style.transform = <code>rotate(${rotation}rad)</code>;
+      this.arrow_.style.transform = `rotate(${rotation}rad)`;
       this.element.classList.toggle(&#39;ol-hidden&#39;, rotation === 0);
       this.rotation_ = rotation;
     }
   }
-} ```</p>
-<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>样式类规范与层叠上下文</strong>：自定义控件根节点必须包含 <code>ol-unselectable</code>（防止鼠标双击或拖拽误选中文本）和 <code>ol-control</code>（OpenLayers 预置的绝对定位容器层级和毛玻璃背景风格）。 - <strong>渲染性能守则</strong>：<code>render(mapEvent)</code> 在地图交互期间每秒调用高达 60 次甚至 120 次。在此方法内严禁执行耗时的 DOM 查询或引起全页 Layout Reflow 的重度操作。务必在构造函数中预先缓存 DOM 节点引用，并利用本地变量做脏检查判断。 - <strong>替换默认控件机制</strong>：初始化地图时，若需替换默认控件（如禁用原装 Rotate 并追加自定义指北针），推荐通过 <code>defaultControls({ rotate: false }).extend([new RotateNorthControl()])</code> 声明式组合构建。</h4>
+}
+</code></pre>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls)</h4>
+<ul>
+<li><strong>样式类规范与层叠上下文</strong>：自定义控件根节点必须包含 <code>ol-unselectable</code>（防止鼠标双击或拖拽误选中文本）和 <code>ol-control</code>（OpenLayers 预置的绝对定位容器层级和毛玻璃背景风格）。</li>
+<li><strong>渲染性能守则</strong>：<code>render(mapEvent)</code> 在地图交互期间每秒调用高达 60 次甚至 120 次。在此方法内严禁执行耗时的 DOM 查询或引起全页 Layout Reflow 的重度操作。务必在构造函数中预先缓存 DOM 节点引用，并利用本地变量做脏检查判断。</li>
+<li><strong>替换默认控件机制</strong>：初始化地图时，若需替换默认控件（如禁用原装 Rotate 并追加自定义指北针），推荐通过 <code>defaultControls({ rotate: false }).extend([new RotateNorthControl()])</code> 声明式组合构建。</li>
+</ul>
 </div>
       </div>
 
@@ -401,16 +421,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

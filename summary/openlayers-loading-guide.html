@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
     <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
   </head>
@@ -73,7 +74,7 @@
     <div class="container">
       <h1 id="openlayers-异步加载策略与资源生命周期体系全景实战指南-loading-strategies--resource-lifecycle">OpenLayers 异步加载策略与资源生命周期体系全景实战指南 (Loading Strategies &amp; Resource Lifecycle)</h1>
 <blockquote>
-<p>本指南基于 OpenLayers 官方 <strong>loading</strong> 核心专题群的 8 个代表性示例，深度解构地图容器、切片网格与光栅图像的多级加载生命周期事件流，剖析 <code>all</code>、<code>bbox</code> 与 <code>tile</code> 三大空间矢量加载策略的算法机制，并实战演示对接 ArcGIS REST FeatureServer、OGC WFS 与 Overpass OSM XML 远程要素服务的完整架构方案。</p>
+<p>本指南基于 OpenLayers 官方 <strong>loading</strong> 核心专题群的 8 个代表性示例，深度解构地图容器、切片网格与栅格图像的多级加载生命周期事件流，剖析 <code>all</code>、<code>bbox</code> 与 <code>tile</code> 三大空间矢量加载策略的算法机制，并实战演示对接 ArcGIS REST FeatureServer、OGC WFS 与 Overpass OSM XML 远程要素服务的完整架构方案。</p>
 </blockquote>
 <hr>
 <h2 id="一、加载架构全景脑图-architectural-overview">一、加载架构全景脑图 (Architectural Overview)</h2>
@@ -165,7 +166,7 @@ source.on(&#39;tileloadstart&#39;, () =&gt; progress.addLoading());
 source.on([&#39;tileloadend&#39;, &#39;tileloaderror&#39;], () =&gt; progress.addLoaded());
 </code></pre>
 <h3 id="3-单张图像数据源事件-olsourceimage--imagewms">3. 单张图像数据源事件 (<code>ol/source/Image</code> / <code>ImageWMS</code>)</h3>
-<p>如 <a href="file:///d:/Users/Downloads/openlayers/examples/image-load-events.html"><code>examples/image-load-events.html</code></a> 所示，单张图像源在每次视口停顿时向服务端请求单张大幅面光栅图片：</p>
+<p>如 <a href="file:///d:/Users/Downloads/openlayers/examples/image-load-events.html"><code>examples/image-load-events.html</code></a> 所示，单张图像源在每次视口停顿时向服务端请求单张大幅面栅格图片：</p>
 <ul>
 <li>细粒度事件：<code>imageloadstart</code>、<code>imageloadend</code>、<code>imageloaderror</code>；</li>
 <li>配合延迟重置机制（<code>setTimeout(..., 250)</code>），使进度条在跑满 100% 后平滑淡出并归零，避免视觉反向闪烁。</li>
@@ -464,5 +465,28 @@ const vectorSource = new VectorSource({
       <a href="https://www.netlify.com">This site is powered by Netlify.</a>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
   </body>
 </html>

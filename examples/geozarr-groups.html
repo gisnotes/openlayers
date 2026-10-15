@@ -183,18 +183,32 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Cloud-masked Sentinel-2 imagery using bands from multiple Zarr groups. / 从 Zarr 存储的多群组中同时拉取反射率与云概率质量波段，在 GPU 中实现动态阈值去云遮罩。</p>
-        <div id="docs"><p>The GeoZarr source supports loading bands from multiple groups within the same Zarr hierarchy. In this example, a true-color composite is rendered from B02 (blue), B03 (green), and B04 (red) reflectance values from the <code>measurements/reflectance</code> group.  The cloud probability (<code>cld</code>) from the <code>quality/probability</code> group is used to fade out cloudy areas, revealing the OSM basemap underneath.</p>
-<p>When bands come from different groups, each band is specified as an object with a <code>name</code> and a <code>group</code> path.  The <code>group</code> is resolved relative to the <code>url</code>, which can be any common ancestor in the Zarr hierarchy — not necessarily the store root.</p>
-<h2>Since the cloud probability data is only available at 20 m resolution, it is resampled at higher zoom levels to match the 10 m reflectance bands.
-GeoZarr 数据源支持从同一个 Zarr 层级树中的多个不同群组（Groups）中组合加载波段。 在本示例中，真彩色合成影像拉取自 <code>measurements/reflectance</code> 群组中的 B02（蓝）、B03（绿）和 B04（红）波段； 同时从 <code>quality/probability</code> 群组中拉取云概率波段（<code>cld</code>），用于动态剔除云层覆盖区域，透出下方的基础 OSM 底图。
-当各波段源自不同群组时，每个波段可以声明为一个包含 <code>name</code>（波段名）与 <code>group</code>（群组相对路径）的对象。 <code>group</code> 路径相对于主 <code>url</code> 进行解析，<code>url</code> 可以是 Zarr 层级中的任何公共祖先节点，不强制要求必须指向存储根目录。
-由于云概率波段仅具备 20 米空间分辨率，而在大比例尺高缩放级别下，OpenLayers 会自动将其上采样重采样，使其与 10 米分辨率的反射率波段精准贴合。</h2>
+        <div id="docs"><p>The GeoZarr source supports loading bands from multiple groups within the same Zarr hierarchy.
+In this example, a true-color composite is rendered from B02 (blue), B03 (green), and B04 (red)
+reflectance values from the <code>measurements/reflectance</code> group.  The cloud probability (<code>cld</code>) from
+the <code>quality/probability</code> group is used to fade out cloudy areas, revealing the OSM basemap
+underneath.</p>
+<p>When bands come from different groups, each band is specified as an object with a <code>name</code> and a
+<code>group</code> path.  The <code>group</code> is resolved relative to the <code>url</code>, which can be any common ancestor in
+the Zarr hierarchy — not necessarily the store root.</p>
+<p>Since the cloud probability data is only available at 20 m resolution, it is resampled at higher
+zoom levels to match the 10 m reflectance bands.</p>
+<p>GeoZarr 数据源支持从同一个 Zarr 层级树中的多个不同群组（Groups）中组合加载波段。
+在本示例中，真彩色合成影像拉取自 <code>measurements/reflectance</code> 群组中的 B02（蓝）、B03（绿）和 B04（红）波段；
+同时从 <code>quality/probability</code> 群组中拉取云概率波段（<code>cld</code>），用于动态剔除云层覆盖区域，透出下方的基础 OSM 底图。</p>
+<p>当各波段源自不同群组时，每个波段可以声明为一个包含 <code>name</code>（波段名）与 <code>group</code>（群组相对路径）的对象。
+<code>group</code> 路径相对于主 <code>url</code> 进行解析，<code>url</code> 可以是 Zarr 层级中的任何公共祖先节点，不强制要求必须指向存储根目录。</p>
+<p>由于云概率波段仅具备 20 米空间分辨率，而在大比例尺高缩放级别下，OpenLayers 会自动将其上采样重采样，使其与 10 米分辨率的反射率波段精准贴合。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. Zarr 树状层级群组架构（Hierarchy Groups） * 在现代卫星产品（如 ESA Copernicus Sentinel-2 L2A Zarr）中，数据不是平铺的，而是类似于操作系统的文件目录树：</h4>
+<h4>1. Zarr 树状层级群组架构（Hierarchy Groups）</h4>
 <ul>
+<li>在现代卫星产品（如 ESA Copernicus Sentinel-2 L2A Zarr）中，数据不是平铺的，而是类似于操作系统的文件目录树：<ul>
 <li><code>measurements/reflectance/</code>：存放地表辐射反射率波段（<code>b01</code> ~ <code>b12</code>）；</li>
 <li><code>quality/probability/</code>：存放质量控制与掩膜波段（云概率 <code>cld</code>、冰雪概率 <code>snw</code>）；</li>
 <li><code>conditions/geometry/</code>：存放太阳与卫星天顶角、方位角等几何参数。</li>
+</ul>
+</li>
 <li><strong>OpenLayers 的对象式波段配置</strong>：<pre><code class="language-javascript">bands: [
   { name: &#39;b04&#39;, group: &#39;measurements/reflectance&#39; }, // Band 1
   { name: &#39;b03&#39;, group: &#39;measurements/reflectance&#39; }, // Band 2
@@ -204,8 +218,10 @@ GeoZarr 数据源支持从同一个 Zarr 层级树中的多个不同群组（Gro
 </code></pre>
 </li>
 </ul>
-<h4>2. GPU 动态云掩膜逻辑：<code>case</code> 条件过滤 在 WebGLTile 样式中，巧妙将第 4 波段作为 Alpha 遮罩权重： ```javascript style: {</h4>
-<p>  variables: { threshold: 50 },
+<h4>2. GPU 动态云掩膜逻辑：<code>case</code> 条件过滤</h4>
+<p>在 WebGLTile 样式中，巧妙将第 4 波段作为 Alpha 遮罩权重：</p>
+<pre><code class="language-javascript">style: {
+  variables: { threshold: 50 },
   gamma: 1.5,
   color: [
     &#39;color&#39;,
@@ -215,7 +231,9 @@ GeoZarr 数据源支持从同一个 Zarr 层级树中的多个不同群组（Gro
     // 当云概率大于用户设置的阈值时，Alpha 设为 0（完全透明），否则设为 1（完全不透明）
     [&#39;case&#39;, [&#39;&gt;&#39;, [&#39;band&#39;, 4], [&#39;var&#39;, &#39;threshold&#39;]], 0, 1],
   ],
-} ``` 通过滑块调用 <code>layer.updateStyleVariables({threshold: val})</code>，用户可任意调节容差，瞬间消除云块或观察厚云边界！</p>
+}
+</code></pre>
+<p>通过滑块调用 <code>layer.updateStyleVariables({threshold: val})</code>，用户可任意调节容差，瞬间消除云块或观察厚云边界！</p>
 </div>
       </div>
 
@@ -345,16 +363,28 @@ thresholdSlider.addEventListener(&#x27;input&#x27;, function () {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

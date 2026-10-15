@@ -90,8 +90,8 @@
               data-title="osm"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-source.html&quot;&gt;Full Screen Control with extended source element / 全屏控件外扩父级容器 (source)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./osm-vector-tiles.html&quot;&gt;OSM Vector Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./preload.html&quot;&gt;Preload Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./osm-vector-tiles.html&quot;&gt;OSM Vector Tiles / OpenStreetMap 矢量切片与 TopoJSON 拓扑图层解构&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./preload.html&quot;&gt;Preload Tiles / 瓦片低分辨率层级预加载与白屏消除&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection / 多投影栅格数据动态重投影&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./semi-transparent-layer.html&quot;&gt;Semi-Transparent Layer / 半透明专题图层叠加与 CSS 黑白滤镜&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tiles.html&quot;&gt;WebGL Tiles / WebGL 基础栅格瓦片渲染&lt;/a&gt;
@@ -155,20 +155,23 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example of a map with a semi-transparent layer. / 演示如何将半透明 TileJSON 专题图层叠加在 OSM 底图上，并使用 CSS 滤镜将底图转为灰度黑白。</p>
-        <div id="docs"><h2>This example will display a tiled MaxBox layer semi-transparently over an OSM background. The OSM layer is changed to black and white by using a CSS filter.
-本示例展示如何将带有半透明属性的 TileJSON 专题切片图层（维吉尼亚地震灾情热力图）叠加在 OpenStreetMap 底图之上。通过为底图图层配置 <code>className: 'bw'</code> 并结合纯 CSS 的 <code>filter: grayscale(100%)</code> 滤镜，将原本色彩斑斓的道路底图降级为低调的黑白基调，从而凸显上层专题数据的色彩对比；同时配置 <code>transition: 0</code> 彻底消除半透明切片在加载淡入时的频闪重影。</h2>
+        <div id="docs"><p>This example will display a tiled MaxBox layer semi-transparently over an OSM background. The OSM layer is changed to black and white by using a CSS filter.</p>
+<p>本示例展示如何将带有半透明属性的 TileJSON 专题切片图层（维吉尼亚地震灾情热力图）叠加在 OpenStreetMap 底图之上。通过为底图图层配置 <code>className: 'bw'</code> 并结合纯 CSS 的 <code>filter: grayscale(100%)</code> 滤镜，将原本色彩斑斓的道路底图降级为低调的黑白基调，从而凸显上层专题数据的色彩对比；同时配置 <code>transition: 0</code> 彻底消除半透明切片在加载淡入时的频闪重影。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 核心架构原理 (Core Architecture) 在制图美学与数据可视化中，“图底关系（Figure-Ground Relationship）”至关重要： - <strong>CSS Filter 图层后处理管线</strong>：OpenLayers 允许为图层指定 <code>className</code>（例如 <code>className: 'bw'</code>）。渲染引擎会将该图层的所有 DOM 元素或独立 Canvas 容器附加该 class。通过定义简洁的 CSS 样式：</h4>
-<pre><code class="language-css">.bw {
+<h4>1. 核心架构原理 (Core Architecture)</h4>
+<p>在制图美学与数据可视化中，“图底关系（Figure-Ground Relationship）”至关重要：</p>
+<ul>
+<li><strong>CSS Filter 图层后处理管线</strong>：OpenLayers 允许为图层指定 <code>className</code>（例如 <code>className: 'bw'</code>）。渲染引擎会将该图层的所有 DOM 元素或独立 Canvas 容器附加该 class。通过定义简洁的 CSS 样式：<pre><code class="language-css">.bw {
   filter: grayscale(100%); /* 转为灰度黑白，突出上层彩色要素 */
 }
 </code></pre>
-<p>  无需耗费 CPU 逐像素运算即可让底图褪色，使上层彩色专题热力图一目了然。</p>
-<ul>
+无需耗费 CPU 逐像素运算即可让底图褪色，使上层彩色专题热力图一目了然。</li>
 <li><strong>半透明图层的淡入动画陷阱（<code>transition: 0</code>）</strong>：默认情况下，OpenLayers 切片图层在瓦片加载完毕后会执行 250ms 的淡入动画（<code>transition: 250</code>）。对于全不透明瓦片，淡入可让过渡柔和；但对于<strong>自身带有透明度通道的专题切片</strong>，淡入期间旧瓦片与新瓦片同时处于半透明叠加状态，会导致重叠处颜色加深甚至产生严重的“黑晕闪烁”。因此对透明专题图层，<strong>必须配置 <code>transition: 0</code> 禁用淡入过渡</strong>。</li>
 </ul>
-<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript const map = new Map({</h4>
-<p>  layers: [
+<h4>2. 关键实现与代码拆解 (Code Deep Dive)</h4>
+<pre><code class="language-javascript">const map = new Map({
+  layers: [
     // 1. 挂载带类名的底图，CSS 驱动灰度滤镜
     new TileLayer({
       className: &#39;bw&#39;,
@@ -177,7 +180,7 @@
     // 2. 叠加半透明专题图层，关键：设置 transition: 0
     new TileLayer({
       source: new TileJSON({
-        url: &#39;<a href="https://api.tiles.mapbox.com/v4/mapbox.va-quake-aug.json">https://api.tiles.mapbox.com/v4/mapbox.va-quake-aug.json</a>?...&#39;,
+        url: &#39;https://api.tiles.mapbox.com/v4/mapbox.va-quake-aug.json?...&#39;,
         crossOrigin: &#39;anonymous&#39;,
         transition: 0, // 杜绝半透明瓦片淡入叠加产生暗影频闪
       }),
@@ -185,8 +188,12 @@
   ],
   target: &#39;map&#39;,
   view: new View({ center: fromLonLat([-77.93255, 37.9555]), zoom: 7 }),
-}); ```</p>
-<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>CSS 滤镜的 GPU 开销</strong>：<code>filter: grayscale()</code> 在现代浏览器中均有良好的 GPU 硬件加速支持。但若同时叠加多个图层且每个都使用复合重度滤镜（如高斯模糊），在移动端低端设备上可能引起合成掉帧，建议仅在底图容器上使用单一黑白滤镜。</h4>
+});
+</code></pre>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls)</h4>
+<ul>
+<li><strong>CSS 滤镜的 GPU 开销</strong>：<code>filter: grayscale()</code> 在现代浏览器中均有良好的 GPU 硬件加速支持。但若同时叠加多个图层且每个都使用复合重度滤镜（如高斯模糊），在移动端低端设备上可能引起合成掉帧，建议仅在底图容器上使用单一黑白滤镜。</li>
+</ul>
 </div>
       </div>
 
@@ -289,16 +296,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

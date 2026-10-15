@@ -183,16 +183,24 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example of a tiled WMS layer that wraps across the 180° meridian. / 演示瓦片式 WMS 图层在横跨 180° 经线（国际日界线）时的连续无缝环绕漫游机制。</p>
-        <div id="docs"><h2>By default, WMS tiles are reused across the 180° meridian.  This behavior can be disabled by setting the <code>wrapX</code> option to <code>false</code>.
-默认情况下，WMS 切片在跨越 180° 经线（国际日期变更线）时会自动跨世界副本重复复用（<code>wrapX: true</code>）。可以通过将 <code>wrapX</code> 选项设为 <code>false</code> 来禁用这一连续环绕行为。</h2>
+        <div id="docs"><p>By default, WMS tiles are reused across the 180° meridian.  This behavior can be disabled by setting the <code>wrapX</code> option to <code>false</code>.</p>
+<p>默认情况下，WMS 切片在跨越 180° 经线（国际日期变更线）时会自动跨世界副本重复复用（<code>wrapX: true</code>）。可以通过将 <code>wrapX</code> 选项设为 <code>false</code> 来禁用这一连续环绕行为。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 什么是 <code>wrapX</code>（世界连续水平卷绕）？ * 在 Web 墨卡托投影（EPSG:3857）或等经纬度投影（EPSG:4326）中，全球经度范围是 $[-180^\circ, +180^\circ]$。 * 当用户在宏观尺度下向东或向西无限制连续平移地图时，视口会漫游到全球范围之外（即“世界副本 -1”、“世界副本 +1”等）。 * <strong><code>wrapX: true</code>（默认）</strong>：</h4>
-<p>  OpenLayers 会将超界坐标自动取模折算回 $[-180^\circ, +180^\circ]$，向 WMS 服务端请求标准范围内的切片，并在当前漫游位置无缝复用绘制，形成地球如同连续旋转圆柱体的视觉体验。</p>
+<h4>1. 什么是 <code>wrapX</code>（世界连续水平卷绕）？</h4>
 <ul>
+<li>在 Web 墨卡托投影（EPSG:3857）或等经纬度投影（EPSG:4326）中，全球经度范围是 $[-180^\circ, +180^\circ]$。</li>
+<li>当用户在宏观尺度下向东或向西无限制连续平移地图时，视口会漫游到全球范围之外（即“世界副本 -1”、“世界副本 +1”等）。</li>
+<li><strong><code>wrapX: true</code>（默认）</strong>：
+OpenLayers 会将超界坐标自动取模折算回 $[-180^\circ, +180^\circ]$，向 WMS 服务端请求标准范围内的切片，并在当前漫游位置无缝复用绘制，形成地球如同连续旋转圆柱体的视觉体验。</li>
 <li><strong><code>wrapX: false</code></strong>：
 当只需要聚焦特定国家区域（如仅展示美国本土或某单个省市），禁止在世界其他副本重复绘制时，可将 <code>wrapX: false</code>，超出真实经度范围的区域将保持空白。</li>
 </ul>
-<h4>2. 服务端支持与边界要求 * 要使全球 WMS 图层在跨 180° 经线处无缝拼接，WMS 服务端发布的数据源本身必须完整覆盖全球范围，或者数据在边界处具有合法的拓扑闭合。 * 本示例加载的是 Natural Earth 全球国家行政区划（<code>ne:ne_10m_admin_0_countries</code>），完美展现了横跨白令海峡与太平洋时的平滑连续视图。</h4>
+<h4>2. 服务端支持与边界要求</h4>
+<ul>
+<li>要使全球 WMS 图层在跨 180° 经线处无缝拼接，WMS 服务端发布的数据源本身必须完整覆盖全球范围，或者数据在边界处具有合法的拓扑闭合。</li>
+<li>本示例加载的是 Natural Earth 全球国家行政区划（<code>ne:ne_10m_admin_0_countries</code>），完美展现了横跨白令海峡与太平洋时的平滑连续视图。</li>
+</ul>
 </div>
       </div>
 
@@ -287,16 +295,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

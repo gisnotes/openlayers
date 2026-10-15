@@ -152,21 +152,32 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example using tile load events. / 演示如何监听 ImageTile 瓦片加载生命周期事件并构建高精度的动态加载进度条。</p>
-        <div id="docs"><h2>Image tile sources fire events related to tile loading.  You can listen for <code>tileloadstart</code>, <code>tileloadend</code>, and <code>tileloaderror</code> type events to monitor tile loading progress.  This example registers listeners for these events and renders a tile loading progress bar at the bottom of the map. The progress bar is shown and hidden according to the map&#39;s <code>loadstart</code> and <code>loadend</code> events.
-切片光栅数据源（如 ImageTile、XYZ、TileWMS 等）在网格瓦片拉取时会触发细粒度生命周期事件。你可以通过监听 <code>tileloadstart</code>、<code>tileloadend</code> 以及 <code>tileloaderror</code> 事件，精确量化瓦片请求池的队列状态与下载完成比率。
-本示例在地图视口底部渲染了一个响应式进度条，将各个瓦片的加载推进过程转化为平滑的百分比宽度增长；同时利用地图实例的 <code>loadstart</code> 与 <code>loadend</code> 事件管理进度条的生命周期显隐与复位。</h2>
+        <div id="docs"><p>Image tile sources fire events related to tile loading.  You can
+listen for <code>tileloadstart</code>, <code>tileloadend</code>,
+and <code>tileloaderror</code> type events to monitor tile loading
+progress.  This example registers listeners for these events and
+renders a tile loading progress bar at the bottom of the map. The
+progress bar is shown and hidden according to the map&#39;s <code>loadstart</code>
+and <code>loadend</code> events.</p>
+<p>切片栅格数据源（如 ImageTile、XYZ、TileWMS 等）在网格瓦片拉取时会触发细粒度生命周期事件。你可以通过监听 <code>tileloadstart</code>、<code>tileloadend</code> 以及 <code>tileloaderror</code> 事件，精确量化瓦片请求池的队列状态与下载完成比率。</p>
+<p>本示例在地图视口底部渲染了一个响应式进度条，将各个瓦片的加载推进过程转化为平滑的百分比宽度增长；同时利用地图实例的 <code>loadstart</code> 与 <code>loadend</code> 事件管理进度条的生命周期显隐与复位。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 核心架构与设计机制 (Core Architecture &amp; Mechanics) - <strong>瓦片池状态机模型（Tile Pool State Machine）</strong>：</h4>
-<p>  地图在一次漫游缩放中会计算出当前视口需要的若干瓦片索引 <code>(z, x, y)</code>。OpenLayers 内部通过 <code>TileQueue</code> 进行优先级调度（按距离视口中心的距离从近到远排序）：</p>
+<h4>1. 核心架构与设计机制 (Core Architecture &amp; Mechanics)</h4>
 <ul>
+<li><strong>瓦片池状态机模型（Tile Pool State Machine）</strong>：
+地图在一次漫游缩放中会计算出当前视口需要的若干瓦片索引 <code>(z, x, y)</code>。OpenLayers 内部通过 <code>TileQueue</code> 进行优先级调度（按距离视口中心的距离从近到远排序）：<ul>
 <li>队列触发网络请求时，数据源抛出 <code>tileloadstart</code>；</li>
 <li>单张瓦片 <code>Image</code> 元素接收到 <code>load</code> 回调并完成纹理上传时，抛出 <code>tileloadend</code>；</li>
 <li>若瓦片返回 404、500 或因网络断开触发 <code>error</code>，抛出 <code>tileloaderror</code>。</li>
+</ul>
+</li>
 <li><strong>累积比率进度计算法（Cumulative Ratio Progress）</strong>：
 与单张图像的 0/1 状态不同，视口涉及大量瓦片。进度条采用 <code>(loaded / loading) * 100</code> 的动态累积法，当视口持续滚动时，<code>loading</code> 计数动态上扬，<code>loaded</code> 计数平稳追赶，确保进度条能真实反映并发流式加载全貌。</li>
 </ul>
-<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns) - <strong>多事件监听合并与容错闭合</strong>：</h4>
-<pre><code class="language-javascript">source.on(&#39;tileloadstart&#39;, function () {
+<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns)</h4>
+<ul>
+<li><strong>多事件监听合并与容错闭合</strong>：<pre><code class="language-javascript">source.on(&#39;tileloadstart&#39;, function () {
   progress.addLoading(); // loading++ 并重绘宽度
 });
 // 使用数组同时捕获成功和失败，保证 loaded 计数器绝对自闭合
@@ -174,8 +185,7 @@ source.on([&#39;tileloadend&#39;, &#39;tileloaderror&#39;], function () {
   progress.addLoaded();  // loaded++ 并重绘宽度
 });
 </code></pre>
-<p>  严禁只监听 <code>tileloadend</code> 而忽略 <code>tileloaderror</code>，否则一旦发生少量瓦片 404，<code>loaded</code> 将永远小于 <code>loading</code>，导致进度条停滞在 90%+ 且无法复位。</p>
-<ul>
+严禁只监听 <code>tileloadend</code> 而忽略 <code>tileloaderror</code>，否则一旦发生少量瓦片 404，<code>loaded</code> 将永远小于 <code>loading</code>，导致进度条停滞在 90%+ 且无法复位。</li>
 <li><strong>重置与延迟消隐机制</strong>：<pre><code class="language-javascript">Progress.prototype.hide = function () {
   const style = this.el.style;
   setTimeout(function () {
@@ -186,9 +196,10 @@ source.on([&#39;tileloadend&#39;, &#39;tileloaderror&#39;], function () {
 </code></pre>
 延迟 250ms 可使 CSS <code>transition: width 250ms ease</code> 完整跑完最后的满格动画，随即将宽度复位为 0，防止下一次加载时出现反向缩回的视觉瑕疵。</li>
 </ul>
-<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices) - <strong>计数器数值膨胀与归零重置</strong>：</h4>
-<p>  在长时间运行的监控看板或大屏系统中，如果用户持续漫游，<code>loading</code> 和 <code>loaded</code> 计数器会持续单调递增至数万。建议在 <code>loadend</code> 触发且进度条隐藏后，将 <code>this.loading = 0; this.loaded = 0;</code> 彻底复位归零，避免数值精度漂移与潜在逻辑溢出。</p>
+<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices)</h4>
 <ul>
+<li><strong>计数器数值膨胀与归零重置</strong>：
+在长时间运行的监控看板或大屏系统中，如果用户持续漫游，<code>loading</code> 和 <code>loaded</code> 计数器会持续单调递增至数万。建议在 <code>loadend</code> 触发且进度条隐藏后，将 <code>this.loading = 0; this.loaded = 0;</code> 彻底复位归零，避免数值精度漂移与潜在逻辑溢出。</li>
 <li><strong>跨瓦片源并发混淆隔离</strong>：
 若地图挂载了多个图层（例如基础底图 + 专题注记 + 业务图斑），建议为每个关键图层单独实例化独立的 Progress 监控，或者在全局状态机中针对每个源计算带权重的综合进度，避免单个迟钝的影像图层拖垮整张地图的交互就绪指示。</li>
 </ul>
@@ -376,16 +387,28 @@ map.on(&#x27;loadend&#x27;, function () {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

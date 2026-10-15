@@ -128,19 +128,36 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Restricting layer rendering to a limited extent. / 演示如何使用 layer.setExtent() 动态裁剪并限制图层仅在特定空间边界内渲染。</p>
-        <div id="docs"><h2>This example uses the <code>layer.setExtent()</code> method to modify the extent of the overlay layer.  Use the controls above to limit rendering based on an extent (approximate country bounds).
-本示例展示如何利用 <code>layer.setExtent()</code> 方法动态裁剪并限制图层在特定空间范围（Extent）内呈现。点击下方按钮可动态切换上层黑色主题世界地图的显示包围盒（印度、阿根廷、尼日利亚、瑞典国界范围），包围盒外部的区域将自动停止切片请求并进行像素级裁切遮罩。</h2>
+        <div id="docs"><p>This example uses the <code>layer.setExtent()</code> method to
+modify the extent of the overlay layer.  Use the controls above
+to limit rendering based on an extent (approximate country bounds).</p>
+<p>本示例展示如何利用 <code>layer.setExtent()</code> 方法动态裁剪并限制图层在特定空间范围（Extent）内呈现。点击下方按钮可动态切换上层黑色主题世界地图的显示包围盒（印度、阿根廷、尼日利亚、瑞典国界范围），包围盒外部的区域将自动停止切片请求并进行像素级裁切遮罩。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 核心架构原理 (Core Architecture) 在多图层叠加应用中，通常只需在特定国家、行政区划或项目红线内叠加特定专题图层（如高分辨率暗黑主题图、专题热力图、遥感正射切片）： - <strong>图层级边界裁剪（Layer Extent Masking）</strong>：<code>TileLayer</code> 的 <code>extent: [minX, minY, maxX, maxY]</code> 会通知底层渲染引擎：只有与该空间包围盒发生相交（Intersect）的切片才会被下载。在 Canvas 绘制阶段，OpenLayers 会利用 <code>ctx.clip()</code> 沿着当前视口下计算出的包围盒矩形进行硬件级画布裁剪，盒外的多余瓦片直接丢弃。 - <strong>坐标投影统一</strong>：<code>extent</code> 的单位必须严格与当前地图的投影坐标系保持一致。若原始经纬度坐标为 WGS84（EPSG:4326），在默认地图（EPSG:3857）中使用前必须通过 <code>transformExtent(extent, 'EPSG:4326', 'EPSG:3857')</code> 进行投影转换。</h4>
-<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript // 1. 将 WGS84 经纬度包围盒转换为 Web 墨卡托投影米制坐标 function transform(extent) {</h4>
-<p>  return transformExtent(extent, &#39;EPSG:4326&#39;, &#39;EPSG:3857&#39;);
+<h4>1. 核心架构原理 (Core Architecture)</h4>
+<p>在多图层叠加应用中，通常只需在特定国家、行政区划或项目红线内叠加特定专题图层（如高分辨率暗黑主题图、专题热力图、遥感正射切片）：</p>
+<ul>
+<li><strong>图层级边界裁剪（Layer Extent Masking）</strong>：<code>TileLayer</code> 的 <code>extent: [minX, minY, maxX, maxY]</code> 会通知底层渲染引擎：只有与该空间包围盒发生相交（Intersect）的切片才会被下载。在 Canvas 绘制阶段，OpenLayers 会利用 <code>ctx.clip()</code> 沿着当前视口下计算出的包围盒矩形进行硬件级画布裁剪，盒外的多余瓦片直接丢弃。</li>
+<li><strong>坐标投影统一</strong>：<code>extent</code> 的单位必须严格与当前地图的投影坐标系保持一致。若原始经纬度坐标为 WGS84（EPSG:4326），在默认地图（EPSG:3857）中使用前必须通过 <code>transformExtent(extent, 'EPSG:4326', 'EPSG:3857')</code> 进行投影转换。</li>
+</ul>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive)</h4>
+<pre><code class="language-javascript">// 1. 将 WGS84 经纬度包围盒转换为 Web 墨卡托投影米制坐标
+function transform(extent) {
+  return transformExtent(extent, &#39;EPSG:4326&#39;, &#39;EPSG:3857&#39;);
 }
-// 2. 按钮点击动态重置图层裁剪范围 for (const key in extents) {
+
+// 2. 按钮点击动态重置图层裁剪范围
+for (const key in extents) {
   document.getElementById(key).onclick = function (event) {
     overlay.setExtent(extents[event.target.id]);
   };
-} ```</p>
-<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>坐标投影不一致导致的图层彻底消失</strong>：若直接将 <code>[68.1, 7.9, 97.4, 35.4]</code> 赋值给使用 EPSG:3857 的图层，由于该范围在米制坐标系中被当做大西洋几内亚湾附近仅数十米大的微小区域，在视口中将完全不可见。务必牢记坐标系转换。 - <strong>不规则多边形裁剪需求</strong>：<code>extent</code> 仅支持正向轴对齐的矩形包围盒（Bounding Box）。若业务需求为沿真实的国界、省界等不规则复杂多边形进行精准裁切，需结合图层的 <code>prerender</code> 事件配合 Canvas 的 <code>clip()</code> 进行矢量路径抠图。</h4>
+}
+</code></pre>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls)</h4>
+<ul>
+<li><strong>坐标投影不一致导致的图层彻底消失</strong>：若直接将 <code>[68.1, 7.9, 97.4, 35.4]</code> 赋值给使用 EPSG:3857 的图层，由于该范围在米制坐标系中被当做大西洋几内亚湾附近仅数十米大的微小区域，在视口中将完全不可见。务必牢记坐标系转换。</li>
+<li><strong>不规则多边形裁剪需求</strong>：<code>extent</code> 仅支持正向轴对齐的矩形包围盒（Bounding Box）。若业务需求为沿真实的国界、省界等不规则复杂多边形进行精准裁切，需结合图层的 <code>prerender</code> 事件配合 Canvas 的 <code>clip()</code> 进行矢量路径抠图。</li>
+</ul>
 </div>
       </div>
 
@@ -276,16 +293,28 @@ for (const countryKey in extents) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

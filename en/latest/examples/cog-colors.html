@@ -151,24 +151,34 @@
 
       <div class="row-fluid">
         <p id="shortdesc">NDVI from a COG with a dynamic color ramp. / 基于云优化 GeoTIFF 实时计算 NDVI，并通过色板与滑块动态更新 WebGL 色带与分段区间。</p>
-        <div id="docs"><h2>The GeoTIFF layer in this example draws from two Sentinel 2 sources: a red band and a near infrared band. The layer style includes a <code>color</code> expression that calculates the Normalized Difference Vegetation Index (NDVI) from values in the two bands.  The <code>interpolate</code> expression is used to map NDVI values to colors.  The &quot;stop&quot; values for the color ramp are derived from application provided style variables.  Using the inputs above, the min and max colors and values can be adjusted.  The <code>layer.updateStyleVariables()</code> method is called to update the variables used in the interpolated color expression.
-本示例中的 GeoTIFF 图层从两个哨兵 2 号（Sentinel-2）数据源中提取红光波段与近红外波段。 图层样式使用 <code>color</code> 声明式表达式在 GPU 中计算归一化植被指数（NDVI），并使用 <code>interpolate</code> 表达式将 NDVI 映射为颜色。 色带的关键阶梯值（Stop values）由应用程序注入的动态样式变量（Style Variables）生成。使用下方的控制面板，可以随意调整最小/最大 NDVI 阈值和对应的端点颜色。 通过调用 <code>layer.updateStyleVariables()</code> 方法，可以在不重新编译着色器的情况下瞬时刷新 GPU 渲染效果。</h2>
+        <div id="docs"><p>The GeoTIFF layer in this example draws from two Sentinel 2 sources: a red band and a near infrared band.
+The layer style includes a <code>color</code> expression that calculates the Normalized Difference Vegetation Index (NDVI)
+from values in the two bands.  The <code>interpolate</code> expression is used to map NDVI values to colors.  The &quot;stop&quot; values
+for the color ramp are derived from application provided style variables.  Using the inputs above, the min and max
+colors and values can be adjusted.  The <code>layer.updateStyleVariables()</code> method is called to update the
+variables used in the interpolated color expression.</p>
+<p>本示例中的 GeoTIFF 图层从两个哨兵 2 号（Sentinel-2）数据源中提取红光波段与近红外波段。
+图层样式使用 <code>color</code> 声明式表达式在 GPU 中计算归一化植被指数（NDVI），并使用 <code>interpolate</code> 表达式将 NDVI 映射为颜色。
+色带的关键阶梯值（Stop values）由应用程序注入的动态样式变量（Style Variables）生成。使用下方的控制面板，可以随意调整最小/最大 NDVI 阈值和对应的端点颜色。
+通过调用 <code>layer.updateStyleVariables()</code> 方法，可以在不重新编译着色器的情况下瞬时刷新 GPU 渲染效果。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. Chroma.js 与感知均匀色彩空间 (Lab Color Space) * <strong>RGB 线性插值的视觉缺陷</strong>：</h4>
-<p>  在计算机常见的 RGB 空间中进行颜色渐变插值（如从蓝色 <code>#0300AD</code> 直接渐变到绿色 <code>#00FF00</code>），中间往往会出现暗沉、发灰的过渡带（俗称“死区”或“灰泥泞区”）。</p>
+<h4>1. Chroma.js 与感知均匀色彩空间 (Lab Color Space)</h4>
 <ul>
+<li><strong>RGB 线性插值的视觉缺陷</strong>：
+在计算机常见的 RGB 空间中进行颜色渐变插值（如从蓝色 <code>#0300AD</code> 直接渐变到绿色 <code>#00FF00</code>），中间往往会出现暗沉、发灰的过渡带（俗称“死区”或“灰泥泞区”）。</li>
 <li><strong>Lab 感知均匀色彩空间</strong>：
 代码中引入了 <code>chroma-js</code> 库，并指定采用 Lab 模式插值：<pre><code class="language-javascript">const scale = chromaScale([minColor, maxColor]).mode(&#39;lab&#39;);
 </code></pre>
 $L^*a^<em>b^</em>$ 是人类视觉感知完全均匀的色彩空间。在 Lab 空间中计算分段梯度，生成的中间渐变色在明度与饱和度上过渡极其自然平滑，非常契合科学遥感制图的专业标准。</li>
 </ul>
-<h4>2. GPU 动态变量数组与分段表达式拼接 * <strong>着色器构建阶段</strong>：</h4>
-<p>  <code>colors()</code> 函数根据分段数（<code>segments = 10</code>）构造一个包含 11 个动态锚点的数组：</p>
-<pre><code class="language-javascript">stops[i * 2] = [&#39;var&#39;, `value${i}`];
+<h4>2. GPU 动态变量数组与分段表达式拼接</h4>
+<ul>
+<li><strong>着色器构建阶段</strong>：
+<code>colors()</code> 函数根据分段数（<code>segments = 10</code>）构造一个包含 11 个动态锚点的数组：<pre><code class="language-javascript">stops[i * 2] = [&#39;var&#39;, `value${i}`];
 stops[i * 2 + 1] = [&#39;color&#39;, [&#39;var&#39;, `red${i}`], [&#39;var&#39;, `green${i}`], [&#39;var&#39;, `blue${i}`]];
 </code></pre>
-<p>  它作为展开参数传入 <code>[&#39;interpolate&#39;, [&#39;linear&#39;], ndvi, ...colors()]</code>。</p>
-<ul>
+它作为展开参数传入 <code>[&#39;interpolate&#39;, [&#39;linear&#39;], ndvi, ...colors()]</code>。</li>
 <li><strong>运行时交互阶段</strong>：
 当用户拖拽阈值滑块或选择调色板时，只需在 JavaScript 中计算出新的分段数值，然后调用：<pre><code class="language-javascript">layer.updateStyleVariables(getVariables());
 </code></pre>
@@ -382,16 +392,28 @@ update();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

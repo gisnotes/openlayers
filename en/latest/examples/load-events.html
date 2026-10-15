@@ -140,30 +140,38 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example using load events to show a loading spinner. / 演示如何使用地图实例的 loadstart 与 loadend 事件驱动 CSS 加载旋转器（Spinner）。</p>
-        <div id="docs"><h2>You can listen for the map&#39;s <code>loadstart</code> and <code>loadend</code> events to show a loading spinner on top of the map.
-通过监听地图实例的 <code>loadstart</code> 和 <code>loadend</code> 事件，可以在地图进行数据拉取和重绘时在地图容器上方展示一个优雅的 CSS 加载旋转器（Spinner）。
-本示例演示了如何通过简单的 DOM 类名切换（<code>classList.add('spinner')</code> / <code>classList.remove('spinner')</code>），在所有底层图层（包括瓦片、矢量等）完成数据加载与光栅渲染期间为用户提供直观的加载状态视觉反馈。</h2>
+        <div id="docs"><p>You can listen for the map&#39;s <code>loadstart</code> and <code>loadend</code> events
+to show a loading spinner on top of the map.</p>
+<p>通过监听地图实例的 <code>loadstart</code> 和 <code>loadend</code> 事件，可以在地图进行数据拉取和重绘时在地图容器上方展示一个优雅的 CSS 加载旋转器（Spinner）。</p>
+<p>本示例演示了如何通过简单的 DOM 类名切换（<code>classList.add('spinner')</code> / <code>classList.remove('spinner')</code>），在所有底层图层（包括瓦片、矢量等）完成数据加载与栅格渲染期间为用户提供直观的加载状态视觉反馈。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 核心架构与设计机制 (Core Architecture &amp; Mechanics) - <strong>地图容器级加载状态聚合（Map Level Event Aggregation）</strong>：</h4>
-<p>  在多图层混合地图中，每个图层的数据源可能同时发起数十个瓦片或要素请求。OpenLayers 在 <code>ol/Map</code> 层面内置了状态聚合机：</p>
+<h4>1. 核心架构与设计机制 (Core Architecture &amp; Mechanics)</h4>
 <ul>
+<li><strong>地图容器级加载状态聚合（Map Level Event Aggregation）</strong>：
+在多图层混合地图中，每个图层的数据源可能同时发起数十个瓦片或要素请求。OpenLayers 在 <code>ol/Map</code> 层面内置了状态聚合机：<ul>
 <li>当任意图层开始加载数据且当前未处于 loading 状态时，触发全局 <code>loadstart</code>；</li>
 <li>当地图视口内的所有图层、瓦片队列及渲染管道全部空闲（Idle）时，触发全局 <code>loadend</code>。</li>
+</ul>
+</li>
 <li><strong>零侵入式 CSS 蒙版方案</strong>：
 通过将旋转动画抽离到 CSS 伪元素（<code>:after</code>）中，不仅保持 JavaScript 逻辑高度极简（仅需 2 行类名增删），还利用了 GPU 硬件加速合成器（<code>transform: rotate()</code>）执行平滑旋转，避免阻塞 JS 主线程。</li>
 </ul>
-<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns) - <strong>事件绑定与类名切换</strong>：</h4>
-<pre><code class="language-javascript">map.on(&#39;loadstart&#39;, function () {
+<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns)</h4>
+<ul>
+<li><strong>事件绑定与类名切换</strong>：<pre><code class="language-javascript">map.on(&#39;loadstart&#39;, function () {
   map.getTargetElement().classList.add(&#39;spinner&#39;);
 });
 map.on(&#39;loadend&#39;, function () {
   map.getTargetElement().classList.remove(&#39;spinner&#39;);
 });
 </code></pre>
-<p>  通过 <code>map.getTargetElement()</code> 直接获取当前地图绑定的根 DOM 节点，动态追加或移除 <code>.spinner</code> 类。</p>
-<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices) - <strong>超时兜底保护（Timeout Fallback）</strong>：</h4>
-<p>  如果第三方底图服务偶尔出现瓦片挂起（TCP 握手挂死且未返回错误），<code>loadend</code> 可能会被严重推迟。在生产项目中，建议配合一个 5-8 秒的兜底定时器（<code>setTimeout</code>），超时后强制移除加载态，避免遮挡用户操作。</p>
+通过 <code>map.getTargetElement()</code> 直接获取当前地图绑定的根 DOM 节点，动态追加或移除 <code>.spinner</code> 类。</li>
+</ul>
+<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices)</h4>
 <ul>
+<li><strong>超时兜底保护（Timeout Fallback）</strong>：
+如果第三方底图服务偶尔出现瓦片挂起（TCP 握手挂死且未返回错误），<code>loadend</code> 可能会被严重推迟。在生产项目中，建议配合一个 5-8 秒的兜底定时器（<code>setTimeout</code>），超时后强制移除加载态，避免遮挡用户操作。</li>
 <li><strong>短频闪烁消除（Flicker Prevention）</strong>：
 对于本地缓存命中率较高的场景，瓦片可能在数十毫秒内瞬间就绪，造成 Spinner &quot;闪现&quot;。推荐通过 CSS <code>transition-delay</code>（如延迟 200ms 显示）或 Lodash 防抖，仅当加载耗时超过阈值时才展示加载动画，从而大幅提升用户体验。</li>
 </ul>
@@ -297,16 +305,28 @@ map.on(&#x27;loadend&#x27;, function () {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

@@ -165,20 +165,38 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Rendering a STAC Item with geometry and COG. / 解析 STAC Item 规范并渲染其空间矢量足迹与云原生 GeoTIFF (COG) 资产图层组。</p>
-        <div id="docs"><h2>This example uses the npm package <a href="https://moregeo-it.github.io/ol-stac/"><code>ol-stac</code></a> which adds <a href="https://stacspec.org">STAC</a> support to OpenLayers.
-It can for example show geometries and assets from SpatioTemporal Asset Catalog (STAC) Items as a layer group.
-For more examples visit <a href="https://moregeo-it.github.io/ol-stac/en/latest/examples/">https://moregeo-it.github.io/ol-stac/en/latest/examples/</a>.
-本示例使用 npm 扩展包 <a href="https://moregeo-it.github.io/ol-stac/"><code>ol-stac</code></a>，为 OpenLayers 提供原生的 <a href="https://stacspec.org">STAC（SpatioTemporal Asset Catalog，时空资产目录）</a> 支持。 它可以直接将 STAC Item（时空数据项）中的空间矢量多边形足迹（Footprint Geometry）与其关联的 COG 遥感资产解析为一个图层组（LayerGroup）。 更多实战范例请访问 <a href="https://moregeo-it.github.io/ol-stac/en/latest/examples/">https://moregeo-it.github.io/ol-stac/en/latest/examples/</a>。</h2>
+        <div id="docs"><p>This example uses the npm package <a href="https://moregeo-it.github.io/ol-stac/"><code>ol-stac</code></a> which
+adds <a href="https://stacspec.org">STAC</a> support to OpenLayers.</p>
+<p>It can for example show geometries and assets from SpatioTemporal Asset Catalog (STAC) Items as a layer group.</p>
+<p>For more examples visit <a href="https://moregeo-it.github.io/ol-stac/en/latest/examples/">https://moregeo-it.github.io/ol-stac/en/latest/examples/</a>.</p>
+<p>本示例使用 npm 扩展包 <a href="https://moregeo-it.github.io/ol-stac/"><code>ol-stac</code></a>，为 OpenLayers 提供原生的 <a href="https://stacspec.org">STAC（SpatioTemporal Asset Catalog，时空资产目录）</a> 支持。
+它可以直接将 STAC Item（时空数据项）中的空间矢量多边形足迹（Footprint Geometry）与其关联的 COG 遥感资产解析为一个图层组（LayerGroup）。
+更多实战范例请访问 <a href="https://moregeo-it.github.io/ol-stac/en/latest/examples/">https://moregeo-it.github.io/ol-stac/en/latest/examples/</a>。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 什么是 STAC（时空资产目录规范）？ * <strong>传统遥感检索的困境</strong>：不同卫星（Landsat、Sentinel、Planet、MODIS）、不同机构（NASA、ESA、USGS）的数据发布格式各异，API 标准碎片化，查找与加载影像极难自动化。 * <strong>STAC 统一元数据标准</strong>：</h4>
+<h4>1. 什么是 STAC（时空资产目录规范）？</h4>
 <ul>
+<li><strong>传统遥感检索的困境</strong>：不同卫星（Landsat、Sentinel、Planet、MODIS）、不同机构（NASA、ESA、USGS）的数据发布格式各异，API 标准碎片化，查找与加载影像极难自动化。</li>
+<li><strong>STAC 统一元数据标准</strong>：<ul>
 <li><strong>STAC Item</strong>：一个 JSON 对象，描述在特定时间采集的单景时空资产；</li>
 <li>包含该景影像的地理外包几何（<code>geometry</code>: GeoJSON 多边形）、拍摄时间戳（<code>datetime</code>）、云量属性（<code>eo:cloud_cover</code>）以及资产清单（<code>assets</code>）；</li>
 <li>资产清单中包含各个波段的 COG 访问链接（<code>image/tiff; application=geotiff; profile=cloud-optimized</code>）、缩略图和元数据。</li>
 </ul>
-<h4>2. <code>ol-stac</code> 的自动化图层构建机制 OpenLayers 开发者只需一行代码： ```javascript const layer = new STAC({</h4>
-<p>  url: &#39;https://.../S2A_10TES_20220726_0_L2A.json&#39;,
-}); ``` <code>ol-stac</code> 会自动执行： 1. 拉取并解析 STAC Item JSON； 2. 提取 <code>geometry</code> 创建矢量边界图层，用多边形勾勒出卫星扫描过境的精确足迹； 3. 遍历 <code>assets</code>，筛选视觉影像或真彩色组合资产，自动创建 <code>ol/source/GeoTIFF</code> 与 <code>ol/layer/WebGLTile</code>； 4. 将矢量层与 COG 栅格层打包为 <code>ol/layer/Group</code>，并在就绪时触发 <code>sourceready</code> 事件，方便通过 <code>view.fit(layer.getExtent())</code> 一键缩放居中。</p>
+</li>
+</ul>
+<h4>2. <code>ol-stac</code> 的自动化图层构建机制</h4>
+<p>OpenLayers 开发者只需一行代码：</p>
+<pre><code class="language-javascript">const layer = new STAC({
+  url: &#39;https://.../S2A_10TES_20220726_0_L2A.json&#39;,
+});
+</code></pre>
+<p><code>ol-stac</code> 会自动执行：</p>
+<ol>
+<li>拉取并解析 STAC Item JSON；</li>
+<li>提取 <code>geometry</code> 创建矢量边界图层，用多边形勾勒出卫星扫描过境的精确足迹；</li>
+<li>遍历 <code>assets</code>，筛选视觉影像或真彩色组合资产，自动创建 <code>ol/source/GeoTIFF</code> 与 <code>ol/layer/WebGLTile</code>；</li>
+<li>将矢量层与 COG 栅格层打包为 <code>ol/layer/Group</code>，并在就绪时触发 <code>sourceready</code> 事件，方便通过 <code>view.fit(layer.getExtent())</code> 一键缩放居中。</li>
+</ol>
 </div>
       </div>
 
@@ -281,16 +299,28 @@ layer.on(&#x27;sourceready&#x27;, () &#x3D;&gt; {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

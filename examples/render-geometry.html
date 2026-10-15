@@ -108,7 +108,7 @@
               data-bs-target="#tag-example-list"
               data-title="canvas"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-tiles.html&quot;&gt;Canvas Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-tiles.html&quot;&gt;Canvas Tiles / Canvas 动态切片与网格坐标调试&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-tiles-tms.html&quot;&gt;Custom Canvas Tiles / 自定义 Canvas 切片与 TMS 坐标网格&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
@@ -142,25 +142,33 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example of rendering geometries to an arbitrary canvas. / 演示如何脱离 Map 实例，利用 toContext 将点、线、面几何直接绘制到任意 HTML5 Canvas 画布上。</p>
-        <div id="docs"><p>This example shows how to render geometries to an arbitrary canvas.</p> <p>本示例演示如何脱离完整的 <code>Map</code> 与 <code>VectorLayer</code> 图层体系，借助 <code>ol/render.toContext</code> 即时渲染引擎，将点、线、面几何以及样式直接光栅化绘制到任意独立的 HTML5 <code>&lt;canvas&gt;</code> 画布上。</p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. 核心架构与设计思想 (Core Architecture & Design) - <strong>即时渲染架构（Immediate Rendering API）</strong>：
-  在大多数应用场景中，OpenLayers 的几何通过 `Map` $\to$ `Layer` $\to$ `Source` $\to$ `Feature` 保留在内存中（保留模式 Retained Mode）。但在某些特定业务中，例如<strong>图例色块生成（Legend Swatches）</strong>、<strong>动态图标生成器（Dynamic Icon Generator）</strong>、<strong>PDF 缩略图导出</strong> 或 <strong>离屏 Web Worker 渲染</strong>，我们并不需要完整的地图事件监听、视口交互和投影系统，仅仅需要借用 OpenLayers 强大的矢量样式排版能力。
-- <strong>`toContext` 桥接器</strong>：
-  `toContext(canvas2dContext, [options])` 返回一个 `VectorContext` 实例。它抹平了底层 Canvas 原生复杂繁琐的 `beginPath`、`arc`、`lineWidth`、`setLineDash` 指令，让开发者能够直接使用高阶的 `ol/style/Style` 与 `ol/geom/*` 几何对象。<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis) - <code>toContext(context, { size, pixelRatio })</code>：</h4>
+        <div id="docs"><p>This example shows how to render geometries to an arbitrary canvas.</p>
+<p>本示例演示如何脱离完整的 <code>Map</code> 与 <code>VectorLayer</code> 图层体系，借助 <code>ol/render.toContext</code> 即时渲染引擎，将点、线、面几何以及样式直接栅格化绘制到任意独立的 HTML5 <code>&lt;canvas&gt;</code> 画布上。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
 <ul>
+<li><strong>即时渲染架构（Immediate Rendering API）</strong>：
+在大多数应用场景中，OpenLayers 的几何通过 <code>Map</code> $\to$ <code>Layer</code> $\to$ <code>Source</code> $\to$ <code>Feature</code> 保留在内存中（保留模式 Retained Mode）。但在某些特定业务中，例如<strong>图例色块生成（Legend Swatches）</strong>、<strong>动态图标生成器（Dynamic Icon Generator）</strong>、<strong>PDF 缩略图导出</strong> 或 <strong>离屏 Web Worker 渲染</strong>，我们并不需要完整的地图事件监听、视口交互和投影系统，仅仅需要借用 OpenLayers 强大的矢量样式排版能力。</li>
+<li><strong><code>toContext</code> 桥接器</strong>：
+<code>toContext(canvas2dContext, [options])</code> 返回一个 <code>VectorContext</code> 实例。它抹平了底层 Canvas 原生复杂繁琐的 <code>beginPath</code>、<code>arc</code>、<code>lineWidth</code>、<code>setLineDash</code> 指令，让开发者能够直接使用高阶的 <code>ol/style/Style</code> 与 <code>ol/geom/*</code> 几何对象。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>toContext(context, { size, pixelRatio })</code>：<ul>
 <li><code>context</code>：目标 Canvas 的 2D 绘图上下文（<code>canvas.getContext(&#39;2d&#39;)</code>）。</li>
 <li><code>size</code>：目标画布的逻辑宽高（如 <code>[100, 100]</code>）。</li>
 <li><code>pixelRatio</code>：设备物理像素比（HiDPI / Retina 支持），默认为 <code>1</code>。</li>
+</ul>
+</li>
 <li><code>vectorContext.setStyle(style)</code>：
 注入 OpenLayers 标准样式对象。支持 <code>Fill</code>、<code>Stroke</code> 以及带有 <code>CircleStyle</code> / <code>Icon</code> 的图片样式。</li>
 <li><code>vectorContext.drawGeometry(geometry)</code>：
 直接接收 <code>Point</code>、<code>LineString</code>、<code>Polygon</code> 或 <code>Multi*</code> 几何实例。坐标直接映射为 Canvas 物理像素坐标系（左上角为 <code>[0, 0]</code>，向右为 X，向下为 Y）。</li>
 </ul>
-<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization) - <strong>像素坐标系与地理坐标系的脱钩</strong>：</h4>
-<p>  传给 <code>drawGeometry</code> 的几何坐标必须是 Canvas 像素坐标（例如 <code>[10, 10]</code>），而不是墨卡托或经纬度。若需在 Canvas 上绘制真实地理要素，需先通过 <code>getTransformFromProjections</code> 计算仿射变换矩阵，将地理坐标缩放平移至 Canvas 尺寸范围。</p>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
 <ul>
+<li><strong>像素坐标系与地理坐标系的脱钩</strong>：
+传给 <code>drawGeometry</code> 的几何坐标必须是 Canvas 像素坐标（例如 <code>[10, 10]</code>），而不是墨卡托或经纬度。若需在 Canvas 上绘制真实地理要素，需先通过 <code>getTransformFromProjections</code> 计算仿射变换矩阵，将地理坐标缩放平移至 Canvas 尺寸范围。</li>
 <li><strong>Canvas 清空重绘</strong>：
 <code>VectorContext</code> 是无状态的即时绘制器，连续调用 <code>drawGeometry</code> 会在 Canvas 上持续叠加图元。如需刷新重绘，需手动调用 <code>ctx.clearRect(0, 0, width, height)</code>。</li>
 </ul>
@@ -281,16 +289,28 @@ vectorContext.drawGeometry(new Point([88, 88]));
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

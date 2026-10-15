@@ -163,28 +163,50 @@
 
       <div class="row-fluid">
         <p id="shortdesc">A GeoZarr source displaying Sentinel-2 imagery. / 使用 GeoZarr 数据源加载并渲染遵循 Multiscales 规范的哨兵 2 号云原生多维科学数组。</p>
-        <div id="docs"><p>The GeoZarr source can be used to read groups of multi-band data from Zarr files following the <a href="https://github.com/zarr-developers/geozarr-spec">GeoZarr specification</a>. GeoZarrs following the <a href="https://github.com/zarr-conventions/multiscales">Multiscales convention</a> are supported. Legacy multiscales GeoZarrs with an OGC TileMatrixSet definition also work.</p>
-<p>In this example, a true-color composite is rendered from Sentinel-2 L2A bands B02 (blue), B03 (green), and B04 (red) reflectance values. Reflectance values from 0 to 0.5 are stretched to values between 0 and 255 for the RGB color channels. A gamma correction is also made to brighten the image.</p>
-<h2>To try different scenes, browse to the <a href="https://api.explorer.eopf.copernicus.eu/browser/external/api.explorer.eopf.copernicus.eu/stac/collections/sentinel-2-l2a">Sentinel-2 Level-2A</a> catalog of the EOPF Explorer, find a Zarr store, and paste the url including the group path (e.g. <code>store.zarr/measurements/reflectance</code>) after selecting &quot;Custom...&quot; from the dropdown above. Note that only GeoZarrs with bands &#39;b02&#39;, &#39;b03&#39;, and &#39;b04&#39; will work without changes to the source code.
-GeoZarr 数据源用于从遵循 <a href="https://github.com/zarr-developers/geozarr-spec">GeoZarr 规范</a> 的 Zarr 存储中读取多波段数组群组。 支持遵循 <a href="https://github.com/zarr-conventions/multiscales">Multiscales 多尺度约定</a> 的 GeoZarr 格式，同时兼容带有 OGC TileMatrixSet 瓦片矩阵集定义的传统多尺度 GeoZarr。
-在本示例中，从哨兵 2 号（Sentinel-2 L2A）波段 B02（蓝）、B03（绿）和 B04（红）的辐射反射率数值中合成真彩色图像。 将 0 到 0.5 之间的物理反射率拉伸映射至 0 到 255 的 RGB 颜色分量，并应用伽马校正（<code>gamma: 1.5</code>）以提亮暗部、增强视觉通透感。
-若想体验不同场景，可访问 EOPF Explorer 的 <a href="https://api.explorer.eopf.copernicus.eu/browser/external/api.explorer.eopf.copernicus.eu/stac/collections/sentinel-2-l2a">Sentinel-2 Level-2A</a> 目录查找 Zarr 存储，在上方下拉菜单中选择 &quot;Custom...&quot; 并粘贴包含群组路径的 URL（例如 <code>store.zarr/measurements/reflectance</code>）。 请注意：在不修改源码的前提下，仅包含 &#39;b02&#39;, &#39;b03&#39;, &#39;b04&#39; 波段的 GeoZarr 数据集可直接展示。</h2>
+        <div id="docs"><p>The GeoZarr source can be used to read groups of multi-band data from Zarr files following the <a href="https://github.com/zarr-developers/geozarr-spec">GeoZarr specification</a>.
+GeoZarrs following the <a href="https://github.com/zarr-conventions/multiscales">Multiscales convention</a> are supported. Legacy multiscales GeoZarrs with an OGC TileMatrixSet definition also work.</p>
+<p>In this example, a true-color composite is rendered from Sentinel-2 L2A bands B02 (blue), B03 (green), and B04 (red) reflectance values.
+Reflectance values from 0 to 0.5 are stretched to values between 0 and 255 for the RGB color channels. A gamma correction is also made to brighten the image.</p>
+<p>To try different scenes, browse to the <a href="https://api.explorer.eopf.copernicus.eu/browser/external/api.explorer.eopf.copernicus.eu/stac/collections/sentinel-2-l2a">Sentinel-2 Level-2A</a> catalog of the EOPF Explorer, find a Zarr store, and paste the url including the group path (e.g. <code>store.zarr/measurements/reflectance</code>) after selecting &quot;Custom...&quot; from the dropdown above.
+Note that only GeoZarrs with bands &#39;b02&#39;, &#39;b03&#39;, and &#39;b04&#39; will work without changes to the source code.</p>
+<p>GeoZarr 数据源用于从遵循 <a href="https://github.com/zarr-developers/geozarr-spec">GeoZarr 规范</a> 的 Zarr 存储中读取多波段数组群组。
+支持遵循 <a href="https://github.com/zarr-conventions/multiscales">Multiscales 多尺度约定</a> 的 GeoZarr 格式，同时兼容带有 OGC TileMatrixSet 瓦片矩阵集定义的传统多尺度 GeoZarr。</p>
+<p>在本示例中，从哨兵 2 号（Sentinel-2 L2A）波段 B02（蓝）、B03（绿）和 B04（红）的辐射反射率数值中合成真彩色图像。
+将 0 到 0.5 之间的物理反射率拉伸映射至 0 到 255 的 RGB 颜色分量，并应用伽马校正（<code>gamma: 1.5</code>）以提亮暗部、增强视觉通透感。</p>
+<p>若想体验不同场景，可访问 EOPF Explorer 的 <a href="https://api.explorer.eopf.copernicus.eu/browser/external/api.explorer.eopf.copernicus.eu/stac/collections/sentinel-2-l2a">Sentinel-2 Level-2A</a> 目录查找 Zarr 存储，在上方下拉菜单中选择 &quot;Custom...&quot; 并粘贴包含群组路径的 URL（例如 <code>store.zarr/measurements/reflectance</code>）。
+请注意：在不修改源码的前提下，仅包含 &#39;b02&#39;, &#39;b03&#39;, &#39;b04&#39; 波段的 GeoZarr 数据集可直接展示。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 为什么在 COG 之外还需要 GeoZarr？ * <strong>COG 的局限</strong>：COG（GeoTIFF）是为 2D 平面图像设计的。面对<strong>高维时空科学数据</strong>（例如包含：经度 $\times$ 纬度 $\times$ 垂直高度/深度 $\times$ 时间序列 $\times$ 物理变量等多维张量），TIFF 的单文件标签结构难以优雅表达。 * <strong>Zarr 的架构优势</strong>：</h4>
+<h4>1. 为什么在 COG 之外还需要 GeoZarr？</h4>
 <ul>
+<li><strong>COG 的局限</strong>：COG（GeoTIFF）是为 2D 平面图像设计的。面对<strong>高维时空科学数据</strong>（例如包含：经度 $\times$ 纬度 $\times$ 垂直高度/深度 $\times$ 时间序列 $\times$ 物理变量等多维张量），TIFF 的单文件标签结构难以优雅表达。</li>
+<li><strong>Zarr 的架构优势</strong>：<ul>
 <li><strong>云原生 N 维分块压缩数组</strong>：由 Zarr 社区（NumFocus）发起，将多维张量切分成规则的分块（Chunks），各分块独立压缩（Blosc/Zstandard/Gzip），并以对象存储的键值对存储（如 <code>.zarr/0/0/1</code>）。</li>
 <li><strong>GeoZarr 规范</strong>：在 Zarr 根目录的 <code>.zattrs</code> 元数据中定义投影坐标系（CRS）、空间仿射变换矩阵（Affine Transform）与维度映射（Dimensions: <code>[&#39;time&#39;, &#39;band&#39;, &#39;y&#39;, &#39;x&#39;]</code>），实现科学计算与地理可视化的统一。</li>
 </ul>
-<h4>2. 波段按名独立点菜加载：<code>bands: [&#39;b04&#39;, &#39;b03&#39;, &#39;b02&#39;]</code> 在 <code>ol/source/GeoZarr</code> 中： * 无需下载一整套庞大的遥感数据集； * 只需声明所需的波段名称数组，OpenLayers 会根据 Zarr 元数据直接只向云端请求这三个波段对应的独立数据分块。</h4>
-<h4>3. 伽马校正与浮点线性插值 卫星传感器测得的地表物理反射率通常介于 $0.0 \sim 0.5$ 之间的小数： ```javascript style: {</h4>
-<p>  gamma: 1.5,
+</li>
+</ul>
+<h4>2. 波段按名独立点菜加载：<code>bands: [&#39;b04&#39;, &#39;b03&#39;, &#39;b02&#39;]</code></h4>
+<p>在 <code>ol/source/GeoZarr</code> 中：</p>
+<ul>
+<li>无需下载一整套庞大的遥感数据集；</li>
+<li>只需声明所需的波段名称数组，OpenLayers 会根据 Zarr 元数据直接只向云端请求这三个波段对应的独立数据分块。</li>
+</ul>
+<h4>3. 伽马校正与浮点线性插值</h4>
+<p>卫星传感器测得的地表物理反射率通常介于 $0.0 \sim 0.5$ 之间的小数：</p>
+<pre><code class="language-javascript">style: {
+  gamma: 1.5,
   color: [
     &#39;color&#39;,
     [&#39;interpolate&#39;, [&#39;linear&#39;], [&#39;band&#39;, 1], 0, 0, 0.5, 255],
     [&#39;interpolate&#39;, [&#39;linear&#39;], [&#39;band&#39;, 2], 0, 0, 0.5, 255],
     [&#39;interpolate&#39;, [&#39;linear&#39;], [&#39;band&#39;, 3], 0, 0, 0.5, 255],
   ],
-} ``` <code>gamma: 1.5</code> 触发非线性伽马曲线映射： $$V_{\text{out}} = V_{\text{in}}^{1 / \gamma} = V_{\text{in}}^{1 / 1.5}$$ 使地球表面原本处于暗调的农田、植被和阴影细节被自然提亮，避免画面发死发黑。</p>
+}
+</code></pre>
+<p><code>gamma: 1.5</code> 触发非线性伽马曲线映射：
+$$V_{\text{out}} = V_{\text{in}}^{1 / \gamma} = V_{\text{in}}^{1 / 1.5}$$
+使地球表面原本处于暗调的农田、植被和阴影细节被自然提亮，避免画面发死发黑。</p>
 </div>
       </div>
 
@@ -346,16 +368,28 @@ render();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

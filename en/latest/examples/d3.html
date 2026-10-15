@@ -103,24 +103,34 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example of using OpenLayers and d3 together. / 演示如何将 OpenLayers 与 D3.js（d3-geo）深度结合，将 TopoJSON 几何渲染到 SVG 图层中。</p>
-        <div id="docs"><p>The example loads TopoJSON geometries and uses d3 (<code>d3.geo.path</code>) to render these geometries to a SVG element.</p> <p>本示例演示如何将 OpenLayers 强大的地理地图视口与 <strong>D3.js（d3-geo / d3-selection）</strong> 数据可视化生态无缝融合。通过继承基础 <code>Layer</code> 类构建自定义图层，在每帧渲染时动态将 OpenLayers 的视口分辨率、中心与旋转角度同步给 D3 的墨卡托投影投影器（<code>d3.geoMercator</code>），从而使用 <code>d3.geoPath</code> 将 TopoJSON 拓扑几何精准绘制在 SVG 画布上。</p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. 核心架构与设计思想 (Core Architecture & Design) - <strong>OpenLayers 与 D3.js 的架构互补性</strong>：
-  - OpenLayers 专精于<strong>全尺度地图切片、坐标投影系统、视口缩放平移交互与空间数据源加载</strong>；
-  - D3.js 专精于<strong>数据驱动文档（Data-Driven Documents）、微观统计图表、精美贝塞尔连线与 SVG 动画过渡</strong>。
-  - 通过将 D3 的 `geoPath` 包装在 OpenLayers 自定义图层的 `render` 生命周期中，既保留了瓦片底图的高速平移缩放体验，又获得了 D3 强大的矢量拓扑数据表达能力。
-- <strong>视图状态双向对齐算法</strong>：
-  D3 的投影器拥有自身独立的缩放（`scale`）、中心点（`center`）、位移（`translate`）与旋转（`angle`）。OpenLayers 通过比较要素包围盒在地理空间下的实际跨度与在 D3 像素空间下的尺寸比例，动态解算出当前的绝对 `scale = r / frameState.viewState.resolution`，实现 100% 像素级贴合。<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis) - 自定义 <code>CanvasLayer extends Layer</code>：</h4>
+        <div id="docs"><p>The example loads TopoJSON geometries and uses d3 (<code>d3.geo.path</code>) to render these geometries to a SVG element.</p>
+<p>本示例演示如何将 OpenLayers 强大的地理地图视口与 <strong>D3.js（d3-geo / d3-selection）</strong> 数据可视化生态无缝融合。通过继承基础 <code>Layer</code> 类构建自定义图层，在每帧渲染时动态将 OpenLayers 的视口分辨率、中心与旋转角度同步给 D3 的墨卡托投影投影器（<code>d3.geoMercator</code>），从而使用 <code>d3.geoPath</code> 将 TopoJSON 拓扑几何精准绘制在 SVG 画布上。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
 <ul>
+<li><strong>OpenLayers 与 D3.js 的架构互补性</strong>：<ul>
+<li>OpenLayers 专精于<strong>全尺度地图切片、坐标投影系统、视口缩放平移交互与空间数据源加载</strong>；</li>
+<li>D3.js 专精于<strong>数据驱动文档（Data-Driven Documents）、微观统计图表、精美贝塞尔连线与 SVG 动画过渡</strong>。</li>
+<li>通过将 D3 的 <code>geoPath</code> 包装在 OpenLayers 自定义图层的 <code>render</code> 生命周期中，既保留了瓦片底图的高速平移缩放体验，又获得了 D3 强大的矢量拓扑数据表达能力。</li>
+</ul>
+</li>
+<li><strong>视图状态双向对齐算法</strong>：
+D3 的投影器拥有自身独立的缩放（<code>scale</code>）、中心点（<code>center</code>）、位移（<code>translate</code>）与旋转（<code>angle</code>）。OpenLayers 通过比较要素包围盒在地理空间下的实际跨度与在 D3 像素空间下的尺寸比例，动态解算出当前的绝对 <code>scale = r / frameState.viewState.resolution</code>，实现 100% 像素级贴合。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li>自定义 <code>CanvasLayer extends Layer</code>：<ul>
 <li><code>getSourceState()</code>：返回 <code>&#39;ready&#39;</code>，通知地图管线当前图层资源已就绪，无需等待外部数据源。</li>
 <li><code>render(frameState)</code>：核心帧回调。从 <code>frameState</code> 中提取当前视口宽高 <code>size</code>、地理中心 <code>getCenter(extent)</code> 与旋转角度 <code>rotation</code>，并实时调用 <code>d3Projection.scale(...).center(...).translate(...).angle(...)</code>。</li>
+</ul>
+</li>
 <li><code>topojson-client</code> 与 <code>d3.geoPath</code>：
 利用 <code>feature(us, &#39;counties&#39;)</code> 将高度压缩的 TopoJSON 拓扑弧段无损展开为 GeoJSON 要素集合，直接喂给 <code>d3Path</code> 生成 SVG <code>d</code> 路径字符串。</li>
 </ul>
-<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization) - <strong>连续缩放时的 DOM 更新开销</strong>：</h4>
-<p>  每当视口移动或缩放一帧，D3 都需要对成千上万个县级边界多边形重新执行投影数学计算并生成巨大的 SVG <code>d</code> 属性字符串，可能导致大范围动画时丢帧。生产中若多边形顶点极多，推荐将 D3 改为渲染到 <code>&lt;canvas&gt;</code> 上下文（<code>geoPath().context(ctx)</code>）以提升渲染帧率。</p>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
 <ul>
+<li><strong>连续缩放时的 DOM 更新开销</strong>：
+每当视口移动或缩放一帧，D3 都需要对成千上万个县级边界多边形重新执行投影数学计算并生成巨大的 SVG <code>d</code> 属性字符串，可能导致大范围动画时丢帧。生产中若多边形顶点极多，推荐将 D3 改为渲染到 <code>&lt;canvas&gt;</code> 上下文（<code>geoPath().context(ctx)</code>）以提升渲染帧率。</li>
 <li><strong>坐标系转换单位规范</strong>：
 D3 的 <code>d3.geoMercator()</code> 默认接受经纬度 <code>[lon, lat]</code>。因此必须使用 <code>toLonLat(getCenter(extent), projection)</code> 将 OpenLayers 内部的 3857 投影坐标逆转为经纬度后再传给 D3 的 <code>center()</code>。</li>
 </ul>
@@ -320,16 +330,28 @@ json(&#x27;data/topojson/us.json&#x27;).then(function (us) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

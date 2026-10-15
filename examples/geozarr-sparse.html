@@ -149,17 +149,37 @@
 
       <div class="row-fluid">
         <p id="shortdesc">A GeoZarr source displaying Sentinel-2 imagery with resampling. / 演示当 GeoZarr 数据集中不同波段的最大分辨率层级不同时，客户端自动从最近层级重采样并融合成瓦片。</p>
-        <div id="docs"><h2>The GeoZarr dataset used in this example doesn&#39;t have all bands available at all zoom levels. When this is the case, band data from the nearest resolution level will be resampled in composing a data tile. The example shows a false-color composite composed of blue (<code>b02</code>), green (<code>b03</code>), and short-wave infrared (<code>b11</code>) data. The short-wave infrared data is only available to 20 m resolution. The visible blue and green bands are available at 10 m resolution. When the map is zoomed in beyond 20 meters per pixel, the highest resolution short-wave infrared data is fetched, resampled, and composed together with the higher resolution visible bands.
-本示例所使用的 GeoZarr 数据集中，并非所有波段都在所有缩放层级（Resolutions）下均有数据。 当遇到这种“多尺度稀疏（Sparse Multiscale）”情况时，OpenLayers 会自动从最接近的分辨率层级中获取波段数据并在客户端执行重采样以合成最终数据瓦片。 本示例展示由蓝光（<code>b02</code>）、绿光（<code>b03</code>）和短波红外（<code>b11</code>）合成的假彩色影像。 其中短波红外（SWIR）传感器物理分辨率仅达 20 米，而可见光蓝、绿波段具备 10 米分辨率。 当地图放大到每像素优于 20 米时，OpenLayers 会抓取最高分辨率的短波红外数据，在前端动态重采样并与高分辨率可见光波段无缝拼合。</h2>
+        <div id="docs"><p>The GeoZarr dataset used in this example doesn&#39;t have all bands available at all zoom levels. When
+this is the case, band data from the nearest resolution level will be resampled in composing a
+data tile. The example shows a false-color composite composed of blue (<code>b02</code>), green (<code>b03</code>), and
+short-wave infrared (<code>b11</code>) data. The short-wave infrared data is only available to 20 m
+resolution. The visible blue and green bands are available at 10 m resolution. When the map is
+zoomed in beyond 20 meters per pixel, the highest resolution short-wave infrared data is fetched,
+resampled, and composed together with the higher resolution visible bands.</p>
+<p>本示例所使用的 GeoZarr 数据集中，并非所有波段都在所有缩放层级（Resolutions）下均有数据。
+当遇到这种“多尺度稀疏（Sparse Multiscale）”情况时，OpenLayers 会自动从最接近的分辨率层级中获取波段数据并在客户端执行重采样以合成最终数据瓦片。
+本示例展示由蓝光（<code>b02</code>）、绿光（<code>b03</code>）和短波红外（<code>b11</code>）合成的假彩色影像。
+其中短波红外（SWIR）传感器物理分辨率仅达 20 米，而可见光蓝、绿波段具备 10 米分辨率。
+当地图放大到每像素优于 20 米时，OpenLayers 会抓取最高分辨率的短波红外数据，在前端动态重采样并与高分辨率可见光波段无缝拼合。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 遥感传感器的物理分辨率异构性（Band Heterogeneity） * 在地球观测卫星（如 Sentinel-2 MSI 传感器）设计中，由于光学衍射极限与传感器探测单元大小所限：</h4>
+<h4>1. 遥感传感器的物理分辨率异构性（Band Heterogeneity）</h4>
 <ul>
+<li>在地球观测卫星（如 Sentinel-2 MSI 传感器）设计中，由于光学衍射极限与传感器探测单元大小所限：<ul>
 <li><strong>可见光与近红外波段（B02, B03, B04, B08）</strong>：具备最细微的 <strong>10 米</strong> 空间分辨率；</li>
 <li><strong>红边与短波红外波段（B05, B06, B07, B8A, B11, B12）</strong>：由于探测器面积增大，物理分辨率为 <strong>20 米</strong>；</li>
 <li><strong>水汽与卷云探测波段（B01, B09, B10）</strong>：分辨率为 <strong>60 米</strong>。</li>
+</ul>
+</li>
 <li>在传统的 Zarr 或 TIFF 数据准备流程中，数据工程师必须预先耗费大量云端 CPU/存储资源对 20m 波段进行离线双三次插值放大至 10m（浪费数倍存储空间）。</li>
 </ul>
-<h4>2. OpenLayers 客户端“稀疏多尺度金字塔”重采样机制 * <code>GeoZarr</code> 规范允许各波段的 Multiscales 金字塔层级数量不一致（例如 10m 波段有 5 层金字塔，而 20m 波段只有 4 层）。 * 当客户端视口缩放到最高层级时，OpenLayers 的 GeoZarr 解算器检测到 <code>b11</code> 缺失当前层级切片，会自动向上回退寻找最近的可用金字塔层级（即 20m 层级）； * 利用 WebGL 纹理坐标映射，在 GPU 片元着色器执行<strong>硬件级线性插值（Hardware Bilinear Filtering）</strong>，与 10m 的可见光切片直接拼成完整的多光谱数据纹理。 * 这种“按需动态升采样”机制为云端遥感数据分发节省了海量的存储冗余与传输流量！</h4>
+<h4>2. OpenLayers 客户端“稀疏多尺度金字塔”重采样机制</h4>
+<ul>
+<li><code>GeoZarr</code> 规范允许各波段的 Multiscales 金字塔层级数量不一致（例如 10m 波段有 5 层金字塔，而 20m 波段只有 4 层）。</li>
+<li>当客户端视口缩放到最高层级时，OpenLayers 的 GeoZarr 解算器检测到 <code>b11</code> 缺失当前层级切片，会自动向上回退寻找最近的可用金字塔层级（即 20m 层级）；</li>
+<li>利用 WebGL 纹理坐标映射，在 GPU 片元着色器执行<strong>硬件级线性插值（Hardware Bilinear Filtering）</strong>，与 10m 的可见光切片直接拼成完整的多光谱数据纹理。</li>
+<li>这种“按需动态升采样”机制为云端遥感数据分发节省了海量的存储冗余与传输流量！</li>
+</ul>
 </div>
       </div>
 
@@ -262,16 +282,28 @@ map.addInteraction(new Link());
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

@@ -148,7 +148,7 @@ adapt your code using 'gl.clear' and other tweaks to the prerender/postrender ev
 <h4>1. 为什么 WebGL 卷帘要用 <code>gl.scissor()</code> 而不是 Canvas 2D 的 <code>clip()</code>？</h4>
 <ul>
 <li><strong>零栅格化开销</strong>：传统 Canvas 2D 卷帘通过在每帧构建矩形路径并调用 <code>ctx.clip()</code>，底层依靠 CPU/GPU 进行软件掩模计算。</li>
-<li><strong>GPU 硬件级视口剪裁（Scissor Test）</strong>：WebGL 的 <code>gl.scissor(x, y, width, height)</code> 是显卡固化管线支持的基础功能。启用 <code>gl.SCISSOR_TEST</code> 后，GPU 在光栅化测试阶段直接剔除指定矩形窗口之外的所有片元（Fragments），完全不产生额外的像素计算或纹理拷贝开销，无论图层瓦片多么庞大，帧率均保持绝对稳定。</li>
+<li><strong>GPU 硬件级视口剪裁（Scissor Test）</strong>：WebGL 的 <code>gl.scissor(x, y, width, height)</code> 是显卡固化管线支持的基础功能。启用 <code>gl.SCISSOR_TEST</code> 后，GPU 在栅格化测试阶段直接剔除指定矩形窗口之外的所有片元（Fragments），完全不产生额外的像素计算或纹理拷贝开销，无论图层瓦片多么庞大，帧率均保持绝对稳定。</li>
 </ul>
 <h4>2. 坐标转换细节：CSS 像素与物理渲染设备像素</h4>
 <ul>
@@ -287,16 +287,28 @@ swipe.addEventListener(&#x27;input&#x27;, function () {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

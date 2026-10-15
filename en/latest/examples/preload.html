@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Preload Tiles</title>
+    <title>Preload Tiles / 瓦片低分辨率层级预加载与白屏消除</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Preload Tiles</h4>
+        <h4 id="title">Preload Tiles / 瓦片低分辨率层级预加载与白屏消除</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,7 +74,7 @@
               data-bs-target="#tag-example-list"
               data-title="preload"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./preload.html&quot;&gt;Preload Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./preload.html&quot;&gt;Preload Tiles / 瓦片低分辨率层级预加载与白屏消除&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -89,8 +89,8 @@
               data-title="OSM"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-source.html&quot;&gt;Full Screen Control with extended source element / 全屏控件外扩父级容器 (source)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./osm-vector-tiles.html&quot;&gt;OSM Vector Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./preload.html&quot;&gt;Preload Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./osm-vector-tiles.html&quot;&gt;OSM Vector Tiles / OpenStreetMap 矢量切片与 TopoJSON 拓扑图层解构&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./preload.html&quot;&gt;Preload Tiles / 瓦片低分辨率层级预加载与白屏消除&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection / 多投影栅格数据动态重投影&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./semi-transparent-layer.html&quot;&gt;Semi-Transparent Layer / 半透明专题图层叠加与 CSS 黑白滤镜&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-tiles.html&quot;&gt;WebGL Tiles / WebGL 基础栅格瓦片渲染&lt;/a&gt;
@@ -121,8 +121,33 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of tile preloading.</p>
-        <div id="docs"><p>The map on the top preloads low resolution tiles.  The map on the bottom does not use any preloading.  Try zooming out and panning to see the difference.</p>
+        <p id="shortdesc">Example of tile preloading. / 演示通过 preload 配置在上层与下层金字塔中预加载低分辨率瓦片以消除缩放平移时的留白现象。</p>
+        <div id="docs"><p>The map on the top preloads low resolution tiles. The map on the bottom does not use any preloading. Try zooming out and panning to see the difference.</p>
+<p>本示例通过上下两个同步联动的对比地图，直观展示了切片图层 <code>preload</code>（预加载）特性的巨大视觉优势：上方地图开启了低分辨率瓦片预加载（<code>preload: Infinity</code>），下方地图则关闭预加载（<code>preload: 0</code>）。尝试快速缩放地图或拖拽漫游，可以明显看到上方地图绝无白屏撕裂，始终拥有清晰的过渡底图，而下方地图在新瓦片下载完毕前会出现空白区域。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
+<ul>
+<li><strong>瓦片金字塔多分辨率插值渲染机制</strong>：
+当用户放大地图至当前层级（例如 Zoom 14）时，若服务器尚未返回 Zoom 14 的切片，如果配置了 <code>preload</code>，OpenLayers 会优先拉取并拉伸渲染上一级（Zoom 13、12 乃至 0 级）的低分辨率切片作为占位底图。虽然低分辨率瓦片被拉伸后稍显模糊，但能立刻给予用户清晰的空间地理方位感，杜绝白屏现象。</li>
+<li><strong>预加载层级参数数值</strong>：<ul>
+<li><code>preload: 0</code>（默认）：仅请求当前视口所需的瓦片层级；</li>
+<li><code>preload: 1</code>：同时预加载当前层级往上 1 级的更粗粒度切片；</li>
+<li><code>preload: Infinity</code>：递归向上一直预加载到 0 级切片（由于 0~3 级总瓦片极少且极小，下载极快）。</li>
+</ul>
+</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>new TileLayer({ preload: Infinity, source: new OSM() })</code>：
+在图层配置中注入 <code>preload</code> 参数。</li>
+<li>视图事件同步联动：
+上方地图与下方地图共享或同步绑定同一 <code>ol/View</code>，确保在鼠标拖拽与滚轮缩放时两个地图呈现完全一致的视口状态以供对照。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
+<ul>
+<li><strong>网络并发与带宽消耗</strong>：
+在低端移动网络环境下，<code>preload: Infinity</code> 会并发产生额外的切片 HTTP 请求。通常移动端推荐配置 <code>preload: 1</code> 或 <code>preload: 2</code>，在流畅体验与流量节省之间取得均衡。</li>
+</ul>
 </div>
       </div>
 
@@ -171,7 +196,7 @@ const map2 &#x3D; new Map({
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Preload Tiles&lt;/title&gt;
+    &lt;title&gt;Preload Tiles / 瓦片低分辨率层级预加载与白屏消除&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -218,16 +243,28 @@ const map2 &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

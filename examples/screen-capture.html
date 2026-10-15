@@ -203,7 +203,7 @@
               data-bs-target="#tag-example-list"
               data-title="canvas"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-tiles.html&quot;&gt;Canvas Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-tiles.html&quot;&gt;Canvas Tiles / Canvas 动态切片与网格坐标调试&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./canvas-tiles-tms.html&quot;&gt;Custom Canvas Tiles / 自定义 Canvas 切片与 TMS 坐标网格&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./earthquake-custom-symbol.html&quot;&gt;Earthquakes with custom symbols / 自定义矢量符号渲染地震点位（toContext 离屏绘制）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./icon-negative.html&quot;&gt;Icon Pixel Operations / 图标像素级处理（反色/负片滤镜）&lt;/a&gt;
@@ -237,45 +237,61 @@
 
       <div class="row-fluid">
         <p id="shortdesc">A custom control that captures the map as a PNG image. / 自定义地图截屏控件，将当前地图视口导出为 PNG 图片。</p>
-        <div id="docs"><h2>This example shows a custom control that captures the current map as an image. Click the camera button to render the map into a canvas and show a preview on top of the map. From the preview, the image can be downloaded as a PNG file with a time stamped file name, or discarded to return to the map. The layer attributions are drawn onto the captured image.
-本示例展示一个将当前地图视口捕获为图片的自定义截屏控件（<code>ScreenCaptureControl</code>）。点击相机按钮可将地图临时重定向至独立离屏 Canvas 中渲染，并在地图上方弹出捕获预览层。在预览界面中，用户可点击将图片以带时间戳的文件名导出下载为 PNG 格式，或点击返回继续浏览地图。所有图层的版权归属（Attributions）信息均会自动绘制在导出图片的右下角。</h2>
+        <div id="docs"><p>This example shows a custom control that captures the current map as an image. Click the camera button
+to render the map into a canvas and show a preview on top of the map. From the preview, the image can
+be downloaded as a PNG file with a time stamped file name, or discarded to return
+to the map. The layer attributions are drawn onto the captured image.</p><p>本示例展示一个将当前地图视口捕获为图片的自定义截屏控件（<code>ScreenCaptureControl</code>）。点击相机按钮可将地图临时重定向至独立离屏 Canvas 中渲染，并在地图上方弹出捕获预览层。在预览界面中，用户可点击将图片以带时间戳的文件名导出下载为 PNG 格式，或点击返回继续浏览地图。所有图层的版权归属（Attributions）信息均会自动绘制在导出图片的右下角。</p><hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 核心架构原理 (Core Architecture) 在 Web GIS 中导出高质量地图截图通常有两种思路： - <strong>直接拼合主画布（<code>map.getViewport().querySelector(&#39;canvas&#39;)</code>）</strong>：该方式对多图层混合、WebGL 与 DOM 叠加（如 HTML 覆盖物、CSS 图标）往往需要复杂的 Canvas 2D <code>drawImage</code> 逐层合成，且跨域图片（CORS）易污染 Canvas 导致 <code>toBlob()</code> / <code>toDataURL()</code> 报安全异常。 - <strong>动态 Target 重定向与一次性重绘机制（<code>map.setTarget(canvas)</code>）</strong>：本例采用的是一种更为优雅原生的 OpenLayers 截屏架构：</h4>
-<ol>
+<h4>1. 核心架构原理 (Core Architecture)</h4>
+<p>在 Web GIS 中导出高质量地图截图通常有两种思路：</p>
+<ul>
+<li><strong>直接拼合主画布（<code>map.getViewport().querySelector(&#39;canvas&#39;)</code>）</strong>：该方式对多图层混合、WebGL 与 DOM 叠加（如 HTML 覆盖物、CSS 图标）往往需要复杂的 Canvas 2D <code>drawImage</code> 逐层合成，且跨域图片（CORS）易污染 Canvas 导致 <code>toBlob()</code> / <code>toDataURL()</code> 报安全异常。</li>
+<li><strong>动态 Target 重定向与一次性重绘机制（<code>map.setTarget(canvas)</code>）</strong>：本例采用的是一种更为优雅原生的 OpenLayers 截屏架构：<ol>
 <li>动态创建一个与地图视口物理分辨率严格一致的离屏 <code>canvas</code>。</li>
 <li>将地图渲染目标临时切换到该离屏画布：<code>map.setTarget(canvas)</code>。</li>
 <li>注册单次渲染完成监听器：<code>map.once('rendercomplete', ...)</code>。</li>
 <li>渲染完成后立即还原原始 DOM 容器：<code>map.setTarget(originalTarget); map.render()</code>。</li>
 <li>在离屏 Canvas 上利用 2D 上下文补画图层归属文本（Attributions），最后调用 <code>canvas.toBlob()</code> 生成 PNG 二进制流。</li>
 </ol>
-<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript handleCapture() {</h4>
-<p>  const map = this.getMap();
+</li>
+</ul>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive)</h4>
+<pre><code class="language-javascript">handleCapture() {
+  const map = this.getMap();
   const target = map.getTargetElement();
   const size = map.getSize();
   const canvas = document.createElement(&#39;canvas&#39;);
   canvas.width = size[0];
-  canvas.height = size[1];</p>
-<p>  // 1. 监听当前截屏重绘完成事件
+  canvas.height = size[1];
+
+  // 1. 监听当前截屏重绘完成事件
   map.once(&#39;rendercomplete&#39;, (event) =&gt; {
     // 收集所有图层在此帧状态下的版权归属 Promise
     const attributions = map
       .getAllLayers()
-      .flatMap((layer) =&gt; layer.getAttributions(event.frameState));</p>
-<pre><code>// 2. 立即将地图 Target 恢复为网页原有的 DOM 容器
-map.setTarget(target);
-map.render();
+      .flatMap((layer) =&gt; layer.getAttributions(event.frameState));
+    
+    // 2. 立即将地图 Target 恢复为网页原有的 DOM 容器
+    map.setTarget(target);
+    map.render();
 
-// 3. 异步解析图层版权文本并绘制到底部水印
-Promise.all(attributions).then((resolved) =&gt; {
-  drawAttributions(canvas, resolved);
-  canvas.toBlob((blob) =&gt; this.showPreview_(blob, size), &#39;image/png&#39;);
-});
-</code></pre>
-<p>  });</p>
-<p>  // 4. 重定向地图渲染目标至离屏 canvas 触发即时绘制
+    // 3. 异步解析图层版权文本并绘制到底部水印
+    Promise.all(attributions).then((resolved) =&gt; {
+      drawAttributions(canvas, resolved);
+      canvas.toBlob((blob) =&gt; this.showPreview_(blob, size), &#39;image/png&#39;);
+    });
+  });
+
+  // 4. 重定向地图渲染目标至离屏 canvas 触发即时绘制
   map.setTarget(canvas);
-} ```</p>
-<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>CORS 跨域画布污染</strong>：若加载了外部未配置 <code>crossOrigin: 'anonymous'</code> 的瓦片或图片图层，<code>canvas.toBlob()</code> 会抛出 <code>DOMException: Failed to execute 'toBlob' on 'HTMLCanvasElement': Tainted canvases may not be exported</code>。所有底图数据源必须明确允许跨域资源共享。 - <strong>内存管理与 Object URL 泄漏</strong>：在创建图片预览与下载链接时，频繁使用 <code>URL.createObjectURL(blob)</code> 会在浏览器内存中建立常驻引用，关闭预览或下载触发后必须显式调用 <code>URL.revokeObjectURL(url)</code> 释放 Blob 内存。 - <strong>高分屏（Retina / HiDPI）导出清晰度</strong>：<code>map.getSize()</code> 获得的是 CSS 像素逻辑尺寸。若需导出高精细度打印级图片，Canvas 的实际尺寸需乘以 <code>window.devicePixelRatio</code>，并配合 <code>context.scale(pixelRatio, pixelRatio)</code> 绘图。</h4>
+}
+</code></pre>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls)</h4>
+<ul>
+<li><strong>CORS 跨域画布污染</strong>：若加载了外部未配置 <code>crossOrigin: 'anonymous'</code> 的瓦片或图片图层，<code>canvas.toBlob()</code> 会抛出 <code>DOMException: Failed to execute 'toBlob' on 'HTMLCanvasElement': Tainted canvases may not be exported</code>。所有底图数据源必须明确允许跨域资源共享。</li>
+<li><strong>内存管理与 Object URL 泄漏</strong>：在创建图片预览与下载链接时，频繁使用 <code>URL.createObjectURL(blob)</code> 会在浏览器内存中建立常驻引用，关闭预览或下载触发后必须显式调用 <code>URL.revokeObjectURL(url)</code> 释放 Blob 内存。</li>
+<li><strong>高分屏（Retina / HiDPI）导出清晰度</strong>：<code>map.getSize()</code> 获得的是 CSS 像素逻辑尺寸。若需导出高精细度打印级图片，Canvas 的实际尺寸需乘以 <code>window.devicePixelRatio</code>，并配合 <code>context.scale(pixelRatio, pixelRatio)</code> 绘图。</li>
+</ul>
 </div>
       </div>
 
@@ -613,16 +629,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

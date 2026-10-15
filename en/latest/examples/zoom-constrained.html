@@ -86,7 +86,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-spy.html&quot;&gt;Layer Spy / 图层探照灯（透镜探查）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe / 图层卷帘对比&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./magnify.html&quot;&gt;Magnify / 局部放大镜（像素插值放大）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer / 深度集成 Mapbox GL JS 渲染引擎图层&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析&lt;/a&gt;
@@ -179,22 +179,34 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example of a zoom constrained view. / 示例展示如何使用 minZoom 与 maxZoom 限制视图缩放区间。</p>
-        <div id="docs"><h2>This map has a view that is constrained between zoom levels 9 and 13.  This is done using the <code>minZoom</code> and <code>maxZoom</code> view options.
-本示例展示如何为视图配置静态的缩放级别区间约束。通过在 <code>ol/View</code> 中配置 <code>minZoom: 9</code> 与 <code>maxZoom: 13</code>，将用户的缩放交互严格钳制在 9 级（区域概览）到 13 级（街区细节）之间，禁止无意义的过大视野与超出瓦片分辨率的过度放大。</h2>
+        <div id="docs"><p>This map has a view that is constrained between zoom levels 9 and 13.  This is done using the <code>minZoom</code> and <code>maxZoom</code> view options.</p>
+<p>本示例展示如何为视图配置静态的缩放级别区间约束。通过在 <code>ol/View</code> 中配置 <code>minZoom: 9</code> 与 <code>maxZoom: 13</code>，将用户的缩放交互严格钳制在 9 级（区域概览）到 13 级（街区细节）之间，禁止无意义的过大视野与超出瓦片分辨率的过度放大。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 核心架构原理 (Core Architecture) 在 WebGIS 项目中，底图数据源（如特定区域无人机正射影像、限定比例尺规划图）往往只在特定缩放级别范围内有效： - <strong>View 缩放约束器（Zoom Constraints）</strong>：OpenLayers 内部通过 <code>createResolutionConstraint</code> 生成约束闭包函数。无论用户是通过滚轮、双击、双指捏合还是调用 <code>view.setZoom()</code> / <code>view.animate()</code>，所有目标缩放级别均会通过约束函数被硬性钳制在 $[ \text{minZoom}, \text{maxZoom} ]$ 的闭区间内。 - <strong><code>minZoom</code> / <code>maxZoom</code> vs <code>minResolution</code> / <code>maxResolution</code></strong>：</h4>
+<h4>1. 核心架构原理 (Core Architecture)</h4>
+<p>在 WebGIS 项目中，底图数据源（如特定区域无人机正射影像、限定比例尺规划图）往往只在特定缩放级别范围内有效：</p>
 <ul>
+<li><strong>View 缩放约束器（Zoom Constraints）</strong>：OpenLayers 内部通过 <code>createResolutionConstraint</code> 生成约束闭包函数。无论用户是通过滚轮、双击、双指捏合还是调用 <code>view.setZoom()</code> / <code>view.animate()</code>，所有目标缩放级别均会通过约束函数被硬性钳制在 $[ \text{minZoom}, \text{maxZoom} ]$ 的闭区间内。</li>
+<li><strong><code>minZoom</code> / <code>maxZoom</code> vs <code>minResolution</code> / <code>maxResolution</code></strong>：<ul>
 <li><code>zoom</code> 是金字塔切片层级的索引（数字越大视野越精细）。</li>
 <li><code>resolution</code> 是每个屏幕像素代表的实际空间地理距离（单位：投影单位/像素，数值越大视野越宏观）。</li>
 <li>两者互为反比映射：$\text{resolution} = \text{maxResolution} / 2^{\text{zoom}}$。设置 <code>minZoom</code> 即限制最大分辨率，设置 <code>maxZoom</code> 即限制最小分辨率。在 <code>View</code> 中直接使用 <code>minZoom</code> / <code>maxZoom</code> 语义更加直观清晰。</li>
 </ul>
-<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript const view = new View({</h4>
-<p>  center: [-13553864, 5918250],
+</li>
+</ul>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive)</h4>
+<pre><code class="language-javascript">const view = new View({
+  center: [-13553864, 5918250],
   zoom: 11,     // 初始进入层级
   minZoom: 9,   // 最小允许缩放级别（最大概览视野）
   maxZoom: 13,  // 最大允许缩放级别（最大精细深度）
-}); ```</p>
-<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>切片 404 彻底杜绝</strong>：若底图切片服务最大仅预先切片至 14 级，若未在 <code>View</code> 中限制 <code>maxZoom: 14</code>，用户连续滚动滚轮会导致浏览器批量发起无效的 404 HTTP 请求，产生网络异常并破坏体验。 - <strong>平滑弹性回弹体验</strong>：当用户使用触控板连续快速缩放触碰 <code>maxZoom</code> 或 <code>minZoom</code> 边界时，OpenLayers 会自动触发自然的阻尼反馈并平滑回弹锁定在边界。</h4>
+});
+</code></pre>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls)</h4>
+<ul>
+<li><strong>切片 404 彻底杜绝</strong>：若底图切片服务最大仅预先切片至 14 级，若未在 <code>View</code> 中限制 <code>maxZoom: 14</code>，用户连续滚动滚轮会导致浏览器批量发起无效的 404 HTTP 请求，产生网络异常并破坏体验。</li>
+<li><strong>平滑弹性回弹体验</strong>：当用户使用触控板连续快速缩放触碰 <code>maxZoom</code> 或 <code>minZoom</code> 边界时，OpenLayers 会自动触发自然的阻尼反馈并平滑回弹锁定在边界。</li>
+</ul>
 </div>
       </div>
 
@@ -289,16 +301,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

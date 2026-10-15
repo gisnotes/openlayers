@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
     <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
   </head>
@@ -78,8 +79,8 @@
 </blockquote>
 <hr>
 <h2 id="1-架构总览：openlayers-文本渲染与避让冲突检测管线">1. 架构总览：OpenLayers 文本渲染与避让冲突检测管线</h2>
-<h3 id="11-文本光栅化与避让仲裁拓扑">1.1 文本光栅化与避让仲裁拓扑</h3>
-<p>在 OpenLayers 中，文本注记并不是简单的 HTML DOM 覆盖物，而是由矢量构建器（<code>TextBuilder</code>）计算排版后直接光栅化到 Canvas 纹理图集中：</p>
+<h3 id="11-文本栅格化与避让仲裁拓扑">1.1 文本栅格化与避让仲裁拓扑</h3>
+<p>在 OpenLayers 中，文本注记并不是简单的 HTML DOM 覆盖物，而是由矢量构建器（<code>TextBuilder</code>）计算排版后直接栅格化到 Canvas 纹理图集中：</p>
 <pre><code class="language-mermaid">flowchart TD
     subgraph FeaturePipeline [矢量要素与注记输入]
         direction TB
@@ -101,7 +102,7 @@
         Collide --&gt;|否 (成功占位)| Accept[注册包围盒并准予绘制]
     end
 
-    subgraph CanvasOutput [Canvas 光栅化输出]
+    subgraph CanvasOutput [Canvas 栅格化输出]
         Accept --&gt; RenderEngine[Canvas 2D TextBuilder / GPU 纹理]
     end
 </code></pre>
@@ -159,7 +160,7 @@
 <ol>
 <li>按照图层渲染顺序，先绘制的文字被量化为屏幕像素包围盒（Bounding Box）；</li>
 <li>引擎在 R 树中查询该包围盒是否与之前已注册的包围盒相交；</li>
-<li>若无碰撞，则将当前包围盒插入 R 树，并将文字光栅化；若发生碰撞，直接跳过当前文字绘制。</li>
+<li>若无碰撞，则将当前包围盒插入 R 树，并将文字栅格化；若发生碰撞，直接跳过当前文字绘制。</li>
 </ol>
 <h3 id="22-命名分组隔离-declutter-separate-解决业务冲突">2.2 命名分组隔离 (<code>declutter: &#39;separate&#39;</code>) 解决业务冲突</h3>
 <p>在复杂 WebGIS 中，经常面临“业务标记（如警情点）必须优先展示，但底图矢量瓦片（如 Mapbox/MapTiler Streets）也有自己的文字避让”的情况。若盲目使用全局 <code>declutter: true</code>，业务图层的大面积文字可能直接把底图的关键路名或地名全部剔除。</p>
@@ -272,7 +273,7 @@
 <h3 id="71-空白空格丢失陷阱">7.1 空白空格丢失陷阱</h3>
 <ul>
 <li><strong>现象</strong>：富文本数组拼接后，州代号与地名紧挨在一起（如 <code>US-CANew York</code>）。</li>
-<li><strong>根因</strong>：数组项紧邻时光栅化引擎不会自动注入空格。</li>
+<li><strong>根因</strong>：数组项紧邻时栅格化引擎不会自动注入空格。</li>
 <li><strong>解决</strong>：在后续片段首位显式加空格：<code>&#39; &#39; + name</code>。</li>
 </ul>
 <h3 id="72-矢量要素线段碎片化导致的注记缺失">7.2 矢量要素线段碎片化导致的注记缺失</h3>
@@ -296,5 +297,28 @@
       <a href="https://www.netlify.com">This site is powered by Netlify.</a>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
   </body>
 </html>

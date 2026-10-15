@@ -110,23 +110,29 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Getting feature information from vector tiles. / 从 MVT 矢量切片中实时拾取并展示地理要素属性信息。</p>
-        <div id="docs"><p>Move your pointer over rendered features to display feature properties.</p> <p>移动鼠标指针悬停在已渲染的地图矢量要素上方，可在悬浮面板中实时探测并展示该要素的完整 JSON 属性字典。</p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. 核心架构与设计思想 (Core Architecture & Design) - <strong>MVT（Mapbox Vector Tiles）二进制协议与属性载荷</strong>：
-  矢量切片与传统栅格切片（PNG/JPEG）的根本区别在于，它在网络传输的是 Protocol Buffers（PBF/MVT）二进制几何编码与键值对属性字典，而非静态像元。OpenLayers 通过 `ol/format/MVT` 解码器在客户端实时将二进制流逆向还原为轻量级 `ol/Feature`（或 `ol/render/Feature`）。这使得客户端天然具备空间要素的<strong>完全属性访问能力</strong>，无需向服务器发起次级 `GetFeatureInfo` 或 WFS 请求。
-- <strong>像素级要素拾取管线 (`getFeaturesAtPixel`)</strong>：
-  OpenLayers 针对矢量切片提供高效的几何碰撞检测。当触发 `pointermove` 时，引擎根据视口像素坐标转换到各切片本地图元空间，遍历命中当前像素顶层的矢量图元集合，并在极短时间内返回 `FeatureLike[]`。<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis) - <code>map.getFeaturesAtPixel(pixel, [options])</code>：</h4>
-<p>  基于硬件/Canvas 渲染上下文拾取视口指定像素下的要素。与 <code>ol/source/Vector</code> 不同，矢量切片在默认 <code>renderMode: &#39;hybrid&#39;</code> 下切片会被光栅化到离屏 Canvas，但 OpenLayers 依然在内部保留切片图元索引树，可精确提取几何与 properties。</p>
+        <div id="docs"><p>Move your pointer over rendered features to display feature properties.</p>
+<p>移动鼠标指针悬停在已渲染的地图矢量要素上方，可在悬浮面板中实时探测并展示该要素的完整 JSON 属性字典。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
 <ul>
+<li><strong>MVT（Mapbox Vector Tiles）二进制协议与属性载荷</strong>：
+矢量切片与传统栅格切片（PNG/JPEG）的根本区别在于，它在网络传输的是 Protocol Buffers（PBF/MVT）二进制几何编码与键值对属性字典，而非静态像元。OpenLayers 通过 <code>ol/format/MVT</code> 解码器在客户端实时将二进制流逆向还原为轻量级 <code>ol/Feature</code>（或 <code>ol/render/Feature</code>）。这使得客户端天然具备空间要素的<strong>完全属性访问能力</strong>，无需向服务器发起次级 <code>GetFeatureInfo</code> 或 WFS 请求。</li>
+<li><strong>像素级要素拾取管线 (<code>getFeaturesAtPixel</code>)</strong>：
+OpenLayers 针对矢量切片提供高效的几何碰撞检测。当触发 <code>pointermove</code> 时，引擎根据视口像素坐标转换到各切片本地图元空间，遍历命中当前像素顶层的矢量图元集合，并在极短时间内返回 <code>FeatureLike[]</code>。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>map.getFeaturesAtPixel(pixel, [options])</code>：
+基于硬件/Canvas 渲染上下文拾取视口指定像素下的要素。与 <code>ol/source/Vector</code> 不同，矢量切片在默认 <code>renderMode: &#39;hybrid&#39;</code> 下切片会被栅格化到离屏 Canvas，但 OpenLayers 依然在内部保留切片图元索引树，可精确提取几何与 properties。</li>
 <li><code>pointerleave</code> 视口越界生命周期兜底：
 监听地图容器外层的原生 <code>pointerleave</code> 事件，确保当光标离开地图窗口时主动隐藏信息面板（<code>opacity: 0</code>），避免视口边缘残留幽灵悬浮窗。</li>
 <li>防抖与拖拽节流守卫：
 在 <code>pointermove</code> 回调中前置校验 <code>if (evt.dragging) return;</code>。当用户按住鼠标平移地图视口时，直接打断要素拾取计算，杜绝拖拽过程中的无效高频 DOM 刷新与 CPU 浪费。</li>
 </ul>
-<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization) - <strong>切片裁切边界属性丢失问题</strong>：</h4>
-<p>  由于切片瓦片化时，跨越瓦片边缘的多边形（如大型行政区划、湖泊）会被打散分割到多个切片中。<code>getFeaturesAtPixel</code> 返回的只是命中瓦片内的局部图元，其几何对象通常被裁剪并带有瓦片缓冲（buffer），且各瓦片中可能多次返回该要素；若业务需要获取完整未裁剪几何，需结合跨瓦片 ID 索引或空间聚合服务。</p>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
 <ul>
+<li><strong>切片裁切边界属性丢失问题</strong>：
+由于切片瓦片化时，跨越瓦片边缘的多边形（如大型行政区划、湖泊）会被打散分割到多个切片中。<code>getFeaturesAtPixel</code> 返回的只是命中瓦片内的局部图元，其几何对象通常被裁剪并带有瓦片缓冲（buffer），且各瓦片中可能多次返回该要素；若业务需要获取完整未裁剪几何，需结合跨瓦片 ID 索引或空间聚合服务。</li>
 <li><strong>高频 Move 事件的 DOM 渲染瓶颈</strong>：
 在复杂底图（如密集道路网、建筑物面）上移动光标，若频繁调用 <code>JSON.stringify</code> 并更新 innerText，会导致主线程布局重排（Reflow/Repaint）卡顿。生产环境推荐使用 <code>requestAnimationFrame</code> 或 30~50ms 的防抖函数，或仅显示关键字段。</li>
 </ul>
@@ -273,16 +279,28 @@ function showInfo(event) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

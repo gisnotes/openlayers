@@ -77,7 +77,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen.html&quot;&gt;Full Screen Control / 全屏显示控件 (FullScreen)&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./full-screen-drag-rotate-and-zoom.html&quot;&gt;Full Screen Drag, Rotate, and Zoom / 全屏联动拖拽旋转与复合缩放&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./side-by-side.html&quot;&gt;Shared Views / 共享视图多屏联动 (Shared Views)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz.html&quot;&gt;XYZ&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz.html&quot;&gt;XYZ / ImageTile 与标准 XYZ 瓦片底图直连&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./xyz-esri.html&quot;&gt;XYZ Esri / ArcGIS REST 静态切片服务（XYZ / WebGLTile）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./xyz-retina.html&quot;&gt;XYZ Retina Tiles / XYZ 视网膜高清切片 (@2x)&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -157,19 +157,29 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example of a XYZ source using Esri tiles. / 使用 WebGLTile 硬件加速与 XYZ 模板直接加载 Esri ArcGIS 预切片服务。</p>
-        <div id="docs"><h2>ArcGIS REST tile services are supported by <code>ol/source/XYZ</code> (or <code>ol/source/ImageTile</code>). This example demonstrates loading cached Esri ArcGIS MapServer tiles using WebGLTile acceleration.
-本示例展示了如何使用标准切片模板加载 ArcGIS REST 紧凑切片缓存（Cached MapServer）。通过采用 <code>ol/source/ImageTile</code>（或 <code>ol/source/XYZ</code>）配合切片 URL 模板 <code>/MapServer/tile/{z}/{y}/{x}</code>，可以直接绕过动态出图服务端的实时渲染管线，从 CDN 或缓存服务器直接按金字塔层级拉取静态瓦片；结合 <code>ol/layer/WebGLTile</code> 与 <code>useGeographic()</code>，实现 GPU 硬件加速的超平滑漫游体验。</h2>
+        <div id="docs"><p>ArcGIS REST tile services are supported by <code>ol/source/XYZ</code> (or <code>ol/source/ImageTile</code>).
+This example demonstrates loading cached Esri ArcGIS MapServer tiles using WebGLTile acceleration.</p>
+<p>本示例展示了如何使用标准切片模板加载 ArcGIS REST 紧凑切片缓存（Cached MapServer）。通过采用 <code>ol/source/ImageTile</code>（或 <code>ol/source/XYZ</code>）配合切片 URL 模板 <code>/MapServer/tile/{z}/{y}/{x}</code>，可以直接绕过动态出图服务端的实时渲染管线，从 CDN 或缓存服务器直接按金字塔层级拉取静态瓦片；结合 <code>ol/layer/WebGLTile</code> 与 <code>useGeographic()</code>，实现 GPU 硬件加速的超平滑漫游体验。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. ArcGIS 静态切片 URL 寻址与性能优势 (Tile REST Addressing Scheme) - <strong>紧凑缓存（Compact Cache）标准化</strong>: ArcGIS Server 在预发布阶段通过切片工具生成紧凑格式缓存（Bundle 压缩存储），其对外暴露的标准 REST 访问模板为：</h4>
-<p>  <code>https://&lt;server&gt;/ArcGIS/rest/services/&lt;ServiceName&gt;/MapServer/tile/{z}/{y}/{x}</code>。</p>
+<h4>1. ArcGIS 静态切片 URL 寻址与性能优势 (Tile REST Addressing Scheme)</h4>
 <ul>
+<li><strong>紧凑缓存（Compact Cache）标准化</strong>: ArcGIS Server 在预发布阶段通过切片工具生成紧凑格式缓存（Bundle 压缩存储），其对外暴露的标准 REST 访问模板为：
+<code>https://&lt;server&gt;/ArcGIS/rest/services/&lt;ServiceName&gt;/MapServer/tile/{z}/{y}/{x}</code>。</li>
 <li><strong>静态直连性能倍增</strong>: 与动态出图的 <code>/export</code> 相比，XYZ 静态切片请求完全不经过 GIS 空间引擎的动态渲染计算，直接由 Web 服务器（Nginx / IIS）或 CDN 分发静态二进制流，吞吐能力提升 10 到 50 倍以上，适合作为高并发企业级生产系统的基础底图。</li>
 </ul>
-<h4>2. WebGLTile 硬件加速与地理坐标系 - <strong>GPU 纹理加速 (<code>WebGLTile</code>)</strong>: 示例中采用现代 <code>ol/layer/WebGLTile</code> 图层，切片位图作为纹理直接上传至 GPU 显存，依托片元着色器进行视口矩阵变换，缩放过渡极其细腻丝滑，彻底告别 Canvas 2D 的重绘拖影。 - <strong><code>useGeographic()</code> 简化业务坐标</strong>: 调用全局 <code>useGeographic()</code> 使得视图中心点直接传入地理经纬度 <code>[-121.1, 47.5]</code>（美国华盛顿州喀斯喀特山脉），兼顾直观的地理开发体验与强大的 GPU 底层渲染。</h4>
-<h4>3. 生产实践陷阱与避坑指南 (Production Pitfalls &amp; Best Practices) - <strong>切片方案（TileGrid）自适应与自定义原点</strong>:</h4>
+<h4>2. WebGLTile 硬件加速与地理坐标系</h4>
 <ul>
+<li><strong>GPU 纹理加速 (<code>WebGLTile</code>)</strong>: 示例中采用现代 <code>ol/layer/WebGLTile</code> 图层，切片位图作为纹理直接上传至 GPU 显存，依托片元着色器进行视口矩阵变换，缩放过渡极其细腻丝滑，彻底告别 Canvas 2D 的重绘拖影。</li>
+<li><strong><code>useGeographic()</code> 简化业务坐标</strong>: 调用全局 <code>useGeographic()</code> 使得视图中心点直接传入地理经纬度 <code>[-121.1, 47.5]</code>（美国华盛顿州喀斯喀特山脉），兼顾直观的地理开发体验与强大的 GPU 底层渲染。</li>
+</ul>
+<h4>3. 生产实践陷阱与避坑指南 (Production Pitfalls &amp; Best Practices)</h4>
+<ul>
+<li><strong>切片方案（TileGrid）自适应与自定义原点</strong>:<ul>
 <li>Esri 官方公开底图（如 World_Topo_Map、World_Street_Map）严格兼容标准 Web 墨卡托方案（切片大小 256×256，左上原点位于 <code>[-20037508.34, 20037508.34]</code>），OpenLayers 默认构造即可无缝对其；</li>
 <li>若加载企业内部或专网发布的 ArcGIS 切片，其切片方案可能自定义了 <code>tileOrigin</code>（例如以某个地方坐标系的原点为切片基准）或特定的分辨率等级列表（<code>resolutions</code>）。此时<strong>严禁直接使用默认 XYZ</strong>，必须请求 <code>.../MapServer?f=pjson</code> 读取元数据，并显式构建 <code>new TileGrid({ origin, resolutions })</code> 传入数据源，否则瓦片将大面积发生偏移、乱序或频繁返回 HTTP 404。</li>
+</ul>
+</li>
 <li><strong>Token 鉴权与安全访问</strong>: 企业内网受保护的 ArcGIS 资源通常需要 Token。可在 URL 末尾追加 <code>?token={accessToken}</code> 或在 <code>source.setTileLoadFunction</code> 中注入自定义 Header 请求拦截。</li>
 </ul>
 </div>
@@ -270,16 +280,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

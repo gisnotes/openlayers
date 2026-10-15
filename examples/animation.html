@@ -115,17 +115,26 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Demonstrates animated pan, zoom, and rotation. / 演示如何使用 view.animate() 实现平滑平移、回弹缩放、锚点旋转以及多阶段飞行巡检动画。</p>
-        <div id="docs"><h2>This example shows how to use the <code>view.animate()</code> method to run one or more animations.
-本示例展示如何使用 <code>view.animate()</code> 方法运行单一或多阶段链式视图动画。涵盖视角中心平移、缩放等级推拉、基于任意地理锚点（Anchor）的旋转、Raphael 经典弹性（Elastic）与弹跳（Bounce）缓动函数集成、两阶段两倍缩放的“弧形起飞降落（FlyTo）”模拟，以及通过回调递归构建的跨洲际城市自动飞行巡检（Tour）。</h2>
+        <div id="docs"><p>This example shows how to use the <code>view.animate()</code> method to run
+one or more animations.</p>
+<p>本示例展示如何使用 <code>view.animate()</code> 方法运行单一或多阶段链式视图动画。涵盖视角中心平移、缩放等级推拉、基于任意地理锚点（Anchor）的旋转、Raphael 经典弹性（Elastic）与弹跳（Bounce）缓动函数集成、两阶段两倍缩放的“弧形起飞降落（FlyTo）”模拟，以及通过回调递归构建的跨洲际城市自动飞行巡检（Tour）。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 核心架构原理 (Core Architecture) 在 WebGIS 导航中，突兀的瞬移切换会割裂用户的空间感知。OpenLayers 提供了基于时间驱动的 <code>view.animate(options, ...)</code> 动画引擎： - <strong>参数并行与链式串行</strong>：</h4>
+<h4>1. 核心架构原理 (Core Architecture)</h4>
+<p>在 WebGIS 导航中，突兀的瞬移切换会割裂用户的空间感知。OpenLayers 提供了基于时间驱动的 <code>view.animate(options, ...)</code> 动画引擎：</p>
 <ul>
+<li><strong>参数并行与链式串行</strong>：<ul>
 <li>单个配置对象中的属性（如同时指定 <code>center</code>、<code>zoom</code>、<code>rotation</code>）会在相同时间窗口内<strong>并行插值执行</strong>。</li>
 <li>传入多个配置对象作为连续参数：<code>view.animate(stage1, stage2)</code>，系统会自动按顺序<strong>串行链式衔接</strong>。</li>
-<li><strong>飞行动画（FlyTo）视差原理</strong>：通过将视口中心平移与两段式缩放（前半段先放大视野 <code>zoom - 1</code>，后半段精确降落 <code>zoom</code>）并发组合，营造出“拉高巡航再俯冲着陆”的极具立体感的镜头体验。 - <strong>旋转最短弧度避坑与 360° 全旋转</strong>：OpenLayers 默认沿最短角弧度插值。若直接设置 <code>rotation + 2*Math.PI</code>，系统计算夹角差值为 0 从而不产生任何旋转。因此完整的一圈旋转必须通过两段式串联执行：前半圈加 $\pi$，后半圈再加 $\pi$。</li>
 </ul>
-<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript // 经典 FlyTo 两阶段起飞俯冲并发动画 function flyTo(location, done) {</h4>
-<p>  const duration = 2000;
+</li>
+<li><strong>飞行动画（FlyTo）视差原理</strong>：通过将视口中心平移与两段式缩放（前半段先放大视野 <code>zoom - 1</code>，后半段精确降落 <code>zoom</code>）并发组合，营造出“拉高巡航再俯冲着陆”的极具立体感的镜头体验。</li>
+<li><strong>旋转最短弧度避坑与 360° 全旋转</strong>：OpenLayers 默认沿最短角弧度插值。若直接设置 <code>rotation + 2*Math.PI</code>，系统计算夹角差值为 0 从而不产生任何旋转。因此完整的一圈旋转必须通过两段式串联执行：前半圈加 $\pi$，后半圈再加 $\pi$。</li>
+</ul>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive)</h4>
+<pre><code class="language-javascript">// 经典 FlyTo 两阶段起飞俯冲并发动画
+function flyTo(location, done) {
+  const duration = 2000;
   const zoom = view.getZoom();
   let parts = 2;
   let called = false;
@@ -145,8 +154,13 @@
     { zoom: zoom, duration: duration / 2 },
     callback
   );
-} ```</p>
-<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>瓦片预加载（Preload）防白屏</strong>：在高速大跨度飞行或旋转期间，当前视口内的高清瓦片可能因下载不及而闪烁白屏。在底图图层配置 <code>preload: 4</code>，可促使 OpenLayers 预加载当前层级上下若干级的低清金字塔切片作为过渡底衬，彻底消除白屏。 - <strong>用户打断响应（Interruption Handling）</strong>：在执行长达数秒的漫游动画时，用户若手动拖拽地图，OpenLayers 会立即中止当前动画并调用 <code>callback(false)</code>。业务代码必须妥善处理 <code>complete === false</code> 的中止信号，及时注销后续巡检定时器。</h4>
+}
+</code></pre>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls)</h4>
+<ul>
+<li><strong>瓦片预加载（Preload）防白屏</strong>：在高速大跨度飞行或旋转期间，当前视口内的高清瓦片可能因下载不及而闪烁白屏。在底图图层配置 <code>preload: 4</code>，可促使 OpenLayers 预加载当前层级上下若干级的低清金字塔切片作为过渡底衬，彻底消除白屏。</li>
+<li><strong>用户打断响应（Interruption Handling）</strong>：在执行长达数秒的漫游动画时，用户若手动拖拽地图，OpenLayers 会立即中止当前动画并调用 <code>callback(false)</code>。业务代码必须妥善处理 <code>complete === false</code> 的中止信号，及时注销后续巡检定时器。</li>
+</ul>
 </div>
       </div>
 
@@ -446,16 +460,28 @@ onClick(&#x27;tour&#x27;, tour);
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

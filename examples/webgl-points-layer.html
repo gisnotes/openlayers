@@ -224,7 +224,7 @@ Choose a predefined style from the list below or edit it as JSON manually / 从�
 <li><strong><code>triangles</code></strong>：利用 <code>shape-points: 3</code> 参数化生成正三角形，颜色根据人口从绿色平滑过渡到橙色；</li>
 <li><strong><code>circles-zoom</code></strong>：使用底数为 2 的指数插值 <code>[&#39;interpolate&#39;, [&#39;exponential&#39;, 2], [&#39;zoom&#39;], 5, 1.5, 15, 1536]</code>，使得圆形在地图缩放时能够严格保持真实地理物理尺寸（固定米制大小），而非固定屏幕像素；</li>
 <li><strong><code>rotating-bars</code></strong>：利用 <code>shape-rotation: [&#39;*&#39;, [&#39;time&#39;], 0.13]</code> 驱动条形根据时间匀速自转，高度与位移随人口指数放大，实现生动的三维柱状可视化效果；</li>
-<li><strong><code>circles-text</code></strong>：在 WebGL 中同时绘制几何圆与文字注记（<code>text-value</code>），底层依托 SDF（有向距离场）或动态文字图集在 GPU 中光栅化渲染。</li>
+<li><strong><code>circles-text</code></strong>：在 WebGL 中同时绘制几何圆与文字注记（<code>text-value</code>），底层依托 SDF（有向距离场）或动态文字图集在 GPU 中栅格化渲染。</li>
 </ul>
 </div>
       </div>
@@ -540,16 +540,28 @@ animate();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

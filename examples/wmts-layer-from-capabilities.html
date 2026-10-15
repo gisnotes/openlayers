@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>WMTS Layer from Capabilities</title>
+    <title>WMTS Layer from Capabilities / 从 GetCapabilities 自动构建 WMTS 图层</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">WMTS Layer from Capabilities</h4>
+        <h4 id="title">WMTS Layer from Capabilities / 从 GetCapabilities 自动构建 WMTS 图层</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -75,12 +75,12 @@
               data-title="wmts"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-hidpi.html&quot;&gt;High DPI WMTS / 高分辨率 WMTS 服务 (HiDPI)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-ign.html&quot;&gt;IGN WMTS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-ign.html&quot;&gt;IGN WMTS / 法国国家地理 IGN 官方 WMTS 底图服务&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection / 多投影栅格数据动态重投影&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts.html&quot;&gt;WMTS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-dimensions.html&quot;&gt;WMTS Tile Transitions&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts.html&quot;&gt;WMTS / 手动配置 WMTS 瓦片服务图层&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing / 解析 WMTS 元数据能力文档&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities / 从 GetCapabilities 自动构建 WMTS 图层&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-dimensions.html&quot;&gt;WMTS Tile Transitions / WMTS 多维时空与平滑切片过渡&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >7</a>
@@ -95,8 +95,8 @@
               data-title="capabilities"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-capabilities.html&quot;&gt;WMS Capabilities Parsing / WMS 服务元数据能力文档解析&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing / 解析 WMTS 元数据能力文档&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities / 从 GetCapabilities 自动构建 WMTS 图层&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -111,8 +111,8 @@
               data-title="getcapabilities"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-capabilities.html&quot;&gt;WMS Capabilities Parsing / WMS 服务元数据能力文档解析&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing / 解析 WMTS 元数据能力文档&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities / 从 GetCapabilities 自动构建 WMTS 图层&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -139,8 +139,33 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of a WMTS source created from a WMTS capabilities document.</p>
+        <p id="shortdesc">Example of a WMTS source created from a WMTS capabilities document. / 演示如何利用 optionsFromCapabilities 辅助工具直接从能力文档生成 WMTS 数据源配置。</p>
         <div id="docs"><p>This example shows how to create the configuration for accessing a WMTS from a GetCapabilities response. The <a href="wmts.html">WMTS example</a> shows how to create the configuration manually.</p>
+<p>本示例展示了如何基于 <code>GetCapabilities</code> 响应文档自动生成访问 OGC WMTS 服务所需的图层与瓦片网格配置。对比 <a href="wmts.html">手动配置 WMTS 瓦片服务示例</a>，这种方式免去了开发者自行计算分辨率数组、原点坐标及 MatrixId 矩阵标识符的繁复数学工作。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
+<ul>
+<li><strong><code>optionsFromCapabilities</code> 自动化胶水函数</strong>：
+这是 OpenLayers 为 WMTS 设计的最具生产力的工具函数之一。它接收解析后的 Capabilities 对象以及目标图层名与矩阵集名，自动提取对应的原点、切片尺寸、比例尺分母换算分辨率、矩阵层级列表以及服务 URL 模板，一键构造出传递给 <code>new WMTS(options)</code> 所需的完整配置字典。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>optionsFromCapabilities(result, config)</code>：<ul>
+<li><code>result</code>：<code>WMTSCapabilities.prototype.read(text)</code> 的解析产物；</li>
+<li><code>config.layer</code>：目标图层标识符（如 <code>'layer-7328'</code>）；</li>
+<li><code>config.matrixSet</code>：匹配的切片矩阵集（如 <code>'EPSG:3857'</code>）。</li>
+</ul>
+</li>
+<li>返回对象结构：
+内部自动生成了具备对应 <code>origin</code>, <code>resolutions</code>, <code>matrixIds</code> 的 <code>WMTSTileGrid</code>，并配置了 <code>urls</code>, <code>layer</code>, <code>matrixSet</code>, <code>format</code> 与 <code>style</code>。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
+<ul>
+<li><strong>多矩阵集与当前视图坐标系匹配</strong>：
+大型 WMTS 服务（如天地图、法国 IGN）往往支持多个矩阵集（如 EPSG:4326、EPSG:3857、CGCS2000）。调用 <code>optionsFromCapabilities</code> 时，必须确保指定的 <code>matrixSet</code> 与当前地图视图 <code>ol/View</code> 的投影坐标系统保持一致，否则瓦片将无法正确投影渲染。</li>
+<li><strong>异步加载未就绪保护</strong>：
+能力文档是通过异步 <code>fetch</code> 获取的。在网络请求返回前，地图必须有优雅的骨架屏、底图加载态或占位提示，避免因网络延迟导致页面显示空白。</li>
+</ul>
 </div>
       </div>
 
@@ -197,7 +222,7 @@ fetch(&#x27;data/WMTSCapabilities.xml&#x27;)
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;WMTS Layer from Capabilities&lt;/title&gt;
+    &lt;title&gt;WMTS Layer from Capabilities / 从 GetCapabilities 自动构建 WMTS 图层&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -243,16 +268,28 @@ fetch(&#x27;data/WMTSCapabilities.xml&#x27;)
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

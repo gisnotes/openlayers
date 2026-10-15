@@ -111,7 +111,7 @@ var elevation2 = new WebGLTileLayer({
 });
 /**
 * Image operation running in Web Worker to trace contour lines.
-* 在 Web Worker 线程中执行邻域比较并绘制等高线的光栅图像算法
+* 在 Web Worker 线程中执行邻域比较并绘制等高线的栅格图像算法
 * @param {Array<ImageData>} inputs Input images / 输入图像数据
 * @param {Object} data Parameters from beforeoperations / 外部传入参数
 * @return {ImageData} Output contour image / 渲染生成的等高线图元

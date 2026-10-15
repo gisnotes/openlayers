@@ -135,21 +135,31 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Using minZoom and maxZoom to control layer visibility. / 使用图层的 minZoom 与 maxZoom 控制不同层级下的图层显示与切换。</p>
-        <div id="docs"><h2>Layers support <code>minZoom</code> and <code>maxZoom</code> options for controlling visibility based on the view&#39;s zoom level. If min or max zoom are set, the layer will only be visible at zoom levels greater than the <code>minZoom</code> and less than or equal to the <code>maxZoom</code>.  After construction, the layer&#39;s <code>setMinZoom</code> and <code>setMaxZoom</code> can be used to set limits.  This example shows an OSM layer at zoom levels 14 and lower and a USGS layer at zoom levels higher than 14.
-图层（Layer）支持通过 <code>minZoom</code> 与 <code>maxZoom</code> 选项精确控制其在不同地图缩放级别下的可见性。当设置了该区间时，图层<strong>仅在缩放级别大于 <code>minZoom</code> 且小于等于 <code>maxZoom</code>（即左开右闭区间 <code>(minZoom, maxZoom]</code>）时处于可见状态</strong>。图层实例化后，亦可通过调用 <code>setMinZoom</code> 与 <code>setMaxZoom</code> 动态更新可见性范围。本示例在 14 级及以下显示宏观 OSM 底图，而在 14 级以上自动无缝切换为精细的高清等高线地形底图（MapTiler Outdoor）。</h2>
+        <div id="docs"><p>Layers support <code>minZoom</code> and <code>maxZoom</code> options for controlling visibility based on the view&#39;s zoom level.
+If min or max zoom are set, the layer will only be visible at zoom levels greater than the <code>minZoom</code> and
+less than or equal to the <code>maxZoom</code>.  After construction, the layer&#39;s <code>setMinZoom</code> and <code>setMaxZoom</code> can
+be used to set limits.  This example shows an OSM layer at zoom levels 14 and lower and a USGS layer at
+zoom levels higher than 14.</p>
+<p>图层（Layer）支持通过 <code>minZoom</code> 与 <code>maxZoom</code> 选项精确控制其在不同地图缩放级别下的可见性。当设置了该区间时，图层<strong>仅在缩放级别大于 <code>minZoom</code> 且小于等于 <code>maxZoom</code>（即左开右闭区间 <code>(minZoom, maxZoom]</code>）时处于可见状态</strong>。图层实例化后，亦可通过调用 <code>setMinZoom</code> 与 <code>setMaxZoom</code> 动态更新可见性范围。本示例在 14 级及以下显示宏观 OSM 底图，而在 14 级以上自动无缝切换为精细的高清等高线地形底图（MapTiler Outdoor）。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 核心架构原理 (Core Architecture) 在多尺度电子地图（Multi-scale Cartography）架构中，宏观大比例尺需要概况性矢量或轻量瓦片，而微观小比例尺需要高精细度影像、等高线或建筑白模： - <strong>图层可见性区间的半开半闭数学定义</strong>：</h4>
-<p>  $$\text{Visible} \iff \text{minZoom} &lt; z \le \text{maxZoom}$$
-  注意：<code>minZoom</code> 为<strong>严格大于（开区间）</strong>，而 <code>maxZoom</code> 为<strong>小于等于（闭区间）</strong>！
-  例如：</p>
+<h4>1. 核心架构原理 (Core Architecture)</h4>
+<p>在多尺度电子地图（Multi-scale Cartography）架构中，宏观大比例尺需要概况性矢量或轻量瓦片，而微观小比例尺需要高精细度影像、等高线或建筑白模：</p>
 <ul>
+<li><strong>图层可见性区间的半开半闭数学定义</strong>：
+$$\text{Visible} \iff \text{minZoom} &lt; z \le \text{maxZoom}$$
+注意：<code>minZoom</code> 为<strong>严格大于（开区间）</strong>，而 <code>maxZoom</code> 为<strong>小于等于（闭区间）</strong>！
+例如：<ul>
 <li>OSM 图层：设置 <code>maxZoom: 14</code>，当 $z \le 14$ 时可见；</li>
 <li>Outdoor 图层：设置 <code>minZoom: 14</code>，当 $z &gt; 14$ 时可见；
-  在临界点 $z=14$ 时，恰好只有 OSM 可见，不会产生两层同尺寸瓦片重合造成的双重渲染浪费。</li>
+在临界点 $z=14$ 时，恰好只有 OSM 可见，不会产生两层同尺寸瓦片重合造成的双重渲染浪费。</li>
+</ul>
+</li>
 <li><strong>动态分辨率计算 (<code>resolution</code>)</strong>：在 OpenLayers 内部渲染帧调度器中，每帧计算 <code>viewState.resolution</code> 时，系统优先比对图层的 <code>minResolution</code> 与 <code>maxResolution</code>。<code>minZoom</code> 和 <code>maxZoom</code> 在底层被自动转换为对应的等价分辨率进行极速常数时间比对。</li>
 </ul>
-<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript const map = new Map({</h4>
-<p>  layers: [
+<h4>2. 关键实现与代码拆解 (Code Deep Dive)</h4>
+<pre><code class="language-javascript">const map = new Map({
+  layers: [
     new TileLayer({
       maxZoom: 14, // 14 级及以下显示（zoom &lt;= 14）
       source: new OSM(),
@@ -157,7 +167,7 @@
     new TileLayer({
       minZoom: 14, // 超过 14 级显示（zoom &gt; 14）
       source: new TileJSON({
-        url: &#39;<a href="https://api.maptiler.com/maps/outdoor-v2/tiles.json?key=">https://api.maptiler.com/maps/outdoor-v2/tiles.json?key=</a>&#39; + key,
+        url: &#39;https://api.maptiler.com/maps/outdoor-v2/tiles.json?key=&#39; + key,
         tileSize: 512,
       }),
     }),
@@ -168,8 +178,13 @@
     maxZoom: 18,
     constrainOnlyCenter: true,
   }),
-}); ```</p>
-<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>图层重合闪烁与并发消耗（Z-fighting）</strong>：切勿将低精度图层设为 <code>maxZoom: 14</code> 的同时将高精度图层设为 <code>minZoom: 13</code>，重叠层级会导致两个图层的瓦片并发请求并重叠绘制，造成严重的网络与 GPU 浪费。遵循 <code>LayerA.maxZoom === LayerB.minZoom</code> 可确保完美的无缝单层衔接。 - <strong>未激活图层的网络静默</strong>：当视口处于图层可见区间之外时，OpenLayers 的切片加载流水线会直接跳过该图层，<strong>绝不会向服务器发起任何瓦片网络请求</strong>，极大节省网络带宽。</h4>
+});
+</code></pre>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls)</h4>
+<ul>
+<li><strong>图层重合闪烁与并发消耗（Z-fighting）</strong>：切勿将低精度图层设为 <code>maxZoom: 14</code> 的同时将高精度图层设为 <code>minZoom: 13</code>，重叠层级会导致两个图层的瓦片并发请求并重叠绘制，造成严重的网络与 GPU 浪费。遵循 <code>LayerA.maxZoom === LayerB.minZoom</code> 可确保完美的无缝单层衔接。</li>
+<li><strong>未激活图层的网络静默</strong>：当视口处于图层可见区间之外时，OpenLayers 的切片加载流水线会直接跳过该图层，<strong>绝不会向服务器发起任何瓦片网络请求</strong>，极大节省网络带宽。</li>
+</ul>
 </div>
       </div>
 
@@ -266,16 +281,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

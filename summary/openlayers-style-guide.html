@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
     <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
     <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
@@ -271,7 +272,7 @@
     Choice --&gt;|&quot;静态固定视觉&quot;| M1[&quot;1. 经典面向对象 API\n(new Style / Fill / Stroke / Icon)&quot;]
     Choice --&gt;|&quot;业务属性/视图变化&quot;| M2[&quot;2. 动态样式函数\n(styleFunction(feature, resolution))&quot;]
     Choice --&gt;|&quot;数据驱动 / 跨平台规格&quot;| M3[&quot;3. 声明式表达式\n([&#39;get&#39;], [&#39;interpolate&#39;], Flat JSON)&quot;]
-    Choice --&gt;|&quot;复杂异形矢量符号&quot;| M4[&quot;4. 离屏 Canvas + toContext\n(ImmediateRenderer 矢量光栅化)&quot;]
+    Choice --&gt;|&quot;复杂异形矢量符号&quot;| M4[&quot;4. 离屏 Canvas + toContext\n(ImmediateRenderer 矢量栅格化)&quot;]
     Choice --&gt;|&quot;底层像素/画布直控&quot;| M5[&quot;5. 自定义 Renderer 钩子\n(Style.renderer / Context.clip)&quot;]
     Choice --&gt;|&quot;渐变与纹理填充&quot;| M6[&quot;6. Canvas 原生材质\n(CanvasGradient / CanvasPattern)&quot;]
     Choice --&gt;|&quot;海量连续场 / 卫星遥感&quot;| M7[&quot;7. WebGL 片元着色器\n(Heatmap / WebGLTile / Band Math)&quot;]
@@ -345,7 +346,7 @@
 <h3 id="4-立即渲染器与离屏画布（immediate-renderer--tocontext）">4. 立即渲染器与离屏画布（Immediate Renderer &amp; <code>toContext</code>）</h3>
 <p><strong>对应示例</strong>：<a href="https://gisnotes.github.io/openlayers/en/latest/examples/earthquake-custom-symbol.html"><code>earthquake-custom-symbol</code></a>、<a href="https://gisnotes.github.io/openlayers/en/latest/examples/animated-gif.html"><code>animated-gif</code></a></p>
 <p>内置的 <code>RegularShape</code> 仅支持对称正多边形，无法直接绘制倾斜折线闪电、非对称标头等复杂矢量。如果预制静态 PNG 图片，在尺寸随属性连续变化时需要过多图片资源。
-<code>toContext</code> 允许在离屏 Canvas 上将矢量几何直接光栅化为位图：</p>
+<code>toContext</code> 允许在离屏 Canvas 上将矢量几何直接栅格化为位图：</p>
 <pre><code class="language-javascript">// 1. 创建离屏画布并包装为立即渲染器
 const canvas = document.createElement(&#39;canvas&#39;);
 const vectorContext = toContext(canvas.getContext(&#39;2d&#39;), {
@@ -572,5 +573,28 @@ const style = new Style({
       <a href="https://www.netlify.com">This site is powered by Netlify.</a>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
   </body>
 </html>

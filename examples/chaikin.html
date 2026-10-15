@@ -140,29 +140,39 @@
   This example uses the npm package [`chaikin-smooth`](https://www.npmjs.com/package/chaikin-smooth) which
   implements [Chaikins algorithm](http://graphics.cs.ucdavis.edu/education/CAGDNotes/Chaikins-Algorithm/Chaikins-Algorithm.html)
   to smooth drawn lines.
-</p> <p>
+</p>
+<p>
   Start by drawing on the map. Once you finish a drawing, the feature's geometry will be smoothed
   as configured via the form elements.
-</p> <p>
-  本示例借助 npm 包 <code>chaikin-smooth</code> 实现了经典的 <strong>Chaikin 割角（Corner-Cutting）平滑算法</strong>，对用户在地图上交互绘制的折线进行平滑化曲线逼近。
-</p> <p>
-  在地图上单击连续画线，双击结束绘制。绘制完成后，要素几何将根据下方表单中配置的迭代次数自动计算并替换为平滑的曲线坐标。
 </p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. 核心架构与设计思想 (Core Architecture & Design) - <strong>Chaikin 割角算法数学原理（Corner-Cutting Algorithm）</strong>：
-  由 George Chaikin 于 1974 年提出，是细分曲线（Subdivision Surfaces）的鼻祖。对于折线段上的任意相邻两点 $P_i$ 与 $P_{i+1}$，算法在每次迭代中将原线段分割，用位于 $1/4$ 处的新顶点 $Q_i = \frac{3}{4}P_i + \frac{1}{4}P_{i+1}$ 与 $3/4$ 处的新顶点 $R_i = \frac{1}{4}P_i + \frac{3}{4}P_{i+1}$ 取代旧拐点。随着迭代次数 $N$ 增加，折线迅速收敛逼近均匀二次 B 样条（Quadratic B-Spline）光滑曲线。
-- <strong>矢量交互与几何后处理管线</strong>：
-  `Draw` 交互负责捕获用户的手势输入并生成初始 `LineString`，而 `drawend` 事件构成了几何进入 `VectorSource` 之前的<strong>拦截处理拦截器</strong>。通过在 `drawend` 回调中就地修改 `geometry.setCoordinates(smoothened)`，整个过程无需销毁重建要素，性能极高。<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis) - <code>makeSmooth(path, numIterations)</code>：</h4>
+<p>
+  本示例借助 npm 包 <code>chaikin-smooth</code> 实现了经典的 <strong>Chaikin 割角（Corner-Cutting）平滑算法</strong>，对用户在地图上交互绘制的折线进行平滑化曲线逼近。
+</p>
+<p>
+  在地图上单击连续画线，双击结束绘制。绘制完成后，要素几何将根据下方表单中配置的迭代次数自动计算并替换为平滑的曲线坐标。
+</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
 <ul>
+<li><strong>Chaikin 割角算法数学原理（Corner-Cutting Algorithm）</strong>：
+由 George Chaikin 于 1974 年提出，是细分曲线（Subdivision Surfaces）的鼻祖。对于折线段上的任意相邻两点 $P_i$ 与 $P_{i+1}$，算法在每次迭代中将原线段分割，用位于 $1/4$ 处的新顶点 $Q_i = \frac{3}{4}P_i + \frac{1}{4}P_{i+1}$ 与 $3/4$ 处的新顶点 $R_i = \frac{1}{4}P_i + \frac{3}{4}P_{i+1}$ 取代旧拐点。随着迭代次数 $N$ 增加，折线迅速收敛逼近均匀二次 B 样条（Quadratic B-Spline）光滑曲线。</li>
+<li><strong>矢量交互与几何后处理管线</strong>：
+<code>Draw</code> 交互负责捕获用户的手势输入并生成初始 <code>LineString</code>，而 <code>drawend</code> 事件构成了几何进入 <code>VectorSource</code> 之前的<strong>拦截处理拦截器</strong>。通过在 <code>drawend</code> 回调中就地修改 <code>geometry.setCoordinates(smoothened)</code>，整个过程无需销毁重建要素，性能极高。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>makeSmooth(path, numIterations)</code>：<ul>
 <li>入参：原始坐标数组 <code>[[x1, y1], [x2, y2], ...]</code>，迭代次数（建议限制在 1~10 之间）。</li>
 <li>边界收敛与顶点爆炸：每增加一次迭代，折线顶点数量近似翻倍（$V_{new} = 2V_{old} - 2$）。若迭代次数过大（如超过 12 次），顶点数将成千上万，不仅无法带来视觉上的进一步平滑提升，还会造成浏览器内存和渲染瓶颈。因此在函数内部使用 <code>Math.min(Math.max(numIterations, 1), 10)</code> 进行安全截断。</li>
+</ul>
+</li>
 <li><code>draw.on(&#39;drawend&#39;, (event) =&gt; ...)</code>：
 事件对象提供 <code>event.feature</code>，直接读取其底层几何并修改其坐标。</li>
 </ul>
-<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization) - <strong>首尾端点固定（Fixed Endpoints）</strong>：</h4>
-<p>  标准 Chaikin 算法可能会导致曲线的首末端点向内轻微收缩。在 GIS 规划和测绘业务中，折线的起点和终点往往具有绝对现实意义（如传感器点位、路口），在实现平滑算法时需确保首点 $P_0$ 和末点 $P_n$ 保持严格不动。</p>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
 <ul>
+<li><strong>首尾端点固定（Fixed Endpoints）</strong>：
+标准 Chaikin 算法可能会导致曲线的首末端点向内轻微收缩。在 GIS 规划和测绘业务中，折线的起点和终点往往具有绝对现实意义（如传感器点位、路口），在实现平滑算法时需确保首点 $P_0$ 和末点 $P_n$ 保持严格不动。</li>
 <li><strong>大尺度缩放与 Douglas-Peucker 结合</strong>：
 平滑算法生成了大量高密度拐点。当用户大幅缩小地图视口时，密集的平滑顶点会导致 Overdraw。生产级方案通常建议在缩放时结合 <code>simplify()</code>（Douglas-Peucker 抽稀算法）动态降低渲染点数。</li>
 </ul>
@@ -310,16 +320,28 @@ draw.on(&#x27;drawend&#x27;, function (event) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

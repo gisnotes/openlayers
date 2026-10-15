@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Google Maps</title>
+    <title>Google Maps / 谷歌地图 Map Tiles API 与 Session Token 鉴权</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Google Maps</h4>
+        <h4 id="title">Google Maps / 谷歌地图 Map Tiles API 与 Session Token 鉴权</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,7 +74,7 @@
               data-bs-target="#tag-example-list"
               data-title="google"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./google.html&quot;&gt;Google Maps&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./google.html&quot;&gt;Google Maps / 谷歌地图 Map Tiles API 与 Session Token 鉴权&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -96,14 +96,13 @@
         <div id="map" class="map">
   <dialog open>
     <form method="dialog" id="key-form">
-      <label>Your API key
+      <label>请输入您的 Google Maps API Key:
         <input type="password" name="key">
       </label>
-      <button type="submit">show map</button>
+      <button type="submit">加载地图 (Show Map)</button>
     </form>
   </dialog>
 </div>
-
 
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
           <input id="codesandbox-params" type="hidden" name="parameters">
@@ -111,8 +110,27 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Map with tiles from Google Maps</p>
-        <div id="docs"><p>This example demonstrates how to display tiles from Google&#39;s Map Tiles API in a map.  To use the Google Map Tiles API, you need to set up a Google Cloud project and create an API key for your application.  See the <a href="https://developers.google.com/maps/documentation/tile/overview">Map Tiles API documentation</a> for instructions.<br> The <code>ol/source/Google</code> source can be used with a tile layer and is configured by passing properties to the constructor that are used in creating the <a href="https://developers.google.com/maps/documentation/tile/session_tokens">session token request</a> for accessing the tiles.  The <code>mapType</code> defaults to <code>&#39;roadmap&#39;</code> and can be changed to any of the <a href="https://developers.google.com/maps/documentation/tile/session_tokens#required_fields">supported map types</a>.<br>  When using the Google source, please make sure you comply with the Google <a href="https://developers.google.com/maps/documentation/tile/policies">Map Tiles API Policies</a>, by adding the <a href="https://developers.google.com/maps/documentation/tile/policies#logo">Google logo</a> in the bottom-left corner of the map. You can add the logo as a static image by using a custom OpenLayers control, as shown in the example below.</p>
+        <p id="shortdesc">Map with tiles from Google Maps / 演示如何使用官方推荐的 Google Map Tiles API 会话令牌接入谷歌地图切片并合规渲染 Logo。</p>
+        <div id="docs"><p>This example demonstrates how to display tiles from Google's Map Tiles API in a map. To use the Google Map Tiles API, you need to set up a Google Cloud project and create an API key for your application. See the <a href="https://developers.google.com/maps/documentation/tile/overview" target="_blank">Map Tiles API documentation</a> for instructions.<br>The <code>ol/source/Google</code> source can be used with a tile layer and is configured by passing properties to the constructor that are used in creating the <a href="https://developers.google.com/maps/documentation/tile/session_tokens" target="_blank">session token request</a> for accessing the tiles. The <code>mapType</code> defaults to <code>'roadmap'</code> and can be changed to any of the <a href="https://developers.google.com/maps/documentation/tile/session_tokens#required_fields" target="_blank">supported map types</a>.<br>When using the Google source, please make sure you comply with the Google <a href="https://developers.google.com/maps/documentation/tile/policies" target="_blank">Map Tiles API Policies</a>, by adding the <a href="https://developers.google.com/maps/documentation/tile/policies#logo" target="_blank">Google logo</a> in the bottom-left corner of the map. You can add the logo as a static image by using a custom OpenLayers control, as shown in the example below.</p>
+<p>本示例展示了如何在 OpenLayers 地图中接入谷歌官方正式开放的 <a href="https://developers.google.com/maps/documentation/tile/overview" target="_blank">Google Map Tiles API</a>。接入前需在 Google Cloud 控制台中启用该 API 并申请凭据 API Key。<br>OpenLayers 提供了专用的 <code>ol/source/Google</code> 数据源，内部全自动调度向谷歌端点申请双向通信的 <a href="https://developers.google.com/maps/documentation/tile/session_tokens" target="_blank">Session Token（会话令牌）</a>，并携带该 Token 拉取瓦片切片。<code>mapType</code> 默认为 <code>'roadmap'</code>（标准路线图），亦可根据业务需求设置为 <code>'satellite'</code>（卫星图）或 <code>'terrain'</code>（地形图）。<br><strong>商用法规合规警示</strong>：根据 Google Map Tiles API 政策条款，使用谷歌底图时，必须在地图视口左下角显式保留合规尺寸的 <a href="https://developers.google.com/maps/documentation/tile/policies#logo" target="_blank">Google 官方品牌 Logo</a>。本例通过自定义一个静态控件（ol/control/Control）实现了该法定品牌标示。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
+<ul>
+<li><strong>基于 Session Token 的短期会话生命周期</strong>：
+与普通静态 XYZ 瓦片仅靠 API Key 直连不同，Google Map Tiles API 采用了高度安全的双阶段架构：首先使用用户的 API Key 向 <code>tile.googleapis.com/v1/createSession</code> 发起一次 POST 请求，换取一个有效期通常为 2 周的加密 <code>session</code> 令牌；后续所有切片请求（<code>2d-tiles/{z}/{x}/{y}?session=...</code>）均使用该 Token。<code>ol/source/Google</code> 在内部全自动处理了会话获取与刷新。</li>
+<li><strong>自定义商标 Control 控件注入</strong>：
+通过继承 <code>ol/control/Control</code> 创建一个纯 DOM 控件并将带有 Google Logo 的图片图标定位在视口左下方，OpenLayers 保证了在全屏或视口调整时该 Logo 始终稳定悬浮于所有业务图层之上。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>new Google({ key: apiKey, mapType: 'roadmap', highDpi: true })</code>：
+OpenLayers 内置 Google 数据源。开启 <code>highDpi: true</code>（如果设备支持）会自动请求 512 像素视网膜切片，在高分辨率屏幕上达到极高锐利度。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
+<ul>
+<li><strong>Google Cloud 计费与预算保护</strong>：
+Google Map Tiles API 是按会话请求次数计费的商业服务。在生产部署时，务必在 Google Cloud 控制台设置每日配额上限与预算警报，并限制 API Key 的 HTTP Referrer，防止盗用产生非预期扣费。</li>
+</ul>
 </div>
       </div>
 
@@ -179,7 +197,7 @@ document.getElementById(&#x27;key-form&#x27;).addEventListener(&#x27;submit&#x27
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Google Maps&lt;/title&gt;
+    &lt;title&gt;Google Maps / 谷歌地图 Map Tiles API 与 Session Token 鉴权&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -192,14 +210,13 @@ document.getElementById(&#x27;key-form&#x27;).addEventListener(&#x27;submit&#x27
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;
       &lt;dialog open&gt;
         &lt;form method&#x3D;&quot;dialog&quot; id&#x3D;&quot;key-form&quot;&gt;
-          &lt;label&gt;Your API key
+          &lt;label&gt;请输入您的 Google Maps API Key:
             &lt;input type&#x3D;&quot;password&quot; name&#x3D;&quot;key&quot;&gt;
           &lt;/label&gt;
-          &lt;button type&#x3D;&quot;submit&quot;&gt;show map&lt;/button&gt;
+          &lt;button type&#x3D;&quot;submit&quot;&gt;加载地图 (Show Map)&lt;/button&gt;
         &lt;/form&gt;
       &lt;/dialog&gt;
     &lt;/div&gt;
-    
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
   &lt;/body&gt;
@@ -235,16 +252,28 @@ document.getElementById(&#x27;key-form&#x27;).addEventListener(&#x27;submit&#x27
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

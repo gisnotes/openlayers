@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>WMTS Capabilities Parsing</title>
+    <title>WMTS Capabilities Parsing / 解析 WMTS 元数据能力文档</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -64,7 +64,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">WMTS Capabilities Parsing</h4>
+        <h4 id="title">WMTS Capabilities Parsing / 解析 WMTS 元数据能力文档</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -76,12 +76,12 @@
               data-title="wmts"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-hidpi.html&quot;&gt;High DPI WMTS / 高分辨率 WMTS 服务 (HiDPI)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-ign.html&quot;&gt;IGN WMTS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-ign.html&quot;&gt;IGN WMTS / 法国国家地理 IGN 官方 WMTS 底图服务&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection / 多投影栅格数据动态重投影&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts.html&quot;&gt;WMTS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-dimensions.html&quot;&gt;WMTS Tile Transitions&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts.html&quot;&gt;WMTS / 手动配置 WMTS 瓦片服务图层&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing / 解析 WMTS 元数据能力文档&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities / 从 GetCapabilities 自动构建 WMTS 图层&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-dimensions.html&quot;&gt;WMTS Tile Transitions / WMTS 多维时空与平滑切片过渡&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >7</a>
@@ -96,8 +96,8 @@
               data-title="capabilities"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-capabilities.html&quot;&gt;WMS Capabilities Parsing / WMS 服务元数据能力文档解析&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing / 解析 WMTS 元数据能力文档&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities / 从 GetCapabilities 自动构建 WMTS 图层&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -112,8 +112,8 @@
               data-title="getcapabilities"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-capabilities.html&quot;&gt;WMS Capabilities Parsing / WMS 服务元数据能力文档解析&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing / 解析 WMTS 元数据能力文档&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities / 从 GetCapabilities 自动构建 WMTS 图层&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -140,8 +140,32 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of parsing a WMTS GetCapabilities response.</p>
+        <p id="shortdesc">Example of parsing a WMTS GetCapabilities response. / 演示如何使用 WMTSCapabilities 格式解析器读取 XML 能力文档并输出结构化 JSON 对象。</p>
         <div id="docs"><p>This example shows the contents of the result object from parsing a WMTS capabilities response.</p>
+<p>本示例展示了如何使用 <code>ol/format/WMTSCapabilities</code> 格式解析器，将 OGC WMTS 服务返回的标准 XML 格式 <code>GetCapabilities</code> 响应文档高效反序列化为易于前端程序访问的结构化 JavaScript/JSON 对象。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
+<ul>
+<li><strong>OGC 元数据 XML 的客户端语义解析</strong>：
+WMTS 服务的 <code>GetCapabilities</code> XML 包含极其繁杂的命名空间（如 <code>ows:</code>, <code>xlink:</code> 等）与层级嵌套。OpenLayers 提供了轻量级的专用 XML 解析器，负责提取关键实体：图层列表（<code>Contents.Layer</code>）、瓦片矩阵集定义（<code>Contents.TileMatrixSet</code>）以及操作元数据（<code>OperationsMetadata</code>）。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>const parser = new WMTSCapabilities()</code>：
+专职负责解析 WMTS 1.0.0 规范 XML 字符串的格式化解析类。</li>
+<li><code>parser.read(text)</code>：
+同步执行 DOM 解析与树状字典映射，返回包含 <code>version</code>, <code>ServiceIdentification</code>, <code>ServiceProvider</code>, <code>Contents</code> 等顶层字段的纯 JavaScript 对象。</li>
+<li>核心提取字段：<ul>
+<li><code>Contents.Layer[]</code>：包含各个图层的标识符 <code>Identifier</code>、标题 <code>Title</code>、支持的 <code>TileMatrixSetLink</code>、样式 <code>Style</code> 与瓦片格式 <code>Format</code>。</li>
+<li><code>Contents.TileMatrixSet[]</code>：包含坐标系定义 <code>SupportedCRS</code> 及各分辨率矩阵 <code>TileMatrix</code>（比例尺分母 <code>ScaleDenominator</code>、矩阵宽高、瓦片物理像素尺寸及左上角矩阵原点 <code>TopLeftCorner</code>）。</li>
+</ul>
+</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
+<ul>
+<li><strong>首屏异步元数据加载开销</strong>：
+完整的 WMTS Capabilities XML 往往达到数百 KB 甚至数 MB。在企业级单页面应用（SPA）中，不建议在用户每次进入页面时都通过网络重新发起一次耗时的 <code>GetCapabilities</code> 请求。推荐在服务端代理缓存、构建期静态序列化或将解析后的轻量级配置保存在前端 LocalStorage / IndexedDB 中。</li>
+</ul>
 </div>
       </div>
 
@@ -171,7 +195,7 @@ fetch(&#x27;data/WMTSCapabilities.xml&#x27;)
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;WMTS Capabilities Parsing&lt;/title&gt;
+    &lt;title&gt;WMTS Capabilities Parsing / 解析 WMTS 元数据能力文档&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -221,16 +245,28 @@ fetch(&#x27;data/WMTSCapabilities.xml&#x27;)
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

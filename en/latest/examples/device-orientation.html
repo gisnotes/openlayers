@@ -137,21 +137,32 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Listen to DeviceOrientation events. / 监听设备陀螺仪与加速度传感器（DeviceOrientation）事件以倾斜平移地图。</p>
-        <div id="docs"><h2>This example shows how to track changes in device orientation. <a href="https://github.com/dorukeker/gyronorm.js">gyronorm.js</a> library is used to access and normalize the events from the browser.
-本示例展示了如何监听移动终端设备的物理姿态变化。通过引入 <a href="https://github.com/dorukeker/gyronorm.js" target="_blank">gyronorm.js</a> 传感器归一化库，跨平台统一解析手机的陀螺仪与重力加速度事件（$\alpha$、$\beta$、$\gamma$ 欧拉角），并将手机倾斜角度实时映射为地图视图的平移矢量，实现体感操控漫游地图。</h2>
+        <div id="docs"><p>This example shows how to track changes in device orientation.
+<a href="https://github.com/dorukeker/gyronorm.js">gyronorm.js</a> library is used to access and
+normalize the events from the browser.</p>
+<p>本示例展示了如何监听移动终端设备的物理姿态变化。通过引入 <a href="https://github.com/dorukeker/gyronorm.js" target="_blank">gyronorm.js</a> 传感器归一化库，跨平台统一解析手机的陀螺仪与重力加速度事件（$\alpha$、$\beta$、$\gamma$ 欧拉角），并将手机倾斜角度实时映射为地图视图的平移矢量，实现体感操控漫游地图。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 设备空间姿态欧拉角动力学 (Euler Angles Model) - <strong>三维旋转参考系</strong>: W3C 姿态规范定义了设备坐标系相对于地球参考坐标系的变换：</h4>
+<h4>1. 设备空间姿态欧拉角动力学 (Euler Angles Model)</h4>
 <ul>
+<li><strong>三维旋转参考系</strong>: W3C 姿态规范定义了设备坐标系相对于地球参考坐标系的变换：<ul>
 <li>$\alpha$（Yaw / 航向角）：绕垂直于屏幕向外的 Z 轴旋转，范围 $[0, 2\pi)$，表征地理北极或罗盘朝向；</li>
 <li>$\beta$（Pitch / 俯仰角）：绕屏幕横向水平的 X 轴旋转，范围 $[-\pi, \pi]$，表征手机前后仰合；</li>
 <li>$\gamma$（Roll / 滚转角）：绕屏幕纵向纵轴的 Y 轴旋转，范围 $[-\pi/2, \pi/2]$，表征手机左右侧翻。</li>
 </ul>
-<h4>2. 尺度自适应平移映射算法 - <strong>分辨率相关动力学公式</strong>:</h4>
-<p>  $$\Delta X = -\text{resolution} \times \gamma \times 25, \quad \Delta Y = \text{resolution} \times \beta \times 25$$</p>
+</li>
+</ul>
+<h4>2. 尺度自适应平移映射算法</h4>
 <ul>
+<li><strong>分辨率相关动力学公式</strong>:
+$$\Delta X = -\text{resolution} \times \gamma \times 25, \quad \Delta Y = \text{resolution} \times \beta \times 25$$</li>
 <li>算法中将倾斜弧度与当前视图的分辨率（<code>view.getResolution()</code>）相乘，确保无论用户在大比例尺（城市微观街道）还是小比例尺（全国宏观）下，晃动手机相同的物理手感角度，屏幕地图内容均发生恒定适中的视觉位移。</li>
 </ul>
-<h4>3. 生产实践陷阱与避坑指南 (Production Pitfalls &amp; Best Practices) - <strong>iOS 13+ 权限交互前置要求</strong>: 在苹果 Safari 浏览器中，未经用户直接点击（如点击“开启体感”按钮）直接调用传感器接口会被静默拒绝。必须先执行 <code>DeviceOrientationEvent.requestPermission()</code> 并获取 <code>&#39;granted&#39;</code> 授权承诺。 - <strong>防抖与死区（Deadzone）控制</strong>: 移动终端传感器普遍存在微小的静态电磁噪声与手部生理颤抖。生产级工程应设置死区过滤（例如当 $|\beta| &lt; 2^\circ$ 或 $|\gamma| &lt; 2^\circ$ 时视为零位移），配合低通滤波（Low-pass Filter）消除高频微震，保障视觉平稳。</h4>
+<h4>3. 生产实践陷阱与避坑指南 (Production Pitfalls &amp; Best Practices)</h4>
+<ul>
+<li><strong>iOS 13+ 权限交互前置要求</strong>: 在苹果 Safari 浏览器中，未经用户直接点击（如点击“开启体感”按钮）直接调用传感器接口会被静默拒绝。必须先执行 <code>DeviceOrientationEvent.requestPermission()</code> 并获取 <code>&#39;granted&#39;</code> 授权承诺。</li>
+<li><strong>防抖与死区（Deadzone）控制</strong>: 移动终端传感器普遍存在微小的静态电磁噪声与手部生理颤抖。生产级工程应设置死区过滤（例如当 $|\beta| &lt; 2^\circ$ 或 $|\gamma| &lt; 2^\circ$ 时视为零位移），配合低通滤波（Low-pass Filter）消除高频微震，保障视觉平稳。</li>
+</ul>
 </div>
       </div>
 
@@ -288,16 +299,28 @@ gn.init().then(
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

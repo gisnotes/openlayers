@@ -80,7 +80,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./image-load-events.html&quot;&gt;Image Load Events / 单张图像加载事件与进度指示&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-wms.html&quot;&gt;MapServer WMS / MapServer WMS 服务集成与高清屏优化&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image.html&quot;&gt;Single Image WMS / 单图像动态 WMS 服务&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-vector-layer.html&quot;&gt;Vector Image Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-vector-layer.html&quot;&gt;Vector Image Layer / 矢量图层栅格化渲染缓存优化&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-svg.html&quot;&gt;WMS loader with SVG format / 采用 SVG 矢量格式的 WMS 加载器&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;单幅静态图像客户端重投影 (Image Reprojection)&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -150,35 +150,44 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example using image load events. / 演示如何监听单张图像（ImageWMS）数据源的加载生命周期事件并渲染动态进度条。</p>
-        <div id="docs"><h2>Image sources fire events related to image loading.  You can listen for <code>imageloadstart</code>, <code>imageloadend</code>, and <code>imageloaderror</code> type events to monitor image loading progress.  This example registers listeners for these events and renders an image loading progress bar at the bottom of the map. The progress bar is shown and hidden according to the map&#39;s <code>loadstart</code> and <code>loadend</code> events.
-图像数据源（如 ImageWMS、ImageStatic）在图像请求与解析期间会触发细粒度生命周期事件。你可以通过监听 <code>imageloadstart</code>、<code>imageloadend</code> 和 <code>imageloaderror</code> 事件实时掌握图像资源的传输与就绪状态。
-本示例演示了如何通过封装一个轻量级进度条组件，监听数据源的加载状态变更进度条宽度，并结合地图实例级别的 <code>loadstart</code> 与 <code>loadend</code> 事件控制进度条的整体显隐，呈现优雅流畅的加载反馈动效。</h2>
+        <div id="docs"><p>Image sources fire events related to image loading.  You can
+listen for <code>imageloadstart</code>, <code>imageloadend</code>,
+and <code>imageloaderror</code> type events to monitor image loading
+progress.  This example registers listeners for these events and
+renders an image loading progress bar at the bottom of the map. The
+progress bar is shown and hidden according to the map&#39;s <code>loadstart</code>
+and <code>loadend</code> events.</p>
+<p>图像数据源（如 ImageWMS、ImageStatic）在图像请求与解析期间会触发细粒度生命周期事件。你可以通过监听 <code>imageloadstart</code>、<code>imageloadend</code> 和 <code>imageloaderror</code> 事件实时掌握图像资源的传输与就绪状态。</p>
+<p>本示例演示了如何通过封装一个轻量级进度条组件，监听数据源的加载状态变更进度条宽度，并结合地图实例级别的 <code>loadstart</code> 与 <code>loadend</code> 事件控制进度条的整体显隐，呈现优雅流畅的加载反馈动效。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 核心架构与设计机制 (Core Architecture &amp; Mechanics) - <strong>单张图像与瓦片加载生命周期的差异</strong>：</h4>
-<p>  瓦片数据源（TileSource）一次视口变更是由数十个切片并发请求组成的，而单张图像数据源（ImageSource，如 <code>ImageWMS</code>、<code>ImageStatic</code> 等）在每次平移或缩放停顿后向服务端请求单张覆盖当前视口 BBOX 的大幅面光栅图。</p>
+<h4>1. 核心架构与设计机制 (Core Architecture &amp; Mechanics)</h4>
 <ul>
+<li><strong>单张图像与瓦片加载生命周期的差异</strong>：
+瓦片数据源（TileSource）一次视口变更是由数十个切片并发请求组成的，而单张图像数据源（ImageSource，如 <code>ImageWMS</code>、<code>ImageStatic</code> 等）在每次平移或缩放停顿后向服务端请求单张覆盖当前视口 BBOX 的大幅面栅格图。</li>
 <li><strong>双层生命周期协同管道</strong>：<ul>
 <li><strong>Map 容器层</strong>：<code>loadstart</code> 与 <code>loadend</code> 标志着地图视口渲染任务的开始与结束（包括所有图层的所有渲染队列），常用于全局蒙版、骨架屏或顶层指示器的显示与隐藏。</li>
 <li><strong>Source 数据源层</strong>：<code>imageloadstart</code> 标志着底层创建图像请求并向网络发起调用；<code>imageloadend</code> 标志着图像二进制完全下载并解码完毕；<code>imageloaderror</code> 则在 4xx/5xx 或跨域 CORS 拦截时触发，避免 UI 卡死在 Loading 状态。</li>
 </ul>
 </li>
 </ul>
-<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns) - <strong>加载计数器模型（Progress Counter）</strong>：</h4>
-<pre><code class="language-javascript">source.on(&#39;imageloadstart&#39;, function () {
+<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns)</h4>
+<ul>
+<li><strong>加载计数器模型（Progress Counter）</strong>：<pre><code class="language-javascript">source.on(&#39;imageloadstart&#39;, function () {
   progress.addLoading(); // loading 计数递增并更新百分比宽度
 });
 source.on([&#39;imageloadend&#39;, &#39;imageloaderror&#39;], function () {
   progress.addLoaded();  // loaded 计数递增，完成或失败均推进进度
 });
 </code></pre>
-<p>  即使发生网络异常（<code>imageloaderror</code>），也必须将其归入 <code>addLoaded()</code> 计算，确保进度条能平稳闭合至 100% 并淡出，杜绝死锁。</p>
-<ul>
+即使发生网络异常（<code>imageloaderror</code>），也必须将其归入 <code>addLoaded()</code> 计算，确保进度条能平稳闭合至 100% 并淡出，杜绝死锁。</li>
 <li><strong>淡出延迟与重置</strong>：
 在 <code>loadend</code> 事件触发后，通过 <code>setTimeout(..., 250)</code> 延迟隐藏 DOM，让用户肉眼捕捉到 100% 满格反馈，随后重置宽度为 <code>0px</code>，优化人机交互微动效。</li>
 </ul>
-<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices) - <strong>防抖与高频视口拖拽丢弃</strong>：</h4>
-<p>  用户连续拖拽或滚轮极速缩放时，OpenLayers 会自动中断上一帧废弃的 WMS 图片请求（通过重设 <code>img.src = &#39;&#39;</code> 或取消挂载）。因此在生产环境中，若手动管理加载锁，必须确保每个 <code>imageloadstart</code> 对应的实例都能正确闭合，推荐使用计数器差值比或 WeakMap 关联。</p>
+<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices)</h4>
 <ul>
+<li><strong>防抖与高频视口拖拽丢弃</strong>：
+用户连续拖拽或滚轮极速缩放时，OpenLayers 会自动中断上一帧废弃的 WMS 图片请求（通过重设 <code>img.src = &#39;&#39;</code> 或取消挂载）。因此在生产环境中，若手动管理加载锁，必须确保每个 <code>imageloadstart</code> 对应的实例都能正确闭合，推荐使用计数器差值比或 WeakMap 关联。</li>
 <li><strong>CORS 跨域像素读取污染</strong>：
 若后续需要在 Canvas 中对图像执行像素分析（如 <code>forEachLayerAtPixel</code> 或 WebGL 滤镜），<code>ImageWMS</code> 需显式配置 <code>crossOrigin: &#39;anonymous&#39;</code>，否则图片虽然能正常显示，但 Canvas 会被“污染（tainted）”从而抛出安全异常。</li>
 </ul>
@@ -357,16 +366,28 @@ map.on(&#x27;loadend&#x27;, function () {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

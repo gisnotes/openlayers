@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
     <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
   </head>
@@ -141,7 +142,7 @@
 <tr>
 <td align="left"><strong>要素拾取 (Hit Detect)</strong></td>
 <td align="left">需通过 <code>postMessage</code> 异步委托 Worker 拾取</td>
-<td align="left">无法直接拾取（切片已完全光栅化）</td>
+<td align="left">无法直接拾取（切片已完全栅格化）</td>
 </tr>
 <tr>
 <td align="left"><strong>工程复杂度</strong></td>
@@ -151,7 +152,7 @@
 <tr>
 <td align="left"><strong>最适业务场景</strong></td>
 <td align="left">超复杂 Mapbox 矢量切片底图（MVT）流畅运行</td>
-<td align="left">自定义光栅瓦片滤镜、离线切片预烘焙、大量切片并行加载</td>
+<td align="left">自定义栅格瓦片滤镜、离线切片预烘焙、大量切片并行加载</td>
 </tr>
 </tbody></table>
 <hr>
@@ -282,5 +283,28 @@ Promise.all(observables).then((res) =&gt; {
       <a href="https://www.netlify.com">This site is powered by Netlify.</a>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
   </body>
 </html>

@@ -123,26 +123,41 @@
 
       <div class="row-fluid">
         <p id="shortdesc">This example shows how to customize the buttons tooltips with Bootstrap. / 展示如何使用 Bootstrap 定制地图控件按钮的悬浮提示工具（Tooltips）。</p>
-        <div id="docs"><h2>This example shows how to customize the buttons tooltips with <a href="https://getbootstrap.com/docs/5.2/components/tooltips/">Bootstrap</a>. For the tooltips to work in fullscreen mode, set the container property to a selector that matches the map target.
-本示例展示如何使用 <a href="https://getbootstrap.com/docs/5.2/components/tooltips/">Bootstrap</a> 自定义 OpenLayers 地图控件按钮的悬停提示气泡（Tooltips）。在全屏（Fullscreen）模式下，必须将 Tooltip 的 <code>container</code> 属性指定为匹配地图容器的选择器（如 <code>#map</code>），确保提示气泡不会被全屏伪类层级或顶层容器遮挡。</h2>
+        <div id="docs"><p>This example shows how to customize the buttons tooltips with <a href="https://getbootstrap.com/docs/5.2/components/tooltips/">Bootstrap</a>.
+For the tooltips to work in fullscreen mode, set the container property to a selector that matches the map target.</p>
+<p>本示例展示如何使用 <a href="https://getbootstrap.com/docs/5.2/components/tooltips/">Bootstrap</a> 自定义 OpenLayers 地图控件按钮的悬停提示气泡（Tooltips）。在全屏（Fullscreen）模式下，必须将 Tooltip 的 <code>container</code> 属性指定为匹配地图容器的选择器（如 <code>#map</code>），确保提示气泡不会被全屏伪类层级或顶层容器遮挡。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 核心架构原理 (Core Architecture) OpenLayers 默认通过原生 DOM 元素的 <code>title</code> 属性实现基础的浏览器原生鼠标悬浮提示。原生 <code>title</code> 存在延迟长、样式无法统一定制、在各操作系统与移动端交互不一致等缺陷。 - <strong>DOM 挂载与全屏隔离</strong>：Bootstrap 等 UI 库的 Tooltip 默认挂载到 <code>document.body</code>。当地图进入全屏模式（Fullscreen API）时，由于全屏伪元素（<code>:fullscreen</code>）将地图容器提升为独立顶层渲染层，挂载到 <code>body</code> 上的元素会被完全遮蔽或不可见。因此必须通过 <code>container: '#map'</code> 将悬停气泡插入地图容器 DOM 树内。 - <strong>控件类名规范</strong>：OpenLayers 核心内置控件均带有一致的 BEM 风格样式类：</h4>
+<h4>1. 核心架构原理 (Core Architecture)</h4>
+<p>OpenLayers 默认通过原生 DOM 元素的 <code>title</code> 属性实现基础的浏览器原生鼠标悬浮提示。原生 <code>title</code> 存在延迟长、样式无法统一定制、在各操作系统与移动端交互不一致等缺陷。</p>
 <ul>
+<li><strong>DOM 挂载与全屏隔离</strong>：Bootstrap 等 UI 库的 Tooltip 默认挂载到 <code>document.body</code>。当地图进入全屏模式（Fullscreen API）时，由于全屏伪元素（<code>:fullscreen</code>）将地图容器提升为独立顶层渲染层，挂载到 <code>body</code> 上的元素会被完全遮蔽或不可见。因此必须通过 <code>container: '#map'</code> 将悬停气泡插入地图容器 DOM 树内。</li>
+<li><strong>控件类名规范</strong>：OpenLayers 核心内置控件均带有一致的 BEM 风格样式类：<ul>
 <li>放大按钮：<code>.ol-zoom-in</code></li>
 <li>缩小按钮：<code>.ol-zoom-out</code></li>
 <li>指北重置：<code>.ol-rotate-reset</code></li>
 <li>属性控件：<code>.ol-attribution button</code>
-  通过标准选择器可无侵入地为原生控件附加现代化交互框架的弹窗组件。</li>
+通过标准选择器可无侵入地为原生控件附加现代化交互框架的弹窗组件。</li>
 </ul>
-<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript // Query standard control buttons and bind Bootstrap Tooltips // 查询标准控件按钮并批量初始化 Bootstrap Tooltip document</h4>
-<p>  .querySelectorAll(&#39;.ol-zoom-in, .ol-zoom-out, .ol-rotate-reset&#39;)
+</li>
+</ul>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive)</h4>
+<pre><code class="language-javascript">// Query standard control buttons and bind Bootstrap Tooltips
+// 查询标准控件按钮并批量初始化 Bootstrap Tooltip
+document
+  .querySelectorAll(&#39;.ol-zoom-in, .ol-zoom-out, .ol-rotate-reset&#39;)
   .forEach(function (el) {
     new bootstrap.Tooltip(el, {
       container: &#39;#map&#39;, // Crucial for Fullscreen API: append within the map DOM / 全屏模式关键：挂载至地图容器内部
     });
-  });</p>
-<pre><code>#### 3. 生产实战避坑与考量 (Production Pitfalls) - &lt;strong&gt;动态销毁与内存泄漏&lt;/strong&gt;：在 SPA 单页应用中，若地图组件频繁挂载与卸载，Bootstrap Tooltip 实例需在组件销毁钩子中显式调用 &lt;code&gt;tooltip.dispose()&lt;/code&gt;，否则游离的 DOM 事件监听会导致内存泄漏。 - &lt;strong&gt;移动端触控优化&lt;/strong&gt;：移动端设备上长按或点击可能导致 Tooltip 滞留不散，生产环境建议配置 &lt;code&gt;trigger: &#39;hover&#39;&lt;/code&gt; 或在触屏设备上通过媒体查询 &lt;code&gt;(hover: none)&lt;/code&gt; 动态禁用 Tooltip。 - &lt;strong&gt;无障碍访问（a11y）兼容&lt;/strong&gt;：替换 Tooltip 时切勿直接清空元素的 &lt;code&gt;aria-label&lt;/code&gt; 属性，保持读屏软件依然可正常播报按钮功能。
+  });
 </code></pre>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls)</h4>
+<ul>
+<li><strong>动态销毁与内存泄漏</strong>：在 SPA 单页应用中，若地图组件频繁挂载与卸载，Bootstrap Tooltip 实例需在组件销毁钩子中显式调用 <code>tooltip.dispose()</code>，否则游离的 DOM 事件监听会导致内存泄漏。</li>
+<li><strong>移动端触控优化</strong>：移动端设备上长按或点击可能导致 Tooltip 滞留不散，生产环境建议配置 <code>trigger: 'hover'</code> 或在触屏设备上通过媒体查询 <code>(hover: none)</code> 动态禁用 Tooltip。</li>
+<li><strong>无障碍访问（a11y）兼容</strong>：替换 Tooltip 时切勿直接清空元素的 <code>aria-label</code> 属性，保持读屏软件依然可正常播报按钮功能。</li>
+</ul>
 </div>
       </div>
 
@@ -238,16 +253,28 @@ document
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

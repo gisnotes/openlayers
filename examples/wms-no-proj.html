@@ -142,12 +142,25 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example of two WMS layers using the projection EPSG:21781, which is unknown to the client. / 本例展示两个使用 EPSG:21781 投影的 WMS 图层，该投影在客户端未定义任何 Proj4js 转换参数。</p>
-        <div id="docs"><h2>As long as no coordinate transformations are required, OpenLayers works fine with projections that are only configured with a <code>code</code> and <code>units</code>.
-只要<strong>不需要在客户端进行坐标转换</strong>（Coordinate Transformation），OpenLayers 即可直接使用仅配置了 <code>code</code>（投影代号）和 <code>units</code>（距离单位）的轻量级投影对象正常工作。</h2>
+        <div id="docs"><p>As long as no coordinate transformations are required, OpenLayers works fine with projections that are only configured with a <code>code</code> and <code>units</code>.</p>
+<p>只要<strong>不需要在客户端进行坐标转换</strong>（Coordinate Transformation），OpenLayers 即可直接使用仅配置了 <code>code</code>（投影代号）和 <code>units</code>（距离单位）的轻量级投影对象正常工作。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 纯平面直角坐标直传机制 * 在本例中，无论是瓦片 WMS（<code>TileWMS</code>）还是单图像 WMS（<code>ImageWMS</code>），服务端与客户端视图（<code>View</code>）均统一使用瑞士国家投影坐标系 <code>EPSG:21781</code>（CH1903 / LV03）。 * OpenLayers 发起 WMS 请求时，仅需将当前视口的平面矩形边界拼接为 <code>BBOX=minx,miny,maxx,maxy</code> 并携带 <code>CRS=EPSG:21781</code> 发给服务端。切片裁剪与图片渲染全由 WMS 地图服务器在服务端完成，客户端仅需充当“平面视口与瓦片网格计算器”，完全不需要客户端具备经纬度正逆投影能力。</h4>
-<h4>2. 比例尺（ScaleLine）与地表真实距离近似 * 在缺乏经纬度椭球体模型与重投影正反算函数时，OpenLayers 会假定投影单位（此处为 <code>&#39;m&#39;</code> 米）即代表地表的真实物理距离。 * 对于局部国家或城市级投影（如瑞士高斯-克吕格变种等角投影，在瑞士全境内的投影长度变形系数极小），直接依据平面米制单位计算比例尺已具备极高工程参考价值。</h4>
-<h4>3. 极简定义 vs 引入 Proj4js 的选型边界 * <strong>使用极简定义即可</strong>：所有图层坐标系统一、CAD 施工平面图、园区/厂区独立相对坐标系、无需叠加 GPS 经纬度航迹或 OSM 外部底图的场景。 * <strong>必须引入 Proj4js 的场景</strong>：需要在该地图上直接打点经纬度数据（<code>[lng, lat]</code> 来自 GPS/WGS84）、需要多源异构跨投影图层混合叠加、或需要精确球面测地线几何计算。</h4>
+<h4>1. 纯平面直角坐标直传机制</h4>
+<ul>
+<li>在本例中，无论是瓦片 WMS（<code>TileWMS</code>）还是单图像 WMS（<code>ImageWMS</code>），服务端与客户端视图（<code>View</code>）均统一使用瑞士国家投影坐标系 <code>EPSG:21781</code>（CH1903 / LV03）。</li>
+<li>OpenLayers 发起 WMS 请求时，仅需将当前视口的平面矩形边界拼接为 <code>BBOX=minx,miny,maxx,maxy</code> 并携带 <code>CRS=EPSG:21781</code> 发给服务端。切片裁剪与图片渲染全由 WMS 地图服务器在服务端完成，客户端仅需充当“平面视口与瓦片网格计算器”，完全不需要客户端具备经纬度正逆投影能力。</li>
+</ul>
+<h4>2. 比例尺（ScaleLine）与地表真实距离近似</h4>
+<ul>
+<li>在缺乏经纬度椭球体模型与重投影正反算函数时，OpenLayers 会假定投影单位（此处为 <code>&#39;m&#39;</code> 米）即代表地表的真实物理距离。</li>
+<li>对于局部国家或城市级投影（如瑞士高斯-克吕格变种等角投影，在瑞士全境内的投影长度变形系数极小），直接依据平面米制单位计算比例尺已具备极高工程参考价值。</li>
+</ul>
+<h4>3. 极简定义 vs 引入 Proj4js 的选型边界</h4>
+<ul>
+<li><strong>使用极简定义即可</strong>：所有图层坐标系统一、CAD 施工平面图、园区/厂区独立相对坐标系、无需叠加 GPS 经纬度航迹或 OSM 外部底图的场景。</li>
+<li><strong>必须引入 Proj4js 的场景</strong>：需要在该地图上直接打点经纬度数据（<code>[lng, lat]</code> 来自 GPS/WGS84）、需要多源异构跨投影图层混合叠加、或需要精确球面测地线几何计算。</li>
+</ul>
 </div>
       </div>
 
@@ -277,16 +290,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

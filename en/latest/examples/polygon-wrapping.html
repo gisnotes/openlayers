@@ -75,11 +75,11 @@
               data-title="simple"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./cartodb.html&quot;&gt;CartoDB source example / CartoDB 云端空间数据源与动态 SQL 过滤 (CartoDB Source)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles.html&quot;&gt;Mapbox Vector Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles.html&quot;&gt;Mapbox Vector Tiles / Mapbox MVT 矢量切片与客户端样式表达式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer / 深度集成 Mapbox GL JS 渲染引擎图层&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./polygon-wrapping.html&quot;&gt;Polygon map wrapping / 多边形跨日界线循环环绕渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./rectangle.html&quot;&gt;Rectangle / 矩形几何（fromExtent）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./simple.html&quot;&gt;Simple Map&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./simple.html&quot;&gt;Simple Map / 极简入门基础地图构建&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer / WebGL 矢量切片图层（MVT 硬件加速渲染）&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
@@ -241,22 +241,30 @@
         <div id="docs"><p>
   A simple map with an OSM basemap and a couple rectangular polygon features (e.g. a bounding box)
   on either side (and crossing over) the antimeridian.
-</p> <p>
-  本示例演示在 OpenStreetMap 底图上，如何正确渲染分布在 180° 日界线（对向子午线 / 反子午线，Antimeridian）两侧以及直接跨越日界线的矩形包围盒多边形要素。
 </p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. 核心架构与设计思想 (Core Architecture & Design) - <strong>日界线（Antimeridian / 180° 经线）与墨卡托世界连续环绕（World Wrapping）</strong>：
-  在标准 Web 墨卡托投影（EPSG:3857）中，全球范围为 $X \in [-20037508.34, 20037508.34]$。但现代 Web 地图允许用户向左或向右无限水平平移视口（连续世界环绕）。当空间几何跨越东经 180° / 西经 -180°（即墨卡托极值边界）时，传统 GIS 若直接将坐标折回，会导致多边形横跨整个地球形成一整道横向拉伸的“蝴蝶结撕裂畸形”。
-- <strong>坐标外推与跨世界投影</strong>：
-  OpenLayers 允许坐标直接超越世界边界范围（例如 $leftX - 2000000$ 或 $rightX + 2000000$）。矢量渲染引擎在绘制时，能够根据当前视口的世界索引（World Index: $0, \pm 1, \pm 2$），将几何副本正确投影映射并无缝渲染到相邻的连续地球副本中。<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis) - <code>Polygon.fromExtent(extent)</code>：</h4>
-<p>  将 <code>[minX, minY, maxX, maxY]</code> 包围盒矩形快速生成逆时针闭合的 5 顶点多边形（左下 $\to$ 右下 $\to$ 右上 $\to$ 左上 $\to$ 闭合起点）。</p>
+<p>
+  本示例演示在 OpenStreetMap 底图上，如何正确渲染分布在 180° 日界线（对向子午线 / 反子午线，Antimeridian）两侧以及直接跨越日界线的矩形包围盒多边形要素。
+</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
 <ul>
+<li><strong>日界线（Antimeridian / 180° 经线）与墨卡托世界连续环绕（World Wrapping）</strong>：
+在标准 Web 墨卡托投影（EPSG:3857）中，全球范围为 $X \in [-20037508.34, 20037508.34]$。但现代 Web 地图允许用户向左或向右无限水平平移视口（连续世界环绕）。当空间几何跨越东经 180° / 西经 -180°（即墨卡托极值边界）时，传统 GIS 若直接将坐标折回，会导致多边形横跨整个地球形成一整道横向拉伸的“蝴蝶结撕裂畸形”。</li>
+<li><strong>坐标外推与跨世界投影</strong>：
+OpenLayers 允许坐标直接超越世界边界范围（例如 $leftX - 2000000$ 或 $rightX + 2000000$）。矢量渲染引擎在绘制时，能够根据当前视口的世界索引（World Index: $0, \pm 1, \pm 2$），将几何副本正确投影映射并无缝渲染到相邻的连续地球副本中。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>Polygon.fromExtent(extent)</code>：
+将 <code>[minX, minY, maxX, maxY]</code> 包围盒矩形快速生成逆时针闭合的 5 顶点多边形（左下 $\to$ 右下 $\to$ 右上 $\to$ 左上 $\to$ 闭合起点）。</li>
 <li><code>updateWhileAnimating: true</code> 与 <code>updateWhileInteracting: true</code>：
 在 <code>VectorLayer</code> 上启用这两个参数，使得当地图进行平移动画或惯性交互时，矢量几何始终在每一帧都重新计算并执行视口裁剪和世界环绕对齐，消除快速平移视口时的闪烁或滞后现象。</li>
 </ul>
-<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization) - <strong>跨日界线 BBOX 空间查询与剪裁陷阱</strong>：</h4>
-<p>  跨越日界线的地理要素（如跨越阿留申群岛、斐济的多边形），在 GeoJSON 规范中若直接存为 <code>minX: 179, maxX: -179</code> 会导致空间索引（R-Tree）计算为几乎覆盖全球的大矩形。工业级实践通常在入库前采用“切分成两个跨经线独立多边形（MultiPolygon）”或在前端利用坐标平移（$+360^\circ$）外推处理。</p>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
+<ul>
+<li><strong>跨日界线 BBOX 空间查询与剪裁陷阱</strong>：
+跨越日界线的地理要素（如跨越阿留申群岛、斐济的多边形），在 GeoJSON 规范中若直接存为 <code>minX: 179, maxX: -179</code> 会导致空间索引（R-Tree）计算为几乎覆盖全球的大矩形。工业级实践通常在入库前采用“切分成两个跨经线独立多边形（MultiPolygon）”或在前端利用坐标平移（$+360^\circ$）外推处理。</li>
+</ul>
 </div>
       </div>
 
@@ -372,16 +380,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

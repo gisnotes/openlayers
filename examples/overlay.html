@@ -155,14 +155,26 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Demonstrates overlays. / 使用 ol/Overlay 锚定 HTML 标记、文本标签与 Bootstrap 弹出框。</p>
-        <div id="docs"><p>The popups are created using <a href="https://getbootstrap.com/docs/5.2/components/popovers/">Popovers</a> from Bootstrap.</p>
-<p>本示例演示了如何使用 <code>ol/Overlay</code> 将普通的 HTML DOM 元素锚定到地理坐标上。示例中分别挂载了维也纳的点击超链接标签、图钉标记以及基于 <a href="https://getbootstrap.com/docs/5.2/components/popovers/" target="_blank">Bootstrap 5 Popovers</a> 组件封装的动态交互气泡弹窗。</p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. `ol/Overlay` 核心架构与 DOM 容器分层 (Overlay Container Hierarchy) - <strong>坐标实时同步</strong>: Overlay 并不是 Canvas 内部绘制的像素，而是绝对定位挂载在地图容器顶层的真实 HTML DOM 元素。OpenLayers 渲染引擎在每次平移、缩放与旋转时，通过 CSS 变换矩阵（`transform: translate(...)`）实时更新 DOM 节点在屏幕上的像素坐标。 - <strong>`stopEvent` 事件冒泡穿透控制</strong>:
-  - `stopEvent: true`（默认）：DOM 元素挂载在 `ol-overlaycontainer-stopevent` 容器内，阻止鼠标拖拽、滚轮缩放与点击事件穿透到地图，适合包含表单、文本输入、滚动条的交互弹窗；
-  - `stopEvent: false`：DOM 元素挂载在 `ol-overlaycontainer` 容器内，允许事件向下穿透到底层画布，适合图钉、半透明装饰标注或雷达指示标。<h4>2. 定位对齐基准与视口锚接 (<code>positioning</code>) - <strong>九宫格锚点模型</strong>: 支持 <code>&#39;bottom-left&#39;</code>、<code>&#39;bottom-center&#39;</code>、<code>&#39;bottom-right&#39;</code>、<code>&#39;center-center&#39;</code> 等 9 种对齐锚点。图钉标记通常采用 <code>&#39;bottom-center&#39;</code>（针尖对准坐标点）或 <code>&#39;center-center&#39;</code>，保证放大缩小地图时图钉针尖不会发生视觉偏离。</h4>
-<h4>3. 生产实践陷阱与避坑指南 (Production Pitfalls &amp; Best Practices) - <strong>第三方 UI 框架（如 Bootstrap / Element / AntD）实例销毁</strong>: 在重复弹出气泡时，必须先检查并调用 <code>popover.dispose()</code> 或 <code>destroy()</code> 销毁旧实例再新建，否则残留的监听器与 DOM 结构会导致内存泄漏和定位漂移。 - <strong>多 Overlay 性能瓶颈</strong>: 每一个 Overlay 都是一个独立的真实 DOM 节点。若在地图上呈现成百上千个点标记，绝对不能全部使用 Overlay（会导致庞大 DOM 树导致重排卡顿），而必须使用常规矢量图层（<code>VectorLayer</code> + <code>Style({image: new Icon(...)})</code>）；Overlay 仅用于展示少量的动态弹出气泡或富媒体卡片。</h4>
+        <div id="docs"><p>The popups are created using <a href="https://getbootstrap.com/docs/5.2/components/popovers/">Popovers</a> from Bootstrap.</p><p>本示例演示了如何使用 <code>ol/Overlay</code> 将普通的 HTML DOM 元素锚定到地理坐标上。示例中分别挂载了维也纳的点击超链接标签、图钉标记以及基于 <a href="https://getbootstrap.com/docs/5.2/components/popovers/" target="_blank">Bootstrap 5 Popovers</a> 组件封装的动态交互气泡弹窗。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. <code>ol/Overlay</code> 核心架构与 DOM 容器分层 (Overlay Container Hierarchy)</h4>
+<ul>
+<li><strong>坐标实时同步</strong>: Overlay 并不是 Canvas 内部绘制的像素，而是绝对定位挂载在地图容器顶层的真实 HTML DOM 元素。OpenLayers 渲染引擎在每次平移、缩放与旋转时，通过 CSS 变换矩阵（<code>transform: translate(...)</code>）实时更新 DOM 节点在屏幕上的像素坐标。</li>
+<li><strong><code>stopEvent</code> 事件冒泡穿透控制</strong>:<ul>
+<li><code>stopEvent: true</code>（默认）：DOM 元素挂载在 <code>ol-overlaycontainer-stopevent</code> 容器内，阻止鼠标拖拽、滚轮缩放与点击事件穿透到地图，适合包含表单、文本输入、滚动条的交互弹窗；</li>
+<li><code>stopEvent: false</code>：DOM 元素挂载在 <code>ol-overlaycontainer</code> 容器内，允许事件向下穿透到底层画布，适合图钉、半透明装饰标注或雷达指示标。</li>
+</ul>
+</li>
+</ul>
+<h4>2. 定位对齐基准与视口锚接 (<code>positioning</code>)</h4>
+<ul>
+<li><strong>九宫格锚点模型</strong>: 支持 <code>&#39;bottom-left&#39;</code>、<code>&#39;bottom-center&#39;</code>、<code>&#39;bottom-right&#39;</code>、<code>&#39;center-center&#39;</code> 等 9 种对齐锚点。图钉标记通常采用 <code>&#39;bottom-center&#39;</code>（针尖对准坐标点）或 <code>&#39;center-center&#39;</code>，保证放大缩小地图时图钉针尖不会发生视觉偏离。</li>
+</ul>
+<h4>3. 生产实践陷阱与避坑指南 (Production Pitfalls &amp; Best Practices)</h4>
+<ul>
+<li><strong>第三方 UI 框架（如 Bootstrap / Element / AntD）实例销毁</strong>: 在重复弹出气泡时，必须先检查并调用 <code>popover.dispose()</code> 或 <code>destroy()</code> 销毁旧实例再新建，否则残留的监听器与 DOM 结构会导致内存泄漏和定位漂移。</li>
+<li><strong>多 Overlay 性能瓶颈</strong>: 每一个 Overlay 都是一个独立的真实 DOM 节点。若在地图上呈现成百上千个点标记，绝对不能全部使用 Overlay（会导致庞大 DOM 树导致重排卡顿），而必须使用常规矢量图层（<code>VectorLayer</code> + <code>Style({image: new Icon(...)})</code>）；Overlay 仅用于展示少量的动态弹出气泡或富媒体卡片。</li>
+</ul>
 </div>
       </div>
 
@@ -323,16 +335,28 @@ map.on(&#x27;click&#x27;, function (evt) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

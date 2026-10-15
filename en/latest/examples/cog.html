@@ -117,20 +117,36 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Rendering a COG as a tiled layer. / 将云原生 GeoTIFF (COG) 遥感影像作为瓦片图层进行流式加载与渲染。</p>
-        <div id="docs"><h2>Tiled data from a Cloud Optimized GeoTIFF (COG) can be rendered as a layer.  In this example, a single 3-band GeoTIFF is used to render RGB data.
-云优化 GeoTIFF（COG）中的平铺瓦片数据可以直接作为图层进行渲染。在本示例中，直接加载一个三波段（RGB）GeoTIFF 卫星影像文件并呈现在地图上。</h2>
+        <div id="docs"><p>Tiled data from a Cloud Optimized GeoTIFF (COG) can be rendered as a layer.  In this
+example, a single 3-band GeoTIFF is used to render RGB data.</p>
+<p>云优化 GeoTIFF（COG）中的平铺瓦片数据可以直接作为图层进行渲染。在本示例中，直接加载一个三波段（RGB）GeoTIFF 卫星影像文件并呈现在地图上。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 什么是 COG（Cloud Optimized GeoTIFF）？ * <strong>传统 GeoTIFF 的痛点</strong>：传统的 TIFF 文件将像素数据连续存储，浏览器必须把整个文件（通常数百兆乃至数吉字节）全量下载到本地内存后才能解码渲染，在 Web 环境下几乎无法实用。 * <strong>COG 的内部结构革命</strong>：</h4>
+<h4>1. 什么是 COG（Cloud Optimized GeoTIFF）？</h4>
 <ul>
+<li><strong>传统 GeoTIFF 的痛点</strong>：传统的 TIFF 文件将像素数据连续存储，浏览器必须把整个文件（通常数百兆乃至数吉字节）全量下载到本地内存后才能解码渲染，在 Web 环境下几乎无法实用。</li>
+<li><strong>COG 的内部结构革命</strong>：<ul>
 <li><strong>内部瓦片分块（Internal Tiling）</strong>：像元按固定尺寸（如 256×256 或 512×512 像素）进行规则分块存储，而不是连续扫描线。</li>
 <li><strong>多级分辨率概览金字塔（Internal Overviews）</strong>：文件内部预先降采样生成了多层缩小影像（从原始分辨率到 1/2、1/4、1/8、1/16 等）。</li>
 <li><strong>元数据头部前置（IFD Header at Beginning）</strong>：文件的标签目录（IFD, Image File Directory）集中放置在文件头部，记录了每个瓦片和金字塔的精确字节偏移量（Byte Offset）和数据长度（Byte Count）。</li>
+</ul>
+</li>
 <li><strong>HTTP 范围请求（Range Requests）</strong>：
 OpenLayers 底层通过 geotiff.js，在初始阶段仅发送一个极小的 HTTP Range 请求（读取文件前几 KB）解析 IFD 元数据；当用户缩放或平移地图时，只针对当前屏幕视口内的瓦片发起 <code>Range: bytes=start-end</code> 请求，<strong>按需下载几 KB 到几十 KB 的局部数据块</strong>，实现零后端服务切片的客户端即时渲染！</li>
 </ul>
-<h4>2. 函数式 View 构造器：<code>getView(source, ...modifiers)</code> 在以往的版本中，必须等待影像元数据异步解析完成后才能计算范围和中心。OpenLayers 引入了强大的函数式 View 辅助函数： ```javascript import {getView, withExtentCenter, withHigherResolutions} from &#39;ol/View.js&#39;;</h4>
-<p>view: getView(source, withHigherResolutions(1), withExtentCenter()) ``` * <strong><code>getView(source)</code></strong>：返回一个 Promise/View 配置工厂，自动根据 GeoTIFF 影像的投影坐标系（如 UTM）、分辨率列表和外包边界生成 <code>View</code> 参数。 * <strong><code>withHigherResolutions(levels)</code></strong>：在影像最高原生分辨率之上额外增加超分辨率层级（放大层级），避免放大时被限制在原始分辨率而无法继续看清局部细节。 * <strong><code>withExtentCenter()</code></strong>：自动计算 GeoTIFF 影像的外包矩形几何中心，并将其设为地图初始视图的中心点（Center）。</p>
-<h4>3. 为什么必须使用 <code>ol/layer/WebGLTile</code>？ COG 数据源输出的是原始影像字节或浮点网格，每个视口更新涉及几十个乃至上百个瓦片、几百万像素的解压缩与动态拼合。<code>ol/layer/WebGLTile</code> 利用浏览器 WebGL 硬件加速，将瓦片作为纹理上传到显卡，由 GPU 并行执行纹理采样与双线性插值，帧率能够稳定维持在 60 FPS。</h4>
+<h4>2. 函数式 View 构造器：<code>getView(source, ...modifiers)</code></h4>
+<p>在以往的版本中，必须等待影像元数据异步解析完成后才能计算范围和中心。OpenLayers 引入了强大的函数式 View 辅助函数：</p>
+<pre><code class="language-javascript">import {getView, withExtentCenter, withHigherResolutions} from &#39;ol/View.js&#39;;
+
+view: getView(source, withHigherResolutions(1), withExtentCenter())
+</code></pre>
+<ul>
+<li><strong><code>getView(source)</code></strong>：返回一个 Promise/View 配置工厂，自动根据 GeoTIFF 影像的投影坐标系（如 UTM）、分辨率列表和外包边界生成 <code>View</code> 参数。</li>
+<li><strong><code>withHigherResolutions(levels)</code></strong>：在影像最高原生分辨率之上额外增加超分辨率层级（放大层级），避免放大时被限制在原始分辨率而无法继续看清局部细节。</li>
+<li><strong><code>withExtentCenter()</code></strong>：自动计算 GeoTIFF 影像的外包矩形几何中心，并将其设为地图初始视图的中心点（Center）。</li>
+</ul>
+<h4>3. 为什么必须使用 <code>ol/layer/WebGLTile</code>？</h4>
+<p>COG 数据源输出的是原始影像字节或浮点网格，每个视口更新涉及几十个乃至上百个瓦片、几百万像素的解压缩与动态拼合。<code>ol/layer/WebGLTile</code> 利用浏览器 WebGL 硬件加速，将瓦片作为纹理上传到显卡，由 GPU 并行执行纹理采样与双线性插值，帧率能够稳定维持在 60 FPS。</p>
 </div>
       </div>
 
@@ -222,16 +238,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

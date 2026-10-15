@@ -147,7 +147,8 @@
   input sources (tile or image based) and runs a pipeline of
   operations on the input data.  The return from the final
   operation is used as the data for the output source.
-</p> <p>
+</p>
+<p>
   In this case, a single tiled source of elevation data is used as input.
   The shaded relief is calculated in a single "image" operation.  By setting
   <code>operationType: 'image'</code> on the raster source, operations are
@@ -159,28 +160,34 @@
   objects.  When the raster source is used by an image layer, the first
   <code>ImageData</code> object returned by the last operation in the pipeline
   is used for rendering.
+</p><p>
+  本示例演示了如何利用 <code>ol/source/Raster</code> 的整图（<code>operationType: 'image'</code>）运算模式，根据数字高程切片（DEM）在后台 Web Worker 中实时计算并渲染出具有立体三维质感的日照山体阴影（Shaded Relief / Hillshade）。
 </p>
 <p>
-  本示例演示了如何利用 <code>ol/source/Raster</code> 的整图（<code>operationType: 'image'</code>）运算模式，根据数字高程切片（DEM）在后台 Web Worker 中实时计算并渲染出具有立体三维质感的日照山体阴影（Shaded Relief / Hillshade）。
-</p> <p>
   算法采用 $3 \times 3$ 邻域有限差分算子解算每个像素点的坡度（Slope）与坡向（Aspect），并依据朗伯漫反射光学模型（Lambertian Reflectance），结合用户实时调节的垂直夸大系数（Vertical Exaggeration）、太阳高度角（Sun Elevation）与太阳方位角（Sun Azimuth）进行光照强度解算，生成半透明地形光影覆盖层叠于 OSM 底图之上。
-</p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. 核心架构与设计机制 (Core Architecture & Mechanics) - <strong>朗伯漫反射日照阴影模型 (Lambertian Shaded Relief Model)</strong>：
-  山体阴影根据太阳入射角与地表微元法线向量的夹角计算光照照度。其核心物理公式为：
-  $$\cos(\theta_{\text{incidence}}) = \sin(\text{SunEl}) \cdot \cos(\text{Slope}) + \cos(\text{SunEl}) \cdot \sin(\text{Slope}) \cdot \cos(\text{SunAz} - \text{Aspect})$$
-  - $\theta_{\text{incidence}}$：太阳光线与地表法线的入射角；
-  - $\text{SunEl}$：太阳高度角（从地平线向上仰角，弧度制）；
-  - $\text{SunAz}$：太阳方位角（自地理正北顺时针旋转，弧度制）；
-  - $\text{Slope}$：当前地表的坡度斜角；
-  - $\text{Aspect}$：当前地表下坡方向的坡向角。
-- <strong>$3 \times 3$ 邻域有限差分梯度解算</strong>：
-  为了在离散光栅网格中计算地表法向量，算法在 $X$（东西）和 $Y$（南北）方向进行中心有限差分近似求偏导：
-  $$\frac{\partial z}{\partial x} = \frac{z(x+1, y) - z(x-1, y)}{2 \times \text{Resolution}}$$
-  $$\frac{\partial z}{\partial y} = \frac{z(x, y+1) - z(x, y-1)}{2 \times \text{Resolution}}$$
-  坡度为梯度幅值：$\text{Slope} = \arctan\left(\sqrt{(\frac{\partial z}{\partial x})^2 + (\frac{\partial z}{\partial y})^2}\right)$；坡向为方位角：$\text{Aspect} = \text{atan2}(\frac{\partial z}{\partial y}, -\frac{\partial z}{\partial x})$。<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns) - <strong>整图级切片参数传递与分辨率感知</strong>：</h4>
-<pre><code class="language-javascript">raster.on(&#39;beforeoperations&#39;, function (event) {
+</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计机制 (Core Architecture &amp; Mechanics)</h4>
+<ul>
+<li><strong>朗伯漫反射日照阴影模型 (Lambertian Shaded Relief Model)</strong>：
+山体阴影根据太阳入射角与地表微元法线向量的夹角计算光照照度。其核心物理公式为：
+$$\cos(\theta_{\text{incidence}}) = \sin(\text{SunEl}) \cdot \cos(\text{Slope}) + \cos(\text{SunEl}) \cdot \sin(\text{Slope}) \cdot \cos(\text{SunAz} - \text{Aspect})$$<ul>
+<li>$\theta_{\text{incidence}}$：太阳光线与地表法线的入射角；</li>
+<li>$\text{SunEl}$：太阳高度角（从地平线向上仰角，弧度制）；</li>
+<li>$\text{SunAz}$：太阳方位角（自地理正北顺时针旋转，弧度制）；</li>
+<li>$\text{Slope}$：当前地表的坡度斜角；</li>
+<li>$\text{Aspect}$：当前地表下坡方向的坡向角。</li>
+</ul>
+</li>
+<li><strong>$3 \times 3$ 邻域有限差分梯度解算</strong>：
+为了在离散栅格网格中计算地表法向量，算法在 $X$（东西）和 $Y$（南北）方向进行中心有限差分近似求偏导：
+$$\frac{\partial z}{\partial x} = \frac{z(x+1, y) - z(x-1, y)}{2 \times \text{Resolution}}$$
+$$\frac{\partial z}{\partial y} = \frac{z(x, y+1) - z(x, y-1)}{2 \times \text{Resolution}}$$
+坡度为梯度幅值：$\text{Slope} = \arctan\left(\sqrt{(\frac{\partial z}{\partial x})^2 + (\frac{\partial z}{\partial y})^2}\right)$；坡向为方位角：$\text{Aspect} = \text{atan2}(\frac{\partial z}{\partial y}, -\frac{\partial z}{\partial x})$。</li>
+</ul>
+<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns)</h4>
+<ul>
+<li><strong>整图级切片参数传递与分辨率感知</strong>：<pre><code class="language-javascript">raster.on(&#39;beforeoperations&#39;, function (event) {
   const data = event.data;
   data.resolution = event.resolution; // 传入当前视口真实物理分辨率 (米/像素)
   data.vert = Number(controls.vert.value);   // 垂直夸大系数
@@ -188,14 +195,14 @@
   data.sunAz = Number(controls.sunAz.value); // 太阳方位角
 });
 </code></pre>
-<p>  导数计算必须依赖 <code>event.resolution</code>。若不考虑地图分辨率（例如固定按像素距离算导数），则地图在缩放层级变化时阴影对比度会失真崩溃；绑定 <code>event.resolution</code> 能保证山体阴影在任意缩放级别下均保持严格一致的物理光影对比度。</p>
-<ul>
+导数计算必须依赖 <code>event.resolution</code>。若不考虑地图分辨率（例如固定按像素距离算导数），则地图在缩放层级变化时阴影对比度会失真崩溃；绑定 <code>event.resolution</code> 能保证山体阴影在任意缩放级别下均保持严格一致的物理光影对比度。</li>
 <li><strong>象限规整与角度变换</strong>：
 标准数学 <code>atan2(y, x)</code> 以正 X 轴为 0 度且逆时针旋转。算法中经过象限转换（<code>halfPi - aspect</code>），将坡向角校准为地理标准（正北为 0 度，顺时针旋转），以与标准的太阳方位角（<code>sunAz</code>）保持同构对齐。</li>
 </ul>
-<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices) - <strong>视觉凹凸反转倒错错觉（Pseudoscopic Inversion Illusion）</strong>：</h4>
-<p>  人类视觉大脑对光影的认知存在强烈的“顶光假定（Light from Above）”。在地图制图中，如果太阳方位角设为正南方（如 $180^\circ$），山脊在视觉上会被大脑误判为深陷的峡谷，而峡谷反被误看为山脊。因此，<strong>行业制图标准始终将太阳方位角设定在西北方向（$315^\circ$ 附近）或偏北方向</strong>，本示例默认提供的 $45^\circ$ 或 $315^\circ$ 均能有效防止视错觉。</p>
+<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices)</h4>
 <ul>
+<li><strong>视觉凹凸反转倒错错觉（Pseudoscopic Inversion Illusion）</strong>：
+人类视觉大脑对光影的认知存在强烈的“顶光假定（Light from Above）”。在地图制图中，如果太阳方位角设为正南方（如 $180^\circ$），山脊在视觉上会被大脑误判为深陷的峡谷，而峡谷反被误看为山脊。因此，<strong>行业制图标准始终将太阳方位角设定在西北方向（$315^\circ$ 附近）或偏北方向</strong>，本示例默认提供的 $45^\circ$ 或 $315^\circ$ 均能有效防止视错觉。</li>
 <li><strong>垂直夸大（Vertical Exaggeration）的平衡度</strong>：
 在宏观平原或低矮丘陵地区，微弱的高程起伏无法形成明显阴影，需要通过 <code>vert</code>（如 $2 \times \sim 5 \times$）进行适度夸大；但在安第斯山脉或喜马拉雅等极端陡峭地区，过高的夸大会导致斜率溢出为全黑深影，此时应回退至 $1 \times$ 以保留山体背光面的纹理细节。</li>
 </ul>
@@ -354,7 +361,7 @@ const elevation &#x3D; new ImageTile({
     &#x27;&lt;a href&#x3D;&quot;https://github.com/tilezen/joerd/blob/master/docs/attribution.md&quot; target&#x3D;&quot;_blank&quot;&gt;Data sources and attribution&lt;/a&gt;&#x27;,
 });
 
-// Raster source with image operation running in worker / 在 Worker 中执行光照运算的光栅数据源
+// Raster source with image operation running in worker / 在 Worker 中执行光照运算的栅格数据源
 const raster &#x3D; new Raster({
   sources: [elevation],
   operationType: &#x27;image&#x27;,
@@ -482,16 +489,28 @@ raster.on(&#x27;beforeoperations&#x27;, function (event) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

@@ -162,8 +162,8 @@
               data-title="mapserver"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-proj.html&quot;&gt;Custom Tiled WMS / 自定义投影转换的瓦片 WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-cgi.html&quot;&gt;MapServer CGI&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-ogc-features.html&quot;&gt;MapServer OGC Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-cgi.html&quot;&gt;MapServer CGI / MapServer CGI 原生动态地图接口集成&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-ogc-features.html&quot;&gt;MapServer OGC Features / MapServer OGC API - Features 现代矢量要素服务接入&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-wms.html&quot;&gt;MapServer WMS / MapServer WMS 服务集成与高清屏优化&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js / 集成 Proj4js 的单图像 WMS&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -193,12 +193,26 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example of integrating Proj4js for coordinate transforms. / 演示通过集成 Proj4js 注册自定义投影定义，实现非内置投影下的单图像 WMS (ImageWMS) 渲染与坐标转换。</p>
-        <div id="docs"><h2>With <a href="http://proj4js.org/">Proj4js</a> integration, OpenLayers can transform coordinates between arbitrary projections.
-本示例展示 OpenLayers 与 <a href="http://proj4js.org/">Proj4js</a> 的深度透明集成机制：通过注册自定义投影定义，在<strong>单图像 WMS（<code>ol/source/ImageWMS</code>）</strong>图层中无缝实现任意投影间的坐标正反算。</h2>
+        <div id="docs"><p>With <a href="http://proj4js.org/">Proj4js</a> integration, OpenLayers can transform coordinates between arbitrary projections.</p>
+<p>本示例展示 OpenLayers 与 <a href="http://proj4js.org/">Proj4js</a> 的深度透明集成机制：通过注册自定义投影定义，在<strong>单图像 WMS（<code>ol/source/ImageWMS</code>）</strong>图层中无缝实现任意投影间的坐标正反算。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 单图像 WMS（ImageWMS）的工作机制 * 与将地图切分为 256×256 固定网格的瓦片式 <code>TileWMS</code> 不同，<code>ImageWMS</code> 会在每次地图视口平移、缩放或窗口尺寸变化后，发起单次 HTTP 请求索要一幅与当前视口像素尺寸完全对应的全屏大图（参数中携带动态的 <code>BBOX</code>、<code>WIDTH</code>、<code>HEIGHT</code> 与 <code>CRS</code>）。 * <strong>适用场景</strong>：对于注记密集、水系复杂的专题业务图（如本例中瑞士环境局的全国洪水警戒图），单图像模式能完美避免瓦片接缝处的文字被截断、图标断裂或重复绘制的问题。</h4>
-<h4>2. 透明的 Proj4js 注册与绑定（<code>register(proj4)</code>） * 调用 <code>proj4.defs(&#39;EPSG:21781&#39;, &#39;+proj=somerc ...&#39;)</code> 声明瑞士旧国家投影（CH1903 / LV03，斜轴等角圆柱投影 / 贝塞尔椭球）； * 执行 <code>register(proj4)</code> 后，OpenLayers 的核心投影系统会自动与 Proj4js 建立双向函数查找映射。 * 随后无论是创建 <code>new Projection(...)</code>，还是直接调用 <code>fromLonLat([8.23, 46.86], projection)</code>，OpenLayers 都能自动拾取底层正逆解算函数，实现经纬度到目标平面坐标的即时计算。</h4>
-<h4>3. 投影合法范围（Extent）对视图分辨率的决定性作用 * 在创建 <code>Projection</code> 实例时配置 <code>extent: [minx, miny, maxx, maxy]</code>； * OpenLayers 视图（<code>View</code>）依据此包围盒计算 Zoom 0 级别的初始点分辨率与世界漫游约束，避免因未定义空间范围导致缩放级别错乱。</h4>
+<h4>1. 单图像 WMS（ImageWMS）的工作机制</h4>
+<ul>
+<li>与将地图切分为 256×256 固定网格的瓦片式 <code>TileWMS</code> 不同，<code>ImageWMS</code> 会在每次地图视口平移、缩放或窗口尺寸变化后，发起单次 HTTP 请求索要一幅与当前视口像素尺寸完全对应的全屏大图（参数中携带动态的 <code>BBOX</code>、<code>WIDTH</code>、<code>HEIGHT</code> 与 <code>CRS</code>）。</li>
+<li><strong>适用场景</strong>：对于注记密集、水系复杂的专题业务图（如本例中瑞士环境局的全国洪水警戒图），单图像模式能完美避免瓦片接缝处的文字被截断、图标断裂或重复绘制的问题。</li>
+</ul>
+<h4>2. 透明的 Proj4js 注册与绑定（<code>register(proj4)</code>）</h4>
+<ul>
+<li>调用 <code>proj4.defs(&#39;EPSG:21781&#39;, &#39;+proj=somerc ...&#39;)</code> 声明瑞士旧国家投影（CH1903 / LV03，斜轴等角圆柱投影 / 贝塞尔椭球）；</li>
+<li>执行 <code>register(proj4)</code> 后，OpenLayers 的核心投影系统会自动与 Proj4js 建立双向函数查找映射。</li>
+<li>随后无论是创建 <code>new Projection(...)</code>，还是直接调用 <code>fromLonLat([8.23, 46.86], projection)</code>，OpenLayers 都能自动拾取底层正逆解算函数，实现经纬度到目标平面坐标的即时计算。</li>
+</ul>
+<h4>3. 投影合法范围（Extent）对视图分辨率的决定性作用</h4>
+<ul>
+<li>在创建 <code>Projection</code> 实例时配置 <code>extent: [minx, miny, maxx, maxy]</code>；</li>
+<li>OpenLayers 视图（<code>View</code>）依据此包围盒计算 Zoom 0 级别的初始点分辨率与世界漫游约束，避免因未定义空间范围导致缩放级别错乱。</li>
+</ul>
 </div>
       </div>
 
@@ -359,16 +373,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

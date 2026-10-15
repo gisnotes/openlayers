@@ -214,12 +214,20 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example of a map with layer group. / 演示如何使用 ol/layer/Group 构建树状图层目录并实现可见性与透明度的双向控制绑定。</p>
-        <div id="docs"><h2>Example of a map with layer group.
-本示例展示如何利用 <code>ol/layer/Group</code> 构建多层次的图层树状管理体系。示例将底图与若干 TileJSON 专题图层分层归类，并通过轻量级递归算法，自动为树形结构中的每个叶子图层与父图层组生成联动控件，实现<strong>图层组整体可见性开关</strong>、<strong>各图层独立不透明度（Opacity）动态调节</strong>与<strong>双向数据同步绑定</strong>。</h2>
+        <div id="docs"><p>Example of a map with layer group.</p>
+<p>本示例展示如何利用 <code>ol/layer/Group</code> 构建多层次的图层树状管理体系。示例将底图与若干 TileJSON 专题图层分层归类，并通过轻量级递归算法，自动为树形结构中的每个叶子图层与父图层组生成联动控件，实现<strong>图层组整体可见性开关</strong>、<strong>各图层独立不透明度（Opacity）动态调节</strong>与<strong>双向数据同步绑定</strong>。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 核心架构原理 (Core Architecture) 在复杂 GIS 项目中，图层动辄数十上百个，扁平化管理会导致图层顺序混乱、批量显隐难以控制。 - <strong><code>ol/layer/Group</code> 复合设计模式（Composite Pattern）</strong>：<code>LayerGroup</code> 自身继承自 <code>BaseLayer</code>，因此它拥有与单一图层完全一致的 API（如 <code>getVisible()</code>、<code>setVisible()</code>、<code>getOpacity()</code>、<code>setOpacity()</code>）。当隐藏一个图层组时，其子图层数组中的所有图层<strong>在渲染流程中均会被整体跳过</strong>；当调节图层组的不透明度时，子图层的不透明度会与父级产生相乘效应：$\text{FinalOpacity} = \text{ParentOpacity} \times \text{ChildOpacity}$。 - <strong>图层集合递归绑定（Recursive Tree Walk）</strong>：通过对 <code>map.getLayerGroup()</code> 执行深度优先遍历，若遇到 <code>LayerGroup</code> 实例则递归进入，自动为 DOM 树映射出唯一的层级 ID（如 <code>#layer0</code>, <code>#layer10</code>, <code>#layer11</code>），大幅简化动态图层目录（Layer Tree）的构建。</h4>
-<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript // 1. 递归构建树级绑定 function setup(id, group) {</h4>
-<p>  group.getLayers().forEach(function (layer, i) {
+<h4>1. 核心架构原理 (Core Architecture)</h4>
+<p>在复杂 GIS 项目中，图层动辄数十上百个，扁平化管理会导致图层顺序混乱、批量显隐难以控制。</p>
+<ul>
+<li><strong><code>ol/layer/Group</code> 复合设计模式（Composite Pattern）</strong>：<code>LayerGroup</code> 自身继承自 <code>BaseLayer</code>，因此它拥有与单一图层完全一致的 API（如 <code>getVisible()</code>、<code>setVisible()</code>、<code>getOpacity()</code>、<code>setOpacity()</code>）。当隐藏一个图层组时，其子图层数组中的所有图层<strong>在渲染流程中均会被整体跳过</strong>；当调节图层组的不透明度时，子图层的不透明度会与父级产生相乘效应：$\text{FinalOpacity} = \text{ParentOpacity} \times \text{ChildOpacity}$。</li>
+<li><strong>图层集合递归绑定（Recursive Tree Walk）</strong>：通过对 <code>map.getLayerGroup()</code> 执行深度优先遍历，若遇到 <code>LayerGroup</code> 实例则递归进入，自动为 DOM 树映射出唯一的层级 ID（如 <code>#layer0</code>, <code>#layer10</code>, <code>#layer11</code>），大幅简化动态图层目录（Layer Tree）的构建。</li>
+</ul>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive)</h4>
+<pre><code class="language-javascript">// 1. 递归构建树级绑定
+function setup(id, group) {
+  group.getLayers().forEach(function (layer, i) {
     const layerid = id + i;
     bindInputs(layerid, layer);
     // 若当前图层是图层组，则递归向下遍历子图层
@@ -227,8 +235,15 @@
       setup(layerid, layer);
     }
   });
-} // 从地图根图层组发起全局递归扫描 setup(&#39;#layer&#39;, map.getLayerGroup()); ```</p>
-<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>父子透明度叠加</strong>：牢记 <code>LayerGroup</code> 的透明度会级联作用于所有子图层。若父级透明度设为 0.5，子级即使设为 1.0，屏幕最终呈现依然是 0.5。 - <strong>动态增删图层监听</strong>：对于支持动态加载图层的业务系统，建议监听 <code>group.getLayers().on('add' / 'remove')</code>，保持 DOM 树节点与地图运行时内核完全同步。</h4>
+}
+// 从地图根图层组发起全局递归扫描
+setup(&#39;#layer&#39;, map.getLayerGroup());
+</code></pre>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls)</h4>
+<ul>
+<li><strong>父子透明度叠加</strong>：牢记 <code>LayerGroup</code> 的透明度会级联作用于所有子图层。若父级透明度设为 0.5，子级即使设为 1.0，屏幕最终呈现依然是 0.5。</li>
+<li><strong>动态增删图层监听</strong>：对于支持动态加载图层的业务系统，建议监听 <code>group.getLayers().on('add' / 'remove')</code>，保持 DOM 树节点与地图运行时内核完全同步。</li>
+</ul>
 </div>
       </div>
 
@@ -442,16 +457,28 @@ document.querySelectorAll(&#x27;#layertree li &gt; span&#x27;).forEach(function 
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

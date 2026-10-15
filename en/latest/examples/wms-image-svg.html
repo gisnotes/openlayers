@@ -106,7 +106,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-load-events.html&quot;&gt;Image Load Events / 单张图像加载事件与进度指示&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-wms.html&quot;&gt;MapServer WMS / MapServer WMS 服务集成与高清屏优化&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image.html&quot;&gt;Single Image WMS / 单图像动态 WMS 服务&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-vector-layer.html&quot;&gt;Vector Image Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./image-vector-layer.html&quot;&gt;Vector Image Layer / 矢量图层栅格化渲染缓存优化&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-image-svg.html&quot;&gt;WMS loader with SVG format / 采用 SVG 矢量格式的 WMS 加载器&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection-image.html&quot;&gt;单幅静态图像客户端重投影 (Image Reprojection)&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -153,17 +153,28 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Using the WMS loader to use SVG images with an Image source. / 使用 WMS 自定义 loader 加载 SVG 矢量图像，在地图连续缩放时保持无限矢量清晰度。</p>
-        <div id="docs"><h2>The Image source can be configured with service specific loaders. By default, the loader returns the image as decoded <code>ImageBitmap</code>. When using the <code>ol/source/Image.load()</code> function instead, SVG images will scale during zooming, because they will be used as <code>HTMLImageElement</code> directly instead of an <code>ImageBitmap</code>.
-<code>ol/source/Image</code> 可以配置针对特定服务的自定义加载器（Loader）。 默认情况下，加载器会将返回的图像解码为离屏 <code>ImageBitmap</code>（位图）。 但若改为使用 <code>ol/source/Image.load()</code> 函数，SVG 矢量图像将直接作为 <code>HTMLImageElement</code> DOM 图像对象使用，在地图连续缩放过程中能够矢量级平滑缩放，避免栅格像素放大时的模糊与马赛克。</h2>
+        <div id="docs"><p>The Image source can be configured with service specific loaders. By default, the loader returns the image
+as decoded <code>ImageBitmap</code>. When using the <code>ol/source/Image.load()</code> function instead, SVG images will scale during
+zooming, because they will be used as <code>HTMLImageElement</code> directly instead of an <code>ImageBitmap</code>.</p>
+<p><code>ol/source/Image</code> 可以配置针对特定服务的自定义加载器（Loader）。
+默认情况下，加载器会将返回的图像解码为离屏 <code>ImageBitmap</code>（位图）。
+但若改为使用 <code>ol/source/Image.load()</code> 函数，SVG 矢量图像将直接作为 <code>HTMLImageElement</code> DOM 图像对象使用，在地图连续缩放过程中能够矢量级平滑缩放，避免栅格像素放大时的模糊与马赛克。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 为什么 WMS 支持输出 SVG 矢量格式？ * 传统 WMS 的 <code>FORMAT</code> 参数通常为 <code>image/png</code> 或 <code>image/jpeg</code>（栅格位图）。 * GeoServer 等先进地图服务器支持将矢量图层直接导出为矢量标准格式：<code>FORMAT=image/svg+xml</code>。 * <strong>优势</strong>：</h4>
+<h4>1. 为什么 WMS 支持输出 SVG 矢量格式？</h4>
 <ul>
+<li>传统 WMS 的 <code>FORMAT</code> 参数通常为 <code>image/png</code> 或 <code>image/jpeg</code>（栅格位图）。</li>
+<li>GeoServer 等先进地图服务器支持将矢量图层直接导出为矢量标准格式：<code>FORMAT=image/svg+xml</code>。</li>
+<li><strong>优势</strong>：<ul>
 <li>客户端接收到的是包含 <code>&lt;svg&gt;</code>、<code>&lt;path&gt;</code>、<code>&lt;text&gt;</code> 的原生矢量图形；</li>
 <li>无论地图如何缩放或旋转，边界线条和文本标注在屏幕上始终具备无限精细的锐利度。</li>
 </ul>
-<h4>2. <code>ImageBitmap</code> vs <code>HTMLImageElement</code> 渲染差异 * <strong>默认加载器行为</strong>：</h4>
-<p>  为了在 Web Worker 或离屏画布中获得最高的绘制吞吐率，OpenLayers 默认通过 <code>createImageBitmap()</code> 将所有网络图像转为显卡纹理或不可变位图（<code>ImageBitmap</code>）。但位图一旦生成，其像素尺寸就被固定；在缩放动画过程中放大该位图会产生明显的像素锯齿。</p>
+</li>
+</ul>
+<h4>2. <code>ImageBitmap</code> vs <code>HTMLImageElement</code> 渲染差异</h4>
 <ul>
+<li><strong>默认加载器行为</strong>：
+为了在 Web Worker 或离屏画布中获得最高的绘制吞吐率，OpenLayers 默认通过 <code>createImageBitmap()</code> 将所有网络图像转为显卡纹理或不可变位图（<code>ImageBitmap</code>）。但位图一旦生成，其像素尺寸就被固定；在缩放动画过程中放大该位图会产生明显的像素锯齿。</li>
 <li><strong>配置 <code>load: load</code>（来自 <code>ol/Image.js</code>）</strong>：<pre><code class="language-javascript">loader: createLoader({
   url: &#39;https://ahocevar.com/geoserver/wms&#39;,
   params: {&#39;LAYERS&#39;: &#39;topp:states&#39;, &#39;FORMAT&#39;: &#39;image/svg+xml&#39;},
@@ -171,7 +182,7 @@
   load: load, // 强制以 HTMLImageElement 模式装载
 }),
 </code></pre>
-通过直接使用 <code>HTMLImageElement</code>，浏览器内核的矢量栅格化引擎会在每次画布缩放时重新对 SVG 进行矢量插值光栅化，在缩放过渡期间保持极高清晰度。</li>
+通过直接使用 <code>HTMLImageElement</code>，浏览器内核的矢量栅格化引擎会在每次画布缩放时重新对 SVG 进行矢量插值栅格化，在缩放过渡期间保持极高清晰度。</li>
 </ul>
 </div>
       </div>
@@ -274,16 +285,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

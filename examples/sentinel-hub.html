@@ -136,10 +136,16 @@
 
       <div class="row-fluid">
         <p id="shortdesc">A tile source using the Sentinel Hub Processing API / 演示如何使用 ol/source/SentinelHub 接入欧空局哨兵2号多光谱遥感影像并执行客户端波段合成。</p>
-        <div id="docs"><p>This example renders a tile layer with a source that uses the Sentinel Hub <a href="https://docs.sentinel-hub.com/api/latest/api/process/">Processing API</a> to generate tiles. The Processing API requires an access token. The form above can be used to provide an OAuth client id and secret. The default client id and secret used in this example is severely rate limited. For the example to perform well, you should register for your own client id and secret. With this information, the source will fetch an access token. If an access token is fetched by other means, the <code>source.setAuth()</code> method can be called the token directly. See the Sentinel Hub <a href="https://docs.sentinel-hub.com/api/latest/api/overview/authentication/">authentication documentation</a> for details.</p>
+        <div id="docs"><p>This example renders a tile layer with a source that uses the Sentinel Hub <a href="https://docs.sentinel-hub.com/api/latest/api/process/">Processing API</a> to generate tiles.
+The Processing API requires an access token. The form above can be used to provide an OAuth client id and secret.
+The default client id and secret used in this example is severely rate limited. For the example to perform well,
+you should register for your own client id and secret.
+With this information, the source will fetch an access token. If an access token is fetched by other means, the <code>source.setAuth()</code>
+method can be called the token directly. See the Sentinel Hub <a href="https://docs.sentinel-hub.com/api/latest/api/overview/authentication/">authentication documentation</a> for details.</p>
 <p>
   本示例展示如何利用 <code>ol/source/SentinelHub</code> 数据源直接对接欧洲航天局（ESA）Sentinel-2 遥感影像的 <a href="https://docs.sentinel-hub.com/api/latest/api/process/">Processing API</a> 生成切片。Processing API 要求通过 OAuth2 进行安全认证，上方弹窗可输入您的 Client ID 与 Client Secret（示例内置的默认凭证存在严苛的限流阈值，建议申请独立凭证测试）。数据源会自动获取并维护 Access Token；若通过后端代理获取令牌，亦可直接调用 <code>source.setAuth()</code> 注入 Token。
-</p> <p>
+</p>
+<p>
   相关进阶示例延伸参考：
   <ul>
     <li>
@@ -151,34 +157,46 @@
       &mdash; 调用 <code>source.setEvalscript()</code> 在线编写 Evalscript 执行多光谱波段数学运算与植被/水分指数分类。
     </li>
   </ul>
-</p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. 核心架构原理 (Core Architecture) 传统遥感影像服务通常仅提供离线静态合成的 RGB 切片。Sentinel Hub 开创了“按需动态即时解译处理（On-the-fly Processing）”云原生模式： - <strong>多光谱原始波段抽取</strong>：Sentinel-2 卫星配备 13 个多光谱波段（覆盖可见光、近红外 NIR、短波红外 SWIR）。本例通过请求短波红外 `B12`、近红外 `B08` 与红光 `B04`，在服务端以 16 位精度动态组合，渲染出极具透视感的遥感假彩色地质与地貌影像。 - <strong>Evalscript 算子运行机制</strong>：在数据源配置中声明的 `evalscript` 脚本（包含 `setup()` 与 `evaluatePixel()`）会被直接发送至 Sentinel Hub 分布式云端算力集群，按像素并行执行系数缩放（如 `2.5 * sample.B12`）与色彩映射，随后切片压缩输出到前端。 - <strong>WebGLTile 硬件加速呈现</strong>：OpenLayers 采用专为现代多波段和浮点切片优化的 `ol/layer/WebGLTile` 进行渲染，保证视口缩放与平移时的极致平滑度。
-#### 2. 关键实现与代码拆解 (Code Deep Dive) ```javascript useGeographic(); // 启用经纬度直接传参模式
+</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构原理 (Core Architecture)</h4>
+<p>传统遥感影像服务通常仅提供离线静态合成的 RGB 切片。Sentinel Hub 开创了“按需动态即时解译处理（On-the-fly Processing）”云原生模式：</p>
+<ul>
+<li><strong>多光谱原始波段抽取</strong>：Sentinel-2 卫星配备 13 个多光谱波段（覆盖可见光、近红外 NIR、短波红外 SWIR）。本例通过请求短波红外 <code>B12</code>、近红外 <code>B08</code> 与红光 <code>B04</code>，在服务端以 16 位精度动态组合，渲染出极具透视感的遥感假彩色地质与地貌影像。</li>
+<li><strong>Evalscript 算子运行机制</strong>：在数据源配置中声明的 <code>evalscript</code> 脚本（包含 <code>setup()</code> 与 <code>evaluatePixel()</code>）会被直接发送至 Sentinel Hub 分布式云端算力集群，按像素并行执行系数缩放（如 <code>2.5 * sample.B12</code>）与色彩映射，随后切片压缩输出到前端。</li>
+<li><strong>WebGLTile 硬件加速呈现</strong>：OpenLayers 采用专为现代多波段和浮点切片优化的 <code>ol/layer/WebGLTile</code> 进行渲染，保证视口缩放与平移时的极致平滑度。</li>
+</ul>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive)</h4>
+<pre><code class="language-javascript">useGeographic(); // 启用经纬度直接传参模式
+
 const source = new SentinelHub({
   data: [{
-    type: 'sentinel-2-l2a', // 指定欧洲空间局 Sentinel-2 L2A 大气校正底表反射率产品
+    type: &#39;sentinel-2-l2a&#39;, // 指定欧洲空间局 Sentinel-2 L2A 大气校正底表反射率产品
     dataFilter: {
       timeRange: {
-        from: '2024-05-30T00:00:00Z',
-        to: '2024-06-01T00:00:00Z',
+        from: &#39;2024-05-30T00:00:00Z&#39;,
+        to: &#39;2024-06-01T00:00:00Z&#39;,
       },
     },
   }],
   evalscript: {
-    setup: () => ({
-      input: ['B12', 'B08', 'B04'], // 订阅所需光谱波段
+    setup: () =&gt; ({
+      input: [&#39;B12&#39;, &#39;B08&#39;, &#39;B04&#39;], // 订阅所需光谱波段
       output: {bands: 3},
     }),
-    evaluatePixel: (sample) => [
+    evaluatePixel: (sample) =&gt; [
       2.5 * sample.B12, // 动态拉伸对比度
       2 * sample.B08,
       2 * sample.B04,
     ],
   },
-}); ```
-#### 3. 生产实战避坑与考量 (Production Pitfalls) - <strong>Client Secret 泄露风险</strong>：在公网商用系统中，严禁直接在前端暴露真实生产环境的 Client Secret。推荐由后端服务器调用 Sentinel Hub 接口换取短生命周期的临时 Access Token，前端通过 `source.setAuth({ token })` 纯令牌接入。 - <strong>云层遮挡与云掩膜过滤</strong>：Sentinel-2 光学卫星极易受多云天气影响。可在 `dataFilter` 中追加 `maxCloudCoverage: 20`（限制云量小于 20%），并在 `evalscript` 中引入 `CLM`（Cloud Mask）质量波段，将厚云或阴影像素动态透明化。
+});
+</code></pre>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls)</h4>
+<ul>
+<li><strong>Client Secret 泄露风险</strong>：在公网商用系统中，严禁直接在前端暴露真实生产环境的 Client Secret。推荐由后端服务器调用 Sentinel Hub 接口换取短生命周期的临时 Access Token，前端通过 <code>source.setAuth({ token })</code> 纯令牌接入。</li>
+<li><strong>云层遮挡与云掩膜过滤</strong>：Sentinel-2 光学卫星极易受多云天气影响。可在 <code>dataFilter</code> 中追加 <code>maxCloudCoverage: 20</code>（限制云量小于 20%），并在 <code>evalscript</code> 中引入 <code>CLM</code>（Cloud Mask）质量波段，将厚云或阴影像素动态透明化。</li>
+</ul>
 </div>
       </div>
 
@@ -340,16 +358,28 @@ source.on(&#x27;change&#x27;, () &#x3D;&gt; {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

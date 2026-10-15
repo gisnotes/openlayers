@@ -154,23 +154,29 @@ Go to / 快速跳转典型沿海城市:
   This example uses a <code>ol/source/Raster</code> with
   <a href="https://documentation.maptiler.com/hc/en-us/articles/4405444055313-RGB-Terrain-by-MapTiler">MapTiler Terrain-RGB tiles</a>
   to "flood" areas below the elevation shown on the sea level slider.
+</p><p>
+  本示例演示了如何利用 <code>ol/source/Raster</code> 对 <a href="https://documentation.maptiler.com/hc/en-us/articles/4405444055313-RGB-Terrain-by-MapTiler">MapTiler Terrain-RGB 地形瓦片</a> 执行客户端逐像素高程解码，并动态模拟海平面上升（Sea Level Rise）的淹没泛洪效果。
 </p>
 <p>
-  本示例演示了如何利用 <code>ol/source/Raster</code> 对 <a href="https://documentation.maptiler.com/hc/en-us/articles/4405444055313-RGB-Terrain-by-MapTiler">MapTiler Terrain-RGB 地形瓦片</a> 执行客户端逐像素高程解码，并动态模拟海平面上升（Sea Level Rise）的淹没泛洪效果。
-</p> <p>
-  通过滑动条调节海平面相对上升高度（0 ~ 100 米），光栅数据源在后台 Web Worker 中实时将地表海拔低于该阈值的陆地区域渲染为半透明水体；同时监听光标移动，调用 <code>raster.getData(coordinate)</code> 实时提取并显示鼠标指针所在位置的亚米级真实地表海拔，并提供旧金山、纽约、孟买、上海等沿海重点城市的快速视角跳转。
-</p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. 核心架构与设计机制 (Core Architecture & Mechanics) - <strong>Mapbox / MapTiler Terrain-RGB 编码协议规范</strong>：
-  Terrain-RGB 是目前数字高程切片（DEM Tiles）的行业通行标准，其高程（单位：米）解码公式为：
-  $$\text{Elevation (m)} = -10000 + (R \times 256^2 + G \times 256 + B) \times 0.1$$
-  - 基础偏移量：$-10000\text{ m}$，以涵盖全球最深的海沟（如马里亚纳海沟 $-10984\text{ m}$ 附近）；
-  - 垂直精度：$0.1\text{ m}$（10 厘米），足以支持微观城市洪涝与地形分析；
-  - 动态范围：$256^3 \times 0.1 - 10000 \approx 1667721\text{ m}$，覆盖地球所有陆地山峰与深海。
-- <strong>地形源必须禁用双线性颜色插值 (`interpolate: false`)</strong>：
-  这是 Terrain-RGB 处理中最致命的工程避坑点！默认情况下浏览器和 WebGL 会对图像切片进行双线性插值（Bilinear Filter），这在普通视觉照片上能获得平滑过渡，但在以字节数值为语义的 Terrain-RGB 上，插值会导致 $R$、$G$、$B$ 通道独立混合，从而在切片边界或不同色块交界处产生极其怪异的几千米高程尖刺或深谷。<strong>在实例化 `ImageTile` 时必须显式声明 `interpolate: false`（强制采用最近邻采样 Nearest Neighbor）</strong>。<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns) - <strong>高性能 Web Worker 阈值泛洪着色算子</strong>：</h4>
-<pre><code class="language-javascript">function flood(pixels, data) {
+  通过滑动条调节海平面相对上升高度（0 ~ 100 米），栅格数据源在后台 Web Worker 中实时将地表海拔低于该阈值的陆地区域渲染为半透明水体；同时监听光标移动，调用 <code>raster.getData(coordinate)</code> 实时提取并显示鼠标指针所在位置的亚米级真实地表海拔，并提供旧金山、纽约、孟买、上海等沿海重点城市的快速视角跳转。
+</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计机制 (Core Architecture &amp; Mechanics)</h4>
+<ul>
+<li><strong>Mapbox / MapTiler Terrain-RGB 编码协议规范</strong>：
+Terrain-RGB 是目前数字高程切片（DEM Tiles）的行业通行标准，其高程（单位：米）解码公式为：
+$$\text{Elevation (m)} = -10000 + (R \times 256^2 + G \times 256 + B) \times 0.1$$<ul>
+<li>基础偏移量：$-10000\text{ m}$，以涵盖全球最深的海沟（如马里亚纳海沟 $-10984\text{ m}$ 附近）；</li>
+<li>垂直精度：$0.1\text{ m}$（10 厘米），足以支持微观城市洪涝与地形分析；</li>
+<li>动态范围：$256^3 \times 0.1 - 10000 \approx 1667721\text{ m}$，覆盖地球所有陆地山峰与深海。</li>
+</ul>
+</li>
+<li><strong>地形源必须禁用双线性颜色插值 (<code>interpolate: false</code>)</strong>：
+这是 Terrain-RGB 处理中最致命的工程避坑点！默认情况下浏览器和 WebGL 会对图像切片进行双线性插值（Bilinear Filter），这在普通视觉照片上能获得平滑过渡，但在以字节数值为语义的 Terrain-RGB 上，插值会导致 $R$、$G$、$B$ 通道独立混合，从而在切片边界或不同色块交界处产生极其怪异的几千米高程尖刺或深谷。<strong>在实例化 <code>ImageTile</code> 时必须显式声明 <code>interpolate: false</code>（强制采用最近邻采样 Nearest Neighbor）</strong>。</li>
+</ul>
+<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns)</h4>
+<ul>
+<li><strong>高性能 Web Worker 阈值泛洪着色算子</strong>：<pre><code class="language-javascript">function flood(pixels, data) {
   const pixel = pixels[0];
   if (pixel[3]) { // Alpha 通道存在有效数据
     const height = -10000 + (pixel[0] * 256 * 256 + pixel[1] * 256 + pixel[2]) * 0.1;
@@ -184,8 +190,7 @@ Go to / 快速跳转典型沿海城市:
   return pixel;
 }
 </code></pre>
-<p>  逐像素操作极其轻量，毫秒级响应滑块拖拽事件。</p>
-<ul>
+逐像素操作极其轻量，毫秒级响应滑块拖拽事件。</li>
 <li><strong>坐标反查原始像素值 (<code>raster.getData(coordinate)</code>)</strong>：<pre><code class="language-javascript">map.on([&#39;pointermove&#39;, &#39;click&#39;], function (event) {
   const pixels = raster.getData(event.coordinate);
   const pixel = pixels &amp;&amp; pixels[0];
@@ -195,11 +200,12 @@ Go to / 快速跳转典型沿海城市:
   }
 });
 </code></pre>
-<code>raster.getData()</code> 能够精准从底层光栅图层的当前离屏像素缓存中提取坐标处输入源的原始 RGBA 值，实现零网络二次请求的即时海拔点选拾取。</li>
+<code>raster.getData()</code> 能够精准从底层栅格图层的当前离屏像素缓存中提取坐标处输入源的原始 RGBA 值，实现零网络二次请求的即时海拔点选拾取。</li>
 </ul>
-<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices) - <strong>地形切片最大层级与超视口拉伸</strong>：</h4>
-<p>  Terrain-RGB 切片通常最大仅预生成至 <code>z: 14</code>，而城市街区矢量底图可达 <code>z: 22</code>。代码中为地形源配置了 <code>maxZoom: 14</code>，当用户继续放大时，OpenLayers 会自动将 14 级切片进行空间几何坐标拉伸放大展示，防止放大后高程图层突然空白消失。</p>
+<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices)</h4>
 <ul>
+<li><strong>地形切片最大层级与超视口拉伸</strong>：
+Terrain-RGB 切片通常最大仅预生成至 <code>z: 14</code>，而城市街区矢量底图可达 <code>z: 22</code>。代码中为地形源配置了 <code>maxZoom: 14</code>，当用户继续放大时，OpenLayers 会自动将 14 级切片进行空间几何坐标拉伸放大展示，防止放大后高程图层突然空白消失。</li>
 <li><strong>水体淹没与水动力拓扑连通性区别</strong>：
 需注意本示例展示的是<strong>纯几何海拔阈值切分（Simple Inundation Model）</strong>。真实水动力学（如风暴潮、海平面上升）中，地势低洼但四周有防洪堤坝环抱的内陆盆地（如荷兰围海造田区）不会直接被海水淹没。若需高精度灾情评估，建议结合 <code>region-growing</code>（区域生长）算法，以入海口为种子点进行水系连通性阻隔计算。</li>
 </ul>
@@ -262,7 +268,7 @@ const elevation &#x3D; new ImageTile({
   interpolate: false,
 });
 
-// Raster source running flood calculation in Web Worker / 执行海平面泛洪运算的光栅数据源
+// Raster source running flood calculation in Web Worker / 执行海平面泛洪运算的栅格数据源
 const raster &#x3D; new RasterSource({
   sources: [elevation],
   operation: flood,
@@ -420,16 +426,28 @@ function relocate(event) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

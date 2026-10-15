@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Reusable Source</title>
+    <title>Reusable Source / 瓦片数据源 URL 动态更新与平滑过渡</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Reusable Source</h4>
+        <h4 id="title">Reusable Source / 瓦片数据源 URL 动态更新与平滑过渡</h4>
         <p class="tags">
         </p>
         <div class="modal modal-tag-example" id="tag-example-list" tabindex="-1" role="dialog" aria-labelledby="tag-example-title" aria-hidden="true">
@@ -80,10 +80,10 @@
           </div>
         </div>
         <div id="map" class="map"></div>
-<button class="switcher" value="0">January</button>
-<button class="switcher" value="1">January (with bathymetry)</button>
-<button class="switcher" value="2">July</button>
-<button class="switcher" value="3">July (with bathymetry)</button>
+<button class="switcher" value="0">一月影像 (January)</button>
+<button class="switcher" value="1">一月含水深 (Jan with bathymetry)</button>
+<button class="switcher" value="2">七月影像 (July)</button>
+<button class="switcher" value="3">七月含水深 (July with bathymetry)</button>
 
         <form method="POST" id="codepen-form" target="_blank" action="https://codesandbox.io/api/v1/sandboxes/define">
           <input id="codesandbox-params" type="hidden" name="parameters">
@@ -91,8 +91,29 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Updating a tile source by changing the URL.</p>
-        <div id="docs"><p>You can call <code>source.setUrl()</code> to update the URL for a tile source.  Note that when you change the URL for a tile source, existing tiles will not be replaced until new tiles are loaded.  If you are interested instead in clearing currently rendered tiles, you can call the <code>source.refresh()</code> method.  Alternatively, you can use two separate sources if you want to remove rendered tiles and start over loading new tiles.</p>
+        <p id="shortdesc">Updating a tile source by changing the URL. / 演示如何使用 source.setUrl() 动态修改瓦片数据源服务地址，实现新旧瓦片无缝换图。</p>
+        <div id="docs"><p>You can call <code>source.setUrl()</code> to update the URL for a tile source. Note that when you change the URL for a tile source, existing tiles will not be replaced until new tiles are loaded. If you are interested instead in clearing currently rendered tiles, you can call the <code>source.refresh()</code> method. Alternatively, you can use two separate sources if you want to remove rendered tiles and start over loading new tiles.</p>
+<p>通过调用 <code>source.setUrl()</code> 方法，可以在不销毁重建数据源实例的前提下，直接动态更新切片数据源的服务地址。注意：当改变数据源 URL 时，当前屏幕上已渲染的旧切片<strong>不会立即被清除</strong>，而是会继续保留在屏幕上作为临时过渡底图，直到新 URL 对应的切片下载解码完毕后才平滑替换。如果您希望立刻抹除当前屏幕切片并从空白开始加载，可显式调用 <code>source.refresh()</code> 方法；或者维护两个独立的数据源进行切换。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
+<ul>
+<li><strong>原地数据源复用（In-place Source Reuse）</strong>：
+频繁更换底图（如切换月份时序影像、四季遥感图谱）时，频繁调用 <code>map.removeLayer()</code> / <code>map.addLayer()</code> 会导致图层树拓扑重排、重绘流水线重建以及强烈的白屏闪烁。直接调用 <code>source.setUrl()</code> 保持图层与数据源引用稳定，仅更新切片地址模板，是 OpenLayers 推荐的平滑换图模式。</li>
+<li><strong>切片缓存生命周期与过渡置换</strong>：
+在内部，OpenLayers 会为每个切片维护唯一键。更新 URL 会使缓存中现有切片标记为需要重新加载，但不会清空 GPU/内存中的位图像素，直到新网络请求完成，形成优雅的“原地交叉淡入”。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>source.setUrl(newUrl)</code>：
+更新服务模板地址，触发数据源变更事件并使相关切片重载。</li>
+<li><code>source.refresh()</code>：
+与 <code>setUrl()</code> 的温和过渡不同，<code>refresh()</code> 会主动清空内部所有的瓦片缓存，强制立刻从远端重新请求。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
+<ul>
+<li><strong>时序数据源网格一致性前提</strong>：
+<code>source.setUrl()</code> 要求新旧两个服务的 <code>tileGrid</code>（瓦片网格切分标准、分辨率层级及原点）完全一致。如果两个底图一个是 256 像素墨卡托切片，另一个是 512 像素切片，或者原点不同，则不能复用同一数据源，必须使用独立图层或独立数据源。</li>
+</ul>
 </div>
       </div>
 
@@ -155,7 +176,7 @@ updateUrl(0);
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Reusable Source&lt;/title&gt;
+    &lt;title&gt;Reusable Source / 瓦片数据源 URL 动态更新与平滑过渡&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -166,10 +187,10 @@ updateUrl(0);
   &lt;/head&gt;
   &lt;body&gt;
     &lt;div id&#x3D;&quot;map&quot; class&#x3D;&quot;map&quot;&gt;&lt;/div&gt;
-    &lt;button class&#x3D;&quot;switcher&quot; value&#x3D;&quot;0&quot;&gt;January&lt;/button&gt;
-    &lt;button class&#x3D;&quot;switcher&quot; value&#x3D;&quot;1&quot;&gt;January (with bathymetry)&lt;/button&gt;
-    &lt;button class&#x3D;&quot;switcher&quot; value&#x3D;&quot;2&quot;&gt;July&lt;/button&gt;
-    &lt;button class&#x3D;&quot;switcher&quot; value&#x3D;&quot;3&quot;&gt;July (with bathymetry)&lt;/button&gt;
+    &lt;button class&#x3D;&quot;switcher&quot; value&#x3D;&quot;0&quot;&gt;一月影像 (January)&lt;/button&gt;
+    &lt;button class&#x3D;&quot;switcher&quot; value&#x3D;&quot;1&quot;&gt;一月含水深 (Jan with bathymetry)&lt;/button&gt;
+    &lt;button class&#x3D;&quot;switcher&quot; value&#x3D;&quot;2&quot;&gt;七月影像 (July)&lt;/button&gt;
+    &lt;button class&#x3D;&quot;switcher&quot; value&#x3D;&quot;3&quot;&gt;七月含水深 (July with bathymetry)&lt;/button&gt;
 
     &lt;script type="module" src="main.js"&gt;&lt;/script&gt;
   &lt;/body&gt;
@@ -205,16 +226,28 @@ updateUrl(0);
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

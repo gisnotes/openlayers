@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>WMS GetFeatureInfo (Layers)</title>
+    <title>WMS GetFeatureInfo (Layers) / WMS 多图层穿透属性查询与按层解析</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">WMS GetFeatureInfo (Layers)</h4>
+        <h4 id="title">WMS GetFeatureInfo (Layers) / WMS 多图层穿透属性查询与按层解析</h4>
         <p class="tags">
         </p>
         <div class="modal modal-tag-example" id="tag-example-list" tabindex="-1" role="dialog" aria-labelledby="tag-example-title" aria-hidden="true">
@@ -81,15 +81,15 @@
         </div>
         <table id="info">
   <tr>
-    <td>All features:</td>
+    <td>全部要素总数 (All features):</td>
     <td id="all"></td>
   </tr>
   <tr>
-    <td>Hotel features:</td>
+    <td>宾馆酒店要素数 (Hotel features):</td>
     <td id="hotel"></td>
   </tr>
   <tr>
-    <td>Restaurant features:</td>
+    <td>餐饮美食要素数 (Restaurant features):</td>
     <td id="restaurant"></td>
   </tr>
 </table>
@@ -100,9 +100,29 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Shows how to fetch features per layer name in a single WMS GetFeatureInfo request
-</p>
+        <p id="shortdesc">Shows how to fetch features per layer name in a single WMS GetFeatureInfo request / 演示如何使用 WMSGetFeatureInfo 格式解析器的 layers 选项在单次多图层查询响应中按图层名字隔离提取要素。</p>
         <div id="docs"><p>Demonstrates the use of the <code>layers</code> option in the <code>ol/format/WMSGetFeatureInfo</code> format object, which allows features returned by a single WMS GetFeatureInfo request that asks for more than one layer to be read by layer name.</p>
+<p>本示例演示了如何在 <code>ol/format/WMSGetFeatureInfo</code> 格式解析器中使用 <code>layers</code> 选项。当客户端通过单次 WMS <code>GetFeatureInfo</code> 请求同时查询多个图层（例如宾馆 <code>hotel</code> 与餐馆 <code>restaurant</code> 两个业务图层）时，该选项允许按照指定的图层名称分别对返回的 XML/GML 数据进行隔离过滤与定向反序列化，极大简化了多专题数据穿透查询的业务代码。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
+<ul>
+<li><strong>一次网络 I/O 穿透多层</strong>：
+在 WMS 规范中，<code>GetFeatureInfo</code> 允许在 <code>QUERY_LAYERS</code> 参数中传入以逗号分隔的多个图层名称（如 <code>QUERY_LAYERS=hotel,restaurant</code>）。服务端会在点选位置垂直向下穿透，一次性返回所有命中图层的空间要素，显著减少网络往返耗时（RTT）。</li>
+<li><strong>客户端多层级语义过滤解析</strong>：
+早期解析方式通常一次性读取全局所有要素，开发者需手写二次循环遍历属性来区分所属图层。<code>WMSGetFeatureInfo</code> 内置的 <code>layers: ['hotel']</code> 参数在 XML 流式解析阶段即可完成节点路由与筛选，性能更优。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>new WMSGetFeatureInfo().readFeatures(response)</code>：
+默认模式，读取响应文档中出现的所有图层的所有要素。</li>
+<li><code>new WMSGetFeatureInfo({ layers: ['hotel'] }).readFeatures(response)</code>：
+过滤模式，仅提取图层名称匹配 <code>hotel</code> 的要素数组，自动排除其他图层的干扰要素。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
+<ul>
+<li><strong>INFO_FORMAT 格式与兼容性</strong>：
+<code>WMSGetFeatureInfo</code> 格式解析器专为解析 GML2 / GML3 格式设计（如请求参数 <code>INFO_FORMAT=application/vnd.ogc.gml</code>）。若服务端返回的是 <code>text/html</code> 或 <code>application/json</code>（GeoServer 扩展），则需使用对应的 HTML 容器或直接用 <code>ol/format/GeoJSON</code> 解析。</li>
+</ul>
 </div>
       </div>
 
@@ -145,7 +165,7 @@ fetch(&#x27;data/wmsgetfeatureinfo/osm-restaurant-hotel.xml&#x27;)
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;WMS GetFeatureInfo (Layers)&lt;/title&gt;
+    &lt;title&gt;WMS GetFeatureInfo (Layers) / WMS 多图层穿透属性查询与按层解析&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -157,15 +177,15 @@ fetch(&#x27;data/wmsgetfeatureinfo/osm-restaurant-hotel.xml&#x27;)
   &lt;body&gt;
     &lt;table id&#x3D;&quot;info&quot;&gt;
       &lt;tr&gt;
-        &lt;td&gt;All features:&lt;/td&gt;
+        &lt;td&gt;全部要素总数 (All features):&lt;/td&gt;
         &lt;td id&#x3D;&quot;all&quot;&gt;&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
-        &lt;td&gt;Hotel features:&lt;/td&gt;
+        &lt;td&gt;宾馆酒店要素数 (Hotel features):&lt;/td&gt;
         &lt;td id&#x3D;&quot;hotel&quot;&gt;&lt;/td&gt;
       &lt;/tr&gt;
       &lt;tr&gt;
-        &lt;td&gt;Restaurant features:&lt;/td&gt;
+        &lt;td&gt;餐饮美食要素数 (Restaurant features):&lt;/td&gt;
         &lt;td id&#x3D;&quot;restaurant&quot;&gt;&lt;/td&gt;
       &lt;/tr&gt;
     &lt;/table&gt;
@@ -204,16 +224,28 @@ fetch(&#x27;data/wmsgetfeatureinfo/osm-restaurant-hotel.xml&#x27;)
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

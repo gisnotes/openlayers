@@ -136,29 +136,39 @@
         <p id="shortdesc">Demonstrates how a GeoTIFF can be rendered with different min and max values for each band. / 演示如何为 GeoTIFF 的每个波段独立配置不同的 min 与 max 统计极值，无需编写着色器即可实现动态对比度拉伸。</p>
         <div id="docs"><p>
   This example demonstrates how a GeoTIFF can be rendered with different min and max values for each band to improve visualization of the data without using styles. The <code>GeoTIFF</code> source supports an array of values for <code>min</code>, <code>max</code> and <code>nodata</code>, so each band can be configured independently.
-</p>
-<p>
+</p><p>
   本示例演示如何通过为每个波段配置独立的 <code>min</code> 和 <code>max</code> 极值来渲染 GeoTIFF，从而无需编写复杂的 WebGL 样式表达式即可直接改善遥感影像的可视化效果。<code>ol/source/GeoTIFF</code> 支持为 <code>min</code>、<code>max</code> 和 <code>nodata</code> 属性传入数组，使每个多光谱波段都可以独立配置统计参数。
-</p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. 为什么多波段遥感影像必须独立拉伸？ * 真实世界中的多光谱遥感影像（如 SpaceNet 高分辨率巴黎卫星图），不同光谱波段的物理传感器响应与反射率范围差异极大：
-  * 例如红光通道的真实像元值可能集中在 `110 ~ 586`；
-  * 绿光通道可能集中在 `216 ~ 579`；
-  * 蓝光通道可能集中在 `217 ~ 432`。
-* 如果采用统一的全局全局拉伸，会导致画面严重偏色（如色彩发暗、蓝天泛灰或绿色地表饱和度失真）。
-#### 2. `ol/source/GeoTIFF` 的内置多波段数组语法 以往开发者必须手写 WebGLTile 表达式对每个波段执行 `['/', ['-', ['band', 1], min1], ['-', max1, min1]]`。 现在 `ol/source/GeoTIFF` 原生支持直接传入数组： ```javascript const source = new GeoTIFF({
+</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 为什么多波段遥感影像必须独立拉伸？</h4>
+<ul>
+<li>真实世界中的多光谱遥感影像（如 SpaceNet 高分辨率巴黎卫星图），不同光谱波段的物理传感器响应与反射率范围差异极大：<ul>
+<li>例如红光通道的真实像元值可能集中在 <code>110 ~ 586</code>；</li>
+<li>绿光通道可能集中在 <code>216 ~ 579</code>；</li>
+<li>蓝光通道可能集中在 <code>217 ~ 432</code>。</li>
+</ul>
+</li>
+<li>如果采用统一的全局全局拉伸，会导致画面严重偏色（如色彩发暗、蓝天泛灰或绿色地表饱和度失真）。</li>
+</ul>
+<h4>2. <code>ol/source/GeoTIFF</code> 的内置多波段数组语法</h4>
+<p>以往开发者必须手写 WebGLTile 表达式对每个波段执行 <code>[&#39;/&#39;, [&#39;-&#39;, [&#39;band&#39;, 1], min1], [&#39;-&#39;, max1, min1]]</code>。
+现在 <code>ol/source/GeoTIFF</code> 原生支持直接传入数组：</p>
+<pre><code class="language-javascript">const source = new GeoTIFF({
   sources: [
     {
-      url: '.../img101.tif',
+      url: &#39;.../img101.tif&#39;,
       nodata: 0,
       min: [110, 216, 217], // 分别对应 Band 1 (R), Band 2 (G), Band 3 (B) 的最小值
       max: [586, 579, 432], // 分别对应 Band 1 (R), Band 2 (G), Band 3 (B) 的最大值
     },
   ],
-}); ``` * 底层渲染管线会自动将每个波段分别按其专属的线性拉伸区间公式：
-  $$\text{normalized} = \frac{\text{raw} - \text{min}_i}{\text{max}_i - \text{min}_i}$$
-  归一化到 $[0.0, 1.0]$ 区间，不仅代码极为清爽优雅，而且执行效率极高！
+});
+</code></pre>
+<ul>
+<li>底层渲染管线会自动将每个波段分别按其专属的线性拉伸区间公式：
+$$\text{normalized} = \frac{\text{raw} - \text{min}_i}{\text{max}_i - \text{min}_i}$$
+归一化到 $[0.0, 1.0]$ 区间，不仅代码极为清爽优雅，而且执行效率极高！</li>
+</ul>
 </div>
       </div>
 
@@ -246,16 +256,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

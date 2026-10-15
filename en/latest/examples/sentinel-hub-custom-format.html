@@ -147,23 +147,38 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Updating the format used by the Sentinel Hub source. / 演示如何动态更新 Sentinel Hub 数据源的切片图像压缩格式以优化传输带宽与加载延迟。</p>
-        <div id="docs"><h2>This example demonstrates how a custom format can be used to render tiles from Sentinel Hub. Select a format from the dropdown and click the update button to change the format. See the Sentinel Hub <a href="https://docs.sentinel-hub.com/api/latest/data/sentinel-2-l2a/examples/#true-color-multi-part-reponse-different-formats-and-sampletype">Examples</a> for more information.
-本示例展示如何在运行时动态配置 Sentinel Hub Processing API 返回的切片图像压缩格式。通过下拉菜单选择目标格式（PNG、JPEG 或现代化高效压缩的 WebP）并提交，OpenLayers 会调用 <code>source.setFormat()</code> 动态更新请求头与载荷结构，刷新并重新加载切片。不同格式在传输带宽消耗、加载解码时延与图像保真度之间提供不同的工程权衡方案。</h2>
+        <div id="docs"><p>This example demonstrates how a custom format can be used to render tiles from Sentinel Hub.
+Select a format from the dropdown and click the update button to change the format.
+See the Sentinel Hub <a href="https://docs.sentinel-hub.com/api/latest/data/sentinel-2-l2a/examples/#true-color-multi-part-reponse-different-formats-and-sampletype">Examples</a> for more information.</p>
+<p>本示例展示如何在运行时动态配置 Sentinel Hub Processing API 返回的切片图像压缩格式。通过下拉菜单选择目标格式（PNG、JPEG 或现代化高效压缩的 WebP）并提交，OpenLayers 会调用 <code>source.setFormat()</code> 动态更新请求头与载荷结构，刷新并重新加载切片。不同格式在传输带宽消耗、加载解码时延与图像保真度之间提供不同的工程权衡方案。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 核心架构原理 (Core Architecture) 海量高分辨率多光谱卫星影像的瓦片网络传输是制约 WebGIS 交互流畅度的核心瓶颈： - <strong>切片格式特征对比</strong>：</h4>
+<h4>1. 核心架构原理 (Core Architecture)</h4>
+<p>海量高分辨率多光谱卫星影像的瓦片网络传输是制约 WebGIS 交互流畅度的核心瓶颈：</p>
 <ul>
+<li><strong>切片格式特征对比</strong>：<ul>
 <li><strong><code>image/png</code></strong>：无损压缩，完整保留透明通道（Alpha），是包含云掩膜（Cloud Mask）或无数据区（NoData）专题切片的理想格式，但体积相对庞大；</li>
 <li><strong><code>image/jpeg</code></strong>：高压缩比有损格式，不支持 Alpha 透明通道，适合纯陆地真彩色卫星正射影像；</li>
 <li><strong><code>image/webp</code></strong>：新一代图像压缩标准，兼具微小体积与 Alpha 透明通道支持，比相同质量的 JPEG 节省 25%~34% 字节，比 PNG 节省 26%~70% 带宽。</li>
+</ul>
+</li>
 <li><strong><code>source.setFormat()</code> 动态热更流水线</strong>：调用该方法会同步重构内部发送给 Sentinel Hub Processing API 的 JSON 载荷中的 <code>output.responses[0].format.type</code>，并自动清空当前图层切片缓存（<code>tileCache.clear()</code>），触发全图以新格式无缝重载。</li>
 </ul>
-<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript const format = document.getElementById(&#39;format&#39;);</h4>
-<p>function updateInputData() {
+<h4>2. 关键实现与代码拆解 (Code Deep Dive)</h4>
+<pre><code class="language-javascript">const format = document.getElementById(&#39;format&#39;);
+
+function updateInputData() {
   // 动态更新请求格式，并自动刷新切片重绘
   source.setFormat(format.value);
 }
-format.addEventListener(&#39;change&#39;, () =&gt; updateInputData()); ```</p>
-<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>透明通道丢失陷阱</strong>：若您的 <code>evalscript</code> 脚本中使用了透明度逻辑（如将水体或云层标记为透明），千万不要切换到 <code>image/jpeg</code> 格式，否则原本透明的区域会被强制填充为黑色或白色纯色背景。 - <strong>浮点数据格式延伸</strong>：除了前端直接可见的 RGB 栅格图，Sentinel Hub 还支持 <code>image/tiff</code>（配合 16 位整型或 32 位浮点），可在前端结合 <code>GeoTIFF</code> 解码器直接读取原始地表反射率数值并开展科学分析。</h4>
+
+format.addEventListener(&#39;change&#39;, () =&gt; updateInputData());
+</code></pre>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls)</h4>
+<ul>
+<li><strong>透明通道丢失陷阱</strong>：若您的 <code>evalscript</code> 脚本中使用了透明度逻辑（如将水体或云层标记为透明），千万不要切换到 <code>image/jpeg</code> 格式，否则原本透明的区域会被强制填充为黑色或白色纯色背景。</li>
+<li><strong>浮点数据格式延伸</strong>：除了前端直接可见的 RGB 栅格图，Sentinel Hub 还支持 <code>image/tiff</code>（配合 16 位整型或 32 位浮点），可在前端结合 <code>GeoTIFF</code> 解码器直接读取原始地表反射率数值并开展科学分析。</li>
+</ul>
 </div>
       </div>
 
@@ -340,16 +355,28 @@ source.on(&#x27;change&#x27;, () &#x3D;&gt; {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

@@ -137,30 +137,38 @@
 </p><p>
   The selection layer is configured with <code>renderMode: 'vector'</code> for better performance on frequent redraws,
   i.e. when "Single Select on hover" is selected.
-</p> <p>
+</p>
+<p>
   点击已渲染的矢量切片要素可在地图上将其高亮显示；点击空白区域（如海洋）可重置重设选择集。
   通过切换交互模式为“Multi Select（多选）”，可同时累加选中多个要素；切换为“Single Select on hover（悬停单选）”时，鼠标指针悬浮处即可实时高亮要素。
 </p><p>
   高亮选择图层（selectionLayer）配置了 <code>renderMode: 'vector'</code>，以便在频繁触发重绘（例如指针悬停连续高亮）时保持极高帧率与渲染性能。
-</p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. 核心架构与设计思想 (Core Architecture & Design) - <strong>双图层覆盖架构（Base VT Layer + Selection VT Layer）</strong>：
-  在矢量切片应用中，通常不会直接对底图切片本身的所有要素进行就地状态修改，因为矢量切片具有离屏栅格化和缓存机制。本示例采用经典的高性能双图层模式：
-  1. <strong>基础图层 (`vtLayer`)</strong>：以默认样式渲染所有瓦片要素。
-  2. <strong>选择图层 (`selectionLayer`)</strong>：直接复用底层 `vtLayer.getSource()`，自身不额外发起任何瓦片 HTTP 请求，仅根据外部全局 `selection` 字典决定是否为对应要素附加高亮样式。
-- <strong>`renderMode: 'vector'` vs 默认 `'hybrid'`</strong>：
-  矢量切片图层默认 `renderMode: 'hybrid'`，它将切片预渲染为位图缓存以提供极限缩放平移性能，但在动态高亮时重建切片纹理开销大。高亮图层使用 `renderMode: 'vector'`，强制保持纯矢量图元实时绘制，当 `selectionLayer.changed()` 触发时可瞬间局部重绘，达到 60fps 丝滑交互。<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis) - <code>MVT({ idProperty: &#39;iso_a3&#39; })</code>：</h4>
-<p>  在矢量瓦片规范中，跨瓦片分割的相同多边形必须依赖唯一标识符来统一身份。通过配置 <code>idProperty: &#39;iso_a3&#39;</code>，MVT 解析器将属性字典中的国家三字代码提取为要素的唯一 <code>feature.getId()</code>。这样当选中切片 A 内的局部多边形时，切片 B 内同属该国家的局部多边形亦能依据相同 ID 同时被高亮，彻底杜绝跨瓦片缝隙丢失现象。</p>
+</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
 <ul>
+<li><strong>双图层覆盖架构（Base VT Layer + Selection VT Layer）</strong>：
+在矢量切片应用中，通常不会直接对底图切片本身的所有要素进行就地状态修改，因为矢量切片具有离屏栅格化和缓存机制。本示例采用经典的高性能双图层模式：<ol>
+<li><strong>基础图层 (<code>vtLayer</code>)</strong>：以默认样式渲染所有瓦片要素。</li>
+<li><strong>选择图层 (<code>selectionLayer</code>)</strong>：直接复用底层 <code>vtLayer.getSource()</code>，自身不额外发起任何瓦片 HTTP 请求，仅根据外部全局 <code>selection</code> 字典决定是否为对应要素附加高亮样式。</li>
+</ol>
+</li>
+<li><strong><code>renderMode: &#39;vector&#39;</code> vs 默认 <code>&#39;hybrid&#39;</code></strong>：
+矢量切片图层默认 <code>renderMode: &#39;hybrid&#39;</code>，它将切片预渲染为位图缓存以提供极限缩放平移性能，但在动态高亮时重建切片纹理开销大。高亮图层使用 <code>renderMode: &#39;vector&#39;</code>，强制保持纯矢量图元实时绘制，当 <code>selectionLayer.changed()</code> 触发时可瞬间局部重绘，达到 60fps 丝滑交互。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>MVT({ idProperty: &#39;iso_a3&#39; })</code>：
+在矢量瓦片规范中，跨瓦片分割的相同多边形必须依赖唯一标识符来统一身份。通过配置 <code>idProperty: &#39;iso_a3&#39;</code>，MVT 解析器将属性字典中的国家三字代码提取为要素的唯一 <code>feature.getId()</code>。这样当选中切片 A 内的局部多边形时，切片 B 内同属该国家的局部多边形亦能依据相同 ID 同时被高亮，彻底杜绝跨瓦片缝隙丢失现象。</li>
 <li><code>vtLayer.getFeatures(pixel)</code> 异步 Promise 拾取：
 区别于 <code>map.getFeaturesAtPixel</code>，<code>layer.getFeatures(pixel)</code> 返回一个 Promise，它直接从底层切片源中检索图元并按层级解析，支持精细过滤。</li>
 <li><code>selectionLayer.changed()</code> 通知机制：
 更新 <code>selection</code> 字典（增删选中的 featureId）后，直接调用 <code>selectionLayer.changed()</code> 发出刷新信号，触发样式函数重新评估，开销极低。</li>
 </ul>
-<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization) - <strong>跨切片要素 ID 缺失导致的“断裂高亮”陷阱</strong>：</h4>
-<p>  若发布的 MVT 矢量切片在生成（如 tippecanoe 或 GeoServer GWC）时未注入唯一 <code>id</code>，或者前端没有显式配置 <code>idProperty</code>，<code>feature.getId()</code> 将返回 <code>undefined</code> 或局部生成 ID，导致点击国家只能高亮所在瓦片的一半。生产环境必须确保矢量切片生产管线携带全局唯一业务主键。</p>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
 <ul>
+<li><strong>跨切片要素 ID 缺失导致的“断裂高亮”陷阱</strong>：
+若发布的 MVT 矢量切片在生成（如 tippecanoe 或 GeoServer GWC）时未注入唯一 <code>id</code>，或者前端没有显式配置 <code>idProperty</code>，<code>feature.getId()</code> 将返回 <code>undefined</code> 或局部生成 ID，导致点击国家只能高亮所在瓦片的一半。生产环境必须确保矢量切片生产管线携带全局唯一业务主键。</li>
 <li><strong>Hover 模式下的节流优化</strong>：
 在 <code>pointermove</code> 模式下，快速滑过复杂要素会导致大量 <code>layer.getFeatures</code> 触发。生产中可将当前命中要素的 ID 缓存，仅在 ID 发生变化时才调用 <code>selectionLayer.changed()</code>，避免不必要的重绘循环。</li>
 </ul>
@@ -352,16 +360,28 @@ map.on([&#x27;click&#x27;, &#x27;pointermove&#x27;], function (event) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

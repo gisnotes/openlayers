@@ -116,12 +116,12 @@
               data-bs-target="#tag-example-list"
               data-title="mapbox"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles-advanced.html&quot;&gt;Advanced Mapbox Vector Tiles&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles-advanced.html&quot;&gt;Advanced Mapbox Vector Tiles / Mapbox 矢量切片进阶：跨层级复用与移动端流量节省&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./declutter-group.html&quot;&gt;Declutter Group / 避让分组（独立避让组）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./geojson-vt.html&quot;&gt;geojson-vt integration / geojson-vt 浏览器端实时切片矢量瓦片&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-layer.html&quot;&gt;Mapbox Vector Layer&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles.html&quot;&gt;Mapbox Vector Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-layer.html&quot;&gt;Mapbox Vector Layer / 使用 ol-mapbox-style 一键接入 Mapbox 样式规范图层&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles.html&quot;&gt;Mapbox Vector Tiles / Mapbox MVT 矢量切片与客户端样式表达式&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer / 深度集成 Mapbox GL JS 渲染引擎图层&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-tiles-reprojected.html&quot;&gt;Vector tiles reprojected / 矢量切片客户端动态重投影&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./webgl-vector-tiles.html&quot;&gt;WebGL Vector Tiles Layer / WebGL 矢量切片图层（MVT 硬件加速渲染）&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -202,24 +202,34 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Demonstrates client-side reprojection of EPSG:4326 vector tiles into polar projection. / 演示将 EPSG:4326 地理坐标系的矢量切片动态重投影为北极极地投影（ESRI:102017）渲染。</p>
-        <div id="docs"><p>Vector tile layers support reprojection to other projections. This example shows EPSG:4326 vector tiles reprojected to North Pole Lambert Azimuthal Equal Area (ESRI:102017). For polar regions, vector tiles in a geographic projection are preferred, because web mercator tiles are severely distorted or truncated past 85 degrees latitude.</p> <p>矢量切片图层（VectorTileLayer）原生支持动态重投影到任意目标坐标系。本示例演示如何将地理坐标系（EPSG:4326）下的矢量切片动态重投影为北极朗伯等面积方位投影（ESRI:102017，North Pole Lambert Azimuthal Equal Area）。</p> <p>对于极地高纬度区域，强烈推荐使用基于地理坐标系的矢量切片作为数据源，因为常规 Web 墨卡托切片（EPSG:3857）在纬度超过南北纬 85.05° 后会发生极端形变乃至直接截断。</p> <p><strong>提示</strong>：在实际项目中使用本示例时，请务必前往 https://www.maptiler.com/cloud/ 申请并配置专属 API Key。若 API Key 过期或无效，底图将无法加载显示。</p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. 核心架构与设计思想 (Core Architecture & Design) - <strong>矢量切片重投影与栅格重投影的架构差异</strong>：
-  - <strong>栅格切片重投影</strong>：基于三角形网格变形与像素重采样（Nearest / Bilinear），虽然速度快但可能引起文字与边缘模糊，且切片接缝处可能产生走样。
-  - <strong>矢量切片重投影</strong>：OpenLayers 在图元级别对切片内的几何顶点执行 Proj4 坐标数学转换，随后在目标投影坐标系下直接执行矢量渲染（线型、填充、注记）。这意味着重投影后的线条依然保持原生物理分辨率，边缘极其锐利，文本沿正确角度排列，不存在栅格模糊失真。
-- <strong>极地投影（Polar Projections）的战略优势</strong>：
-  传统 EPSG:3857 在极地数学趋于无穷大，故直接将北冰洋和南极洲截断。而 ESRI:102017（North Pole Lambert Azimuthal Equal Area）以北极点（90°N）为切平面中心，真实保面积地展现整个北极圈及周边大陆，是极地科考、北极航道和高纬度气候仿真的标准底图。<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis) - <code>proj4.defs(&#39;ESRI:102017&#39;, &#39;+proj=laea +lat_0=90 ...&#39;)</code> 与 <code>register(proj4)</code>：</h4>
-<p>  通过 Proj4 字符串定义北极等面积方位投影参数，并将其注册到 OpenLayers 全局投影字典中。</p>
+        <div id="docs"><p>Vector tile layers support reprojection to other projections. This example shows EPSG:4326 vector tiles reprojected to North Pole Lambert Azimuthal Equal Area (ESRI:102017). For polar regions, vector tiles in a geographic projection are preferred, because web mercator tiles are severely distorted or truncated past 85 degrees latitude.</p>
+<p>矢量切片图层（VectorTileLayer）原生支持动态重投影到任意目标坐标系。本示例演示如何将地理坐标系（EPSG:4326）下的矢量切片动态重投影为北极朗伯等面积方位投影（ESRI:102017，North Pole Lambert Azimuthal Equal Area）。</p>
+<p>对于极地高纬度区域，强烈推荐使用基于地理坐标系的矢量切片作为数据源，因为常规 Web 墨卡托切片（EPSG:3857）在纬度超过南北纬 85.05° 后会发生极端形变乃至直接截断。</p>
+<p><strong>提示</strong>：在实际项目中使用本示例时，请务必前往 https://www.maptiler.com/cloud/ 申请并配置专属 API Key。若 API Key 过期或无效，底图将无法加载显示。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
 <ul>
+<li><strong>矢量切片重投影与栅格重投影的架构差异</strong>：<ul>
+<li><strong>栅格切片重投影</strong>：基于三角形网格变形与像素重采样（Nearest / Bilinear），虽然速度快但可能引起文字与边缘模糊，且切片接缝处可能产生走样。</li>
+<li><strong>矢量切片重投影</strong>：OpenLayers 在图元级别对切片内的几何顶点执行 Proj4 坐标数学转换，随后在目标投影坐标系下直接执行矢量渲染（线型、填充、注记）。这意味着重投影后的线条依然保持原生物理分辨率，边缘极其锐利，文本沿正确角度排列，不存在栅格模糊失真。</li>
+</ul>
+</li>
+<li><strong>极地投影（Polar Projections）的战略优势</strong>：
+传统 EPSG:3857 在极地数学趋于无穷大，故直接将北冰洋和南极洲截断。而 ESRI:102017（North Pole Lambert Azimuthal Equal Area）以北极点（90°N）为切平面中心，真实保面积地展现整个北极圈及周边大陆，是极地科考、北极航道和高纬度气候仿真的标准底图。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>proj4.defs(&#39;ESRI:102017&#39;, &#39;+proj=laea +lat_0=90 ...&#39;)</code> 与 <code>register(proj4)</code>：
+通过 Proj4 字符串定义北极等面积方位投影参数，并将其注册到 OpenLayers 全局投影字典中。</li>
 <li><code>VectorTileSource({ projection: &#39;EPSG:4326&#39;, tileGrid })</code>：
 数据源声明自己的原始坐标系是经纬度（EPSG:4326），并以对应的 TileGrid 向服务器拉取瓦片。</li>
 <li><code>View({ projection: &#39;ESRI:102017&#39;, center: fromLonLat([0, 90], &#39;ESRI:102017&#39;) })</code>：
 地图视图声明自身采用目标极地投影。OpenLayers 的渲染渲染管线在获取到切片几何后，检测到 <code>source.getProjection() !== view.getProjection()</code>，自动在客户端主线程或工人线程中调用重投影数学函数，将图元顶点转换到 ESRI:102017 像素空间后渲染。</li>
 </ul>
-<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization) - <strong>重投影下文本注记（Declutter &amp; Rotation）的计算负担</strong>：</h4>
-<p>  矢量重投影会对几何顶点进行密集的非线性三角变换。在含有数万条路网或注记的大型切片中，建议启用 <code>declutter: true</code> 并合理配置 <code>maxZoom/minZoom</code>，避免在全景尺度下因巨量几何重投影导致帧率降低。</p>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
 <ul>
+<li><strong>重投影下文本注记（Declutter &amp; Rotation）的计算负担</strong>：
+矢量重投影会对几何顶点进行密集的非线性三角变换。在含有数万条路网或注记的大型切片中，建议启用 <code>declutter: true</code> 并合理配置 <code>maxZoom/minZoom</code>，避免在全景尺度下因巨量几何重投影导致帧率降低。</li>
 <li><strong>极点闭合与跨经线剪裁</strong>：
 等面积方位投影在远离极点的边缘可能出现几何奇点。在生成切片时应确保切片瓦片含有适当的缓冲（Buffer = 64~128 像素），防止重投影后多边形在瓦片缝隙处产生裂纹。</li>
 </ul>
@@ -345,16 +355,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

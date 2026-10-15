@@ -15,6 +15,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
     <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
   </head>
@@ -84,7 +85,7 @@
 </blockquote>
 <hr>
 <h2 id="1-架构总览：新一代矢量切片运行机制">1. 架构总览：新一代矢量切片运行机制</h2>
-<p>随着高分辨率显示设备与 Web 空间分析需求的普及，基于 Protocol Buffers 二进制流的 <strong>Mapbox 矢量切片（MVT/PBF）</strong> 已成为现代 WebGIS 的事实标准。传统栅格切片（PNG/JPEG）将图元光栅化为死板的像元矩阵，丢失了全部图元拓扑、属性字典与样式自适应能力；而矢量切片将点、线、面矢量坐标及键值对属性编码进网格化的金字塔中，交由前端浏览器执行动态着色、注记布局与交互探测。</p>
+<p>随着高分辨率显示设备与 Web 空间分析需求的普及，基于 Protocol Buffers 二进制流的 <strong>Mapbox 矢量切片（MVT/PBF）</strong> 已成为现代 WebGIS 的事实标准。传统栅格切片（PNG/JPEG）将图元栅格化为死板的像元矩阵，丢失了全部图元拓扑、属性字典与样式自适应能力；而矢量切片将点、线、面矢量坐标及键值对属性编码进网格化的金字塔中，交由前端浏览器执行动态着色、注记布局与交互探测。</p>
 <p>OpenLayers 拥有业界最成熟、可扩展性最高的矢量切片（<code>VectorTileLayer</code> + <code>VectorTileSource</code>）架构。它不仅完美支持标准 Web 墨卡托（EPSG:3857），更支持<strong>非墨卡托原生切片（EPSG:4326 等经纬度网格）</strong>、<strong>任意异构坐标系下的客户端矢量实时重投影（如北极极地投影 ESRI:102017）</strong>、<strong>TMS/XYZ 坐标翻转调试</strong> 以及 <strong>毫秒级跨切片要素统一高亮（Selection）</strong>。</p>
 <pre><code class="language-mermaid">flowchart TD
     subgraph Server[&quot;后端切片服务 (GeoServer / MapTiler / ArcGIS)&quot;]
@@ -139,7 +140,7 @@
 <tr>
 <td align="left"><strong>内存与渲染方式</strong></td>
 <td align="left">显存/内存位图贴图</td>
-<td align="left">离屏 Canvas 位图光栅化缓存</td>
+<td align="left">离屏 Canvas 位图栅格化缓存</td>
 <td align="left">视口逐帧纯矢量 Path 绘制</td>
 <td align="left">全量 DOM/Canvas 几何对象树</td>
 </tr>
@@ -153,7 +154,7 @@
 <tr>
 <td align="left"><strong>高频重绘性能</strong></td>
 <td align="left">极快（仅平移贴图）</td>
-<td align="left">瓦片重光栅化开销大（约 15~30fps）</td>
+<td align="left">瓦片重栅格化开销大（约 15~30fps）</td>
 <td align="left">局部图元即时重绘（稳居 60fps）</td>
 <td align="left">要素量大时 CPU/GC 瓶颈明显</td>
 </tr>
@@ -224,7 +225,7 @@ vtLayer.getFeatures(event.pixel).then((features) =&gt; {
 </code></pre>
 <p>当配置了 <code>idProperty</code> 后，各切片中解出的子图元都拥有相同的 <code>feature.getId() === &#39;CHN&#39;</code>。</p>
 <h4 id="双图层覆盖模式（base-layer--selection-layer）">双图层覆盖模式（Base Layer + Selection Layer）</h4>
-<p>为实现极致的高亮交互性能，避免修改底图切片导致全图重光栅化：</p>
+<p>为实现极致的高亮交互性能，避免修改底图切片导致全图重栅格化：</p>
 <ol>
 <li><strong>底图图层</strong>：负责底图背景与全部多边形的常规绘制。</li>
 <li><strong>高亮图层</strong>：共享底图数据源 <code>source: vtLayer.getSource()</code>，自身不发任何网络请求；配置 <code>renderMode: &#39;vector&#39;</code>，样式函数只匹配 <code>feature.getId() in selection</code> 的图元。</li>
@@ -377,5 +378,28 @@ const debugLayer = new TileLayer({
       <a href="https://www.netlify.com">This site is powered by Netlify.</a>
     </footer>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
   </body>
 </html>

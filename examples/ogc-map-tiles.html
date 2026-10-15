@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>OGC Map Tiles</title>
+    <title>OGC Map Tiles / OGC API - Tiles 现代栅格瓦片服务集成</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">OGC Map Tiles</h4>
+        <h4 id="title">OGC Map Tiles / OGC API - Tiles 现代栅格瓦片服务集成</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,12 +74,12 @@
               data-bs-target="#tag-example-list"
               data-title="ogc"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-ogc-features.html&quot;&gt;MapServer OGC Features&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./ogc-map-tiles.html&quot;&gt;OGC Map Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-map-tiles-geographic.html&quot;&gt;OGC Map Tiles (Geographic)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-maps.html&quot;&gt;OGC Maps&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles.html&quot;&gt;OGC Vector Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles-geographic.html&quot;&gt;OGC Vector Tiles (Geographic)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-ogc-features.html&quot;&gt;MapServer OGC Features / MapServer OGC API - Features 现代矢量要素服务接入&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-map-tiles-geographic.html&quot;&gt;OGC Map Tiles (Geographic) / OGC API - Tiles 经纬度地理切片服务&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./ogc-map-tiles.html&quot;&gt;OGC Map Tiles / OGC API - Tiles 现代栅格瓦片服务集成&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-maps.html&quot;&gt;OGC Maps / OGC API - Maps 现代动态单图地图服务&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles-geographic.html&quot;&gt;OGC Vector Tiles (Geographic) / OGC API 经纬度矢量切片与等矩投影&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles.html&quot;&gt;OGC Vector Tiles / OGC API - Tiles 矢量切片服务与客户端样式&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >6</a>
@@ -106,8 +106,29 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Rendering map tiles from an OGC API – Tiles service.</p>
-        <div id="docs"><p>The <a href="https://ogcapi.ogc.org/tiles/">OGC API – Tiles</a> specification describes how a service can provide map tiles.</p>
+        <p id="shortdesc">Rendering map tiles from an OGC API – Tiles service. / 演示如何使用 OGCMapTile 数据源接入符合现代 OGC API - Tiles 规范的 Web 墨卡托栅格切片服务。</p>
+        <div id="docs"><p>The <a href="https://ogcapi.ogc.org/tiles/" target="_blank">OGC API – Tiles</a> specification describes how a service can provide map tiles.</p>
+<p>本示例展示了如何渲染基于现代 <a href="https://ogcapi.ogc.org/tiles/" target="_blank">OGC API – Tiles</a> 国际标准的栅格地图瓦片。OGC API 系列是 OGC 组织全面拥抱 OpenAPI（RESTful JSON、资源化 URI）的新一代地理信息服务规范，取代了过去高度依赖复杂 XML 与长查询参数的传统 WMTS/WMS。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
+<ul>
+<li><strong>新一代 OGC API - Tiles 规范</strong>：
+传统 WMTS 需要解析复杂的 Capabilities XML。而在 OGC API - Tiles 中，服务采用现代的 RESTful 路径组织：<code>/collections/{collectionId}/map/tiles/{tileMatrixSetId}/{tileMatrix}/{tileRow}/{tileCol}</code>。</li>
+<li><strong><code>ol/source/OGCMapTile</code> 开箱即用</strong>：
+OpenLayers 内置了专用的 <code>OGCMapTile</code> 数据源类。开发者仅需指定包含切片矩阵集的基础 URL（如本例 GNOSIS Earth 的 <code>blueMarble</code> 集合的 <code>WebMercatorQuad</code> 矩阵集），内部自动完成切片元数据握手与动态请求组装。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>url: '<a href="https://maps.gnosis.earth/ogcapi/collections/blueMarble/map/tiles/WebMercatorQuad">https://maps.gnosis.earth/ogcapi/collections/blueMarble/map/tiles/WebMercatorQuad</a>'</code>：
+指向特定图层集合与特定瓦片网格矩阵（<code>WebMercatorQuad</code> 对应标准的 Web 墨卡托四叉树网格）。</li>
+<li><code>new TileLayer({ source: ... })</code>：
+标准切片图层容器，具备与常规 XYZ 或 WMTS 完全一致的缓存与渲染性能表现。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
+<ul>
+<li><strong>TileMatrixSet 标识符规范</strong>：
+OGC 官方对切片矩阵集制定了标准命名（如 <code>WebMercatorQuad</code> 对应 EPSG:3857，<code>WorldCRS84Quad</code> 对应 EPSG:4326）。调用服务前需查阅服务端 <code>/tiles</code> 端点返回的 JSON 元数据，确保所选的矩阵集与当前前端视图投影严格一致。</li>
+</ul>
 </div>
       </div>
 
@@ -144,7 +165,7 @@ const map &#x3D; new Map({
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;OGC Map Tiles&lt;/title&gt;
+    &lt;title&gt;OGC Map Tiles / OGC API - Tiles 现代栅格瓦片服务集成&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -190,16 +211,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

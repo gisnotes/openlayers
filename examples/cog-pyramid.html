@@ -146,31 +146,53 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Rendering a COG tile pyramid as layer group. / 将符合 STACTA 规范的云优化 GeoTIFF 瓦片金字塔目录按需渲染为图层集合。</p>
-        <div id="docs"><h2>Data from a Cloud Optimized GeoTIFF (COG) tile pyramid can be rendered as a set of layers.  In this example, a pyramid of 3-band GeoTIFFs is used to render RGB data. The <code>ol/source.sourcesFromTileGrid</code> helper function creates sources from this pyramid on demand. The GeoTIFFs used by those sources have a resolution range that matches the range of a single z of the pyramid tile grid.
-来自云优化 GeoTIFF（COG）瓦片金字塔目录的数据可以作为图层集合进行按需渲染。 在本示例中，采用三波段 GeoTIFF 组成的瓦片金字塔渲染 RGB 影像。通过 <code>ol/source.sourcesFromTileGrid</code> 辅助函数，可以根据金字塔瓦片网格动态创建数据源。 每个数据源所使用的 GeoTIFF 文件，其适用的分辨率区间精确对应金字塔瓦片网格中的单个缩放层级（$z$）。</h2>
+        <div id="docs"><p>Data from a Cloud Optimized GeoTIFF (COG) tile pyramid can be rendered as a set of layers.  In this
+example, a pyramid of 3-band GeoTIFFs is used to render RGB data. The <code>ol/source.sourcesFromTileGrid</code>
+helper function creates sources from this pyramid on demand. The GeoTIFFs used by those sources have
+a resolution range that matches the range of a single z of the pyramid tile grid.</p>
+<p>来自云优化 GeoTIFF（COG）瓦片金字塔目录的数据可以作为图层集合进行按需渲染。
+在本示例中，采用三波段 GeoTIFF 组成的瓦片金字塔渲染 RGB 影像。通过 <code>ol/source.sourcesFromTileGrid</code> 辅助函数，可以根据金字塔瓦片网格动态创建数据源。
+每个数据源所使用的 GeoTIFF 文件，其适用的分辨率区间精确对应金字塔瓦片网格中的单个缩放层级（$z$）。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 什么是 STACTA / COG 瓦片金字塔？ * <strong>单文件 COG 的边界</strong>：对于大范围（如洲际或全球级）卫星底图，即使制作成单文件 COG，文件大小也会达到上百 GB 乃至数十 TB，而且单文件的 IFD 头部索引膨胀后也会消耗大量初始网络解析时间。 * <strong>STACTA (STAC Tile Access) 与瓦片目录</strong>：</h4>
+<h4>1. 什么是 STACTA / COG 瓦片金字塔？</h4>
 <ul>
+<li><strong>单文件 COG 的边界</strong>：对于大范围（如洲际或全球级）卫星底图，即使制作成单文件 COG，文件大小也会达到上百 GB 乃至数十 TB，而且单文件的 IFD 头部索引膨胀后也会消耗大量初始网络解析时间。</li>
+<li><strong>STACTA (STAC Tile Access) 与瓦片目录</strong>：<ul>
 <li>将全球影像按照标准瓦片网格切分为规则的单个独立小 COG 文件（每个瓦片自身依然是合法的 <code>.tif</code>，具有内嵌金字塔和地理元数据）。</li>
 <li>文件目录路径按 <code>/{z}/{y}/{x}.tif</code> 规则组织。</li>
 <li>这样既继承了传统 TMS/WMTS 瓦片服务横向无限扩展的优势，又保留了 GeoTIFF 的 16 位/浮点真值、多光谱波段与客户端 WebGL 实时着色的科学属性！</li>
 </ul>
-<h4>2. <code>sourcesFromTileGrid(tileGrid, tileUrlFunction)</code> 核心机制 传统 <code>ol/layer/WebGLTile</code> 通常接收单个 <code>source</code>。而面对全球海量独立 TIFF 瓦片时： ```javascript const pyramid = new WebGLTileLayer({</h4>
-<p>  sources: sourcesFromTileGrid(
+</li>
+</ul>
+<h4>2. <code>sourcesFromTileGrid(tileGrid, tileUrlFunction)</code> 核心机制</h4>
+<p>传统 <code>ol/layer/WebGLTile</code> 通常接收单个 <code>source</code>。而面对全球海量独立 TIFF 瓦片时：</p>
+<pre><code class="language-javascript">const pyramid = new WebGLTileLayer({
+  sources: sourcesFromTileGrid(
     tileGrid,
     ([z, x, y]) =&gt;
       new GeoTIFF({
-        sources: [{ url: <code>.../${z}/${y}/${x}.tif</code> }],
+        sources: [{ url: `.../${z}/${y}/${x}.tif` }],
       }),
   ),
-}); ``` * <code>sourcesFromTileGrid</code> 是一个极高水准的工厂函数，它监听地图当前视图的缩放层级和可见范围； * 根据自定义的 <code>TileGrid</code> 网格参数，<strong>按需、懒加载实例化</strong>目标层级的 <code>GeoTIFF</code> source； * 各层级独立管理各自的 TIFF 头部缓存与像元请求，极大降低了前端初始内存开销。</p>
-<h4>3. 灵活的 <code>tileSizes</code> 与非正方形瓦片 观察本例中的 <code>tileGrid</code> 配置： ```javascript tileSizes: [</h4>
-<p>  [512, 256],
+});
+</code></pre>
+<ul>
+<li><code>sourcesFromTileGrid</code> 是一个极高水准的工厂函数，它监听地图当前视图的缩放层级和可见范围；</li>
+<li>根据自定义的 <code>TileGrid</code> 网格参数，<strong>按需、懒加载实例化</strong>目标层级的 <code>GeoTIFF</code> source；</li>
+<li>各层级独立管理各自的 TIFF 头部缓存与像元请求，极大降低了前端初始内存开销。</li>
+</ul>
+<h4>3. 灵活的 <code>tileSizes</code> 与非正方形瓦片</h4>
+<p>观察本例中的 <code>tileGrid</code> 配置：</p>
+<pre><code class="language-javascript">tileSizes: [
+  [512, 256],
   [1024, 512],
   [2048, 1024],
   [4096, 2048],
   [4096, 4096],
-] ``` 不同于传统 Web 墨卡托固定 256×256 的正方形切片，EPSG:4326（WGS 84 经纬度）全球长宽比为 2:1（经度 360°，纬度 180°）。OpenLayers 完美支持按层级动态定义矩形瓦片尺寸，使高层级能够成倍减少 HTTP 请求数量，显著提升大图吞吐性能。</p>
+]
+</code></pre>
+<p>不同于传统 Web 墨卡托固定 256×256 的正方形切片，EPSG:4326（WGS 84 经纬度）全球长宽比为 2:1（经度 360°，纬度 180°）。OpenLayers 完美支持按层级动态定义矩形瓦片尺寸，使高层级能够成倍减少 HTTP 请求数量，显著提升大图吞吐性能。</p>
 </div>
       </div>
 
@@ -283,16 +305,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

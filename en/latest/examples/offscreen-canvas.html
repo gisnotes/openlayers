@@ -143,7 +143,7 @@
         <div id="docs"><p>
   The map in this example is rendered in a web worker, using <code>OffscreenCanvas</code>.
 </p> <p>
-  在此示例中，完整的矢量瓦片地图在 Web Worker 后台子线程中渲染，依托浏览器的 <code>OffscreenCanvas</code>（离屏画布）与 <code>ImageBitmap</code> 零拷贝转移技术，彻底将复杂的矢量反序列化、样式计算与光栅化脱离主线程。
+  在此示例中，完整的矢量瓦片地图在 Web Worker 后台子线程中渲染，依托浏览器的 <code>OffscreenCanvas</code>（离屏画布）与 <code>ImageBitmap</code> 零拷贝转移技术，彻底将复杂的矢量反序列化、样式计算与栅格化脱离主线程。
 </p> <hr> <h3>📚 学习记录与技术深度解读</h3>
 <h4>1. 核心架构与设计思想</h4> <ul>
   <li><strong>主线程 UI 与渲染管线彻底解耦：</strong>
@@ -684,16 +684,28 @@ worker.addEventListener(&#x27;message&#x27;, (event) &#x3D;&gt; {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

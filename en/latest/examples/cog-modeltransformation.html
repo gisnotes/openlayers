@@ -164,12 +164,20 @@
 
       <div class="row-fluid">
         <p id="shortdesc">COG with ModelTransformation. / 展示包含 ModelTransformation 仿射变换矩阵（旋转/倾斜）的云原生 GeoTIFF (COG) 在客户端的重投影与渲染。</p>
-        <div id="docs"><h2>Example of using a COG with ModelTransformation. A ModelTransformation may rotate or skew the tile grid relative to the reported projection. This can be reprojected to that or any other supported projection. To apply the ModelTransformation to <code>ol/source/TileDebug</code> use the <code>source</code> option.
-本示例演示如何加载和渲染带有 <strong><code>ModelTransformation</code>（模型变换矩阵）</strong> 的云原生 GeoTIFF（COG）影像。 <code>ModelTransformation</code> 可能会使瓦片网格相对于其报告的投影产生旋转或倾斜剪切。 OpenLayers 可以在客户端将其动态重投影到目标投影（如 EPSG:3857），或保持其原始几何特征。 若要将模型变换矩阵应用到 <code>ol/source/TileDebug</code> 调试图层中，只需配置 <code>source</code> 选项即可。</h2>
+        <div id="docs"><p>Example of using a COG with ModelTransformation.
+A ModelTransformation may rotate or skew the tile grid relative to the reported projection.
+This can be reprojected to that or any other supported projection.
+To apply the ModelTransformation to <code>ol/source/TileDebug</code> use the <code>source</code> option.</p>
+<p>本示例演示如何加载和渲染带有 <strong><code>ModelTransformation</code>（模型变换矩阵）</strong> 的云原生 GeoTIFF（COG）影像。
+<code>ModelTransformation</code> 可能会使瓦片网格相对于其报告的投影产生旋转或倾斜剪切。
+OpenLayers 可以在客户端将其动态重投影到目标投影（如 EPSG:3857），或保持其原始几何特征。
+若要将模型变换矩阵应用到 <code>ol/source/TileDebug</code> 调试图层中，只需配置 <code>source</code> 选项即可。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 什么是 <code>ModelTransformation</code> 标签？ * <strong>标准正交网格定位（PixelScale + Tiepoint）</strong>：</h4>
-<p>  常规 GeoTIFF 文件通常使用 <code>ModelPixelScaleTag</code>（像元物理尺寸）和 <code>ModelTiepointTag</code>（控制点地理坐标）来锚定图像。这种方式假定像元网格与地图投影坐标轴完全正交（即图像没有旋转，像素列方向精确平行于 Y 轴，行方向平行于 X 轴）。</p>
+<h4>1. 什么是 <code>ModelTransformation</code> 标签？</h4>
 <ul>
+<li><strong>标准正交网格定位（PixelScale + Tiepoint）</strong>：
+常规 GeoTIFF 文件通常使用 <code>ModelPixelScaleTag</code>（像元物理尺寸）和 <code>ModelTiepointTag</code>（控制点地理坐标）来锚定图像。这种方式假定像元网格与地图投影坐标轴完全正交（即图像没有旋转，像素列方向精确平行于 Y 轴，行方向平行于 X 轴）。</li>
 <li><strong>倾斜/旋转成像（SAR、航拍与斜向轨道）</strong>：
 合成孔径雷达（SAR，如本例中 Umbra 卫星拍摄的瓦努阿图塔纳岛影像）或无人机航拍斜拍时，传感器视线与地面投影坐标系存在显著的<strong>旋转角（Rotation）或剪切（Skew）</strong>。</li>
 <li><strong>GeoTIFF Tag 34264 仿射变换矩阵</strong>：
@@ -177,8 +185,16 @@ GeoTIFF 规范使用 Tag 34264（<code>ModelTransformationTag</code>）定义一
 $$\begin{bmatrix} X \ Y \ 1 \end{bmatrix} = \begin{bmatrix} a &amp; b &amp; c \ d &amp; e &amp; f \ 0 &amp; 0 &amp; 1 \end{bmatrix} \begin{bmatrix} \text{col} \ \text{row} \ 1 \end{bmatrix}$$
 其中非对角线系数 $b$ 与 $d$ 明确刻画了旋转与剪切形变。</li>
 </ul>
-<h4>2. OpenLayers 客户端硬件重投影机制 * <code>ol/source/GeoTIFF</code> 能够直接解析 TIFF 头部中的 <code>ModelTransformation</code> 矩阵，并在内存中构建具有旋转角度的非正交瓦片网格。 * 配合 WebGL 瓦片渲染管线（<code>ol/layer/WebGLTile</code>），OpenLayers 在 GPU 片元着色器中执行反向坐标投影寻址，将具有空间倾斜的 COG 像元平滑、无缝地映射到 Web 墨卡托（EPSG:3857）底图上，与标准 OSM 底图严丝合缝地对齐。</h4>
-<h4>3. 倾斜瓦片调试器：<code>new TileDebug({source: cogSource})</code> * 当勾选“显示数据源瓦片坐标 (Show source tile coordinates)”时，通过传入 <code>source: cogSource</code>，<code>TileDebug</code> 图层会直接继承 COG 数据源内部的仿射变换矩阵。 * 从而在地图表面精确绘制出<strong>带有倾斜与旋转角度</strong>的原始 COG 瓦片边界与层级/行列编号（$z/x/y$）。</h4>
+<h4>2. OpenLayers 客户端硬件重投影机制</h4>
+<ul>
+<li><code>ol/source/GeoTIFF</code> 能够直接解析 TIFF 头部中的 <code>ModelTransformation</code> 矩阵，并在内存中构建具有旋转角度的非正交瓦片网格。</li>
+<li>配合 WebGL 瓦片渲染管线（<code>ol/layer/WebGLTile</code>），OpenLayers 在 GPU 片元着色器中执行反向坐标投影寻址，将具有空间倾斜的 COG 像元平滑、无缝地映射到 Web 墨卡托（EPSG:3857）底图上，与标准 OSM 底图严丝合缝地对齐。</li>
+</ul>
+<h4>3. 倾斜瓦片调试器：<code>new TileDebug({source: cogSource})</code></h4>
+<ul>
+<li>当勾选“显示数据源瓦片坐标 (Show source tile coordinates)”时，通过传入 <code>source: cogSource</code>，<code>TileDebug</code> 图层会直接继承 COG 数据源内部的仿射变换矩阵。</li>
+<li>从而在地图表面精确绘制出<strong>带有倾斜与旋转角度</strong>的原始 COG 瓦片边界与层级/行列编号（$z/x/y$）。</li>
+</ul>
 </div>
       </div>
 
@@ -323,16 +339,28 @@ cogSource.getView().then((viewConfig) &#x3D;&gt;
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

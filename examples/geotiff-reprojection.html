@@ -175,16 +175,19 @@
   different projection. For other source types, it is necessary to specify the source projection when
   it differs from the map view projection. In this example, information about the source projection is
   included in the GeoTIFF metadata, so it doesn't need to be specified in the application code.
-</p> <p>
+</p>
+<p>
   The <code>source.getView()</code> method returns a promise that resolves after the GeoTIFF metadata has
   been fetched. This can be used to get the image projection information along with the image extent and
   center coordinates. The <code>transform()</code> function is used to transform the source imagery center
   coordinate when updating the view.
-</p> <p>
+</p>
+<p>
   OpenLayers has built-in reprojection support for sources in Universal Transverse Mercator (UTM)
   projections. Since the source data shown here is in UTM Zone 36 N, no additional configuration is needed
   to reproject the data to the map projection (Spherical Mercator).
-</p> <p>
+</p>
+<p>
   See these other examples for details on the following:
   <ul>
     <li>
@@ -196,21 +199,35 @@
       &mdash; using an external service to look up projection configuration information.
     </li>
   </ul>
+</p><p>
+  本示例演示如何将一种投影下的 GeoTIFF 数据动态展示在采用不同投影的地图视图中。对于其它类型的数据源，当源投影与地图视图投影不一致时，通常必须显式指定源投影；而在本示例中，投影信息已内嵌于 GeoTIFF 的元数据中，因此无需在业务代码中额外配置源投影。
 </p>
 <p>
-  本示例演示如何将一种投影下的 GeoTIFF 数据动态展示在采用不同投影的地图视图中。对于其它类型的数据源，当源投影与地图视图投影不一致时，通常必须显式指定源投影；而在本示例中，投影信息已内嵌于 GeoTIFF 的元数据中，因此无需在业务代码中额外配置源投影。
-</p> <p>
   调用 <code>source.getView()</code> 方法会返回一个 Promise，该 Promise 在成功获取并解析 GeoTIFF 元数据后完成兑现（resolve）。可借此获取影像投影、范围（extent）以及中心点坐标。在更新视图中心时，使用 <code>transform()</code> 函数将源影像中心点坐标转换为视图对应的坐标系。
-</p> <p>
-  OpenLayers 内置支持通用横轴墨卡托（Universal Transverse Mercator, UTM）投影源的客户端动态重投影。由于本示例加载的卫星影像数据源位于 UTM Zone 36N，因此无需任何额外配置（无需注册 Proj4js），即可直接动态重投影至地图视图所采用的球面墨卡托投影（EPSG:3857）。
 </p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. GeoTIFF 元数据自解析与投影自治 * 传统栅格瓦片（如 XYZ/TMS/WMTS）通常是裸图像（PNG/JPEG），本身不包含任何地理元数据，因此客户端必须显式硬编码声明其投影坐标系。 * GeoTIFF 内部的 GeoKeyDirectoryTag（Tag 34735）和 ProjectedCSTypeGeoKey 完整记录了椭球体、中央经线、标准纬线、投影带编号等所有大地测量参数。 * `ol/source/GeoTIFF` 在读取文件头第一批字节时便自动构建出 `Projection` 实例，实现了<strong>零配置的投影自动识别</strong>。
-#### 2. OpenLayers 内置 UTM 引擎与零依赖重投影 * <strong>UTM（通用横轴墨卡托）</strong>：全球被划分为 60 个 6° 投影带（Zone 1 到 Zone 60），是全球高精度卫星影像（如 Landsat、Sentinel-2）最普遍的原生存储投影。 * 过去在浏览器中进行 UTM 重投影必须引入体积庞大的 Proj4js 库。 * OpenLayers 内部内置了 UTM 转换多项式与反解算法，只要检测到源影像属于 UTM 投影，`WebGLTile` 能够在显卡渲染管线中<strong>零 Proj4 依赖直接完成极速三角剖分与纹理重采样</strong>！
-#### 3. 异步视口同步：`source.getView().then(...)` 当源数据位于局域 UTM Zone 36N（米制平面直角坐标），而地图视图处于全球 Web 墨卡托（EPSG:3857）时： ```javascript source.getView().then((viewConfig) => {
+<p>
+  OpenLayers 内置支持通用横轴墨卡托（Universal Transverse Mercator, UTM）投影源的客户端动态重投影。由于本示例加载的卫星影像数据源位于 UTM Zone 36N，因此无需任何额外配置（无需注册 Proj4js），即可直接动态重投影至地图视图所采用的球面墨卡托投影（EPSG:3857）。
+</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. GeoTIFF 元数据自解析与投影自治</h4>
+<ul>
+<li>传统栅格瓦片（如 XYZ/TMS/WMTS）通常是裸图像（PNG/JPEG），本身不包含任何地理元数据，因此客户端必须显式硬编码声明其投影坐标系。</li>
+<li>GeoTIFF 内部的 GeoKeyDirectoryTag（Tag 34735）和 ProjectedCSTypeGeoKey 完整记录了椭球体、中央经线、标准纬线、投影带编号等所有大地测量参数。</li>
+<li><code>ol/source/GeoTIFF</code> 在读取文件头第一批字节时便自动构建出 <code>Projection</code> 实例，实现了<strong>零配置的投影自动识别</strong>。</li>
+</ul>
+<h4>2. OpenLayers 内置 UTM 引擎与零依赖重投影</h4>
+<ul>
+<li><strong>UTM（通用横轴墨卡托）</strong>：全球被划分为 60 个 6° 投影带（Zone 1 到 Zone 60），是全球高精度卫星影像（如 Landsat、Sentinel-2）最普遍的原生存储投影。</li>
+<li>过去在浏览器中进行 UTM 重投影必须引入体积庞大的 Proj4js 库。</li>
+<li>OpenLayers 内部内置了 UTM 转换多项式与反解算法，只要检测到源影像属于 UTM 投影，<code>WebGLTile</code> 能够在显卡渲染管线中<strong>零 Proj4 依赖直接完成极速三角剖分与纹理重采样</strong>！</li>
+</ul>
+<h4>3. 异步视口同步：<code>source.getView().then(...)</code></h4>
+<p>当源数据位于局域 UTM Zone 36N（米制平面直角坐标），而地图视图处于全球 Web 墨卡托（EPSG:3857）时：</p>
+<pre><code class="language-javascript">source.getView().then((viewConfig) =&gt; {
   view.setCenter(transform(viewConfig.center, viewConfig.projection, view.getProjection()));
-}); ``` 通过 `ol/proj.transform` 将局部 UTM 中心点无缝投射为 Web 墨卡托米制坐标，确保地图视口平滑过渡并精确对焦。
+});
+</code></pre>
+<p>通过 <code>ol/proj.transform</code> 将局部 UTM 中心点无缝投射为 Web 墨卡托米制坐标，确保地图视口平滑过渡并精确对焦。</p>
 </div>
       </div>
 
@@ -318,16 +335,28 @@ source.getView().then((sourceView) &#x3D;&gt; {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

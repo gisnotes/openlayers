@@ -103,8 +103,8 @@
               data-title="capabilities"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-capabilities.html&quot;&gt;WMS Capabilities Parsing / WMS 服务元数据能力文档解析&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing / 解析 WMTS 元数据能力文档&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities / 从 GetCapabilities 自动构建 WMTS 图层&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -119,8 +119,8 @@
               data-title="getcapabilities"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-capabilities.html&quot;&gt;WMS Capabilities Parsing / WMS 服务元数据能力文档解析&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-capabilities.html&quot;&gt;WMTS Capabilities Parsing / 解析 WMTS 元数据能力文档&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-layer-from-capabilities.html&quot;&gt;WMTS Layer from Capabilities / 从 GetCapabilities 自动构建 WMTS 图层&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >3</a>
@@ -148,13 +148,15 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example of parsing a WMS GetCapabilities response. / 使用 ol/format/WMSCapabilities 解析 WMS 服务的 GetCapabilities XML 文档并提取图层元数据。</p>
-        <div id="docs"><h2>This example shows the contents of the result object from parsing a WMS capabilities response.
-本示例展示如何使用 <code>ol/format/WMSCapabilities</code> 格式化解析器，将 WMS 服务的 <code>GetCapabilities</code> XML 元数据响应解析为结构化 JavaScript 对象并展示其详细内容。</h2>
+        <div id="docs"><p>This example shows the contents of the result object from parsing a WMS capabilities response.</p>
+<p>本示例展示如何使用 <code>ol/format/WMSCapabilities</code> 格式化解析器，将 WMS 服务的 <code>GetCapabilities</code> XML 元数据响应解析为结构化 JavaScript 对象并展示其详细内容。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 什么是 WMS <code>GetCapabilities</code>？ * <code>GetCapabilities</code> 是 OGC WMS 规范中最核心的自描述元数据请求：</h4>
-<pre><code class="language-text">https://.../wms?SERVICE=WMS&amp;REQUEST=GetCapabilities&amp;VERSION=1.3.0
-</code></pre>
+<h4>1. 什么是 WMS <code>GetCapabilities</code>？</h4>
 <ul>
+<li><code>GetCapabilities</code> 是 OGC WMS 规范中最核心的自描述元数据请求：<pre><code class="language-text">https://.../wms?SERVICE=WMS&amp;REQUEST=GetCapabilities&amp;VERSION=1.3.0
+</code></pre>
+</li>
 <li>服务端返回一个大型 XML 文档，详尽记录了：<ul>
 <li><strong>服务级别元数据</strong>：服务标题、摘要、联系人、关键字、操作约束；</li>
 <li><strong>支持的图层树</strong>：每个图层的 <code>Name</code>、<code>Title</code>、<code>Abstract</code>、支持的投影坐标系列表（<code>CRS</code> / <code>SRS</code>）、地理边界（<code>EX_GeographicBoundingBox</code> 与投影包围盒 <code>BoundingBox</code>）；</li>
@@ -163,7 +165,12 @@
 </ul>
 </li>
 </ul>
-<h4>2. <code>ol/format/WMSCapabilities</code> 的实战价值 * <strong>动态图层目录树生成</strong>：企业级 GIS 平台中，前端通常先请求并解析 <code>GetCapabilities</code>，自动在左侧侧边栏渲染多级图层树，用户勾选图层后才动态实例化 <code>TileWMS</code> 或 <code>ImageWMS</code>； * <strong>坐标系与范围自动校验</strong>：自动比对地图视图当前的投影是否包含在该图层的 <code>CRS</code> 支持列表中，以及自动调用 <code>view.fit(bbox)</code> 居中定位； * <strong>图例与查询能力自适应</strong>：提取图层的 LegendURL 与 Queryable 属性，决定是否启用点击要素查询（<code>GetFeatureInfo</code>）。</h4>
+<h4>2. <code>ol/format/WMSCapabilities</code> 的实战价值</h4>
+<ul>
+<li><strong>动态图层目录树生成</strong>：企业级 GIS 平台中，前端通常先请求并解析 <code>GetCapabilities</code>，自动在左侧侧边栏渲染多级图层树，用户勾选图层后才动态实例化 <code>TileWMS</code> 或 <code>ImageWMS</code>；</li>
+<li><strong>坐标系与范围自动校验</strong>：自动比对地图视图当前的投影是否包含在该图层的 <code>CRS</code> 支持列表中，以及自动调用 <code>view.fit(bbox)</code> 居中定位；</li>
+<li><strong>图例与查询能力自适应</strong>：提取图层的 LegendURL 与 Queryable 属性，决定是否启用点击要素查询（<code>GetFeatureInfo</code>）。</li>
+</ul>
 </div>
       </div>
 
@@ -249,16 +256,28 @@ fetch(&#x27;data/ogcsample.xml&#x27;)
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

@@ -605,7 +605,7 @@ function refreshMap(imageInfoUrl) {
 		response.json().then(function(imageInfo) {
 			const options = new IIIFInfo(imageInfo).getTileSourceOptions();
 			if (options === void 0 || options.version === void 0) {
-				notifyDiv.textContent = "Data seems to be no valid IIIF image information.";
+				notifyDiv.textContent = "数据似乎不是有效的 IIIF 图像元数据。(Data seems to be no valid IIIF image information.)";
 				return;
 			}
 			options.zDirection = -1;
@@ -619,10 +619,10 @@ function refreshMap(imageInfoUrl) {
 			map.getView().fit(iiifTileSource.getTileGrid().getExtent());
 			notifyDiv.textContent = "";
 		}).catch(function(body) {
-			notifyDiv.textContent = "Could not read image info json. " + body;
+			notifyDiv.textContent = "无法读取图像 info.json 元数据。(Could not read image info json.) " + body;
 		});
 	}).catch(function() {
-		notifyDiv.textContent = "Could not read data from URL.";
+		notifyDiv.textContent = "无法从指定 URL 获取数据。(Could not read data from URL.)";
 	});
 }
 displayButton.addEventListener("click", function() {

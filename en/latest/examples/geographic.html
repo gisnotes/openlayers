@@ -109,12 +109,26 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Using geographic coordinates for the map view. / 演示如何调用 useGeographic() 让视图中心、几何要素与浮层直接使用原生经纬度坐标，免去手动投影转换。</p>
-        <div id="docs"><h2>Calling the <code>useGeographic</code> function in the <code>'ol/proj'</code> module makes it so the map view uses geographic coordinates (even if the view projection is not geographic).
-本示例展示如何通过调用 <code>'ol/proj'</code> 模块中的 <code>useGeographic()</code> 函数，让 OpenLayers 的视图中心、几何图形（Point）、浮层（Overlay）以及鼠标事件坐标全面直接使用<strong>地理坐标（经度、纬度，即 WGS84 / EPSG:4326）</strong>。即使底层底图使用的是 Web 墨卡托（EPSG:3857），框架也会在 API 入口与出口处自动进行透明映射转换，开发者无需再手动编写繁琐的 <code>fromLonLat()</code> 与 <code>toLonLat()</code>。</h2>
+        <div id="docs"><p>Calling the <code>useGeographic</code> function in the <code>'ol/proj'</code> module
+makes it so the map view uses geographic coordinates (even if the view projection is
+not geographic).</p>
+<p>本示例展示如何通过调用 <code>'ol/proj'</code> 模块中的 <code>useGeographic()</code> 函数，让 OpenLayers 的视图中心、几何图形（Point）、浮层（Overlay）以及鼠标事件坐标全面直接使用<strong>地理坐标（经度、纬度，即 WGS84 / EPSG:4326）</strong>。即使底层底图使用的是 Web 墨卡托（EPSG:3857），框架也会在 API 入口与出口处自动进行透明映射转换，开发者无需再手动编写繁琐的 <code>fromLonLat()</code> 与 <code>toLonLat()</code>。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 核心架构原理 (Core Architecture) 在 OpenLayers 6 之前，框架默认要求所有传入 API 的坐标必须匹配视口投影（通常为 Web 墨卡托的大数值米制坐标，如 <code>[-12245143, 5621521]</code>），开发者必须在各处调用 <code>fromLonLat([lon, lat])</code>，极易遗漏引发“坐标静默丢失”Bug。 - <strong><code>useGeographic()</code> 的 API 拦截机制</strong>：调用此全局方法后，OpenLayers 重新配置了全局默认的用户投影体系（User Projection）。所有公开 API（包括 <code>view.getCenter()</code>、<code>view.setCenter()</code>、<code>new Point([lon, lat])</code>、<code>overlay.setPosition([lon, lat])</code>、<code>map.on(&#39;click&#39;, e =&gt; e.coordinate)</code>）均自动采用 <code>[经度, 纬度]</code>（以度为单位）。 - <strong>底层渲染性能零妥协</strong>：底层的切片流水线、WebGL 着色器和 Canvas 2D 绘图网格依然基于投影坐标系（EPSG:3857）运行，保证切片拼合与投影几何的高保真度，转换仅在用户交互与数据读写的边界毫秒级执行。</h4>
-<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript // 1. 全局启用地理坐标支持 useGeographic();</h4>
-<p>// 2. 直接以经纬度声明地点坐标与几何体，无需 fromLonLat const place = [-110, 45]; // 经度 -110°, 纬度 45° (美国黄石国家公园附近) const point = new Point(place);
+<h4>1. 核心架构原理 (Core Architecture)</h4>
+<p>在 OpenLayers 6 之前，框架默认要求所有传入 API 的坐标必须匹配视口投影（通常为 Web 墨卡托的大数值米制坐标，如 <code>[-12245143, 5621521]</code>），开发者必须在各处调用 <code>fromLonLat([lon, lat])</code>，极易遗漏引发“坐标静默丢失”Bug。</p>
+<ul>
+<li><strong><code>useGeographic()</code> 的 API 拦截机制</strong>：调用此全局方法后，OpenLayers 重新配置了全局默认的用户投影体系（User Projection）。所有公开 API（包括 <code>view.getCenter()</code>、<code>view.setCenter()</code>、<code>new Point([lon, lat])</code>、<code>overlay.setPosition([lon, lat])</code>、<code>map.on(&#39;click&#39;, e =&gt; e.coordinate)</code>）均自动采用 <code>[经度, 纬度]</code>（以度为单位）。</li>
+<li><strong>底层渲染性能零妥协</strong>：底层的切片流水线、WebGL 着色器和 Canvas 2D 绘图网格依然基于投影坐标系（EPSG:3857）运行，保证切片拼合与投影几何的高保真度，转换仅在用户交互与数据读写的边界毫秒级执行。</li>
+</ul>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive)</h4>
+<pre><code class="language-javascript">// 1. 全局启用地理坐标支持
+useGeographic();
+
+// 2. 直接以经纬度声明地点坐标与几何体，无需 fromLonLat
+const place = [-110, 45]; // 经度 -110°, 纬度 45° (美国黄石国家公园附近)
+const point = new Point(place);
+
 const map = new Map({
   view: new View({
     center: place, // 直接传入 [lon, lat]
@@ -126,11 +140,13 @@ const map = new Map({
       source: new VectorSource({ features: [new Feature(point)] }),
     }),
   ],
-}); ```</p>
-<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>多世界平铺（World Wrapping）下的经度偏移补偿</strong>：当用户横向连续拖拽地球穿过多周时，<code>event.coordinate[0]</code> 可能会大于 180° 或小于 -180°（例如点击第二圈的黄石公园，经度为 $250^\circ$）。示例通过：</h4>
-<p>  <code>coordinate[0] + Math.round(event.coordinate[0] / 360) * 360</code>
-  巧妙计算出对应周期的平移量，确保 Bootstrap 弹窗精确吸附在当前视口所见的世界副本上。</p>
+});
+</code></pre>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls)</h4>
 <ul>
+<li><strong>多世界平铺（World Wrapping）下的经度偏移补偿</strong>：当用户横向连续拖拽地球穿过多周时，<code>event.coordinate[0]</code> 可能会大于 180° 或小于 -180°（例如点击第二圈的黄石公园，经度为 $250^\circ$）。示例通过：
+<code>coordinate[0] + Math.round(event.coordinate[0] / 360) * 360</code>
+巧妙计算出对应周期的平移量，确保 Bootstrap 弹窗精确吸附在当前视口所见的世界副本上。</li>
 <li><strong>GeoJSON 数据源自动对齐</strong>：启用 <code>useGeographic()</code> 后，<code>new GeoJSON().readFeatures(data)</code> 无需再配置 <code>dataProjection: &#39;EPSG:4326&#39;</code> 和 <code>featureProjection: &#39;EPSG:3857&#39;</code>，格式解析器会自动将数据转换为用户投影。</li>
 </ul>
 </div>
@@ -314,16 +330,28 @@ map.on(&#x27;pointermove&#x27;, function (event) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

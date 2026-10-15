@@ -135,10 +135,10 @@
               data-bs-target="#tag-example-list"
               data-title="transition"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tile-transitions.html&quot;&gt;Tile Transitions&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./tile-transitions.html&quot;&gt;Tile Transitions / 切片加载不透明度渐变过渡动效&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-time-webgl.html&quot;&gt;WMS Time (WebGL) / WebGL WMS 时序动态瓦片平滑过渡渲染&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-time.html&quot;&gt;WMS Time / WMS 时间维度时序雷达动态播放&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-dimensions.html&quot;&gt;WMTS Tile Transitions&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-dimensions.html&quot;&gt;WMTS Tile Transitions / WMTS 多维时空与平滑切片过渡&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >4</a>
@@ -186,20 +186,28 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example of smooth tile transitions when changing the time dimension of a tiled WMS layer. / 演示连续切换瓦片式 WMS 图层的时间维度 (TIME 参数) 时的平滑瓦片过渡与雷达回波动态播放。</p>
-        <div id="docs"><h2>Demonstrates smooth reloading of layers when changing the time dimension continuously. Data shown: IEM generated CONUS composite of NWS NEXRAD WSR-88D level III base reflectivity.
-本示例演示在连续动态切换时间维度时，瓦片图层如何平滑重载与过渡。 所展示的数据为爱荷华环境网（IEM）生成的美国国家气象局（NWS）NEXRAD WSR-88D 三级基数据雷达反射率全国雷达拼图。</h2>
+        <div id="docs"><p>Demonstrates smooth reloading of layers when changing the time dimension continuously. Data shown: IEM generated CONUS composite of NWS NEXRAD WSR-88D level III base reflectivity.</p>
+<p>本示例演示在连续动态切换时间维度时，瓦片图层如何平滑重载与过渡。
+所展示的数据为爱荷华环境网（IEM）生成的美国国家气象局（NWS）NEXRAD WSR-88D 三级基数据雷达反射率全国雷达拼图。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. WMS 时间维度规范（WMS-T / <code>TIME</code> 参数） * 在气象监测（雷达、卫星云图、台风路径）、海洋洋流、空气质量监测等业务场景中，地学栅格具有强烈的时序属性。 * OGC WMS 规范定义了标准的 <code>TIME</code> 参数：</h4>
-<pre><code class="language-text">https://.../wms?SERVICE=WMS&amp;REQUEST=GetMap&amp;LAYERS=...&amp;TIME=2026-10-15T10:00:00.000Z
-</code></pre>
+<h4>1. WMS 时间维度规范（WMS-T / <code>TIME</code> 参数）</h4>
 <ul>
+<li>在气象监测（雷达、卫星云图、台风路径）、海洋洋流、空气质量监测等业务场景中，地学栅格具有强烈的时序属性。</li>
+<li>OGC WMS 规范定义了标准的 <code>TIME</code> 参数：<pre><code class="language-text">https://.../wms?SERVICE=WMS&amp;REQUEST=GetMap&amp;LAYERS=...&amp;TIME=2026-10-15T10:00:00.000Z
+</code></pre>
+</li>
 <li>时间参数格式采用 ISO 8601 标准字符串（UTC 时间）。</li>
 </ul>
-<h4>2. 原地热更新与双缓冲平滑过渡：<code>updateParams({&#39;TIME&#39;: ...})</code> * <strong>传统重置图层的痛点</strong>：如果每次切换时间帧都调用 <code>layer.setSource(newSource)</code>，上一时刻的瓦片会瞬间消失，造成强烈的白屏闪烁。 * <strong><code>source.updateParams({&#39;TIME&#39;: isoString})</code> 的优雅机制</strong>：</h4>
+<h4>2. 原地热更新与双缓冲平滑过渡：<code>updateParams({&#39;TIME&#39;: ...})</code></h4>
 <ul>
+<li><strong>传统重置图层的痛点</strong>：如果每次切换时间帧都调用 <code>layer.setSource(newSource)</code>，上一时刻的瓦片会瞬间消失，造成强烈的白屏闪烁。</li>
+<li><strong><code>source.updateParams({&#39;TIME&#39;: isoString})</code> 的优雅机制</strong>：<ul>
 <li>OpenLayers 内部维护了瓦片双缓冲机制（Tile Double Buffering）；</li>
 <li>当调用 <code>updateParams</code> 修改查询参数时，数据源会保留旧时间帧的瓦片继续在屏幕上显示；</li>
 <li>只有当新时间帧对应的所有新瓦片在后台完全下载解码完毕后，OpenLayers 才会平滑切换到新时间帧，实现毫无闪烁的电影级连续雷达播放！</li>
+</ul>
+</li>
 </ul>
 </div>
       </div>
@@ -353,16 +361,28 @@ stopButton.addEventListener(&#x27;click&#x27;, stop, false);
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

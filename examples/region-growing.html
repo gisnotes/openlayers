@@ -121,7 +121,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-spy.html&quot;&gt;Layer Spy / 图层探照灯（透镜探查）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe / 图层卷帘对比&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./magnify.html&quot;&gt;Magnify / 局部放大镜（像素插值放大）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer / 深度集成 Mapbox GL JS 渲染引擎图层&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析&lt;/a&gt;
@@ -169,43 +169,54 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Grow a region from a seed pixel. / 演示如何使用 ol/source/Raster 在 Web Worker 中执行图像级（image operation）区域生长算法（Region Growing / 泛洪填充），根据点击种子点与颜色容差动态提取连通地物。</p>
-        <div id="docs"><p>Click a region on the map. The computed region will be red.</p> <p>
+        <div id="docs"><p>Click a region on the map. The computed region will be red.</p>
+<p>
   This example uses a <code>ol/source/Raster</code> to generate data
   based on another source.  The raster source accepts any number of
   input sources (tile or image based) and runs a pipeline of
   operations on the input data.  The return from the final
   operation is used as the data for the output source.
-</p> <p>
+</p>
+<p>
   In this case, a single tiled source of imagery data is used as input.
   The region is calculated in a single "image" operation using the "seed"
   pixel provided by the user clicking on the map. The "threshold" value
   determines whether a given contiguous pixel belongs to the "region" - the
   difference between a candidate pixel's RGB values and the seed values must
   be below the threshold.
-</p> <p>
+</p>
+<p>
   This example also shows how an additional function can be made available
   to the operation.
-</p>
-<p>点击地图上的任意区域，系统将以该点击位置为种子点，动态计算并用红色渲染出连通分割区域。</p> <p>
+</p><p>点击地图上的任意区域，系统将以该点击位置为种子点，动态计算并用红色渲染出连通分割区域。</p>
+<p>
   本示例利用 <code>ol/source/Raster</code> 的 <code>operationType: 'image'</code> 整图运算模式，在后台 Web Worker 中运行经典的区域生长（Region Growing / Flood Fill）空间图像分割算法。
-  当用户点击地图时，地图坐标被转换为光栅像素种子，算法以广度优先搜索（BFS）向四周 4-邻域扩散；若相邻像素与种子像素的 RGB 颜色差异低于滑块设定的容差阈值（Threshold），则将其归入目标区域并高亮着色，实现纯前端、零服务端的交互式遥感水体或农田图斑提取。
-</p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. 核心架构与设计机制 (Core Architecture & Mechanics) - <strong>整图操作模式 (`operationType: 'image'`)</strong>：
-  通常的 `RasterSource` 采用逐像素模式（`pixel` 模式），每次函数调用只能访问单点孤立的像素数组 `[R, G, B, A]`，无法获知相邻像素信息。而将 `operationType` 设为 `'image'` 时：
-  - Web Worker 接收到完整的 `ImageData` 对象（包含 `width`、`height` 与连续紧凑的 `Uint8ClampedArray` 数据缓冲区）；
-  - 开发者可以自由实现依赖空间拓扑与邻域遍历的高级算子（如区域生长、Sobel 边缘检测、高斯模糊、腐蚀膨胀等）。
-- <strong>广度优先搜索（BFS）区域生长状态机</strong>：
-  算法采用双缓冲边缘队列（`edge` 与 `newedge`）：
-  1. 从种子像素索引 `seedIdx` 开始，读取基准色 $(R_{seed}, G_{seed}, B_{seed})$；
-  2. 弹出当前边缘像素，调用 `next4Edges` 检查上、下、左、右 4-邻域；
-  3. 判定颜色欧氏相似度：$|R - R_{seed}| < \Delta \land |G - G_{seed}| < \Delta \land |B - B_{seed}| < \Delta$；
-  4. 命中像素在输出缓冲区染为红色，并将其压入下一轮生长边界；
-  5. <strong>原地访问标记（In-place Visited Flag）</strong>：巧妙将输入像素的 Alpha 通道置零（`inputData[ci + 3] = 0`），无需额外分配庞大的布尔访问标记矩阵，彻底杜绝回溯死循环并优化垃圾回收。<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns) - <strong>视口坐标到光栅像素坐标的映射</strong>：</h4>
-<pre><code class="language-javascript">map.on(&#39;click&#39;, function (event) {
+  当用户点击地图时，地图坐标被转换为栅格像素种子，算法以广度优先搜索（BFS）向四周 4-邻域扩散；若相邻像素与种子像素的 RGB 颜色差异低于滑块设定的容差阈值（Threshold），则将其归入目标区域并高亮着色，实现纯前端、零服务端的交互式遥感水体或农田图斑提取。
+</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计机制 (Core Architecture &amp; Mechanics)</h4>
+<ul>
+<li><strong>整图操作模式 (<code>operationType: &#39;image&#39;</code>)</strong>：
+通常的 <code>RasterSource</code> 采用逐像素模式（<code>pixel</code> 模式），每次函数调用只能访问单点孤立的像素数组 <code>[R, G, B, A]</code>，无法获知相邻像素信息。而将 <code>operationType</code> 设为 <code>&#39;image&#39;</code> 时：<ul>
+<li>Web Worker 接收到完整的 <code>ImageData</code> 对象（包含 <code>width</code>、<code>height</code> 与连续紧凑的 <code>Uint8ClampedArray</code> 数据缓冲区）；</li>
+<li>开发者可以自由实现依赖空间拓扑与邻域遍历的高级算子（如区域生长、Sobel 边缘检测、高斯模糊、腐蚀膨胀等）。</li>
+</ul>
+</li>
+<li><strong>广度优先搜索（BFS）区域生长状态机</strong>：
+算法采用双缓冲边缘队列（<code>edge</code> 与 <code>newedge</code>）：<ol>
+<li>从种子像素索引 <code>seedIdx</code> 开始，读取基准色 $(R_{seed}, G_{seed}, B_{seed})$；</li>
+<li>弹出当前边缘像素，调用 <code>next4Edges</code> 检查上、下、左、右 4-邻域；</li>
+<li>判定颜色欧氏相似度：$|R - R_{seed}| &lt; \Delta \land |G - G_{seed}| &lt; \Delta \land |B - B_{seed}| &lt; \Delta$；</li>
+<li>命中像素在输出缓冲区染为红色，并将其压入下一轮生长边界；</li>
+<li><strong>原地访问标记（In-place Visited Flag）</strong>：巧妙将输入像素的 Alpha 通道置零（<code>inputData[ci + 3] = 0</code>），无需额外分配庞大的布尔访问标记矩阵，彻底杜绝回溯死循环并优化垃圾回收。</li>
+</ol>
+</li>
+</ul>
+<h4>2. 关键代码解析与 API 模式 (Code Deep Dive &amp; API Patterns)</h4>
+<ul>
+<li><strong>视口坐标到栅格像素坐标的映射</strong>：<pre><code class="language-javascript">map.on(&#39;click&#39;, function (event) {
   coordinate = event.coordinate; // 记录地理坐标
-  raster.changed();              // 触发光栅数据源重新执行计算
+  raster.changed();              // 触发栅格数据源重新执行计算
 });
 
 raster.on(&#39;beforeoperations&#39;, function (event) {
@@ -217,10 +228,12 @@ raster.on(&#39;beforeoperations&#39;, function (event) {
   }
 });
 </code></pre>
-<p>  通过在 <code>beforeoperations</code> 中完成坐标系换算，将轻量级的 <code>{pixel, delta}</code> 纯数据对象传递至后台 Worker，保持前后端数据交互契约解耦。</p>
-<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices) - <strong>长任务与大视口堆栈溢出防护</strong>：</h4>
-<p>  区域生长若采用传统递归实现，在高分辨率大屏幕（如 4K 屏幕，数百万像素）遇到大面积纯色湖泊或天空时，极易发生 <code>Maximum call stack size exceeded</code> 调用栈崩溃。本示例采用<strong>迭代式队列（while-loop BFS）</strong>与边缘数组双缓冲，完全规避了栈溢出风险。</p>
+通过在 <code>beforeoperations</code> 中完成坐标系换算，将轻量级的 <code>{pixel, delta}</code> 纯数据对象传递至后台 Worker，保持前后端数据交互契约解耦。</li>
+</ul>
+<h4>3. 工程避坑与高可用实践 (Production Pitfalls &amp; Best Practices)</h4>
 <ul>
+<li><strong>长任务与大视口堆栈溢出防护</strong>：
+区域生长若采用传统递归实现，在高分辨率大屏幕（如 4K 屏幕，数百万像素）遇到大面积纯色湖泊或天空时，极易发生 <code>Maximum call stack size exceeded</code> 调用栈崩溃。本示例采用<strong>迭代式队列（while-loop BFS）</strong>与边缘数组双缓冲，完全规避了栈溢出风险。</li>
 <li><strong>跨视口重绘时种子点失效处理</strong>：
 当用户点击确定种子点后，若随后拖拽平移了地图视口，屏幕像素坐标对应的地理目标会发生偏移。生产项目中建议记录地理坐标（Coordinate），并在每次重绘时根据最新的视口位置重新调用 <code>map.getPixelFromCoordinate(coordinate)</code> 计算新的种子像素；若种子点已滑出当前视口，则直接提前返回原始图像，防止出现错误的定位投影。</li>
 </ul>
@@ -336,7 +349,7 @@ const imagery &#x3D; new TileLayer({
   }),
 });
 
-// Raster source configured with image-level operation / 配置为整图运算模式的光栅数据源
+// Raster source configured with image-level operation / 配置为整图运算模式的栅格数据源
 const raster &#x3D; new RasterSource({
   sources: [imagery.getSource()],
   operationType: &#x27;image&#x27;,
@@ -347,7 +360,7 @@ const raster &#x3D; new RasterSource({
   },
 });
 
-// Semi-transparent overlay displaying computed segmented region / 半透明光栅图层展示计算得出的分割区域
+// Semi-transparent overlay displaying computed segmented region / 半透明栅格图层展示计算得出的分割区域
 const rasterImage &#x3D; new ImageLayer({
   opacity: 0.7,
   source: raster,
@@ -366,7 +379,7 @@ const map &#x3D; new Map({
 let coordinate;
 
 // Click event records geographic seed coordinate and triggers re-computation
-// 点击地图记录种子地理坐标，并触发光栅数据源重新计算
+// 点击地图记录种子地理坐标，并触发栅格数据源重新计算
 map.on(&#x27;click&#x27;, function (event) {
   coordinate &#x3D; event.coordinate;
   raster.changed();
@@ -463,16 +476,28 @@ thresholdControl.addEventListener(&#x27;input&#x27;, function () {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

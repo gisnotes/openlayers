@@ -124,27 +124,43 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Demonstrates how the view&#x27;s minimum zoom level can be changed. / 演示如何动态更新 View 的最小缩放级别（minZoom），防止地图在宽屏下横向多次平铺重复。</p>
-        <div id="docs"><h2>The <code>minZoom</code> option for a view limits how far out you can zoom.  This property can be updated by calling <code>view.setMinZoom(newMinZoom)</code>. In this example, the minimum zoom level is set so that you only see one world at a time.  Resize your browser window to change the threshold.
-视图（View）的 <code>minZoom</code> 选项用于严格限制地图视口可缩放的最大全局视野（即数值最小的级别）。该属性可在运行时通过调用 <code>view.setMinZoom(newMinZoom)</code> 动态更改。本示例根据当前浏览器窗口的物理像素宽度，通过对数公式动态计算 <code>minZoom</code>，确保视口中横向刚好仅完整呈现单个世界地图，消除瓦片重复拼接；缩放浏览器窗口时将实时重算并生效。</h2>
+        <div id="docs"><p>The <code>minZoom</code> option for a view limits how far out you can
+zoom.  This property can be updated by calling <code>view.setMinZoom(newMinZoom)</code>.
+In this example, the minimum zoom level is set so that you only see one
+world at a time.  Resize your browser window to change the threshold.</p>
+<p>视图（View）的 <code>minZoom</code> 选项用于严格限制地图视口可缩放的最大全局视野（即数值最小的级别）。该属性可在运行时通过调用 <code>view.setMinZoom(newMinZoom)</code> 动态更改。本示例根据当前浏览器窗口的物理像素宽度，通过对数公式动态计算 <code>minZoom</code>，确保视口中横向刚好仅完整呈现单个世界地图，消除瓦片重复拼接；缩放浏览器窗口时将实时重算并生效。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 核心架构原理 (Core Architecture) 在 Web 墨卡托投影（EPSG:3857）的标准金字塔切片模型中，缩放级别 $z=0$ 时整个地球被切为一个 $256 \times 256$ 像素的正方形切片。随着缩放级别 $z$ 递增，切片像素总宽度为 $256 \times 2^z$。 - <strong>宽屏下的多世界平铺（World Wrapping）</strong>：若地图容器宽度 $W &gt; 256$，在 $z=0$ 时容器内横向会重复绘制多个拼接的世界地图，这在桌面宽屏或大屏监控场景下极度影响审美与交互逻辑。 - <strong>单世界自适应临界级别解算</strong>：要确保屏幕宽度刚好不超过单个世界宽度，必须满足：</h4>
-<p>  $$256 \times 2^z \ge W \implies 2^z \ge \frac{W}{256} \implies z \ge \log_2\left(\frac{W}{256}\right)$$
-  利用换底公式与 JavaScript 的 <code>Math.LOG2E</code>（即 $\log_2(e)$）：
-  $$z_{\min} = \lceil \log_2(e) \cdot \ln(W / 256) \rceil$$</p>
+<h4>1. 核心架构原理 (Core Architecture)</h4>
+<p>在 Web 墨卡托投影（EPSG:3857）的标准金字塔切片模型中，缩放级别 $z=0$ 时整个地球被切为一个 $256 \times 256$ 像素的正方形切片。随着缩放级别 $z$ 递增，切片像素总宽度为 $256 \times 2^z$。</p>
 <ul>
+<li><strong>宽屏下的多世界平铺（World Wrapping）</strong>：若地图容器宽度 $W &gt; 256$，在 $z=0$ 时容器内横向会重复绘制多个拼接的世界地图，这在桌面宽屏或大屏监控场景下极度影响审美与交互逻辑。</li>
+<li><strong>单世界自适应临界级别解算</strong>：要确保屏幕宽度刚好不超过单个世界宽度，必须满足：
+$$256 \times 2^z \ge W \implies 2^z \ge \frac{W}{256} \implies z \ge \log_2\left(\frac{W}{256}\right)$$
+利用换底公式与 JavaScript 的 <code>Math.LOG2E</code>（即 $\log_2(e)$）：
+$$z_{\min} = \lceil \log_2(e) \cdot \ln(W / 256) \rceil$$</li>
 <li><strong>动态视口监听与运行时热更</strong>：通过监听 <code>window.resize</code> 事件，动态获取 <code>viewport.clientWidth</code>，并在值变动时触发 <code>view.setMinZoom(minZoom)</code>，OpenLayers 内部的约束器（Constraint Engine）会自动平滑钳制当前视口，防止出现多世界视效。</li>
 </ul>
-<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript // 1. 基于视口像素宽度动态推导最小限制缩放级别 function getMinZoom() {</h4>
-<p>  const width = viewport.clientWidth;
+<h4>2. 关键实现与代码拆解 (Code Deep Dive)</h4>
+<pre><code class="language-javascript">// 1. 基于视口像素宽度动态推导最小限制缩放级别
+function getMinZoom() {
+  const width = viewport.clientWidth;
   return Math.ceil(Math.LOG2E * Math.log(width / 256));
 }
-// 2. 窗口尺寸调整时动态钳制 window.addEventListener(&#39;resize&#39;, function () {
+
+// 2. 窗口尺寸调整时动态钳制
+window.addEventListener(&#39;resize&#39;, function () {
   const minZoom = getMinZoom();
   if (minZoom !== view.getMinZoom()) {
     view.setMinZoom(minZoom);
   }
-}); ```</p>
-<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>Resize 防抖优化</strong>：<code>window.addEventListener('resize')</code> 在用户拖拽窗体时会高频触发，生产环境中建议使用防抖（Debounce）或 <code>requestAnimationFrame</code> 延迟 100~200ms 执行，避免持续引发 View 的约束重算。 - <strong><code>multiWorld: false</code> 备选方案</strong>：若业务完全禁止横向跨周期连续滚动，可在创建 <code>View</code> 时设置 <code>multiWorld: false</code>，但此设置会使地图在世界东西边缘硬性截断；动态 <code>minZoom</code> 方案既保留了自然的环球漫游，又杜绝了宽屏平铺的多世界瑕疵。</h4>
+});
+</code></pre>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls)</h4>
+<ul>
+<li><strong>Resize 防抖优化</strong>：<code>window.addEventListener('resize')</code> 在用户拖拽窗体时会高频触发，生产环境中建议使用防抖（Debounce）或 <code>requestAnimationFrame</code> 延迟 100~200ms 执行，避免持续引发 View 的约束重算。</li>
+<li><strong><code>multiWorld: false</code> 备选方案</strong>：若业务完全禁止横向跨周期连续滚动，可在创建 <code>View</code> 时设置 <code>multiWorld: false</code>，但此设置会使地图在世界东西边缘硬性截断；动态 <code>minZoom</code> 方案既保留了自然的环球漫游，又杜绝了宽屏平铺的多世界瑕疵。</li>
+</ul>
 </div>
       </div>
 
@@ -253,16 +269,28 @@ window.addEventListener(&#x27;resize&#x27;, function () {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

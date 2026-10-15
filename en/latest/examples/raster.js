@@ -39,7 +39,7 @@ var aerial = new ImageTileSource({
 });
 /**
 * Raster source executing VGI operation and threshold coloring in Web Worker.
-* 在 Web Worker 中执行 VGI 运算与阈值着色的光栅数据源
+* 在 Web Worker 中执行 VGI 运算与阈值着色的栅格数据源
 */
 var raster = new RasterSource({
 	sources: [aerial],

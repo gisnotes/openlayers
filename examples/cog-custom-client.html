@@ -117,11 +117,28 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Rendering a COG with a custom loader function. / 通过自定义 loader 函数为 COG 遥感切片请求注入认证头 (Token/Bearer) 或重试/缓存逻辑。</p>
-        <div id="docs"><h2>Tiled data from a Cloud Optimized GeoTIFF (COG) can be rendered as a layer.  In this example, a custom loader function is provided to handle requests with custom headers or authentication logic. The loader receives the URL, headers, and an abort signal, and must return a Response object.
-云优化 GeoTIFF（COG）中的平铺数据可以通过图层进行呈现。在本示例中，配置了一个自定义的加载函数（<code>loader</code>），用于处理带有自定义请求头（Headers）或认证授权逻辑的网络请求。加载函数接收目标 URL、请求头信息和中止信号（<code>AbortSignal</code>），并且必须返回一个原生的 <code>Response</code> 对象。</h2>
+        <div id="docs"><p>Tiled data from a Cloud Optimized GeoTIFF (COG) can be rendered as a layer.  In this
+example, a custom loader function is provided to handle requests with custom headers
+or authentication logic. The loader receives the URL, headers, and an abort signal,
+and must return a Response object.</p>
+<p>云优化 GeoTIFF（COG）中的平铺数据可以通过图层进行呈现。在本示例中，配置了一个自定义的加载函数（<code>loader</code>），用于处理带有自定义请求头（Headers）或认证授权逻辑的网络请求。加载函数接收目标 URL、请求头信息和中止信号（<code>AbortSignal</code>），并且必须返回一个原生的 <code>Response</code> 对象。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 为什么需要自定义 <code>loader</code> 函数？ 在商业 GIS 与企业级遥感项目中，遥感影像通常存储在受严格权限保护的对象存储中（如 AWS S3 私有存储桶、Google Cloud Storage、Azure Blob 或带有鉴权网关的反向代理服务）。 * <strong>Bearer 令牌与 API 密钥</strong>：请求每个切片时必须携带 <code>Authorization: Bearer &lt;token&gt;</code> 或专有签名头。 * <strong>自定义缓存与离线代理</strong>：结合 ServiceWorker 或 Cache API 进行瓦片持久化。 * <strong>网络重试与熔断机制</strong>：对因为临时网络波动（如 503/429 限流）失败的 Range 请求执行指数退避重试（Exponential Backoff）。</h4>
-<h4>2. <code>loader(url, headers, abortSignal)</code> 规范 <code>ol/source/GeoTIFF</code> 中的 <code>loader</code> 拥有清晰严谨的签名契约： * <strong><code>url</code></strong>：请求的目标切片或元数据文件的完整 URI。 * <strong><code>headers</code></strong>：OpenLayers 和 geotiff.js 自动生成的默认请求头（最关键的是包含类似 <code>Range: bytes=1024-4095</code> 的字节范围头）。<strong>开发者必须保留这些头信息</strong>（例如通过展开运算符 <code>{...headers, &#39;Authorization&#39;: &#39;...&#39;}</code>），否则无法按需拉取局部字节！ * <strong><code>abortSignal</code></strong>：一个 <code>AbortSignal</code> 实例。当用户快速拖拽平移或连续滚轮缩放地图时，先前视口内尚未完成下载的瓦片会瞬间失效。OpenLayers 会触发中止信号，<code>fetch</code> 自动将未完成的 HTTP 连接切断，避免带宽挤占与无效等待。 * <strong>返回值</strong>：必须返回一个 Promise，且 resolve 的内容必须是标准 Web API 的 <code>Response</code> 实例。</h4>
+<h4>1. 为什么需要自定义 <code>loader</code> 函数？</h4>
+<p>在商业 GIS 与企业级遥感项目中，遥感影像通常存储在受严格权限保护的对象存储中（如 AWS S3 私有存储桶、Google Cloud Storage、Azure Blob 或带有鉴权网关的反向代理服务）。</p>
+<ul>
+<li><strong>Bearer 令牌与 API 密钥</strong>：请求每个切片时必须携带 <code>Authorization: Bearer &lt;token&gt;</code> 或专有签名头。</li>
+<li><strong>自定义缓存与离线代理</strong>：结合 ServiceWorker 或 Cache API 进行瓦片持久化。</li>
+<li><strong>网络重试与熔断机制</strong>：对因为临时网络波动（如 503/429 限流）失败的 Range 请求执行指数退避重试（Exponential Backoff）。</li>
+</ul>
+<h4>2. <code>loader(url, headers, abortSignal)</code> 规范</h4>
+<p><code>ol/source/GeoTIFF</code> 中的 <code>loader</code> 拥有清晰严谨的签名契约：</p>
+<ul>
+<li><strong><code>url</code></strong>：请求的目标切片或元数据文件的完整 URI。</li>
+<li><strong><code>headers</code></strong>：OpenLayers 和 geotiff.js 自动生成的默认请求头（最关键的是包含类似 <code>Range: bytes=1024-4095</code> 的字节范围头）。<strong>开发者必须保留这些头信息</strong>（例如通过展开运算符 <code>{...headers, &#39;Authorization&#39;: &#39;...&#39;}</code>），否则无法按需拉取局部字节！</li>
+<li><strong><code>abortSignal</code></strong>：一个 <code>AbortSignal</code> 实例。当用户快速拖拽平移或连续滚轮缩放地图时，先前视口内尚未完成下载的瓦片会瞬间失效。OpenLayers 会触发中止信号，<code>fetch</code> 自动将未完成的 HTTP 连接切断，避免带宽挤占与无效等待。</li>
+<li><strong>返回值</strong>：必须返回一个 Promise，且 resolve 的内容必须是标准 Web API 的 <code>Response</code> 实例。</li>
+</ul>
 </div>
       </div>
 
@@ -234,16 +251,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

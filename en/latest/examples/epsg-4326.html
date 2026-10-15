@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>EPSG:4326</title>
+    <title>EPSG:4326 / EPSG:4326 经纬度地理坐标系与度数比例尺</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">EPSG:4326</h4>
+        <h4 id="title">EPSG:4326 / EPSG:4326 经纬度地理坐标系与度数比例尺</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,7 +74,7 @@
               data-bs-target="#tag-example-list"
               data-title="epsg4326"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./epsg-4326.html&quot;&gt;EPSG:4326&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./epsg-4326.html&quot;&gt;EPSG:4326 / EPSG:4326 经纬度地理坐标系与度数比例尺&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-4326.html&quot;&gt;Vector tiles in EPSG:4326 / EPSG:4326 坐标系矢量切片&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
@@ -102,8 +102,29 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of a map in EPSG:4326.</p>
+        <p id="shortdesc">Example of a map in EPSG:4326. / 演示如何构建原生 EPSG:4326 地理经纬度投影地图并挂载以“度(degrees)”为单位的比例尺控件。</p>
         <div id="docs"><p>This example shows how to create a map in EPSG:4326.</p>
+<p>本示例展示了如何创建基于原生 <code>EPSG:4326</code>（WGS 84 大地坐标系）的地图视口。当地图运行在 EPSG:4326 下时，横轴为经度（-180° ~ 180°），纵轴为纬度（-90° ~ 90°），以等距圆柱投影（Equirectangular / Plate Carrée）铺展全图，并演示了如何配置以角度“度（degrees）”为测量单位的比例尺控件。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
+<ul>
+<li><strong>EPSG:4326 原生支持与 Plate Carrée 投影</strong>：
+OpenLayers 内置对 <code>EPSG:3857</code> 与 <code>EPSG:4326</code> 的原生支持（无需加载 proj4js）。在 EPSG:4326 视图下，经纬度直接等比例映射为平面直角笛卡尔坐标 $(x, y)$。虽然在高纬度地区会出现横向拉伸变形，但在全球尺度统计、气候气象云图及遥感网格数据呈现中应用极为普遍。</li>
+<li><strong>角度单位比例尺适配</strong>：
+由于经纬度属于角坐标而非公制米，在不同纬度上 1 经度的实际物理地面距离不同（赤道约为 111km，极点为 0）。配置 <code>new ScaleLine({ units: 'degrees' })</code> 可以直接以度数展示空间标尺。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>view: new View({ projection: 'EPSG:4326', center: [0, 0], zoom: 2 })</code>：
+视口明确声明采用 <code>EPSG:4326</code>。此时 <code>center</code> 的坐标直接以经纬度 <code>[lon, lat]</code> 解释，无需经过任何坐标转换函数。</li>
+<li><code>TileWMS</code> 的坐标系协商：
+OpenLayers 会自动向 GeoServer 发送匹配当前视图的 WMS 请求参数（如 <code>CRS=EPSG:4326</code>），服务端直接输出未经墨卡托投影的切片。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
+<ul>
+<li><strong>与主流商业底图（OSM/Google）混用冲突</strong>：
+几乎所有公网主流商业切片原生均为 <code>EPSG:3857</code>。如果将它们直接放入 <code>EPSG:4326</code> 的地图中，OpenLayers 会启动客户端动态重投影（Reprojection），带来一定的性能开销。因此若需原生流畅呈现 EPSG:4326，底图服务最好直接支持 4326 切片。</li>
+</ul>
 </div>
       </div>
 
@@ -154,7 +175,7 @@ const map &#x3D; new Map({
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;EPSG:4326&lt;/title&gt;
+    &lt;title&gt;EPSG:4326 / EPSG:4326 经纬度地理坐标系与度数比例尺&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -200,16 +221,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

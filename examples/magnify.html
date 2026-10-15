@@ -116,7 +116,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-spy.html&quot;&gt;Layer Spy / 图层探照灯（透镜探查）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe / 图层卷帘对比&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./magnify.html&quot;&gt;Magnify / 局部放大镜（像素插值放大）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer / 深度集成 Mapbox GL JS 渲染引擎图层&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析&lt;/a&gt;
@@ -157,18 +157,30 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Show a magnified version of imagery under the pointer / 在鼠标指针下方以高倍率插值放大显示局部遥感影像。</p>
-        <div id="docs"><p>This example makes use of the <code>postrender</code> event listener to oversample imagery in a circle around the pointer location.  Listeners for this event have access to the Canvas context and can manipulate image data.</p> <p>Move around the map to see the effect.  Use the ↑ up and ↓ down arrow keys to adjust the magnified circle size.</p>
-<p>本示例演示了如何通过 <code>postrender</code> 事件监听器对鼠标指针下方的遥感影像进行像素级超采样（Oversampling）与局部放大。事件监听器可以访问图层的 Canvas 2D 绘图上下文，直接读取并重构指定视口包围盒内的像素数据，实现实时圆形放大镜效果。</p> <p>在地图上移动鼠标即可查看放大镜效果。使用键盘方向键 ↑（向上）和 ↓（向下）可动态调整放大镜的圆形透镜尺寸（25px ~ 150px）。</p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. 像素重采样与局部放大数学模型 (Oversampling & Magnification Math) - <strong>局部视口采样包围盒</strong>: 以鼠标物理像素 $(centerX, centerY)$ 为几何中心，计算边长为 $size = 2 \times radius + 1$ 的外接正方形区域，调用 `context.getImageData(originX, originY, size, size)` 提取该正方形内的原始像素矩阵。 - <strong>极坐标几何采样与 2x 缩放映射</strong>:
-  - 对于目标缓冲区中的每个像素 $(i, j)$，计算其相对于正方形中心 $(half, half)$ 的欧氏距离 $dist = \sqrt{\Delta i^2 + \Delta j^2}$；
-  - 当 $dist < radius$（即位于圆形透镜内部）时，采样坐标映射为：
-    $$sourceI = \text{round}\left(half + \frac{\Delta i}{2}\right), \quad sourceJ = \text{round}\left(half + \frac{\Delta j}{2}\right)$$
-    相当于从中心向外缩放了 2 倍，实现无缝局域像素放大；
-  - 圆形外部像素保持 $sourceI = i, sourceJ = j$ 不做放大。
-- <strong>透镜边缘描边与视觉修饰</strong>: 像素写回后，调用 `context.arc(centerX, centerY, half, 0, 2 * Math.PI)` 为透镜绘制半透明白色高亮轮廓，形成逼真的光学放大镜质感。
-#### 2. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices) - <strong>数字插值拉伸 vs 真实层级切片</strong>: 本例算法本质为近邻像素重采样（数字放大），当地图瓦片分辨率受限时，放大区域会出现阶梯状马赛克或模糊伪影。在追求真实清晰度的 GIS 项目中，更理想的方案是在放大镜内部嵌套渲染高缩放级别（如 $z + 2$）的高清切片源。 - <strong>视口边缘越界安全防线</strong>: 当光标移动到地图边缘（例如最左侧或最上端）时，$originX < 0$ 或 $originY < 0$，调用 `getImageData` 会因越界抛出 `IndexSizeError` 异常中断渲染。生产环境中需使用 `Math.max(0, ...)` 进行边界防范或对裁剪区域求交。 - <strong>单例离屏 Canvas 性能优化</strong>: 示例在每次鼠标移动渲染帧中频繁调用 `createImageData` 分配内存，在持续高速拖拽或高刷屏上会引起轻度 GC 压力。可通过预先维护一个固定尺寸的最大离屏 Canvas 缓冲区反复重用，减少垃圾回收开销。
+        <div id="docs"><p>This example makes use of the <code>postrender</code> event listener to
+oversample imagery in a circle around the pointer location.  Listeners for this event have access to the Canvas context and can manipulate image data.</p>
+<p>Move around the map to see the effect.  Use the ↑ up and ↓ down arrow keys to adjust the magnified circle size.</p><p>本示例演示了如何通过 <code>postrender</code> 事件监听器对鼠标指针下方的遥感影像进行像素级超采样（Oversampling）与局部放大。事件监听器可以访问图层的 Canvas 2D 绘图上下文，直接读取并重构指定视口包围盒内的像素数据，实现实时圆形放大镜效果。</p>
+<p>在地图上移动鼠标即可查看放大镜效果。使用键盘方向键 ↑（向上）和 ↓（向下）可动态调整放大镜的圆形透镜尺寸（25px ~ 150px）。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 像素重采样与局部放大数学模型 (Oversampling &amp; Magnification Math)</h4>
+<ul>
+<li><strong>局部视口采样包围盒</strong>: 以鼠标物理像素 $(centerX, centerY)$ 为几何中心，计算边长为 $size = 2 \times radius + 1$ 的外接正方形区域，调用 <code>context.getImageData(originX, originY, size, size)</code> 提取该正方形内的原始像素矩阵。</li>
+<li><strong>极坐标几何采样与 2x 缩放映射</strong>:<ul>
+<li>对于目标缓冲区中的每个像素 $(i, j)$，计算其相对于正方形中心 $(half, half)$ 的欧氏距离 $dist = \sqrt{\Delta i^2 + \Delta j^2}$；</li>
+<li>当 $dist &lt; radius$（即位于圆形透镜内部）时，采样坐标映射为：
+$$sourceI = \text{round}\left(half + \frac{\Delta i}{2}\right), \quad sourceJ = \text{round}\left(half + \frac{\Delta j}{2}\right)$$
+相当于从中心向外缩放了 2 倍，实现无缝局域像素放大；</li>
+<li>圆形外部像素保持 $sourceI = i, sourceJ = j$ 不做放大。</li>
+</ul>
+</li>
+<li><strong>透镜边缘描边与视觉修饰</strong>: 像素写回后，调用 <code>context.arc(centerX, centerY, half, 0, 2 * Math.PI)</code> 为透镜绘制半透明白色高亮轮廓，形成逼真的光学放大镜质感。</li>
+</ul>
+<h4>2. 生产实践陷阱与避坑指南 (Production Pitfalls &amp; Best Practices)</h4>
+<ul>
+<li><strong>数字插值拉伸 vs 真实层级切片</strong>: 本例算法本质为近邻像素重采样（数字放大），当地图瓦片分辨率受限时，放大区域会出现阶梯状马赛克或模糊伪影。在追求真实清晰度的 GIS 项目中，更理想的方案是在放大镜内部嵌套渲染高缩放级别（如 $z + 2$）的高清切片源。</li>
+<li><strong>视口边缘越界安全防线</strong>: 当光标移动到地图边缘（例如最左侧或最上端）时，$originX &lt; 0$ 或 $originY &lt; 0$，调用 <code>getImageData</code> 会因越界抛出 <code>IndexSizeError</code> 异常中断渲染。生产环境中需使用 <code>Math.max(0, ...)</code> 进行边界防范或对裁剪区域求交。</li>
+<li><strong>单例离屏 Canvas 性能优化</strong>: 示例在每次鼠标移动渲染帧中频繁调用 <code>createImageData</code> 分配内存，在持续高速拖拽或高刷屏上会引起轻度 GC 压力。可通过预先维护一个固定尺寸的最大离屏 Canvas 缓冲区反复重用，减少垃圾回收开销。</li>
+</ul>
 </div>
       </div>
 
@@ -362,16 +374,28 @@ imagery.on(&#x27;postrender&#x27;, function (event) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

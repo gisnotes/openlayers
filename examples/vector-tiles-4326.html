@@ -93,7 +93,7 @@
               data-bs-target="#tag-example-list"
               data-title="epsg4326"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./epsg-4326.html&quot;&gt;EPSG:4326&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./epsg-4326.html&quot;&gt;EPSG:4326 / EPSG:4326 经纬度地理坐标系与度数比例尺&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-tiles-4326.html&quot;&gt;Vector tiles in EPSG:4326 / EPSG:4326 坐标系矢量切片&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
@@ -151,7 +151,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-spy.html&quot;&gt;Layer Spy / 图层探照灯（透镜探查）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe / 图层卷帘对比&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./magnify.html&quot;&gt;Magnify / 局部放大镜（像素插值放大）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer / 深度集成 Mapbox GL JS 渲染引擎图层&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析&lt;/a&gt;
@@ -178,14 +178,14 @@
               data-bs-target="#tag-example-list"
               data-title="grid"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles-advanced.html&quot;&gt;Advanced Mapbox Vector Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-ign.html&quot;&gt;IGN WMTS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles-advanced.html&quot;&gt;Advanced Mapbox Vector Tiles / Mapbox 矢量切片进阶：跨层级复用与移动端流量节省&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-ign.html&quot;&gt;IGN WMTS / 法国国家地理 IGN 官方 WMTS 底图服务&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./print-to-scale.html&quot;&gt;Print to scale example / 按指定比例尺高精打印导出 PDF&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection / 多投影栅格数据动态重投影&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./vector-tiles-4326.html&quot;&gt;Vector tiles in EPSG:4326 / EPSG:4326 坐标系矢量切片&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-custom-tilegrid-512x256.html&quot;&gt;WMS 512x256 Tiles / WMS 512x256 自定义矩形瓦片网格&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts.html&quot;&gt;WMTS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-dimensions.html&quot;&gt;WMTS Tile Transitions&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts.html&quot;&gt;WMTS / 手动配置 WMTS 瓦片服务图层&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-dimensions.html&quot;&gt;WMTS Tile Transitions / WMTS 多维时空与平滑切片过渡&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >8</a>
@@ -213,24 +213,32 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example showing vector tiles in EPSG:4326 (styled using ol-mapbox-style) / 演示基于 MapTiler 在 EPSG:4326 地理坐标系下加载矢量切片并使用 ol-mapbox-style 渲染样式。</p>
-        <div id="docs"><p>Example showing vector tiles in EPSG:4326 (styled using `ol-mapbox-style`) loaded from maptiler.com.</p> <p><strong>Note</strong>: Make sure to get your own API key at https://www.maptiler.com/cloud/ when using this example. No map will be visible when the API key has expired.</p> <p>本示例演示如何直接在 WGS84 地理坐标系（EPSG:4326）下加载来自 MapTiler 的矢量切片，并借助 <code>ol-mapbox-style</code> 库将 Mapbox Style JSON 样式表动态解析并应用到 OpenLayers 矢量切片图层中。</p> <p><strong>提示</strong>：在实际项目中使用本示例时，请务必前往 https://www.maptiler.com/cloud/ 申请并配置您专属的 API Key。若 API Key 过期或无效，底图将无法加载显示。</p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. 核心架构与设计思想 (Core Architecture & Design) - <strong>打破 Web 墨卡托（EPSG:3857）的固有垄断</strong>：
-  市面上绝大多数矢量切片遵循 Mapbox 矢量切片标准（基于 EPSG:3857）。但很多专业行业（航海、航空、极地科考、气象遥感）原生数据以等经纬度网格（EPSG:4326）存储。OpenLayers 具备业界最强大的投影内核，允许 `VectorTileSource` 直接配置 `projection: 'EPSG:4326'`，无需中间坐标重投影即可直接消费服务端的经纬度瓦片。
-- <strong>ol-mapbox-style 样式引擎适配</strong>：
-  Mapbox Style 规范原生是针对 Mapbox GL 编写的，而 `ol-mapbox-style` 作为桥接器，将 Mapbox JSON 样式的 Filter、Paint、Layout 属性实时转换为 OpenLayers 的 `Style`、`Text`、`Fill`、`Stroke` 渲染指令。在非 3857 投影中，需显式传入 `resolutions`，确保样式中的缩放级别（Zoom-and-Function）与自定义切片网格完美对齐。<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis) - <code>createXYZ({ extent, tileSize, maxResolution, maxZoom })</code>：</h4>
-<p>  在 WGS84 坐标系下，全球经度范围为 <code>[-180, 180]</code>（宽度 360°），纬度范围为 <code>[-90, 90]</code>（高度 180°）。当切片大小为 <code>512</code> 像素且 Zoom 0 全球分为两张切片时，其最大分辨率 <code>maxResolution = 180 / 512 = 0.3515625 度/像素</code>。通过精确配置 TileGrid 参数，客户端发起的瓦片计算能 100% 契合服务端切片矩阵金字塔。</p>
+        <div id="docs"><p>Example showing vector tiles in EPSG:4326 (styled using `ol-mapbox-style`) loaded from maptiler.com.</p>
+<p><strong>Note</strong>: Make sure to get your own API key at https://www.maptiler.com/cloud/ when using this example. No map will be visible when the API key has expired.</p>
+<p>本示例演示如何直接在 WGS84 地理坐标系（EPSG:4326）下加载来自 MapTiler 的矢量切片，并借助 <code>ol-mapbox-style</code> 库将 Mapbox Style JSON 样式表动态解析并应用到 OpenLayers 矢量切片图层中。</p>
+<p><strong>提示</strong>：在实际项目中使用本示例时，请务必前往 https://www.maptiler.com/cloud/ 申请并配置您专属的 API Key。若 API Key 过期或无效，底图将无法加载显示。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
 <ul>
+<li><strong>打破 Web 墨卡托（EPSG:3857）的固有垄断</strong>：
+市面上绝大多数矢量切片遵循 Mapbox 矢量切片标准（基于 EPSG:3857）。但很多专业行业（航海、航空、极地科考、气象遥感）原生数据以等经纬度网格（EPSG:4326）存储。OpenLayers 具备业界最强大的投影内核，允许 <code>VectorTileSource</code> 直接配置 <code>projection: &#39;EPSG:4326&#39;</code>，无需中间坐标重投影即可直接消费服务端的经纬度瓦片。</li>
+<li><strong>ol-mapbox-style 样式引擎适配</strong>：
+Mapbox Style 规范原生是针对 Mapbox GL 编写的，而 <code>ol-mapbox-style</code> 作为桥接器，将 Mapbox JSON 样式的 Filter、Paint、Layout 属性实时转换为 OpenLayers 的 <code>Style</code>、<code>Text</code>、<code>Fill</code>、<code>Stroke</code> 渲染指令。在非 3857 投影中，需显式传入 <code>resolutions</code>，确保样式中的缩放级别（Zoom-and-Function）与自定义切片网格完美对齐。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>createXYZ({ extent, tileSize, maxResolution, maxZoom })</code>：
+在 WGS84 坐标系下，全球经度范围为 <code>[-180, 180]</code>（宽度 360°），纬度范围为 <code>[-90, 90]</code>（高度 180°）。当切片大小为 <code>512</code> 像素且 Zoom 0 全球分为两张切片时，其最大分辨率 <code>maxResolution = 180 / 512 = 0.3515625 度/像素</code>。通过精确配置 TileGrid 参数，客户端发起的瓦片计算能 100% 契合服务端切片矩阵金字塔。</li>
 <li><code>applyStyle(layer, url, { resolutions })</code> 与 <code>applyBackground(layer, url)</code>：<ul>
 <li><code>applyStyle</code>：异步下载 Mapbox Style JSON，递归构建图层图元样式函数，并绑定到 <code>layer</code> 上。</li>
 <li><code>applyBackground</code>：提取样式表中的 <code>background</code> 层颜色，将其应用为底层背景，防止瓦片透明区域露出默认白色底色。</li>
 </ul>
 </li>
 </ul>
-<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization) - <strong>4326 切片的长宽比陷阱</strong>：</h4>
-<p>  Web 墨卡托是 1:1 的正方形（全球范围为 1 个切片，Zoom 0 是 $1 \times 1$），而 EPSG:4326 全球范围是 2:1 的长方形。如果瓦片使用 $512 \times 512$ 像素，Zoom 0 通常由 $2 \times 1$ 两张切片组成（X 轴两张，Y 轴一张）。若未正确设置 <code>maxResolution</code> 或 <code>extent</code>，切片行号和列号计算将错位，导致地图错乱或大面积 404。</p>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
 <ul>
+<li><strong>4326 切片的长宽比陷阱</strong>：
+Web 墨卡托是 1:1 的正方形（全球范围为 1 个切片，Zoom 0 是 $1 \times 1$），而 EPSG:4326 全球范围是 2:1 的长方形。如果瓦片使用 $512 \times 512$ 像素，Zoom 0 通常由 $2 \times 1$ 两张切片组成（X 轴两张，Y 轴一张）。若未正确设置 <code>maxResolution</code> 或 <code>extent</code>，切片行号和列号计算将错位，导致地图错乱或大面积 404。</li>
 <li><strong>字体与雪碧图（Sprites）跨域加载</strong>：
 Mapbox 样式通常依赖 Glyph 字体 PBF 和 Sprite 图标图集。在企业内网部署 EPSG:4326 矢量切片服务时，除 Style JSON 外，必须确保字体和雪碧图服务也具备跨域 CORS 头（<code>Access-Control-Allow-Origin: *</code>）。</li>
 </ul>
@@ -345,16 +353,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

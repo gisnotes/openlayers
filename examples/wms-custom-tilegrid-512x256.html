@@ -138,14 +138,14 @@
               data-bs-target="#tag-example-list"
               data-title="grid"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles-advanced.html&quot;&gt;Advanced Mapbox Vector Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-ign.html&quot;&gt;IGN WMTS&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-vector-tiles-advanced.html&quot;&gt;Advanced Mapbox Vector Tiles / Mapbox 矢量切片进阶：跨层级复用与移动端流量节省&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-ign.html&quot;&gt;IGN WMTS / 法国国家地理 IGN 官方 WMTS 底图服务&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./print-to-scale.html&quot;&gt;Print to scale example / 按指定比例尺高精打印导出 PDF&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./reprojection.html&quot;&gt;Raster Reprojection / 多投影栅格数据动态重投影&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-tiles-4326.html&quot;&gt;Vector tiles in EPSG:4326 / EPSG:4326 坐标系矢量切片&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-custom-tilegrid-512x256.html&quot;&gt;WMS 512x256 Tiles / WMS 512x256 自定义矩形瓦片网格&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts.html&quot;&gt;WMTS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-dimensions.html&quot;&gt;WMTS Tile Transitions&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts.html&quot;&gt;WMTS / 手动配置 WMTS 瓦片服务图层&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wmts-dimensions.html&quot;&gt;WMTS Tile Transitions / WMTS 多维时空与平滑切片过渡&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >8</a>
@@ -173,22 +173,32 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example of a WMS layer with a custom grid with 512x256px tiles. / 为 WMS 图层配置非正方形 512x256 像素自定义切片网格以匹配特定服务端缓存结构并降低请求数。</p>
-        <div id="docs"><h2>WMS can serve arbitrary tile sizes. This example uses a custom tile grid with non-square tiles.
-WMS 服务能够动态响应并渲染任意尺寸的切片图幅。本示例演示如何使用自定义瓦片网格（TileGrid）请求非正方形的 512×256 像素矩形瓦片。</h2>
+        <div id="docs"><p>WMS can serve arbitrary tile sizes. This example uses a custom tile grid with non-square tiles.</p>
+<p>WMS 服务能够动态响应并渲染任意尺寸的切片图幅。本示例演示如何使用自定义瓦片网格（TileGrid）请求非正方形的 512×256 像素矩形瓦片。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 为什么需要非正方形（512×256）切片网格？ * <strong>标准 Web 墨卡托与正方形瓦片的局限</strong>：</h4>
-<p>  标准切片方案（如 Google / OSM / TMS）通常固定使用 256×256 的正方形切片。但在某些投影（如 EPSG:4326 经纬度直投，全球长宽比为 360° : 180° = 2:1）或者特定宽屏显示设备上，正方形切片会导致小比例尺下切片分割不自然或请求数量偏多。</p>
+<h4>1. 为什么需要非正方形（512×256）切片网格？</h4>
 <ul>
+<li><strong>标准 Web 墨卡托与正方形瓦片的局限</strong>：
+标准切片方案（如 Google / OSM / TMS）通常固定使用 256×256 的正方形切片。但在某些投影（如 EPSG:4326 经纬度直投，全球长宽比为 360° : 180° = 2:1）或者特定宽屏显示设备上，正方形切片会导致小比例尺下切片分割不自然或请求数量偏多。</li>
 <li><strong>降低 HTTP 请求并发开销</strong>：
 将单张切片宽度翻倍（512×256），相同视口面积所需的切片数量直接<strong>减少一半</strong>，显著减轻浏览器网络连接池压力与 WMS 服务端的并发渲染负载。</li>
 </ul>
-<h4>2. 自定义 <code>TileGrid</code> 的计算与构造 在代码中，从 Web 墨卡托全球外包范围宽度出发推算各级分辨率： ```javascript const projExtent = getProjection(&#39;EPSG:3857&#39;).getExtent(); const startResolution = getWidth(projExtent) / 256; const resolutions = new Array(22); for (let i = 0, ii = resolutions.length; i &lt; ii; ++i) {</h4>
-<p>  resolutions[i] = startResolution / Math.pow(2, i);
-} const tileGrid = new TileGrid({
+<h4>2. 自定义 <code>TileGrid</code> 的计算与构造</h4>
+<p>在代码中，从 Web 墨卡托全球外包范围宽度出发推算各级分辨率：</p>
+<pre><code class="language-javascript">const projExtent = getProjection(&#39;EPSG:3857&#39;).getExtent();
+const startResolution = getWidth(projExtent) / 256;
+const resolutions = new Array(22);
+for (let i = 0, ii = resolutions.length; i &lt; ii; ++i) {
+  resolutions[i] = startResolution / Math.pow(2, i);
+}
+const tileGrid = new TileGrid({
   extent: [-13884991, 2870341, -7455066, 6338219],
   resolutions: resolutions,
   tileSize: [512, 256], // [宽度 512, 高度 256]
-}); ``` OpenLayers 在发起 WMS 请求时，会自动将参数 <code>WIDTH=512&amp;HEIGHT=256</code> 发往 GeoServer，实现与自定义网格的严丝合缝匹配。</p>
+});
+</code></pre>
+<p>OpenLayers 在发起 WMS 请求时，会自动将参数 <code>WIDTH=512&amp;HEIGHT=256</code> 发往 GeoServer，实现与自定义网格的严丝合缝匹配。</p>
 </div>
       </div>
 
@@ -302,16 +312,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

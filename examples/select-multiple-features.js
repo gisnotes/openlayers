@@ -22,7 +22,7 @@ new Map({
 }).addInteraction(select);
 var status = document.getElementById("status");
 select.on("select", function() {
-	status.innerHTML = "&nbsp;" + select.getFeatures().getLength() + " selected features";
+	status.innerHTML = "&nbsp;已选中 " + select.getFeatures().getLength() + " 个要素 (" + select.getFeatures().getLength() + " selected features)";
 });
 //#endregion
 

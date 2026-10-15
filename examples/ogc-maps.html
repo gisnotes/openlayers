@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>OGC Maps</title>
+    <title>OGC Maps / OGC API - Maps 现代动态单图地图服务</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">OGC Maps</h4>
+        <h4 id="title">OGC Maps / OGC API - Maps 现代动态单图地图服务</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,12 +74,12 @@
               data-bs-target="#tag-example-list"
               data-title="ogc"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-ogc-features.html&quot;&gt;MapServer OGC Features&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-map-tiles.html&quot;&gt;OGC Map Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-map-tiles-geographic.html&quot;&gt;OGC Map Tiles (Geographic)&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./ogc-maps.html&quot;&gt;OGC Maps&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles.html&quot;&gt;OGC Vector Tiles&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles-geographic.html&quot;&gt;OGC Vector Tiles (Geographic)&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-ogc-features.html&quot;&gt;MapServer OGC Features / MapServer OGC API - Features 现代矢量要素服务接入&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-map-tiles-geographic.html&quot;&gt;OGC Map Tiles (Geographic) / OGC API - Tiles 经纬度地理切片服务&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-map-tiles.html&quot;&gt;OGC Map Tiles / OGC API - Tiles 现代栅格瓦片服务集成&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./ogc-maps.html&quot;&gt;OGC Maps / OGC API - Maps 现代动态单图地图服务&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles-geographic.html&quot;&gt;OGC Vector Tiles (Geographic) / OGC API 经纬度矢量切片与等矩投影&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./ogc-vector-tiles.html&quot;&gt;OGC Vector Tiles / OGC API - Tiles 矢量切片服务与客户端样式&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >6</a>
@@ -106,8 +106,27 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Rendering maps from an OGC API – Maps service.</p>
-        <div id="docs"><p>The <a href="https://ogcapi.ogc.org/maps/">OGC API – Maps</a> specification describes how a service can provide maps.</p>
+        <p id="shortdesc">Rendering maps from an OGC API – Maps service. / 演示如何使用 OGCMap 数据源结合 ImageLayer 接入新一代 OGC API - Maps 动态按需出图服务。</p>
+        <div id="docs"><p>The <a href="https://ogcapi.ogc.org/maps/" target="_blank">OGC API – Maps</a> specification describes how a service can provide maps.</p>
+<p>本示例展示了如何渲染遵循现代 <a href="https://ogcapi.ogc.org/maps/" target="_blank">OGC API – Maps</a> 规范的单图服务。OGC API – Maps 是传统 WMS（Web Map Service）标准的现代 RESTful 升级版，专为按当前屏幕视口范围和分辨率动态请求整幅单图（ImageLayer）而设计。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
+<ul>
+<li><strong>新一代动态按需出图协议</strong>：
+相比于切片服务（Tiles），动态单图服务适合数据更新极度频繁（如实时台风云图、雷达回波）、图层组合样式高度动态且不适合提前切片的业务场景。客户端每次缩放或平移停止时，服务端仅针对当前包围盒出图并返回一张图片。</li>
+<li><strong><code>ol/source/OGCMap</code> 专职数据源</strong>：
+与传统 <code>ImageWMS</code> 需手动拼写长串参数不同，<code>OGCMap</code> 内部自动封装了基于 OGC API - Maps REST 端点格式的视口出图请求管线。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li><code>ImageLayer</code> 与 <code>OGCMap</code> 联动：
+URL 直接指向 collection 的 <code>/map</code> 资源端点，底层在每次视口平移缩放停止时，自动向服务端发起包含视口包围盒尺寸与比例尺的单图渲染拉取。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
+<ul>
+<li><strong>动态单图 vs 瓦片切片的架构选型</strong>：
+单图服务每次都需要服务端现算渲染，高并发访问下服务端压力大；对于静态或更新频次低的基础底图，强烈建议优先选用 <code>OGCMapTile</code>，仅对高度动态或自定义渲染条件的专题数据采用 <code>OGCMap</code>。</li>
+</ul>
 </div>
       </div>
 
@@ -144,7 +163,7 @@ const map &#x3D; new Map({
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;OGC Maps&lt;/title&gt;
+    &lt;title&gt;OGC Maps / OGC API - Maps 现代动态单图地图服务&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -190,16 +209,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

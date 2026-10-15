@@ -180,22 +180,51 @@
 
       <div class="row-fluid">
         <p id="shortdesc">GeoZarr sources rendering bands from a single n-dimensional data array. / 从高维 (N-D) 单一科学数据数组 (如 time, band, y, x) 中切片提取并渲染多波段遥感与气候模型数据。</p>
-        <div id="docs"><p>Besides one array per band, the GeoZarr source supports datacubes where all bands are packed into a single n-dimensional data array (e.g. <code>(time, band, y, x)</code>): the <code>variable</code> option names the array, and the <code>dimensions</code> option fixes its non-spatial dimensions by index or coordinate label, with one dimension optionally selecting multiple bands.</p>
-<h2>The datasets above are real-world Zarr v2 and v3 stores from different producers, in different projections and multiscale layouts. The extent, resolution, projection and y-axis orientation are read from the store metadata (proj:/spatial: conventions, <code>bounds</code>/<code>proj4</code>/<code>spatial_ref</code> attributes) or inferred from the coordinate arrays; where the store provides neither (Delta FG CO2), the <code>extent</code> and <code>flipY</code> options fill the gap. Data with non-square pixels (CMIP6) and south-up rows (Delta FG CO2) is handled transparently.
-除了“每个波段一个独立数组”的结构外，GeoZarr 数据源还深度支持将所有波段打包在<strong>单一高维（N 维）科学数据数组</strong>中的数据立方体（Datacubes，例如 <code>(time, band, y, x)</code> 形式）： 通过 <code>variable</code> 选项指定目标变量数组名称；通过 <code>dimensions</code> 选项按数值索引或坐标标签锁定其非空间维度，并支持在某一维度中同时拾取多个波段进行多通道合成。
-上方下拉列表汇聚了来自不同科学机构的真实世界 Zarr v2 与 v3 存储，涵盖多种投影坐标系与多尺度组织形态。 空间范围（Extent）、分辨率、投影和 Y 轴朝向既可直接从存储元数据（<code>proj:</code>/<code>spatial:</code> 规范、<code>bounds</code>/<code>proj4</code>/<code>spatial_ref</code> 属性）中读取，也可从经纬度坐标数组中自动推导； 当存储未提供元数据时（如 Delta FG CO2 全球碳通量），可通过 <code>extent</code> 与 <code>flipY</code> 选项补充。 非正方形像元（CMIP6 气候模型）与南向朝上（South-up）网格均由 OpenLayers 底层透明、自动地完成校正与贴图渲染。</h2>
+        <div id="docs"><p>Besides one array per band, the GeoZarr source supports datacubes where all bands are
+packed into a single n-dimensional data array (e.g. <code>(time, band, y, x)</code>): the <code>variable</code>
+option names the array, and the <code>dimensions</code> option fixes its non-spatial dimensions by
+index or coordinate label, with one dimension optionally selecting multiple bands.</p>
+<p>The datasets above are real-world Zarr v2 and v3 stores from different producers, in
+different projections and multiscale layouts. The extent, resolution, projection and
+y-axis orientation are read from the store metadata (proj:/spatial: conventions,
+<code>bounds</code>/<code>proj4</code>/<code>spatial_ref</code> attributes) or inferred from the coordinate arrays;
+where the store provides neither (Delta FG CO2), the <code>extent</code> and <code>flipY</code> options
+fill the gap. Data with non-square pixels (CMIP6) and south-up rows (Delta FG CO2)
+is handled transparently.</p>
+<p>除了“每个波段一个独立数组”的结构外，GeoZarr 数据源还深度支持将所有波段打包在<strong>单一高维（N 维）科学数据数组</strong>中的数据立方体（Datacubes，例如 <code>(time, band, y, x)</code> 形式）：
+通过 <code>variable</code> 选项指定目标变量数组名称；通过 <code>dimensions</code> 选项按数值索引或坐标标签锁定其非空间维度，并支持在某一维度中同时拾取多个波段进行多通道合成。</p>
+<p>上方下拉列表汇聚了来自不同科学机构的真实世界 Zarr v2 与 v3 存储，涵盖多种投影坐标系与多尺度组织形态。
+空间范围（Extent）、分辨率、投影和 Y 轴朝向既可直接从存储元数据（<code>proj:</code>/<code>spatial:</code> 规范、<code>bounds</code>/<code>proj4</code>/<code>spatial_ref</code> 属性）中读取，也可从经纬度坐标数组中自动推导；
+当存储未提供元数据时（如 Delta FG CO2 全球碳通量），可通过 <code>extent</code> 与 <code>flipY</code> 选项补充。
+非正方形像元（CMIP6 气候模型）与南向朝上（South-up）网格均由 OpenLayers 底层透明、自动地完成校正与贴图渲染。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 什么是数据立方体（Datacube）与高维科学张量？ 在气象学（ERA5、ECMWF）、海洋学、冰川监测与地球系统科学（CMIP6）中，观测数据通常是高阶张量： $$\mathbf{D} \in \mathbb{R}^{T \times C \times Z \times Y \times X}$$ * $T$：时间轴（逐小时/逐月/逐年预报）； * $C$：物理波段/变量轴（气压、风速、地表温度、湿度）； * $Z$：垂直高程/气压层（1000 hPa 到 10 hPa）； * $Y, X$：空间纬度与经度。 传统 WebGIS 必须在后端将这些高维数据切片为死板的 RGB 图片；而 <strong>OpenLayers GeoZarr 能够在浏览器端直接穿透高维数组</strong>，按需拉取指定时刻、指定高度层的空间切片！</h4>
-<h4>2. <code>dimensions</code> 维度切片语法 * <strong>按整型索引切片（Index-based Slicing）</strong>：</h4>
-<pre><code class="language-javascript">dimensions: { band: [0, 1, 2], time: 1 } // 取第 1 个时间片的前 3 个波段作为 RGB
-</code></pre>
+<h4>1. 什么是数据立方体（Datacube）与高维科学张量？</h4>
+<p>在气象学（ERA5、ECMWF）、海洋学、冰川监测与地球系统科学（CMIP6）中，观测数据通常是高阶张量：
+$$\mathbf{D} \in \mathbb{R}^{T \times C \times Z \times Y \times X}$$</p>
 <ul>
+<li>$T$：时间轴（逐小时/逐月/逐年预报）；</li>
+<li>$C$：物理波段/变量轴（气压、风速、地表温度、湿度）；</li>
+<li>$Z$：垂直高程/气压层（1000 hPa 到 10 hPa）；</li>
+<li>$Y, X$：空间纬度与经度。
+传统 WebGIS 必须在后端将这些高维数据切片为死板的 RGB 图片；而 <strong>OpenLayers GeoZarr 能够在浏览器端直接穿透高维数组</strong>，按需拉取指定时刻、指定高度层的空间切片！</li>
+</ul>
+<h4>2. <code>dimensions</code> 维度切片语法</h4>
+<ul>
+<li><strong>按整型索引切片（Index-based Slicing）</strong>：<pre><code class="language-javascript">dimensions: { band: [0, 1, 2], time: 1 } // 取第 1 个时间片的前 3 个波段作为 RGB
+</code></pre>
+</li>
 <li><strong>按物理坐标标签切片（Coordinate Label Slicing）</strong>：<pre><code class="language-javascript">dimensions: { band: [&#39;tavg&#39;], month: 0 } // 直接按变量名 &#39;tavg&#39;（月平均温）拾取
 </code></pre>
 </li>
 <li>OpenLayers 会自动解析 Zarr 内部的坐标轴元数据，将非空间轴降维锁定为 2D 空间切片，交付 GPU 片元着色器实时插值渲染。</li>
 </ul>
-<h4>3. 应对科学数据的异构性：<code>flipY</code>、非正方形像元与极地投影 * <strong><code>flipY: true</code>（南向朝上修正）</strong>：某些海洋和气候模型在 NetCDF 转换至 Zarr 时数组行方向从南向北存储（纬度从小到大），OpenLayers 通过 <code>flipY</code> 自动在纹理映射中翻转 Y 轴。 * <strong>非正方形像元（Non-square pixels）</strong>：气候模型（如 CMIP6 ACCESS-CM2）纬度方向分辨率为 1.25°，经度方向为 1.875°。OpenLayers 自适应网格生成器能够精确根据非等比步长构建瓦片网格。 * <strong>极地投影支持</strong>：斯维茨冰川（Thwaites Glacier）采用南极极地立体投影（EPSG:3031），配合 Proj4js 即可无缝展开与漫游。</h4>
+<h4>3. 应对科学数据的异构性：<code>flipY</code>、非正方形像元与极地投影</h4>
+<ul>
+<li><strong><code>flipY: true</code>（南向朝上修正）</strong>：某些海洋和气候模型在 NetCDF 转换至 Zarr 时数组行方向从南向北存储（纬度从小到大），OpenLayers 通过 <code>flipY</code> 自动在纹理映射中翻转 Y 轴。</li>
+<li><strong>非正方形像元（Non-square pixels）</strong>：气候模型（如 CMIP6 ACCESS-CM2）纬度方向分辨率为 1.25°，经度方向为 1.875°。OpenLayers 自适应网格生成器能够精确根据非等比步长构建瓦片网格。</li>
+<li><strong>极地投影支持</strong>：斯维茨冰川（Thwaites Glacier）采用南极极地立体投影（EPSG:3031），配合 Proj4js 即可无缝展开与漫游。</li>
+</ul>
 </div>
       </div>
 
@@ -486,16 +515,28 @@ render();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

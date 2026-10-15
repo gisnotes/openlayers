@@ -193,15 +193,27 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Stepping through the time dimension of a GeoZarr cube with a slider. / 使用滑块动态步进 GeoZarr 科学数据立方体的时间轴，实时更新雷达双极化复合遥感影像。</p>
-        <div id="docs"><p>A GeoZarr array can have non-spatial dimensions such as <code>time</code>. This example steps through the <code>time</code> axis of a Sentinel-1 radar cube with a slider: <code>getDimensions()</code> reports the axis with its size and units, <code>updateDimensions()</code> reloads the chosen slice in place, and <code>getValue</code> reads the axis value to label it with the acquisition date.</p>
-<h2>The cube images the 2021 Cumbre Vieja eruption on La Palma as a dual-polarization composite: the VV and VH bands (vertical transmit, vertical vs. horizontal receive) map to red and green, and their ratio to blue.
-GeoZarr 数组可以包含非空间维度，例如 <code>time</code>（时间轴）。 本示例演示如何通过滑块沿哨兵 1 号（Sentinel-1）雷达数据立方体的时间轴逐步漫游： 调用 <code>getDimensions()</code> 获取维度的轴长度与物理单位，调用 <code>updateDimensions()</code> 原地重载所选时间切片，调用 <code>getValue()</code> 读取时间戳数值并格式化为卫星过境采集日期。
-该数据立方体完整记录了 2021 年西班牙拉帕尔马岛老峰火山（Cumbre Vieja）喷发的动态演变过程，采用双极化复合图呈现： VV 波段（同向垂直极化）映射至红通道，VH 波段（交叉极化）映射至绿通道，它们的比值 VV/VH 则映射至蓝通道。</h2>
+        <div id="docs"><p>A GeoZarr array can have non-spatial dimensions such as <code>time</code>. This example steps through the
+<code>time</code> axis of a Sentinel-1 radar cube with a slider: <code>getDimensions()</code> reports the axis with its
+size and units, <code>updateDimensions()</code> reloads the chosen slice in place, and <code>getValue</code> reads the
+axis value to label it with the acquisition date.</p>
+<p>The cube images the 2021 Cumbre Vieja eruption on La Palma as a dual-polarization composite: the
+VV and VH bands (vertical transmit, vertical vs. horizontal receive) map to red and green, and
+their ratio to blue.</p>
+<p>GeoZarr 数组可以包含非空间维度，例如 <code>time</code>（时间轴）。
+本示例演示如何通过滑块沿哨兵 1 号（Sentinel-1）雷达数据立方体的时间轴逐步漫游：
+调用 <code>getDimensions()</code> 获取维度的轴长度与物理单位，调用 <code>updateDimensions()</code> 原地重载所选时间切片，调用 <code>getValue()</code> 读取时间戳数值并格式化为卫星过境采集日期。</p>
+<p>该数据立方体完整记录了 2021 年西班牙拉帕尔马岛老峰火山（Cumbre Vieja）喷发的动态演变过程，采用双极化复合图呈现：
+VV 波段（同向垂直极化）映射至红通道，VH 波段（交叉极化）映射至绿通道，它们的比值 VV/VH 则映射至蓝通道。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 合成孔径雷达（SAR）双极化特征与火山熔岩解译 * <strong>光学卫星 vs 雷达卫星</strong>：</h4>
+<h4>1. 合成孔径雷达（SAR）双极化特征与火山熔岩解译</h4>
 <ul>
+<li><strong>光学卫星 vs 雷达卫星</strong>：<ul>
 <li>当拉帕尔马火山喷发时，火山口浓烟滚滚遮天蔽日，传统光学卫星（如 Sentinel-2、Landsat）视线完全被黑烟和火山灰阻挡；</li>
 <li>哨兵 1 号（Sentinel-1）搭载 C 波段合成孔径雷达（SAR），微波能够<strong>无视昼夜与浓烟，全天候穿透烟羽</strong>直达地表！</li>
+</ul>
+</li>
 <li><strong>双极化合成机理</strong>：<ul>
 <li><code>VV</code>（垂直发射、垂直接收）：主要反映粗糙地表的镜面散射与面散射强度，红通道呈现明亮背景；</li>
 <li><code>VH</code>（垂直发射、水平接收）：主要反映植被冠层、碎屑与复杂粗糙岩石的体散射与去极化散射；</li>
@@ -209,15 +221,20 @@ GeoZarr 数组可以包含非空间维度，例如 <code>time</code>（时间轴
 </ul>
 </li>
 </ul>
-<h4>2. 原地时间切片重载：<code>source.updateDimensions({time: index})</code> * 传统 WebGIS 切换时间序列时通常需要销毁重建图层或切换 WMS/WMTS URL，伴随剧烈的白屏闪烁。 * <code>GeoZarr</code> 提供了轻量级的 <code>updateDimensions({time: index})</code> 原地切片方法：</h4>
+<h4>2. 原地时间切片重载：<code>source.updateDimensions({time: index})</code></h4>
 <ul>
+<li>传统 WebGIS 切换时间序列时通常需要销毁重建图层或切换 WMS/WMTS URL，伴随剧烈的白屏闪烁。</li>
+<li><code>GeoZarr</code> 提供了轻量级的 <code>updateDimensions({time: index})</code> 原地切片方法：<ul>
 <li>图层实例与 WebGL 着色器完全保持不变；</li>
 <li>数据源直接复用已建立的 Zarr 索引句柄，仅向云端发起目标时间切片对应分块的局部 HTTP 请求；</li>
 <li>配合滑块拖拽，犹如在浏览器中翻阅卫星雷达电影！</li>
 </ul>
-<h4>3. CF 元数据时间解码：<code>getDimensions()</code> 与 <code>getValue(&#39;time&#39;, index)</code> * 气候与预测元数据规范（CF Conventions）通常将时间记录为相对起算点，例如：</h4>
-<p>  <code>&quot;nanoseconds since 1970-01-01&quot;</code></p>
+</li>
+</ul>
+<h4>3. CF 元数据时间解码：<code>getDimensions()</code> 与 <code>getValue(&#39;time&#39;, index)</code></h4>
 <ul>
+<li>气候与预测元数据规范（CF Conventions）通常将时间记录为相对起算点，例如：
+<code>&quot;nanoseconds since 1970-01-01&quot;</code></li>
 <li><code>source.getValue(&#39;time&#39;, index)</code> 异步读取目标时间维度的标量浮点值，代码通过 <code>Date(epoch + value / 1e6)</code> 转化为标准 ISO 日期展示给用户。</li>
 </ul>
 </div>
@@ -381,16 +398,28 @@ source
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

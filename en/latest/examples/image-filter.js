@@ -117,7 +117,7 @@ select.onchange = function() {
 };
 /**
 * Apply a filter on "postrender" events.
-* 监听遥感图层的 postrender 事件：拦截光栅化后的 Canvas 像素应用空间卷积
+* 监听遥感图层的 postrender 事件：拦截栅格化后的 Canvas 像素应用空间卷积
 */
 imagery.on("postrender", function(event) {
 	convolve(event.context, selectedKernel);

@@ -180,13 +180,23 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Calculating NDVI+NDWI as green and blue values. / 跨越不同空间分辨率的 16 位云原生 GeoTIFF 影像，在 GPU 中同时解算植被指数 (NDVI) 与水体指数 (NDWI)。</p>
-        <div id="docs"><h2>The GeoTIFF layer in this example calculates the Normalized Difference Vegetation Index (NDVI) and Normalized Difference Water Index (NDWI) from two cloud-optimized Sentinel 2 GeoTIFFs: one with 10 m resolution and red and a near infrared bands, and one with 60 m resolution and a short wave infrared channel. The NDVI is shown as green, the NDWI as blue. The 4th band is the alpha band, which gets added when a source has a <code>nodata</code> value configured.
-本示例中的 GeoTIFF 图层从两幅不同分辨率的云优化哨兵 2 号（Sentinel-2）GeoTIFF 中同时计算归一化植被指数（NDVI）与归一化水体指数（NDWI）： 第一幅影像为 10 米空间分辨率，包含红光（Red）与近红外（NIR）波段；第二幅影像为 60 米空间分辨率，包含短波红外（SWIR）波段。 在最终渲染中，NDVI 强度被映射为绿色分量，NDWI 强度被映射为蓝色分量。当数据源配置了 <code>nodata</code> 值时，第 4 波段会自动作为 Alpha 透明度通道参与遮罩裁切。</h2>
+        <div id="docs"><p>The GeoTIFF layer in this example calculates the Normalized Difference Vegetation Index (NDVI)
+and Normalized Difference Water Index (NDWI) from two cloud-optimized Sentinel 2 GeoTIFFs: one
+with 10 m resolution and red and a near infrared bands, and one with 60 m resolution and a short
+wave infrared channel. The NDVI is shown as green, the NDWI as blue. The 4th band is the alpha
+band, which gets added when a source has a <code>nodata</code> value configured.</p>
+<p>本示例中的 GeoTIFF 图层从两幅不同分辨率的云优化哨兵 2 号（Sentinel-2）GeoTIFF 中同时计算归一化植被指数（NDVI）与归一化水体指数（NDWI）：
+第一幅影像为 10 米空间分辨率，包含红光（Red）与近红外（NIR）波段；第二幅影像为 60 米空间分辨率，包含短波红外（SWIR）波段。
+在最终渲染中，NDVI 强度被映射为绿色分量，NDWI 强度被映射为蓝色分量。当数据源配置了 <code>nodata</code> 值时，第 4 波段会自动作为 Alpha 透明度通道参与遮罩裁切。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 双指数复合遥感解译：NDVI 与 NDWI * <strong>归一化植被指数 (NDVI)</strong>：</h4>
-<p>  $$\text{NDVI} = \frac{\text{NIR} - \text{Red}}{\text{NIR} + \text{Red}} = \frac{\text{Band 2} - \text{Band 1}}{\text{Band 2} + \text{Band 1}}$$</p>
+<h4>1. 双指数复合遥感解译：NDVI 与 NDWI</h4>
 <ul>
+<li><strong>归一化植被指数 (NDVI)</strong>：
+$$\text{NDVI} = \frac{\text{NIR} - \text{Red}}{\text{NIR} + \text{Red}} = \frac{\text{Band 2} - \text{Band 1}}{\text{Band 2} + \text{Band 1}}$$<ul>
 <li>本例中将 NDVI 乘以 255 赋予 <strong>Green 通道</strong>，健康植被呈现明亮绿色。</li>
+</ul>
+</li>
 <li><strong>归一化水体指数 (NDWI, McFeeters / Gao 变体)</strong>：
 $$\text{NDWI} = \frac{\text{SWIR} - \text{Red}}{\text{SWIR} + \text{Red}} = \frac{\text{Band 3} - \text{Band 1}}{\text{Band 3} + \text{Band 1}}$$<ul>
 <li>水体在短波红外（SWIR）与红光处的吸收特性形成显著反差。</li>
@@ -197,13 +207,21 @@ $$\text{NDWI} = \frac{\text{SWIR} - \text{Red}}{\text{SWIR} + \text{Red}} = \fra
 $$\text{Red} = 255 \times |\text{NDVI} - \text{NDWI}|$$
 红通道突出显示植被与水体指数差异极大的过渡区域（如沙滩、城市人工地表、裸露岩石），三色通道融合成丰富的地物多光谱伪彩图！</li>
 </ul>
-<h4>2. 跨空间分辨率动态重采样（10m 与 60m 融合） * 在现实遥感应用中，不同传感器波段的空间分辨率通常不同（如哨兵 2 号的 B04/B08 是 10 米，而大气校正与特定短波红外波段是 20 米或 60 米）。 * OpenLayers 的 <code>ol/source/GeoTIFF</code> 支持同时声明多个异构 <code>sources</code>：</h4>
+<h4>2. 跨空间分辨率动态重采样（10m 与 60m 融合）</h4>
 <ul>
+<li>在现实遥感应用中，不同传感器波段的空间分辨率通常不同（如哨兵 2 号的 B04/B08 是 10 米，而大气校正与特定短波红外波段是 20 米或 60 米）。</li>
+<li>OpenLayers 的 <code>ol/source/GeoTIFF</code> 支持同时声明多个异构 <code>sources</code>：<ul>
 <li><code>sources[0]</code>：10 米分辨率，提取 <code>bands: [3, 4]</code>；</li>
 <li><code>sources[1]</code>：60 米分辨率，提取 <code>bands: [9]</code>；</li>
+</ul>
+</li>
 <li>WebGLTile 渲染管线会在显卡显存中对较低分辨率的波段自动执行<strong>双线性插值采样（Bilinear Interpolation）</strong>，开发者无需在后端离线执行耗时的“重采样对齐网格”，即可直接在前端完成多尺度波段代数运算！</li>
 </ul>
-<h4>3. 无效值处理：<code>nodata: 0</code> 与 <code>case</code> 条件遮罩 * 卫星影像在拍摄边界外常填充值为 <code>0</code> 的黑边。 * 通过配置 <code>nodata: 0</code> 以及在着色器中使用 <code>[&#39;case&#39;, [&#39;any&#39;, [&#39;==&#39;, [&#39;band&#39;, 1], 0], ...], [0, 0, 0, 0], ...]</code>，只要任何一个波段无数据，立即将像元 Alpha 设为 0 完全透明，完美剔除影像周边黑框。</h4>
+<h4>3. 无效值处理：<code>nodata: 0</code> 与 <code>case</code> 条件遮罩</h4>
+<ul>
+<li>卫星影像在拍摄边界外常填充值为 <code>0</code> 的黑边。</li>
+<li>通过配置 <code>nodata: 0</code> 以及在着色器中使用 <code>[&#39;case&#39;, [&#39;any&#39;, [&#39;==&#39;, [&#39;band&#39;, 1], 0], ...], [0, 0, 0, 0], ...]</code>，只要任何一个波段无数据，立即将像元 Alpha 设为 0 完全透明，完美剔除影像周边黑框。</li>
+</ul>
 </div>
       </div>
 
@@ -348,16 +366,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

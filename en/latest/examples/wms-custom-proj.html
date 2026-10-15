@@ -168,8 +168,8 @@
               data-title="mapserver"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./wms-custom-proj.html&quot;&gt;Custom Tiled WMS / 自定义投影转换的瓦片 WMS&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-cgi.html&quot;&gt;MapServer CGI&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-ogc-features.html&quot;&gt;MapServer OGC Features&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-cgi.html&quot;&gt;MapServer CGI / MapServer CGI 原生动态地图接口集成&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-ogc-features.html&quot;&gt;MapServer OGC Features / MapServer OGC API - Features 现代矢量要素服务接入&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapserver-wms.html&quot;&gt;MapServer WMS / MapServer WMS 服务集成与高清屏优化&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./wms-image-custom-proj.html&quot;&gt;Single Image WMS with Proj4js / 集成 Proj4js 的单图像 WMS&lt;/a&gt;
                 &lt;/ul&gt;"
@@ -199,12 +199,25 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example of using custom coordinate transform functions. / 演示通过注册自定义正反算坐标转换函数，使用非标准/自定义投影瓦片 WMS。</p>
-        <div id="docs"><h2>With <code>ol.proj.addCoordinateTransforms()</code>, custom coordinate transform functions can be added to configured projections.
-通过 OpenLayers 提供的 <code>addCoordinateTransforms()</code> API，开发者可以直接向特定投影注册轻量级的<strong>自定义正反算坐标转换函数</strong>，无需引入完整的 Proj4js 库。</h2>
+        <div id="docs"><p>With <code>ol.proj.addCoordinateTransforms()</code>, custom coordinate transform functions can be added to configured projections.</p>
+<p>通过 OpenLayers 提供的 <code>addCoordinateTransforms()</code> API，开发者可以直接向特定投影注册轻量级的<strong>自定义正反算坐标转换函数</strong>，无需引入完整的 Proj4js 库。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 无需 Proj4js 的轻量级转换（<code>addCoordinateTransforms</code>） * 通常注册非标准投影需要依赖 <code>proj4</code> 库及其定义字符串，但如果应用场景仅涉及特定坐标系之间的互转，引入整个 proj4 库会增加应用体积。 * <code>addCoordinateTransforms(source, destination, forward, inverse)</code> 允许开发者直接传入纯 JavaScript 实现的正向与逆向数学公式函数。 * 注册完成后，OpenLayers 核心的 <code>transform()</code> 方法、要素重投影、以及 <code>ScaleLine</code> 比例尺计算等逻辑均会自动利用这两个转换函数进行精确坐标解算。</h4>
-<h4>2. 瑞士旧国家坐标系（CH1903 / EPSG:21781）多项式拟合 * 本例使用的是瑞士联邦地形局（Swisstopo）公布的高精度三次多项式经验拟合算法。该算法无需计算复杂的贝塞尔旋转椭球积分，即可在微秒级时间内完成 WGS84 经纬度与瑞士平面直角坐标的高精度互转（瑞士全境内误差低于 0.1 米）。 * <strong>注意轴向顺序</strong>：瑞士测绘体系传统上将东坐标（Easting）记为 $y$，北坐标（Northing）记为 $x$（基准原点设在旧伯尔尼天文台，假东 600,000 米，假北 200,000 米）。在提供给 OpenLayers 时，必须将坐标数组组织为国际通用的 $[Easting, Northing]$ 笛卡尔顺序。</h4>
-<h4>3. 投影合法范围（Validity Extent）的作用 * 在创建 <code>Projection</code> 实例时配置 <code>extent: [minx, miny, maxx, maxy]</code>，OpenLayers 的视图（<code>View</code>）才能据此计算出合理的缩放级别、切片网格与漫游边界。</h4>
+<h4>1. 无需 Proj4js 的轻量级转换（<code>addCoordinateTransforms</code>）</h4>
+<ul>
+<li>通常注册非标准投影需要依赖 <code>proj4</code> 库及其定义字符串，但如果应用场景仅涉及特定坐标系之间的互转，引入整个 proj4 库会增加应用体积。</li>
+<li><code>addCoordinateTransforms(source, destination, forward, inverse)</code> 允许开发者直接传入纯 JavaScript 实现的正向与逆向数学公式函数。</li>
+<li>注册完成后，OpenLayers 核心的 <code>transform()</code> 方法、要素重投影、以及 <code>ScaleLine</code> 比例尺计算等逻辑均会自动利用这两个转换函数进行精确坐标解算。</li>
+</ul>
+<h4>2. 瑞士旧国家坐标系（CH1903 / EPSG:21781）多项式拟合</h4>
+<ul>
+<li>本例使用的是瑞士联邦地形局（Swisstopo）公布的高精度三次多项式经验拟合算法。该算法无需计算复杂的贝塞尔旋转椭球积分，即可在微秒级时间内完成 WGS84 经纬度与瑞士平面直角坐标的高精度互转（瑞士全境内误差低于 0.1 米）。</li>
+<li><strong>注意轴向顺序</strong>：瑞士测绘体系传统上将东坐标（Easting）记为 $y$，北坐标（Northing）记为 $x$（基准原点设在旧伯尔尼天文台，假东 600,000 米，假北 200,000 米）。在提供给 OpenLayers 时，必须将坐标数组组织为国际通用的 $[Easting, Northing]$ 笛卡尔顺序。</li>
+</ul>
+<h4>3. 投影合法范围（Validity Extent）的作用</h4>
+<ul>
+<li>在创建 <code>Projection</code> 实例时配置 <code>extent: [minx, miny, maxx, maxy]</code>，OpenLayers 的视图（<code>View</code>）才能据此计算出合理的缩放级别、切片网格与漫游边界。</li>
+</ul>
 </div>
       </div>
 
@@ -529,16 +542,28 @@ function DEGtoSEC(angle) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

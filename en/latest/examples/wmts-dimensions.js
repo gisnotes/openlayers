@@ -38,7 +38,7 @@ new Map({
 var slider = document.getElementById("slider");
 var updateSourceDimension = function() {
 	wmtsSource.updateDimensions({ "threshold": slider.value });
-	document.getElementById("theinfo").innerHTML = slider.value + " meters";
+	document.getElementById("theinfo").innerHTML = slider.value + " 米 (meters)";
 };
 slider.addEventListener("input", updateSourceDimension);
 updateSourceDimension();

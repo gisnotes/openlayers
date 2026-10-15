@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="initial-scale=1.0, user-scalable=no, width=device-width">
-    <title>Dynamic Data</title>
+    <title>Dynamic Data / 动态高频数据流与内旋轮线（Hypotrochoid）动效</title>
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
@@ -63,7 +63,7 @@
         <a href="#" id="codepen-button" class="btn btn-link float-end">
           <i class="fab fa-codepen fa-lg"></i> Edit
         </a>
-        <h4 id="title">Dynamic Data</h4>
+        <h4 id="title">Dynamic Data / 动态高频数据流与内旋轮线（Hypotrochoid）动效</h4>
         <p class="tags">
           <span class="badge-group">
             <a
@@ -74,7 +74,7 @@
               data-bs-target="#tag-example-list"
               data-title="dynamic-data"
               data-content="&lt;ul class=&quot;list-group&quot;&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./dynamic-data.html&quot;&gt;Dynamic Data&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./dynamic-data.html&quot;&gt;Dynamic Data / 动态高频数据流与内旋轮线（Hypotrochoid）动效&lt;/a&gt;
                 &lt;/ul&gt;"
               tabindex="0"
               >1</a>
@@ -101,8 +101,31 @@
       </div>
 
       <div class="row-fluid">
-        <p id="shortdesc">Example of dynamic data.</p>
+        <p id="shortdesc">Example of dynamic data. / 演示如何使用 postrender 事件与 getVectorContext 轻量级即时渲染实时计算的数学内旋轮线几何动画。</p>
         <div id="docs"><p>Example of dynamic data.</p>
+<p>本示例展示了如何在 OpenLayers 中实现极高帧率的动态数据实时渲染。利用切片图层的 <code>postrender</code> 钩子与 <code>getVectorContext</code> 即时渲染管线，通过数学内旋轮线（Hypotrochoid）公式，在每秒 60 帧刷新周期内实时计算并直接绘制包含 200 个黄色轨迹粒子与蓝黑交替龙头的动态流线。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
+<ul>
+<li><strong>即时模式（Immediate Mode）渲染架构</strong>：
+在保留模式（Retained Mode，即常规 <code>VectorSource.addFeature()</code>）下，如果每秒钟有几百个实时坐标需要刷新（如雷达扫描、实时无人机轨迹），频繁向数据源增删要素会导致大量的要素分配、空间索引重构（RBush Rebuild）与图层失效，造成剧烈掉帧。而通过 <code>getVectorContext(event)</code>，开发者可以直接在每帧结束时向视口底层 Canvas 绘制瞬时几何，帧结束后自动销毁，零内存垃圾！</li>
+<li><strong>连续时间轴驱动（<code>frameState.time</code>）</strong>：
+<code>frameState.time</code> 记录了当前帧被浏览器调度的精准毫秒级时间戳。通过 <code>theta = (2 * Math.PI * frameState.time) / 30000</code> 将时间映射为旋转相位，配合 <code>map.render()</code> 形成自驱动的稳定 60FPS 动画循环。</li>
+</ul>
+<h4>2. 源码与关键 API 剖析 (Source Code &amp; API Analysis)</h4>
+<ul>
+<li>内旋轮线（Hypotrochoid）几何公式：
+$$x = (R - r)\cos(t) + p\cos\left(\frac{R - r}{r}t\right)$$
+$$y = (R - r)\sin(t) - p\sin\left(\frac{R - r}{r}t\right)$$
+其中 $R=7000\text{km}, r=2000\text{km}, p=2000\text{km}$，生成空间多叶花瓣轮廓。</li>
+<li><code>vectorContext.drawGeometry(new MultiPoint(coordinates))</code>：
+一次性绘制批量多点，极大减少原生 Canvas 上下文的状态切换开销。</li>
+</ul>
+<h4>3. 生产实践踩坑与性能调优 (Production Pitfalls &amp; Optimization)</h4>
+<ul>
+<li><strong>拾取交互与即时渲染权衡</strong>：
+即时渲染（Immediate Mode）绘制的图元不保存在 <code>VectorSource</code> 中，因此无法通过 <code>map.forEachFeatureAtPixel()</code> 进行常规拾取。生产中常将该技术用于“高频流动特效、雷达波纹、闪烁动画”，而可交互的真实业务实体仍采用常规要素源。</li>
+</ul>
 </div>
       </div>
 
@@ -198,7 +221,7 @@ map.render();
 &lt;html lang="zh-CN"&gt;
   &lt;head&gt;
     &lt;meta charset="UTF-8"&gt;
-    &lt;title&gt;Dynamic Data&lt;/title&gt;
+    &lt;title&gt;Dynamic Data / 动态高频数据流与内旋轮线（Hypotrochoid）动效&lt;/title&gt;
     &lt;link rel="stylesheet" href="node_modules/ol/ol.css"&gt;
     &lt;style&gt;
       .map {
@@ -244,16 +267,28 @@ map.render();
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

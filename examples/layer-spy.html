@@ -116,7 +116,7 @@
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action active&quot; href=&quot;./layer-spy.html&quot;&gt;Layer Spy / 图层探照灯（透镜探查）&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./layer-swipe.html&quot;&gt;Layer Swipe / 图层卷帘对比&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./magnify.html&quot;&gt;Magnify / 局部放大镜（像素插值放大）&lt;/a&gt;
-                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer&lt;/a&gt;
+                &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./mapbox-layer.html&quot;&gt;Mapbox-gl Layer / 深度集成 Mapbox GL JS 渲染引擎图层&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./feature-move-animation.html&quot;&gt;Marker Animation / 折线轨迹沿线运动与车辆巡航动效&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./vector-osm.html&quot;&gt;OSM XML / Overpass API 矢量数据动态 BBOX 加载&lt;/a&gt;
                 &lt;li&gt;&lt;a class=&quot;list-group-item list-group-item-action&quot; href=&quot;./raster.html&quot;&gt;Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析&lt;/a&gt;
@@ -157,16 +157,35 @@
 
       <div class="row-fluid">
         <p id="shortdesc">View a portion of one layer over another / 使用圆形探照灯在底图上方透视查阅另一图层内容。</p>
-        <div id="docs"><p>Layer rendering can be manipulated in <code>prerender</code> and <code>postrender</code> event listeners. These listeners get an event with a reference to the Canvas rendering context. In this example, the <code>prerender</code> listener sets a clipping mask around the most recent mouse position, giving you a spyglass effect for viewing one layer over another.</p> <p>Move around the map to see the effect.  Use the ↑ up and ↓ down arrow keys to adjust the spyglass size.</p>
-<p>图层的渲染流程可通过 <code>prerender</code> 与 <code>postrender</code> 事件进行拦截。事件对象携带了底层的 Canvas 2D 绘图上下文（<code>event.context</code>）。本示例中，上层的遥感卫星图层在 <code>prerender</code> 阶段基于鼠标实时光标位置创建圆形剪切蒙版（Clipping Mask），实现了圆形探照灯（透镜）透视下方矢量路网图层的对比效果。</p> <p>在地图上移动鼠标即可观察探照灯透视效果。按键盘的 ↑（向上）和 ↓（向下）方向键可以动态调节透镜的探照半径（25px ~ 150px）。</p>
----
-### 📚 学习记录与技术深度解读 (Learning Notes)
-#### 1. 探照灯透视核心技术原理 (Spyglass Clipping Architecture) - <strong>双图层叠置与选择性裁切</strong>: 底图为普通矢量道路图层（`roads`），顶层为全覆盖的卫星遥感影像（`imagery`）。在默认渲染机制下，卫星图层将遮蔽下层的所有道路信息。 - <strong>Canvas 裁切蒙版流水线 (Clip Pipeline)</strong>:
-  1. 在 `imagery.on('prerender')` 阶段调用 `ctx.save()` 将画布初始坐标系与剪切区入栈；
-  2. 基于当前鼠标光标位置调用 `ctx.arc(...)` 绘制圆形矢量轮廓，并执行 `ctx.clip()`；
-  3. OpenLayers 内部仅把位于圆形裁切路径内的卫星瓦片光栅化到画布上；
-  4. 在 `imagery.on('postrender')` 阶段必须立即调用 `ctx.restore()` 弹出状态栈，释放剪切区约束，使后续图层与 UI 控件可正常绘制。<h4>2. 高分屏（HiDPI / Retina）物理像素自适应 - <strong>物理像素坐标对齐</strong>: 浏览器 DOM 事件返回的 <code>event.clientX/Y</code> 属于 CSS 像素，而在视网膜屏幕或设置了特定缩放的设备上，Canvas 的真实画布尺寸为 CSS 尺寸乘以设备像素比（<code>devicePixelRatio</code>）。 - <strong><code>getRenderPixel</code> 工具函数的关键作用</strong>: 代码中调用 <code>getRenderPixel(event, mousePosition)</code> 与其相邻偏移点，能精准把逻辑像素转换为物理像素坐标及真实物理半径，彻底避免高分屏下探照灯圆心偏移、圆弧锯齿或半径比例失调的问题。</h4>
-<h4>3. 生产实践陷阱与避坑指南 (Production Pitfalls &amp; Best Practices) - <strong>Canvas 状态栈泄漏风险</strong>: 若在 <code>prerender</code> 执行了 <code>ctx.save()</code> 但在 <code>postrender</code> 中未成功执行 <code>ctx.restore()</code>（例如中间发生抛错），残留的裁剪区会持续收缩全局上下文，导致整张地图最终黑屏或完全空白。 - <strong>鼠标移出重绘清理</strong>: 当鼠标移出地图容器时（<code>mouseout</code> 事件），务必将 <code>mousePosition</code> 置为 <code>null</code> 并触发 <code>map.render()</code>，此时裁切逻辑将由于无光标坐标而隐藏整层卫星图，确保无光标时不残留冻结的圆形残影。 - <strong>移动端多点触控与手势兼容</strong>: 原生 <code>mousemove</code> 仅适用于传统桌面鼠标。在移动平板或手机端开发时，需改用 PointerEvent（<code>pointerdown</code> / <code>pointermove</code>）或 TouchEvent，并为单指拖拽探照灯与双指缩放地图做好手势冲突防范。</h4>
+        <div id="docs"><p>Layer rendering can be manipulated in <code>prerender</code> and <code>postrender</code> event listeners.
+These listeners get an event with a reference to the Canvas rendering context.
+In this example, the <code>prerender</code> listener sets a clipping mask around the most
+recent mouse position, giving you a spyglass effect for viewing one layer over another.</p>
+<p>Move around the map to see the effect.  Use the ↑ up and ↓ down arrow keys to adjust the spyglass size.</p><p>图层的渲染流程可通过 <code>prerender</code> 与 <code>postrender</code> 事件进行拦截。事件对象携带了底层的 Canvas 2D 绘图上下文（<code>event.context</code>）。本示例中，上层的遥感卫星图层在 <code>prerender</code> 阶段基于鼠标实时光标位置创建圆形剪切蒙版（Clipping Mask），实现了圆形探照灯（透镜）透视下方矢量路网图层的对比效果。</p>
+<p>在地图上移动鼠标即可观察探照灯透视效果。按键盘的 ↑（向上）和 ↓（向下）方向键可以动态调节透镜的探照半径（25px ~ 150px）。</p><hr>
+<h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
+<h4>1. 探照灯透视核心技术原理 (Spyglass Clipping Architecture)</h4>
+<ul>
+<li><strong>双图层叠置与选择性裁切</strong>: 底图为普通矢量道路图层（<code>roads</code>），顶层为全覆盖的卫星遥感影像（<code>imagery</code>）。在默认渲染机制下，卫星图层将遮蔽下层的所有道路信息。</li>
+<li><strong>Canvas 裁切蒙版流水线 (Clip Pipeline)</strong>:<ol>
+<li>在 <code>imagery.on(&#39;prerender&#39;)</code> 阶段调用 <code>ctx.save()</code> 将画布初始坐标系与剪切区入栈；</li>
+<li>基于当前鼠标光标位置调用 <code>ctx.arc(...)</code> 绘制圆形矢量轮廓，并执行 <code>ctx.clip()</code>；</li>
+<li>OpenLayers 内部仅把位于圆形裁切路径内的卫星瓦片栅格化到画布上；</li>
+<li>在 <code>imagery.on(&#39;postrender&#39;)</code> 阶段必须立即调用 <code>ctx.restore()</code> 弹出状态栈，释放剪切区约束，使后续图层与 UI 控件可正常绘制。</li>
+</ol>
+</li>
+</ul>
+<h4>2. 高分屏（HiDPI / Retina）物理像素自适应</h4>
+<ul>
+<li><strong>物理像素坐标对齐</strong>: 浏览器 DOM 事件返回的 <code>event.clientX/Y</code> 属于 CSS 像素，而在视网膜屏幕或设置了特定缩放的设备上，Canvas 的真实画布尺寸为 CSS 尺寸乘以设备像素比（<code>devicePixelRatio</code>）。</li>
+<li><strong><code>getRenderPixel</code> 工具函数的关键作用</strong>: 代码中调用 <code>getRenderPixel(event, mousePosition)</code> 与其相邻偏移点，能精准把逻辑像素转换为物理像素坐标及真实物理半径，彻底避免高分屏下探照灯圆心偏移、圆弧锯齿或半径比例失调的问题。</li>
+</ul>
+<h4>3. 生产实践陷阱与避坑指南 (Production Pitfalls &amp; Best Practices)</h4>
+<ul>
+<li><strong>Canvas 状态栈泄漏风险</strong>: 若在 <code>prerender</code> 执行了 <code>ctx.save()</code> 但在 <code>postrender</code> 中未成功执行 <code>ctx.restore()</code>（例如中间发生抛错），残留的裁剪区会持续收缩全局上下文，导致整张地图最终黑屏或完全空白。</li>
+<li><strong>鼠标移出重绘清理</strong>: 当鼠标移出地图容器时（<code>mouseout</code> 事件），务必将 <code>mousePosition</code> 置为 <code>null</code> 并触发 <code>map.render()</code>，此时裁切逻辑将由于无光标坐标而隐藏整层卫星图，确保无光标时不残留冻结的圆形残影。</li>
+<li><strong>移动端多点触控与手势兼容</strong>: 原生 <code>mousemove</code> 仅适用于传统桌面鼠标。在移动平板或手机端开发时，需改用 PointerEvent（<code>pointerdown</code> / <code>pointermove</code>）或 TouchEvent，并为单指拖拽探照灯与双指缩放地图做好手势冲突防范。</li>
+</ul>
 </div>
       </div>
 
@@ -346,16 +365,28 @@ imagery.on(&#x27;postrender&#x27;, function (event) {
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

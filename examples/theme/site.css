@@ -208,27 +208,40 @@ a>img {
   margin-top: 1em;
 }
 
-#docs table {
-  border-collapse: collapse;
+/* Markdown 内容表格全局边框样式：同时适配示例 #docs、站点专题 .container 以及 Markdown 生成的所有内容表格 */
+#docs table:not(.controls),
+.container table:not(.controls):not(.table-borderless),
+table.markdown-table {
+  border-collapse: collapse !important;
   width: 100%;
-  margin: 1em 0;
+  margin: 1.25em 0;
   font-size: 0.95em;
+  border: 1px solid #d0d7de !important;
 }
 
-#docs th,
-#docs td {
-  border: 1px solid #d0d7de;
-  padding: 8px 12px;
+#docs table:not(.controls) th,
+#docs table:not(.controls) td,
+.container table:not(.controls):not(.table-borderless) th,
+.container table:not(.controls):not(.table-borderless) td,
+table.markdown-table th,
+table.markdown-table td {
+  border: 1px solid #d0d7de !important;
+  padding: 8px 14px;
   vertical-align: top;
 }
 
-#docs thead th {
-  background-color: var(--ol-accent-background-color);
+#docs table:not(.controls) thead th,
+.container table:not(.controls):not(.table-borderless) thead th,
+table.markdown-table thead th {
+  background-color: var(--ol-accent-background-color, #f6f8fa);
   font-weight: 700;
+  border-bottom: 2px solid #d0d7de !important;
 }
 
-#docs tbody tr:nth-child(even) {
-  background-color: #fafbfc;
+#docs table:not(.controls) tbody tr:nth-child(even),
+.container table:not(.controls):not(.table-borderless) tbody tr:nth-child(even),
+table.markdown-table tbody tr:nth-child(even) {
+  background-color: #fcfdfe;
 }
 
 ul.inline,
@@ -558,3 +571,52 @@ div.code-toolbar>.toolbar button:before {
 table.featureInfo {
   caption-side: initial;
 }
+
+/* ==========================================================================
+   Summary Index & Bootstrap 5.2 Utility Polyfills
+   ========================================================================== */
+
+/* Bootstrap 5.3 subtle background utility classes polyfill for Bootstrap 5.2 */
+.bg-primary-subtle { background-color: #cfe2ff !important; }
+.bg-secondary-subtle { background-color: #e2e3e5 !important; }
+.bg-success-subtle { background-color: #d1e7dd !important; }
+.bg-info-subtle { background-color: #cff4fc !important; }
+.bg-warning-subtle { background-color: #fff3cd !important; }
+.bg-danger-subtle { background-color: #f8d7da !important; }
+.bg-light-subtle { background-color: #fcfcfd !important; }
+.bg-dark-subtle { background-color: #ced4da !important; }
+
+/* Bootstrap 5.3 emphasis text utility classes polyfill for Bootstrap 5.2 */
+.text-primary-emphasis { color: #0a58ca !important; }
+.text-secondary-emphasis { color: #41464b !important; }
+.text-success-emphasis { color: #146c43 !important; }
+.text-info-emphasis { color: #087990 !important; }
+.text-warning-emphasis { color: #664d03 !important; }
+.text-danger-emphasis { color: #b02a37 !important; }
+.text-dark-emphasis { color: #1a1e21 !important; }
+
+/* Subtle badge text color safety fallback: prevent badge from defaulting to white text */
+.badge[class*="-subtle"] {
+  color: var(--ol-foreground-color);
+}
+
+/* Summary Card Header: prevent badge overflow, allow natural multi-line wrapping */
+.summary-card-badges,
+.card-body > .d-flex.align-items-center.mb-3 {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.85rem !important;
+}
+
+.summary-card-badges .badge,
+.card-body > .d-flex.align-items-center.mb-3 > .badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.32em 0.55em;
+  line-height: 1.25;
+  margin-right: 0 !important;
+  white-space: nowrap;
+}
+

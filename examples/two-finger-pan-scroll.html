@@ -170,12 +170,23 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Shows a map that allows page scrolling unless two fingers or Cmd/Ctrl are used to pan the map. / 演示如何配置协作手势：触屏上单指滚动网页、双指拖拽地图；桌面端按住 Cmd/Ctrl 键才允许拖拽平移与滚轮缩放。</p>
-        <div id="docs"><h2>This example shows a common behavior for page scrolling: on touch devices, when one finger is placed on the map, it can be used to scroll the page. Only two fingers will perform drag pan. For mouse or trackpad devices, the platform modifier key (Cmd or Ctrl) will enable drag pan on the map, otherwise the page will scroll.
-本示例展示在现代 Web 应用中极为通用的“协作手势模式（Cooperative Gesture Handling）”：在触控屏设备（手机/平板）上，单指在地图上滑动依然用于顺畅滚动外层网页，唯有使用<strong>双指触摸（Two-Finger）</strong>时才会触发地图的拖拽平移；在桌面鼠标与触控板设备上，需同时按住操作系统修饰键（macOS 上的 <code>Cmd</code> 或 Windows 上的 <code>Ctrl</code>）才能对地图进行拖动与滚轮缩放，否则滚轮与滑动手势将继续平滑滚动页面。</h2>
+        <div id="docs"><p>This example shows a common behavior for page scrolling: on touch devices, when one finger
+is placed on the map, it can be used to scroll the page. Only two fingers will perform drag pan.
+For mouse or trackpad devices, the platform modifier key (Cmd or Ctrl) will enable drag pan on
+the map, otherwise the page will scroll.</p>
+<p>本示例展示在现代 Web 应用中极为通用的“协作手势模式（Cooperative Gesture Handling）”：在触控屏设备（手机/平板）上，单指在地图上滑动依然用于顺畅滚动外层网页，唯有使用<strong>双指触摸（Two-Finger）</strong>时才会触发地图的拖拽平移；在桌面鼠标与触控板设备上，需同时按住操作系统修饰键（macOS 上的 <code>Cmd</code> 或 Windows 上的 <code>Ctrl</code>）才能对地图进行拖动与滚轮缩放，否则滚轮与滑动手势将继续平滑滚动页面。</p>
+<hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
-<h4>1. 核心架构原理 (Core Architecture) “滚轮与手势陷阱”是嵌入式地图组件破坏宿主页面可用性的头号痛点。主流地图平台普遍采用该协作交互范式： - <strong>默认交互的禁用与重构</strong>：默认情况下，OpenLayers 内部装载了无条件的 <code>DragPan</code> 与 <code>MouseWheelZoom</code>。本示例通过 <code>defaults({ dragPan: false, mouseWheelZoom: false })</code> 移除默认实例，换上配置了复合条件谓词（Condition Predicates）的定制实例。 - <strong>触摸点数探测机制 (<code>this.getPointerCount()</code>)</strong>：在自定义 <code>DragPan</code> 的 <code>condition</code> 函数中，通过访问当前交互实例的 <code>this.getPointerCount()</code>，可实时精确探测屏幕当前的活动触控点数。当且仅当触控点数为 2 时返回 <code>true</code>，触发地图平移；触控点为 1 时条件不满足，OpenLayers 放弃拦截事件，原生触摸事件驱动页面正常顺滑上下滚动。 - <strong>跨平台修饰键适配 (<code>platformModifierKeyOnly</code>)</strong>：OpenLayers 封装了跨平台的事件条件工具函数 <code>platformModifierKeyOnly(event)</code>，在 macOS 上自动匹配 <code>metaKey</code>（Command 键），在 Windows / Linux 上自动匹配 <code>ctrlKey</code>，无需开发者编写繁琐的平台分支兼容代码。</h4>
-<h4>2. 关键实现与代码拆解 (Code Deep Dive) ```javascript const map = new Map({</h4>
-<p>  interactions: defaults({
+<h4>1. 核心架构原理 (Core Architecture)</h4>
+<p>“滚轮与手势陷阱”是嵌入式地图组件破坏宿主页面可用性的头号痛点。主流地图平台普遍采用该协作交互范式：</p>
+<ul>
+<li><strong>默认交互的禁用与重构</strong>：默认情况下，OpenLayers 内部装载了无条件的 <code>DragPan</code> 与 <code>MouseWheelZoom</code>。本示例通过 <code>defaults({ dragPan: false, mouseWheelZoom: false })</code> 移除默认实例，换上配置了复合条件谓词（Condition Predicates）的定制实例。</li>
+<li><strong>触摸点数探测机制 (<code>this.getPointerCount()</code>)</strong>：在自定义 <code>DragPan</code> 的 <code>condition</code> 函数中，通过访问当前交互实例的 <code>this.getPointerCount()</code>，可实时精确探测屏幕当前的活动触控点数。当且仅当触控点数为 2 时返回 <code>true</code>，触发地图平移；触控点为 1 时条件不满足，OpenLayers 放弃拦截事件，原生触摸事件驱动页面正常顺滑上下滚动。</li>
+<li><strong>跨平台修饰键适配 (<code>platformModifierKeyOnly</code>)</strong>：OpenLayers 封装了跨平台的事件条件工具函数 <code>platformModifierKeyOnly(event)</code>，在 macOS 上自动匹配 <code>metaKey</code>（Command 键），在 Windows / Linux 上自动匹配 <code>ctrlKey</code>，无需开发者编写繁琐的平台分支兼容代码。</li>
+</ul>
+<h4>2. 关键实现与代码拆解 (Code Deep Dive)</h4>
+<pre><code class="language-javascript">const map = new Map({
+  interactions: defaults({
     dragPan: false,        // 卸载默认无条件拖拽
     mouseWheelZoom: false, // 卸载默认无条件滚轮缩放
   }).extend([
@@ -193,8 +204,13 @@
   layers: [new TileLayer({ source: new OSM() })],
   target: &#39;map&#39;,
   view: new View({ center: [0, 0], zoom: 2 }),
-}); ```</p>
-<h4>3. 生产实战避坑与考量 (Production Pitfalls) - <strong>浮层手势引导提示（User Guidance Overlay）</strong>：在商用落地页中，建议搭配交互提示遮罩（如提示：“使用双指移动地图”或“按住 ⌘/Ctrl 滚轮缩放地图”），当用户触发单指滑动或未按键滚轮时短暂停留 1.5 秒后自动淡出。 - <strong>捏合缩放（Pinch Zoom）协同</strong>：即使重构了平移逻辑，默认的 <code>PinchZoom</code>（双指捏合缩放）依然可以正常保留，与双指平移（<code>getPointerCount() === 2</code>）天然完美契合。</h4>
+});
+</code></pre>
+<h4>3. 生产实战避坑与考量 (Production Pitfalls)</h4>
+<ul>
+<li><strong>浮层手势引导提示（User Guidance Overlay）</strong>：在商用落地页中，建议搭配交互提示遮罩（如提示：“使用双指移动地图”或“按住 ⌘/Ctrl 滚轮缩放地图”），当用户触发单指滑动或未按键滚轮时短暂停留 1.5 秒后自动淡出。</li>
+<li><strong>捏合缩放（Pinch Zoom）协同</strong>：即使重构了平移逻辑，默认的 <code>PinchZoom</code>（双指捏合缩放）依然可以正常保留，与双指平移（<code>getPointerCount() === 2</code>）天然完美契合。</li>
+</ul>
 </div>
       </div>
 
@@ -293,16 +309,28 @@ const map &#x3D; new Map({
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.js"></script>
     <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
-    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"
-      onload="renderMathInElement(document.getElementById('docs') || document.body, {
-        delimiters: [
-          {left: '$$', right: '$$', display: true},
-          {left: '$', right: '$', display: false},
-          {left: '\\(', right: '\\)', display: false},
-          {left: '\\[', right: '\\]', display: true}
-        ],
-        throwOnError: false
-      });"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.getElementById('docs') || document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')
