@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>OpenLayers - </title>
+    <title>OpenLayers - OpenLayers 卷帘对比、透视镜探查与图层像素裁剪全景实战指南 (Layer Swipe, Spy Glass &amp; Pixel Clipping)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
@@ -18,6 +18,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
   </head>
   <body>
     <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
@@ -72,7 +73,288 @@
     </header>
 
     <div class="container">
-      
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">卷帘对比与图层像素裁剪指南</li></ol></nav>
+
+<h1 id="openlayers-卷帘对比、透视镜探查与图层像素裁剪全景实战指南">OpenLayers 卷帘对比、透视镜探查与图层像素裁剪全景实战指南</h1>
+<blockquote>
+<p>在地理信息系统（GIS）与遥感影像解译中，<strong>多时相变化监测（Temporal Change Detection）</strong>与<strong>多源底图差异对比（Multi-source Imagery Comparison）</strong>是核心的高频业务诉求。</p>
+<p>传统的左右分屏或透明度滑块往往难以实现像素级精细比对。OpenLayers 提供了基于 Canvas 2D 渲染上下文生命周期钩子（<code>prerender</code> / <code>postrender</code>）与 WebGL 硬件裁剪（Scissor Test）的整套视觉掩膜体系：涵盖<strong>左右/上下卷帘分割（Layer Swipe）</strong>、<strong>光标探照透视镜（Spy Glass）</strong>、<strong>显微放大镜（Magnify）</strong>以及<strong>行政区划几何掩膜裁剪（Vector Geometry Clipping）</strong>。</p>
+<p>本文基于 6 个核心官方示例，系统解构像素级图层裁剪的底层渲染管线与高帧率交互实践。</p>
+</blockquote>
+<hr>
+<h2 id="1-架构总览：6-个图层裁剪与对比官方示例矩阵">1. 架构总览：6 个图层裁剪与对比官方示例矩阵</h2>
+<table>
+<thead>
+<tr>
+<th align="left">分类</th>
+<th align="left">示例标识</th>
+<th align="left">核心技术机制</th>
+<th align="left">解决的典型生产场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>Canvas 2D 卷帘</strong></td>
+<td align="left"><a href="../en/latest/examples/layer-swipe.html"><code>layer-swipe</code></a></td>
+<td align="left"><code>prerender</code> / <code>postrender</code> + <code>ctx.clip()</code></td>
+<td align="left">历史遥感正射影像与现状高分卫星图垂直/水平滑块拖拽对比</td>
+</tr>
+<tr>
+<td align="left"><strong>WebGL 硬件卷帘</strong></td>
+<td align="left"><a href="../en/latest/examples/webgl-layer-swipe.html"><code>webgl-layer-swipe</code></a></td>
+<td align="left"><code>gl.enable(gl.SCISSOR_TEST)</code> + <code>gl.scissor()</code></td>
+<td align="left">高性能 WebGL 栅格瓦片/张量图层硬件加速极速卷帘</td>
+</tr>
+<tr>
+<td align="left"><strong>探照透视镜</strong></td>
+<td align="left"><a href="../en/latest/examples/layer-spy.html"><code>layer-spy</code></a></td>
+<td align="left">跟随鼠标坐标动态构建 <code>ctx.arc()</code> 圆形视口掩膜</td>
+<td align="left">鼠标悬停处动态透视地表下方隐藏的测绘图层或管网资产</td>
+</tr>
+<tr>
+<td align="left"><strong>局部显微放大镜</strong></td>
+<td align="left"><a href="../en/latest/examples/magnify.html"><code>magnify</code></a></td>
+<td align="left">双视口坐标投影映射 + 高倍率离屏 Canvas 局部重绘</td>
+<td align="left">局部超高分辨率建筑物细节、密集标牌无级放大探查</td>
+</tr>
+<tr>
+<td align="left"><strong>视口视窗遮罩</strong></td>
+<td align="left"><a href="../en/latest/examples/layer-clipping.html"><code>layer-clipping</code></a></td>
+<td align="left">屏幕矩形区域动态限制与 CSS 动画补间结合</td>
+<td align="left">炫酷开场揭幕动画、限定窗口范围内的瓦片动态渲染</td>
+</tr>
+<tr>
+<td align="left"><strong>行政几何掩膜</strong></td>
+<td align="left"><a href="../en/latest/examples/layer-clipping-vector.html"><code>layer-clipping-vector</code></a></td>
+<td align="left">多边形要素坐标向 Canvas 路径转换 + 复杂拓扑裁剪</td>
+<td align="left">仅显示省市行政边界内部地图，外部区域纯白或蒙版遮罩</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-canvas-2d-像素裁剪原理与卷帘实现（layer-swipe）">2. Canvas 2D 像素裁剪原理与卷帘实现（<code>layer-swipe</code>）</h2>
+<h3 id="21-渲染生命周期沙箱机制">2.1 渲染生命周期沙箱机制</h3>
+<p>在 Canvas 2D 渲染器中，OpenLayers 在绘制每个图层时都会触发 <code>prerender</code> 与 <code>postrender</code> 事件，并向监听回调传入 <code>evt.context</code>（原生 <code>CanvasRenderingContext2D</code>）。</p>
+<p>要在特定图层上实现半屏卷帘，关键在于利用 Canvas 状态栈：</p>
+<ol>
+<li>在 <code>prerender</code> 中保存上下文状态（<code>ctx.save()</code>）；</li>
+<li>构造可见区域路径并执行裁剪（<code>ctx.clip()</code>）；</li>
+<li>OpenLayers 内部仅在此裁剪路径内绘制该图层瓦片；</li>
+<li>在 <code>postrender</code> 中恢复上下文状态（<code>ctx.restore()</code>），确保不污染后续图层。</li>
+</ol>
+<pre><code class="language-mermaid">flowchart TD
+    FrameStart[&quot;触发 Layer 绘制帧&quot;] --&gt; PreRender[&quot;layer.on(&#39;prerender&#39;) 触发&quot;]
+    PreRender --&gt; SaveCtx[&quot;ctx.save() 保存渲染上下文&quot;]
+    SaveCtx --&gt; BuildPath[&quot;构建卷帘矩形路径: ctx.rect(0, 0, swipePixel, height)&quot;]
+    BuildPath --&gt; ClipCtx[&quot;ctx.clip() 锁定像素可写区域&quot;]
+    ClipCtx --&gt; RenderLayer[&quot;OpenLayers 执行瓦片绘制 (仅裁剪区内着色)&quot;]
+    RenderLayer --&gt; PostRender[&quot;layer.on(&#39;postrender&#39;) 触发&quot;]
+    PostRender --&gt; RestoreCtx[&quot;ctx.restore() 恢复状态栈&quot;]
+    RestoreCtx --&gt; FrameEnd[&quot;继续渲染下一图层&quot;]
+</code></pre>
+<h3 id="22-生产级高分屏（retina）适配卷帘代码范式">2.2 生产级高分屏（Retina）适配卷帘代码范式</h3>
+<blockquote>
+<p>[!IMPORTANT]
+在高 DPI 屏幕（Retina）下，Canvas 的物理像素尺寸与 CSS 逻辑像素存在缩放比 <code>window.devicePixelRatio</code>。若未对裁剪坐标乘以此比例，卷帘分界线会出现错位。</p>
+</blockquote>
+<pre><code class="language-javascript">import Map from &#39;ol/Map.js&#39;;
+import TileLayer from &#39;ol/layer/Tile.js&#39;;
+import OSM from &#39;ol/source/OSM.js&#39;;
+import XYZ from &#39;ol/source/XYZ.js&#39;;
+import { getRenderPixel } from &#39;ol/render.js&#39;;
+
+// 底层底图：标准路网
+const baseLayer = new TileLayer({
+  source: new OSM(),
+});
+
+// 上层图层：航空卫星图（待卷帘裁剪）
+const aerialLayer = new TileLayer({
+  source: new XYZ({
+    url: &#39;https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}&#39;,
+    maxZoom: 19,
+  }),
+});
+
+const map = new Map({
+  target: &#39;map&#39;,
+  layers: [baseLayer, aerialLayer],
+  view: new View({ center: [0, 0], zoom: 2 }),
+});
+
+const swipeInput = document.getElementById(&#39;swipe&#39;);
+
+// 1. prerender 阶段：建立裁剪掩膜
+aerialLayer.on(&#39;prerender&#39;, function (event) {
+  const ctx = event.context;
+  const mapSize = map.getSize();
+  const width = mapSize[0] * (swipeInput.value / 100);
+
+  // 利用 getRenderPixel 自动处理 devicePixelRatio 缩放基准
+  const tl = getRenderPixel(event, [width, 0]);
+  const tr = getRenderPixel(event, [mapSize[0], 0]);
+  const bl = getRenderPixel(event, [width, mapSize[1]]);
+  const br = getRenderPixel(event, mapSize);
+
+  ctx.save();
+  ctx.beginPath();
+  ctx.moveTo(tl[0], tl[1]);
+  ctx.lineTo(tr[0], tr[1]);
+  ctx.lineTo(br[0], br[1]);
+  ctx.lineTo(bl[0], bl[1]);
+  ctx.closePath();
+  ctx.clip(); // 仅允许右侧区域绘制卫星图
+});
+
+// 2. postrender 阶段：恢复上下文，避免影响后续图层
+aerialLayer.on(&#39;postrender&#39;, function (event) {
+  const ctx = event.context;
+  ctx.restore();
+});
+
+// 3. 滑块拖拽事件绑定
+swipeInput.addEventListener(&#39;input&#39;, function () {
+  map.render(); // 强制触发地图重绘以刷新帧
+});
+</code></pre>
+<hr>
+<h2 id="3-webgl-图层硬件加速裁剪（webgl-layer-swipe）">3. WebGL 图层硬件加速裁剪（<code>webgl-layer-swipe</code>）</h2>
+<h3 id="31-为什么-canvas-2d-裁剪无法用于-webgl-图层？">3.1 为什么 Canvas 2D 裁剪无法用于 WebGL 图层？</h3>
+<p>当使用 <code>WebGLTileLayer</code> 时，图层直接输出至 WebGL 渲染管线，其 <code>event.context</code> 是 <code>WebGLRenderingContext</code>，根本不存在 2D Canvas 的 <code>ctx.clip()</code> 方法。</p>
+<p>WebGL 提供了专用的<strong>硬件剪裁测试（Scissor Test）</strong>能力：
+$$x_{\text{gl}} = x, \quad y_{\text{gl}} = H - (y + h), \quad w_{\text{gl}} = w, \quad h_{\text{gl}} = h$$</p>
+<blockquote>
+<p>[!NOTE]
+WebGL 的屏幕坐标原点位于<strong>左下角</strong>（Y 轴向上），而 DOM 与 2D Canvas 的原点位于<strong>左上角</strong>（Y 轴向下），计算剪裁矩形纵坐标时必须用视口总高度进行反转。</p>
+</blockquote>
+<h3 id="32-webgl-卷帘实战代码范式">3.2 WebGL 卷帘实战代码范式</h3>
+<pre><code class="language-javascript">import WebGLTileLayer from &#39;ol/layer/WebGLTile.js&#39;;
+
+const webglLayer = new WebGLTileLayer({
+  source: sourceB,
+});
+
+webglLayer.on(&#39;prerender&#39;, function (event) {
+  const gl = event.context;
+  const pixelRatio = event.inversePixelTransform[0]; // 获取设备缩放比例倒数
+  const width = map.getSize()[0] * (swipeInput.value / 100);
+
+  gl.enable(gl.SCISSOR_TEST);
+
+  // 坐标转换：将 DOM 左上角转换为 WebGL 左下角坐标
+  const canvasHeight = gl.canvas.height;
+  const scissorWidth = width * window.devicePixelRatio;
+  const scissorHeight = canvasHeight;
+
+  // 仅在左半侧激活渲染
+  gl.scissor(0, 0, scissorWidth, scissorHeight);
+});
+
+webglLayer.on(&#39;postrender&#39;, function (event) {
+  const gl = event.context;
+  gl.disable(gl.SCISSOR_TEST); // 恢复全视口绘制
+});
+</code></pre>
+<hr>
+<h2 id="4-动态探照透视镜与局部放大镜（layer-spy--magnify）">4. 动态探照透视镜与局部放大镜（<code>layer-spy</code> / <code>magnify</code>）</h2>
+<h3 id="41-探照透视镜（spy-glass）算法">4.1 探照透视镜（Spy Glass）算法</h3>
+<p>探照镜通常以鼠标当前指针位置为圆心 $(x_0, y_0)$，以固定半径 $r$（如 $120\text{px}$）创建圆形镂空区域：</p>
+<p>$$\text{Circle}(x, y) = (x - x_0)^2 + (y - y_0)^2 \le r^2$$</p>
+<pre><code class="language-javascript">let mousePosition = null;
+const radius = 100;
+
+document.addEventListener(&#39;mousemove&#39;, function (evt) {
+  mousePosition = map.getEventPixel(evt);
+  map.render();
+});
+
+imageryLayer.on(&#39;prerender&#39;, function (event) {
+  const ctx = event.context;
+  if (!mousePosition) return;
+
+  const pixel = getRenderPixel(event, mousePosition);
+  const r = radius * (event.frameState.pixelRatio || 1);
+
+  ctx.save();
+  ctx.beginPath();
+  // 以当前鼠标像素为圆心构造圆形剪裁路径
+  ctx.arc(pixel[0], pixel[1], r, 0, 2 * Math.PI);
+  ctx.clip();
+});
+
+imageryLayer.on(&#39;postrender&#39;, function (event) {
+  event.context.restore();
+});
+</code></pre>
+<h3 id="42-局部显微放大镜（magnify）的双重变换机制">4.2 局部显微放大镜（Magnify）的双重变换机制</h3>
+<p>与仅透视不同，放大镜（<code>magnify</code>）需要在透镜内部呈现更高缩放等级（Zoom Level）的细节。</p>
+<pre><code class="language-mermaid">sequenceDiagram
+    autonumber
+    participant U as 用户鼠标移动
+    participant M1 as 主地图 (Main Map)
+    participant M2 as 放大镜离屏地图 (Magnify Map)
+    participant C as 渲染上下文 (Canvas)
+
+    U-&gt;&gt;M1: pointermove 触发更新中心坐标
+    M1-&gt;&gt;M2: 提取鼠标物理地理坐标 P(lng, lat)
+    M2-&gt;&gt;M2: 设置 Magnify 视口中心为 P，Zoom = ZoomMain + 2
+    M2-&gt;&gt;C: 渲染高分辨率瓦片至离屏容器
+    C-&gt;&gt;M1: 将离屏结果绘制为圆形悬浮蒙版
+</code></pre>
+<hr>
+<h2 id="5-行政区划几何掩膜裁剪（layer-clipping-vector）">5. 行政区划几何掩膜裁剪（<code>layer-clipping-vector</code>）</h2>
+<p>在业务大屏展示中，通常只希望展示本省/本市范围内的卫星遥感影像，其余区域保持纯黑或空白。</p>
+<h3 id="51-矢量坐标到-canvas-绘图指令映射">5.1 矢量坐标到 Canvas 绘图指令映射</h3>
+<p>利用 OpenLayers 内部几何渲染通道，将 <code>Polygon</code> / <code>MultiPolygon</code> 的空间坐标动态投影转换为 Canvas 屏幕像素路径：</p>
+<pre><code class="language-javascript">import { toContext } from &#39;ol/render.js&#39;;
+import Style from &#39;ol/style/Style.js&#39;;
+import Fill from &#39;ol/style/Fill.js&#39;;
+
+// 获取行政区划要素
+const boundaryFeature = vectorSource.getFeatures()[0];
+
+tileLayer.on(&#39;prerender&#39;, function (event) {
+  const ctx = event.context;
+  ctx.save();
+
+  // 使用 toContext 获取高精度即时渲染上下文
+  const vectorContext = toContext(ctx, {
+    pixelRatio: event.frameState.pixelRatio,
+  });
+
+  // 构造纯色填充样式，作为剪裁区域的载体
+  const clipStyle = new Style({
+    fill: new Fill({ color: &#39;black&#39; }),
+  });
+
+  // 将矢量多边形绘制进路径并锁定裁剪
+  ctx.beginPath();
+  vectorContext.setStyle(clipStyle);
+  vectorContext.drawGeometry(boundaryFeature.getGeometry());
+  ctx.clip();
+});
+
+tileLayer.on(&#39;postrender&#39;, function (event) {
+  event.context.restore();
+});
+</code></pre>
+<hr>
+<h2 id="6-避坑指南与性能最佳实践">6. 避坑指南与性能最佳实践</h2>
+<h3 id="61-致命陷阱：漏写-ctxrestore-导致全图崩溃">6.1 致命陷阱：漏写 <code>ctx.restore()</code> 导致全图崩溃</h3>
+<ul>
+<li><strong>现象</strong>：地图拖拽时除目标图层外，其他所有底图和标注突然消失或被不可逆裁剪。</li>
+<li><strong>根因</strong>：Canvas 状态栈（State Stack）未恢复。OpenLayers 在整个地图视图共用一个主 Canvas（Canvas 2D 模式下）。如果在 <code>postrender</code> 中未对称调用 <code>ctx.restore()</code>，裁剪作用域会直接泄漏到后续执行绘制的图层。</li>
+<li><strong>解法</strong>：养成防御性编程习惯，在 <code>prerender</code> 中只要调用过 <code>ctx.save()</code>，必须确保 <code>postrender</code> 中成对执行 <code>ctx.restore()</code>。</li>
+</ul>
+<h3 id="62-高分屏模糊与偏移防范">6.2 高分屏模糊与偏移防范</h3>
+<ul>
+<li>严禁直接使用 DOM 事件中的 <code>evt.offsetX</code> 或 <code>evt.clientX</code> 作为裁剪坐标。</li>
+<li>必须使用 <code>ol/render</code> 导出的 <code>getRenderPixel(event, domPixel)</code> 进行高分辨率物理设备像素变换。</li>
+</ul>
+<h3 id="63-交互性能防抖与调度">6.3 交互性能防抖与调度</h3>
+<ul>
+<li>卷帘拖拽时，滑块绑定 <code>input</code> 事件，直接调用 <code>map.render()</code> 即可触发帧调度。</li>
+<li>严禁在 <code>input</code> 回调中重复创建 <code>Layer</code> 或修改 <code>Source</code>，仅需修改裁剪阈值变量并通知重新渲染，可轻松维持 60 FPS 满帧滑动。</li>
+</ul>
+
     </div>
     <footer>
       Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
