@@ -262,13 +262,13 @@ const source = new ImageTileSource({
 <hr>
 <h2 id="6-决策指南：三维选型决策树">6. 决策指南：三维选型决策树</h2>
 <pre><code class="language-mermaid">flowchart TD
-    Start([ArcGIS MapServer 接入需求]) --&gt; HasCache{服务端是否已生成静态切片缓存?}
-    HasCache --&gt;|是 (Cached)| HighPerf[优先采用 XYZ / ImageTile + WebGLTile]
-    HasCache --&gt;|否 (Dynamic)| NeedDynamicFilter{业务是否需要动态图层/属性 SQL 过滤?}
-    NeedDynamicFilter --&gt;|是| CheckQuality{对注记品质与网络要求?}
-    NeedDynamicFilter --&gt;|否| BuildCache[建议管理员发布切片缓存]
-    CheckQuality --&gt;|要求文字绝对不被切断| UseImage[选用 ImageArcGISRest (单图视口出图)]
-    CheckQuality --&gt;|要求网络慢时渐进渲染| UseTile[选用 TileArcGISRest + extent 范围约束]
+    Start([&quot;ArcGIS MapServer 接入需求&quot;]) --&gt; HasCache{&quot;服务端是否已生成静态切片缓存?&quot;}
+    HasCache --&gt;|是 (Cached)| HighPerf[&quot;优先采用 XYZ / ImageTile + WebGLTile&quot;]
+    HasCache --&gt;|否 (Dynamic)| NeedDynamicFilter{&quot;业务是否需要动态图层/属性 SQL 过滤?&quot;}
+    NeedDynamicFilter --&gt;|是| CheckQuality{&quot;对注记品质与网络要求?&quot;}
+    NeedDynamicFilter --&gt;|否| BuildCache[&quot;建议管理员发布切片缓存&quot;]
+    CheckQuality --&gt;|要求文字绝对不被切断| UseImage[&quot;选用 ImageArcGISRest (单图视口出图)&quot;]
+    CheckQuality --&gt;|要求网络慢时渐进渲染| UseTile[&quot;选用 TileArcGISRest + extent 范围约束&quot;]
 </code></pre>
 
     </div>
@@ -301,6 +301,39 @@ const source = new ImageTileSource({
           }
         }
         renderMath();
+      });
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMermaid() {
+          if (window.mermaid) {
+            if (window.__mermaidInitialized) {
+              return;
+            }
+            window.__mermaidInitialized = true;
+            mermaid.initialize({
+              startOnLoad: false,
+              theme: 'default',
+              securityLevel: 'loose'
+            });
+            const codeBlocks = document.querySelectorAll('pre code.language-mermaid, pre code.mermaid');
+            if (codeBlocks.length > 0) {
+              codeBlocks.forEach(function (el) {
+                const pre = el.parentElement;
+                const wrapper = pre.closest('.code-toolbar') || pre;
+                const div = document.createElement('div');
+                div.className = 'mermaid';
+                div.textContent = el.textContent;
+                wrapper.parentElement.replaceChild(div, wrapper);
+              });
+              mermaid.run();
+            }
+          } else {
+            setTimeout(renderMermaid, 50);
+          }
+        }
+        renderMermaid();
       });
     </script>
   </body>

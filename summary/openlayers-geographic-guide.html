@@ -115,13 +115,13 @@ export function useGeographic() {
 <p>在地理模式下进行矢量图层数字化编辑，体验与直接在 QGIS 或 ArcGIS Pro 中操作经纬度图层高度一致。</p>
 <h3 id="21-协同工作流水线">2.1 协同工作流水线</h3>
 <pre><code class="language-mermaid">flowchart TD
-    User([用户鼠标操作]) --&gt; SnapInt[Snap 交互吸附]
-    SnapInt --&gt;|校准吸附后的 [lon, lat]| ActiveMode{当前激活模式}
-    ActiveMode --&gt;|draw 模式| DrawInt[Draw 交互: 生成多边形]
-    DrawInt --&gt; Source[(VectorSource 数据源)]
-    ActiveMode --&gt;|modify 模式| SelectInt[Select 交互: 拾取要素]
-    SelectInt --&gt; FeatureCollection[Selected Features 集合]
-    FeatureCollection --&gt; ModifyInt[Modify 交互: 拖动编辑顶点]
+    User([&quot;用户鼠标操作&quot;]) --&gt; SnapInt[&quot;Snap 交互吸附&quot;]
+    SnapInt --&gt;|校准吸附后的 [lon, lat]| ActiveMode{&quot;当前激活模式&quot;}
+    ActiveMode --&gt;|draw 模式| DrawInt[&quot;Draw 交互: 生成多边形&quot;]
+    DrawInt --&gt; Source[(&quot;VectorSource 数据源&quot;)]
+    ActiveMode --&gt;|modify 模式| SelectInt[&quot;Select 交互: 拾取要素&quot;]
+    SelectInt --&gt; FeatureCollection[&quot;Selected Features 集合&quot;]
+    FeatureCollection --&gt; ModifyInt[&quot;Modify 交互: 拖动编辑顶点&quot;]
     ModifyInt --&gt; Source
 </code></pre>
 <h3 id="22-编辑模式切换与交互互斥代码范式">2.2 编辑模式切换与交互互斥代码范式</h3>
@@ -358,6 +358,39 @@ baseLayer.on(&#39;postrender&#39;, (event) =&gt; {
           }
         }
         renderMath();
+      });
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMermaid() {
+          if (window.mermaid) {
+            if (window.__mermaidInitialized) {
+              return;
+            }
+            window.__mermaidInitialized = true;
+            mermaid.initialize({
+              startOnLoad: false,
+              theme: 'default',
+              securityLevel: 'loose'
+            });
+            const codeBlocks = document.querySelectorAll('pre code.language-mermaid, pre code.mermaid');
+            if (codeBlocks.length > 0) {
+              codeBlocks.forEach(function (el) {
+                const pre = el.parentElement;
+                const wrapper = pre.closest('.code-toolbar') || pre;
+                const div = document.createElement('div');
+                div.className = 'mermaid';
+                div.textContent = el.textContent;
+                wrapper.parentElement.replaceChild(div, wrapper);
+              });
+              mermaid.run();
+            }
+          } else {
+            setTimeout(renderMermaid, 50);
+          }
+        }
+        renderMermaid();
       });
     </script>
   </body>
