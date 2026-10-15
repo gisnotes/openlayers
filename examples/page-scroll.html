@@ -1,10 +1,45 @@
 ---
 layout: example.html
-title: Page Scrolling
-shortdesc: Shows a map that does not interrupt page scrolling.
+title: Page Scrolling / 页面滚动与焦点隔离（tabindex 缩放陷阱防御）
+shortdesc: Shows a map that does not interrupt page scrolling. / 展示如何通过配置 tabindex 防止地图捕获滚轮事件从而阻断长网页的正常向下滚动。
 docs: >
   To perform wheel/trackpad zoom and drag-pan actions only when the map
   has the focus, configure your map div with a `tabindex` attribute.
+
+  在长网页（如产品落地页、新闻专栏、技术博客）中嵌入地图时，用户快速滚动鼠标滚轮极易被地图拦截并触发缩放，导致页面无法继续向下滚动（俗称“滚轮缩放陷阱 Scroll Trap”）。只需为地图挂载的宿主容器（`<div>`）添加 <code>tabindex="1"</code>（或任意有效数值），OpenLayers 便会自动切换为**焦点优先模式**：仅当地图容器被用户点击获得焦点后，滚轮和触控板手势才会触发地图缩放；失去焦点时，滚轮事件直接穿透给外层浏览器窗口，页面正常上下滚动。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构原理 (Core Architecture)
+  默认情况下，`<div>` 元素是不具备键盘焦点（Non-focusable）的纯布局容器。当用户滚轮滑动经过地图视口时，浏览器的 <code>wheel</code> 事件直接冒泡至 OpenLayers 绑定的监听器，触发 <code>preventDefault()</code> 并引发地图视口放大或缩小。
+  - **`tabindex` 赋能交互焦点隔离**：通过为 HTML 元素注入 <code>tabindex</code> 属性，浏览器将该 `div` 提升为可聚焦元素（Focusable Element），支持键盘 Tab 导航与鼠标点击对焦。
+  - **OpenLayers `MouseWheelZoom` 内部焦点检测**：OpenLayers 的 <code>MouseWheelZoom</code> 交互在收到 <code>wheel</code> 事件时，会检查宿主元素是否声明了 <code>tabindex</code> 且当前是否持有焦点。若未获得焦点，OpenLayers 会**主动放弃捕获该事件**，允许事件继续冒泡给浏览器外层 Window，驱动长网页上下平滑滚动。
+
+  #### 2. 关键实现与代码拆解 (Code Deep Dive)
+  ```html
+  <!-- 核心：为地图容器声明 tabindex 属性使之具备焦点感知能力 -->
+  <div tabindex="1" id="map" class="map"></div>
+  ```
+  ```javascript
+  // JavaScript 代码无需额外配置，OpenLayers 内部会自动检测 target 元素的 tabindex 与 focus 状态
+  const map = new Map({
+    layers: [new TileLayer({ source: new OSM() })],
+    target: 'map',
+    view: new View({ center: [0, 0], zoom: 2 }),
+  });
+  ```
+
+  #### 3. 生产实战避坑与考量 (Production Pitfalls)
+  - **焦点高亮样式定制（Focus Outline）**：在某些浏览器中，获得焦点的 `div` 会出现默认外边框。建议在 CSS 中显式声明精致的柔和轮廓，向用户清晰传达“地图已激活，滚轮已切换为缩放模式”的视觉反馈：
+    ```css
+    .map:focus {
+      outline: 2px solid rgba(0, 102, 204, 0.4);
+      outline-offset: -2px;
+    }
+    ```
+  - **移动端多指交互配合**：<code>tabindex</code> 机制主要解决桌面端鼠标滚轮与笔记本触控板问题。在手机或平板触摸屏上，单指滑动依然可能触发地图平移。如需在移动端也彻底防误触，需结合 <code>two-finger-pan-scroll</code>（双指拖动）协作模式。
 tags: "trackpad, mousewheel, zoom, scroll, page"
 ---
 <div tabindex="1" id="map" class="map"></div>

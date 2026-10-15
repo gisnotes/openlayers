@@ -12,6 +12,8 @@ const attributions =
   '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> ' +
   '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>';
 
+// Initialize map with FullScreen control and DragRotateAndZoom interaction
+// 初始化带有 FullScreen 全屏控件与 DragRotateAndZoom 复合拖拽手势的地图实例
 const map = new Map({
   controls: defaultControls().extend([new FullScreen()]),
   interactions: defaultInteractions().extend([new DragRotateAndZoom()]),

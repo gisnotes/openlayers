@@ -1,10 +1,61 @@
 ---
 layout: example.html
-title: Full Screen Drag, Rotate, and Zoom
-shortdesc: Example of drag rotate and zoom control with full screen effect.
+title: Full Screen Drag, Rotate, and Zoom / 全屏联动拖拽旋转与复合缩放
+shortdesc: Example of drag rotate and zoom control with full screen effect. / 演示结合全屏控件（FullScreen）与 Shift+拖拽复合手势（DragRotateAndZoom）的沉浸式地图交互。
 docs: >
   <p>Hold down <code>Shift+Drag</code> to rotate and zoom.  Click the button in the top right corner to go full screen.  Then do the <code>Shift+Drag</code> thing again.</p>
   <p>If there is no button on the map, your browser does not support the <a href="https://caniuse.com/fullscreen">Full Screen API</a>.</p>
+
+  <p>按住 <code>Shift + 鼠标左键拖拽</code> 可同时以拖拽起点为中心对地图进行自由旋转与连续缩放。点击右上角的全屏按钮（<code>FullScreen</code> 控件）可切换至无边框全屏沉浸模式；在全屏状态下再次使用 <code>Shift + 拖拽</code> 即可体验完整的复合三维视角变换体验。</p>
+  <p>若地图右上角未显示全屏按钮，说明当前运行的浏览器或 iframe 沙箱环境不支持 <a href="https://caniuse.com/fullscreen">Full Screen API</a>。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构原理 (Core Architecture)
+  在专业地理信息指挥大屏与航空遥感分析中，沉浸式全屏与高自由度复合视角变换是高级 GIS 的标配：
+  - **`DragRotateAndZoom` 复合动力学手势**：默认的单指或左键拖拽仅触发平移（<code>DragPan</code>）。<code>DragRotateAndZoom</code> 交互将旋转与缩放合二为一：
+    - 当用户按下 <code>Shift</code> 键并在地图上拖拽时，交互记录起始点 $P_0$ 和当前点 $P_1$ 相对于视口中心的极坐标夹角 $\Delta \theta$ 与径向距离比 $\frac{r_1}{r_0}$。
+    - 地图视口随之实时旋转 $\Delta \theta$，并通过对数尺度连续缩放：$\Delta z = \log_2(r_1 / r_0)$。
+  - **HTML5 Fullscreen API 规范集成**：<code>ol/control/FullScreen</code> 控件封装了现代浏览器的 <code>element.requestFullscreen()</code> 与多浏览器前缀适配。点击后将地图宿主容器提升为全屏呈现层（Top Layer），并在退出全屏时自动重置视口尺寸。
+  - **全屏时的尺寸监听与重采样**：当从普通窗口切换到全屏时，DOM 容器尺寸瞬间跃升。OpenLayers 内部的 <code>Map</code> 实例自动监听尺寸变更事件，无缝更新内部渲染视口宽度与高度，触发无失真切片重排。
+
+  #### 2. 关键实现与代码拆解 (Code Deep Dive)
+  ```javascript
+  const map = new Map({
+    // 挂载 FullScreen 全屏控件
+    controls: defaultControls().extend([new FullScreen()]),
+    // 挂载 DragRotateAndZoom 复合手势交互
+    interactions: defaultInteractions().extend([new DragRotateAndZoom()]),
+    layers: [
+      new TileLayer({
+        source: new ImageTile({
+          url: 'https://api.maptiler.com/maps/satellite/{z}/{x}/{y}.jpg?key=' + key,
+          tileSize: 512,
+          maxZoom: 20,
+        }),
+      }),
+    ],
+    target: 'map',
+    view: new View({
+      center: [-33519607, 5616436],
+      rotation: -Math.PI / 8, // 初始倾斜旋转视角
+      zoom: 8,
+    }),
+  });
+  ```
+
+  #### 3. 生产实战避坑与考量 (Production Pitfalls)
+  - **iframe 沙箱全屏权限**：若 OpenLayers 地图被嵌入在微前端架构或第三方页面的 <code>&lt;iframe&gt;</code> 中，必须为 iframe 标签显式添加 <code>allowfullscreen="true"</code> 或权限策略 <code>allow="fullscreen"</code>，否则 <code>FullScreen</code> 控件会检测到 API 不可用并自动自我隐藏。
+  - **CSS 宽高自适应必须 100%**：全屏控件作用于地图容器 <code>id="map"</code>。要确保全屏后铺满屏幕，容器样式必须配置：
+    ```css
+    .map:fullscreen {
+      width: 100%;
+      height: 100%;
+    }
+    ```
+    否则全屏后地图可能依然保持固定像素宽高，周围留下大面积黑色空白区域。
 tags: "full-screen, drag, rotate, zoom, xyz, maptiler"
 ---
 <div id="map" class="map"></div>

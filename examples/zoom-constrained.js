@@ -8,6 +8,8 @@ const attributions =
   '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> ' +
   '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>';
 
+// Instantiate map with constrained zoom range (minZoom: 9, maxZoom: 13)
+// 初始化带有缩放级别硬约束（minZoom: 9, maxZoom: 13）的地图与视图
 const map = new Map({
   target: 'map',
   layers: [
@@ -23,7 +25,7 @@ const map = new Map({
   view: new View({
     center: [-13553864, 5918250],
     zoom: 11,
-    minZoom: 9,
-    maxZoom: 13,
+    minZoom: 9, // Clamped minimum zoom level (broadest view) / 允许缩放的最小级别（最宽视野）
+    maxZoom: 13, // Clamped maximum zoom level (most detailed view) / 允许缩放的最大级别（最高精细度）
   }),
 });
