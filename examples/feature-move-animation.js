@@ -41,10 +41,13 @@ const map = new Map({
 
 // The polyline string is read from a JSON similar to those returned
 // by directions APIs such as Openrouteservice and Mapbox.
+// 从类似 Openrouteservice 或 Mapbox 路径规划 API 返回的 JSON 中读取折线编码字符串
 fetch('data/polyline/route.json').then(function (response) {
   response.json().then(function (result) {
     const polyline = result.routes[0].geometry;
 
+    // Decode polyline to geometry (factor 1e6 for 6-decimal precision)
+    // 解码 Google/Mapbox 算法压缩的折线几何
     const route = new Polyline({
       factor: 1e6,
     }).readGeometry(polyline, {
@@ -112,10 +115,17 @@ fetch('data/polyline/route.json').then(function (response) {
     let distance = 0;
     let lastTime;
 
+    /**
+     * Postrender animation loop: interpolate position and draw with VectorContext.
+     * 渲染后帧回调：基于时间差积分计算折线插值坐标，使用 VectorContext 瞬态绘制。
+     * @param {import("../src/ol/render/Event.js").default} event Render event.
+     */
     function moveFeature(event) {
       const speed = Number(speedInput.value);
       const time = event.frameState.time;
       const elapsedTime = time - lastTime;
+      // Modulo 2 allows round-trip movement (0->1 forward, 1->2 backward)
+      // 对 2 取模实现沿线往返往复运动（0~1 为正向，1~2 为反向折返）
       distance = (distance + (speed * elapsedTime) / 1e6) % 2;
       lastTime = time;
 
@@ -127,23 +137,34 @@ fetch('data/polyline/route.json').then(function (response) {
       vectorContext.setStyle(styles.geoMarker);
       vectorContext.drawGeometry(position);
       // tell OpenLayers to continue the postrender animation
+      // 请求下一帧重绘继续推进动画
       map.render();
     }
 
+    /**
+     * Start animation: detach geometry from source and subscribe to postrender.
+     * 启动动画：临时将 geoMarker 几何置空以优化性能，挂载 postrender 监听。
+     */
     function startAnimation() {
       animating = true;
       lastTime = Date.now();
-      startButton.textContent = 'Stop Animation';
+      startButton.textContent = 'Stop Animation / 停止动画';
       vectorLayer.on('postrender', moveFeature);
       // hide geoMarker and trigger map render through change event
+      // 临时隐藏数据源中的要素，避免每帧触发 R-Tree 空间索引重构
       geoMarker.setGeometry(null);
     }
 
+    /**
+     * Stop animation: restore geometry to source and unsubscribe from postrender.
+     * 停止动画：将最终位置赋回 geoMarker 并注销 postrender 监听。
+     */
     function stopAnimation() {
       animating = false;
-      startButton.textContent = 'Start Animation';
+      startButton.textContent = 'Start Animation / 开始动画';
 
       // Keep marker at current animation position
+      // 在当前动画停止位置还原要素几何
       geoMarker.setGeometry(position);
       vectorLayer.un('postrender', moveFeature);
     }

@@ -1,16 +1,60 @@
 ---
 layout: example.html
-title: Marker Animation
-shortdesc: Demonstrates how to move a feature along a line.
+title: Marker Animation / 折线轨迹沿线运动与车辆巡航动效
+shortdesc: Demonstrates how to move a feature along a line. / 演示如何使用 postrender 与 VectorContext 实现标记要素沿 Polyline 路径平滑移动与倍速调节。
 docs: >
   This example shows how to use <b>postrender</b> events and a <b>vector context</b> to
   animate a marker feature along a line. In this example an encoded polyline
   is being used.
+
+  本示例展示如何利用 <b>postrender</b> 渲染完成事件与 <b>VectorContext</b> 矢量管线，驱动点标记沿着高压缩编码折线（Polyline）路径进行平滑连续的动态巡航。支持通过滑块实时调节运动速度倍率，且在动画进行期间将要素几何临时剥离出数据源，利用即时帧上下文绘制，实现极高帧率下的低 CPU 开销渲染。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构原理 (Core Architecture)
+  在智慧交通、车辆监控与物流路径回放系统中，车辆需要沿着数千个转折点的复杂线路行进：
+  - **路径插值与高精度距离比例 (`route.getCoordinateAt(fraction)`)**：OpenLayers 的 <code>LineString.prototype.getCoordinateAt(fraction)</code> 提供了沿折线全长按百分比（$0.0 \sim 1.0$）线性插值空间坐标的能力，内部自动进行各分段欧几里得距离累加，避免了手动逐段解算复杂向量插值的繁琐。
+  - **时间增量积分与往返巡航模运算**：
+    $$\text{distance} = \left(\text{distance} + \frac{\text{speed} \times \Delta t}{10^6}\right) \bmod 2$$
+    通过对 2 取模，巧妙实现 $0 \to 1$（正向出发）与 $1 \to 2$（逆向折返，对应实际比例 $2 - \text{distance}$）的无缝连续往复巡航。
+  - **“临时隐藏 + 帧代理”黄金性能范式**：启动动画时执行 <code>geoMarker.setGeometry(null)</code>，将要素实体从数据源空间索引中临时卸载；在每帧 <code>postrender</code> 中仅通过 <code>vectorContext.drawGeometry(position)</code> 将临时点绘制在视口上。停止时再通过 <code>geoMarker.setGeometry(position)</code> 还原。这彻底消除了每帧频繁更新 Feature 几何引发的数据源 R-Tree 空间索引重构开销！
+
+  #### 2. 关键实现与代码拆解 (Code Deep Dive)
+  ```javascript
+  function moveFeature(event) {
+    const speed = Number(speedInput.value);
+    const time = event.frameState.time;
+    const elapsedTime = time - lastTime;
+    // 依据真实帧耗时增量累加位移，杜绝掉帧跳跃
+    distance = (distance + (speed * elapsedTime) / 1e6) % 2;
+    lastTime = time;
+
+    // 获取当前折返位置的空间投影坐标
+    const currentCoordinate = route.getCoordinateAt(
+      distance > 1 ? 2 - distance : distance,
+    );
+    position.setCoordinates(currentCoordinate);
+
+    // 利用帧上下文即时绘制
+    const vectorContext = getVectorContext(event);
+    vectorContext.setStyle(styles.geoMarker);
+    vectorContext.drawGeometry(position);
+
+    // 持续驱动下一帧重绘
+    map.render();
+  }
+  ```
+
+  #### 3. 生产实战避坑与考量 (Production Pitfalls)
+  - **车辆转向角（Heading Rotation）同步**：实际车联网应用中，不仅需要更新坐标，还需要根据相邻两点差值向量计算航向角：$\theta = \operatorname{atan2}(\Delta x, \Delta y)$，并将车辆图标（Icon）的 <code>rotation</code> 设为 $\theta$，使车辆在拐弯时自然顺滑转向。
+  - **基于帧时间增量（$\Delta t$）计算**：严禁在动画中基于固定步长叠加坐标，必须使用 <code>event.frameState.time - lastTime</code>。当用户切换标签页或设备卡顿导致帧率波动时，基于真实时间差的积分能保证位移物理速度始终恒定。
 tags: "animation, feature, postrender, polyline, maptiler"
 ---
 <div id="map" class="map"></div>
 <label for="speed">
-  speed:&nbsp;
+  speed / 速度:&nbsp;
   <input id="speed" type="range" min="10" max="999" step="10" value="60">
 </label>
-<button id="start-animation">Start Animation</button>
+<button id="start-animation">Start Animation / 开始动画</button>

@@ -51,6 +51,7 @@ const flightsSource = new VectorSource({
           const to = flight[1];
 
           // create an arc circle between the two locations
+          // 利用 arc.js 在起点与终点之间计算球面大圆弧线
           const arcGenerator = new arc.GreatCircle(
             {x: from[1], y: from[0]},
             {x: to[1], y: to[0]},
@@ -59,6 +60,7 @@ const flightsSource = new VectorSource({
           const arcLine = arcGenerator.Arc(100, {offset: 10});
           // paths which cross the -180°/+180° meridian are split
           // into two sections which will be animated sequentially
+          // 跨越 180° 反子午线的路径被自动切分为两个几何分段，按时序依次呈现动画
           const features = [];
           arcLine.geometries.forEach(function (geometry) {
             const line = new LineString(geometry.coords);
@@ -73,6 +75,7 @@ const flightsSource = new VectorSource({
           });
           // add the features with a delay so that the animation
           // for all features does not start at the same time
+          // 增加阶梯延迟，使航线错峰腾飞
           addLater(features, i * 50);
         }
         tileLayer.on('postrender', animateFlights);
@@ -85,6 +88,7 @@ const flightsLayer = new VectorLayer({
   style: function (feature) {
     // if the animation is still active for a feature, do not
     // render the feature with the layer style
+    // 若要素正在进行动态飞行，图层不直接绘制；完全飞完后移交常规样式渲染
     if (feature.get('finished')) {
       return style;
     }
@@ -95,6 +99,12 @@ const flightsLayer = new VectorLayer({
 map.addLayer(flightsLayer);
 
 const pointsPerMs = 0.02;
+
+/**
+ * Postrender animation handler: draws growing flight lines with vectorContext.
+ * 渲染后帧回调：使用 vectorContext 瞬态绘制逐步生长的飞行航迹。
+ * @param {import("../src/ol/render/Event.js").default} event Render event.
+ */
 function animateFlights(event) {
   const vectorContext = getVectorContext(event);
   const frameState = event.frameState;
@@ -105,6 +115,7 @@ function animateFlights(event) {
     const feature = features[i];
     if (!feature.get('finished')) {
       // only draw the lines for which the animation has not finished yet
+      // 仅对尚未完成飞行的航线进行帧动画绘制
       const coords = feature.getGeometry().getCoordinates();
       const elapsedTime = frameState.time - feature.get('start');
       if (elapsedTime >= 0) {
@@ -118,10 +129,12 @@ function animateFlights(event) {
         const currentLine = new LineString(coords.slice(0, maxIndex));
 
         // animation is needed in the current and nearest adjacent wrapped world
+        // 多世界坐标平移补偿：计算当前视口中心所在的平铺世界偏移
         const worldWidth = getWidth(map.getView().getProjection().getExtent());
         const offset = Math.floor(map.getView().getCenter()[0] / worldWidth);
 
         // directly draw the lines with the vector context
+        // 直接使用 vector context 在当前世界与相邻世界中绘制航迹
         currentLine.translate(offset * worldWidth, 0);
         vectorContext.drawGeometry(currentLine);
         currentLine.translate(worldWidth, 0);
@@ -130,9 +143,16 @@ function animateFlights(event) {
     }
   }
   // tell OpenLayers to continue the animation
+  // 请求下一帧重绘继续推进动画
   map.render();
 }
 
+/**
+ * Stagger feature addition with timeout.
+ * 阶梯延迟注入要素到数据源中。
+ * @param {Array<Feature>} features Feature array.
+ * @param {number} timeout Timeout in ms.
+ */
 function addLater(features, timeout) {
   window.setTimeout(function () {
     let start = Date.now();
