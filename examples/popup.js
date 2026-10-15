@@ -8,6 +8,7 @@ import ImageTile from '../src/ol/source/ImageTile.js';
 
 /**
  * Elements that make up the popup.
+ * 构成弹出框的 DOM 元素。
  */
 const container = document.getElementById('popup');
 const content = document.getElementById('popup-content');
@@ -15,6 +16,7 @@ const closer = document.getElementById('popup-closer');
 
 /**
  * Create an overlay to anchor the popup to the map.
+ * 创建 Overlay 覆盖物以将弹出框锚定到地图上。
  */
 const overlay = new Overlay({
   element: container,
@@ -27,7 +29,8 @@ const overlay = new Overlay({
 
 /**
  * Add a click handler to hide the popup.
- * @return {boolean} Don't follow the href.
+ * 添加点击处理函数以隐藏弹出框。
+ * @return {boolean} Don't follow the href. / 阻止 a 标签默认跳转行为。
  */
 closer.onclick = function () {
   overlay.setPosition(undefined);
@@ -42,6 +45,7 @@ const attributions =
 
 /**
  * Create the map.
+ * 创建地图实例。
  */
 const map = new Map({
   layers: [
@@ -64,11 +68,13 @@ const map = new Map({
 
 /**
  * Add a click handler to the map to render the popup.
+ * 为地图添加单击事件监听器以渲染弹出框。
  */
 map.on('singleclick', function (evt) {
   const coordinate = evt.coordinate;
   const hdms = toStringHDMS(toLonLat(coordinate));
 
-  content.innerHTML = '<p>You clicked here:</p><code>' + hdms + '</code>';
+  content.innerHTML =
+    '<p>You clicked here / 您点击的位置是：</p><code>' + hdms + '</code>';
   overlay.setPosition(coordinate);
 });

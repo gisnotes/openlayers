@@ -1,9 +1,50 @@
 ---
 layout: example.html
-title: Tooltip on Hover
-shortdesc: Example of displaying feature information in tooltip by hovering.
+title: Tooltip on Hover / 悬浮提示框 (Tooltip)
+shortdesc: Example of displaying feature information in tooltip by hovering. / 鼠标悬浮在矢量要素上方时通过 Tooltip 浮层展示属性信息的示例。
 docs: >
-  In this example, a listener is registered on the map's <code>pointermove</code> to display the feature information in a tooltip when the pointer hovers over a feature.
+  <p>
+    In this example, a listener is registered on the map's <code>pointermove</code> to display the feature information in a tooltip when the pointer hovers over a feature.
+  </p>
+  <p>
+    在此示例中，为地图注册了 <code>pointermove</code> 指针移动事件监听器，当鼠标指针悬停在矢量要素上方时，通过 Tooltip 浮层实时展示该要素的生态区属性信息。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>地理覆盖物（Overlay）vs 像素级悬浮框（Pixel Tooltip）：</strong>
+      <code>ol/Overlay</code> 适用于锚定在<strong>地理投影坐标（Coordinate）</strong>上的标注、气泡框或标记点，随地图缩放与平移同步运动；而 Tooltip 则是纯粹跟随<strong>屏幕光标像素坐标（Pixel）</strong>的 UI 交互组件。直接利用绝对定位 DOM 元素结合 <code>pixel[0]</code> / <code>pixel[1]</code> 驱动，免去了地理坐标与屏幕坐标的高频相互转换，交互响应极度平滑。
+    </li>
+    <li><strong>高效的命中检测（Hit Detection）：</strong>
+      <code>map.forEachFeatureAtPixel(pixel, callback)</code> 利用 OpenLayers 内部维护的离屏 Hit-Detect Canvas 与空间索引（RBush R-Tree），在用户光标滑动到要素上方时毫秒级命中拾取对应的 <code>Feature</code> 实例。
+    </li>
+    <li><strong>事件边界控制（Event Boundary Guard）：</strong>
+      通过 <code>target.closest('.ol-control')</code> 判断光标是否落在地图内置控件（如 <code>ol-zoom</code> 放大缩小按钮、全屏控件等）上。若是控件区域则主动跳过要素拾取，彻底杜绝了鼠标点击地图缩放按钮时下方要素被意外激活的穿透问题。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>evt.dragging</code> 检测：当用户正按住鼠标左键拖拽平移地图时，立即隐藏 Tooltip 并将 <code>currentFeature</code> 置为 <code>undefined</code>，避免地图平移过程中出现浮层残影和无谓的命中计算。</li>
+    <li><code>currentFeature !== feature</code> 差异化更新：仅在鼠标从要素 A 移动到要素 B（或从空白移入要素）时才更新 <code>innerText</code> 与可见性，避免光标在同一要素内部微动时反复触发 DOM 布局重排（Reflow）。</li>
+    <li><code>map.getTargetElement().addEventListener('pointerleave', ...)</code>：为地图宿主外层元素绑定 <code>pointerleave</code> 原生监听，一旦光标划出地图可视区即刻销毁浮窗状态，保证 UI 干净利落。</li>
+    <li>声明式矢量样式表达式：<code>['string', ['get', 'COLOR'], '#eeeeee']</code> 使用 OpenLayers WebGL/Canvas 通用样式表达式，直接从 GeoJSON 属性中动态获取颜色字符串，无需编写动态 Style Function。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>高频事件节流（Throttle）：</strong>
+      浏览器 <code>pointermove</code> 在高刷新率屏幕（120Hz/144Hz）上会以极高频率触发。对于包含数万个复杂多边形的矢量图层，建议结合 <code>requestAnimationFrame</code> 对 <code>displayFeatureInfo</code> 进行节流调度，确保帧率稳定在 60FPS。
+    </li>
+    <li><strong>视口边缘防溢出处理（Boundary Collision）：</strong>
+      直接设置 <code>info.style.left = pixel[0] + 'px'</code> 在光标滑到地图右下角时会导致 Tooltip 超出地图边界甚至触发外层页面滚动条。生产环境应计算：若 <code>pixel[0] + tooltipWidth &gt; mapWidth</code>，则改用 <code>info.style.left = (pixel[0] - tooltipWidth) + 'px'</code> 动态翻转方向。
+    </li>
+    <li><strong>CSS 穿透与交互阻断：</strong>
+      由于 Tooltip 紧贴光标，如果不设置 CSS <code>pointer-events: none;</code>，光标再次微移时可能会命中 Tooltip 自身的 DOM 节点而非底层 Canvas，导致要素拾取丢失并产生严重闪烁。
+    </li>
+  </ul>
 tags: "hover, vector"
 ---
 <div id="map" class="map">

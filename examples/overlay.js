@@ -22,12 +22,14 @@ const map = new Map({
 const pos = fromLonLat([16.3725, 48.208889]);
 
 // Popup showing the position the user clicked
+// 显示用户点击位置的弹出框
 const popup = new Overlay({
   element: document.getElementById('popup'),
 });
 map.addOverlay(popup);
 
 // Vienna marker
+// 维也纳标记点
 const marker = new Overlay({
   position: pos,
   positioning: 'center-center',
@@ -37,6 +39,7 @@ const marker = new Overlay({
 map.addOverlay(marker);
 
 // Vienna label
+// 维也纳文本标签
 const vienna = new Overlay({
   position: pos,
   element: document.getElementById('vienna'),
@@ -55,10 +58,13 @@ map.on('click', function (evt) {
   popover = new bootstrap.Popover(element, {
     animation: false,
     container: element,
-    content: '<p>The location you clicked was:</p><code>' + hdms + '</code>',
+    content:
+      '<p>The location you clicked was / 您点击的位置是：</p><code>' +
+      hdms +
+      '</code>',
     html: true,
     placement: 'top',
-    title: 'Welcome to OpenLayers',
+    title: 'Welcome to OpenLayers / 欢迎使用 OpenLayers',
   });
   popover.show();
 });

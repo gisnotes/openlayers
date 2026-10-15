@@ -1,9 +1,28 @@
 ---
 layout: example.html
-title: Overlay
-shortdesc: Demonstrates overlays.
+title: Overlay / 地图覆盖物（Overlay）
+shortdesc: Demonstrates overlays. / 使用 ol/Overlay 锚定 HTML 标记、文本标签与 Bootstrap 弹出框。
 docs: >
   <p>The popups are created using <a href="https://getbootstrap.com/docs/5.2/components/popovers/">Popovers</a> from Bootstrap.</p>
+
+  <p>本示例演示了如何使用 <code>ol/Overlay</code> 将普通的 HTML DOM 元素锚定到地理坐标上。示例中分别挂载了维也纳的点击超链接标签、图钉标记以及基于 <a href="https://getbootstrap.com/docs/5.2/components/popovers/" target="_blank">Bootstrap 5 Popovers</a> 组件封装的动态交互气泡弹窗。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. `ol/Overlay` 核心架构与 DOM 容器分层 (Overlay Container Hierarchy)
+  - **坐标实时同步**: Overlay 并不是 Canvas 内部绘制的像素，而是绝对定位挂载在地图容器顶层的真实 HTML DOM 元素。OpenLayers 渲染引擎在每次平移、缩放与旋转时，通过 CSS 变换矩阵（`transform: translate(...)`）实时更新 DOM 节点在屏幕上的像素坐标。
+  - **`stopEvent` 事件冒泡穿透控制**:
+    - `stopEvent: true`（默认）：DOM 元素挂载在 `ol-overlaycontainer-stopevent` 容器内，阻止鼠标拖拽、滚轮缩放与点击事件穿透到地图，适合包含表单、文本输入、滚动条的交互弹窗；
+    - `stopEvent: false`：DOM 元素挂载在 `ol-overlaycontainer` 容器内，允许事件向下穿透到底层画布，适合图钉、半透明装饰标注或雷达指示标。
+
+  #### 2. 定位对齐基准与视口锚接 (`positioning`)
+  - **九宫格锚点模型**: 支持 `'bottom-left'`、`'bottom-center'`、`'bottom-right'`、`'center-center'` 等 9 种对齐锚点。图钉标记通常采用 `'bottom-center'`（针尖对准坐标点）或 `'center-center'`，保证放大缩小地图时图钉针尖不会发生视觉偏离。
+
+  #### 3. 生产实践陷阱与避坑指南 (Production Pitfalls & Best Practices)
+  - **第三方 UI 框架（如 Bootstrap / Element / AntD）实例销毁**: 在重复弹出气泡时，必须先检查并调用 `popover.dispose()` 或 `destroy()` 销毁旧实例再新建，否则残留的监听器与 DOM 结构会导致内存泄漏和定位漂移。
+  - **多 Overlay 性能瓶颈**: 每一个 Overlay 都是一个独立的真实 DOM 节点。若在地图上呈现成百上千个点标记，绝对不能全部使用 Overlay（会导致庞大 DOM 树导致重排卡顿），而必须使用常规矢量图层（`VectorLayer` + `Style({image: new Icon(...)})`）；Overlay 仅用于展示少量的动态弹出气泡或富媒体卡片。
 tags: "overlay, popup, bootstrap, popover"
 resources:
   - https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css
@@ -11,9 +30,9 @@ resources:
 ---
 <div id="map" class="map"></div>
 <div style="display: none;">
-  <!-- Clickable label for Vienna -->
-  <a class="overlay" id="vienna" target="_blank" href="https://en.wikipedia.org/wiki/Vienna">Vienna</a>
+  <!-- Clickable label for Vienna / 维也纳超链接文本标签 -->
+  <a class="overlay" id="vienna" target="_blank" href="https://en.wikipedia.org/wiki/Vienna">Vienna / 维也纳</a>
   <div id="marker" title="Marker"></div>
-  <!-- Popup -->
+  <!-- Popup container / 气泡容器 -->
   <div id="popup"></div>
 </div>
