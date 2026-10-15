@@ -1,9 +1,24 @@
 ---
 layout: example.html
-title: WebGL Vector Tiles Layer
-shortdesc: Example of a vector tiles map rendered using WebGL.
-docs: >
-  A simple map showing Mapbox vector tiles, rendered using WebGL. **Note**: Make sure to get your own Mapbox API key when using this example. No map will be visible when the API key has expired.
+title: WebGL Vector Tiles Layer / WebGL 矢量切片图层（MVT 硬件加速渲染）
+shortdesc: Example of a vector tiles map rendered using WebGL. / 使用 WebGLVectorTileLayer 与 MVT 格式在 GPU 中直接渲染 Mapbox 矢量切片（涵盖道路网、水系、建筑与土地利用分级着色）。
+docs: |
+  <p>A simple map showing Mapbox vector tiles, rendered using WebGL. <b>Note</b>: Make sure to get your own Mapbox API key when using this example. No map will be visible when the API key has expired.</p>
+
+  <p>本示例展示如何使用 <code>ol/layer/WebGLVectorTile</code> 并在 WebGL 渲染管线中直接渲染 Mapbox MVT 矢量切片。<br>
+  <b>注意</b>：在实际生产中使用时，请配置您自己的有效 Mapbox API Key。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么矢量切片（Vector Tiles）特别适合 WebGL 硬件加速？
+  * **瓦片要素密度极限**：标准城市级 MVT 矢量切片（如 Mapbox Streets）单个瓦片常包含上万个房屋轮廓、交叉路网与注记点。如果使用传统 Canvas 2D 渲染，在高速缩放或拖拽时，每秒需要执行上百万次 2D 上下文绘制指令，导致显著卡顿。
+  * **异步 Worker 网格构建**：`WebGLVectorTileLayer` 在后台多线程 Web Worker 中对 Protobuf（PBF）二进制矢量切片进行解包与三角剖分（Tessellation），构建为显卡顶点缓冲区直接传送至 GPU 显存，实现近乎 60 FPS 满帧丝滑浏览。
+
+  #### 2. 庞大复杂样式规则树的高效编译
+  * 本例通过一个包含数百行规则的 `FlatStyle` 数组，精确映射了自然地理、土地利用（`landuse`）、水体（`water`）、建筑轮廓（`building`）、各等级路网（`road`）、隧道与行政区划边界。
+  * **GPU 着色器代码生成**：OpenLayers 表达式编译器将这些嵌套的 `['all', ['==', ['get', 'class'], 'motorway'], ...]` 逻辑一次性编译为紧凑高效的 GLSL 顶点与片元着色器代码，在显卡硬件中进行单周期逻辑判定。
 tags: "simple, mapbox, vector, tiles, webgl"
 experimental: true
 resources:

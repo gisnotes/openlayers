@@ -7,9 +7,11 @@ import {fromLonLat} from '../src/ol/proj.js';
 import StadiaMaps from '../src/ol/source/StadiaMaps.js';
 import VectorSource from '../src/ol/source/Vector.js';
 
+// DOM input elements / 控制滑块与筛选器 DOM 元素
 const blur = document.getElementById('blur');
 const radius = document.getElementById('radius');
 
+// WebGL Heatmap layer for trajectories / 轨迹热力图层配置
 const heatmap = new HeatmapLayer({
   source: new VectorSource({
     url: 'data/geojson/ship-trajectories.json',
@@ -38,7 +40,7 @@ const raster = new TileLayer({
 });
 
 const map = new Map({
-  layers: [raster, heatmap /*vector*/],
+  layers: [raster, heatmap],
   target: 'map',
   view: new View({
     center: fromLonLat([11.86, 57.67]),
@@ -46,6 +48,7 @@ const map = new Map({
   }),
 });
 
+// Event listeners for blur and radius sliders / 监听模糊度与核半径滑块输入
 blur.addEventListener('input', function () {
   heatmap.updateStyleVariables({blur: parseInt(blur.value, 10)});
 });
@@ -54,6 +57,7 @@ radius.addEventListener('input', function () {
   heatmap.updateStyleVariables({radius: parseInt(radius.value, 10)});
 });
 
+// Ship type selector event listener / 监听船舶类型下拉菜单切换
 const shipTypeSelect = document.getElementById('shiptype-filter');
 shipTypeSelect.addEventListener('input', function () {
   heatmap.updateStyleVariables({shipType: shipTypeSelect.value});

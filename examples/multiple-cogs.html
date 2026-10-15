@@ -1,29 +1,23 @@
 ---
 layout: example.html
-title: 多 COG 数据源重投影与波段合成 (Multiple COG sources)
-shortdesc: 展示两个位于不同 UTM 投影分带的 Sentinel-2 云原生 GeoTIFF (COG) 数据源，并在同一个 WebGL 图层中进行多波段动态合成与重投影显示。
-docs: >
-  本例展示了如何在同一个 WebGL 瓦片图层（`ol/layer/WebGLTile`）中同时加载并拼接**两个跨越不同投影分带（UTM Zones）**的 Sentinel-2（哨兵 2 号）云原生 GeoTIFF（COG）数据源，并在客户端实现多波段假彩色合成与实时重投影。
+title: Multiple COG Sources / 多 COG 数据源重投影与波段合成
+shortdesc: Displaying two Sentinel 2 COGs with different projections. / 展示两个位于不同 UTM 投影分带的 Sentinel-2 云原生 GeoTIFF (COG) 数据源，并在同一个 WebGL 图层中进行多波段动态合成与重投影显示。
+docs: |
+  <p>Two Sentinel 2 COGs each with sources for visible red, green and blue bands, and a near-infrared band. The adjacent regions are at the edge of their respective UTM zones so at least one COG must be reprojected to be displayed on the same map.</p>
 
-  ### 核心机制与原理解析
+  <p>本例展示了如何在同一个 WebGL 瓦片图层（<code>ol/layer/WebGLTile</code>）中同时加载并拼接<b>两个跨越不同投影分带（UTM Zones）</b>的 Sentinel-2（哨兵 2 号）云原生 GeoTIFF（COG）数据源，并在客户端实现多波段假彩色合成与实时重投影。</p>
 
-  1. **跨 UTM 投影分带的边缘拼接与实时重投影**：
-     - 卫星影像通常依据其所处的全球通用横轴墨卡托（UTM）6度分带进行正射纠正与存储。本例展示的两个相邻地块刚好位于不同分带的交界处：
-       - 西侧地块属于 **UTM Zone 31N（`EPSG:32631`）**；
-       - 东侧地块属于 **UTM Zone 32N（`EPSG:32632`）**。
-     - 由于两个投影的中央子午线和椭球切面不同，无法直接在单一坐标系下拼接。
-     - OpenLayers 的 `ol/layer/WebGLTile` 支持绑定多个数据源（`sources: [source1, source2]`），在 WebGL 片段着色器中独立执行像素反向映射与纹理重采样，将两者无缝投影至全局地图视图（`EPSG:3857`）中，完美消除分带接缝。
+  ---
 
-  2. **多波段光谱合成（Band Combination）与 WebGL 样式表达式**：
-     - 每个地块均读取了 4 个单波段 GeoTIFF 文件：**B04（红光）**、**B03（绿光）**、**B02（蓝光）**、**B08（近红外 NIR）**。
-     - 借助 WebGL 样式表达式（`style`），将图层颜色组织为动态变量映射：
-       `color: ['array', ['band', ['var', 'red']], ['band', ['var', 'green']], ['band', ['var', 'blue']], ['band', 5]]`
-       其中第 5 波段为哨兵数据自带的有效区域 Alpha 掩模。
-     - 切换下拉菜单通过 `layer.updateStyleVariables()` 触发毫秒级 GPU 动态重绘，即可自由切换**真彩色合成**（4-3-2）与监测植被生长的**标准假彩色合成**（8-4-3）。
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
 
-  3. **多数据源元数据的异步范围融合**：
-     - 通过 `Promise.all(sources.map(s => s.getView()))` 并发异步读取各 COG 的瓦片头信息；
-     - 使用 `transformExtent` 将两个不同 UTM 坐标系下的外包矩形统一转换至 `EPSG:3857`，并用 `extend(extent, ...)` 合并出总全景边界，实现视口的精确居中与缩放适配。
+  #### 1. 跨 UTM 投影分带的边缘拼接与实时重投影
+  * **分带交界与投影形变**：卫星遥感影像依据其全球通用横轴墨卡托（UTM）6° 分带存储（西侧属 UTM 31N `EPSG:32631`，东侧属 UTM 32N `EPSG:32632`）。两分带中央子午线不同，在单一直角坐标系下无法简单平移拼接。
+  * **多源 GPU 独立重采样**：`ol/layer/WebGLTile` 支持传入 `sources: [source1, source2]`。WebGL 渲染管线针对每个数据源独立计算坐标逆映射，片元着色器实时采样并重投影至地图目标视图（`EPSG:3857`），无缝消除分带拼接缝隙。
+
+  #### 2. 多波段动态映射与 WebGL 样式表达式
+  * **波段提取与通道重构**：每个地块分别拉取 B04（红光）、B03（绿光）、B02（蓝光）与 B08（近红外 NIR）4 个独立单波段 COG 切片。
+  * **动态 Uniform 切换**：通过 `['band', ['var', 'red']]` 表达式将波段动态绑定到图层变量。当用户切换通道时，仅需调用 `layer.updateStyleVariables()`，GPU 在片元着色器中瞬间完成真彩色（4-3-2）与标准假彩色（8-4-3 植被高亮）的平滑切换，完全免除了重新发起网络瓦片请求的开销。
 tags: "cog, webgl, projection, reprojection"
 ---
 <div id="map" class="map"></div>

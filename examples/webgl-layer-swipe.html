@@ -1,17 +1,31 @@
 ---
 layout: example.html
-title: Layer Swipe (WebGL)
-shortdesc: Cropping a WebGL tile layer
-docs: >
-  The <code>prerender</code> and <code>postrender</code> events on a WebGL tile layer can be
-  used to manipulate the WebGL context before and after rendering.  In this case, the 
+title: Layer Swipe (WebGL) / WebGL 卷帘对比（硬件级 Scissor 视口剪裁）
+shortdesc: Cropping a WebGL tile layer. / 利用 WebGL prerender/postrender 钩子与 gl.scissor 硬件剪裁区实现图层卷帘对比。
+docs: |
+  <p>The <code>prerender</code> and <code>postrender</code> events on a WebGL tile layer can be
+  used to manipulate the WebGL context before and after rendering. In this case, the 
   <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/scissor"><code>gl.scissor()</code></a>
-  method is called to clip the top layer based on the position of a slider.
-  <p><b>Note: </b>This example is minimalist and works as there is only one WebGL layer rendered. That might works as well if the layers are drawn to different contexts. This does not apply to
-    to several layers drawn to a single context, such as set with the 'className' property to 'canvas3d' on multiple layers. In such case, it's would be wise 
-    adapt your code using 'gl.clear' and other tweaks to the prerender/postrender event.
-  </p>
+  method is called to clip the top layer based on the position of a slider.</p>
+  <p><b>Note: </b>This example is minimalist and works as there is only one WebGL layer rendered. That might work as well if the layers are drawn to different contexts. This does not apply
+  to several layers drawn to a single context, such as set with the 'className' property to 'canvas3d' on multiple layers. In such case, it would be wise to
+  adapt your code using 'gl.clear' and other tweaks to the prerender/postrender event.</p>
+
+  <p>WebGL 瓦片图层上的 <code>prerender</code> 与 <code>postrender</code> 渲染生命周期事件，允许开发者在图层绘制前后直接操作底层的 WebGLRenderingContext 上下文。本例中调用了 WebGL 原生 API <a href="https://developer.mozilla.org/en-US/docs/Web/API/WebGLRenderingContext/scissor"><code>gl.scissor()</code></a>，根据滑块位置动态限制顶层卫星影像图层的可见视口宽度，从而实现丝滑的图层卷帘卷动对比效果。</p>
+  <p><b>提示：</b>本示例展示了单一 WebGL 图层上下文裁剪的实现模式。如果多个 WebGL 图层共享同一个绘制上下文（例如为多个图层设置相同的 <code>className: 'canvas3d'</code>），需在 prerender/postrender 中注意配合 <code>gl.clear</code> 及深度/模板缓冲区管理，防止状态冲突。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么 WebGL 卷帘要用 `gl.scissor()` 而不是 Canvas 2D 的 `clip()`？
+  * **零栅格化开销**：传统 Canvas 2D 卷帘通过在每帧构建矩形路径并调用 `ctx.clip()`，底层依靠 CPU/GPU 进行软件掩模计算。
+  * **GPU 硬件级视口剪裁（Scissor Test）**：WebGL 的 `gl.scissor(x, y, width, height)` 是显卡固化管线支持的基础功能。启用 `gl.SCISSOR_TEST` 后，GPU 在光栅化测试阶段直接剔除指定矩形窗口之外的所有片元（Fragments），完全不产生额外的像素计算或纹理拷贝开销，无论图层瓦片多么庞大，帧率均保持绝对稳定。
+
+  #### 2. 坐标转换细节：CSS 像素与物理渲染设备像素
+  * **`getRenderPixel` 的必要性**：在高分屏（Retina / devicePixelRatio > 1）下，地图 DOM 的 CSS 尺寸与 WebGL 画布的物理像素分辨率并不一致。
+  * **坐标原点对齐**：HTML DOM 坐标系以左上角为原点（Y 轴向下），而 WebGL 坐标系以左下角为原点（Y 轴向上）。本例使用 `getRenderPixel(event, [0, mapSize[1]])` 获取左下角物理像素坐标，完美对齐了屏幕分辨率与 GPU 裁剪原点。
 tags: "swipe, webgl"
 ---
 <div id="map" class="map"></div>
-<input id="swipe" type="range" style="width: 100%">
+<input id="swipe" type="range" style="width: 100%" title="Drag to swipe / 拖动进行左右图层卷帘对比">

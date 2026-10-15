@@ -6,20 +6,18 @@ import OSM from '../src/ol/source/OSM.js';
 
 const variables = {};
 
-// The method used to extract elevations from the DEM.
-// In this case the format used is Terrarium
-// red * 256 + green + blue / 256 - 32768
-//
-// Other frequently used methods include the Mapbox format
-// (red * 256 * 256 + green * 256 + blue) * 0.1 - 10000
-//
+// Method used to extract elevations from the DEM.
+// In this case the format used is Terrarium: (red * 256 + green + blue / 256) - 32768
+// Other frequently used methods include the Mapbox format: (red * 256 * 256 + green * 256 + blue) * 0.1 - 10000
+// 从 DEM 瓦片中提取真实海拔高程的方法。
+// 本例使用的瓦片编码格式为 Mapzen Terrarium：red * 256 + green + blue / 256 - 32768
 function elevation(xOffset, yOffset) {
   const red = ['band', 1, xOffset, yOffset];
   const green = ['band', 2, xOffset, yOffset];
   const blue = ['band', 3, xOffset, yOffset];
 
-  // band math operates on normalized values from 0-1
-  // so we scale by 255
+  // Band math operates on normalized values from 0-1, so we scale by 255
+  // 波段数学运算使用 0-1 范围的归一化像素值，因此乘以 255 对齐字节分量
   return [
     '+',
     ['*', 255 * 256, red],
@@ -29,8 +27,8 @@ function elevation(xOffset, yOffset) {
   ];
 }
 
-// Generates a shaded relief image given elevation data.  Uses a 3x3
-// neighborhood for determining slope and aspect.
+// Generates shaded relief image given elevation data. Uses 3x3 neighborhood for determining slope and aspect.
+// 根据高程数据在着色器中生成山体日照阴影。利用 3x3 邻域中心差分计算地表坡度（Slope）与坡向（Aspect）。
 const dp = ['*', 2, ['resolution']];
 const z0x = ['*', ['var', 'vert'], elevation(-1, 0)];
 const z1x = ['*', ['var', 'vert'], elevation(1, 0)];
@@ -43,6 +41,7 @@ const aspect = ['clamp', ['atan', ['-', 0, dzdx], dzdy], -Math.PI, Math.PI];
 const sunEl = ['*', Math.PI / 180, ['var', 'sunEl']];
 const sunAz = ['*', Math.PI / 180, ['var', 'sunAz']];
 
+// Lambertian cosine incidence angle / 漫反射光照入射角余弦值计算
 const cosIncidence = [
   '+',
   ['*', ['sin', sunEl], ['cos', slope]],
@@ -60,23 +59,27 @@ const shadedRelief = new TileLayer({
   }),
   style: {
     variables: variables,
-    color: ['color', scaled],
+    color: ['color', scaled, scaled, scaled],
   },
 });
 
+// Update style variables and reflect them in UI text spans
+// 动态更新样式变量并同步界面文本显示
 const controlIds = ['vert', 'sunEl', 'sunAz'];
 controlIds.forEach(function (id) {
   const control = document.getElementById(id);
   const output = document.getElementById(id + 'Out');
-  function updateValues() {
-    output.innerText = control.value;
-    variables[id] = Number(control.value);
+  function value() {
+    return parseFloat(control.value);
   }
-  updateValues();
-  control.addEventListener('input', function () {
-    updateValues();
+  variables[id] = value();
+  function update() {
+    output.innerText = control.value;
+    variables[id] = value();
     shadedRelief.updateStyleVariables(variables);
-  });
+  }
+  control.addEventListener('input', update);
+  update();
 });
 
 const map = new Map({
@@ -88,7 +91,7 @@ const map = new Map({
     shadedRelief,
   ],
   view: new View({
-    center: [-13615645, 4497969],
-    zoom: 13,
+    center: [15016024, -4076722],
+    zoom: 11,
   }),
 });

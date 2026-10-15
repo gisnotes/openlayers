@@ -1,20 +1,38 @@
 ---
 layout: example.html
-title: Rendering 16-bit NumpyTiles
-shortdesc: Renders a multi-byte depth source image directly using WebGL.
-docs: >
-  This example uses a <code>ol/source/DataTile</code> source to load multi-byte raster data in the
+title: Rendering 16-bit NumpyTiles / WebGL 渲染 16 位科学栅格切片（NumpyTile）
+shortdesc: Renders a multi-byte depth source image directly using WebGL. / 使用 WebGLTile 图层直接渲染多字节深度的 16 位 NumpyTile 遥感影像并实现直方图对比度拉伸。
+docs: |
+  <p>This example uses a <code>ol/source/DataTile</code> source to load multi-byte raster data in the
   <a href="https://github.com/planetlabs/numpytiles-spec/">NumpyTile</a> format.
-  The source is rendered with a <code>ol/layer/WebGLTile</code> layer.  Adjusting the sliders above
-  performs a contrast stretch by adjusting the style variables set on the layer.
+  The source is rendered with a <code>ol/layer/WebGLTile</code> layer. Adjusting the sliders above
+  performs a contrast stretch by adjusting the style variables set on the layer.</p>
+
+  <p>本示例演示使用 <code>ol/source/DataTile</code> 数据源加载以 <a href="https://github.com/planetlabs/numpytiles-spec/">NumpyTile</a> 格式封装的多字节科学遥感栅格数据。
+  数据直接交由 <code>ol/layer/WebGLTile</code> 图层在 GPU 中渲染。通过拖动上方的滑块调整图层样式变量（Style Variables），可在客户端对 16 位原始地表反射率数据执行毫秒级直方图对比度拉伸（Contrast Stretch）。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 突破 8 位图像限制：高动态范围科学数据（HDR Raster）
+  * **8 位与 16 位的核心差异**：标准 Web 图像格式（PNG/JPEG）每个颜色通道仅有 8 位深度（取值 0~255），无法保留卫星传感器测得的真实地表反射率（通常为 12 位或 16 位高动态浮点/整数，如 0~65535）。如果直接转码为 PNG 会损失大量暗部与亮部地物科学信息。
+  * **NumpyTile 协议**：将瓦片以 NumPy `.npy` 二进制多维数组格式进行传输。客户端通过 `@planet/ol-numpytiles` 解析出包含 5 个波段原始数值的 `Float32Array` 类型化数组。
+
+  #### 2. `ol/source/DataTile` 与原生 GPU 纹理管线
+  * **原始字节直接绑定**：`DataTile` 数据源允许通过自定义 `loader(z, x, y)` 直接返回类型化数组（TypedArray），OpenLayers 内部将其作为 `gl.R32F` 或 `gl.RGBA` 浮点纹理上传给 GPU 显存。
+  * **GPU 着色器插值对比度拉伸**：
+    利用样式表达式对红绿蓝通道进行归一化拉伸：
+    `interpolateBand = (idx) => ['interpolate', ['linear'], ['band', idx], ['var', 'bMin'], 0, ['var', 'bMax'], 1]`
+    动态调整 `bMin` 与 `bMax` 时，着色器仅根据 Uniform 变量重映射像素强度，无需向服务端重新请求拉伸后的图片，完全做到了客户端无损科学分析与渲染。
 tags: "numpytiles, webgl"
 ---
 <div id="map" class="map"></div>
 
 <div>
-  <h5>Contrast stretch</h5>
+  <h5>Contrast stretch / 动态对比度拉伸</h5>
   <ul>
-    <li>Min <input type="range" min="1000" max="10000" id="input-min"/> <span id="output-min"></span></li>
-    <li>Max <input type="range" min="10000" max="50000" id="input-max"/> <span id="output-max"></span></li>
+    <li>Min / 最小截断值 <input type="range" min="1000" max="10000" id="input-min"/> <span id="output-min"></span></li>
+    <li>Max / 最大截断值 <input type="range" min="10000" max="50000" id="input-max"/> <span id="output-max"></span></li>
   </ul>
 </div>

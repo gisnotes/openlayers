@@ -1,11 +1,30 @@
 ---
 layout: example.html
-title: WebGL Vector Layer
-shortdesc: Example of a vector layer rendered using WebGL
-docs: >
-  The ecoregions are loaded from a GeoJSON file.
+title: WebGL Vector Layer / WebGL 矢量多边形面图层与悬停高亮
+shortdesc: Example of a vector layer rendered using WebGL. / 使用 WebGLVectorLayer 渲染包含数千个复杂生态多边形面要素的 GeoJSON 数据，支持 GPU 条件分支高亮与文字标注。
+docs: |
+  <p>The ecoregions are loaded from a GeoJSON file.</p>
+
+  <p>本示例展示如何使用 <code>ol/layer/WebGLVector</code> 渲染复杂的多边形矢量面要素。全球生态区（Ecoregions）数据从 GeoJSON 文件异步加载，并在 WebGL 中实现多边形填充、描边外轮廓、注记文本与鼠标悬停即时高亮。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. WebGL 多边形面要素三角剖分（Polygon Triangulation）
+  * **GPU 图元要求**：GPU 硬件原生只能绘制点、线、三角形，无法直接填充任意凹多边形或带内环（Holes）的多边形面。
+  * **Earcut 算法装配**：`WebGLVectorLayer` 在后台 Worker 线程中自动调用 Earcut 耳切三角剖分算法，将每个复杂多边形分解为成百上千个三角形顶点网格，并生成顶点缓冲区（VBO）写入 GPU 显存。
+
+  #### 2. 着色器分支语法：`filter` 与 `else: true`
+  * 样式规则数组中声明了条件分支：
+    - 规则 1：`filter: ['==', ['var', 'highlightedId'], ['id']]`，命中当前悬停 ID 的要素被绘制为加粗白色外框与高亮填充；
+    - 规则 2：`else: true`，其余未选中要素以自身属性颜色（`COLOR`）进行渲染；
+    - 规则 3：叠加注记文本（`text-value: ['coalesce', ['get', 'ECO_NAME'], 'unknown']`）。
+
+  #### 3. 悬停交互性能：零重建的 Uniform 高亮
+  * 在鼠标移动时，通过 `vectorLayer.updateStyleVariables({highlightedId})` 仅把当前要素 ID 作为 Uniform 标量传给 GPU，GPU 片元着色器瞬间改变绘制分支，完全避免了传统 Canvas 重新遍历所有要素生成样式对象的开销。
 tags: "vector, geojson, webgl"
 experimental: true
 ---
 <div id="map" class="map"></div>
-<div id="info">&nbsp;</div>
+<div id="info">Hover or click an ecoregion / 悬停或点击生态区以查看名称</div>

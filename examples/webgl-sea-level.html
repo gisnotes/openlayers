@@ -1,34 +1,57 @@
 ---
 layout: example.html
-title: Sea Level (with WebGL)
-shortdesc: Render sea level at different elevations
-docs: >
+title: Sea Level (with WebGL) / WebGL 海平面上升淹没模拟与 DEM 高程着色器计算
+shortdesc: Render sea level at different elevations. / 使用 WebGLTile 动态解码 RGB 地形高程瓦片，结合着色器数学表达式模拟不同海平面上升高度下的淹没区域。
+docs: |
   <p>
     The <code>style</code> property of a WebGL tile layer accepts a <code>color</code> expression that
-    can be used to modify pixel values before rendering.  Here, RGB tiles representing elevation
+    can be used to modify pixel values before rendering. Here, RGB tiles representing elevation
     data are loaded and rendered so that values at or below sea level are blue, and values
-    above sea level are transparent.  The <code>color</code> expression operates on normalized pixel
-    values ranging from 0 to 1.  The <code>band</code> operator is used to select normalized values
+    above sea level are transparent. The <code>color</code> expression operates on normalized pixel
+    values ranging from 0 to 1. The <code>band</code> operator is used to select normalized values
     from a single band.
   </p><p>
     After converting the normalized RGB values to elevation, the <code>case</code> expression
-    is used to pick colors to apply at a given elevation.  Instead of using constant
+    is used to pick colors to apply at a given elevation. Instead of using constant
     numeric values as the stops in the colors array, the <code>var</code> operator allows you to
-    use a value that can be modified by your application.  When the user drags the
+    use a value that can be modified by your application. When the user drags the
     sea level slider, the <code>layer.updateStyleVariables()</code> function is called to update
     the <code>level</code> style variable with the value from the slider.
   </p>
+
+  <p>
+    WebGL 瓦片图层的 <code>style</code> 配置接收声明式 <code>color</code> 表达式，可在最终渲染前在 GPU 片元着色器中实时处理每个像素。本例加载了经过 Terrain-RGB 编码的高程栅格切片：低于或等于当前模拟海平面的像素被渲染为水体蓝色，高于海平面的陆地像素则被设为完全透明。表达式中的 <code>band</code> 操作符提取对应波段的归一化像素值（范围 0 到 1）。
+  </p><p>
+    将归一化的 RGB 值通过数学公式反算还原为真实海拔高程后，利用 <code>case</code> 条件分支表达式确定当前高程的显示色彩。借助 <code>var</code> 操作符，应用程序可动态传入外部样式变量。用户拖动海平面滑块时，调用 <code>layer.updateStyleVariables()</code> 即可毫秒级动态刷新 <code>level</code> 变量，直观模拟暴雨洪水或海平面上升对各沿海主要城市的淹没态势。
+  </p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. Terrain-RGB 高程编码与着色器波段解算（Band Math）
+  * **编码原理**：MapTiler / Mapbox 的 Terrain-RGB 协议利用 24 位 RGB 颜色通道存储高精度 DEM 高程：
+    $$Elevation = -10000 + (R \times 256 \times 256 + G \times 256 + B) \times 0.1$$
+  * **着色器归一化系数适配**：
+    由于 WebGL 的 `['band', n]` 取出的像素强度已自动归一化到 $[0, 1]$，因此在着色器数学表达式中需要额外乘以 $255$ 还原字节分量：
+    - R 分量权重：$0.1 \times 255 \times 256 \times 256 = 1671168$
+    - G 分量权重：$0.1 \times 255 \times 256 = 6528$
+    - B 分量权重：$0.1 \times 255 = 25.5$
+    - 常数偏移：$-10000$
+
+  #### 2. GPU 条件分支与动态水体遮罩
+  * **零重绘开销**：传统方式计算淹没图需要后端 GIS 引擎执行栅格代数切图。而在 WebGL 中，`['case', ['<=', elevation, ['var', 'level']], [139, 212, 255, 1], [139, 212, 255, 0]]` 在片元着色器内部直接完成逐像素测试，拖拽滑块时帧率稳定在 60 FPS。
 tags: "webgl, math, flood"
 ---
 <div id="map" class="map"></div>
 <label>
-  Sea level
+  Sea level / 海平面上升高度：
   <input id="level" type="range" min="0" max="100" value="1"/>
-  +<span id="output"></span> m
+  +<span id="output"></span> m / 米
 </label>
 <br>
-Go to
-<a class="location" data-center="-122.3267,37.8377" data-zoom="11">San Francisco</a>,
-<a class="location" data-center="-73.9338,40.6861" data-zoom="11">New York</a>,
-<a class="location" data-center="72.9481,18.9929" data-zoom="11">Mumbai</a>, or
-<a class="location" data-center="120.831,31.160" data-zoom="9">Shanghai</a>
+Go to / 快速跳转城市：
+<a class="location" data-center="-122.3267,37.8377" data-zoom="11">San Francisco / 旧金山</a>,
+<a class="location" data-center="-73.9338,40.6861" data-zoom="11">New York / 纽约</a>,
+<a class="location" data-center="72.9481,18.9929" data-zoom="11">Mumbai / 孟买</a>, or
+<a class="location" data-center="120.831,31.160" data-zoom="9">Shanghai / 上海</a>

@@ -4,9 +4,12 @@ import MVT from '../src/ol/format/MVT.js';
 import WebGLVectorTileLayer from '../src/ol/layer/WebGLVectorTile.js';
 import VectorTileSource from '../src/ol/source/VectorTile.js';
 
+// Mapbox Streets v6 vector tiles API key / Mapbox Streets v6 矢量切片访问 Key
 const key =
   'pk.eyJ1IjoiYWhvY2V2YXIiLCJhIjoiY2t0cGdwMHVnMGdlbzMxbDhwazBic2xrNSJ9.WbcTL9uj8JPAsnT9mgb7oQ';
 
+// Comprehensive WebGL vector tiles style rules definition covering landuse, water, roads, and buildings
+// 完整的 WebGL 矢量切片样式规则表（涵盖土地利用、水体、各级路网、建筑物与行政区划边界）
 const style = [
   {
     filter: [
@@ -571,6 +574,8 @@ const style = [
   },
 ];
 
+// Initialize map with WebGLVectorTileLayer rendering Mapbox MVT vector tiles
+// 初始化地图实例，使用 WebGLVectorTileLayer 高性能渲染 Mapbox MVT 矢量切片
 const map = new Map({
   layers: [
     new WebGLVectorTileLayer({

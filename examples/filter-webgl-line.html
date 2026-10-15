@@ -2,9 +2,22 @@
 layout: example.html
 title: Applying a filter along lines rendered with WebGL / WebGL 沿线过滤与时间序列渐变渲染
 shortdesc: Example showing how filtering a line using the M parameter is represented with the WebGL renderer. / 演示如何利用包含 M 测量参数的折线顶点与 WebGL 渲染器实现沿线动态过滤与时间序列演进。
-docs: >
+docs: |
   <p>This example showcases how the <code>['line-metric']</code> operator can be used to style and partially filter lines which contain an M ("measure") parameter in their coordinates. For each trajectory the timestamp is stored in the M parameter using an <code>XYM</code> layout. This let us show the progression on a specific time for each trajectory on the map.</p>
+
   <p>本示例展示了如何利用样式表达式中的 <code>['line-metric']</code> 操作符，对坐标中包含 M（“度量/Measure”）参数的折线进行样式设置和部分线段的动态过滤。在各飞行轨迹数据中，时间戳以 <code>XYM</code> 维度布局存入 M 参数中，从而允许通过滑块动态控制轨迹随时间的演进显示过程。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心技术：XYM 维度布局与 `['line-metric']` 操作符
+  * **高维坐标数据**：传统 GIS 坐标仅包含二维平面 `[X, Y]` 或三维高程 `[X, Y, Z]`。而在时序轨迹分析、管道沿程桩号度量等场景中，第 3 或第 4 个分量通常用来存储度量参数 M（Measure），对应 OpenLayers 中的 `XYM` 或 `XYZM` 几何布局。
+  * **GPU 片元级插值**：`['line-metric']` 是 WebGL 矢量图层独有的表达式操作符。在顶点着色器与片元着色器中，GPU 会在折线各顶点间自动对 M 值进行线性内插，开发者无需把一条折线物理切分成数千个离散小段，即可在单条连续几何内部实现微秒级平滑颜色渐变与裁剪。
+
+  #### 2. 动态样式变量与毫秒级时间演进（`variables` + `updateStyleVariables`）
+  * **零重建开销**：传统 Canvas 2D 绘制时序动画时，每次修改过滤时间往往需要调用 `source.clear()` 或遍历要素重新计算样式函数，开销巨大。
+  * **GPU Uniform 机制**：`WebGLVectorLayer` 采用类似着色器 Uniform 的变量机制。通过 `vectorLayer.updateStyleVariables({timestamp})` 仅修改传入 GPU 片元着色器的变量值，配合 `filter: ['<=', ['line-metric'], ['var', 'timestamp']]`，GPU 直接在片元着色器中按阈值丢弃超过当前时间的像素，实现无缝平滑的 60 FPS 轨迹动态回放。
 experimental: true
 tags: "draw, vector, webgl, line, line-metric, measure, layout"
 ---

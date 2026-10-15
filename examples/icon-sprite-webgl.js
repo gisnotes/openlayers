@@ -33,6 +33,8 @@ const map = new Map({
 const oldColor = [255, 160, 110];
 const newColor = [180, 255, 200];
 
+// WebGL literal style with sprite atlas offset mapping and color interpolation
+// WebGL 字面量样式：结合精灵图偏移映射与年份颜色插值
 const style = {
   'icon-src': 'data/ufo_shapes.png',
   'icon-width': 128,
@@ -94,6 +96,7 @@ shapeSelect.addEventListener('input', function () {
   pointsLayer.updateStyleVariables({filterShape: shapeSelect.value});
   map.render();
 });
+
 function fillShapeSelect(shapeTypes) {
   Object.keys(shapeTypes)
     .sort(function (a, b) {
@@ -102,23 +105,26 @@ function fillShapeSelect(shapeTypes) {
     .forEach(function (shape) {
       const option = document.createElement('option');
       const sightings = shapeTypes[shape];
-      option.text = `${shape} (${sightings} sighting${
+      const displayName = shape === 'all' ? 'All shapes / 全部形态' : shape;
+      option.text = `${displayName} (${sightings} sighting${
         sightings === 1 ? '' : 's'
-      })`;
+      } / 次)`;
       option.value = shape;
       shapeSelect.appendChild(option);
     });
 }
 
+// Load UFO sightings CSV dataset (approx 80k points)
+// 异步读取 UFO 目击事件 CSV 数据集（约 8 万条记录）
 const client = new XMLHttpRequest();
 client.open('GET', 'data/csv/ufo_sighting_data.csv');
 client.addEventListener('load', function () {
   const csv = client.responseText;
-  // key is shape name, value is sightings count
+  // Key is shape name, value is sightings count / 统计各形态频次
   const shapeTypes = {};
   const features = [];
 
-  let prevIndex = csv.indexOf('\n') + 1; // scan past the header line
+  let prevIndex = csv.indexOf('\n') + 1; // Scan past header line / 跳过表头
   let curIndex;
   while ((curIndex = csv.indexOf('\n', prevIndex)) !== -1) {
     const line = csv.substring(prevIndex, curIndex).split(',');
@@ -131,7 +137,7 @@ client.addEventListener('load', function () {
     features.push(
       new Feature({
         datetime: line[0],
-        year: parseInt(/[0-9]{4}/.exec(line[0])[0], 10), // extract the year as int
+        year: parseInt(/[0-9]{4}/.exec(line[0])[0], 10), // Extract year as int / 提取目击年份
         shape: shape,
         duration: line[3],
         geometry: new Point(fromLonLat(coords)),
@@ -145,6 +151,7 @@ client.addEventListener('load', function () {
 });
 client.send();
 
+// Feature hover hit detection / 鼠标移动要素拾取探测
 const info = document.getElementById('info');
 map.on('pointermove', function (evt) {
   if (map.getView().getInteracting() || map.getView().getAnimating()) {
@@ -154,7 +161,7 @@ map.on('pointermove', function (evt) {
     const datetime = feature.get('datetime');
     const duration = feature.get('duration');
     const shape = feature.get('shape');
-    return `On ${datetime}, lasted ${duration} seconds and had a "${shape}" shape.`;
+    return `On ${datetime}, lasted ${duration} seconds and had a "${shape}" shape. / 时间：${datetime}，持续 ${duration} 秒，形态为 "${shape}"。`;
   });
-  info.innerText = text || '';
+  info.innerText = text || 'None / 暂无';
 });

@@ -1,8 +1,8 @@
 ---
 layout: example.html
-title: Shaded Relief (with WebGL)
-shortdesc: Calculate shaded relief from elevation data
-docs: >
+title: Shaded Relief (with WebGL) / WebGL 动态山体阴影（地貌日照晕渲与邻域采样）
+shortdesc: Calculate shaded relief from elevation data. / 利用 WebGL 邻域像元采样算子在片元着色器中实时计算坡度与坡向，实现可动态调整光源方向的山体日照晕渲效果。
+docs: |
   <p>
     For the shaded relief, a single tiled source of elevation data is used as input.
     The shaded relief is calculated by the layer's <code>style</code> with a <code>color</code>
@@ -10,22 +10,45 @@ docs: >
     <code>band</code> operator is used to sample data from neighboring pixels for calculating slope and
     aspect, which is done with the <code>['band', bandIndex, xOffset, yOffset]</code> syntax.
   </p>
+
+  <p>
+    本示例利用单一的瓦片高程数据源作为输入生成地表动态山体阴影（Shaded Relief / 日照晕渲）。山体阴影通过 WebGL 瓦片图层 <code>style</code> 中的 <code>color</code> 声明式表达式在 GPU 片元着色器中实时解算。拖动下方滑块可动态更新样式变量。着色器中使用具备像元偏移能力的 <code>band</code> 算子对当前像素周围的邻域像元进行采样（语法为 <code>['band', bandIndex, xOffset, yOffset]</code>），从而精确解算出各点的坡度（Slope）与坡向（Aspect）。
+  </p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 邻域像元偏移采样语法：`['band', bandIndex, xOffset, yOffset]`
+  * **突破单像素局限**：常规的片元着色仅能读取当前坐标对应的一个像素值。而在空间卷积滤波、边缘提取（Sobel）及地形表面分析中，必须获取相邻栅格数据。
+  * **硬件级纹素偏移（Texel Offset）**：OpenLayers WebGL 瓦片引擎通过 `['band', n, dx, dy]` 允许传入整数像素偏移量（例如 `[-1, 0]` 代表西侧相邻像素，`[1, 0]` 代表东侧相邻像素）。底层着色器自动换算纹理坐标偏移，实现极低开销的邻域采样。
+
+  #### 2. GPU 实时解算中心差分、坡度、坡向与 Lambert 漫反射光照
+  * **高程梯度中心差分**：
+    $$\frac{\partial z}{\partial x} = \frac{Z_{x+1} - Z_{x-1}}{2 \times \text{resolution}}$$
+    $$\frac{\partial z}{\partial y} = \frac{Z_{y+1} - Z_{y-1}}{2 \times \text{resolution}}$$
+  * **坡度（Slope）与坡向（Aspect）**：
+    $$\text{Slope} = \arctan\left(\sqrt{(\partial z / \partial x)^2 + (\partial z / \partial y)^2}\right)$$
+    $$\text{Aspect} = \arctan\left(-\frac{\partial z}{\partial x}, \frac{\partial z}{\partial y}\right)$$
+  * **太阳光入射余弦角（Cosine Incidence）**：
+    $$\cos(\theta) = \sin(\text{SunEl}) \cdot \cos(\text{Slope}) + \cos(\text{SunEl}) \cdot \sin(\text{Slope}) \cdot \cos(\text{SunAz} - \text{Aspect})$$
+  * **全动态可交互性**：传统 GIS 晕渲是预切的静态死图，而此方案在客户端可任意拖动太阳高度角（`sunEl`）与太阳方位角（`sunAz`），实时模拟晨昏、正午与季节太阳照射的光影变幻，视觉冲击力极强。
 tags: "webgl, shaded relief"
 ---
 <div id="map" class="map"></div>
 <table class="controls">
   <tr>
-    <td><label for="vert">vertical exaggeration:</label></td>
+    <td><label for="vert">Vertical exaggeration / 垂直夸张倍数：</label></td>
     <td><input id="vert" type="range" min="1" max="5" value="1"/></td>
     <td><span id="vertOut"></span> x</td>
   </tr>
   <tr>
-    <td><label for="sunEl">sun elevation:</label></td>
+    <td><label for="sunEl">Sun elevation / 太阳高度角：</label></td>
     <td><input id="sunEl" type="range" min="0" max="90" value="45"/></td>
     <td><span id="sunElOut"></span> °</td>
   </tr>
   <tr>
-    <td><label for="sunAz">sun azimuth:</label></td>
+    <td><label for="sunAz">Sun azimuth / 太阳方位角：</label></td>
     <td><input id="sunAz" type="range" min="0" max="360" value="45"/></td>
     <td><span id="sunAzOut"></span> °</td>
   </tr>

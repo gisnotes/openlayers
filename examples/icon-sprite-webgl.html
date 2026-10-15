@@ -1,23 +1,42 @@
 ---
 layout: example.html
-title: Icon Sprites with WebGL
-shortdesc: Rendering many icons with WebGL
-docs: >
-  This example shows how to use `ol/layer/WebGLVector` to render
-    a very large amount of sprites. The above map is based on a dataset from the National UFO Reporting Center: each
-    icon marks a UFO sighting according to its reported shape (disk, light, fireball...). The older the sighting, the redder
-    the icon.
+title: Icon Sprites with WebGL / WebGL 图标精灵图（Sprite Atlas）海量点渲染
+shortdesc: Rendering many icons with WebGL. / 使用 WebGL 矢量图层配合纹理图集（Sprite Atlas）高效渲染 8 万个 UFO 目击事件点位。
+docs: |
+  <p>This example shows how to use <code>ol/layer/WebGLVector</code> to render
+  a very large amount of sprites. The above map is based on a dataset from the National UFO Reporting Center: each
+  icon marks a UFO sighting according to its reported shape (disk, light, fireball...). The older the sighting, the redder
+  the icon.</p>
 
-  A very simple sprite atlas is used in the form of a PNG file containing all icons on a grid. Then, the `style` object
-    given to the `ol/layer/WebGLVector` constructor is used to specify which sprite to use according to the sighting shape.
+  <p>A very simple sprite atlas is used in the form of a PNG file containing all icons on a grid. Then, the <code>style</code> object
+  given to the <code>ol/layer/WebGLVector</code> constructor is used to specify which sprite to use according to the sighting shape.</p>
 
-  The dataset contains around 80k points and can be found here: https://www.kaggle.com/NUFORC/ufo-sightings
+  <p>The dataset contains around 80k points and can be found here: https://www.kaggle.com/NUFORC/ufo-sightings</p>
+
+  <p>本示例展示如何利用 <code>ol/layer/WebGLVector</code> 渲染海量图标精灵（Sprites）。地图数据来源于美国国家不明飞行物报告中心（NUFORC）记录的约 8 万条目击事件：每个图标根据目击报告的几何外形（如圆盘形、光点、火球、椭圆形等）显示不同的精灵贴图。目击年份越早，图标颜色在着色器中被插值渲染得越偏红。</p>
+
+  <p>图层通过一张轻量的 PNG 精灵纹理图集（Sprite Atlas，将各种形态图标规整排布在一个网格图像中），随后在 WebGL 样式表达式中利用 <code>match</code> 算子根据要素的 <code>shape</code> 属性动态映射对应的纹理偏移量（<code>icon-offset</code>），免除频繁切换纹理绑定的 GPU 开销。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 纹理图集（Sprite Atlas / Texture Atlas）在 WebGL 中的核心优势
+  * **批处理与 Draw Call 优化**：在标准 WebGL 渲染管线中，如果 8 万个点位使用多张分散的图片贴图，每次更换图片都必须触发 `gl.bindTexture` 并拆分 Draw Call，导致严峻的 CPU/GPU 切换开销。
+  * **UV 纹理子域采样**：通过将所有图标打包到一张 128x64 像素的贴图网格中，并配置 `icon-size: [32, 32]` 以及基于属性匹配的 `icon-offset`（如 `light: [0, 0]`, `sphere: [32, 0]`, `fireball: [0, 32]`），着色器在单次批处理中仅通过调整纹理坐标（UV Coordinates）即可渲染完全不同形态的图标。
+
+  #### 2. GPU 片元色彩插值（Color Tinting）
+  * 样式中直接使用 `icon-color: ['interpolate', ['linear'], ['get', 'year'], 1950, oldColor, 2013, newColor]`，在片元着色器中将纹理灰度与目标颜色进行乘法调制（Texture Tinting），无需生成数十种不同颜色的预制图片。
+
+  #### 3. 拾取交互与动态属性过滤
+  * 借助 `map.forEachFeatureAtPixel` 在海量点下高效检索鼠标悬停命中要素。
+  * 配合 `updateStyleVariables({filterShape})` 在着色器层面毫秒级完成按特定外形（如盘状、球状）实时筛选显示。
 tags: "webgl, icon, sprite, point, ufo"
 experimental: true
 ---
 <div id="map" class="map"></div>
-<div>Current sighting: <span id="info"></span></div>
+<div>Current sighting / 当前目击信息：<span id="info">None / 暂无</span></div>
 <div>
-  <label for="shape-filter">Filter by UFO shape:</label>
+  <label for="shape-filter">Filter by UFO shape / 按目击形状筛选：</label>
   <select id="shape-filter"></select>
 </div>

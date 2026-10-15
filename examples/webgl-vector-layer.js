@@ -6,6 +6,8 @@ import WebGLVectorLayer from '../src/ol/layer/WebGLVector.js';
 import OSM from '../src/ol/source/OSM.js';
 import VectorSource from '../src/ol/source/Vector.js';
 
+// WebGL FlatStyle rules with conditional branching (highlighted vs standard) and labels
+// WebGL FlatStyle 规则：利用条件分支实现高亮对比与文本注记
 /** @type {import('../src/ol/style/flat.js').FlatStyleLike} */
 const style = [
   {
@@ -63,6 +65,9 @@ const map = new Map({
 });
 
 let highlightedId = -1;
+
+// Retrieve feature at pixel and update highlightedId variable
+// 获取鼠标位置像素要素并更新 highlightedId 样式变量
 const displayFeatureInfo = function (pixel) {
   const feature = map.forEachFeatureAtPixel(pixel, function (feature) {
     return feature;
@@ -72,7 +77,7 @@ const displayFeatureInfo = function (pixel) {
   if (feature) {
     info.innerHTML = feature.get('ECO_NAME') || '&nbsp;';
   } else {
-    info.innerHTML = '&nbsp;';
+    info.innerHTML = 'Hover or click an ecoregion / 悬停或点击生态区以查看名称';
   }
 
   const id = feature ? feature.getId() : -1;

@@ -1,36 +1,55 @@
 ---
 layout: example.html
-title: Trajectories Heatmap
-shortdesc: Demonstrates the use of a heatmap layer with linear geometries.
-docs: >
-  This example shows linear geometries rendered using a <code>ol/layer/Heatmap</code> layer.<br>
-  Data is AIS maritime traffic around Gothenburg transformed into GeoJSON, taken from <a href="https://movingpandas.github.io/movingpandas-website/2-analysis-examples/ship-data.html">this example</a>.
+title: Trajectories Heatmap / 航迹热力图（折线要素 WebGL 热力场渲染）
+shortdesc: Demonstrates the use of a heatmap layer with linear geometries. / 演示如何使用 Heatmap 热力图层对线型航迹几何要素进行 WebGL 核密度热力渲染。
+docs: |
+  <p>This example shows linear geometries rendered using a <code>ol/layer/Heatmap</code> layer.<br>
+  Data is AIS maritime traffic around Gothenburg transformed into GeoJSON, taken from <a href="https://movingpandas.github.io/movingpandas-website/2-analysis-examples/ship-data.html">this example</a>.</p>
+
+  <p>本示例展示如何使用 <code>ol/layer/Heatmap</code> 热力图层直接渲染线几何（LineString）要素。<br>
+  底图数据来源于瑞典哥德堡周边海域真实 AIS 船舶航行轨迹转换生成的 GeoJSON 数据集。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 折线要素（Linear Geometries）热力场渲染机制
+  * **不仅支持点要素**：传统 GIS 热力图通常仅针对点要素计算高斯核密度（Kernel Density Estimation）。OpenLayers 的 `HeatmapLayer` 同样支持线几何要素（LineString）。
+  * **线采样与离屏合成**：底层渲染管线将折线按像素分辨率抽样或利用阴影模糊算法将线段光栅化到离屏 Canvas/Texture 中，各线段交汇与重叠区域的透明度通道（Alpha）进行线性叠加累加，再通过内置或自定义调色板（Color Gradient Ramp）进行最终上色。
+
+  #### 2. WebGL 动态样式变量联动（`updateStyleVariables`）
+  * **核半径与模糊半径的动态调优**：
+    - `radius`：控制单一要素的影响核半径，值越大扩散范围越广；
+    - `blur`：控制高斯衰减过渡的柔和程度。
+  * **片元过滤与属性联动**：本例在热力图层中配置了 `filter` 表达式：
+    `['any', ['==', ['var', 'shipType'], 'All'], ['==', ['var', 'shipType'], ['get', 'ShipType']]]`
+    当切换船舶类型筛选框时，调用 `heatmap.updateStyleVariables({shipType: ...})`，瞬间在 GPU 层面完成特定船种热力图的重算，无需清空或重新解析原始数据源。
 tags: "heatmap, geojson, vector, trajectory, webgl"
 ---
 <div id="map" class="map"></div>
 <form>
-  <label for="radius">radius size</label>
+  <label for="radius">Radius size / 核半径 (px)：</label>
   <input id="radius" type="range" min="1" max="50" step="1" value="5"/>
-  <label for="blur">blur size</label>
+  <label for="blur">Blur size / 模糊半径 (px)：</label>
   <input id="blur" type="range" min="1" max="50" step="1" value="15"/>
-  <label for="shiptype-filter">Filter by type of ship:</label>
+  <label for="shiptype-filter">Filter by type of ship / 船舶类型过滤：</label>
   <select id="shiptype-filter">
-      <option>All</option>
-      <option>Passenger</option>
-      <option>HSC</option>
-      <option>Tanker</option>
-      <option>Cargo</option>
-      <option>Sailing</option>
-      <option>Other</option>
-      <option>Tug</option>
-      <option>SAR</option>
-      <option>Pleasure</option>
-      <option>Dredging</option>
-      <option>Law enforcement</option>
-      <option>Pilot</option>
-      <option>Fishing</option>
-      <option>Diving</option>
-      <option>Spare 2</option>
-      <option>Undefined</option>
+      <option value="All">All / 全部</option>
+      <option value="Passenger">Passenger / 客轮</option>
+      <option value="HSC">HSC / 高速快艇</option>
+      <option value="Tanker">Tanker / 油轮</option>
+      <option value="Cargo">Cargo / 货船</option>
+      <option value="Sailing">Sailing / 帆船</option>
+      <option value="Other">Other / 其他</option>
+      <option value="Tug">Tug / 拖船</option>
+      <option value="SAR">SAR / 搜救船</option>
+      <option value="Pleasure">Pleasure / 游艇</option>
+      <option value="Dredging">Dredging / 挖泥船</option>
+      <option value="Law enforcement">Law enforcement / 执法巡逻船</option>
+      <option value="Pilot">Pilot / 引航船</option>
+      <option value="Fishing">Fishing / 渔船</option>
+      <option value="Diving">Diving / 潜水作业船</option>
+      <option value="Spare 2">Spare 2 / 备用 2</option>
+      <option value="Undefined">Undefined / 未定义</option>
   </select>
 </form>

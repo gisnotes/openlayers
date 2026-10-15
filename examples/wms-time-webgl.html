@@ -1,16 +1,29 @@
 ---
 layout: example.html
-title: WMS Time (WebGL)
-shortdesc: Smooth tile transitions on a WebGL tile layer when changing the time dimension of a tiled WMS layer.
-docs: >
-  Demonstrates smooth reloading of layers when changing the time dimension continuously. When the source key changes
-  by calling `updateParams()` on the source, the renderer keeps the previous frame's tiles visible until the new ones
-  load, so the animation stays smooth instead of flashing. Data shown: IEM generated CONUS composite of NWS NEXRAD WSR-88D level III base reflectivity.
+title: WMS Time (WebGL) / WebGL WMS 时序动态瓦片平滑过渡渲染
+shortdesc: Smooth tile transitions on a WebGL tile layer when changing the time dimension of a tiled WMS layer. / 演示在 WebGL 瓦片图层中动态更改 WMS 时间维度时，实现无白屏闪烁的平滑瓦片重载过渡。
+docs: |
+  <p>Demonstrates smooth reloading of layers when changing the time dimension continuously. When the source key changes
+  by calling <code>updateParams()</code> on the source, the renderer keeps the previous frame's tiles visible until the new ones
+  load, so the animation stays smooth instead of flashing. Data shown: IEM generated CONUS composite of NWS NEXRAD WSR-88D level III base reflectivity.</p>
+
+  <p>本示例演示在连续动态切换时间维度时，WebGL 瓦片图层如何实现平滑无缝重载。当通过调用数据源的 <code>updateParams({'TIME': ...})</code> 导致缓存键变更时，WebGL 渲染器会自动保持上一帧的瓦片持续可见，直到新的瓦片完成加载解码后才进行淡入切换，从根本上消除了传统重载时的白屏与剧烈闪烁。数据展示：美国爱荷华州环境网（IEM）生成的全美气象雷达（NEXRAD WSR-88D）三级反射率时序复合切片。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 传统 2D 瓦片 vs WebGL 瓦片的时序过渡缺陷对比
+  * **2D Canvas 的闪烁痛点**：传统 Canvas 2D 瓦片图层在参数变化后，如果立即清空旧瓦片缓冲区，会导致视口瞬间空白（白屏）；而如果保留旧瓦片，处理跨层级或时序覆盖时的透明通道混色（Alpha Blending）通常非常繁琐，容易产生破损残影。
+  * **WebGL 纹理双缓冲与帧保持机制（Frame Retention）**：`WebGLTile` 在内部维护了多缓冲纹理状态。当请求新的时间戳瓦片时，GPU 继续使用上一时刻已在显存中的纹理进行着色，只有当新瓦片纹理全部下载并上传 GPU 后，才通过片元着色器执行平滑混合，实现类似视频播放般的连贯体验。
+
+  #### 2. WMS-T 规范与参数响应
+  * **`updateParams({'TIME': ...})` 规范驱动**：OGC WMS 规范通过 `TIME` 参数（遵循 ISO 8601 时间格式）支持四维时空切片查询。调用 `updateParams` 仅需改变查询参数字符串，无需销毁重建图层实例。
 tags: "wms, time, dimensions, transition, nexrad, webgl"
 ---
 <div id="map" class="map"></div>
-<div role="group" aria-label="Animation controls">
-  <button id="play" type="button">Play</button>
-  <button id="pause" type="button">Pause</button>
+<div role="group" aria-label="Animation controls / 动画播放控制">
+  <button id="play" type="button">Play / 播放</button>
+  <button id="pause" type="button">Pause / 暂停</button>
   <span id="info"></span>
 </div>

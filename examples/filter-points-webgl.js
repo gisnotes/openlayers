@@ -14,7 +14,9 @@ const vectorSource = new Vector({
 
 const oldColor = 'rgba(242,56,22,0.61)';
 const newColor = '#ffe52c';
-const period = 12; // animation period in seconds
+const period = 12; // Animation period in seconds / 动画周期（秒）
+// Construct periodic pulse ratio using shader math operators
+// 使用着色器数学运算符构造周期性呼吸脉冲比率
 const animRatio = [
   '^',
   [
@@ -33,6 +35,8 @@ const animRatio = [
   0.5,
 ];
 
+// WebGL style expressions mapping mass and animation ratio to radius, color, and opacity
+// WebGL 样式表达式：将质量和动画比率映射到半径、填充色和透明度
 const style = {
   'circle-radius': [
     '*',
@@ -51,7 +55,7 @@ const style = {
   'circle-opacity': ['-', 1.0, ['*', animRatio, 0.75]],
 };
 
-// handle input values & events
+// Handle input slider values and events / 处理滑块输入值与事件
 const minYearInput = document.getElementById('min-year');
 const maxYearInput = document.getElementById('max-year');
 
@@ -63,8 +67,8 @@ function updateStatusText() {
 
 const pointsLayer = new WebGLVectorLayer({
   variables: {
-    minYear: parseInt(minYearInput.value),
-    maxYear: parseInt(maxYearInput.value),
+    minYear: parseInt(minYearInput.value, 10),
+    maxYear: parseInt(maxYearInput.value, 10),
   },
   style: [
     {
@@ -78,27 +82,31 @@ const pointsLayer = new WebGLVectorLayer({
     },
   ],
   source: vectorSource,
-  disableHitDetection: true,
+  disableHitDetection: true, // Disable hit detection for optimal performance with 45k points / 禁用拾取探测以提升海量点性能
 });
 
 minYearInput.addEventListener('input', function () {
-  pointsLayer.updateStyleVariables({minYear: parseInt(minYearInput.value)});
+  pointsLayer.updateStyleVariables({
+    minYear: parseInt(minYearInput.value, 10),
+  });
   updateStatusText();
 });
 maxYearInput.addEventListener('input', function () {
-  pointsLayer.updateStyleVariables({maxYear: parseInt(maxYearInput.value)});
+  pointsLayer.updateStyleVariables({
+    maxYear: parseInt(maxYearInput.value, 10),
+  });
   updateStatusText();
 });
 updateStatusText();
 
-// load data;
+// Load CSV data / 异步加载陨石撞击 CSV 数据
 const client = new XMLHttpRequest();
 client.open('GET', 'data/csv/meteorite_landings.csv');
 client.onload = function () {
   const csv = client.responseText;
   const features = [];
 
-  let prevIndex = csv.indexOf('\n') + 1; // scan past the header line
+  let prevIndex = csv.indexOf('\n') + 1; // Scan past header line / 跳过表头首行
 
   let curIndex;
   while ((curIndex = csv.indexOf('\n', prevIndex)) != -1) {
@@ -107,14 +115,14 @@ client.onload = function () {
 
     const coords = fromLonLat([parseFloat(line[4]), parseFloat(line[3])]);
     if (isNaN(coords[0]) || isNaN(coords[1])) {
-      // guard against bad data
+      // Guard against bad or missing data / 过滤无效坐标数据
       continue;
     }
 
     features.push(
       new Feature({
         mass: parseFloat(line[1]) || 0,
-        year: parseInt(line[2]) || 0,
+        year: parseInt(line[2], 10) || 0,
         geometry: new Point(coords),
       }),
     );
@@ -140,7 +148,7 @@ const map = new Map({
   }),
 });
 
-// animate the map
+// Animate map continuously every frame / 逐帧驱动地图重绘以展示着色器脉冲动画
 function animate() {
   map.render();
   window.requestAnimationFrame(animate);

@@ -3,6 +3,8 @@ import View from '../src/ol/View.js';
 import Layer from '../src/ol/layer/WebGLTile.js';
 import Source from '../src/ol/source/ImageTile.js';
 
+// Initialize map with WebGLTile layer rendering OpenStreetMap raster tiles
+// 初始化地图实例，使用 WebGLTile 图层高效渲染标准 OpenStreetMap 栅格瓦片
 const map = new Map({
   target: 'map',
   layers: [

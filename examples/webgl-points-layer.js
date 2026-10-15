@@ -12,6 +12,7 @@ const vectorSource = new Vector({
   wrapX: true,
 });
 
+// Predefined WebGL literal style configurations / 预设 WebGL 字面量样式集合
 const predefinedStyles = {
   icons: {
     'icon-src': 'data/icon.png',
@@ -96,8 +97,8 @@ const predefinedStyles = {
     'circle-rotate-with-view': false,
   },
   'circles-zoom': {
-    // by using an exponential interpolation with a base of 2 we can make it so that circles will have a fixed size
-    // in world coordinates between zoom level 5 and 15
+    // By using an exponential interpolation with a base of 2, circles have fixed physical size in world coordinates
+    // 使用底数为 2 的指数插值，保证圆形在层级 5 到 15 之间在真实世界坐标系中具有固定的物理尺寸
     'circle-radius': [
       'interpolate',
       ['exponential', 2],
@@ -156,6 +157,8 @@ let pointsLayer;
 
 let selected = null;
 
+// Hover interaction to update feature 'hover' property
+// 鼠标悬停交互：动态设置要素的 hover 属性以触发着色器分支变色
 map.on('pointermove', function (ev) {
   if (selected !== null) {
     selected.set('hover', 0);
@@ -169,6 +172,7 @@ map.on('pointermove', function (ev) {
   });
 });
 
+// Refresh layer with new style configuration / 根据新样式重建并切换图层
 function refreshLayer(newStyle) {
   const previousLayer = pointsLayer;
   pointsLayer = new WebGLVectorLayer({
@@ -215,7 +219,7 @@ function onSelectChange() {
   editor.value = JSON.stringify(newLiteralStyle, null, 2);
   try {
     refreshLayer(newLiteralStyle);
-    setStyleStatus();
+    setStyleStatus(null);
   } catch (e) {
     setStyleStatus(e.message);
   }
@@ -223,7 +227,7 @@ function onSelectChange() {
 onSelectChange();
 select.addEventListener('change', onSelectChange);
 
-// animate the map
+// Animate the map continuously / 持续驱动帧循环以播放自旋动画
 function animate() {
   map.render();
   window.requestAnimationFrame(animate);

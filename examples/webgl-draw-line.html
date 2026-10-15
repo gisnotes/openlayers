@@ -2,9 +2,27 @@
 layout: example.html
 title: Draw lines rendered with WebGL / WebGL 渲染绘制线条
 shortdesc: Example showing how stroke styling options are represented with the WebGL renderer. / 演示如何使用 WebGL 矢量图层渲染线条描边与虚线样式选项。
-docs: >
+docs: |
   <p>This example lets you tweak the stroke styling options dynamically to see how they affect line rendering. The line string showing by default can be modified and new ones can be drawn by single-clicking on the map.</p>
-  <p>本示例支持动态调整线条描边样式参数，直观观察 WebGL 渲染器下线条的渲染表现。地图上默认展示的折线可直接通过 Modify 交互拖拽顶点修改，同时支持在地图上单机连续绘制新的折线。</p>
+
+  <p>本示例支持动态调整线条描边样式参数，直观观察 WebGL 渲染器下线条的渲染表现。地图上默认展示的折线可直接通过 Modify 交互拖拽顶点修改，同时支持在地图上单击连续绘制新的折线。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. WebGL 矢量线段三角剖分（Tessellation）与顶点着色
+  * **GPU 线条渲染原理**：原生 WebGL 的 `gl.LINES` 在大多数平台上最大线宽被硬件限制为 1 像素，且不支持复杂的拐角斜接和端点线帽。
+  * **几何扩充机制**：OpenLayers 的 `WebGLVectorLayer` 在 CPU 端（Worker 线程）将折线顶点自动膨胀为三角带（Triangle Strips / Quads）。
+  * **线帽（Cap）与连接（Join）**：
+    - `stroke-line-cap`：支持 `butt`（平头）、`round`（圆头弧线扩充）与 `square`（方头延伸半个线宽）；
+    - `stroke-line-join`：支持 `miter`（尖角斜接，配合 `miterLimit` 防止锐角过长刺出）、`round`（平滑圆角扇形）与 `bevel`（平角斜切）。
+
+  #### 2. GPU 片元着色器虚线运算（Procedural Dash Calculation）
+  * **无需切割几何**：虚线（`stroke-line-dash`）和相位偏移（`stroke-line-dash-offset`）并非把折线切成碎段，而是在顶点着色器中传入沿线累计距离属性（Line Distance），在片元着色器中利用模运算（Modulo）动态剔除间隔部分的片元，计算效率极高。
+
+  #### 3. 标绘交互装配顺序佐证
+  * 本例同样集成了 `Modify`、`Draw` 与 `Snap` 交互，源码中严格遵循了 `Modify -> Draw -> Snap` 的挂载次序，确保在 WebGL 矢量图层上绘制和编辑时拓扑吸附精准生效。
 experimental: true
 tags: "draw, vector, webgl, line, dash"
 ---
@@ -58,7 +76,7 @@ tags: "draw, vector, webgl, line, dash"
       <input type="checkbox" class="rebuild" id="dashEnable">
       Enable dashes / 启用虚线（Dash）
     </label>
-    </div>
+  </div>
   <div class="form-group" style="margin-left: 18px">
     <label>
       Line dash pattern (px) / 虚线线段与间隔（像素）

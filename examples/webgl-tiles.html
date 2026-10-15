@@ -1,9 +1,22 @@
 ---
 layout: example.html
-title: WebGL Tiles
-shortdesc: Rendering raster data with WebGL.
-docs: >
-  This example uses WebGL to raster tiles on a map.
+title: WebGL Tiles / WebGL 基础栅格瓦片渲染
+shortdesc: Rendering raster data with WebGL. / 使用 WebGLTile 图层与 ImageTile 数据源直接在 GPU 中高效渲染栅格瓦片。
+docs: |
+  <p>This example uses WebGL to raster tiles on a map.</p>
+
+  <p>本示例演示如何使用 <code>ol/layer/WebGLTile</code> 在地图上直接基于 WebGL 硬件管线渲染标准 OSM 栅格瓦片。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. `ol/layer/WebGLTile` 与传统 Canvas 2D 瓦片图层的架构差异
+  * **显存纹理绑定机制**：传统 `ol/layer/Tile` 在每帧重绘时依靠浏览器主线程的 2D Canvas 上下文调用 `ctx.drawImage()` 绘制每一个切片。当瓦片数量众多或频繁缩放旋转时，CPU 负担极重。
+  * **GPU 硬件级图元装配**：`WebGLTile` 在图片下载解码完成后，直接将其上传为显卡纹理对象（WebGLTexture），通过网格顶点索引一次性提交渲染。视口平移、多级平滑缩放、旋转等几何变换完全由顶点着色器（Vertex Shader）矩阵运算瞬时完成，极大降低了主线程开销。
+
+  #### 2. 通向高级 GPU 图像处理的基石
+  * 虽然本例仅展示了标准 OSM 瓦片的基准渲染，但 `WebGLTile` 原生支持挂载 `style` 配置项。基于本例架构，开发者无需更换图层类型，即可随时无缝注入波段表达式（`band`）、实时色彩增强（亮度/对比度/饱和度调整）、高程伪彩色合成及硬件级视口剪裁。
 tags: "webgl, osm"
 ---
 <div id="map" class="map"></div>

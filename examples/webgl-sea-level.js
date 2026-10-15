@@ -9,9 +9,8 @@ const attributions =
   '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> ' +
   '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>';
 
-// band math operates on normalized values from 0-1
-// so we scale by 255 to align with the elevation formula
-// from https://cloud.maptiler.com/tiles/terrain-rgb-v2/
+// Band math operates on normalized values from 0-1, so we scale by 255 to align with elevation formula
+// 着色器波段数学运算使用 0-1 范围的归一化像素值，因此乘以 255 对齐 Terrain-RGB 真实海拔反算公式
 const elevation = [
   '+',
   -10000,
@@ -35,7 +34,8 @@ const layer = new TileLayer({
     },
     color: [
       'case',
-      // use the `level` style variable to determine the color
+      // Use the `level` style variable to determine color (blue if submerged, transparent otherwise)
+      // 使用 `level` 样式变量判断像素颜色（被水淹没区域显示为蓝色，陆地部分完全透明）
       ['<=', elevation, ['var', 'level']],
       [139, 212, 255, 1],
       [139, 212, 255, 0],
@@ -76,6 +76,7 @@ for (let i = 0, ii = locations.length; i < ii; ++i) {
   locations[i].addEventListener('click', relocate);
 }
 
+// Quick jump to city coordinates / 快速跳转至指定城市中心点
 function relocate(event) {
   const data = event.target.dataset;
   const view = map.getView();

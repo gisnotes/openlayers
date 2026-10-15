@@ -10,14 +10,14 @@ import {fromLonLat} from '../src/ol/proj.js';
 import OSM from '../src/ol/source/OSM.js';
 import VectorSource from '../src/ol/source/Vector.js';
 
-// WebGL 样式动态变量初始值字典
+// Initial values for dynamic WebGL style variables / WebGL 样式动态变量初始值字典
 /** @type {import('../src/ol/style/flat.js').StyleVariables} */
 const styleVariables = {
   width: 12,
   offset: 0,
   capType: 'butt',
   joinType: 'miter',
-  miterLimit: 10, // 斜接比例
+  miterLimit: 10, // Miter limit ratio / 斜接比例限制
   dashLength1: 25,
   dashLength2: 15,
   dashLength3: 15,
@@ -33,10 +33,11 @@ const source = new VectorSource({
 });
 
 /**
+ * Generate WebGL FlatStyle expression based on dash and pattern toggles
  * 根据虚线与纹理开关生成 WebGL FlatStyle 样式表达式
- * @param {boolean} dash 是否包含虚线
- * @param {boolean} pattern 是否包含图片纹理
- * @return {import('../src/ol/style/flat.js').FlatStyle} 生成的样式对象
+ * @param {boolean} dash Whether dash pattern is enabled / 是否包含虚线
+ * @param {boolean} pattern Whether image pattern is enabled / 是否包含图片纹理
+ * @return {import('../src/ol/style/flat.js').FlatStyle} Generated style object / 生成的样式对象
  */
 const getStyle = (dash, pattern) => {
   let newStyle = {
@@ -94,6 +95,7 @@ const map = new Map({
   }),
 });
 
+// Rebuild shader style when structure changes (e.g. toggling dashes or textures)
 // 重构着色器样式（当勾选虚线或纹理开关改变着色器输入结构时调用）
 const rebuildStyle = () => {
   const dash = document.getElementById('dashEnable').checked;
@@ -111,7 +113,7 @@ const rebuildStyle = () => {
 const modify = new Modify({source: source});
 map.addInteraction(modify);
 
-let draw, snap; // 全局变量，便于移除重建
+let draw, snap; // Global variables for interaction management / 全局变量，便于移除重建
 
 function addInteractions() {
   draw = new Draw({
@@ -125,6 +127,7 @@ function addInteractions() {
 
 addInteractions();
 
+// Listen to input changes and update style variables for instantaneous GPU uniform updates
 // 监听样式变量控件输入事件，通过 updateStyleVariables 实现微秒级 GPU Uniform 更新
 const inputListener = (event) => {
   const variableName = event.target.name;

@@ -1,26 +1,47 @@
 ---
 layout: example.html
-title: Filtering features with WebGL
-shortdesc: Using WebGL to filter large quantities of features
-docs: >
-  This example shows how to use `ol/layer/WebGLVector` with a literal style to dynamically filter a large amount
-    of point geometries. The above map is based on a dataset from the NASA containing 45k recorded meteorite
-    landing sites. Each meteorite is marked by a circle on the map (the bigger the circle, the heavier
-    the object). A pulse effect has been added, which is slightly offset by the year of the impact.
+title: Filtering Features with WebGL / WebGL 海量要素动态过滤与着色器动画
+shortdesc: Using WebGL to filter large quantities of features. / 使用 WebGL 动态过滤海量点要素并结合着色器实现呼吸脉冲动画。
+docs: |
+  <p>This example shows how to use <code>ol/layer/WebGLVector</code> with a literal style to dynamically filter a large amount
+  of point geometries. The above map is based on a dataset from the NASA containing 45k recorded meteorite
+  landing sites. Each meteorite is marked by a circle on the map (the bigger the circle, the heavier
+  the object). A pulse effect has been added, which is slightly offset by the year of the impact.</p>
 
-  Adjusting the sliders causes the objects outside of the date range to be filtered out of the map. This is done
-    by mutating the variables used by the `style` object provided to the WebGL layer. Also note that the last snippet
-    of code is necessary to make sure the map refreshes itself every frame.
+  <p>Adjusting the sliders causes the objects outside of the date range to be filtered out of the map. This is done
+  by mutating the variables used by the <code>style</code> object provided to the WebGL layer. Also note that the last snippet
+  of code is necessary to make sure the map refreshes itself every frame.</p>
 
+  <p>本示例演示如何使用 <code>ol/layer/WebGLVector</code> 搭配声明式字面量样式（Literal Style），动态过滤海量点几何要素。底图数据源来自 NASA 记录的全球约 45,000 处陨石撞击点。每个撞击点在地图上以圆点标绘（圆点越大代表陨石质量越重），并根据撞击发生年份加入了带有微小相位偏移的脉冲动态呼吸光晕效果。</p>
+
+  <p>拖动下方年份滑块可动态过滤超出时间范围的要素。该过程通过修改传递给 WebGL 矢量图层 <code>style</code> 对象的样式变量（Variables）完成。此外，文末使用 <code>requestAnimationFrame</code> 触发持续重绘，以驱动 GPU 片元着色器实时计算逐帧脉冲动画。</p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. GPU 实例绘制（Instanced Rendering）与海量点承载
+  * **传统 Canvas 瓶颈**：在普通 Canvas 2D 渲染下，绘制 4.5 万个具有动态缩放、透明度和渐变色的要素会导致极严重的 CPU 循环绘制卡顿（帧率跌至 10 FPS 以下）。
+  * **WebGL 批量提交**：`ol/layer/WebGLVector` 将所有点的坐标、属性（质量 `mass`、年份 `year`）打包为显存顶点缓冲区（VBO），通过一次 Draw Call 驱动 GPU 进行硬件级实例绘制，实现 60 FPS 满帧渲染。
+
+  #### 2. 着色器内置时间运算符 `['time']` 与呼吸脉冲
+  * **时间驱动插值**：样式表达式中使用了 `['time']` 运算符，该算子读取当前动画帧时间戳（以秒为单位）。
+  * **连续波动函数**：
+    `animRatio = ( (time + yearOffset) % period ) / period ^ 0.5`
+    利用求模与指数运算构造出周期为 12 秒的非线性脉冲曲线。各点根据自身的撞击年份（`year`）产生错落有致的起伏，无需在 JS 层面逐点计算属性更新。
+
+  #### 3. 毫秒级属性过滤与命中探测优化
+  * **片元级条件过滤**：`filter: ['between', ['get', 'year'], ['var', 'minYear'], ['var', 'maxYear']]`。滑块变动时调用 `pointsLayer.updateStyleVariables()`，GPU 片元着色器直接根据 Uniform 变量丢弃非区间点位，无任何要素重建或垃圾回收停顿。
+  * **`disableHitDetection: true` 性能保护**：在超大规模数据集下，如果不需要鼠标点击/悬停拾取要素，显式关闭命中探测可完全避免在离屏 Hit-Buffer 上的额外渲染开销。
 tags: "webgl, icon, sprite, filter, feature"
 experimental: true
 ---
 <div id="map" class="map"></div>
 <form>
-  <div id="status">Show impacts between <span class="min-year"></span> and <span class="max-year"></span></div>
+  <div id="status">Show impacts between / 显示撞击年份区间：<span class="min-year"></span> ~ <span class="max-year"></span></div>
 
-  <label for="min-year">Minimum year:</label>
+  <label for="min-year">Minimum year / 起始年份：</label>
   <input id="min-year" type="range" min="1850" max="2015" step="1" value="1850"/>
-  <label for="max-year">Maximum year:</label>
+  <label for="max-year">Maximum year / 截止年份：</label>
   <input id="max-year" type="range" min="1850" max="2015" step="1" value="2015"/>
 </form>
