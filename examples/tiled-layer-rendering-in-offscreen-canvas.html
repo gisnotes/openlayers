@@ -1,9 +1,50 @@
 ---
 layout: example.html
-title: Tiled Layer Rendering in an Offscreen Canvas
-shortdesc: Simplified example of a tiled layer strategy using a map that lives inside a worker.
+title: Tiled Layer Rendering in an Offscreen Canvas / OffscreenCanvas 离屏瓦片图层渲染
+shortdesc: Simplified example of a tiled layer strategy using a map that lives inside a worker. / 使用 Worker 内部地图实例进行离屏瓦片异步渲染与 ImageBitmap 传输的示例。
 docs: >
-  The tiles of the map in this example are rendered in a web worker, using `OffscreenCanvas`. This can be improved by using a pool of workers to enable parallel, multi-threaded rendering.
+  <p>
+    The tiles of the map in this example are rendered in a web worker, using <code>OffscreenCanvas</code>. This can be improved by using a pool of workers to enable parallel, multi-threaded rendering.
+  </p>
+  <p>
+    在此示例中，地图的各个瓦片都在 Web Worker 后台子线程中通过 <code>OffscreenCanvas</code> 进行离屏渲染。通过在主线程自定义 <code>ImageTileSource</code> 的 <code>loader</code> 拦截瓦片请求，由 Worker 内部运行的无头地图完成光栅化并以 <code>ImageBitmap</code> 零拷贝返回。在生产环境中，还可以通过 Worker 线程池（Worker Pool）实现多核并行多线程出图。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>瓦片级微任务架构（Tile-Level Worker Pipeline）：</strong>
+      与整屏全幅委托不同，本示例将**每个独立瓦片（512×512）**视为一个异步作业单元。主线程的 <code>ImageTileSource</code> 仅负责维护空间视口瓦片网格与缓存，当需要加载新瓦片时，触发自定义 <code>loader</code> 向 Web Worker 发送 <code>[z, x, y]</code> 切片坐标任务。
+    </li>
+    <li><strong>Worker 内部的无头地图（Headless Map）：</strong>
+      在 Worker 子线程中，实例化了一个挂载于 <code>new OffscreenCanvas(512, 512)</code> 的无头 <code>ol/Map</code>。收到切片坐标后，利用 <code>tileGrid.getTileCoordCenter(tile)</code> 与对应层级分辨率动态为该无头地图重设 <code>View</code>，使得 Worker 像微型离线瓦片服务器一样精准烘焙单张瓦片。
+    </li>
+    <li><strong>ImageBitmap 零拷贝 Transferable 管道：</strong>
+      渲染完成后，通过 <code>canvas.transferToImageBitmap()</code> 获取图像显存句柄，并通过 <code>worker.postMessage({ action: 'rendered', imageData }, [imageData])</code> 进行 Transferable 零拷贝转移，主线程的 Promise 立即 <code>resolve(imageData)</code> 并无缝贴图，全程毫无内存序列化阻塞。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>ImageTileSource({ loader: (z, x, y) =&gt; Promise })</code>：现代 OpenLayers 提供的异步瓦片加载拦截点，返回包含 <code>HTMLImageElement</code>、<code>ImageBitmap</code> 或 <code>HTMLCanvasElement</code> 的 Promise。</li>
+    <li><code>transition: 0</code>：在 Worker 内部的 <code>OSM</code> 数据源中，显式将瓦片淡入过渡时间设为 0。因为 Worker 中只做单帧烘焙，开启淡入动画会导致透明度未完全显现就提前截帧。</li>
+    <li><code>map.once('rendercomplete', callback)</code>：单次渲染完成事件监听，确保 Worker 中的底图瓦片完全绘制就绪后再截取 <code>ImageBitmap</code>。</li>
+    <li><code>tileQueue.shift(); loadNextTile?.()</code>：简易排队队列，保证主线程有序向单个 Worker 发送任务，避免消息堆叠引发时序混乱。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>单 Worker 吞吐瓶颈与线程池（Worker Pool）：</strong>
+      示例中使用单个 Worker 串行处理瓦片，当快速缩放平移出现数十个瓦片请求时会出现排队等待。在复杂工程中，应构建 <code>navigator.hardwareConcurrency</code> 规模的 Worker 线程池，配合 Round-Robin 算法或空闲窃取（Work Stealing）实现多核满载并行渲染。
+    </li>
+    <li><strong>请求取消与中止（AbortSignal）：</strong>
+      用户快速拖拽地图时，已滑出视口的瓦片不再需要渲染。若未在主线程向 Worker 发送 <code>cancel</code> 信号，Worker 会浪费 CPU 继续渲染无用瓦片。生产环境需配合 <code>AbortController</code> 实现任务丢弃。
+    </li>
+    <li><strong>内存泄漏防范：</strong>
+      <code>OffscreenCanvas</code> 每次调用 <code>transferToImageBitmap()</code> 都会转移当前画布内容并清空上下文，主线程在使用完毕后应注意垃圾回收，避免大批 <code>ImageBitmap</code> 长期驻留显存。
+    </li>
+  </ul>
 tags: "worker, offscreencanvas, tiles"
 sources:
   - path: tiled-layer-rendering-in-offscreen-canvas.worker.js

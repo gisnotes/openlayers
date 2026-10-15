@@ -1,9 +1,50 @@
 ---
 layout: example.html
-title: Vector tiles rendered in an offscreen canvas
-shortdesc: Example of a map that delegates rendering to a worker.
+title: Vector tiles rendered in an offscreen canvas / OffscreenCanvas 离屏多线程矢量瓦片渲染
+shortdesc: Example of a map that delegates rendering to a worker. / 将矢量瓦片地图渲染委托给 Web Worker 离屏画布的示例。
 docs: >
-  The map in this example is rendered in a web worker, using `OffscreenCanvas`.
+  <p>
+    The map in this example is rendered in a web worker, using <code>OffscreenCanvas</code>.
+  </p>
+  <p>
+    在此示例中，完整的矢量瓦片地图在 Web Worker 后台子线程中渲染，依托浏览器的 <code>OffscreenCanvas</code>（离屏画布）与 <code>ImageBitmap</code> 零拷贝转移技术，彻底将复杂的矢量反序列化、样式计算与光栅化脱离主线程。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>主线程 UI 与渲染管线彻底解耦：</strong>
+      在传统前端单线程架构中，Mapbox 矢量瓦片（MVT PBF）的反序列化、几何构建、文字排版与样式匹配会密集抢占主线程 CPU 时间片，极易引发页面滚动卡顿或输入响应延迟。通过 <code>OffscreenCanvas</code> 与独立 Web Worker，所有繁重的几何构建与绘制指令均在子线程独立核中执行，主线程仅负责手势监听与最终图像合成。
+    </li>
+    <li><strong>异步视图状态双向同步与仿射矩阵补偿：</strong>
+      由于主线程手势交互（平移/缩放）具有极高的时效性，而 Worker 异步渲染返回存在微小延迟，为了避免地图在快速拖拽时出现闪烁或画面跳动，主线程维护了一个 <code>updateContainerTransform()</code> 几何补偿矩阵，通过 CSS <code>transform</code> 实时将 Worker 上一次渲染的旧帧变换到主线程最新的瞬时中心点与缩放尺度，实现丝滑流畅的交互体验。
+    </li>
+    <li><strong>跨线程要素拾取通道（Cross-Thread Hit Detection）：</strong>
+      Worker 内部持有完整的空间索引与矢量要素，主线程捕获 <code>pointermove</code> 像素坐标后，通过 <code>postMessage({ action: 'requestFeatures', pixel })</code> 将像素坐标分发给 Worker，Worker 拾取要素属性后回传，实现主线程信息窗的高效响应。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>new Worker(new URL('./offscreen-canvas.worker.js', import.meta.url), { type: 'module' })</code>：使用现代 ES 模块化语法实例化 Web Worker，支持在 Worker 内部使用标准的 <code>import</code> 导入 OpenLayers 核心包。</li>
+    <li><code>createImageBitmap(image)</code> 与 Transferable 零拷贝传输：主线程解析出的雪碧图纹理在传递给 Worker 时，利用 Transferable 对象列表 <code>[imageBitmap]</code> 将底层显存所有权直接转移给子线程，避免了数兆字节内存的大开销结构化克隆。</li>
+    <li><code>layer.getRenderer().useContainer = ...</code>：Worker 内部模拟了一个轻量级的无头 DOM 容器，重写图层渲染器的容器注入逻辑，直接将绘图输出定向到 <code>OffscreenCanvas</code> 上下文。</li>
+    <li><code>frameState.animate = true</code>：若主线程发生缩放平移而 Worker 渲染尚未完成，强制标记渲染循环保持活跃，直至新帧送达。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>浏览器兼容性与安全上下文：</strong>
+      <code>OffscreenCanvas</code> 与现代 Web Worker 必须在安全上下文（HTTPS 或 <code>localhost</code>）中运行。对于老旧浏览器（如 iOS Safari &lt; 16.4 或部分安卓 WebView），需提供回退到主线程常规 Canvas 渲染的降级容灾方案。
+    </li>
+    <li><strong>Worker 内部文本字体测量（Text Metrics）：</strong>
+      在 Web Worker 中无法访问标准的 <code>document.fonts</code>，若使用带有文本注记的矢量瓦片，需要使用本地系统通用字体（如 <code>getFont()</code> 替换为 <code>serif</code> / <code>sans-serif</code>）或借助 Canvas 2D 的 <code>ctx.measureText()</code> 进行降级排版。
+    </li>
+    <li><strong>内存泄漏与并发并发丢帧（Frame Dropping）：</strong>
+      用户高速滚轮缩放时，主线程可能在 1 秒内产生 60 次视图变化。若不加以节流或设置丢帧锁（<code>if (!rendering)</code>），Worker 消息队列积压会导致高延迟和内存膨胀。本示例严格采用互斥锁与 <code>requestAnimationFrame</code> 协同，确保每一时刻仅有一帧在 Worker 中处理。
+    </li>
+  </ul>
 tags: "worker, offscreencanvas, vector-tiles"
 experimental: true
 sources:

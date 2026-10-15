@@ -16,6 +16,7 @@ const worker = self;
 let frameState, pixelRatio, rendererTransform;
 const canvas = new OffscreenCanvas(1, 1);
 // OffscreenCanvas does not have a style, so we mock it
+// OffscreenCanvas 没有 DOM style 属性，因此在此处进行模拟
 canvas.style = {};
 const context = canvas.getContext('2d');
 
@@ -29,10 +30,13 @@ const sources = {
 const layers = [];
 
 // Font replacement so we do not need to load web fonts in the worker
+// 字体回退替换函数，避免在 Worker 中异步加载外部网络 Web 字体
 function getFont(font) {
   return font[0].replace('Noto Sans', 'serif').replace('Roboto', 'sans-serif');
 }
 
+// Load Mapbox style JSON and sprites
+// 加载 Mapbox 样式规范 JSON 及雪碧图资源
 function loadStyles() {
   const styleUrl =
     'https://api.maptiler.com/maps/streets-v2/style.json?key=' + key;
@@ -102,6 +106,7 @@ function loadStyles() {
 }
 
 // Minimal map-like functionality for rendering
+// 用于离屏渲染的最小瓦片队列调度系统
 const tileQueue = new TileQueue(
   (tile, tileSourceKey, tileCenter, tileResolution) =>
     tilePriorityFunction(
@@ -117,6 +122,8 @@ const tileQueue = new TileQueue(
 const maxTotalLoading = 8;
 const maxNewLoads = 2;
 
+// Handle messages from main thread
+// 处理来自主线程的消息
 worker.addEventListener('message', (event) => {
   if (event.data.action === 'requestFeatures') {
     const layersInView = layers.filter((l) =>

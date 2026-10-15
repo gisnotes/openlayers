@@ -2,6 +2,9 @@ import Map from '../src/ol/Map.js';
 import View from '../src/ol/View.js';
 import TileLayer from '../src/ol/layer/Tile.js';
 import ImageTileSource from '../src/ol/source/ImageTile.js';
+
+// Initialize Web Worker for offscreen tile rendering
+// 初始化用于离屏瓦片渲染的 Web Worker
 const worker = new Worker(
   new URL(
     './tiled-layer-rendering-in-offscreen-canvas.worker.js',
@@ -12,6 +15,8 @@ const worker = new Worker(
 
 const tileQueue = [];
 
+// Initialize map with custom tile loader delegated to worker
+// 初始化地图，使用委托给 Worker 的自定义瓦片加载器
 new Map({
   layers: [
     new TileLayer({

@@ -10,6 +10,8 @@ import {
   toString as toTransformString,
 } from '../src/ol/transform.js';
 
+// Initialize Web Worker with module support
+// 初始化支持 ES 模块的 Web Worker
 const worker = new Worker(
   new URL('./offscreen-canvas.worker.js', import.meta.url),
   {type: 'module'},
@@ -24,6 +26,7 @@ let container,
 
 // Transform the container to account for the difference between the (newer)
 // main thread frameState and the (older) worker frameState
+// 变换容器以补偿主线程（较新）帧状态与 Worker（较旧）帧状态之间的几何差异
 function updateContainerTransform() {
   if (workerFrameState) {
     const viewState = mainThreadFrameState.viewState;
@@ -51,6 +54,8 @@ function updateContainerTransform() {
   }
 }
 
+// Initialize map with custom layer delegated to worker
+// 初始化地图，使用委托给 Worker 离屏渲染的自定义图层
 const map = new Map({
   layers: [
     new Layer({
@@ -146,9 +151,11 @@ map.on('pointermove', function (evt) {
 });
 
 // Worker messaging and actions
+// Worker 跨线程消息通信与操作处理
 worker.addEventListener('message', (message) => {
   if (message.data.action === 'loadImage') {
     // Image loader for ol-mapbox-style
+    // ol-mapbox-style 的图像加载器
     const image = new Image();
     image.crossOrigin = 'anonymous';
     image.addEventListener('load', function () {
@@ -170,9 +177,11 @@ worker.addEventListener('message', (message) => {
     showInfo(message.data.features);
   } else if (message.data.action === 'requestRender') {
     // Worker requested a new render frame
+    // Worker 请求新的渲染帧
     map.render();
   } else if (canvas && message.data.action === 'rendered') {
     // Worker provides a new render frame
+    // Worker 提供渲染完成的新帧图像
     requestAnimationFrame(function () {
       const imageData = message.data.imageData;
       canvas.width = imageData.width;
@@ -187,6 +196,8 @@ worker.addEventListener('message', (message) => {
 });
 
 const info = document.getElementById('info');
+// Show feature properties in info container
+// 在 info 容器中展示要素属性
 function showInfo(propertiesFromFeatures) {
   if (propertiesFromFeatures.length == 0 || pointerOutside) {
     info.innerText = '';
