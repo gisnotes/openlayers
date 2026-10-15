@@ -571,3 +571,52 @@ div.code-toolbar>.toolbar button:before {
 table.featureInfo {
   caption-side: initial;
 }
+
+/* ==========================================================================
+   Summary Index & Bootstrap 5.2 Utility Polyfills
+   ========================================================================== */
+
+/* Bootstrap 5.3 subtle background utility classes polyfill for Bootstrap 5.2 */
+.bg-primary-subtle { background-color: #cfe2ff !important; }
+.bg-secondary-subtle { background-color: #e2e3e5 !important; }
+.bg-success-subtle { background-color: #d1e7dd !important; }
+.bg-info-subtle { background-color: #cff4fc !important; }
+.bg-warning-subtle { background-color: #fff3cd !important; }
+.bg-danger-subtle { background-color: #f8d7da !important; }
+.bg-light-subtle { background-color: #fcfcfd !important; }
+.bg-dark-subtle { background-color: #ced4da !important; }
+
+/* Bootstrap 5.3 emphasis text utility classes polyfill for Bootstrap 5.2 */
+.text-primary-emphasis { color: #0a58ca !important; }
+.text-secondary-emphasis { color: #41464b !important; }
+.text-success-emphasis { color: #146c43 !important; }
+.text-info-emphasis { color: #087990 !important; }
+.text-warning-emphasis { color: #664d03 !important; }
+.text-danger-emphasis { color: #b02a37 !important; }
+.text-dark-emphasis { color: #1a1e21 !important; }
+
+/* Subtle badge text color safety fallback: prevent badge from defaulting to white text */
+.badge[class*="-subtle"] {
+  color: var(--ol-foreground-color);
+}
+
+/* Summary Card Header: prevent badge overflow, allow natural multi-line wrapping */
+.summary-card-badges,
+.card-body > .d-flex.align-items-center.mb-3 {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  align-items: center;
+  gap: 0.35rem;
+  margin-bottom: 0.85rem !important;
+}
+
+.summary-card-badges .badge,
+.card-body > .d-flex.align-items-center.mb-3 > .badge {
+  font-size: 0.75rem;
+  font-weight: 500;
+  padding: 0.32em 0.55em;
+  line-height: 1.25;
+  margin-right: 0 !important;
+  white-space: nowrap;
+}
+

@@ -133,6 +133,17 @@ openlayers/
     ```
   - KaTeX 自动忽略 `code` 和 `pre` 标签，代码块中的 `$` 变量符号不受干扰。
 
+### 8. Bootstrap 5 版本兼容与 Summary 卡片排版规范（防止文字空白与标题栏溢出）
+- **Bootstrap 5.2 版本约束**：
+  - 全站（站点模板与全部示例）统一基线为 Bootstrap 5.2.0。Bootstrap 5.2 原生**不存在** Bootstrap 5.3+ 的 `bg-*-subtle` 与 `text-*-emphasis` 类名。
+- **文字空白隐形根因与防范**：
+  - 在 `.badge` 中若误用未定义的 `text-*-emphasis`，会导致文字颜色回退至 `.badge` 默认的 `#fff`（纯白文字），若同时使用未定义的 `bg-*-subtle`（无背景色，透出卡片纯白底色），就会直接产生“白底白字”的文字看似空白看不见的 Bug。
+  - **防范机制**：已在 `site/src/theme/site.css` 中完整 Polyfill 了全部 `bg-*-subtle`、`text-*-emphasis` 色值及兜底安全着色 `.badge[class*="-subtle"] { color: var(--ol-foreground-color); }`，保证文字永远具备高对比度可视性。
+- **卡片顶部标题栏防溢出（Flex 自动换行规范）**：
+  - 卡片顶部徽章容器统一使用 `<div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">`。
+  - **严禁**使用未声明 `flex-wrap` 的 `d-flex align-items-center` 硬塞 3 个以上带有较长中文标题或英文长模块名的徽章（卡片在 3 列栅格下可用内容宽度仅约 324px，3 个徽章不换行必定顶破右边界）。
+  - `summary-card-badges` 已内置 `flex-wrap: wrap`、`gap: 0.35rem`、`margin-right: 0 !important` 与 `font-size: 0.75rem`，长标题徽章会自动平滑折行到底部，紧凑且绝对不溢出卡片。
+
 ---
 
 ## 四、 Summary 专题体系与页面联动

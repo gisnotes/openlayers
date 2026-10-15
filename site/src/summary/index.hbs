@@ -60,7 +60,7 @@ layout: default.hbs
         class="card h-100 shadow-sm border-0 border-top border-4 border-primary"
       >
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-primary me-2"><i
                 class="fa fa-palette me-1"
               ></i>
@@ -96,7 +96,7 @@ layout: default.hbs
         class="card h-100 shadow-sm border-0 border-top border-4 border-success"
       >
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-success me-2"><i
                 class="fa fa-ruler-combined me-1"
               ></i>
@@ -136,7 +136,7 @@ layout: default.hbs
         class="card h-100 shadow-sm border-0 border-top border-4 border-info"
       >
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-info text-white me-2"><i
                 class="fa fa-sync-alt me-1"
               ></i>
@@ -176,7 +176,7 @@ layout: default.hbs
         class="card h-100 shadow-sm border-0 border-top border-4 border-warning"
       >
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-warning text-dark me-2"><i
                 class="fa fa-hand-pointer me-1"
               ></i>
@@ -216,7 +216,7 @@ layout: default.hbs
         class="card h-100 shadow-sm border-0 border-top border-4 border-danger"
       >
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-danger me-2"><i
                 class="fa fa-pencil-alt me-1"
               ></i>
@@ -256,7 +256,7 @@ layout: default.hbs
         class="card h-100 shadow-sm border-0 border-top border-4 border-secondary"
       >
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-secondary me-2"><i
                 class="fa fa-edit me-1"
               ></i>
@@ -291,7 +291,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-primary">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-primary text-white me-2"><i class="fa fa-microchip me-1"></i> WebGL</span>
             <span class="badge bg-light text-dark border me-1">19 个核心示例</span>
             <span class="badge bg-danger-subtle text-danger border border-danger">GPU 硬件加速</span>
@@ -316,7 +316,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-success">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-success text-white me-2"><i class="fa fa-satellite me-1"></i> COG / GeoZarr</span>
             <span class="badge bg-light text-dark border me-1">25 个核心示例</span>
             <span class="badge bg-info-subtle text-info border border-info">云原生遥感</span>
@@ -341,7 +341,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-info">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-info text-white me-2"><i class="fa fa-server me-1"></i> WMS</span>
             <span class="badge bg-light text-dark border me-1">14 个核心示例</span>
             <span class="badge bg-primary-subtle text-primary border border-primary">动态服务</span>
@@ -366,7 +366,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-warning">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-warning text-dark me-2"><i class="fa fa-spinner me-1"></i> Loading</span>
             <span class="badge bg-light text-dark border me-1">8 个核心示例</span>
             <span class="badge bg-warning-subtle text-warning-emphasis border border-warning">生命周期与策略</span>
@@ -391,7 +391,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-success">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-success text-white me-2"><i class="fa fa-map-marked-alt me-1"></i> GeoJSON</span>
             <span class="badge bg-light text-dark border me-1">11 个核心示例</span>
             <span class="badge bg-success-subtle text-success border border-success">矢量管线与切片</span>
@@ -416,7 +416,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-danger">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-danger text-white me-2"><i class="fa fa-mountain me-1"></i> Raster</span>
             <span class="badge bg-light text-dark border me-1">6 个核心示例</span>
             <span class="badge bg-danger-subtle text-danger border border-danger">栅格与多线程</span>
@@ -441,7 +441,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-dark">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-dark text-white me-2"><i class="fa fa-cogs me-1"></i> Custom</span>
             <span class="badge bg-light text-dark border me-1">7 个核心示例</span>
             <span class="badge bg-dark-subtle text-dark border border-dark">底层定制与扩展</span>
@@ -466,7 +466,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-primary">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-primary text-white me-2"><i class="fa fa-search-plus me-1"></i> Zoom</span>
             <span class="badge bg-light text-dark border me-1">10 个核心示例</span>
             <span class="badge bg-primary-subtle text-primary border border-primary">视口缩放与多尺度</span>
@@ -491,7 +491,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-info">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-info text-dark me-2"><i class="fa fa-play me-1"></i> Animation</span>
             <span class="badge bg-light text-dark border me-1">5 个核心示例</span>
             <span class="badge bg-info-subtle text-info-emphasis border border-info">空间动效与轨迹</span>
@@ -516,7 +516,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-secondary">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-secondary text-white me-2"><i class="fa fa-layer-group me-1"></i> TileJSON</span>
             <span class="badge bg-light text-dark border me-1">5 个核心示例</span>
             <span class="badge bg-secondary-subtle text-secondary-emphasis border border-secondary">元数据与图层组织</span>
@@ -541,7 +541,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-success">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-success text-white me-2"><i class="fa fa-satellite me-1"></i> Sentinel Hub</span>
             <span class="badge bg-light text-dark border me-1">4 个核心示例</span>
             <span class="badge bg-success-subtle text-success-emphasis border border-success">遥感解译与多光谱</span>
@@ -566,7 +566,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-warning">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-warning text-dark me-2"><i class="fa fa-globe me-1"></i> Geographic</span>
             <span class="badge bg-light text-dark border me-1">3 个核心示例</span>
             <span class="badge bg-warning-subtle text-warning-emphasis border border-warning">用户投影与即时渲染</span>
@@ -591,7 +591,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-danger">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-danger text-white me-2"><i class="fa fa-crop-alt me-1"></i> Canvas & Clipping</span>
             <span class="badge bg-light text-dark border me-1">6 个核心示例</span>
             <span class="badge bg-danger-subtle text-danger border border-danger">视口裁剪与滤镜</span>
@@ -616,7 +616,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-primary">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-primary text-white me-2"><i class="fa fa-font me-1"></i> Labels & Declutter</span>
             <span class="badge bg-light text-dark border me-1">5 个核心示例</span>
             <span class="badge bg-primary-subtle text-primary-emphasis border border-primary">注记排版与避让</span>
@@ -641,7 +641,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-success">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-success text-white me-2"><i class="fa fa-layer-group me-1"></i> ArcGIS REST</span>
             <span class="badge bg-light text-dark border me-1">3 个核心示例</span>
             <span class="badge bg-success-subtle text-success-emphasis border border-success">企业级服务集成</span>
@@ -666,7 +666,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-info">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-info text-dark me-2"><i class="fa fa-location-arrow me-1"></i> Geolocation</span>
             <span class="badge bg-light text-dark border me-1">4 个核心示例</span>
             <span class="badge bg-info-subtle text-info-emphasis border border-info">移动端定位与姿态</span>
@@ -691,7 +691,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-primary">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-primary text-white me-2"><i class="fa fa-comment-dots me-1"></i> Overlay & Popup</span>
             <span class="badge bg-light text-dark border me-1">3 个核心示例</span>
             <span class="badge bg-primary-subtle text-primary-emphasis border border-primary">覆盖物与弹窗</span>
@@ -716,7 +716,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-warning">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-warning text-dark me-2"><i class="fa fa-tv me-1"></i> Retina / HiDPI</span>
             <span class="badge bg-light text-dark border me-1">3 个核心示例</span>
             <span class="badge bg-warning-subtle text-warning-emphasis border border-warning">高清视网膜适配</span>
@@ -741,7 +741,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-info">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-info text-dark me-2"><i class="fa fa-microchip me-1"></i> Worker & Offscreen</span>
             <span class="badge bg-light text-dark border me-1">2 个核心示例</span>
             <span class="badge bg-info-subtle text-info-emphasis border border-info">离屏多线程渲染</span>
@@ -766,7 +766,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-success">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-success text-white me-2"><i class="fa fa-universal-access me-1"></i> Web Components & A11y</span>
             <span class="badge bg-light text-dark border me-1">3 个核心示例</span>
             <span class="badge bg-success-subtle text-success-emphasis border border-success">原生组件与无障碍</span>
@@ -791,7 +791,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-danger">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-danger text-white me-2"><i class="fa fa-file-pdf me-1"></i> Export & Print</span>
             <span class="badge bg-light text-dark border me-1">3 个核心示例</span>
             <span class="badge bg-danger-subtle text-danger-emphasis border border-danger">高精打印与比例尺</span>
@@ -816,7 +816,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-primary">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-primary text-white me-2"><i class="fa fa-compass me-1"></i> OverviewMap & Controls</span>
             <span class="badge bg-light text-dark border me-1">4 个核心示例</span>
             <span class="badge bg-primary-subtle text-primary-emphasis border border-primary">鹰眼与导航控件体系</span>
@@ -841,7 +841,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-warning">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-warning text-dark me-2"><i class="fa fa-server me-1"></i> OGC WMS & WFS</span>
             <span class="badge bg-light text-dark border me-1">3 个核心示例</span>
             <span class="badge bg-warning-subtle text-warning-emphasis border border-warning">服务穿透与矢量检索</span>
@@ -866,7 +866,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-info">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-info text-dark me-2"><i class="fa fa-arrows-alt me-1"></i> View & Positioning</span>
             <span class="badge bg-light text-dark border me-1">3 个核心示例</span>
             <span class="badge bg-info-subtle text-info-emphasis border border-info">视口定位与边界约束</span>
@@ -891,7 +891,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-primary">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-primary text-white me-2"><i class="fa fa-expand me-1"></i> Fullscreen & Migration</span>
             <span class="badge bg-light text-dark border me-1">4 个核心示例</span>
             <span class="badge bg-primary-subtle text-primary-emphasis border border-primary">全屏与容器迁移</span>
@@ -916,7 +916,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-success">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-success text-white me-2"><i class="fa fa-link me-1"></i> View Sync & History</span>
             <span class="badge bg-light text-dark border me-1">3 个核心示例</span>
             <span class="badge bg-success-subtle text-success-emphasis border border-success">视图同步与永久链接</span>
@@ -941,7 +941,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-secondary">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-secondary text-white me-2"><i class="fa fa-copyright me-1"></i> Attributions & CartoDB</span>
             <span class="badge bg-light text-dark border me-1">3 个核心示例</span>
             <span class="badge bg-secondary-subtle text-secondary border border-secondary">版权合规与云端数据</span>
@@ -966,7 +966,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-dark">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-dark text-white me-2"><i class="fa fa-layer-group me-1"></i> Layer Management</span>
             <span class="badge bg-light text-dark border me-1">4 个核心示例</span>
             <span class="badge bg-dark-subtle text-dark border border-dark">层级排序与分辨率门控</span>
@@ -991,7 +991,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-primary">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-primary text-white me-2"><i class="fa fa-globe-americas me-1"></i> Projections & Graticule</span>
             <span class="badge bg-light text-dark border me-1">4 个核心示例</span>
             <span class="badge bg-primary-subtle text-primary border border-primary">网格格网与投影失真</span>
@@ -1016,7 +1016,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-warning">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-warning text-dark me-2"><i class="fa fa-file-code me-1"></i> Vector Formats</span>
             <span class="badge bg-light text-dark border me-1">5 个核心示例</span>
             <span class="badge bg-warning-subtle text-warning-emphasis border border-warning">标准格式与4D轨迹</span>
@@ -1041,7 +1041,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-info">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-info text-dark me-2"><i class="fa fa-draw-polygon me-1"></i> Topology & Analysis</span>
             <span class="badge bg-light text-dark border me-1">5 个核心示例</span>
             <span class="badge bg-info-subtle text-info-emphasis border border-info">测地几何与拓扑分析</span>
@@ -1066,7 +1066,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-success">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-success text-white me-2"><i class="fa fa-cubes me-1"></i> Vector Tiles</span>
             <span class="badge bg-light text-dark border me-1">5 个核心示例</span>
             <span class="badge bg-success-subtle text-success-emphasis border border-success">网格与跨坐标系重投影</span>
@@ -1091,7 +1091,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-warning">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-warning text-dark me-2"><i class="fa fa-shapes me-1"></i> Geometry & Curves</span>
             <span class="badge bg-light text-dark border me-1">4 个核心示例</span>
             <span class="badge bg-warning-subtle text-warning-emphasis border border-warning">日界线环绕与曲线平滑</span>
@@ -1116,7 +1116,7 @@ layout: default.hbs
     <div class="col-md-6 col-lg-4">
       <div class="card h-100 shadow-sm border-0 border-top border-4 border-danger">
         <div class="card-body d-flex flex-column">
-          <div class="d-flex align-items-center mb-3">
+          <div class="summary-card-badges d-flex flex-wrap align-items-center mb-3">
             <span class="badge bg-danger text-white me-2"><i class="fa fa-palette me-1"></i> SVG & Transforms</span>
             <span class="badge bg-light text-dark border me-1">4 个核心示例</span>
             <span class="badge bg-danger-subtle text-danger border border-danger">仿射矩阵与色彩空间</span>
