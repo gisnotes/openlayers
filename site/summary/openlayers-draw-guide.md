@@ -46,6 +46,7 @@ layout: default.hbs
 | **空间动态量算**       | [`measure`](../en/latest/examples/measure.html)                                   | `getLength()` / `getArea()` + Overlay DOM 标签              | 绘制过程中动态跟随光标显示实时距离与面积气泡   |
 |                        | [`measure-style`](../en/latest/examples/measure-style.html)                       | 纯矢量样式函数（Style Function）输出动态标注                | 零 DOM 节点开销，百万级测量标记流畅平移缩放    |
 | **线条样式与 WebGL**   | [`line-arrows`](../en/latest/examples/line-arrows.html)                           | `geometry.forEachSegment()` + 方位角图标旋转                | 航线、水流、单行道方向动态箭头装饰             |
+|                        | [`icon-repeat`](../en/latest/examples/icon-repeat.html)                           | `Icon` 沿折线切线周期排布（`placement: 'line', repeat`）    | 动态交互绘制折线过程中实时计算切向旋转箭头排布 |
 |                        | [`webgl-draw-line`](../en/latest/examples/webgl-draw-line.html)                   | `WebGLVectorLayer` + 动态 Uniform 样式变量                  | GPU 级线条平滑线宽、虚线与纹理渲染             |
 |                        | [`filter-webgl-line`](../en/latest/examples/filter-webgl-line.html)               | `['line-metric']` 表达式 + `XYM` 测量维度                   | 飞行滑翔航迹随时间戳动态演进与渐变着色         |
 
@@ -286,3 +287,4 @@ OpenLayers 默认 `Polygon` 并不校验自相交。如需构建地籍或拓扑�
 15. [line-arrows](../en/latest/examples/line-arrows.html) — 折线分段箭头方向指示
 16. [webgl-draw-line](../en/latest/examples/webgl-draw-line.html) — WebGL 线条渲染与动态 Uniform
 17. [filter-webgl-line](../en/latest/examples/filter-webgl-line.html) — WebGL 沿线度量过滤与时间渐变
+18. [icon-repeat](../en/latest/examples/icon-repeat.html) — 交互式绘制折线沿线切向重复图标排版

@@ -1,8 +1,17 @@
+---
+title: OpenLayers 地理坐标系（useGeographic）与即时渲染深度实战指南
+layout: default.hbs
+head:
+  - '<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: ''$$'', right: ''$$'', display: true},{left: ''$'', right: ''$'', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>'
+---
+
+<nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">Geographic 地理坐标系指南</li></ol></nav>
+
 # OpenLayers 地理坐标系（useGeographic）与即时渲染深度实战指南
 
 > 在现代 WebGIS 架构中，坐标系统是连接现实地理空间与屏幕像素的核心桥梁。长期以来，OpenLayers 内部默认以 Web 墨卡托投影（`EPSG:3857`）作为投影平面的度量基准，开发者在处理来自 GPS、GeoJSON、后台服务或用户输入的经纬度（`EPSG:4326`）数据时，不得不频繁编写 `fromLonLat([lon, lat])` 与 `toLonLat(coord)` 模板代码。
 >
-> OpenLayers 引入的 `useGeographic()` 机制打破了这一常规壁垒，它在框架级建立了**透明的用户投影（User Projection）重映射管线**，使应用层代码能直接使用直观的经纬度，而底层渲染引擎依然享受墨卡托平面切片与 GPU 加速的高性能变换。本文将深入解析该机制的实现原理、交互编辑系统集成以及高帧率即时渲染（Immediate Rendering）的最佳生产实践。
+> OpenLayers 引入的 `useGeographic()` 机制打破了这一常规壁垒，它在框架级建立了**透明的用户投影（User Projection）重映射管线**，使应用层代码能直接使用直观的经纬度，而底层渲染引擎依然享受墨卡托平面切片与 GPU 加速的高性能变换。本文立足于 [`geographic`](../en/latest/examples/geographic.html)、[`edit-geographic`](../en/latest/examples/edit-geographic.html) 与 [`immediate-geographic`](../en/latest/examples/immediate-geographic.html) 3 个核心官方示例，深入解析该机制的实现原理、交互编辑系统集成以及高帧率即时渲染（Immediate Rendering）的最佳生产实践。
 
 ---
 
@@ -33,14 +42,15 @@ flowchart LR
 在 `ol/proj.js` 模块中，`useGeographic()` 执行的实质操作非常轻量但影响深远：
 
 ```javascript
-import {setUserProjection} from './proj.js';
+import { setUserProjection } from "./proj.js";
 
 export function useGeographic() {
-  setUserProjection('EPSG:4326');
+  setUserProjection("EPSG:4326");
 }
 ```
 
 当 `setUserProjection('EPSG:4326')` 被调用后：
+
 1. **视图层（View）**：`view.getCenter()`、`view.setCenter()`、`view.calculateExtent()` 均按 `[lon, lat]` 格式与地理范围 `[minLon, minLat, maxLon, maxLat]` 工作；
 2. **要素与几何体（Geometry）**：创建 `new Point([lon, lat])` 或 `new Polygon(...)` 时，构造函数识别到全局用户投影，自动将其注册为用户坐标，内部渲染时由 WebGL/Canvas 渲染器完成向投影平面的实时投影投射；
 3. **交互系统（Interactions）**：`Draw` 绘制过程中生成的坐标、`Modify` 拖动修改的顶点、`Snap` 捕捉吸附计算、`Select` 选区过滤，全部透明输出并消费经纬度；
@@ -71,29 +81,29 @@ flowchart TD
 在实现单页面的多模式切换时，交互冲突是常见问题（例如：在绘制时单机被 `Select` 拦截导致无法落点）。最佳实践是集中管理交互注销与按需挂载：
 
 ```javascript
-import {useGeographic} from 'ol/proj';
-import Map from 'ol/Map';
-import View from 'ol/View';
-import Draw from 'ol/interaction/Draw';
-import Modify from 'ol/interaction/Modify';
-import Select from 'ol/interaction/Select';
-import Snap from 'ol/interaction/Snap';
-import VectorSource from 'ol/source/Vector';
-import VectorLayer from 'ol/layer/Vector';
+import { useGeographic } from "ol/proj";
+import Map from "ol/Map";
+import View from "ol/View";
+import Draw from "ol/interaction/Draw";
+import Modify from "ol/interaction/Modify";
+import Select from "ol/interaction/Select";
+import Snap from "ol/interaction/Snap";
+import VectorSource from "ol/source/Vector";
+import VectorLayer from "ol/layer/Vector";
 
 useGeographic();
 
 const source = new VectorSource();
 const map = new Map({
-  target: 'map',
-  layers: [new VectorLayer({source})],
-  view: new View({center: [116.4074, 39.9042], zoom: 10}),
+  target: "map",
+  layers: [new VectorLayer({ source })],
+  view: new View({ center: [116.4074, 39.9042], zoom: 10 }),
 });
 
 const select = new Select();
-const modify = new Modify({features: select.getFeatures()});
-const draw = new Draw({source, type: 'Polygon'});
-const snap = new Snap({source});
+const modify = new Modify({ features: select.getFeatures() });
+const draw = new Draw({ source, type: "Polygon" });
+const snap = new Snap({ source });
 
 // 集中卸载所有可能冲突的交互
 function removeInteractions() {
@@ -106,10 +116,10 @@ function removeInteractions() {
 // 根据业务状态动态装配
 function setEditMode(mode) {
   removeInteractions();
-  if (mode === 'draw') {
+  if (mode === "draw") {
     map.addInteraction(draw);
     map.addInteraction(snap); // Snap 必须在编辑交互之后生效
-  } else if (mode === 'modify') {
+  } else if (mode === "modify") {
     map.addInteraction(select);
     map.addInteraction(modify);
     map.addInteraction(snap);
@@ -149,22 +159,22 @@ sequenceDiagram
 ### 3.2 零 GC 压力的动态衰减流星雨代码范式
 
 ```javascript
-import {useGeographic} from 'ol/proj';
-import {getVectorContext} from 'ol/render';
-import Point from 'ol/geom/Point';
-import Style from 'ol/style/Style';
-import Circle from 'ol/style/Circle';
-import Fill from 'ol/style/Fill';
-import {upAndDown} from 'ol/easing';
+import { useGeographic } from "ol/proj";
+import { getVectorContext } from "ol/render";
+import Point from "ol/geom/Point";
+import Style from "ol/style/Style";
+import Circle from "ol/style/Circle";
+import Fill from "ol/style/Fill";
+import { upAndDown } from "ol/easing";
 
 useGeographic();
 
 // 1. 严格单例化样式对象，避免在每秒 60 帧中产生数万个临时对象导致 GC 掉帧
 const particleImage = new Circle({
   radius: 6,
-  fill: new Fill({color: 'rgba(255, 120, 0, 1)'}),
+  fill: new Fill({ color: "rgba(255, 120, 0, 1)" }),
 });
-const particleStyle = new Style({image: particleImage});
+const particleStyle = new Style({ image: particleImage });
 
 const N = 1000;
 const geometries = new Array(N);
@@ -176,7 +186,7 @@ for (let i = 0; i < N; ++i) {
 }
 
 // 2. 挂载到底图渲染完成钩子上
-baseLayer.on('postrender', (event) => {
+baseLayer.on("postrender", (event) => {
   const vectorContext = getVectorContext(event);
 
   for (let i = 0; i < N; ++i) {
@@ -192,7 +202,9 @@ baseLayer.on('postrender', (event) => {
   }
 
   // 3. 滑动队列：淘汰陈旧点，入队新点
-  geometries.push(new Point([Math.random() * 360 - 180, Math.random() * 180 - 90]));
+  geometries.push(
+    new Point([Math.random() * 360 - 180, Math.random() * 180 - 90]),
+  );
   geometries.shift();
 
   // 4. 请求下一帧连续重绘
@@ -217,11 +229,11 @@ $$\text{displayLon} = \text{targetLon} + \text{round}\left(\frac{\text{clickLon}
 对应实现代码：
 
 ```javascript
-map.on('singleclick', (evt) => {
+map.on("singleclick", (evt) => {
   const coordinate = evt.coordinate;
   // 计算当前视口处于哪一个世界副本中（0 为本初子午线主世界，1 为右侧第一个镜像世界，-1 为左侧镜像世界）
   const worldIndex = Math.round(coordinate[0] / 360);
-  
+
   // 将目标要素的经度平移至当前展开的世界中
   const popupCoordinate = [
     targetFeatureLon + worldIndex * 360,
@@ -236,16 +248,19 @@ map.on('singleclick', (evt) => {
 ## 5. 生产避坑指南与工程规范
 
 ### 5.1 全局作用域污染陷阱
+
 - **问题**：`useGeographic()` 会修改 OpenLayers 全局单例的 `userProjection`。
 - **排查**：如果你的工程是一个大型微前端系统，或者引入了依赖米制平面坐标（如按米计算等距缓冲区、特定投影测量插件）的第三方组件，全局调用可能引发隐蔽的计算偏差。
 - **解法**：在局部图层或模块中，若需保持传统隔离，可通过在 `VectorSource` 或 `GeoJSON` 读取时单独显式声明 `dataProjection: 'EPSG:4326', featureProjection: 'EPSG:3857'`。
 
 ### 5.2 坐标维度顺序严禁倒置
+
 - **问题**：部分移动端地图 SDK（如早期的 Leaflet 或高德某些接口）采用 `[lat, lon]` 顺序，而数学与现代 GIS 工业规范统一使用 `[x, y]` 即 `[经度 lon, 纬度 lat]`。
 - **排查**：在 `useGeographic()` 开启后，输入 `[39.9, 116.4]` 会直接导致几何体漂移至南极洲或非法纬度超出报错（纬度必须在 $[-90, 90]$ 之间）。
 - **规范**：严格核验所有 API 参数，确保第一维度为经度（Longitude），第二维度为纬度（Latitude）。
 
 ### 5.3 即时渲染的无限递归重绘灾难
+
 - **问题**：在 `postrender` 监听器内部调用 `map.render()` 会触发浏览器 `requestAnimationFrame` 的永动机式重绘。
 - **排查**：在非活跃页面、地图容器被隐藏（`display: none`）或用户最小化窗口时，未停止的重绘会导致客户端笔记本风扇狂转、移动设备发热严重。
 - **解法**：结合 `document.visibilityState` 或 `IntersectionObserver` 监听地图视口可见性；在隐藏时暂停调用 `map.render()`，恢复可见时再次唤醒。
@@ -254,10 +269,18 @@ map.on('singleclick', (evt) => {
 
 ## 6. 核心知识图谱与 API 对照表
 
-| API / 组件 | 传统模式 (`EPSG:3857`) | 地理模式 (`useGeographic`) | 适用场景 |
-| :--- | :--- | :--- | :--- |
-| **`View.center`** | 米制坐标（如 `[12958000, 4830000]`） | 经纬度 `[116.40, 39.90]` | 全局视图定位与动态平移 |
-| **`new Point(...)`** | 需要 `fromLonLat([lon, lat])` | 直接传 `[lon, lat]` | 矢量要素快速数字化建库 |
-| **`Draw / Modify`** | 顶点数据为米制平面坐标 | 顶点数据直接为真实经纬度 | 业务端无缝对接 GeoJSON/WFS |
-| **`getVectorContext`** | 支持像素/平面投影即时绘制 | 自动将经纬度几何体映射至当前帧画布 | 海量粒子、高频轨迹与雷达动态动画 |
-| **`Overlay.position`** | 必须传入投影后坐标 | 直接支持经纬度（需处理世界循环偏移） | 提示弹窗、HTML 气泡组件定位 |
+| API / 组件             | 传统模式 (`EPSG:3857`)               | 地理模式 (`useGeographic`)           | 适用场景                         |
+| :--------------------- | :----------------------------------- | :----------------------------------- | :------------------------------- |
+| **`View.center`**      | 米制坐标（如 `[12958000, 4830000]`） | 经纬度 `[116.40, 39.90]`             | 全局视图定位与动态平移           |
+| **`new Point(...)`**   | 需要 `fromLonLat([lon, lat])`        | 直接传 `[lon, lat]`                  | 矢量要素快速数字化建库           |
+| **`Draw / Modify`**    | 顶点数据为米制平面坐标               | 顶点数据直接为真实经纬度             | 业务端无缝对接 GeoJSON/WFS       |
+| **`getVectorContext`** | 支持像素/平面投影即时绘制            | 自动将经纬度几何体映射至当前帧画布   | 海量粒子、高频轨迹与雷达动态动画 |
+| **`Overlay.position`** | 必须传入投影后坐标                   | 直接支持经纬度（需处理世界循环偏移） | 提示弹窗、HTML 气泡组件定位      |
+
+---
+
+## 附录：核心官方示例列表
+
+1. [geographic (useGeographic 基础与多视图跨世界投影同步)](../en/latest/examples/geographic.html)
+2. [edit-geographic (地理坐标系下的 Draw/Modify/Snap 交互编辑协同)](../en/latest/examples/edit-geographic.html)
+3. [immediate-geographic (地理坐标系下的 Canvas 离屏即时渲染粒子动画)](../en/latest/examples/immediate-geographic.html)
