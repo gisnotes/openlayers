@@ -1,15 +1,61 @@
 ---
 layout: example.html
-title: View Padding
-shortdesc: This example demonstrates the use of the view's padding option.
+title: View Padding / 视图内边距与视口避让 (padding)
+shortdesc: This example demonstrates the use of the view's padding option. / 演示使用 View 的 padding 选项避让悬浮侧边栏/面板并自动偏移视图中心。
 docs: >
-  This example demonstrates how a map's view can be configured to accommodate
-  for viewport space covered by other elements.
-  If the map viewport is partially covered with other content (overlays) along
-  its edges, the `padding` option allows to shift the center of the viewport away from
-  that content. The shifted viewport center will also be the anchor for zooming in and
-  out with the Zoom controls, and for rotating.
+  <p>
+    This example demonstrates how a map's view can be configured to accommodate
+    for viewport space covered by other elements.
+    If the map viewport is partially covered with other content (overlays) along
+    its edges, the `padding` option allows to shift the center of the viewport away from
+    that content. The shifted viewport center will also be the anchor for zooming in and
+    out with the Zoom controls, and for rotating.
+  </p>
   <p>Use <code>Alt+Shift+Drag</code> to rotate the map.</p>
+  <p>
+    本示例演示了如何通过配置 View 对象的全局 <code>padding</code> 选项，使地图完美避让视口四周被其他 UI 元素（如悬浮导航栏、半透明侧边抽屉、底部时序面板）遮挡的空间。
+    当视口边缘被其他覆盖物遮挡时，<code>padding</code> 选项会自动将视口的核心几何中心从物理中心迁移至未被遮挡的有效区域中心。
+    发生偏移后的新中心将作为缩放控件（Zoom Controls）、鼠标滚轮以及手势旋转的统一轴心锚点。
+  </p>
+  <p>按住 <code>Alt+Shift</code> 并拖拽鼠标左键可自由旋转地图体验旋转轴心的对齐。</p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>局部 Padding vs 全局 View Padding 的本质跃迁：</strong>
+      在 <code>center.html</code> 中，Padding 仅作为 <code>view.fit()</code> 的单次参数生效，视图的真实缩放锚点和旋转中心依然停留在被遮挡的视口屏幕中心 $(W/2, H/2)$。而本示例直接在 <code>new View({ padding: [top, right, bottom, left] })</code> 中声明全局内边距，OpenLayers 内部在底层修改了相机投影矩阵：
+      $$\text{Anchor}_X = \frac{W - \text{padding}_{\text{right}} + \text{padding}_{\text{left}}}{2}$$
+      $$\text{Anchor}_Y = \frac{H - \text{padding}_{\text{bottom}} + \text{padding}_{\text{top}}}{2}$$
+      使得所有缩放、旋转手势全面以可用观察区的正中心为旋转轴心。
+    </li>
+    <li><strong>无侵入式业务调用：</strong>
+      一旦设置了全局 <code>padding</code>，后续在业务代码中执行 <code>view.fit(polygon)</code> 或 <code>view.setCenter(coord)</code> 时，无需在每个业务方法中到处重复传递 <code>padding</code> 参数，系统自动应用统一避让规范。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>padding: [170, 50, 30, 150]</code>：分别对应顶部导航栏高度（170px）、右侧边距（50px）、底部状态栏（30px）、左侧菜单抽屉宽度（150px）。</li>
+    <li><code>view.setCenter(point.getCoordinates())</code>：直接将洛桑对齐至有效区域正中心。</li>
+    <li><code>vectorLayer.getSource().on('featuresloadend', callback)</code>：监听异步 GeoJSON 矢量加载完成事件，在数据就绪后再执行按钮交互绑定，防止空指针异常。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>响应式面板展开/收起的动态更新：</strong>
+      在大屏或后台管理系统中，左侧菜单栏常支持折叠与展开。当菜单宽度由 260px 变为 60px 时，必须动态更新视图的内边距并触发重绘：
+      ```javascript
+      view.padding = [0, 0, 0, isCollapsed ? 60 : 260];
+      ```
+    </li>
+    <li><strong>Padding 超过视口尺寸崩溃防御：</strong>
+      若由于窗口极度缩小导致 <code>padding_left + padding_right &gt; map_width</code>，可用可视区宽度变为负数，会引发渲染管线计算 NaN 异常。生产环境应做边界约束保护：
+      ```javascript
+      const safePadding = Math.min(paddingLeft, mapWidth / 2 - 20);
+      ```
+    </li>
+  </ul>
 tags: "center, padding, view, shift"
 ---
 <div class="mapcontainer">
@@ -19,5 +65,5 @@ tags: "center, padding, view, shift"
   <div class="padding-right"></div>
   <div class="padding-bottom"></div>
 </div>
-<button id="zoomtoswitzerland">Zoom to Switzerland</button>
-<button id="centerlausanne">Center on Lausanne</button>
+<button id="zoomtoswitzerland">Zoom to Switzerland / 缩放至瑞士全境</button>
+<button id="centerlausanne">Center on Lausanne / 居中对齐洛桑</button>

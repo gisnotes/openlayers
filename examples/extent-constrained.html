@@ -1,9 +1,49 @@
 ---
 layout: example.html
-title: Constrained Extent
-shortdesc: Example of a view with a constrained extent.
+title: Constrained Extent / 约束视图范围 (extent 边界限制)
+shortdesc: Example of a view with a constrained extent. / 约束地图漫游包围盒、限制用户平移范围与防止视图跑偏出界的示例。
 docs: >
-  This map has a view that is constrained in an extent.  This is done using the `extent` view option. Please note that specifying `constrainOnlyCenter: true` would only apply the extent restriction to the view center.
+  <p>
+    This map has a view that is constrained in an extent. This is done using the <code>extent</code> view option. Please note that specifying <code>constrainOnlyCenter: true</code> would only apply the extent restriction to the view center.
+  </p>
+  <p>
+    本示例展示了如何为地图视图配置边界范围约束（<code>extent</code>）。这使得用户的地图平移与漫游操作被严格限制在预设的地理包围盒内部，彻底防止因拖拽过猛导致地图跑偏甚至漂移至空白虚无区域。请注意：若显式配置 <code>constrainOnlyCenter: true</code>，则约束仅作用于视口中心点，允许视口边缘部分溢出边界。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>地理视口边界圈禁（Spatial Extent Restriction）：</strong>
+      在智慧城市、厂区室内定位、数字孪生园区或国土省市级平台中，数据通常仅覆盖特定行政辖区。如果允许用户无限制拖动到全球大洋或南北极，不仅界面体验空洞露白，还会触发无意义的全球底图瓦片网络请求。通过在 <code>View</code> 中声明 <code>extent: [minX, minY, maxX, maxY]</code>，OpenLayers 内部运动学算法会自动在拖拽触碰边界时执行平滑阻尼拦截。
+    </li>
+    <li><strong>双重约束模式对比：</strong>
+      <ul>
+        <li><strong>整屏视口严格约束（默认）：</strong>整个地图视口矩形无论在任何缩放层级下，四角均不得越过 Extent 边界，视野永远饱满充盈，杜绝黑边与灰边。</li>
+        <li><strong>仅约束中心点（<code>constrainOnlyCenter: true</code>）：</strong>仅保证视图中心点落在 Extent 内，视口四周允许滑出边界，提供更自由松弛的操作手感。</li>
+      </ul>
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>extent: [-572513, 5211017, 916327, 6636950]</code>：指定英国及西欧局部区域的 EPSG:3857 墨卡托包围盒坐标。</li>
+    <li><code>new ZoomSlider()</code>：滑块式缩放控件，展示当前缩放等级在全局层级轴上的位置。</li>
+    <li><code>keyboardEventTarget: document</code>：将键盘事件监听目标挂载至整页 Document，使得用户无需点击地图聚焦即可直接按方向键体验边界碰撞阻尼效果。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>视口物理尺寸与最小缩放层级（minZoom）冲突死锁：</strong>
+      若地图容器尺寸较大（如 1920×1080），而用户缩小到 <code>zoom: 2</code>，此时屏幕视口所涵盖的真实地理跨度远大于设定的 <code>extent</code>。OpenLayers 将无法同时满足“整屏在 Extent 内部”的几何定理，导致地图剧烈抖动或画面锁死。
+      <strong>工程准则</strong>：在设置 <code>extent</code> 的同时，务必计算并锁定合理的 <code>minZoom</code>，使得在最小层级下当前屏幕视口能够完整容纳该 Extent：
+      ```javascript
+      const resolution = view.getResolutionForExtent(extent);
+      const minZoom = view.getZoomForResolution(resolution);
+      view.setMinZoom(minZoom);
+      ```
+    </li>
+  </ul>
 tags: "view, extent, constrain, restrict"
 ---
 <div id="map" class="map"></div>

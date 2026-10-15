@@ -1,21 +1,48 @@
 ---
 layout: example.html
-title: Advanced View Positioning
-shortdesc: This example demonstrates how a map's view can be adjusted so a geometry or coordinate is positioned at a specific pixel location.
+title: Advanced View Positioning / 高级视口定位与居中 (centerOn & fit)
+shortdesc: This example demonstrates how a map's view can be adjusted so a geometry or coordinate is positioned at a specific pixel location. / 演示如何调整视图，使要素几何体或指定坐标精准定位在特定屏幕像素位置。
 docs: >
-  This example demonstrates how a map's view can be
-  adjusted so a geometry or coordinate is positioned at a specific
-  pixel location. The map above has top, right, bottom, and left
-  padding applied inside the viewport. The view's <code>fit</code> method
-  is used to fit a geometry in the view with the same padding. The
-  view's <code>centerOn</code> method is used to position a coordinate (Lausanne)
-  at a specific pixel location (the center of the black box).
-  <p>Use <code>Alt+Shift+Drag</code> to rotate the map.</p>
-  <p><b>Note:</b> This example does not shift the view center. So the zoom 
-  controls and rotating the map will still use the center of the viewport as anchor.
-  To shift the whole view based on a padding, use the `padding` option on the view,
-  as shown in the <a href="view-padding.html">view-padding.html</a> example.
+  <p>
+    This example demonstrates how a map's view can be adjusted so a geometry or coordinate is positioned at a specific pixel location. The map above has top, right, bottom, and left padding applied inside the viewport. The view's <code>fit</code> method is used to fit a geometry in the view with the same padding. The view's <code>centerOn</code> method is used to position a coordinate (Lausanne) at a specific pixel location (the center of the black box).
   </p>
+  <p>Use <code>Alt+Shift+Drag</code> to rotate the map.</p>
+  <p><b>Note:</b> This example does not shift the view center. So the zoom controls and rotating the map will still use the center of the viewport as anchor. To shift the whole view based on a padding, use the `padding` option on the view, as shown in the <a href="view-padding.html">view-padding.html</a> example.</p>
+  <p>
+    本示例演示了如何通过高阶视图方法将几何图形或目标地理坐标精准定位于屏幕视口的特定像素位置。上方的地图在视口内部模拟了顶部、右侧、底部与左侧的悬浮内边距（Padding）。调用 <code>view.fit()</code> 可将几何要素在剔除内边距后的可用可视区内自适应完整展示；调用 <code>view.centerOn()</code> 可将指定坐标（瑞士洛桑）精准钉在视口内的特定像素坐标（黑色方块中心）。
+  </p>
+  <p>按住 <code>Alt+Shift</code> 并拖拽鼠标左键可自由旋转地图。</p>
+  <p><b>注意：</b>本示例通过局部参数进行定位，并没有从根本上改变 View 的中心点锚点。因此旋转与缩放按钮仍以视口绝对几何中心为轴心。若需全局偏移整个视图旋转缩放锚点，推荐使用 View 的 <code>padding</code> 构造选项，详见 <a href="view-padding.html">view-padding.html</a> 示例。</p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>非对称视口中的几何自适应（View fit with Padding）：</strong>
+      现代 WebGIS 界面往往在左侧布置折叠菜单、顶部放置导航栏、底部布置时序滑块。在传统开发中，如果直接 <code>view.fit(extent)</code>，目标区域的边缘会被四周的悬浮面板遮挡。通过传入 <code>padding: [top, right, bottom, left]</code>，OpenLayers 内部在反算最佳缩放分辨率与中心点时，预先扣除遮挡区域，确保几何图形完整且居中暴露在有效观察区。
+    </li>
+    <li><strong>特定像素点坐标钉扎（<code>view.centerOn</code>）：</strong>
+      常规的 <code>view.setCenter(coord)</code> 强制将地理点置于视口正中心 $(W/2, H/2)$。但在多屏对比或需要留出弹出详情卡片的场景下，业务往往需要将某个重点目标固定在屏幕的特定偏置位置（如右侧 $2/3$ 处）。<code>view.centerOn(coordinate, size, pixelPosition)</code> 内部通过视口尺寸和目标像素偏移量逆向换算 View Center，实现像素级偏置定位。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>view.fit(geometry, options)</code>：
+      <ul>
+        <li><code>padding: [170, 50, 30, 150]</code>：分别声明上、右、下、左的像素遮挡缓冲值。</li>
+        <li><code>minResolution: 50</code>：防止单个点要素或超微小多边形在 fit 时被过度放大到不可思议的超大比例尺。</li>
+      </ul>
+    </li>
+    <li><code>view.centerOn(coord, size, [px_x, px_y])</code>：将地理坐标 <code>coord</code> 精准对齐到屏幕容器尺寸为 <code>size</code> 时的像素坐标 <code>[570, 500]</code>。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>`centerOn` 与旋转的耦合陷阱：</strong>
+      若地图处于旋转状态（<code>rotation &ne; 0</code>），<code>centerOn</code> 的像素偏移换算必须依赖当前的旋转矩阵。若在旋转动画未停止时频繁触发 <code>centerOn</code>，可能会导致跳帧闪烁。建议在动画停止后再执行绝对定位。
+    </li>
+  </ul>
 tags: "center, rotation, openstreetmap"
 ---
 <div class="mapcontainer">
@@ -26,6 +53,6 @@ tags: "center, rotation, openstreetmap"
   <div class="padding-bottom"></div>
   <div class="center"></div>
 </div>
-<button id="zoomtoswitzerland">Zoom to Switzerland</button> (best fit).<br/>
-<button id="zoomtolausanne">Zoom to Lausanne</button> (with min resolution),<br/>
-<button id="centerlausanne">Center on Lausanne</button>
+<button id="zoomtoswitzerland">Zoom to Switzerland / 缩放至瑞士全境 (best fit)</button><br/>
+<button id="zoomtolausanne">Zoom to Lausanne / 缩放至洛桑 (with min resolution)</button><br/>
+<button id="centerlausanne">Center on Lausanne / 居中对齐洛桑</button>

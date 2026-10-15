@@ -6,6 +6,8 @@ import VectorLayer from '../src/ol/layer/Vector.js';
 import OSM from '../src/ol/source/OSM.js';
 import VectorSource from '../src/ol/source/Vector.js';
 
+// Load GeoJSON vector source containing Switzerland boundary and cities
+// 加载包含瑞士国界多边形和城市要素的 GeoJSON 矢量数据源
 const source = new VectorSource({
   url: 'data/geojson/switzerland.geojson',
   format: new GeoJSON(),
@@ -28,6 +30,9 @@ const view = new View({
   center: [0, 0],
   zoom: 1,
 });
+
+// Initialize map
+// 初始化地图
 const map = new Map({
   layers: [
     new TileLayer({
@@ -39,6 +44,8 @@ const map = new Map({
   view: view,
 });
 
+// Fit polygon geometry with custom padding
+// 在预留内边距的可用视口区域内自适应完整展示多边形几何体
 const zoomtoswitzerland = document.getElementById('zoomtoswitzerland');
 zoomtoswitzerland.addEventListener(
   'click',
@@ -50,6 +57,8 @@ zoomtoswitzerland.addEventListener(
   false,
 );
 
+// Fit point geometry with padding and minimum resolution constraint
+// 自适应点要素，配置内边距并设定最小分辨率约束
 const zoomtolausanne = document.getElementById('zoomtolausanne');
 zoomtolausanne.addEventListener(
   'click',
@@ -61,6 +70,8 @@ zoomtolausanne.addEventListener(
   false,
 );
 
+// Center on Lausanne coordinate at specific pixel location
+// 将洛桑地理坐标精准对齐到特定的屏幕像素点位置
 const centerlausanne = document.getElementById('centerlausanne');
 centerlausanne.addEventListener(
   'click',
