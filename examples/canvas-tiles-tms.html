@@ -1,14 +1,47 @@
 ---
 layout: example.html
-title: Custom Canvas Tiles
-shortdesc: Renders tiles with TMS coordinates for debugging.
+title: Custom Canvas Tiles / 自定义 Canvas 切片与 TMS 坐标网格
+shortdesc: Renders tiles with TMS coordinates for debugging. / 渲染带有 TMS 切片坐标的网格以进行空间调试与切片对齐验证。
 docs: >
-  The black grid tiles are generated on the client with an HTML5 canvas.
-  The displayed TMS tile coordinates are produced using a custom template
-  for TMS, the vector tile source's 512 pixel tile grid and the
-  <code>zDirection</code> setting for vector tiles.
-  Notice how the country polygons can be split between tiles and vector
-  labels may appear in each tile.
+  <p>
+    The black grid tiles are generated on the client with an HTML5 canvas.
+    The displayed TMS tile coordinates are produced using a custom template
+    for TMS, the vector tile source's 512 pixel tile grid and the
+    <code>zDirection</code> setting for vector tiles.
+    Notice how the country polygons can be split between tiles and vector
+    labels may appear in each tile.
+  </p>
+  <p>
+    黑色网格切片由客户端借助 HTML5 Canvas 动态即时生成。
+    所显示的 TMS 切片坐标系利用了自定义 TMS 模板（如 <code>{-y}</code>）、矢量切片源的 512 像素切片网格（TileGrid）以及矢量切片专用的 <code>zDirection</code> 设置。
+    请观察多边形国家要素是如何被切片边界无缝截断分割的，以及矢量文本标注是如何在各个切片中独立渲染的。
+  </p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计思想 (Core Architecture & Design)
+  - **TMS（Tile Map Service）与 XYZ 坐标系的 Y 轴倒置原理**：
+    - **标准 XYZ / WMTS**：原点位于左上角（Top-Left），随着纬度降低，Y 坐标自顶向下递增（$Y = 0$ 在最北端 85.05°N）。
+    - **TMS 规范**：原点位于左下角（Bottom-Left），符合传统笛卡尔直角坐标系，$Y = 0$ 在最南端，随着纬度升高，Y 坐标自底向上递增。
+    - OpenLayers 在 URL 模板中通过 `{-y}` 占位符支持 TMS 协议，公式为：`{-y} = (1 << z) - 1 - y`。
+  - **TileDebug 调试切片源在空间排错中的价值**：
+    `ol/source/TileDebug` 可以在客户端透明生成一个轻量级的动态调试网格，将当前的缩放层级（Z）、列号（X）、行号（Y / -Y）直接绘制在对应的切片网格中心。它是排查切片 404、切片漂移、跨瓦片接缝不齐的核心排错武器。
+
+  #### 2. 源码与关键 API 剖析 (Source Code & API Analysis)
+  - `TileDebug({ template: 'z:{z} x:{x} y:{-y}', projection, tileGrid, zDirection: 1 })`：
+    - `template`：支持自定义调试文本模板，使用 `{-y}` 可精准反映 TMS 规范下发给服务端的实际请求行号。
+    - `tileGrid`：直接绑定矢量切片图层数据源的 `getTileGrid()`，确保调试网格与真实的矢量切片物理分块完全重合。
+    - `zDirection: 1`：控制缩放过程中的切片选择偏向。`1` 表示倾向于选择更高分辨率（更大 Z 级别）的瓦片进行插值显示，提升清晰度。
+  - **多边形跨切片分割与标注重复机制**：
+    由于矢量切片服务器在切割几何时，会在各瓦片边界进行裁剪并将国家属性写入每个相关切片。若不启用 `declutter: true`（标注避让整理），同一个国家的名称可能会在相邻的多个切片中反复出现。开启 `declutter: true` 后，OpenLayers 的全局避让管理器会在视口中执行多边形标注去重与最优摆放。
+
+  #### 3. 生产实践踩坑与性能调优 (Production Pitfalls & Optimization)
+  - **TMS 坐标翻转导致的切片 404 灾难**：
+    在接入基于 GeoServer GWC、MapProxy 等支持 TMS 协议的服务时，若切片 URL 误写成了 `{z}/{x}/{y}.pbf` 而非 `{z}/{x}/{-y}.pbf`，会导致请求发送到地球对称的另一侧半球，返回大面积 404 或南美与北美颠倒。使用 `TileDebug` 能够一目了然验证 Y 轴计算是否正确。
+  - **TileDebug 生产环境剔除**：
+    `TileDebug` 仅供开发调试时使用，每个瓦片都会创建 Canvas 上下文并执行 fillText，生产上线前应通过环境变量或配置开关彻底移除该图层，释放 CPU 与 GPU 资源。
 tags: "layers, vector tiles, tms, canvas"
 ---
 <div id="map" class="map"></div>

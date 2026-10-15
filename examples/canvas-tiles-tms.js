@@ -10,6 +10,8 @@ import Stroke from '../src/ol/style/Stroke.js';
 import Style from '../src/ol/style/Style.js';
 import Text from '../src/ol/style/Text.js';
 
+// Base styling for country polygon boundary and label text
+// 国家多边形边界与文本标注的基础样式
 const style = new Style({
   fill: new Fill({
     color: 'rgba(255, 255, 255, 0.6)',
@@ -30,6 +32,8 @@ const style = new Style({
   }),
 });
 
+// Vector tile layer consuming TMS-indexed MVT tiles from GeoServer GWC
+// 矢量切片图层，消费来自 GeoServer GWC 的 TMS 坐标规范 MVT 矢量切片
 const vtLayer = new VectorTileLayer({
   declutter: true,
   source: new VectorTileSource({
@@ -45,6 +49,8 @@ const vtLayer = new VectorTileLayer({
   },
 });
 
+// Debug layer rendering client-side canvas grid with TMS coordinates
+// 调试图层，使用客户端 Canvas 实时绘制包含 TMS 坐标编号的网格
 const debugLayer = new TileLayer({
   source: new TileDebug({
     template: 'z:{z} x:{x} y:{-y}',
@@ -54,6 +60,8 @@ const debugLayer = new TileLayer({
   }),
 });
 
+// Initialize map with vector tile layer and debug overlay
+// 初始化包含矢量切片与调试覆盖网格的地图实例
 const map = new Map({
   layers: [vtLayer, debugLayer],
   target: 'map',
