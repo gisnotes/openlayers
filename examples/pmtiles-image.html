@@ -1,7 +1,7 @@
 ---
 layout: example.html
-title: PMTiles Image Tiles
-shortdesc: Displaying image tiles from a PMTiles archive.
+title: PMTiles Image Tiles / PMTiles 单文件云原生切片归档读取
+shortdesc: Displaying image tiles from a PMTiles archive. / 演示如何使用 PMTiles JavaScript API 通过 HTTP Range 范围请求直接读取单一归档文件中的栅格图像切片。
 docs: >
   This example shows image tiles from a [PMTiles](https://github.com/protomaps/PMTiles) source.
   A PMTiles archive can contain tiled data in a variety of formats. In this example, the PMTiles
@@ -11,6 +11,52 @@ docs: >
   in this example converts the PMTiles response data into a [data URL](https://developer.mozilla.org/en-US/docs/Web/URI/Schemes/data)
   and then uses the browser's built-in image decoder to turn the data URL into an image.
 
+  本示例演示了如何从云原生单文件格式 [PMTiles](https://github.com/protomaps/PMTiles) 归档包中直接按需读取光栅切片。
+
+  PMTiles 是由 Protomaps 发起的一种专为云对象存储（S3/OSS/R2）设计的单一文件金字塔切片容器。通过调用 `pmtiles` 官方 JavaScript API，代码根据视口所需的切片坐标 `(z, x, y)` 发起精细的 HTTP Range（字节范围）请求；在 `ImageTile` 的自定义异步 `loader` 中，将返回的二进制切片数据封装为内存 Blob 对象并利用浏览器原生图像解码器渲染呈现，彻底告别传统 GIS 服务器。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计机制 (Core Architecture & Mechanics)
+  - **云原生单文件容器架构 (Cloud-Native Archive vs Tile Sprawl)**：
+    传统切片发布面临“小文件爆炸（Tile Sprawl）”痛点：数百万个散落的切片文件不仅占用巨额 inode、难以复制迁移，还会给文件系统带来严重压力。PMTiles 将整张地图或影像的所有层级切片统一封存在一个单一的 `.pmtiles` 文件中：
+    - **头部元数据（Header）**：记录投影、外包范围与根目录偏移量；
+    - **希尔伯特曲线索引（Hilbert Curve Index）**：利用空间填充曲线将三维瓦片坐标 `(z, x, y)` 映射为一维有序数组，通过二分查找实现近乎 $O(1)$ 的定位开销；
+    - **叶子目录（Leaf Directories）**：海量切片时支持分级按需加载目录，避免首屏下载庞大索引。
+  - **无服务器无状态直连 (Serverless Direct Object Storage)**：
+    客户端无需任何后端应用网关（无需运行 GeoServer、TileServer 或 Node 代理），利用 HTTP/1.1 与 HTTP/2 标准的 `Range: bytes=start-end` 报文头，直接向 S3/CDN 请求特定瓦片，服务器成本降低 90% 以上。
+
+  #### 2. 关键代码解析与 API 模式 (Code Deep Dive & API Patterns)
+  - **自定义异步切片加载器与内存回收**：
+    ```javascript
+    const source = new Source({
+      async loader(z, x, y, {signal}) {
+        // 1. 发起 HTTP Range 请求拉取目标切片二进制
+        const response = await tiles.getZxy(z, x, y, signal);
+        // 2. 将 Uint8Array 封装为内存 Blob
+        const blob = new Blob([response.data]);
+        // 3. 生成临时对象引用 URL
+        const src = URL.createObjectURL(blob);
+        // 4. 调用原生 Image 对象执行浏览器底层多线程硬件解码
+        const image = await loadImage(src);
+        // 5. 立即释放对象 URL 内存句柄，杜绝高频漫游时的内存泄漏
+        URL.revokeObjectURL(src);
+        return image;
+      },
+    });
+    ```
+    在异步 `loader` 中，OpenLayers 传入了 `{signal}`（`AbortSignal`）。当用户极速缩放使某切片飞出视口时，`tiles.getZxy` 会自动中断未决的 HTTP 请求，大幅节约客户端带宽。
+
+  #### 3. 工程避坑与高可用实践 (Production Pitfalls & Best Practices)
+  - **对象存储 CORS 与 `Range` 响应头配置**：
+    将 PMTiles 托管在 S3、OSS 或 Cloudflare R2 时，Bucket 的 CORS 规则必须显式开放：
+    - 允许的请求头（Allowed Headers）：`Range`；
+    - 暴露的响应头（Expose Headers）：`Content-Range`、`Content-Length`、`ETag`。
+    如果缺少 `Content-Range`，浏览器安全沙箱会静默拦截分块读取，导致切片解析失败。
+  - **Safari 浏览器与低端移动端内存管理**：
+    在连续大幅度拖拽地图时，数千个 Blob URL 的快速创建若未能及时释放，可能引发 WebKit 内核内存溢出。务必在 `await loadImage(src)` 完成后立即执行 `URL.revokeObjectURL(src)`，确保只保留显存中的纹理位图。
 tags: "pmtiles, raster, image tiles"
 ---
 <div id="map" class="map"></div>

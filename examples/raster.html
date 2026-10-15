@@ -1,7 +1,7 @@
 ---
 layout: example.html
-title: Raster Source
-shortdesc: Demonstrates pixelwise operations with a raster source.
+title: Raster Source / 栅格数据源多波段像素代数运算与植被指数动态分析
+shortdesc: Demonstrates pixelwise operations with a raster source. / 演示如何使用 ol/source/Raster 在 Web Worker 中对卫星航拍切片执行逐像素运算，实时计算植被绿度指数（VGI）并联动 D3 直方图进行面积统计与阈值过滤。
 docs: >
   <p>
     This example uses a <code>ol/source/Raster</code> to generate data
@@ -18,6 +18,63 @@ docs: >
     those pixels based on a threshold value (values above the
     threshold are green and those below are transparent).
   </p>
+
+  <p>
+    本示例演示了如何利用 <code>ol/source/Raster</code>（栅格数据源）对输入数据源执行客户端逐像素级算术运算。栅格数据源支持接收任意数量的输入图层（切片或单图），在后台 Web Worker 线程流水线中处理输入像素，并将运算结果直接作为输出图层的可视化像素流。
+  </p>
+  <p>
+    本例以卫星航拍影像切片作为输入源，针对视口内每个像素点，实时计算植被绿度指数（<a href="https://www.tandfonline.com/doi/abs/10.1080/10106040108542184#.Vb90ITBViko">VGI</a>）。通过与右侧 D3.js 动态频数直方图联动，根据用户鼠标悬停选定的动态阈值，将高于阈值的健康植被高亮着色为半透明荧光绿，同时基于地图分辨率即时解算出当前地表覆盖英亩面积。
+  </p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计机制 (Core Architecture & Mechanics)
+  - **Web Worker 多线程栅格处理流水线**：
+    在主线程执行全图数十万甚至数百万像素的数学计算会导致 UI 帧率断崖式下跌。<code>ol/source/Raster</code> 内部维护了多线程 Web Worker 池：
+    - 主线程准备当前视口各输入源的 <code>ImageData</code> 像素阵列；
+    - 将像素缓冲区通过 <code>postMessage</code> 传递给后台 Worker；
+    - Worker 内部无阻塞执行纯函数式数学变换并回传结果；
+    - 最终由 <code>ImageLayer</code> 作为动态光栅画布完成无缝渲染。
+  - **植被绿度指数（Vegetation Greenness Index, VGI）原理**：
+    在没有近红外（NIR）波段的常规 RGB 航拍影像中，VGI 是一种经典的经验估算指数：
+    $$\text{VGI} = \frac{2G - R - B}{2G + R + B}$$
+    归一化后，绿色通道占比显著高于红蓝通道的像素点呈现出更高的 VGI 值（通常大于 0.2），代表地表覆盖有较高密度的健康绿色植被。
+
+  #### 2. 关键代码解析与 API 模式 (Code Deep Dive & API Patterns)
+  - **Worker 沙箱隔离与 `lib` 辅助函数注入**：
+    ```javascript
+    const raster = new RasterSource({
+      sources: [aerial],
+      operation: function (pixels, data) {
+        const pixel = pixels[0];
+        const value = vgi(pixel);
+        summarize(value, data.counts); // 统计直方图分箱
+        if (value >= data.threshold) {
+          pixel[0] = 0; pixel[1] = 255; pixel[2] = 0; pixel[3] = 128; // 高于阈值标绿
+        } else {
+          pixel[3] = 0; // 低于阈值完全透明
+        }
+        return pixel;
+      },
+      lib: {
+        vgi: vgi,
+        summarize: summarize, // 注入函数体至 Worker 全局上下文
+      },
+    });
+    ```
+    由于 Web Worker 无法直接访问主线程闭包变量，必须通过 <code>lib</code> 属性显式注入依赖工具函数。
+  - **双向双向事件管道与响应式图表联动**：
+    - <code>beforeoperations</code>：在计算启动前将主线程的状态（如 <code>threshold</code> 与空频数数组 <code>data.counts</code>）挂入事件上下文；
+    - <code>afteroperations</code>：在计算完成时捕获 Worker 回传的聚合统计值，触发 <code>schedulePlot</code> 驱动 D3.js 绘制直方图柱状图与面积计算；
+    - 直方图交互：鼠标滑过柱子时调用 <code>raster.set('threshold', threshold); raster.changed();</code>，触发光栅源以 60 FPS 重新计算渲染。
+
+  #### 3. 工程避坑与高可用实践 (Production Pitfalls & Best Practices)
+  - **跨域 Canvas 像素污染（CORS Tainted Canvas）**：
+    <code>ol/source/Raster</code> 需要读取切片的底层二进制像素数组。输入切片源（<code>aerial</code>）必须显式声明 <code>crossOrigin: ''</code>。如果切片服务器未正确配置 <code>Access-Control-Allow-Origin: *</code>，浏览器 Canvas 会被标记为受污染，直接抛出 SecurityError 导致光栅运算崩溃。
+  - **直方图重绘节流防抖（Debounced Plotting）**：
+    在地图连续漫游平移时，每个渲染帧都会触发 <code>afteroperations</code>。代码中通过 <code>setTimeout(..., 1000 / 60)</code> 实现了基于 RAF 频率的轻量任务调度，避免高频 DOM 操作拖慢地图平移流畅度。
 tags: "raster, pixel, maptiler"
 ---
 <div class="rel">

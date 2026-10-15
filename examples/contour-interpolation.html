@@ -1,7 +1,7 @@
 ---
 layout: example.html
-title: Interpolating Contours from a DEM
-shortdesc: Example of WebGL data interpolation
+title: Interpolating Contours from a DEM / DEM 高程插值与动态等高线生成
+shortdesc: Example of WebGL data interpolation. / 演示如何使用 WebGL 对数字高程模型（DEM）瓦片执行双线性重采样插值，消除接缝，并结合 RasterSource 动态计算生成平滑等高线与高程探测。
 docs: >
   <p>
     Example of data resampling when using raster DEM (digital elevation model) data with WebGL.
@@ -18,6 +18,57 @@ docs: >
     The data values of the original source are shown for comparison.  Notice how, particularly on steep ground,
     the interpolated values and contours change smoothly while the original data values are stepped.
   </p>
+
+  <p>
+    本示例演示了在 WebGL 环境下对数字高程模型（DEM）栅格数据进行连续空间重采样与动态等高线抽取的完整工程方案。
+  </p>
+  <p>
+    数据源采用 Mapzen Terrarium 格式高程切片，通过带有保护缓冲外边框（Gutter）的瓦片机制，通过预加载周边相邻的 9 张瓦片生成带有 1 像素裙边的无缝合成切片，完美解决了跨瓦片边缘插值时的接缝断裂问题。
+    利用 Float32 浮点纹理（提升移动端高程精度）对 RGB 编码高程进行 GPU 硬件线性插值，再通过 <code>ol/source/Raster</code> 在后台 Web Worker 中进行邻域像素梯度探测：当相邻插值像素跨越指定等高距时绘制等高线，同时支持鼠标悬停位置亚米级连续平滑高程探测。
+  </p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计机制 (Core Architecture & Mechanics)
+  - **瓦片边缘接缝与 3x3 缓冲区切片机制 (Tile Gutter & 3x3 Buffering)**：
+    常规 DEM 瓦片各自独立进行双线性插值（Bilinear Interpolation）时，由于切片边界处缺少相邻切片最外侧像素作为插值参考，会导致瓦片四周产生明显的“网格接缝裂痕”。本示例在 `DataTile` 的 `loader` 中并发拉取目标瓦片周围的 9 张邻近切片（$3 \times 3$），并在离屏 Canvas 中合成出带 1 像素裙边（`gutter: 1`）的超采样切片，确保在切片边缘求导与插值时保持空间一阶导数连续。
+  - **Mapzen Terrarium 高程编码与浮点纹理解算**：
+    Mapzen Terrarium 格式的高程解码数学公式为：
+    $$\text{Elevation} = -32768 + \left( R \times 256 + G + \frac{B}{256} \right)$$
+    其将 24 位高程紧凑压缩入 RGB 三通道中。代码将解码后的数值写入 `Float32Array`，在支持 `OES_texture_float_linear` 扩展的 WebGL 上下文中直接享受硬件级浮点平滑插值，避免了原始离散台阶效应（Stepped Artifacts）。
+
+  #### 2. 关键代码解析与 API 模式 (Code Deep Dive & API Patterns)
+  - **Web Worker 邻域跨距等高线判别算法 (Contour Interval Crossing)**：
+    ```javascript
+    // 在 Web Worker 线程内部逐像素检查 4-邻域
+    const contour = Math.floor(centerElevation / interval);
+    if (
+      contour !== Math.floor(leftElevation / interval) ||
+      contour !== Math.floor(rightElevation / interval) ||
+      contour !== Math.floor(topElevation / interval) ||
+      contour !== Math.floor(bottomElevation / interval)
+    ) {
+      // 命中等高线，陆地赋金棕色 (0xe0, 0x94, 0x5e)，海洋赋蓝绿色 (0x00, 0xa9, 0xca)
+      contourData[offset] = 0xe0;
+      contourData[offset + 1] = 0x94;
+      contourData[offset + 2] = 0x5e;
+      contourData[offset + 3] = 255;
+    }
+    ```
+    通过整数阶跃比对（`Math.floor(z / interval)`），只要中心像素与四周任意邻居处于不同的等高距区间，即证明等高线恰好穿过该像素，算法无需构建复杂的三角网（TIN）即可实现全视口毫秒级动态等高线光栅化。
+  - **自适应视口等高距调度 (Dynamic Contour LOD)**：
+    在 `beforeoperations` 事件中，根据当前地图视口分辨率动态缩放等高距：
+    - 大比例尺（`resolution < 5`）：等高距设为 `10m`；
+    - 中比例尺（`resolution < 50`）：等高距设为 `100m`；
+    - 宏观尺度（`resolution >= 250`）：等高距设为 `1000m`，保证任何缩放层级下注记与线网均疏密适中。
+
+  #### 3. 工程避坑与高可用实践 (Production Pitfalls & Best Practices)
+  - **移动端 WebGL 浮点纹理扩展兼容防护**：
+    部分低端移动端 GPU 不支持 `OES_texture_float_linear` 扩展。代码在 `postrender` 中进行了探测拦截（`gl.getSupportedExtensions().includes('OES_texture_float_linear')`），在生产项目中若不支持该扩展，应优雅降级为 Canvas 2D 离线重采样或使用预切好的栅格等高线底图。
+  - **多 RasterSource 共享图层的并发隔离**：
+    示例中同时需要绘制等高线（`contourLayer`）和捕获鼠标高程（`elevationLayer`）。若两个 `RasterSource` 共享同一个底层图层实例，会导致 WebGL 帧缓冲区读写冲突。生产中必须如示例中声明两个独立图层实例（`elevation1` 与 `elevation2`）分别供给不同的光栅运算管道。
 tags: "image-interpolation, contours, raster, mouse-position, mapzen"
 ---
 <div id="map" class="map"></div>

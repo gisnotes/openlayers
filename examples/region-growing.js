@@ -6,10 +6,17 @@ import {fromLonLat} from '../src/ol/proj.js';
 import ImageTile from '../src/ol/source/ImageTile.js';
 import RasterSource from '../src/ol/source/Raster.js';
 
+/**
+ * Region growing segmentation algorithm running as an image operation in Web Worker.
+ * 在 Web Worker 线程中运行的整图级区域生长空间分割算法
+ * @param {Array<ImageData>} inputs Input images / 输入图像数据数组
+ * @param {Object} data Context data from beforeoperations / 外部注入的上下文参数
+ * @return {ImageData|Object} Output image with segmented region highlighted / 标记高亮后的输出图像
+ */
 function growRegion(inputs, data) {
   const image = inputs[0];
   let seed = data.pixel;
-  const delta = parseInt(data.delta);
+  const delta = parseInt(data.delta, 10);
   if (!seed) {
     return image;
   }
@@ -27,9 +34,7 @@ function growRegion(inputs, data) {
   while (edge.length) {
     const newedge = [];
     for (let i = 0, ii = edge.length; i < ii; i++) {
-      // As noted in the Raster source constructor, this function is provided
-      // using the `lib` option. Other functions will NOT be visible unless
-      // provided using the `lib` option.
+      // Access next4Edges provided through the lib option / 访问通过 lib 注入的 4-邻域搜索纯函数
       const next = next4Edges(edge[i]);
       for (let j = 0, jj = next.length; j < jj; j++) {
         const s = next[j][0];
@@ -40,7 +45,7 @@ function growRegion(inputs, data) {
           const cg = inputData[ci + 1];
           const cb = inputData[ci + 2];
           const ca = inputData[ci + 3];
-          // if alpha is zero, carry on
+          // If alpha is zero, it was already visited / 若 Alpha 为 0，说明此前已访问过，直接跳过
           if (ca === 0) {
             continue;
           }
@@ -49,13 +54,14 @@ function growRegion(inputs, data) {
             Math.abs(seedG - cg) < delta &&
             Math.abs(seedB - cb) < delta
           ) {
+            // Highlight region pixel with opaque red / 满足容差阈值时染成不透明纯红
             outputData[ci] = 255;
             outputData[ci + 1] = 0;
             outputData[ci + 2] = 0;
             outputData[ci + 3] = 255;
             newedge.push([s, t]);
           }
-          // mark as visited
+          // Mark as visited in-place by zeroing alpha / 原地将 Alpha 置零充当访问标记
           inputData[ci + 3] = 0;
         }
       }
@@ -65,6 +71,12 @@ function growRegion(inputs, data) {
   return {data: outputData, width: width, height: height};
 }
 
+/**
+ * Return 4-connected neighbor pixel coordinates.
+ * 获取当前像素上下左右 4-邻域连通坐标
+ * @param {Array<number>} edge Pixel coordinates [x, y] / 当前像素坐标
+ * @return {Array<Array<number>>} 4-connected neighbors / 四邻域坐标数组
+ */
 function next4Edges(edge) {
   const x = edge[0];
   const y = edge[1];
@@ -76,11 +88,13 @@ function next4Edges(edge) {
   ];
 }
 
+// MapTiler key and attributions / MapTiler 访问凭证与版权声明
 const key = 'EPhPi7Zr1GTS500UybLu';
 const attributions =
   '<a href="https://www.maptiler.com/copyright/" target="_blank">&copy; MapTiler</a> ' +
   '<a href="https://www.openstreetmap.org/copyright" target="_blank">&copy; OpenStreetMap contributors</a>';
 
+// Base satellite imagery tile layer / 卫星遥感正射底图瓦片图层
 const imagery = new TileLayer({
   source: new ImageTile({
     attributions: attributions,
@@ -90,22 +104,24 @@ const imagery = new TileLayer({
   }),
 });
 
+// Raster source configured with image-level operation / 配置为整图运算模式的光栅数据源
 const raster = new RasterSource({
   sources: [imagery.getSource()],
   operationType: 'image',
   operation: growRegion,
-  // Functions in the `lib` object will be available to the operation run in
-  // the web worker.
+  // Functions in the `lib` object are serialized to the web worker / lib 中的辅助函数会被序列化注入到 Web Worker
   lib: {
     next4Edges: next4Edges,
   },
 });
 
+// Semi-transparent overlay displaying computed segmented region / 半透明光栅图层展示计算得出的分割区域
 const rasterImage = new ImageLayer({
   opacity: 0.7,
   source: raster,
 });
 
+// Initialize map centered near Grand Coulee, WA / 初始化地图并定位至华盛顿州大库力水库
 const map = new Map({
   layers: [imagery, rasterImage],
   target: 'map',
@@ -117,6 +133,8 @@ const map = new Map({
 
 let coordinate;
 
+// Click event records geographic seed coordinate and triggers re-computation
+// 点击地图记录种子地理坐标，并触发光栅数据源重新计算
 map.on('click', function (event) {
   coordinate = event.coordinate;
   raster.changed();
@@ -124,8 +142,8 @@ map.on('click', function (event) {
 
 const thresholdControl = document.getElementById('threshold');
 
+// Inject latest parameters into worker before operation execution / 在计算前将最新参数装配入 Worker 上下文
 raster.on('beforeoperations', function (event) {
-  // the event.data object will be passed to operations
   const data = event.data;
   data.delta = thresholdControl.value;
   if (coordinate) {
@@ -138,6 +156,7 @@ function updateControlValue() {
 }
 updateControlValue();
 
+// Threshold slider changes re-trigger region growing / 滑块调节颜色容差并即时重新执行分割
 thresholdControl.addEventListener('input', function () {
   updateControlValue();
   raster.changed();

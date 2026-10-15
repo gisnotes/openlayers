@@ -7,11 +7,12 @@ import OSM from '../src/ol/source/OSM.js';
 import Raster from '../src/ol/source/Raster.js';
 
 /**
- * Generates a shaded relief image given elevation data.  Uses a 3x3
- * neighborhood for determining slope and aspect.
- * @param {Array<ImageData>} inputs Array of input images.
- * @param {Object} data Data added in the "beforeoperations" event.
- * @return {ImageData} Output image.
+ * Generates a shaded relief image given elevation data.
+ * Uses a 3x3 neighborhood for determining slope and aspect.
+ * 基于数字高程切片使用 3x3 邻域解算坡度与坡向，生成日照山体阴影图像
+ * @param {Array<ImageData>} inputs Array of input images. / 输入图像数组
+ * @param {Object} data Data added in the "beforeoperations" event. / 外部上下文参数
+ * @return {ImageData|Object} Output image. / 计算生成的山体阴影图像
  */
 function shade(inputs, data) {
   const elevationImage = inputs[0];
@@ -44,16 +45,20 @@ function shade(inputs, data) {
     aspect,
     cosIncidence,
     scaled;
+
+  /**
+   * Extract elevation in meters from Terrarium DEM format.
+   * 从 Terrarium 格式像素解码真实高程（米）
+   * @param {Array<number>} pixel RGBA values / 像素数组
+   * @return {number} Elevation in meters / 高程（米）
+   */
   function calculateElevation(pixel) {
-    // The method used to extract elevations from the DEM.
-    // In this case the format used is Terrarium
-    // red * 256 + green + blue / 256 - 32768
-    //
-    // Other frequently used methods include the Mapbox format
-    // (red * 256 * 256 + green * 256 + blue) * 0.1 - 10000
-    //
+    // Terrarium encoding: red * 256 + green + blue / 256 - 32768
+    // Mapbox format alternative: (red * 256 * 256 + green * 256 + blue) * 0.1 - 10000
     return pixel[0] * 256 + pixel[1] + pixel[2] / 256 - 32768;
   }
+
+  // Iterate over all pixels calculating gradients in X and Y / 遍历视口像素计算 X 与 Y 方向有限差分梯度
   for (pixelY = 0; pixelY <= maxY; ++pixelY) {
     y0 = pixelY === 0 ? 0 : pixelY - 1;
     y1 = pixelY === maxY ? maxY : pixelY + 1;
@@ -61,7 +66,7 @@ function shade(inputs, data) {
       x0 = pixelX === 0 ? 0 : pixelX - 1;
       x1 = pixelX === maxX ? maxX : pixelX + 1;
 
-      // determine elevation for (x0, pixelY)
+      // Determine elevation for (x0, pixelY) / 计算西侧邻域高程
       offset = (pixelY * width + x0) * 4;
       pixel[0] = elevationData[offset];
       pixel[1] = elevationData[offset + 1];
@@ -69,7 +74,7 @@ function shade(inputs, data) {
       pixel[3] = elevationData[offset + 3];
       z0 = data.vert * calculateElevation(pixel);
 
-      // determine elevation for (x1, pixelY)
+      // Determine elevation for (x1, pixelY) / 计算东侧邻域高程
       offset = (pixelY * width + x1) * 4;
       pixel[0] = elevationData[offset];
       pixel[1] = elevationData[offset + 1];
@@ -77,9 +82,10 @@ function shade(inputs, data) {
       pixel[3] = elevationData[offset + 3];
       z1 = data.vert * calculateElevation(pixel);
 
+      // Partial derivative dz/dx / X 方向偏导数
       dzdx = (z1 - z0) / dp;
 
-      // determine elevation for (pixelX, y0)
+      // Determine elevation for (pixelX, y0) / 计算北侧邻域高程
       offset = (y0 * width + pixelX) * 4;
       pixel[0] = elevationData[offset];
       pixel[1] = elevationData[offset + 1];
@@ -87,7 +93,7 @@ function shade(inputs, data) {
       pixel[3] = elevationData[offset + 3];
       z0 = data.vert * calculateElevation(pixel);
 
-      // determine elevation for (pixelX, y1)
+      // Determine elevation for (pixelX, y1) / 计算南侧邻域高程
       offset = (y1 * width + pixelX) * 4;
       pixel[0] = elevationData[offset];
       pixel[1] = elevationData[offset + 1];
@@ -95,10 +101,13 @@ function shade(inputs, data) {
       pixel[3] = elevationData[offset + 3];
       z1 = data.vert * calculateElevation(pixel);
 
+      // Partial derivative dz/dy / Y 方向偏导数
       dzdy = (z1 - z0) / dp;
 
+      // Slope calculation / 计算坡度角
       slope = Math.atan(Math.sqrt(dzdx * dzdx + dzdy * dzdy));
 
+      // Aspect calculation aligned to compass azimuth / 计算坡向角并对齐罗盘方位角
       aspect = Math.atan2(dzdy, -dzdx);
       if (aspect < 0) {
         aspect = halfPi - aspect;
@@ -108,6 +117,7 @@ function shade(inputs, data) {
         aspect = halfPi - aspect;
       }
 
+      // Lambertian diffuse reflectance illumination / 朗伯漫反射光照余弦值解算
       cosIncidence =
         sinSunEl * Math.cos(slope) +
         cosSunEl * Math.sin(slope) * Math.cos(sunAz - aspect);
@@ -129,6 +139,7 @@ function shade(inputs, data) {
   };
 }
 
+// AWS Mapzen Terrarium DEM tile source / AWS 托管的 Mapzen Terrarium 高程数据源
 const elevation = new ImageTile({
   url: 'https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png',
   maxZoom: 15,
@@ -136,12 +147,14 @@ const elevation = new ImageTile({
     '<a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md" target="_blank">Data sources and attribution</a>',
 });
 
+// Raster source with image operation running in worker / 在 Worker 中执行光照运算的光栅数据源
 const raster = new Raster({
   sources: [elevation],
   operationType: 'image',
   operation: shade,
 });
 
+// Map instance with OSM basemap and shaded relief overlay / 初始化地图与半透明山体阴影层
 const map = new Map({
   target: 'map',
   layers: [
@@ -159,6 +172,7 @@ const map = new Map({
   }),
 });
 
+// Interactive controls for vertical exaggeration and sun angles / 垂直夸大与太阳入射角交互控件
 const controlIds = ['vert', 'sunEl', 'sunAz'];
 const controls = {};
 controlIds.forEach(function (id) {
@@ -172,8 +186,8 @@ controlIds.forEach(function (id) {
   controls[id] = control;
 });
 
+// Pass parameters and resolution before operations start / 运算前注入真实分辨率与光照参数
 raster.on('beforeoperations', function (event) {
-  // the event.data object will be passed to operations
   const data = event.data;
   data.resolution = event.resolution;
   for (const id in controls) {

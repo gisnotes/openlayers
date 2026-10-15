@@ -12,6 +12,12 @@ import RasterSource from '../src/ol/source/Raster.js';
 const attribution =
   '<a href="https://github.com/tilezen/joerd/blob/master/docs/attribution.md" target="_blank">Data sources and attribution</a>';
 
+/**
+ * Decode Mapzen Terrarium elevation from RGB pixel array.
+ * 从 RGB 像素数组解码 Mapzen Terrarium 格式的高程值
+ * @param {Array<number>} pixel Pixel values [R, G, B, A] / 像素通道数组
+ * @return {number|undefined} Elevation in meters / 高程值（米）
+ */
 const calculateElevation = function (pixel) {
   if (pixel[3]) {
     return -32768 + (pixel[0] * 256 + pixel[1] + pixel[2] / 256);
@@ -19,9 +25,11 @@ const calculateElevation = function (pixel) {
 };
 
 // Use Float32 interpolation where supported for best results on mobile devices.
+// 在支持的设备上使用 Float32 精度直接读取解算后的高程数值
 const calculateElevationFromData = function (pixel) {
   return pixel[0];
 };
+
 const elevation = ['band', 1];
 const tileSize = 256;
 const gutter = 1;
@@ -30,6 +38,7 @@ canvas.width = tileSize * 3;
 canvas.height = tileSize * 3;
 const context = canvas.getContext('2d', {willReadFrequently: true});
 
+// DataTile source with 3x3 gutter buffer loader / 具备 3x3 邻域外扩裙边的无缝高程数据源
 const source = new DataTile({
   attributions: attribution,
   tileSize: tileSize,
@@ -39,6 +48,8 @@ const source = new DataTile({
   wrapX: true,
   loader: (z, x, y) => {
     const promises = [];
+    // Load 3x3 neighbor tiles to support seamless interpolation across boundaries
+    // 并发加载四周 9 张邻接切片，消除切片接缝处插值伪影
     for (let i = 0; i < 3; ++i) {
       for (let j = 0; j < 3; ++j) {
         promises.push(
@@ -96,7 +107,8 @@ const style = {
   ],
 };
 
-/// duplicate layers as one layer shared by two raster sources causes rendering issues
+// Duplicate layers to isolate rendering pipelines for contour and mouse elevation
+// 实例化两个独立的图层以避免两个 RasterSource 共享图层时 WebGL 冲突
 const elevation1 = new TileLayer({
   source: source,
   style: style,
@@ -106,6 +118,13 @@ const elevation2 = new TileLayer({
   style: style,
 });
 
+/**
+ * Image operation running in Web Worker to trace contour lines.
+ * 在 Web Worker 线程中执行邻域比较并绘制等高线的光栅图像算法
+ * @param {Array<ImageData>} inputs Input images / 输入图像数据
+ * @param {Object} data Parameters from beforeoperations / 外部传入参数
+ * @return {ImageData} Output contour image / 渲染生成的等高线图元
+ */
 const contours = function (inputs, data) {
   const elevationImage = inputs[0];
   const width = elevationImage.width;
@@ -118,6 +137,7 @@ const contours = function (inputs, data) {
   let offset, pixelY, pixelX;
   for (pixelY = 0; pixelY < height; ++pixelY) {
     for (pixelX = 0; pixelX < width; ++pixelX) {
+      // 4-neighborhood sampling: left, right, top, bottom / 4-邻域采样：左、右、上、下
       offset = (pixelY * width + Math.max(pixelX - 1, 0)) * 4;
       pixel[0] = elevationData[offset];
       pixel[1] = elevationData[offset + 1];
@@ -160,6 +180,7 @@ const contours = function (inputs, data) {
         bottomElevation !== undefined &&
         centerElevation !== undefined
       ) {
+        // Detect if adjacent pixels cross the contour interval / 判断当前点与相邻像素是否跨越等高线步长
         const contour = Math.floor(centerElevation / interval);
         if (
           contour !== Math.floor(leftElevation / interval) ||
@@ -174,11 +195,13 @@ const contours = function (inputs, data) {
             topElevation > 0 &&
             bottomElevation > 0
           ) {
+            // Land contour color (brownish gold) / 陆地等高线赋金棕色
             contourData[offset] = 0xe0;
             contourData[offset + 1] = 0x94;
             contourData[offset + 2] = 0x5e;
             contourData[offset + 3] = 255;
           } else {
+            // Marine bathymetric contour color (cyan) / 海洋等深线赋青蓝色
             contourData[offset] = 0x00;
             contourData[offset + 1] = 0xa9;
             contourData[offset + 2] = 0xca;
@@ -191,6 +214,7 @@ const contours = function (inputs, data) {
   return {data: contourData, width: width, height: height};
 };
 
+// RasterSource executing contour tracing / 执行等高线提取的光栅数据源
 const contourSource = new RasterSource({
   sources: [elevation1],
   operationType: 'image',
@@ -201,6 +225,7 @@ const contourSource = new RasterSource({
   resolutions: null,
 });
 
+// Dynamically adjust contour interval based on view resolution / 依据视图分辨率自适应调整等高距
 contourSource.on('beforeoperations', function (event) {
   const data = event.data;
   if (event.resolution < 5) {
@@ -221,6 +246,7 @@ const contourLayer = new ImageLayer({
   opacity: 0.5,
 });
 
+// Invisible elevation probe layer for mouse position / 用于鼠标位置高程探测的只读透明图层
 const elevationLayer = new ImageLayer({
   source: new RasterSource({
     sources: [elevation2],
@@ -237,6 +263,7 @@ const dataLayer = new TileLayer({
   style: {color: ['array', 0, 0, 0, 0]},
 });
 
+// Check for WebGL float texture extension / 检查设备是否支持 WebGL 浮点线性插值扩展
 dataLayer.once('postrender', function (event) {
   const gl = event.context;
   if (!gl.getSupportedExtensions().includes('OES_texture_float_linear')) {
@@ -244,6 +271,7 @@ dataLayer.once('postrender', function (event) {
   }
 });
 
+// Initialize map centered near Mount Chimborazo / 初始化地图并定位至厄瓜多尔钦博拉索火山
 const map = new Map({
   layers: [
     new TileLayer({
@@ -261,6 +289,7 @@ const map = new Map({
   }),
 });
 
+// Mouse position control displaying interpolated elevation / 实时显示插值后高程的鼠标位置控件
 const mousePositionControl = new MousePosition({
   className: 'custom-mouse-position',
   target: 'info',

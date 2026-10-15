@@ -1,7 +1,7 @@
 ---
 layout: example.html
-title: Region Growing
-shortdesc: Grow a region from a seed pixel
+title: Region Growing / 种子点区域生长与交互式影像分割
+shortdesc: Grow a region from a seed pixel. / 演示如何使用 ol/source/Raster 在 Web Worker 中执行图像级（image operation）区域生长算法（Region Growing / 泛洪填充），根据点击种子点与颜色容差动态提取连通地物。
 docs: >
   <p>Click a region on the map. The computed region will be red.</p>
   <p>
@@ -23,6 +23,54 @@ docs: >
     This example also shows how an additional function can be made available
     to the operation.
   </p>
+
+  <p>点击地图上的任意区域，系统将以该点击位置为种子点，动态计算并用红色渲染出连通分割区域。</p>
+  <p>
+    本示例利用 <code>ol/source/Raster</code> 的 <code>operationType: 'image'</code> 整图运算模式，在后台 Web Worker 中运行经典的区域生长（Region Growing / Flood Fill）空间图像分割算法。
+    当用户点击地图时，地图坐标被转换为光栅像素种子，算法以广度优先搜索（BFS）向四周 4-邻域扩散；若相邻像素与种子像素的 RGB 颜色差异低于滑块设定的容差阈值（Threshold），则将其归入目标区域并高亮着色，实现纯前端、零服务端的交互式遥感水体或农田图斑提取。
+  </p>
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 核心架构与设计机制 (Core Architecture & Mechanics)
+  - **整图操作模式 (`operationType: 'image'`)**：
+    通常的 `RasterSource` 采用逐像素模式（`pixel` 模式），每次函数调用只能访问单点孤立的像素数组 `[R, G, B, A]`，无法获知相邻像素信息。而将 `operationType` 设为 `'image'` 时：
+    - Web Worker 接收到完整的 `ImageData` 对象（包含 `width`、`height` 与连续紧凑的 `Uint8ClampedArray` 数据缓冲区）；
+    - 开发者可以自由实现依赖空间拓扑与邻域遍历的高级算子（如区域生长、Sobel 边缘检测、高斯模糊、腐蚀膨胀等）。
+  - **广度优先搜索（BFS）区域生长状态机**：
+    算法采用双缓冲边缘队列（`edge` 与 `newedge`）：
+    1. 从种子像素索引 `seedIdx` 开始，读取基准色 $(R_{seed}, G_{seed}, B_{seed})$；
+    2. 弹出当前边缘像素，调用 `next4Edges` 检查上、下、左、右 4-邻域；
+    3. 判定颜色欧氏相似度：$|R - R_{seed}| < \Delta \land |G - G_{seed}| < \Delta \land |B - B_{seed}| < \Delta$；
+    4. 命中像素在输出缓冲区染为红色，并将其压入下一轮生长边界；
+    5. **原地访问标记（In-place Visited Flag）**：巧妙将输入像素的 Alpha 通道置零（`inputData[ci + 3] = 0`），无需额外分配庞大的布尔访问标记矩阵，彻底杜绝回溯死循环并优化垃圾回收。
+
+  #### 2. 关键代码解析与 API 模式 (Code Deep Dive & API Patterns)
+  - **视口坐标到光栅像素坐标的映射**：
+    ```javascript
+    map.on('click', function (event) {
+      coordinate = event.coordinate; // 记录地理坐标
+      raster.changed();              // 触发光栅数据源重新执行计算
+    });
+
+    raster.on('beforeoperations', function (event) {
+      const data = event.data;
+      data.delta = thresholdControl.value;
+      if (coordinate) {
+        // 将地理投影坐标即时解算为当前视口屏幕像素坐标 [x, y]
+        data.pixel = map.getPixelFromCoordinate(coordinate);
+      }
+    });
+    ```
+    通过在 `beforeoperations` 中完成坐标系换算，将轻量级的 `{pixel, delta}` 纯数据对象传递至后台 Worker，保持前后端数据交互契约解耦。
+
+  #### 3. 工程避坑与高可用实践 (Production Pitfalls & Best Practices)
+  - **长任务与大视口堆栈溢出防护**：
+    区域生长若采用传统递归实现，在高分辨率大屏幕（如 4K 屏幕，数百万像素）遇到大面积纯色湖泊或天空时，极易发生 `Maximum call stack size exceeded` 调用栈崩溃。本示例采用**迭代式队列（while-loop BFS）**与边缘数组双缓冲，完全规避了栈溢出风险。
+  - **跨视口重绘时种子点失效处理**：
+    当用户点击确定种子点后，若随后拖拽平移了地图视口，屏幕像素坐标对应的地理目标会发生偏移。生产项目中建议记录地理坐标（Coordinate），并在每次重绘时根据最新的视口位置重新调用 `map.getPixelFromCoordinate(coordinate)` 计算新的种子像素；若种子点已滑出当前视口，则直接提前返回原始图像，防止出现错误的定位投影。
 tags: "raster, region growing, maptiler"
 ---
 <div id="map" class="map"></div>
