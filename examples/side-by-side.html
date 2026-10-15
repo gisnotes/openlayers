@@ -1,18 +1,55 @@
 ---
 layout: example.html
-title: Shared Views
-shortdesc: Two maps share view properties
+title: Shared Views / 共享视图多屏联动 (Shared Views)
+shortdesc: Two maps share view properties. / 演示两个独立的地图实例共享同一个 View 对象，实现道路底图与卫星影像的高性能无缝双屏联动。
 docs: >
-  Two maps (one Road, one Aerial) share the same center, resolution and rotation.
+  <p>
+    Two maps (one Road, one Aerial) share the same center, resolution and rotation.
+  </p>
+  <p>
+    在此示例中，两个完全独立的地图容器（左侧为标准道路底图，右侧为高分辨率卫星航拍影像）共享同一个 <code>ol/View</code> 视图实例。无论用户在任意一个分屏中进行鼠标拖拽平移、滚轮缩放还是按住 Shift 旋转，两个地图都能以 60FPS 的渲染帧率绝对零延迟完美同步。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>视图模型与渲染容器的彻底解耦（Decoupled View Pattern）：</strong>
+      在 OpenLayers 的底层设计中，<code>ol/Map</code> 本质上是 DOM 容器、交互控制器（Interactions）和图层渲染管线（Layer Renderers）的宿主；而 <code>ol/View</code> 则是一个纯粹的二维几何视口数学模型（封装了空间坐标系、分辨率、中心点与旋转状态）。
+      因此，一个 <code>View</code> 实例可以被同时注入到任意数量的 <code>Map</code> 实例中。
+    </li>
+    <li><strong>零延迟与防死锁优势（Zero-Latency Synchronization）：</strong>
+      传统的多屏地图联动通常采用“事件监听法”——监听 Map A 的 <code>move</code> 事件去命令 Map B <code>setCenter</code>，反之亦然。这种方案不仅需要大量胶水代码来防止“相互触发”的事件死循环，而且由于微任务队列与帧渲染调度时差，鼠标拖拽时总会有明显的“拖影”与“迟滞感”。
+      而共享同一个 <code>View</code> 实例时，底层的属性变更直接通知两个 Map 的渲染器在同一个 <code>requestAnimationFrame</code> 周期内完成画布绘制，达到了性能与体验的极致。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>const view = new View({ center, zoom })</code>：统一声明唯一的视口状态控制器。</li>
+    <li><code>new Map({ target: 'roadMap', layers: [roadLayer], view: view })</code> 与 <code>new Map({ target: 'aerialMap', layers: [aerialLayer], view: view })</code>：将同一视口分别绑定到不同地图容器中。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong>不同图层源的最大缩放级别（MaxZoom）冲突：</strong>
+      道路底图（矢量切片或光栅切片）通常支持到 22 级，而卫星航拍图受限于遥感卫星分辨率，往往只支持到 18~20 级。
+      当用户放大到 21 级时，卫星图可能会因为找不到瓦片而出现空白。在生产环境中，可配置航拍图层的 <code>maxResolution</code> 或为瓦片源开启重采样插值（Overzoom / Tile Oversampling）。
+    </li>
+    <li><strong>分屏动态销毁内存泄露：</strong>
+      在业务系统中切换“单屏/双屏对比模式”时，若关闭第二个分屏，必须执行 <code>map2.setTarget(null)</code> 解绑 DOM 容器，并移除不需要的图层，但不要销毁仍然在主屏中运行的共享 <code>view</code>。
+    </li>
+  </ul>
 tags: "side-by-side, xyz, maptiler"
 ---
 <div class="wrapper">
   <div class="half">
-    <h4>Road</h4>
+    <h4>Road (道路路网)</h4>
     <div id="roadMap" class="map"></div>
   </div>
   <div class="half">
-    <h4>Aerial</h4>
+    <h4>Aerial (卫星航拍)</h4>
     <div id="aerialMap" class="map"></div>
   </div>
 </div>
+

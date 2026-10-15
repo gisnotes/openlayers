@@ -1,11 +1,46 @@
 ---
 layout: example.html
-title: Permalink
-shortdesc: Example on how to create permalinks.
+title: Permalink / 永久链接与历史状态同步 (Permalink & History API)
+shortdesc: Example on how to create permalinks. / 演示如何结合 HTML5 History API 与 URL Hash 实现地图视图状态（缩放、中心点、旋转角度）的双向同步与永久链接分享。
 docs: >
-  In this example the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"
-  target="_blank">HTML 5 History API</a> is used to update the browser URL
-  with the current zoom-level, center and rotation when the map is moved.
+  <p>
+    In this example the <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API"
+    target="_blank">HTML 5 History API</a> is used to update the browser URL
+    with the current zoom-level, center and rotation when the map is moved.
+  </p>
+  <p>
+    在此示例中，利用 <a href="https://developer.mozilla.org/en-US/docs/Web/API/History_API" target="_blank">HTML5 History API</a> 和 URL Hash 锚点，在地图平移、缩放或旋转完成时动态更新浏览器地址栏。用户可以随时复制当前 URL 形成“永久链接（Permalink）”，发送给他人可直接精准恢复当前地图视角；同时全面支持浏览器的前进与后退导航按钮。
+  </p>
+  <hr>
+  <h3>📚 学习记录与技术深度解读</h3>
+
+  <h4>1. 核心架构与设计思想</h4>
+  <ul>
+    <li><strong>视图状态序列化与 URL 语义化编码：</strong>
+      地理视口状态本质上由一组极简参数构成：缩放级别（Zoom）、中心点坐标（Center X/Y）、旋转角度（Rotation）。
+      示例将其规范化编码为 Hash 锚点：<code>#map=zoom/center_x/center_y/rotation</code>。
+      页面初次加载时，优先解析该 Hash 参数初始化 <code>ol/View</code>；若 Hash 为空，则平滑回退到默认坐标系统。
+    </li>
+    <li><strong>状态更新环路阻断（State Loop Guard）：</strong>
+      在双向绑定的应用中，最忌讳的是“事件死循环”。当用户点击浏览器“后退”按钮时，触发浏览器的 <code>popstate</code> 事件，系统从 <code>event.state</code> 取出历史坐标并调用 <code>view.setCenter()</code>。
+      然而，程序修改视口坐标依然会触发 <code>map.on('moveend')</code>！如果不在 <code>popstate</code> 中设置 <code>shouldUpdate = false</code> 并在 <code>moveend</code> 守卫中拦截，该事件又会调用 <code>pushState</code>，从而破坏历史记录栈并陷入无限死循环。
+    </li>
+  </ul>
+
+  <h4>2. 源码与关键 API 剖析</h4>
+  <ul>
+    <li><code>window.history.pushState(state, title, hash)</code>：无刷新向浏览器历史栈推入新记录，将结构化状态对象与地址栏 Hash 绑定。</li>
+    <li><code>window.addEventListener('popstate', fn)</code>：监听用户点击浏览器导航前进/后退操作，提取快照状态并还原视图。</li>
+    <li><code>view.getZoom().toFixed(2)</code> 与 <code>center[0].toFixed(2)</code>：坐标精度规整，既保留了米级定位精度，又极大缩短了 URL 长度。</li>
+  </ul>
+
+  <h4>3. 生产实践踩坑与性能调优</h4>
+  <ul>
+    <li><strong><code>pushState</code> vs <code>replaceState</code> 的抉择：</strong>
+      在默认实现中，用户每拖动一次地图都会向浏览历史塞入一条记录。如果用户持续漫游了 30 次，需要连续点击 30 次浏览器“后退”才能返回上一网页，体验极差。
+      在实际大型工程中，推荐在微小漫游时使用 <code>history.replaceState()</code>，仅在特定层级跳转或用户点击书签标记时调用 <code>pushState()</code>；或采用防抖（Debounce）技术。
+    </li>
+  </ul>
 tags: "permalink, openstreetmap, history"
 ---
 <div id="map" class="map"></div>
