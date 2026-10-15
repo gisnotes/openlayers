@@ -1,14 +1,36 @@
 ---
 layout: example.html
-title: WMS Time
-shortdesc: Example of smooth tile transitions when changing the time dimension of a tiled WMS layer.
+title: WMS Time / WMS 时间维度时序雷达动态播放
+shortdesc: Example of smooth tile transitions when changing the time dimension of a tiled WMS layer. / 演示连续切换瓦片式 WMS 图层的时间维度 (TIME 参数) 时的平滑瓦片过渡与雷达回波动态播放。
 docs: >
   Demonstrates smooth reloading of layers when changing the time dimension continuously. Data shown: IEM generated CONUS composite of NWS NEXRAD WSR-88D level III base reflectivity.
+
+  本示例演示在连续动态切换时间维度时，瓦片图层如何平滑重载与过渡。
+  所展示的数据为爱荷华环境网（IEM）生成的美国国家气象局（NWS）NEXRAD WSR-88D 三级基数据雷达反射率全国雷达拼图。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. WMS 时间维度规范（WMS-T / `TIME` 参数）
+  * 在气象监测（雷达、卫星云图、台风路径）、海洋洋流、空气质量监测等业务场景中，地学栅格具有强烈的时序属性。
+  * OGC WMS 规范定义了标准的 `TIME` 参数：
+    ```text
+    https://.../wms?SERVICE=WMS&REQUEST=GetMap&LAYERS=...&TIME=2026-10-15T10:00:00.000Z
+    ```
+  * 时间参数格式采用 ISO 8601 标准字符串（UTC 时间）。
+
+  #### 2. 原地热更新与双缓冲平滑过渡：`updateParams({'TIME': ...})`
+  * **传统重置图层的痛点**：如果每次切换时间帧都调用 `layer.setSource(newSource)`，上一时刻的瓦片会瞬间消失，造成强烈的白屏闪烁。
+  * **`source.updateParams({'TIME': isoString})` 的优雅机制**：
+    * OpenLayers 内部维护了瓦片双缓冲机制（Tile Double Buffering）；
+    * 当调用 `updateParams` 修改查询参数时，数据源会保留旧时间帧的瓦片继续在屏幕上显示；
+    * 只有当新时间帧对应的所有新瓦片在后台完全下载解码完毕后，OpenLayers 才会平滑切换到新时间帧，实现毫无闪烁的电影级连续雷达播放！
 tags: "wms, time, dimensions, transition, nexrad"
 ---
 <div id="map" class="map"></div>
-<div role="group" aria-label="Animation controls">
-  <button id="play" type="button">Play</button>
-  <button id="pause" type="button">Pause</button>
-  <span id="info"></span>
+<div class="mt-2" role="group" aria-label="Animation controls">
+  <button id="play" class="btn btn-primary btn-sm" type="button">Play / 播放</button>
+  <button id="pause" class="btn btn-secondary btn-sm" type="button">Pause / 暂停</button>
+  <span id="info" class="badge bg-light text-dark border ms-2"></span>
 </div>

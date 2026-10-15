@@ -1,9 +1,37 @@
 ---
 layout: example.html
-title: Tiled WMS
-shortdesc: Example of a tiled WMS layer.
+title: Tiled WMS / 瓦片式动态 WMS 服务
+shortdesc: Example of a tiled WMS layer. / 使用 ol/source/TileWMS 加载瓦片式切片 WMS 地图服务，利用浏览器缓存提升连续漫游性能。
 docs: >
   WMS can be used as a Tile layer, as shown here, or as an Image layer, as shown in the [Single Image WMS](wms-image.html) example. Tiles can be cached, so the browser will not re-fetch data for areas that were viewed already. But there may be problems with repeated labels for WMS servers that are not aware of tiles, in which case single image WMS will produce better cartography.
+
+  WMS（Web Map Service，网络地图服务）既可以作为瓦片图层使用（如本例所示），也可以作为单图像图层使用（详见 [单图像动态 WMS](wms-image.html) 示例）。
+  瓦片具备良好的缓存特性，因此浏览器不会重复请求已经浏览过的可视区域。
+  但对于不支持瓦片感知的 WMS 服务器，切片可能会导致跨边界文本注记重复出现或被截断，这种情况下单图像 WMS 能够呈现更优雅的制图视觉效果。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 瓦片 WMS（TileWMS）的工作机制
+  * **按网格分块请求**：OpenLayers 根据视图的切片网格（TileGrid），将屏幕视口拆解为多个规则的正方形瓦片（通常为 256×256 像素），并分别为每个瓦片生成一个标准的 WMS `GetMap` 请求：
+    ```text
+    https://.../wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetMap&LAYERS=topp:states&WIDTH=256&HEIGHT=256&CRS=EPSG:3857&BBOX=minx,miny,maxx,maxy
+    ```
+  * **浏览器缓存与并发优势**：
+    * 每个瓦片拥有独立的 URL 与 ETag/Last-Modified 响应头，浏览器可充分利用本地 HTTP 缓存；
+    * 现代浏览器支持多线程并发发起瓦片请求（HTTP/2 多路复用），大范围漫游时平移平滑，用户体验极佳。
+
+  #### 2. 切片式 WMS 的经典缺陷与“元瓦片 (Meta-tiling)”解决方案
+  * **接缝截断与文字重复问题**：
+    如果 WMS 服务器每次仅接收单个 256×256 的 BBOX 请求并在其内部独立排版注记，位于瓦片边缘的城市名称、道路文字容易被切成两半，或者在相邻瓦片中各绘制一遍，导致满屏文字重影。
+  * **GeoServer `TILED: true` 与元瓦片（Meta-tiling）**：
+    * 本例中传入参数 `params: {'LAYERS': 'topp:states', 'TILED': true}`；
+    * GeoServer 检测到 `TILED=true` 后，会自动启用**元瓦片机制（Meta-tiling）**：服务端一次性渲染一个大图（如 3×3 = 768×768 像素），统一计算注记排版与避让，然后再在内存中切割成 9 张小瓦片返回。这样既消除了文字截断，又保留了客户端切片缓存的优势。
+
+  #### 3. 性能与视觉细节：`transition: 0`
+  * 当图层包含透明背景（如本例中覆盖在 OSM 基础底图之上的美国各州边界），若保留默认的瓦片加载淡入过渡动画，新旧瓦片在渐变叠加的几十毫秒内可能会产生半透明泛白或叠影。
+  * 设置 `transition: 0` 直接关闭淡入过渡，瓦片解码完毕后瞬间显示，界面干脆利落。
 tags: "wms, tile, tilelayer"
 ---
 <div id="map" class="map"></div>

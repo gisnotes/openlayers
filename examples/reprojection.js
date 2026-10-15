@@ -13,7 +13,9 @@ import WMTS, {optionsFromCapabilities} from '../src/ol/source/WMTS.js';
 import {createXYZ} from '../src/ol/tilegrid.js';
 import TileGrid from '../src/ol/tilegrid/TileGrid.js';
 
+// Register representative map projection definitions with Proj4js:
 // 向 Proj4js 注册多种典型地理投影坐标系：
+// 1. EPSG:27700 - British National Grid (Transverse Mercator / Airy ellipsoid)
 // 1. EPSG:27700 - 英国国家格网 (British National Grid, 横轴墨卡托 / Airy 椭球)
 proj4.defs(
   'EPSG:27700',
@@ -22,12 +24,14 @@ proj4.defs(
     '+towgs84=446.448,-125.157,542.06,0.15,0.247,0.842,-20.489 ' +
     '+units=m +no_defs',
 );
+// 2. EPSG:23032 - European Datum 1950 UTM Zone 32N
 // 2. EPSG:23032 - 欧洲 1950 基准 UTM 32N 分带 (ED50 / UTM zone 32N)
 proj4.defs(
   'EPSG:23032',
   '+proj=utm +zone=32 +ellps=intl ' +
     '+towgs84=-87,-98,-121,0,0,0,0 +units=m +no_defs',
 );
+// 3. EPSG:5479 - Ross Sea Region Geodetic Datum Lambert Conformal Conic
 // 3. EPSG:5479 - 罗斯海属地南极兰勃特等角圆锥投影 (RSRGD2000 / MSLC2000)
 proj4.defs(
   'EPSG:5479',
@@ -35,6 +39,7 @@ proj4.defs(
     '-79.33333333333333 +lat_0=-78 +lon_0=163 +x_0=7000000 +y_0=5000000 ' +
     '+ellps=GRS80 +towgs84=0,0,0,0,0,0,0 +units=m +no_defs',
 );
+// 4. EPSG:21781 - Swiss Oblique Mercator (CH1903 / LV03)
 // 4. EPSG:21781 - 瑞士旧国家投影 (CH1903 / LV03，斜轴等角圆柱投影 / 贝塞尔椭球)
 proj4.defs(
   'EPSG:21781',
@@ -42,26 +47,31 @@ proj4.defs(
     '+lon_0=7.439583333333333 +k_0=1 +x_0=600000 +y_0=200000 +ellps=bessel ' +
     '+towgs84=674.4,15.1,405.3,0,0,0,0 +units=m +no_defs',
 );
+// 5. EPSG:3413 - NSIDC Polar Stereographic North
 // 5. EPSG:3413 - 美国冰雪数据中心北极极射赤平投影 (NSIDC Polar Stereographic North)
 proj4.defs(
   'EPSG:3413',
   '+proj=stere +lat_0=90 +lat_ts=70 +lon_0=-45 +k=1 ' +
     '+x_0=0 +y_0=0 +datum=WGS84 +units=m +no_defs',
 );
+// 6. EPSG:2163 - US National Atlas Equal Area
 // 6. EPSG:2163 - 美国国家地图集兰勃特方位等积投影 (US National Atlas Equal Area)
 proj4.defs(
   'EPSG:2163',
   '+proj=laea +lat_0=45 +lon_0=-100 +x_0=0 +y_0=0 ' +
     '+a=6370997 +b=6370997 +units=m +no_defs',
 );
+// 7. ESRI:54009 - World Mollweide equal-area projection
 // 7. ESRI:54009 - 全球摩尔威特等面积伪圆柱投影 (World Mollweide)
 proj4.defs(
   'ESRI:54009',
   '+proj=moll +lon_0=0 +x_0=0 +y_0=0 +datum=WGS84 ' + '+units=m +no_defs',
 );
+// Synchronize definitions with OpenLayers projection registry
 // 同步注册到 OpenLayers 投影表
 register(proj4);
 
+// Set valid geographic bounding boxes (Extent) for each projection to avoid out-of-domain errors
 // 设置各投影在地理上的合法有效包围盒（Extent），避免超出投影数学定义域
 const proj27700 = getProjection('EPSG:27700');
 proj27700.setExtent([-650000, -150000, 1350000, 1450000]);
@@ -84,14 +94,17 @@ proj2163.setExtent([-8040784.5135, -2577524.921, 3668901.4484, 4785105.1096]);
 const proj54009 = getProjection('ESRI:54009');
 proj54009.setExtent([-18e6, -9e6, 18e6, 9e6]);
 
+// Layer dictionary
 // 图层对象字典
 const layers = {};
 
+// Base layer 1: OSM standard Spherical Mercator tiles (EPSG:3857)
 // 底图 1：OSM 标准墨卡托瓦片 (EPSG:3857)
 layers['osm'] = new TileLayer({
   source: new OSM(),
 });
 
+// Base layer 2: GeoServer global Natural Earth WMS tiles in WGS 84 (EPSG:4326)
 // 底图 2：GeoServer 全球 Natural Earth 地表切片 WMS (EPSG:4326)
 layers['wms4326'] = new TileLayer({
   source: new TileWMS({
@@ -103,17 +116,20 @@ layers['wms4326'] = new TileLayer({
       'VERSION': '1.1.1',
     },
     projection: 'EPSG:4326',
+    // Source tile grid definition before reprojection (512px tiles)
     // 重投影前的源切片网格定义（512 像素大瓦片，全经纬范围）
     tileGrid: createXYZ({
       extent: [-180, -90, 180, 90],
       maxResolution: 360 / 512,
       maxZoom: 10,
     }),
+    // Reprojection error tolerance in pixels (higher tolerance reduces triangular mesh subdivisions)
     // 重投影误差容限设为 2 像素（调大容限可显著减少三角形网格细分，提升重投影性能）
     reprojectionErrorThreshold: 2,
   }),
 });
 
+// Overlay 1: Swisstopo 1:1,000,000 WMS tiles in Swiss national grid (EPSG:21781)
 // 叠加层 1：瑞士联邦地形局 1:1,000,000 彩色切片地图 (EPSG:21781)
 layers['wms21781'] = new TileLayer({
   source: new TileWMS({
@@ -130,6 +146,7 @@ layers['wms21781'] = new TileLayer({
   }),
 });
 
+// Overlay 2: NASA Earthdata Arctic WMTS imagery (EPSG:3413)
 // 叠加层 2：NASA Earthdata 北极冰貌 WMTS 影像 (EPSG:3413)
 const parser = new WMTSCapabilities();
 layers['wmts3413'] = new TileLayer();
@@ -141,6 +158,7 @@ fetch(urlA)
     return response.text();
   })
   .then(function (text) {
+    // Asynchronously parse GetCapabilities XML to configure WMTS source
     // 异步解析 GetCapabilities XML 并根据指定图层与矩阵集推导配置
     const result = parser.read(text);
     const options = optionsFromCapabilities(result, {
@@ -153,6 +171,7 @@ fetch(urlA)
     layers['wmts3413'].setSource(new WMTS(options));
   });
 
+// Overlay 3: Ordnance Survey Open Raster WMTS (EPSG:27700)
 // 叠加层 3：英国国家测绘局 ArcGIS WMTS 开放栅格图 (EPSG:27700)
 layers['bng'] = new TileLayer();
 const urlB =
@@ -175,6 +194,7 @@ fetch(urlB)
     layers['bng'].setSource(new WMTS(options));
   });
 
+// Calculate standard resolution steps in EPSG:3857 for 22 zoom levels
 // 计算 3857 投影下的标准切片分辨率阶梯（共 22 级）
 const startResolution = getWidth(getProjection('EPSG:3857').getExtent()) / 256;
 const resolutions = new Array(22);
@@ -182,6 +202,7 @@ for (let i = 0, ii = resolutions.length; i < ii; ++i) {
   resolutions[i] = startResolution / Math.pow(2, i);
 }
 
+// Overlay 4: GeoServer US States WMS tile layer (EPSG:3857)
 // 叠加层 4：GeoServer 美国本土州界 WMS 切片图层 (EPSG:3857)
 layers['states'] = new TileLayer({
   source: new TileWMS({
@@ -198,6 +219,7 @@ layers['states'] = new TileLayer({
   }),
 });
 
+// Initialize map instance (default base: OSM, default overlay: British National Grid WMTS)
 // 初始化地图实例（默认底图为 OSM，默认叠加层为英国国家格网 WMTS）
 const map = new Map({
   layers: [layers['osm'], layers['bng']],
@@ -209,6 +231,7 @@ const map = new Map({
   }),
 });
 
+// UI DOM element references
 // UI DOM 元素引用
 const baseLayerSelect = document.getElementById('base-layer');
 const overlayLayerSelect = document.getElementById('overlay-layer');
@@ -217,6 +240,8 @@ const renderEdgesCheckbox = document.getElementById('render-edges');
 let renderEdges = false;
 
 /**
+ * Dynamically update map view target projection.
+ * Creates a new View and bounds local overlays when switching to global projections to avoid wrapping artifacts.
  * 动态更新地图视图的目标投影
  * 根据用户选取的投影创建全新的 View，并对局域图层设置范围裁剪以防全球视角下产生重影
  */
@@ -231,6 +256,7 @@ function updateViewProjection() {
   });
   map.setView(newView);
 
+  // When target projection is global, clip local layer extent to prevent multi-world wrapping
   // 关键技巧：当目标投影为全球投影（isGlobal() 为真）时，
   // 将局域图层（英国格网）的外包范围限制为其在目标投影下的转换矩形，防止出现跨球循环重影
   if (newProj.isGlobal()) {
@@ -242,17 +268,20 @@ function updateViewProjection() {
   }
 }
 
+// Listen to view projection changes
 // 监听视图投影下拉切换
 viewProjSelect.onchange = function () {
   updateViewProjection();
 };
 
+// Initialize view projection
 // 初始化视图投影
 updateViewProjection();
 
 /**
+ * Synchronize renderReprojectionEdges setting on a tile layer
  * 同步更新图层上的重投影三角网边缘渲染开关
- * @param {TileLayer} layer 瓦片图层对象
+ * @param {TileLayer} layer Tile layer instance / 瓦片图层对象
  */
 const updateRenderEdgesOnLayer = function (layer) {
   if (layer instanceof TileLayer) {
@@ -263,6 +292,7 @@ const updateRenderEdgesOnLayer = function (layer) {
   }
 };
 
+// Listen to base layer selection
 // 监听底图切换
 baseLayerSelect.onchange = function () {
   const layer = layers[baseLayerSelect.value];
@@ -273,6 +303,7 @@ baseLayerSelect.onchange = function () {
   }
 };
 
+// Listen to overlay layer selection
 // 监听叠加业务图层切换
 overlayLayerSelect.onchange = function () {
   const layer = layers[overlayLayerSelect.value];
@@ -283,6 +314,7 @@ overlayLayerSelect.onchange = function () {
   }
 };
 
+// Toggle reprojection mesh edges
 // 监听重投影三角网边缘显示复选框
 renderEdgesCheckbox.onchange = function () {
   renderEdges = renderEdgesCheckbox.checked;

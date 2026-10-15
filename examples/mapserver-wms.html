@@ -1,7 +1,7 @@
 ---
 layout: example.html
-title: MapServer WMS
-shortdesc: Example of a MapServer WMS map.
+title: MapServer WMS / MapServer WMS 服务集成与高清屏优化
+shortdesc: Example of a MapServer WMS map. / 演示如何使用 ImageSource 和 createLoader 集成 MapServer WMS 地图服务，并针对高分屏 (HiDPI) 自动适配 MAP_RESOLUTION。
 docs: >
   Example of a map generated using a [MapServer WMS](https://mapserver.org/ogc/wms_server.html), with an `ImageSource` and a `createLoader`
   function. <br /><br />
@@ -9,6 +9,33 @@ docs: >
   map's `pixelRatio` and sends an additional [MAP_RESOLUTION](https://mapserver.org/ogc/wms_server.html#vendor-specific-wms-parameters) parameter
   to MapServer to ensure fonts and symbols render correctly.
 
+  本示例演示如何使用 `ImageSource` 与 `createLoader` 函数加载基于 [MapServer WMS](https://mapserver.org/ogc/wms_server.html) 发布的地图服务。<br /><br />
+  仅在开启 `hidpi: true` 时才需要显式设置 `serverType: 'mapserver'`。在高分屏（Retina / 4K / High-DPI）设备上，OpenLayers 会根据设备像素比（`pixelRatio`）自动计算并追加 MapServer 专有的 [MAP_RESOLUTION](https://mapserver.org/ogc/wms_server.html#vendor-specific-wms-parameters) 供应商参数，确保标注字体与符号图标在视网膜屏幕上以正确的物理尺寸和超高清画质呈现。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 高分屏（HiDPI / Retina）下的 WebGIS 痛点
+  * 在早期的 96 DPI 普通显示器上，字体 12px 刚好清晰易读；
+  * 但在现代 MacBook、4K 显示器或高分手机上，设备像素比（`devicePixelRatio`）达到 2.0 乃至 3.0。
+  * 如果客户端直接向 WMS 服务端索取 2 倍分辨率的图像而未通知服务端 DPI 变更，服务端会按照 96 DPI 将文字和图标原样渲染在高分辨率画布上，导致文字缩小到像蚂蚁一样细小，完全无法阅读。
+
+  #### 2. OpenLayers 的 `serverType` 与厂商专用参数协商
+  当在 `createLoader` 中配置：
+  ```javascript
+  loader: createLoader({
+    url: 'https://demo.mapserver.org/cgi-bin/wms?',
+    params: { LAYERS: ['bluemarble,country_bounds,cities'], ... },
+    hidpi: true,
+    serverType: 'mapserver',
+  })
+  ```
+  OpenLayers 会执行以下自适应调度：
+  1. 读取当前屏幕的实际 `pixelRatio`（如 2.0）；
+  2. 计算对应的屏幕物理 DPI：$96 \times \text{pixelRatio} = 192$；
+  3. 自动向 MapServer 发起的请求 URL 中注入专属厂商参数：`&MAP_RESOLUTION=192`；
+  4. MapServer 收到后，会自动将符号线宽、字体大小放大至对应的物理磅值，保证在任何分辨率屏幕上都清晰易读且保持一致的物理视觉尺寸！
 tags: "mapserver, wms, image"
 ---
 <div id="map" class="map"></div>

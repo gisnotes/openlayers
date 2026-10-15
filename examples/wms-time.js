@@ -8,17 +8,22 @@ import TileWMS from '../src/ol/source/TileWMS.js';
 
 const interval = 3 * 60 * 60 * 1000;
 const step = 15 * 60 * 1000;
-const frameRate = 0.5; // frames per second
+const frameRate = 0.5; // frames per second / 每秒 0.5 帧
 const extent = transformExtent([-126, 24, -66, 50], 'EPSG:4326', 'EPSG:3857');
 
 let wmsTime = new Date();
 let animationId = null;
 
+// Base terrain layer from StadiaMaps
+// StadiaMaps 地形底图图层
 const stadiaLayer = new TileLayer({
   source: new StadiaMaps({
     layer: 'stamen_terrain',
   }),
 });
+
+// Weather radar WMS layer with time dimension
+// 带有时间维度的气象雷达 WMS 图层
 const tileWmsLayer = new TileLayer({
   extent: extent,
   source: new TileWMS({
@@ -46,6 +51,8 @@ function threeHoursAgo() {
   return new Date(Math.floor((Date.now() - interval) / step) * step);
 }
 
+// Advance time step and smoothly update WMS layer TIME parameter
+// 推进时间步长并通过 updateParams 平滑更新 WMS 图层的 TIME 查询参数
 function setTime() {
   wmsTime.setMinutes(wmsTime.getMinutes() + 15);
   if (wmsTime.getTime() > Date.now()) {
@@ -56,6 +63,8 @@ function setTime() {
 }
 setTime();
 
+// Animation controls: play and pause
+// 动画时序播放与暂停控制逻辑
 const stop = function () {
   if (animationId !== null) {
     window.clearInterval(animationId);

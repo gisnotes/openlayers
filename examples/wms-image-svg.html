@@ -1,11 +1,40 @@
 ---
 layout: example.html
-title: WMS loader with SVG format
-shortdesc: Using the WMS loader to use SVG images with an Image source.
+title: WMS loader with SVG format / 采用 SVG 矢量格式的 WMS 加载器
+shortdesc: Using the WMS loader to use SVG images with an Image source. / 使用 WMS 自定义 loader 加载 SVG 矢量图像，在地图连续缩放时保持无限矢量清晰度。
 docs: >
   The Image source can be configured with service specific loaders. By default, the loader returns the image
   as decoded `ImageBitmap`. When using the `ol/source/Image.load()` function instead, SVG images will scale during
   zooming, because they will be used as `HTMLImageElement` directly instead of an `ImageBitmap`.
+
+  `ol/source/Image` 可以配置针对特定服务的自定义加载器（Loader）。
+  默认情况下，加载器会将返回的图像解码为离屏 `ImageBitmap`（位图）。
+  但若改为使用 `ol/source/Image.load()` 函数，SVG 矢量图像将直接作为 `HTMLImageElement` DOM 图像对象使用，在地图连续缩放过程中能够矢量级平滑缩放，避免栅格像素放大时的模糊与马赛克。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么 WMS 支持输出 SVG 矢量格式？
+  * 传统 WMS 的 `FORMAT` 参数通常为 `image/png` 或 `image/jpeg`（栅格位图）。
+  * GeoServer 等先进地图服务器支持将矢量图层直接导出为矢量标准格式：`FORMAT=image/svg+xml`。
+  * **优势**：
+    * 客户端接收到的是包含 `<svg>`、`<path>`、`<text>` 的原生矢量图形；
+    * 无论地图如何缩放或旋转，边界线条和文本标注在屏幕上始终具备无限精细的锐利度。
+
+  #### 2. `ImageBitmap` vs `HTMLImageElement` 渲染差异
+  * **默认加载器行为**：
+    为了在 Web Worker 或离屏画布中获得最高的绘制吞吐率，OpenLayers 默认通过 `createImageBitmap()` 将所有网络图像转为显卡纹理或不可变位图（`ImageBitmap`）。但位图一旦生成，其像素尺寸就被固定；在缩放动画过程中放大该位图会产生明显的像素锯齿。
+  * **配置 `load: load`（来自 `ol/Image.js`）**：
+    ```javascript
+    loader: createLoader({
+      url: 'https://ahocevar.com/geoserver/wms',
+      params: {'LAYERS': 'topp:states', 'FORMAT': 'image/svg+xml'},
+      ratio: 1,
+      load: load, // 强制以 HTMLImageElement 模式装载
+    }),
+    ```
+    通过直接使用 `HTMLImageElement`，浏览器内核的矢量栅格化引擎会在每次画布缩放时重新对 SVG 进行矢量插值光栅化，在缩放过渡期间保持极高清晰度。
 tags: "wms, image, svg"
 ---
 <div id="map" class="map"></div>

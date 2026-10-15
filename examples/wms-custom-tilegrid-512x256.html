@@ -1,9 +1,38 @@
 ---
 layout: example.html
-title: WMS 512x256 Tiles
-shortdesc: Example of a WMS layer with a custom grid with 512x256px tiles.
+title: WMS 512x256 Tiles / WMS 512x256 自定义矩形瓦片网格
+shortdesc: Example of a WMS layer with a custom grid with 512x256px tiles. / 为 WMS 图层配置非正方形 512x256 像素自定义切片网格以匹配特定服务端缓存结构并降低请求数。
 docs: >
   WMS can serve arbitrary tile sizes. This example uses a custom tile grid with non-square tiles.
+
+  WMS 服务能够动态响应并渲染任意尺寸的切片图幅。本示例演示如何使用自定义瓦片网格（TileGrid）请求非正方形的 512×256 像素矩形瓦片。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 为什么需要非正方形（512×256）切片网格？
+  * **标准 Web 墨卡托与正方形瓦片的局限**：
+    标准切片方案（如 Google / OSM / TMS）通常固定使用 256×256 的正方形切片。但在某些投影（如 EPSG:4326 经纬度直投，全球长宽比为 360° : 180° = 2:1）或者特定宽屏显示设备上，正方形切片会导致小比例尺下切片分割不自然或请求数量偏多。
+  * **降低 HTTP 请求并发开销**：
+    将单张切片宽度翻倍（512×256），相同视口面积所需的切片数量直接**减少一半**，显著减轻浏览器网络连接池压力与 WMS 服务端的并发渲染负载。
+
+  #### 2. 自定义 `TileGrid` 的计算与构造
+  在代码中，从 Web 墨卡托全球外包范围宽度出发推算各级分辨率：
+  ```javascript
+  const projExtent = getProjection('EPSG:3857').getExtent();
+  const startResolution = getWidth(projExtent) / 256;
+  const resolutions = new Array(22);
+  for (let i = 0, ii = resolutions.length; i < ii; ++i) {
+    resolutions[i] = startResolution / Math.pow(2, i);
+  }
+  const tileGrid = new TileGrid({
+    extent: [-13884991, 2870341, -7455066, 6338219],
+    resolutions: resolutions,
+    tileSize: [512, 256], // [宽度 512, 高度 256]
+  });
+  ```
+  OpenLayers 在发起 WMS 请求时，会自动将参数 `WIDTH=512&HEIGHT=256` 发往 GeoServer，实现与自定义网格的严丝合缝匹配。
 tags: "wms, tile, non-square, grid"
 ---
 <div id="map" class="map"></div>

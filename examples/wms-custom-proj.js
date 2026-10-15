@@ -11,26 +11,27 @@ import {
 import Projection from '../src/ol/proj/Projection.js';
 import TileWMS from '../src/ol/source/TileWMS.js';
 
+// OpenLayers does not include the EPSG:21781 (CH1903 / LV03) projection definition by default.
+// We create a Projection instance and register it with addProjection so it can be retrieved by code.
 // OpenLayers 默认未内置瑞士国家投影 EPSG:21781 (CH1903 / LV03)。
-// 因此我们为 EPSG:21781 创建一个 Projection 投影实例，并通过 addProjection
-// 将其注册到库中，使其可以通过投影代号进行全局检索。
-
+// 因此我们为 EPSG:21781 创建一个 Projection 投影实例，并通过 addProjection 将其注册到库中。
 const projection = new Projection({
   code: 'EPSG:21781',
+  // The extent is used to determine the default validity bounding box for zoom level 0.
   // extent 用于决定缩放级别 0 时的默认有效包围盒。
-  // 各投影的推荐合法范围可查阅 https://spatialreference.org/。
   extent: [485869.5728, 76443.1884, 837076.5648, 299941.7864],
   units: 'm',
 });
 addProjection(projection);
 
+// Register bidirectional coordinate transforms between EPSG:21781 and EPSG:4326 (WGS84).
+// These transforms are required for ScaleLine point resolution calculation and transform() calls.
 // 声明 EPSG:21781 与 EPSG:4326 (WGS84 经纬度) 之间的双向坐标转换函数。
-// 这些转换函数对于 ScaleLine 比例尺控件（用于反算地表点分辨率与大地线距离）
-// 以及通过 ol/proj~transform 设置地图视图的初始中心点都是必不可少的。
-
+// 这些转换函数对于 ScaleLine 比例尺控件计算点分辨率以及 transform() 初始中心点换算是必不可少的。
 addCoordinateTransforms(
   'EPSG:4326',
   projection,
+  // Forward transform: WGS84 [lng, lat] -> Swiss planar [Easting(y), Northing(x)]
   // 正向转换：WGS84 经纬度 [lng, lat] -> 瑞士平面直角坐标 [Easting(y), Northing(x)]
   function (coordinate) {
     return [
@@ -38,6 +39,7 @@ addCoordinateTransforms(
       WGStoCHx(coordinate[1], coordinate[0]),
     ];
   },
+  // Inverse transform: Swiss planar [Easting(y), Northing(x)] -> WGS84 [lng, lat]
   // 逆向转换：瑞士平面直角坐标 [Easting(y), Northing(x)] -> WGS84 经纬度 [lng, lat]
   function (coordinate) {
     return [
@@ -47,11 +49,14 @@ addCoordinateTransforms(
   },
 );
 
+// Bounding box extent for Switzerland
 // 瑞士区域适用的显示范围 [minx, miny, maxx, maxy]
 const extent = [420000, 30000, 900000, 350000];
 
-// 图层定义
+// Layer definitions: Tiled WMS base and thematic hazard overlay
+// 图层定义：瓦片底图与业务专题图层
 const layers = [
+  // Tiled WMS base: Swisstopo 1:1,000,000 pixel map (EPSG:21781)
   // 瓦片底图：瑞士联邦地形局 1:1,000,000 彩色像元地图（EPSG:21781）
   new TileLayer({
     extent: extent,
@@ -68,6 +73,7 @@ const layers = [
       serverType: 'mapserver',
     }),
   }),
+  // Thematic overlay: Swiss national flood alert map
   // 业务专题图层：瑞士环境局全国洪水警戒分布图
   new TileLayer({
     extent: extent,
@@ -83,10 +89,10 @@ const layers = [
   }),
 ];
 
+// Initialize map instance
 // 初始化地图实例
 const map = new Map({
   controls: defaultControls().extend([
-    // 配置公制比例尺控件（内部会自动调用上面注册的转换函数推算点分辨率）
     new ScaleLine({
       units: 'metric',
     }),
@@ -95,7 +101,8 @@ const map = new Map({
   target: 'map',
   view: new View({
     projection: projection,
-    // 将经纬度中心点 [8.23°E, 46.86°N]（瑞士中部卢塞恩湖附近）转换为 EPSG:21781 平面坐标
+    // Transform coordinates near Lake Lucerne [8.23°E, 46.86°N] to EPSG:21781
+    // 将经纬度中心点 [8.23°E, 46.86°N] 转换为 EPSG:21781 平面坐标
     center: transform([8.23, 46.86], 'EPSG:4326', 'EPSG:21781'),
     extent: extent,
     zoom: 2,
@@ -103,9 +110,9 @@ const map = new Map({
 });
 
 /*
+ * Official polynomial approximation functions provided by swisstopo
  * 瑞士投影正反算多项式拟合函数（由瑞士联邦地形局官方提供）
- * 来源：https://www.swisstopo.admin.ch/en/knowledge-facts/surveying-geodesy/reference-systems/map-projections.html
- * 算法原理：以旧伯尔尼天文台为基准点，利用三次泰勒展开经验多项式完成高精度快速换算。
+ * Source / 来源: https://www.swisstopo.admin.ch/en/knowledge-facts/surveying-geodesy/reference-systems/map-projections.html
  */
 
 /**

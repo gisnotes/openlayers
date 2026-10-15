@@ -1,48 +1,52 @@
 ---
 layout: example.html
-title: 多投影栅格数据动态重投影 (Raster Reprojection)
-shortdesc: 演示在客户端对多种来源（OSM、WMS、WMTS）及异构坐标系底图与叠加层进行实时栅格动态重投影。
+title: Raster Reprojection / 多投影栅格数据动态重投影
+shortdesc: Demonstrates client-side raster reprojection between various projections. / 演示在客户端对多种来源（OSM、WMS、WMTS）及异构坐标系底图与叠加层进行实时栅格动态重投影。
 docs: >
-  本例展示了 OpenLayers 强大的**客户端栅格多源异构动态重投影（Client-side Raster Reprojection）**综合能力。用户可以自由组合不同投影的底图（OSM、WMS）、不同投影的叠加层（英国格网、瑞士国家投影、NASA 北极极地 WMTS、美国本土 WMS），并将它们实时重投影呈现到多达 8 种全球或区域性目标视图投影中。
+  This example shows client-side raster reprojection between various projections.
 
-  ### 核心机制与原理解析
+  本示例展示了 OpenLayers 强大的**客户端栅格多源异构动态重投影（Client-side Raster Reprojection）**综合能力。用户可以自由组合不同投影的底图（OSM、WMS）、不同投影的叠加层（英国格网、瑞士国家投影、NASA 北极极地 WMTS、美国本土 WMS），并将它们实时重投影呈现到多达 8 种全球或区域性目标视图投影中。
 
-  1. **多源多协议异构瓦片混叠**：
-     - 基础底图包含：Web 墨卡托（`EPSG:3857`）的 OSM、以及 WGS84（`EPSG:4326`）的 GeoServer 切片 WMS；
-     - 业务叠加图层包含：英国国家格网（`EPSG:27700`）WMTS、瑞士联邦地形局（`EPSG:21781`）WMS、NASA Earthdata 北极极射赤平投影（`EPSG:3413`）WMTS 等；
-     - 无论各图层源采用何种几何投影、切片网格（TileGrid）或像素分辨率，OpenLayers 均可在浏览器 GPU/Canvas 渲染管线中并行解算，将各层像元重采样并精准套合在同一个视图坐标系下。
+  ---
 
-  2. **重投影精度与性能平衡（`reprojectionErrorThreshold`）**：
-     - 在 `wms4326` 图层配置中指定了 `reprojectionErrorThreshold: 2`（单位为像元）。
-     - OpenLayers 采用自适应三角网（Adaptive Triangulated Mesh）算法拟合非线性投影曲面。该阈值代表重采样网格与真值曲面允许的最大拟合偏差。适当调大该阈值（默认 0.5 像素），可在复杂大范围投影下大幅精简三角形细分数量，大幅提升渲染性能。
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
 
-  3. **全球视图下消除局域图层重影（`isGlobal()` 与范围约束）**：
-     - 局域工程投影（如英国国家格网 `EPSG:27700`）只在其本国地理范围内有效。当全局视图（如摩尔威特等积投影 `ESRI:54009`、WGS84 `EPSG:4326`）开启世界环绕时，局域图层可能会在球面展开周期中产生重复映射的重影。
-     - 代码演示了标准工程方案：通过 `newProj.isGlobal()` 判断目标视图是否为全球投影，若为全球投影则调用 `transformExtent(proj27700.getExtent(), ...)` 将局域合法外包矩形赋予该图层（`layer.setExtent()`），有效截断定义域外的不合理像元，杜绝重影。
+  #### 1. 多源多协议异构瓦片混叠
+  * 基础底图包含：Web 墨卡托（`EPSG:3857`）的 OSM、以及 WGS84（`EPSG:4326`）的 GeoServer 切片 WMS；
+  * 业务叠加图层包含：英国国家格网（`EPSG:27700`）WMTS、瑞士联邦地形局（`EPSG:21781`）WMS、NASA Earthdata 北极极射赤平投影（`EPSG:3413`）WMTS 等；
+  * 无论各图层源采用何种几何投影、切片网格（TileGrid）或像素分辨率，OpenLayers 均可在浏览器 GPU/Canvas 渲染管线中并行解算，将各层像元重采样并精准套合在同一个视图坐标系下。
 
-  4. **OGC WMTS 元数据动态解析（`WMTSCapabilities`）**：
-     - 演示了通过 `ol/format/WMTSCapabilities` 异步抓取并解析远程服务的 `GetCapabilities` XML，配合 `optionsFromCapabilities` 一键推导切片矩阵集、分辨率阶梯与投影参数，极大简化了复杂 WMTS 服务的对接配置。
+  #### 2. 重投影精度与性能平衡（`reprojectionErrorThreshold`）
+  * 在 `wms4326` 图层配置中指定了 `reprojectionErrorThreshold: 2`（单位为像元）。
+  * OpenLayers 采用自适应三角网（Adaptive Triangulated Mesh）算法拟合非线性投影曲面。该阈值代表重采样网格与真值曲面允许的最大拟合偏差。适当调大该阈值（默认 0.5 像素），可在复杂大范围投影下大幅精简三角形细分数量，大幅提升渲染性能。
+
+  #### 3. 全球视图下消除局域图层重影（`isGlobal()` 与范围约束）
+  * 局域工程投影（如英国国家格网 `EPSG:27700`）只在其本国地理范围内有效。当全局视图（如摩尔威特等积投影 `ESRI:54009`、WGS84 `EPSG:4326`）开启世界环绕时，局域图层可能会在球面展开周期中产生重复映射的重影。
+  * 代码演示了标准工程方案：通过 `newProj.isGlobal()` 判断目标视图是否为全球投影，若为全球投影则调用 `transformExtent(proj27700.getExtent(), ...)` 将局域合法外包矩形赋予该图层（`layer.setExtent()`），有效截断定义域外的不合理像元，杜绝重影。
+
+  #### 4. OGC WMTS 元数据动态解析（`WMTSCapabilities`）
+  * 演示了通过 `ol/format/WMTSCapabilities` 异步抓取并解析远程服务的 `GetCapabilities` XML，配合 `optionsFromCapabilities` 一键推导切片矩阵集、分辨率阶梯与投影参数，极大简化了复杂 WMTS 服务的对接配置。
 tags: "reprojection, projection, proj4js, osm, wms, wmts, hidpi, grid"
 ---
 <div id="map" class="map"></div>
 <form class="reprojection-form">
-  <label for="base-layer">底图图层 (Base map)：</label>
+  <label for="base-layer">Base map / 底图图层：</label>
   <select id="base-layer">
     <option value="osm">OSM 瓦片 (EPSG:3857)</option>
     <option value="wms4326">WMS 全球地表 (EPSG:4326)</option>
   </select>
 
-  <label for="overlay-layer">叠加业务图层 (Overlay map)：</label>
+  <label for="overlay-layer">Overlay map / 叠加业务图层：</label>
   <select id="overlay-layer">
-    <option value="bng">英国国家格网 (EPSG:27700)</option>
-    <option value="wms21781">瑞士联邦地形局 WMS (EPSG:21781)</option>
-    <option value="wmts3413">NASA 北极冰貌 WMTS (EPSG:3413)</option>
-    <option value="states">美国本土州界 (EPSG:3857)</option>
+    <option value="bng">British National Grid / 英国国家格网 (EPSG:27700)</option>
+    <option value="wms21781">Swisstopo WMS / 瑞士联邦地形局 WMS (EPSG:21781)</option>
+    <option value="wmts3413">NASA Arctic WMTS / NASA 北极冰貌 WMTS (EPSG:3413)</option>
+    <option value="states">United States / 美国本土州界 WMS (EPSG:3857)</option>
   </select>
 
-  <label for="view-projection">视图投影 (View projection)：</label>
+  <label for="view-projection">View projection / 视图投影：</label>
   <select id="view-projection">
-    <option value="EPSG:3857">球形墨卡托 / Spherical Mercator (EPSG:3857)</option>
+    <option value="EPSG:3857">Spherical Mercator / 球形墨卡托 (EPSG:3857)</option>
     <option value="EPSG:4326">WGS 84 / 等经纬度 (EPSG:4326)</option>
     <option value="ESRI:54009">Mollweide / 摩尔威特等面积伪圆柱投影 (ESRI:54009)</option>
     <option value="EPSG:27700">British National Grid / 英国国家格网 (EPSG:27700)</option>
@@ -52,6 +56,6 @@ tags: "reprojection, projection, proj4js, osm, wms, wmts, hidpi, grid"
     <option value="EPSG:5479">RSRGD2000 / MSLC2000 南极兰勃特圆锥投影 (EPSG:5479)</option>
   </select>
 
-  <label for="render-edges">渲染重投影三角网边缘：</label>
+  <label for="render-edges">Render reprojection edges / 渲染重投影三角网边缘：</label>
   <span><input type="checkbox" id="render-edges" /></span>
 </form>

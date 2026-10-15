@@ -1,15 +1,46 @@
 ---
 layout: example.html
-title: WMS GetLegendGraphic
-shortdesc: Example of a WMS GetLegendGraphic.
+title: WMS GetLegendGraphic / WMS 动态图例获取与尺度自适应
+shortdesc: Example of a WMS GetLegendGraphic. / 演示如何使用 getLegendUrl 方法向 WMS 服务动态获取图例图片，并随分辨率变化实时更新。
 docs: >
   WMS supports the [getLegendGraphic request](https://docs.geoserver.org/latest/en/user/services/wms/get_legend_graphic/index.html).
   This example demonstrates the use of the `getLegendUrl` method.
 
 
   As a legend can be responsive to the scale it is updated on every change of the resolution.
+
+  WMS 规范支持 [GetLegendGraphic 图例获取请求](https://docs.geoserver.org/latest/en/user/services/wms/get_legend_graphic/index.html)。
+  本示例演示如何使用 `source.getLegendUrl()` 方法动态生成图例图片的请求地址。
+
+  由于许多地图图例具备比例尺自适应能力（根据缩放级别展示不同要素类别的符号），因此每当地图视图分辨率发生变化时，图例图片均会实时响应更新。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 什么是 `GetLegendGraphic`？
+  * 在 GIS 制图标准中，地图样式通常由服务端的 SLD（Styled Layer Descriptor）文件定义。
+  * `GetLegendGraphic` 请求用于直接向 WMS 服务端索取当前图层在指定样式下的官方图例图片：
+    ```text
+    https://.../wms?SERVICE=WMS&VERSION=1.3.0&REQUEST=GetLegendGraphic&FORMAT=image/png&LAYER=topp:states&SCALE=...
+    ```
+  * 前端完全不需要自己硬编码图例的颜色色块、线条样式和文字说明，直接显示服务端返回的图例图片即可。
+
+  #### 2. `source.getLegendUrl(resolution, params)` 的内部封装
+  OpenLayers 的 `ol/source/ImageWMS` 和 `ol/source/TileWMS` 均内置了 `getLegendUrl` 辅助方法：
+  * **自动比例尺推算**：传入当前视图的 `resolution`（分辨率），OpenLayers 会自动将其转换为 WMS 规范所依赖的大地比例尺分母（`SCALE` 参数）；
+  * **响应式监听**：通过监听视图的 `change:resolution` 事件：
+    ```javascript
+    map.getView().on('change:resolution', function (event) {
+      const resolution = event.target.getResolution();
+      updateLegend(resolution);
+    });
+    ```
+    当用户放大进入大比例尺时，如果服务端规则启用了特定细节符号（如仅在大比例尺下显示的县界、公路等级符号），图例图片会自动刷新显示最新的图元规则。
 tags: "GetLegendGraphic, getLegendUrl, WMS"
 ---
 <div id="map" class="map"></div>
-Legend:
-<div><img id="legend"/></div>
+<div class="mt-2">
+  <strong>Legend / 图例：</strong>
+  <div><img id="legend" alt="WMS 图例"/></div>
+</div>

@@ -1,9 +1,31 @@
 ---
 layout: example.html
-title: WMS Capabilities Parsing
-shortdesc: Example of parsing a WMS GetCapabilities response.
+title: WMS Capabilities Parsing / WMS 服务元数据能力文档解析
+shortdesc: Example of parsing a WMS GetCapabilities response. / 使用 ol/format/WMSCapabilities 解析 WMS 服务的 GetCapabilities XML 文档并提取图层元数据。
 docs: >
   This example shows the contents of the result object from parsing a WMS capabilities response.
+
+  本示例展示如何使用 `ol/format/WMSCapabilities` 格式化解析器，将 WMS 服务的 `GetCapabilities` XML 元数据响应解析为结构化 JavaScript 对象并展示其详细内容。
+
+  ---
+
+  ### 📚 学习记录与技术深度解读 (Learning Notes)
+
+  #### 1. 什么是 WMS `GetCapabilities`？
+  * `GetCapabilities` 是 OGC WMS 规范中最核心的自描述元数据请求：
+    ```text
+    https://.../wms?SERVICE=WMS&REQUEST=GetCapabilities&VERSION=1.3.0
+    ```
+  * 服务端返回一个大型 XML 文档，详尽记录了：
+    * **服务级别元数据**：服务标题、摘要、联系人、关键字、操作约束；
+    * **支持的图层树**：每个图层的 `Name`、`Title`、`Abstract`、支持的投影坐标系列表（`CRS` / `SRS`）、地理边界（`EX_GeographicBoundingBox` 与投影包围盒 `BoundingBox`）；
+    * **支持的输出格式**：`GetMap` 格式（`image/png`, `image/jpeg`, `image/svg+xml`）与 `GetFeatureInfo` 格式（`text/html`, `application/json`）；
+    * **样式与维度**：图层关联的 SLD 样式名（`Style`）、时间维度（`Dimension name="time"`）与高程维度（`elevation`）。
+
+  #### 2. `ol/format/WMSCapabilities` 的实战价值
+  * **动态图层目录树生成**：企业级 GIS 平台中，前端通常先请求并解析 `GetCapabilities`，自动在左侧侧边栏渲染多级图层树，用户勾选图层后才动态实例化 `TileWMS` 或 `ImageWMS`；
+  * **坐标系与范围自动校验**：自动比对地图视图当前的投影是否包含在该图层的 `CRS` 支持列表中，以及自动调用 `view.fit(bbox)` 居中定位；
+  * **图例与查询能力自适应**：提取图层的 LegendURL 与 Queryable 属性，决定是否启用点击要素查询（`GetFeatureInfo`）。
 tags: "wms, capabilities, getcapabilities"
 ---
 <pre class="log-container"><code id="log"></code></pre>

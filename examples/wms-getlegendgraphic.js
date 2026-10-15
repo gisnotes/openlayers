@@ -5,6 +5,8 @@ import TileLayer from '../src/ol/layer/Tile.js';
 import ImageWMS from '../src/ol/source/ImageWMS.js';
 import OSM from '../src/ol/source/OSM.js';
 
+// Single image WMS source for US states
+// 美国各州边界单图像 WMS 数据源
 const wmsSource = new ImageWMS({
   url: 'https://ahocevar.com/geoserver/wms',
   params: {'LAYERS': 'topp:states'},
@@ -12,6 +14,8 @@ const wmsSource = new ImageWMS({
   serverType: 'geoserver',
 });
 
+// Update the legend image element using getLegendUrl with current resolution
+// 使用当前分辨率调用 getLegendUrl 方法动态刷新图例图片地址
 const updateLegend = function (resolution) {
   const graphicUrl = wmsSource.getLegendUrl(resolution);
   const img = document.getElementById('legend');
@@ -37,12 +41,14 @@ const map = new Map({
   }),
 });
 
-// Initial legend
+// Fetch initial legend for current view resolution
+// 获取当前视图初始分辨率下的图例
 const resolution = map.getView().getResolution();
 updateLegend(resolution);
 
-// Update the legend when the resolution changes
+// Listen to resolution changes and update the scale-responsive legend
+// 监听分辨率变化事件，实时更新支持比例尺响应式的图例
 map.getView().on('change:resolution', function (event) {
-  const resolution = event.target.getResolution();
-  updateLegend(resolution);
+  const currentRes = event.target.getResolution();
+  updateLegend(currentRes);
 });
