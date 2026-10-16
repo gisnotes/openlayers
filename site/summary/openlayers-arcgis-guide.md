@@ -12,21 +12,21 @@
 
 ```mermaid
 flowchart TD
-    subgraph ArcGISServer [ArcGIS Enterprise / ArcGIS Server]
+    subgraph ArcGISServer ["ArcGIS Enterprise / ArcGIS Server"]
         DynamicEngine["动态制图引擎 (ArcObjects / Core)"]
         CompactCache[("紧凑切片缓存 (Compact Cache / Bundle)")]
     end
 
-    subgraph OpenLayersClient [OpenLayers 客户端渲染通道]
+    subgraph OpenLayersClient ["OpenLayers 客户端渲染通道"]
         direction TB
         Mode1["模式一：ImageArcGISRest<br/>(单张视口图，动态 /export)"]
         Mode2["模式二：TileArcGISRest<br/>(网格分块，动态 /export)"]
         Mode3["模式三：ImageTile / WebGLTile<br/>(XYZ 静态直连 /tile/{z}/{y}/{x})"]
     end
 
-    Mode1 <-->|实时渲染单张大图| DynamicEngine
-    Mode2 <-->|按瓦片并发请求实时出图| DynamicEngine
-    Mode3 <-->|静态直取瓦片文件 (CDN 友好)| CompactCache
+    Mode1 <-->|"实时渲染单张大图"| DynamicEngine
+    Mode2 <-->|"按瓦片并发请求实时出图"| DynamicEngine
+    Mode3 <-->|"静态直取瓦片文件 (CDN 友好)"| CompactCache
 ```
 
 ### 1.2 方案选型综合特征对照表
@@ -177,8 +177,8 @@ const map = new Map({
 ```mermaid
 flowchart TD
     Start(["ArcGIS MapServer 接入需求"]) --> HasCache{"服务端是否已生成静态切片缓存?"}
-    HasCache -->|是 (Cached)| HighPerf["优先采用 XYZ / ImageTile + WebGLTile"]
-    HasCache -->|否 (Dynamic)| NeedDynamicFilter{"业务是否需要动态图层/属性 SQL 过滤?"}
+    HasCache -->|"是 (Cached)"| HighPerf["优先采用 XYZ / ImageTile + WebGLTile"]
+    HasCache -->|"否 (Dynamic)"| NeedDynamicFilter{"业务是否需要动态图层/属性 SQL 过滤?"}
     NeedDynamicFilter -->|是| CheckQuality{"对注记品质与网络要求?"}
     NeedDynamicFilter -->|否| BuildCache["建议管理员发布切片缓存"]
     CheckQuality -->|要求文字绝对不被切断| UseImage["选用 ImageArcGISRest (单图视口出图)"]

@@ -19,33 +19,37 @@ head:
 
 ```mermaid
 flowchart TD
-    subgraph ClientLayer [客户端交互与展示]
+    subgraph ClientLayer ["客户端交互与展示"]
         MapClick["用户鼠标点击地图 (单点坐标)"]
         MapHover["用户鼠标光标悬停 (像素拾取)"]
         WFSQuery["复杂属性/空间条件检索"]
     end
 
-    subgraph WMSPipeline [范式一：WMS 栅格渲染与属性穿透]
+    subgraph WMSPipeline ["范式一：WMS 栅格渲染与属性穿透"]
         GetPixel["layer.getData(pixel)<br/>Alpha 通道检测 (零网络开销)"]
         GetInfoUrl["wmsSource.getFeatureInfoUrl()<br/>计算切片/视口局部 BBOX 与 (I, J)"]
     end
 
-    subgraph WFSPipeline [范式二：WFS 矢量实体几何获取]
+    subgraph WFSPipeline ["范式二：WFS 矢量实体几何获取"]
         FilterBuilder["ol/format/filter 复合过滤器<br/>andFilter(like, equalTo)"]
         WFSXML["new WFS().writeGetFeature()<br/>XML 序列化"]
     end
 
-    subgraph GISServer [GIS 服务器 (GeoServer / MapServer)]
+    subgraph GISServer ["GIS 服务器 (GeoServer / MapServer)"]
         RasterEngine["WMS 渲染引擎<br/>出图 PNG/JPEG"]
         FeatureEngine["WFS 空间数据引擎<br/>查询 PostGIS 返回 GeoJSON"]
     end
 
-    MapHover --> GetPixel -->|data[3] > 0| HandCursor["光标切换为 pointer 手型"]
-    MapClick --> GetInfoUrl -->|HTTP GET GetFeatureInfo| RasterEngine
-    RasterEngine -->|返回 HTML/JSON 属性详情| InfoWindow["展示要素属性弹窗"]
+    MapHover --> GetPixel
+    GetPixel -->|"Alpha > 0"| HandCursor["光标切换为 pointer 手型"]
+    MapClick --> GetInfoUrl
+    GetInfoUrl -->|"HTTP GET GetFeatureInfo"| RasterEngine
+    RasterEngine -->|"返回 HTML/JSON 属性详情"| InfoWindow["展示要素属性弹窗"]
 
-    WFSQuery --> FilterBuilder --> WFSXML -->|HTTP POST XML| FeatureEngine
-    FeatureEngine -->|返回标准 GeoJSON| VectorLayer["动态注入 VectorSource<br/>view.fit() 自动聚焦"]
+    WFSQuery --> FilterBuilder
+    FilterBuilder --> WFSXML
+    WFSXML -->|"HTTP POST XML"| FeatureEngine
+    FeatureEngine -->|"返回标准 GeoJSON"| VectorLayer["动态注入 VectorSource<br/>view.fit() 自动聚焦"]
 ```
 
 ### 1.1 两种 OGC 交互模式综合特征对比

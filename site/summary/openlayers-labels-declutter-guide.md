@@ -14,28 +14,28 @@
 
 ```mermaid
 flowchart TD
-    subgraph FeaturePipeline [矢量要素与注记输入]
+    subgraph FeaturePipeline ["矢量要素与注记输入"]
         direction TB
-        F[矢量要素 Feature] --> StyleFunc[样式计算 style / text]
+        F["矢量要素 Feature"] --> StyleFunc["样式计算 style / text"]
         StyleFunc --> TextDef["Text 样式对象 (font, placement, overflow)"]
     end
 
-    subgraph DeclutterEngine [空间避让引擎 RBush]
+    subgraph DeclutterEngine ["空间避让引擎 RBush"]
         direction TB
-        TextDef --> CheckOverflow{是否面要素 & 超出边界?}
-        CheckOverflow -->|是且 overflow:false| Drop[丢弃注记]
-        CheckOverflow -->|否或 overflow:true| CalcBox[计算屏幕像素包围盒 AABB / OBB]
-        CalcBox --> DeclutterGroup{declutter 模式}
-        DeclutterGroup -->|true| SharedTree[全局共享 R 树碰撞检测]
-        DeclutterGroup -->|'separate' / 组名| IsolatedTree[专属命名 R 树碰撞检测]
-        SharedTree --> Collide{是否与已有包围盒相交?}
+        TextDef --> CheckOverflow{"是否面要素且超出边界?"}
+        CheckOverflow -->|"是且 overflow:false"| Drop["丢弃注记"]
+        CheckOverflow -->|"否或 overflow:true"| CalcBox["计算屏幕像素包围盒 AABB / OBB"]
+        CalcBox --> DeclutterGroup{"declutter 模式"}
+        DeclutterGroup -->|true| SharedTree["全局共享 R 树碰撞检测"]
+        DeclutterGroup -->|"separate 或命名分组"| IsolatedTree["专属命名 R 树碰撞检测"]
+        SharedTree --> Collide{"是否与已有包围盒相交?"}
         IsolatedTree --> Collide
-        Collide -->|是 (低优先级)| Suppress[抑制隐藏当前文字]
-        Collide -->|否 (成功占位)| Accept[注册包围盒并准予绘制]
+        Collide -->|"是 (低优先级)"| Suppress["抑制隐藏当前文字"]
+        Collide -->|"否 (成功占位)"| Accept["注册包围盒并准予绘制"]
     end
 
-    subgraph CanvasOutput [Canvas 栅格化输出]
-        Accept --> RenderEngine[Canvas 2D TextBuilder / GPU 纹理]
+    subgraph CanvasOutput ["Canvas 栅格化输出"]
+        Accept --> RenderEngine["Canvas 2D TextBuilder / GPU 纹理"]
     end
 ```
 

@@ -13,19 +13,19 @@
 
 ```mermaid
 stateDiagram-v2
-    [*] --> LocalContainer: 初始化地图 (setTarget('map'))
+    [*] --> LocalContainer: 初始化地图容器
     
-    LocalContainer --> FullscreenLocal: 点击全屏 (FullScreen)
-    FullscreenLocal --> LocalContainer: 退出全屏 (Esc / 还原)
+    LocalContainer --> FullscreenLocal: 点击全屏控件
+    FullscreenLocal --> LocalContainer: 退出全屏或按Esc键
 
-    LocalContainer --> FullscreenParent: 整体全屏 (source: 'parent')<br/>包含侧边栏看板
+    LocalContainer --> FullscreenParent: 整体全屏放大至父级节点
     FullscreenParent --> LocalContainer: 退出全屏
 
-    LocalContainer --> ExternalWindow: 弹出独立窗口 (window.open)<br/>map.setTarget(childMapTarget)
-    ExternalWindow --> LocalContainer: 子窗口关闭 (unload / pagehide)<br/>resetMapTarget() 归还主容器
+    LocalContainer --> ExternalWindow: 弹出独立窗口并重设Target
+    ExternalWindow --> LocalContainer: 子窗口关闭后归还主容器
 
-    LocalContainer --> TeleportContainer: 动态瞬移 (map.setTarget('map2'))<br/>多标签/多分屏无缝迁移
-    TeleportContainer --> LocalContainer: 瞬移归位 (setTarget('map1'))
+    LocalContainer --> TeleportContainer: 动态瞬移至新DOM容器
+    TeleportContainer --> LocalContainer: 瞬移归还原始容器
 ```
 
 ### 1.1 四大视口拓扑模式对比

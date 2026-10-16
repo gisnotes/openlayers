@@ -12,34 +12,34 @@
 
 ```mermaid
 flowchart TD
-    subgraph MainThread [主线程 (Main Thread / UI & Gesture)]
+    subgraph MainThread ["主线程 (Main Thread / UI & Gesture)"]
         UserGesture["用户缩放/平移手势<br/>(60-120 FPS 极速响应)"]
         TransformComp["仿射变换补偿器<br/>updateContainerTransform()"]
         DisplayCanvas["宿主画布 / DOM 容器"]
     end
 
-    subgraph Mode1 [范式一：全幅委托架构 (offscreen-canvas)]
+    subgraph Mode1 ["范式一：全幅委托架构 (offscreen-canvas)"]
         WorkerFull["Worker 全图渲染器"]
         HeadlessMVT["Mapbox 矢量瓦片引擎<br/>MVT 解码 + 样式排版"]
         OffCanvasFull["OffscreenCanvas (全屏尺寸)"]
     end
 
-    subgraph Mode2 [范式二：瓦片级微任务架构 (tiled-layer)]
+    subgraph Mode2 ["范式二：瓦片级微任务架构 (tiled-layer)"]
         TileLoader["ImageTileSource.loader"]
         WorkerPool["Worker 瓦片烘焙池"]
         OffCanvasTile["OffscreenCanvas (512×512)"]
     end
 
-    UserGesture -->|同步状态| TransformComp
+    UserGesture -->|"同步状态"| TransformComp
     TransformComp --> DisplayCanvas
 
-    UserGesture -.->|postMessage 异步帧状态| WorkerFull
+    UserGesture -.->|"postMessage 异步帧状态"| WorkerFull
     WorkerFull --> HeadlessMVT --> OffCanvasFull
-    OffCanvasFull -->|ImageBitmap 零拷贝传输| DisplayCanvas
+    OffCanvasFull -->|"ImageBitmap 零拷贝传输"| DisplayCanvas
 
-    TileLoader -.->|请求单个切片 [z,x,y]| WorkerPool
+    TileLoader -.->|"请求单个切片 [z,x,y]"| WorkerPool
     WorkerPool --> OffCanvasTile
-    OffCanvasTile -->|ImageBitmap| TileLoader --> DisplayCanvas
+    OffCanvasTile -->|"ImageBitmap"| TileLoader --> DisplayCanvas
 ```
 
 ### 1.1 两种离屏方案综合特征对比

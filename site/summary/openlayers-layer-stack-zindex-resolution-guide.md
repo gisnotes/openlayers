@@ -138,8 +138,8 @@ $$\text{Resolution} = \frac{\text{EquatorLength} \times \cos(\text{latitude})}{2
 
 ```mermaid
 graph LR
-    ZoomLow["Zoom 0~4 (宏观大洲视角)"] -->|放大地图 (Zoom In)| ZoomHigh["Zoom 15~18 (微观街道视角)"]
-    ResHigh["Resolution: 20000 ~ 2000 米/像素<br/>(数值极大)"] -->|数值减小| ResLow["Resolution: 200 ~ 1 米/像素<br/>(数值极小)"]
+    ZoomLow["Zoom 0~4 (宏观大洲视角)"] -->|"放大地图 (Zoom In)"| ZoomHigh["Zoom 15~18 (微观街道视角)"]
+    ResHigh["Resolution: 20000 ~ 2000 米/像素<br/>(数值极大)"] -->|"数值减小"| ResLow["Resolution: 200 ~ 1 米/像素<br/>(数值极小)"]
 ```
 
 ### 4.2 半开区间门控与无缝平滑交接

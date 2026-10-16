@@ -16,8 +16,8 @@ layout: default.hbs
 ```mermaid
 flowchart TD
     UserScroll(["用户在手机/触控板上单指上下滑动网页"]) --> HitMap{"光标/触点是否进入地图 DOM 区域?"}
-    HitMap -->|是 (未做手势隔离)| TrapMode["地图事件拦截器捕获 wheel / touchmove<br/>阻断网页原生滚动<br/>导致地图不断异常缩放/移位，用户卡在地图内无法翻页"]
-    HitMap -->|是 (已配置双指隔离)| SafeMode["单指滑动: 透传为浏览器原生页面滚动 (流畅阅读)<br/>双指滑动: 激活地图平移漫游与捏合缩放"]
+    HitMap -->|"是 (未做手势隔离)"| TrapMode["地图事件拦截器捕获 wheel / touchmove<br/>阻断网页原生滚动<br/>导致地图不断异常缩放/移位，用户卡在地图内无法翻页"]
+    HitMap -->|"是 (已配置双指隔离)"| SafeMode["单指滑动: 透传为浏览器原生页面滚动 (流畅阅读)<br/>双指滑动: 激活地图平移漫游与捏合缩放"]
     SafeMode --> TipCheck{"是否为单指误触地图?"}
     TipCheck -->|是| ShowOverlay["淡入提示: '使用双指移动或缩放地图' (持续 1.5 秒后自动隐退)"]
 ```

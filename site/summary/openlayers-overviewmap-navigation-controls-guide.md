@@ -10,27 +10,27 @@
 
 ```mermaid
 flowchart TD
-    subgraph HostPage [主页面布局 (Page DOM)]
+    subgraph HostPage ["主页面布局 (Page DOM)"]
         ExternalStatus["底部外部状态栏<br/>#mouse-position"]
         MapContainer["地图容器<br/>#map (.ol-viewport)"]
     end
 
-    subgraph InternalControls [内置控件容器 .ol-overlaycontainer-stopevent]
+    subgraph InternalControls ["内置控件容器 .ol-overlaycontainer-stopevent"]
         ZoomCtrl["ol/control/Zoom<br/>(放大/缩小)"]
         ZoomExtentCtrl["ol/control/ZoomToExtent<br/>(苏黎世湖区范围复位)"]
         OverviewCtrl["ol/control/OverviewMap<br/>(独立微缩子地图)"]
     end
 
-    subgraph DualMapSync [双向空间联动管道]
+    subgraph DualMapSync ["双向空间联动管道"]
         MainView["主地图 View<br/>(center, resolution, rotation)"]
         SubMap["鹰眼内部无头 Map<br/>(绘制红框指示器 / 视角同步)"]
     end
 
     MapContainer --> InternalControls
-    ExternalStatus <-->|target: document.getElementById| MousePositionCtrl["ol/control/MousePosition<br/>(坐标格式化与重投影)"]
+    ExternalStatus <-->|"指定外部挂载目标 target"| MousePositionCtrl["ol/control/MousePosition<br/>(坐标格式化与重投影)"]
 
-    ZoomCtrl & ZoomExtentCtrl -->|驱动| MainView
-    MainView <-->|事件监听与矩阵投影| DualMapSync
+    ZoomCtrl & ZoomExtentCtrl -->|"驱动视口变换"| MainView
+    MainView <-->|"事件监听与矩阵投影"| DualMapSync
     DualMapSync --> OverviewCtrl
 ```
 

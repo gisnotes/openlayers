@@ -83,7 +83,7 @@ const collection = new GeometryCollection(geometries);
 
 ```mermaid
 stateDiagram-v2
-    [*] --> Idle: 进入绘制/修改模式 (trace: true)
+    [*] --> Idle: 进入绘制与修改模式 (开启 trace 模式)
     Idle --> SnapDetected: 鼠标靠近已有要素边缘 (Snap 交互捕获)
     SnapDetected --> TracingActive: 点击第一点 (锁定追踪起点)
     TracingActive --> PathPreview: 移动鼠标，实时沿多边形拓扑寻径

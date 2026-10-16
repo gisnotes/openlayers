@@ -10,22 +10,22 @@
 
 ```mermaid
 flowchart TD
-    subgraph BrowserScreen [浏览器物理屏幕视口 (Width × Height)]
+    subgraph BrowserScreen ["浏览器物理屏幕视口 (Width × Height)"]
         TopNav["顶部导航栏 (padding-top: 170px)"]
         LeftDrawer["左侧折叠菜单 (padding-left: 150px)"]
         RightPanel["右侧属性卡片 (padding-right: 50px)"]
         BottomTimeline["底部状态栏 (padding-bottom: 30px)"]
 
-        subgraph ActiveViewport [有效可视交互区域 (Unpadded Area)]
+        subgraph ActiveViewport ["有效可视交互区域 (Unpadded Area)"]
             VisualCenter["视觉有效中心点 (New View Anchor)<br/>也是旋转与缩放的真正轴心点"]
             FeatureTarget["目标要素 / 瑞士国界多边形"]
         end
     end
 
-    TopNav & LeftDrawer & RightPanel & BottomTimeline -->|扣除遮挡尺寸| ActiveViewport
-    VisualCenter -->|驱动| FeatureTarget
+    TopNav & LeftDrawer & RightPanel & BottomTimeline -->|"扣除遮挡尺寸"| ActiveViewport
+    VisualCenter -->|"驱动"| FeatureTarget
 
-    subgraph ViewModes [OpenLayers 两种避让驱动机制]
+    subgraph ViewModes ["OpenLayers 两种避让驱动机制"]
         LocalFit["模式一：局部方法级 (center.html)<br/>view.fit(geom, { padding })<br/>view.centerOn(coord, size, pixel)"]
         GlobalPadding["模式二：全局视图级 (view-padding.html)<br/>new View({ padding: [...] })<br/>全局自动接管缩放、旋转与居中"]
     end

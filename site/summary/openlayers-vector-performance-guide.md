@@ -33,13 +33,13 @@ head:
 
 ```mermaid
 flowchart TD
-    subgraph Mode1 [模式一：ol/layer/Vector (实时矢量渲染)]
+    subgraph Mode1 ["模式一：ol/layer/Vector (实时矢量渲染)"]
         V1["平移/缩放每一帧"] --> V2["遍历视口内全部几何顶点"]
         V2 --> V3["Canvas 2D 重新描边与填充"]
         V3 --> V4["优点：文字永远锐利高清<br/>缺点：海量复杂面平移掉帧严重"]
     end
 
-    subgraph Mode2 [模式二：ol/layer/VectorImage (离屏栅格化预渲染)]
+    subgraph Mode2 ["模式二：ol/layer/VectorImage (离屏栅格化预渲染)"]
         VI1["平移漫游"] --> VI2["将预先渲染好的离屏图片快速拉伸/位移"]
         VI2 --> VI3["零几何计算，极速 blit 到屏幕"]
         VI3 --> VI4["优点：平移漫游锁死 60 FPS<br/>缺点：连续快速缩放时偶有轻微模糊"]

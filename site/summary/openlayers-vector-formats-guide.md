@@ -214,15 +214,15 @@ const featureWKB = formatWKB.readFeature(wkbHexOrBuffer, {
 ```mermaid
 graph LR
     subgraph WKT_Flow["WKT 纯文本传输链路 (臃肿 & 精度折损)"]
-        DB1["PostGIS 内存浮点数"] -->|ST_AsText 四舍五入| Str["ASCII 字符串 (体积大)"]
-        Str -->|HTTP 传输 (宽带占用高)| Client1["前端字符串正则解析"]
-        Client1 -->|parseFloat 精度损失| Geom1["生成 Feature"]
+        DB1["PostGIS 内存浮点数"] -->|"ST_AsText 四舍五入"| Str["ASCII 字符串 (体积大)"]
+        Str -->|"HTTP 传输 (宽带占用高)"| Client1["前端字符串正则解析"]
+        Client1 -->|"parseFloat 精度损失"| Geom1["生成 Feature"]
     end
 
     subgraph WKB_Flow["WKB 二进制传输链路 (极限紧凑 & 零损耗)"]
-        DB2["PostGIS 内存浮点数"] -->|ST_AsBinary 内存直出| Bin["IEEE 754 字节流 (精简 60%+)"]
-        Bin -->|HTTP 二进制直传| Client2["DataView 内存映射读取"]
-        Client2 -->|零拷贝直接还原| Geom2["生成 Feature (绝对零精度损失)"]
+        DB2["PostGIS 内存浮点数"] -->|"ST_AsBinary 内存直出"| Bin["IEEE 754 字节流 (精简 60%+)"]
+        Bin -->|"HTTP 二进制直传"| Client2["DataView 内存映射读取"]
+        Client2 -->|"零拷贝直接还原"| Geom2["生成 Feature (绝对零精度损失)"]
     end
 ```
 

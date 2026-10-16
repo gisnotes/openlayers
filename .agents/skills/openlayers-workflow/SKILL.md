@@ -154,17 +154,27 @@ openlayers/
     layout: default.hbs
     ---
     ```
-- **节点文案双引号包裹铁律（杜绝 Mermaid 语法解析崩溃）**：
-  - 在 `flowchart`、`graph`、`stateDiagram-v2` 等图表中，只要节点文案包含**中文、半角圆括号 `()`、冒号 `:`、斜杠 `/`、加号 `+`、逗号 `,` 或空格**，**必须整体用英文双引号 `["..."]` 包裹**！
-  - **常见正确范式**：
-    - 矩形节点：`UseImage["选用 ImageArcGISRest (单图视口出图)"]`、`DrawInt["Draw 交互: 生成多边形"]`
-    - 菱形判断：`ActiveMode{"当前激活模式"}`、`HasCache{"服务端是否已生成静态切片缓存?"}`
-    - 圆角/药丸节点：`Start(["ArcGIS MapServer 接入需求"])`
-    - 圆柱体数据库节点：`Source[("VectorSource 数据源")]`（圆柱体内同样必须双引号）
-    - 复合说明节点：`HighPerf["优先采用 XYZ / ImageTile + WebGLTile"]`
-  - **高危错误警示**：
-    - ❌ `UseImage[选用 ImageArcGISRest (单图视口出图)]` —— 括号未加双引号，Mermaid 解析器将其误认为是嵌套语法，导致整个图表解析失败白屏！
-    - ❌ `DrawInt[Draw 交互: 生成多边形]` —— 冒号未加双引号，引发语法异常！
+- **四大语法转义与双引号包裹铁律（杜绝 Mermaid 语法解析崩溃 / Parse error: got 'PS'）**：
+  1. **节点文案双引号包裹**：
+     - 在 `flowchart`、`graph`、`stateDiagram-v2` 等图表中，只要节点文案包含**中文、半角圆括号 `()`、方括号 `[]`、冒号 `:`、斜杠 `/`、加号 `+`、逗号 `,`、尖括号 `<>` 或空格**，**必须整体用英文双引号 `["..."]` 包裹**！
+     - 常见正确范式：
+       - 矩形节点：`UseImage["选用 ImageArcGISRest (单图视口出图)"]`、`DrawInt["Draw 交互: 生成多边形"]`
+       - 菱形判断：`ActiveMode{"当前激活模式"}`、`HasCache{"服务端是否已生成静态切片缓存?"}`
+       - 圆角/药丸节点：`Start(["ArcGIS MapServer 接入需求"])`
+       - 圆柱体数据库节点：`Source[("VectorSource 数据源")]`
+       - 复合说明节点：`HighPerf["优先采用 XYZ / ImageTile + WebGLTile"]`
+  2. **子图标题（`subgraph`）必须使用双引号中括号**：
+     - **极高频崩溃点**：Mermaid 语法中 `subgraph ID [Label (with parens)]` 的括号会被词法分析器误认为起始标记（PS 异常），导致整图崩溃！
+     - **规范**：只要子图显示名带有括号、斜杠或中文，**必须**写为：`subgraph SubgraphId ["子图中文名称 (English / Detail)"]`。
+     - ❌ `subgraph Mode1 [模式一：ol/layer/Vector (实时矢量渲染)]`（致命语法错误）
+     - ✅ `subgraph Mode1 ["模式一：ol/layer/Vector (实时矢量渲染)"]`（正确）
+  3. **连接线/边标签（Edge Label `|...|`）必须双引号包裹**：
+     - 只要边标签文字包含**圆括号 `()`、方括号 `[]`、冒号 `:`、斜杠 `/`、反引号、大于/小于号**，必须写成 `-->|"说明文本 (包含括号)"|`。
+     - ❌ `-->|HTTP 传输 (宽带占用高)|` 或 `-.->|popstate (前进/后退)|`（致命语法错误）
+     - ✅ `-->|"HTTP 传输 (宽带占用高)"|` 或 `-.->|"popstate (前进/后退)"|`（正确）
+  4. **状态图（`stateDiagram-v2`）状态转移标签规范**：
+     - 在状态图的转移线上，如 `StateA --> StateB: 转移描述`，**描述文案中严禁出现第二个冒号 `:`**，否则解析器会将其错误识别为双重状态转移；文案中如需说明格式，请使用中文括号或短横线代替英文冒号。
+     - 状态转移线上严禁插入 HTML 换行标签 `<br/>`，如需多行请拆分状态或转移路径。
 - **响应式排版自适应**：
   - 全局样式（`site/src/theme/site.css`）已为 `.mermaid` 容器内置了 `overflow-x: auto;`、中英文居中、主题自适应灰底及细边框。对于复杂大图，在移动端与较小视口下会自动出现水平平滑滑动条，绝不顶破主容器布局。
 

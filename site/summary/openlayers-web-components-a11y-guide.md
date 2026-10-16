@@ -12,32 +12,32 @@
 
 ```mermaid
 flowchart TD
-    subgraph HostDocument [主文档 / 业务页面 (Host DOM)]
+    subgraph HostDocument ["主文档 / 业务页面 (Host DOM)"]
         SkipLink["无障碍跳跃链接<br/>&lt;a href='#map'&gt;"]
         ExternalBtn["语义化控制按钮<br/>&lt;button&gt; Zoom +/-"]
         CustomTag["自定义元素宿主<br/>&lt;ol-map tabindex='0'&gt;"]
     end
 
-    subgraph ShadowDOMBoundary [Shadow DOM 独立作用域边界]
+    subgraph ShadowDOMBoundary ["Shadow DOM 独立作用域边界"]
         HostStyle[":host { display: block; }"]
         ScopedCSS["隔离样式表 theme/ol.css"]
         MapDiv["内部挂载容器 &lt;div&gt;"]
     end
 
-    subgraph OLMapEngine [OpenLayers 地图引擎]
+    subgraph OLMapEngine ["OpenLayers 地图引擎"]
         ViewSystem["View (中心点 / 缩放层级)"]
         KeyboardInteraction["内置交互器: KeyboardPan & KeyboardZoom"]
         LayerRender["瓦片底图渲染 (OSM)"]
     end
 
-    SkipLink -->|Tab 聚焦直接跳转| CustomTag
-    ExternalBtn -->|点击 / Enter 触发| ViewSystem
-    CustomTag -->|attachShadow({mode:'open'})| ShadowDOMBoundary
+    SkipLink -->|"Tab 聚焦直接跳转"| CustomTag
+    ExternalBtn -->|"点击 / Enter 触发"| ViewSystem
+    CustomTag -->|"attachShadow({mode:'open'})"| ShadowDOMBoundary
     ShadowDOMBoundary --> MapDiv
     MapDiv --> OLMapEngine
 
-    CustomTag -.->|键盘事件穿透 (composed: true)| KeyboardInteraction
-    KeyboardInteraction -->|驱动视口漫游/缩放| ViewSystem
+    CustomTag -.->|"键盘事件穿透 (composed: true)"| KeyboardInteraction
+    KeyboardInteraction -->|"驱动视口漫游/缩放"| ViewSystem
 ```
 
 ### 1.1 核心方案选型特征对比

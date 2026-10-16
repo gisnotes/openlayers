@@ -21,21 +21,21 @@ head:
 
 ```mermaid
 flowchart TD
-    subgraph LegacyOWS [传统 OWS 时代 (1999-2015)]
+    subgraph LegacyOWS ["传统 OWS 时代 (1999-2015)"]
         direction TB
         WMS["WMS 1.3.0 (复杂 Key-Value-Pair / XML)"]
         WMTS["WMTS 1.0.0 (庞大 GetCapabilities XML)"]
         WFS["WFS 2.0 (Filter Encoding XML POST)"]
     end
 
-    subgraph ModernOGCAPI [现代 OGC API 时代 (OpenAPI / RESTful)]
+    subgraph ModernOGCAPI ["现代 OGC API 时代 (OpenAPI / RESTful)"]
         direction TB
         OGCMaps["OGC API - Maps (/collections/{id}/map)"]
         OGCTiles["OGC API - Tiles (/collections/{id}/tiles/{matrixSet}/{z}/{y}/{x})"]
         OGCFeatures["OGC API - Features (/collections/{id}/items?bbox=...)"]
     end
 
-    subgraph OpenLayersClient [OpenLayers 客户端支持]
+    subgraph OpenLayersClient ["OpenLayers 客户端支持"]
         SourceMapTile["ol/source/OGCMapTile (栅格切片)"]
         SourceVectorTile["ol/source/OGCVectorTile (MVT/GeoJSON 矢量切片)"]
         SourceVector["ol/source/Vector + GeoJSON (要素集合)"]

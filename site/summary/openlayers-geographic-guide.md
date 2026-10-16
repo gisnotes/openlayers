@@ -67,10 +67,10 @@ export function useGeographic() {
 ```mermaid
 flowchart TD
     User(["用户鼠标操作"]) --> SnapInt["Snap 交互吸附"]
-    SnapInt -->|校准吸附后的 [lon, lat]| ActiveMode{"当前激活模式"}
-    ActiveMode -->|draw 模式| DrawInt["Draw 交互: 生成多边形"]
+    SnapInt -->|"校准吸附后的经纬度 [lon, lat]"| ActiveMode{"当前激活模式"}
+    ActiveMode -->|"draw 模式"| DrawInt["Draw 交互: 生成多边形"]
     DrawInt --> Source[("VectorSource 数据源")]
-    ActiveMode -->|modify 模式| SelectInt["Select 交互: 拾取要素"]
+    ActiveMode -->|"modify 模式"| SelectInt["Select 交互: 拾取要素"]
     SelectInt --> FeatureCollection["Selected Features 集合"]
     FeatureCollection --> ModifyInt["Modify 交互: 拖动编辑顶点"]
     ModifyInt --> Source

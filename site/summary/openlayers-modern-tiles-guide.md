@@ -32,18 +32,18 @@ head:
 
 ```mermaid
 flowchart LR
-    subgraph BrowserClient [OpenLayers 客户端]
+    subgraph BrowserClient ["OpenLayers 客户端"]
         PMTilesLib["pmtiles 客户端库"]
         WebGLTileLayer["WebGLTile 图层"]
     end
 
-    subgraph CloudStorage [云端对象存储 (AWS S3 / 阿里云 OSS)]
+    subgraph CloudStorage ["云端对象存储 (AWS S3 / 阿里云 OSS)"]
         SingleFile["terrain.pmtiles (单文件, 数 GB)"]
     end
 
-    WebGLTileLayer -->|计算所需切片 (z,x,y)| PMTilesLib
-    PMTilesLib -->|HTTP GET bytes=1024-4096 (读取索引)| SingleFile
-    PMTilesLib -->|HTTP GET bytes=845620-889420 (精确读取切片)| SingleFile
+    WebGLTileLayer -->|"计算所需切片 (z,x,y)"| PMTilesLib
+    PMTilesLib -->|"HTTP GET bytes=1024-4096 (读取索引)"| SingleFile
+    PMTilesLib -->|"HTTP GET bytes=845620-889420 (精确读取切片)"| SingleFile
 ```
 
 ### 2.1 高程地形山体阴影渲染（`pmtiles-elevation`）

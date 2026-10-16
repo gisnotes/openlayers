@@ -33,15 +33,15 @@ graph TD
         Token["匿名地图会话协商 (Instantiation Token)"]
     end
 
-    OSMSource -->|可见时贡献版权| DynamicCollector
-    CartoSource -->|动态切片流| DynamicCollector
+    OSMSource -->|"可见时贡献版权"| DynamicCollector
+    CartoSource -->|"动态切片流"| DynamicCollector
     DynamicCollector --> ResponsiveState
     StaticConfig --> ResponsiveState
-    ResponsiveState -->|视口宽度 < 600px 折叠为 'i'| MapView["地图视口 UI (右下角)"]
+    ResponsiveState -->|"视口宽度 < 600px 折叠为 'i'"| MapView["地图视口 UI (右下角)"]
 
-    Config -->|setConfig(mapConfig)| CartoSource
-    CartoSource <-->|HTTP POST 协商 Token| CloudEngine
-    CloudPostGIS -->|生成 WebP/PNG 瓦片流| CartoSource
+    Config -->|"setConfig(mapConfig)"| CartoSource
+    CartoSource <-->|"HTTP POST 协商 Token"| CloudEngine
+    CloudPostGIS -->|"生成 WebP/PNG 瓦片流"| CartoSource
 ```
 
 ### 1.1 三大核心技术模式对比

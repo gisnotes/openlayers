@@ -34,14 +34,14 @@ graph TD
         MoveEndEvent["'moveend' 事件<br/>(用户拖拽/滚轮/惯性动画完全停止)"]
     end
 
-    ViewState -->|共享同一个 View 实例| Map1
-    ViewState -->|共享同一个 View 实例| Map2
-    Map1 -->|交互结束| MoveEndEvent
-    Map2 -->|交互结束| MoveEndEvent
-    MoveEndEvent -->|计算 Extent + wrapLon| ExtentInputs["四至坐标表单 (WGS84)"]
-    MoveEndEvent -->|状态序列化 (State Loop Guard 保护)| History
-    History -->|状态还原| URL
-    History -.->|popstate (前进/后退)| ViewState
+    ViewState -->|"共享同一个 View 实例"| Map1
+    ViewState -->|"共享同一个 View 实例"| Map2
+    Map1 -->|"交互结束"| MoveEndEvent
+    Map2 -->|"交互结束"| MoveEndEvent
+    MoveEndEvent -->|"计算 Extent + wrapLon"| ExtentInputs["四至坐标表单 (WGS84)"]
+    MoveEndEvent -->|"状态序列化 (State Loop Guard 保护)"| History
+    History -->|"状态还原"| URL
+    History -.->|"popstate (前进/后退)"| ViewState
 ```
 
 ### 1.1 三大核心机制对比分析
@@ -243,16 +243,16 @@ window.addEventListener('popstate', function (event) {
 ```mermaid
 graph LR
     subgraph Bad["❌ 传统事件监听法 (抖动与死循环隐患)"]
-        M1["Map A"] -->|监听 pointerdrag| Sync1["跨图层 setCenter()"]
+        M1["Map A"] -->|"监听 pointerdrag"| Sync1["跨图层 setCenter()"]
         Sync1 --> M2["Map B"]
-        M2 -->|监听 pointerdrag| Sync2["跨图层 setCenter()"]
-        Sync2 -.->|递归死锁或帧延迟拖影| M1
+        M2 -->|"监听 pointerdrag"| Sync2["跨图层 setCenter()"]
+        Sync2 -.->|"递归死锁或帧延迟拖影"| M1
     end
 
     subgraph Good["✅ OpenLayers 共享 View 架构 (0 延迟/原生同步)"]
         SharedView["ol/View (单一视口数学模型)"]
-        SharedView -->|驱动| MapA["Map A (DOM 容器 1)"]
-        SharedView -->|驱动| MapB["Map B (DOM 容器 2)"]
+        SharedView -->|"驱动"| MapA["Map A (DOM 容器 1)"]
+        SharedView -->|"驱动"| MapB["Map B (DOM 容器 2)"]
     end
 ```
 
