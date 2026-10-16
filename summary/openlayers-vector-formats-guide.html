@@ -298,15 +298,15 @@ const featureWKB = formatWKB.readFeature(wkbHexOrBuffer, {
 <h3 id="42-wkb-相比-wkt-的性能与网络优势">4.2 WKB 相比 WKT 的性能与网络优势</h3>
 <pre><code class="language-mermaid">graph LR
     subgraph WKT_Flow[&quot;WKT 纯文本传输链路 (臃肿 &amp; 精度折损)&quot;]
-        DB1[&quot;PostGIS 内存浮点数&quot;] --&gt;|ST_AsText 四舍五入| Str[&quot;ASCII 字符串 (体积大)&quot;]
-        Str --&gt;|HTTP 传输 (宽带占用高)| Client1[&quot;前端字符串正则解析&quot;]
-        Client1 --&gt;|parseFloat 精度损失| Geom1[&quot;生成 Feature&quot;]
+        DB1[&quot;PostGIS 内存浮点数&quot;] --&gt;|&quot;ST_AsText 四舍五入&quot;| Str[&quot;ASCII 字符串 (体积大)&quot;]
+        Str --&gt;|&quot;HTTP 传输 (宽带占用高)&quot;| Client1[&quot;前端字符串正则解析&quot;]
+        Client1 --&gt;|&quot;parseFloat 精度损失&quot;| Geom1[&quot;生成 Feature&quot;]
     end
 
     subgraph WKB_Flow[&quot;WKB 二进制传输链路 (极限紧凑 &amp; 零损耗)&quot;]
-        DB2[&quot;PostGIS 内存浮点数&quot;] --&gt;|ST_AsBinary 内存直出| Bin[&quot;IEEE 754 字节流 (精简 60%+)&quot;]
-        Bin --&gt;|HTTP 二进制直传| Client2[&quot;DataView 内存映射读取&quot;]
-        Client2 --&gt;|零拷贝直接还原| Geom2[&quot;生成 Feature (绝对零精度损失)&quot;]
+        DB2[&quot;PostGIS 内存浮点数&quot;] --&gt;|&quot;ST_AsBinary 内存直出&quot;| Bin[&quot;IEEE 754 字节流 (精简 60%+)&quot;]
+        Bin --&gt;|&quot;HTTP 二进制直传&quot;| Client2[&quot;DataView 内存映射读取&quot;]
+        Client2 --&gt;|&quot;零拷贝直接还原&quot;| Geom2[&quot;生成 Feature (绝对零精度损失)&quot;]
     end
 </code></pre>
 <hr>

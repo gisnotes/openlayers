@@ -120,18 +120,18 @@
 <h2 id="2-pmtiles-云原生切片：零服务端直读单文件">2. PMTiles 云原生切片：零服务端直读单文件</h2>
 <p><strong>PMTiles（Protomaps）</strong> 是专为云存储设计的单文件切片归档格式。它将数百万个切片整合为单个二进制文件，在头部维护了多级 B-Tree 索引表。</p>
 <pre><code class="language-mermaid">flowchart LR
-    subgraph BrowserClient [OpenLayers 客户端]
+    subgraph BrowserClient [&quot;OpenLayers 客户端&quot;]
         PMTilesLib[&quot;pmtiles 客户端库&quot;]
         WebGLTileLayer[&quot;WebGLTile 图层&quot;]
     end
 
-    subgraph CloudStorage [云端对象存储 (AWS S3 / 阿里云 OSS)]
+    subgraph CloudStorage [&quot;云端对象存储 (AWS S3 / 阿里云 OSS)&quot;]
         SingleFile[&quot;terrain.pmtiles (单文件, 数 GB)&quot;]
     end
 
-    WebGLTileLayer --&gt;|计算所需切片 (z,x,y)| PMTilesLib
-    PMTilesLib --&gt;|HTTP GET bytes=1024-4096 (读取索引)| SingleFile
-    PMTilesLib --&gt;|HTTP GET bytes=845620-889420 (精确读取切片)| SingleFile
+    WebGLTileLayer --&gt;|&quot;计算所需切片 (z,x,y)&quot;| PMTilesLib
+    PMTilesLib --&gt;|&quot;HTTP GET bytes=1024-4096 (读取索引)&quot;| SingleFile
+    PMTilesLib --&gt;|&quot;HTTP GET bytes=845620-889420 (精确读取切片)&quot;| SingleFile
 </code></pre>
 <h3 id="21-高程地形山体阴影渲染（pmtiles-elevation）">2.1 高程地形山体阴影渲染（<code>pmtiles-elevation</code>）</h3>
 <p>在 <code>pmtiles-elevation</code> 示例中，切片包含的是 Mapbox Terrain-RGB 编码的高程数据，通过 WebGL 片元着色器实时计算地形坡度与太阳入射光照，生成逼真的山体阴影（Hillshade）：</p>

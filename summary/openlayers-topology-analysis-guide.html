@@ -185,7 +185,7 @@ const collection = new GeometryCollection(geometries);
 <li><strong>修改追踪</strong>：将多边形的连续两个相邻顶点吸附至目标边界，两者之间的整段曲线瞬间被拉伸并严丝合缝地重合到目标边界上。</li>
 </ul>
 <pre><code class="language-mermaid">stateDiagram-v2
-    [*] --&gt; Idle: 进入绘制/修改模式 (trace: true)
+    [*] --&gt; Idle: 进入绘制与修改模式 (开启 trace 模式)
     Idle --&gt; SnapDetected: 鼠标靠近已有要素边缘 (Snap 交互捕获)
     SnapDetected --&gt; TracingActive: 点击第一点 (锁定追踪起点)
     TracingActive --&gt; PathPreview: 移动鼠标，实时沿多边形拓扑寻径

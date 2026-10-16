@@ -119,10 +119,10 @@ export function useGeographic() {
 <h3 id="21-协同工作流水线">2.1 协同工作流水线</h3>
 <pre><code class="language-mermaid">flowchart TD
     User([&quot;用户鼠标操作&quot;]) --&gt; SnapInt[&quot;Snap 交互吸附&quot;]
-    SnapInt --&gt;|校准吸附后的 [lon, lat]| ActiveMode{&quot;当前激活模式&quot;}
-    ActiveMode --&gt;|draw 模式| DrawInt[&quot;Draw 交互: 生成多边形&quot;]
+    SnapInt --&gt;|&quot;校准吸附后的经纬度 [lon, lat]&quot;| ActiveMode{&quot;当前激活模式&quot;}
+    ActiveMode --&gt;|&quot;draw 模式&quot;| DrawInt[&quot;Draw 交互: 生成多边形&quot;]
     DrawInt --&gt; Source[(&quot;VectorSource 数据源&quot;)]
-    ActiveMode --&gt;|modify 模式| SelectInt[&quot;Select 交互: 拾取要素&quot;]
+    ActiveMode --&gt;|&quot;modify 模式&quot;| SelectInt[&quot;Select 交互: 拾取要素&quot;]
     SelectInt --&gt; FeatureCollection[&quot;Selected Features 集合&quot;]
     FeatureCollection --&gt; ModifyInt[&quot;Modify 交互: 拖动编辑顶点&quot;]
     ModifyInt --&gt; Source

@@ -80,22 +80,22 @@
 <hr>
 <h2 id="1-架构总览：物理视口中心-vs-视觉有效中心的解耦">1. 架构总览：物理视口中心 vs 视觉有效中心的解耦</h2>
 <pre><code class="language-mermaid">flowchart TD
-    subgraph BrowserScreen [浏览器物理屏幕视口 (Width × Height)]
+    subgraph BrowserScreen [&quot;浏览器物理屏幕视口 (Width × Height)&quot;]
         TopNav[&quot;顶部导航栏 (padding-top: 170px)&quot;]
         LeftDrawer[&quot;左侧折叠菜单 (padding-left: 150px)&quot;]
         RightPanel[&quot;右侧属性卡片 (padding-right: 50px)&quot;]
         BottomTimeline[&quot;底部状态栏 (padding-bottom: 30px)&quot;]
 
-        subgraph ActiveViewport [有效可视交互区域 (Unpadded Area)]
+        subgraph ActiveViewport [&quot;有效可视交互区域 (Unpadded Area)&quot;]
             VisualCenter[&quot;视觉有效中心点 (New View Anchor)&lt;br/&gt;也是旋转与缩放的真正轴心点&quot;]
             FeatureTarget[&quot;目标要素 / 瑞士国界多边形&quot;]
         end
     end
 
-    TopNav &amp; LeftDrawer &amp; RightPanel &amp; BottomTimeline --&gt;|扣除遮挡尺寸| ActiveViewport
-    VisualCenter --&gt;|驱动| FeatureTarget
+    TopNav &amp; LeftDrawer &amp; RightPanel &amp; BottomTimeline --&gt;|&quot;扣除遮挡尺寸&quot;| ActiveViewport
+    VisualCenter --&gt;|&quot;驱动&quot;| FeatureTarget
 
-    subgraph ViewModes [OpenLayers 两种避让驱动机制]
+    subgraph ViewModes [&quot;OpenLayers 两种避让驱动机制&quot;]
         LocalFit[&quot;模式一：局部方法级 (center.html)&lt;br/&gt;view.fit(geom, { padding })&lt;br/&gt;view.centerOn(coord, size, pixel)&quot;]
         GlobalPadding[&quot;模式二：全局视图级 (view-padding.html)&lt;br/&gt;new View({ padding: [...] })&lt;br/&gt;全局自动接管缩放、旋转与居中&quot;]
     end

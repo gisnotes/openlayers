@@ -80,27 +80,27 @@
 <hr>
 <h2 id="1-架构总览：openlayers-控件体系设计哲学">1. 架构总览：OpenLayers 控件体系设计哲学</h2>
 <pre><code class="language-mermaid">flowchart TD
-    subgraph HostPage [主页面布局 (Page DOM)]
+    subgraph HostPage [&quot;主页面布局 (Page DOM)&quot;]
         ExternalStatus[&quot;底部外部状态栏&lt;br/&gt;#mouse-position&quot;]
         MapContainer[&quot;地图容器&lt;br/&gt;#map (.ol-viewport)&quot;]
     end
 
-    subgraph InternalControls [内置控件容器 .ol-overlaycontainer-stopevent]
+    subgraph InternalControls [&quot;内置控件容器 .ol-overlaycontainer-stopevent&quot;]
         ZoomCtrl[&quot;ol/control/Zoom&lt;br/&gt;(放大/缩小)&quot;]
         ZoomExtentCtrl[&quot;ol/control/ZoomToExtent&lt;br/&gt;(苏黎世湖区范围复位)&quot;]
         OverviewCtrl[&quot;ol/control/OverviewMap&lt;br/&gt;(独立微缩子地图)&quot;]
     end
 
-    subgraph DualMapSync [双向空间联动管道]
+    subgraph DualMapSync [&quot;双向空间联动管道&quot;]
         MainView[&quot;主地图 View&lt;br/&gt;(center, resolution, rotation)&quot;]
         SubMap[&quot;鹰眼内部无头 Map&lt;br/&gt;(绘制红框指示器 / 视角同步)&quot;]
     end
 
     MapContainer --&gt; InternalControls
-    ExternalStatus &lt;--&gt;|target: document.getElementById| MousePositionCtrl[&quot;ol/control/MousePosition&lt;br/&gt;(坐标格式化与重投影)&quot;]
+    ExternalStatus &lt;--&gt;|&quot;指定外部挂载目标 target&quot;| MousePositionCtrl[&quot;ol/control/MousePosition&lt;br/&gt;(坐标格式化与重投影)&quot;]
 
-    ZoomCtrl &amp; ZoomExtentCtrl --&gt;|驱动| MainView
-    MainView &lt;--&gt;|事件监听与矩阵投影| DualMapSync
+    ZoomCtrl &amp; ZoomExtentCtrl --&gt;|&quot;驱动视口变换&quot;| MainView
+    MainView &lt;--&gt;|&quot;事件监听与矩阵投影&quot;| DualMapSync
     DualMapSync --&gt; OverviewCtrl
 </code></pre>
 <h3 id="11-四大导航控件核心特征对比">1.1 四大导航控件核心特征对比</h3>

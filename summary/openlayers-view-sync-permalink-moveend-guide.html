@@ -105,14 +105,14 @@
         MoveEndEvent[&quot;&#39;moveend&#39; 事件&lt;br/&gt;(用户拖拽/滚轮/惯性动画完全停止)&quot;]
     end
 
-    ViewState --&gt;|共享同一个 View 实例| Map1
-    ViewState --&gt;|共享同一个 View 实例| Map2
-    Map1 --&gt;|交互结束| MoveEndEvent
-    Map2 --&gt;|交互结束| MoveEndEvent
-    MoveEndEvent --&gt;|计算 Extent + wrapLon| ExtentInputs[&quot;四至坐标表单 (WGS84)&quot;]
-    MoveEndEvent --&gt;|状态序列化 (State Loop Guard 保护)| History
-    History --&gt;|状态还原| URL
-    History -.-&gt;|popstate (前进/后退)| ViewState
+    ViewState --&gt;|&quot;共享同一个 View 实例&quot;| Map1
+    ViewState --&gt;|&quot;共享同一个 View 实例&quot;| Map2
+    Map1 --&gt;|&quot;交互结束&quot;| MoveEndEvent
+    Map2 --&gt;|&quot;交互结束&quot;| MoveEndEvent
+    MoveEndEvent --&gt;|&quot;计算 Extent + wrapLon&quot;| ExtentInputs[&quot;四至坐标表单 (WGS84)&quot;]
+    MoveEndEvent --&gt;|&quot;状态序列化 (State Loop Guard 保护)&quot;| History
+    History --&gt;|&quot;状态还原&quot;| URL
+    History -.-&gt;|&quot;popstate (前进/后退)&quot;| ViewState
 </code></pre>
 <h3 id="11-三大核心机制对比分析">1.1 三大核心机制对比分析</h3>
 <table>
@@ -322,16 +322,16 @@ window.addEventListener(&#39;popstate&#39;, function (event) {
 <p>在多屏分屏对比（如遥感影像与规划矢量底图分屏）中，有两种实现机制：</p>
 <pre><code class="language-mermaid">graph LR
     subgraph Bad[&quot;❌ 传统事件监听法 (抖动与死循环隐患)&quot;]
-        M1[&quot;Map A&quot;] --&gt;|监听 pointerdrag| Sync1[&quot;跨图层 setCenter()&quot;]
+        M1[&quot;Map A&quot;] --&gt;|&quot;监听 pointerdrag&quot;| Sync1[&quot;跨图层 setCenter()&quot;]
         Sync1 --&gt; M2[&quot;Map B&quot;]
-        M2 --&gt;|监听 pointerdrag| Sync2[&quot;跨图层 setCenter()&quot;]
-        Sync2 -.-&gt;|递归死锁或帧延迟拖影| M1
+        M2 --&gt;|&quot;监听 pointerdrag&quot;| Sync2[&quot;跨图层 setCenter()&quot;]
+        Sync2 -.-&gt;|&quot;递归死锁或帧延迟拖影&quot;| M1
     end
 
     subgraph Good[&quot;✅ OpenLayers 共享 View 架构 (0 延迟/原生同步)&quot;]
         SharedView[&quot;ol/View (单一视口数学模型)&quot;]
-        SharedView --&gt;|驱动| MapA[&quot;Map A (DOM 容器 1)&quot;]
-        SharedView --&gt;|驱动| MapB[&quot;Map B (DOM 容器 2)&quot;]
+        SharedView --&gt;|&quot;驱动&quot;| MapA[&quot;Map A (DOM 容器 1)&quot;]
+        SharedView --&gt;|&quot;驱动&quot;| MapB[&quot;Map B (DOM 容器 2)&quot;]
     end
 </code></pre>
 <p>在共享 View 模式下：</p>

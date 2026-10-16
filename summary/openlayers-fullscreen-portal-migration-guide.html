@@ -85,19 +85,19 @@
 <hr>
 <h2 id="1-架构总览：打破单一-dom-容器桎梏的视口演进">1. 架构总览：打破单一 DOM 容器桎梏的视口演进</h2>
 <pre><code class="language-mermaid">stateDiagram-v2
-    [*] --&gt; LocalContainer: 初始化地图 (setTarget(&#39;map&#39;))
+    [*] --&gt; LocalContainer: 初始化地图容器
     
-    LocalContainer --&gt; FullscreenLocal: 点击全屏 (FullScreen)
-    FullscreenLocal --&gt; LocalContainer: 退出全屏 (Esc / 还原)
+    LocalContainer --&gt; FullscreenLocal: 点击全屏控件
+    FullscreenLocal --&gt; LocalContainer: 退出全屏或按Esc键
 
-    LocalContainer --&gt; FullscreenParent: 整体全屏 (source: &#39;parent&#39;)&lt;br/&gt;包含侧边栏看板
+    LocalContainer --&gt; FullscreenParent: 整体全屏放大至父级节点
     FullscreenParent --&gt; LocalContainer: 退出全屏
 
-    LocalContainer --&gt; ExternalWindow: 弹出独立窗口 (window.open)&lt;br/&gt;map.setTarget(childMapTarget)
-    ExternalWindow --&gt; LocalContainer: 子窗口关闭 (unload / pagehide)&lt;br/&gt;resetMapTarget() 归还主容器
+    LocalContainer --&gt; ExternalWindow: 弹出独立窗口并重设Target
+    ExternalWindow --&gt; LocalContainer: 子窗口关闭后归还主容器
 
-    LocalContainer --&gt; TeleportContainer: 动态瞬移 (map.setTarget(&#39;map2&#39;))&lt;br/&gt;多标签/多分屏无缝迁移
-    TeleportContainer --&gt; LocalContainer: 瞬移归位 (setTarget(&#39;map1&#39;))
+    LocalContainer --&gt; TeleportContainer: 动态瞬移至新DOM容器
+    TeleportContainer --&gt; LocalContainer: 瞬移归还原始容器
 </code></pre>
 <h3 id="11-四大视口拓扑模式对比">1.1 四大视口拓扑模式对比</h3>
 <table>

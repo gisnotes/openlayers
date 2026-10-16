@@ -229,8 +229,8 @@ $$\text{Resolution} = \frac{\text{EquatorLength} \times \cos(\text{latitude})}{2
 <li><strong>级别越小（Zoom 微观 $\to$ 宏观）</strong>：单个像素覆盖整个大洲甚至半球，$\text{Resolution}$ 数值<strong>急剧变大</strong>。</li>
 </ul>
 <pre><code class="language-mermaid">graph LR
-    ZoomLow[&quot;Zoom 0~4 (宏观大洲视角)&quot;] --&gt;|放大地图 (Zoom In)| ZoomHigh[&quot;Zoom 15~18 (微观街道视角)&quot;]
-    ResHigh[&quot;Resolution: 20000 ~ 2000 米/像素&lt;br/&gt;(数值极大)&quot;] --&gt;|数值减小| ResLow[&quot;Resolution: 200 ~ 1 米/像素&lt;br/&gt;(数值极小)&quot;]
+    ZoomLow[&quot;Zoom 0~4 (宏观大洲视角)&quot;] --&gt;|&quot;放大地图 (Zoom In)&quot;| ZoomHigh[&quot;Zoom 15~18 (微观街道视角)&quot;]
+    ResHigh[&quot;Resolution: 20000 ~ 2000 米/像素&lt;br/&gt;(数值极大)&quot;] --&gt;|&quot;数值减小&quot;| ResLow[&quot;Resolution: 200 ~ 1 米/像素&lt;br/&gt;(数值极小)&quot;]
 </code></pre>
 <h3 id="42-半开区间门控与无缝平滑交接">4.2 半开区间门控与无缝平滑交接</h3>
 <p>图层渲染器在每一帧通过闭开区间进行判定：

@@ -104,15 +104,15 @@
         Token[&quot;匿名地图会话协商 (Instantiation Token)&quot;]
     end
 
-    OSMSource --&gt;|可见时贡献版权| DynamicCollector
-    CartoSource --&gt;|动态切片流| DynamicCollector
+    OSMSource --&gt;|&quot;可见时贡献版权&quot;| DynamicCollector
+    CartoSource --&gt;|&quot;动态切片流&quot;| DynamicCollector
     DynamicCollector --&gt; ResponsiveState
     StaticConfig --&gt; ResponsiveState
-    ResponsiveState --&gt;|视口宽度 &lt; 600px 折叠为 &#39;i&#39;| MapView[&quot;地图视口 UI (右下角)&quot;]
+    ResponsiveState --&gt;|&quot;视口宽度 &lt; 600px 折叠为 &#39;i&#39;&quot;| MapView[&quot;地图视口 UI (右下角)&quot;]
 
-    Config --&gt;|setConfig(mapConfig)| CartoSource
-    CartoSource &lt;--&gt;|HTTP POST 协商 Token| CloudEngine
-    CloudPostGIS --&gt;|生成 WebP/PNG 瓦片流| CartoSource
+    Config --&gt;|&quot;setConfig(mapConfig)&quot;| CartoSource
+    CartoSource &lt;--&gt;|&quot;HTTP POST 协商 Token&quot;| CloudEngine
+    CloudPostGIS --&gt;|&quot;生成 WebP/PNG 瓦片流&quot;| CartoSource
 </code></pre>
 <h3 id="11-三大核心技术模式对比">1.1 三大核心技术模式对比</h3>
 <table>

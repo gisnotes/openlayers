@@ -84,32 +84,32 @@
 <hr>
 <h2 id="1-架构总览：shadow-dom-隔离与无障碍事件流">1. 架构总览：Shadow DOM 隔离与无障碍事件流</h2>
 <pre><code class="language-mermaid">flowchart TD
-    subgraph HostDocument [主文档 / 业务页面 (Host DOM)]
+    subgraph HostDocument [&quot;主文档 / 业务页面 (Host DOM)&quot;]
         SkipLink[&quot;无障碍跳跃链接&lt;br/&gt;&amp;lt;a href=&#39;#map&#39;&amp;gt;&quot;]
         ExternalBtn[&quot;语义化控制按钮&lt;br/&gt;&amp;lt;button&amp;gt; Zoom +/-&quot;]
         CustomTag[&quot;自定义元素宿主&lt;br/&gt;&amp;lt;ol-map tabindex=&#39;0&#39;&amp;gt;&quot;]
     end
 
-    subgraph ShadowDOMBoundary [Shadow DOM 独立作用域边界]
+    subgraph ShadowDOMBoundary [&quot;Shadow DOM 独立作用域边界&quot;]
         HostStyle[&quot;:host { display: block; }&quot;]
         ScopedCSS[&quot;隔离样式表 theme/ol.css&quot;]
         MapDiv[&quot;内部挂载容器 &amp;lt;div&amp;gt;&quot;]
     end
 
-    subgraph OLMapEngine [OpenLayers 地图引擎]
+    subgraph OLMapEngine [&quot;OpenLayers 地图引擎&quot;]
         ViewSystem[&quot;View (中心点 / 缩放层级)&quot;]
         KeyboardInteraction[&quot;内置交互器: KeyboardPan &amp; KeyboardZoom&quot;]
         LayerRender[&quot;瓦片底图渲染 (OSM)&quot;]
     end
 
-    SkipLink --&gt;|Tab 聚焦直接跳转| CustomTag
-    ExternalBtn --&gt;|点击 / Enter 触发| ViewSystem
-    CustomTag --&gt;|attachShadow({mode:&#39;open&#39;})| ShadowDOMBoundary
+    SkipLink --&gt;|&quot;Tab 聚焦直接跳转&quot;| CustomTag
+    ExternalBtn --&gt;|&quot;点击 / Enter 触发&quot;| ViewSystem
+    CustomTag --&gt;|&quot;attachShadow({mode:&#39;open&#39;})&quot;| ShadowDOMBoundary
     ShadowDOMBoundary --&gt; MapDiv
     MapDiv --&gt; OLMapEngine
 
-    CustomTag -.-&gt;|键盘事件穿透 (composed: true)| KeyboardInteraction
-    KeyboardInteraction --&gt;|驱动视口漫游/缩放| ViewSystem
+    CustomTag -.-&gt;|&quot;键盘事件穿透 (composed: true)&quot;| KeyboardInteraction
+    KeyboardInteraction --&gt;|&quot;驱动视口漫游/缩放&quot;| ViewSystem
 </code></pre>
 <h3 id="11-核心方案选型特征对比">1.1 核心方案选型特征对比</h3>
 <table>

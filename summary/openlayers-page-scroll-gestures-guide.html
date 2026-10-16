@@ -83,8 +83,8 @@
 <p>在现代响应式网页中，当全宽或大尺寸地图嵌入在长页面（包含上下滚动条的网页）正文中时，经常发生极为糟糕的用户体验事故——<strong>地图陷阱（Map / Scroll Trap）</strong>：</p>
 <pre><code class="language-mermaid">flowchart TD
     UserScroll([&quot;用户在手机/触控板上单指上下滑动网页&quot;]) --&gt; HitMap{&quot;光标/触点是否进入地图 DOM 区域?&quot;}
-    HitMap --&gt;|是 (未做手势隔离)| TrapMode[&quot;地图事件拦截器捕获 wheel / touchmove&lt;br/&gt;阻断网页原生滚动&lt;br/&gt;导致地图不断异常缩放/移位，用户卡在地图内无法翻页&quot;]
-    HitMap --&gt;|是 (已配置双指隔离)| SafeMode[&quot;单指滑动: 透传为浏览器原生页面滚动 (流畅阅读)&lt;br/&gt;双指滑动: 激活地图平移漫游与捏合缩放&quot;]
+    HitMap --&gt;|&quot;是 (未做手势隔离)&quot;| TrapMode[&quot;地图事件拦截器捕获 wheel / touchmove&lt;br/&gt;阻断网页原生滚动&lt;br/&gt;导致地图不断异常缩放/移位，用户卡在地图内无法翻页&quot;]
+    HitMap --&gt;|&quot;是 (已配置双指隔离)&quot;| SafeMode[&quot;单指滑动: 透传为浏览器原生页面滚动 (流畅阅读)&lt;br/&gt;双指滑动: 激活地图平移漫游与捏合缩放&quot;]
     SafeMode --&gt; TipCheck{&quot;是否为单指误触地图?&quot;}
     TipCheck --&gt;|是| ShowOverlay[&quot;淡入提示: &#39;使用双指移动或缩放地图&#39; (持续 1.5 秒后自动隐退)&quot;]
 </code></pre>

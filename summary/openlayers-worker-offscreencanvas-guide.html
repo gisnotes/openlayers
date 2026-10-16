@@ -81,34 +81,34 @@
 <h2 id="1-架构总览：两种离屏多线程渲染范式">1. 架构总览：两种离屏多线程渲染范式</h2>
 <p>根据渲染粒度与生命周期的不同，OpenLayers 在 Web Worker 中的实践分为两大流派：</p>
 <pre><code class="language-mermaid">flowchart TD
-    subgraph MainThread [主线程 (Main Thread / UI &amp; Gesture)]
+    subgraph MainThread [&quot;主线程 (Main Thread / UI &amp; Gesture)&quot;]
         UserGesture[&quot;用户缩放/平移手势&lt;br/&gt;(60-120 FPS 极速响应)&quot;]
         TransformComp[&quot;仿射变换补偿器&lt;br/&gt;updateContainerTransform()&quot;]
         DisplayCanvas[&quot;宿主画布 / DOM 容器&quot;]
     end
 
-    subgraph Mode1 [范式一：全幅委托架构 (offscreen-canvas)]
+    subgraph Mode1 [&quot;范式一：全幅委托架构 (offscreen-canvas)&quot;]
         WorkerFull[&quot;Worker 全图渲染器&quot;]
         HeadlessMVT[&quot;Mapbox 矢量瓦片引擎&lt;br/&gt;MVT 解码 + 样式排版&quot;]
         OffCanvasFull[&quot;OffscreenCanvas (全屏尺寸)&quot;]
     end
 
-    subgraph Mode2 [范式二：瓦片级微任务架构 (tiled-layer)]
+    subgraph Mode2 [&quot;范式二：瓦片级微任务架构 (tiled-layer)&quot;]
         TileLoader[&quot;ImageTileSource.loader&quot;]
         WorkerPool[&quot;Worker 瓦片烘焙池&quot;]
         OffCanvasTile[&quot;OffscreenCanvas (512×512)&quot;]
     end
 
-    UserGesture --&gt;|同步状态| TransformComp
+    UserGesture --&gt;|&quot;同步状态&quot;| TransformComp
     TransformComp --&gt; DisplayCanvas
 
-    UserGesture -.-&gt;|postMessage 异步帧状态| WorkerFull
+    UserGesture -.-&gt;|&quot;postMessage 异步帧状态&quot;| WorkerFull
     WorkerFull --&gt; HeadlessMVT --&gt; OffCanvasFull
-    OffCanvasFull --&gt;|ImageBitmap 零拷贝传输| DisplayCanvas
+    OffCanvasFull --&gt;|&quot;ImageBitmap 零拷贝传输&quot;| DisplayCanvas
 
-    TileLoader -.-&gt;|请求单个切片 [z,x,y]| WorkerPool
+    TileLoader -.-&gt;|&quot;请求单个切片 [z,x,y]&quot;| WorkerPool
     WorkerPool --&gt; OffCanvasTile
-    OffCanvasTile --&gt;|ImageBitmap| TileLoader --&gt; DisplayCanvas
+    OffCanvasTile --&gt;|&quot;ImageBitmap&quot;| TileLoader --&gt; DisplayCanvas
 </code></pre>
 <h3 id="11-两种离屏方案综合特征对比">1.1 两种离屏方案综合特征对比</h3>
 <table>

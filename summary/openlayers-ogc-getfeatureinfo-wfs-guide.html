@@ -83,33 +83,37 @@
 <hr>
 <h2 id="1-架构总览：ogc-webgis-空间交互的两大范式">1. 架构总览：OGC WebGIS 空间交互的两大范式</h2>
 <pre><code class="language-mermaid">flowchart TD
-    subgraph ClientLayer [客户端交互与展示]
+    subgraph ClientLayer [&quot;客户端交互与展示&quot;]
         MapClick[&quot;用户鼠标点击地图 (单点坐标)&quot;]
         MapHover[&quot;用户鼠标光标悬停 (像素拾取)&quot;]
         WFSQuery[&quot;复杂属性/空间条件检索&quot;]
     end
 
-    subgraph WMSPipeline [范式一：WMS 栅格渲染与属性穿透]
+    subgraph WMSPipeline [&quot;范式一：WMS 栅格渲染与属性穿透&quot;]
         GetPixel[&quot;layer.getData(pixel)&lt;br/&gt;Alpha 通道检测 (零网络开销)&quot;]
         GetInfoUrl[&quot;wmsSource.getFeatureInfoUrl()&lt;br/&gt;计算切片/视口局部 BBOX 与 (I, J)&quot;]
     end
 
-    subgraph WFSPipeline [范式二：WFS 矢量实体几何获取]
+    subgraph WFSPipeline [&quot;范式二：WFS 矢量实体几何获取&quot;]
         FilterBuilder[&quot;ol/format/filter 复合过滤器&lt;br/&gt;andFilter(like, equalTo)&quot;]
         WFSXML[&quot;new WFS().writeGetFeature()&lt;br/&gt;XML 序列化&quot;]
     end
 
-    subgraph GISServer [GIS 服务器 (GeoServer / MapServer)]
+    subgraph GISServer [&quot;GIS 服务器 (GeoServer / MapServer)&quot;]
         RasterEngine[&quot;WMS 渲染引擎&lt;br/&gt;出图 PNG/JPEG&quot;]
         FeatureEngine[&quot;WFS 空间数据引擎&lt;br/&gt;查询 PostGIS 返回 GeoJSON&quot;]
     end
 
-    MapHover --&gt; GetPixel --&gt;|data[3] &gt; 0| HandCursor[&quot;光标切换为 pointer 手型&quot;]
-    MapClick --&gt; GetInfoUrl --&gt;|HTTP GET GetFeatureInfo| RasterEngine
-    RasterEngine --&gt;|返回 HTML/JSON 属性详情| InfoWindow[&quot;展示要素属性弹窗&quot;]
+    MapHover --&gt; GetPixel
+    GetPixel --&gt;|&quot;Alpha &gt; 0&quot;| HandCursor[&quot;光标切换为 pointer 手型&quot;]
+    MapClick --&gt; GetInfoUrl
+    GetInfoUrl --&gt;|&quot;HTTP GET GetFeatureInfo&quot;| RasterEngine
+    RasterEngine --&gt;|&quot;返回 HTML/JSON 属性详情&quot;| InfoWindow[&quot;展示要素属性弹窗&quot;]
 
-    WFSQuery --&gt; FilterBuilder --&gt; WFSXML --&gt;|HTTP POST XML| FeatureEngine
-    FeatureEngine --&gt;|返回标准 GeoJSON| VectorLayer[&quot;动态注入 VectorSource&lt;br/&gt;view.fit() 自动聚焦&quot;]
+    WFSQuery --&gt; FilterBuilder
+    FilterBuilder --&gt; WFSXML
+    WFSXML --&gt;|&quot;HTTP POST XML&quot;| FeatureEngine
+    FeatureEngine --&gt;|&quot;返回标准 GeoJSON&quot;| VectorLayer[&quot;动态注入 VectorSource&lt;br/&gt;view.fit() 自动聚焦&quot;]
 </code></pre>
 <h3 id="11-两种-ogc-交互模式综合特征对比">1.1 两种 OGC 交互模式综合特征对比</h3>
 <table>

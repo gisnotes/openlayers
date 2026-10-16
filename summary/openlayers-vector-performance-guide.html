@@ -137,13 +137,13 @@
 <hr>
 <h2 id="2-渲染模式决战：vectorlayer-vs-vectorimagelayer">2. 渲染模式决战：<code>VectorLayer</code> vs <code>VectorImageLayer</code></h2>
 <pre><code class="language-mermaid">flowchart TD
-    subgraph Mode1 [模式一：ol/layer/Vector (实时矢量渲染)]
+    subgraph Mode1 [&quot;模式一：ol/layer/Vector (实时矢量渲染)&quot;]
         V1[&quot;平移/缩放每一帧&quot;] --&gt; V2[&quot;遍历视口内全部几何顶点&quot;]
         V2 --&gt; V3[&quot;Canvas 2D 重新描边与填充&quot;]
         V3 --&gt; V4[&quot;优点：文字永远锐利高清&lt;br/&gt;缺点：海量复杂面平移掉帧严重&quot;]
     end
 
-    subgraph Mode2 [模式二：ol/layer/VectorImage (离屏栅格化预渲染)]
+    subgraph Mode2 [&quot;模式二：ol/layer/VectorImage (离屏栅格化预渲染)&quot;]
         VI1[&quot;平移漫游&quot;] --&gt; VI2[&quot;将预先渲染好的离屏图片快速拉伸/位移&quot;]
         VI2 --&gt; VI3[&quot;零几何计算，极速 blit 到屏幕&quot;]
         VI3 --&gt; VI4[&quot;优点：平移漫游锁死 60 FPS&lt;br/&gt;缺点：连续快速缩放时偶有轻微模糊&quot;]

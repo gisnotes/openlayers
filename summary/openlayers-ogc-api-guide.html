@@ -84,21 +84,21 @@
 <h2 id="1-架构总览：从传统-ows-到-ogc-api-的代际演进">1. 架构总览：从传统 OWS 到 OGC API 的代际演进</h2>
 <h3 id="11-传统-ows-vs-新一代-ogc-api-架构对比">1.1 传统 OWS vs 新一代 OGC API 架构对比</h3>
 <pre><code class="language-mermaid">flowchart TD
-    subgraph LegacyOWS [传统 OWS 时代 (1999-2015)]
+    subgraph LegacyOWS [&quot;传统 OWS 时代 (1999-2015)&quot;]
         direction TB
         WMS[&quot;WMS 1.3.0 (复杂 Key-Value-Pair / XML)&quot;]
         WMTS[&quot;WMTS 1.0.0 (庞大 GetCapabilities XML)&quot;]
         WFS[&quot;WFS 2.0 (Filter Encoding XML POST)&quot;]
     end
 
-    subgraph ModernOGCAPI [现代 OGC API 时代 (OpenAPI / RESTful)]
+    subgraph ModernOGCAPI [&quot;现代 OGC API 时代 (OpenAPI / RESTful)&quot;]
         direction TB
         OGCMaps[&quot;OGC API - Maps (/collections/{id}/map)&quot;]
         OGCTiles[&quot;OGC API - Tiles (/collections/{id}/tiles/{matrixSet}/{z}/{y}/{x})&quot;]
         OGCFeatures[&quot;OGC API - Features (/collections/{id}/items?bbox=...)&quot;]
     end
 
-    subgraph OpenLayersClient [OpenLayers 客户端支持]
+    subgraph OpenLayersClient [&quot;OpenLayers 客户端支持&quot;]
         SourceMapTile[&quot;ol/source/OGCMapTile (栅格切片)&quot;]
         SourceVectorTile[&quot;ol/source/OGCVectorTile (MVT/GeoJSON 矢量切片)&quot;]
         SourceVector[&quot;ol/source/Vector + GeoJSON (要素集合)&quot;]
