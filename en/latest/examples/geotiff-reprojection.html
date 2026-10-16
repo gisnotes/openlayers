@@ -357,39 +357,6 @@ source.getView().then((sourceView) &#x3D;&gt; {
         renderMath();
       });
     </script>
-    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        function renderMermaid() {
-          if (window.mermaid) {
-            if (window.__mermaidInitialized) {
-              return;
-            }
-            window.__mermaidInitialized = true;
-            mermaid.initialize({
-              startOnLoad: false,
-              theme: 'default',
-              securityLevel: 'loose'
-            });
-            const codeBlocks = document.querySelectorAll('pre code.language-mermaid, pre code.mermaid');
-            if (codeBlocks.length > 0) {
-              codeBlocks.forEach(function (el) {
-                const pre = el.parentElement;
-                const wrapper = pre.closest('.code-toolbar') || pre;
-                const div = document.createElement('div');
-                div.className = 'mermaid';
-                div.textContent = el.textContent;
-                wrapper.parentElement.replaceChild(div, wrapper);
-              });
-              mermaid.run();
-            }
-          } else {
-            setTimeout(renderMermaid, 50);
-          }
-        }
-        renderMermaid();
-      });
-    </script>
     <script src="./resources/common.js"></script>
     <script>
       document.getElementById('tag-example-list')

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - OpenLayers 页面滚动防误触与移动端双指交互实战指南 (Page Scroll, Two-Finger Pan &amp; Gesture Control)</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">页面滚动与双指手势指南</li></ol></nav>
+
+<h1 id="openlayers-页面滚动防误触与移动端双指交互实战指南">OpenLayers 页面滚动防误触与移动端双指交互实战指南</h1>
+<blockquote>
+<p>针对长篇图文报告、门户新闻、数据大屏等嵌入式地图场景中常见的“滚轮陷阱（Scroll Trap）”，系统解构滚轮条件约束、移动端双指漫游（Two-Finger Pan）、以及桌面触控板平滑手势拦截与遮罩引导设计。</p>
+</blockquote>
+<hr>
+<h2 id="1-核心痛点与地图陷阱现象">1. 核心痛点与“地图陷阱”现象</h2>
+<p>在现代响应式网页中，当全宽或大尺寸地图嵌入在长页面（包含上下滚动条的网页）正文中时，经常发生极为糟糕的用户体验事故——<strong>地图陷阱（Map / Scroll Trap）</strong>：</p>
+<pre><code class="language-mermaid">flowchart TD
+    UserScroll([&quot;用户在手机/触控板上单指上下滑动网页&quot;]) --&gt; HitMap{&quot;光标/触点是否进入地图 DOM 区域?&quot;}
+    HitMap --&gt;|是 (未做手势隔离)| TrapMode[&quot;地图事件拦截器捕获 wheel / touchmove&lt;br/&gt;阻断网页原生滚动&lt;br/&gt;导致地图不断异常缩放/移位，用户卡在地图内无法翻页&quot;]
+    HitMap --&gt;|是 (已配置双指隔离)| SafeMode[&quot;单指滑动: 透传为浏览器原生页面滚动 (流畅阅读)&lt;br/&gt;双指滑动: 激活地图平移漫游与捏合缩放&quot;]
+    SafeMode --&gt; TipCheck{&quot;是否为单指误触地图?&quot;}
+    TipCheck --&gt;|是| ShowOverlay[&quot;淡入提示: &#39;使用双指移动或缩放地图&#39; (持续 1.5 秒后自动隐退)&quot;]
+</code></pre>
+<hr>
+<h2 id="2-官方示例矩阵解构">2. 官方示例矩阵解构</h2>
+<table>
+<thead>
+<tr>
+<th align="left">示例标识</th>
+<th align="left">核心实现机制</th>
+<th align="left">典型生产应用场景</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><a href="../en/latest/examples/page-scroll.html"><code>page-scroll</code></a></td>
+<td align="left"><code>MouseWheelZoom</code> 绑定 <code>platformModifierKeyOnly</code> + 嵌入长文本滚动流</td>
+<td align="left">新闻特稿、博客、电子政务门户长文档内嵌交互式插图地图</td>
+</tr>
+<tr>
+<td align="left"><a href="../en/latest/examples/two-finger-pan-scroll.html"><code>two-finger-pan-scroll</code></a></td>
+<td align="left"><code>DragPan</code> 条件绑定单指/双指判断 + 动态触摸浮层指引</td>
+<td align="left">移动端 H5 混合应用、微信公众号内嵌地图、手机端数据看板</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="3-核心实现与典型范式">3. 核心实现与典型范式</h2>
+<h3 id="31-桌面端平台修饰键约束（ctrl--cmd--滚轮）">3.1 桌面端平台修饰键约束（Ctrl / Cmd + 滚轮）</h3>
+<p>在 <code>page-scroll.html</code> 中，通过约束默认的 <code>MouseWheelZoom</code> 交互，只有在按住修饰键时才允许缩放：</p>
+<pre><code class="language-javascript">import Map from &#39;ol/Map&#39;;
+import View from &#39;ol/View&#39;;
+import TileLayer from &#39;ol/layer/Tile&#39;;
+import OSM from &#39;ol/source/OSM&#39;;
+import {defaults as defaultInteractions, MouseWheelZoom} from &#39;ol/interaction&#39;;
+import {platformModifierKeyOnly} from &#39;ol/events/condition&#39;;
+
+const map = new Map({
+  target: &#39;map&#39;,
+  layers: [new TileLayer({source: new OSM()})],
+  view: new View({center: [0, 0], zoom: 2}),
+  // 自定义交互集合
+  interactions: defaultInteractions({
+    mouseWheelZoom: false, // 禁用默认的无限制滚轮缩放
+  }).extend([
+    new MouseWheelZoom({
+      // 只有在按下 Ctrl (Windows/Linux) 或 Command (macOS) 时，滚轮才生效
+      condition: platformModifierKeyOnly,
+    }),
+  ]),
+});
+</code></pre>
+<hr>
+<h3 id="32-移动端双指漫游与单指透传范式">3.2 移动端双指漫游与单指透传范式</h3>
+<p>在 <code>two-finger-pan-scroll.html</code> 中，展示了类似 Apple Maps 和 Google Maps 的移动端体验标准：</p>
+<pre><code class="language-javascript">import DragPan from &#39;ol/interaction/DragPan&#39;;
+
+// 自定义 DragPan 条件：触点数 &gt;= 2 时才激活平移
+const twoFingerDragPan = new DragPan({
+  condition: function (event) {
+    // 检查原始触摸事件中的接触点数量
+    const origEvent = event.originalEvent;
+    return origEvent.touches &amp;&amp; origEvent.touches.length &gt;= 2;
+  },
+});
+
+// 结合手势提示遮罩
+let timeoutId;
+map.getViewport().addEventListener(&#39;touchmove&#39;, function (evt) {
+  if (evt.touches.length === 1) {
+    // 单指滑动地图时，显示提示覆盖层
+    const overlay = document.getElementById(&#39;gesture-tip&#39;);
+    overlay.classList.add(&#39;visible&#39;);
+    clearTimeout(timeoutId);
+    timeoutId = setTimeout(() =&gt; overlay.classList.remove(&#39;visible&#39;), 1500);
+  }
+});
+</code></pre>
+<hr>
+<h2 id="4-生产避坑指南与性能治理">4. 生产避坑指南与性能治理</h2>
+<h3 id="41-提示遮罩层必须设置-pointer-events-none">4.1 提示遮罩层必须设置 <code>pointer-events: none</code></h3>
+<ul>
+<li><strong>高危陷阱</strong>：弹出的“请使用双指移动地图”提示层如果是一个常规的 <code>&lt;div&gt;</code>，它会阻断底层的触摸事件传播，导致用户在看到提示后即便换成双指也无法操作。</li>
+<li><strong>解法</strong>：手势遮罩必须声明：<pre><code class="language-css">#gesture-tip {
+  pointer-events: none; /* 保证触控事件完全穿透至底层地图 */
+  transition: opacity 0.3s ease;
+}
+</code></pre>
+</li>
+</ul>
+<h3 id="42-避免使用全局-preventdefault">4.2 避免使用全局 <code>preventDefault()</code></h3>
+<ul>
+<li>很多开发者试图在 <code>touchstart</code> 或 <code>touchmove</code> 上直接调用 <code>event.preventDefault()</code>。</li>
+<li><strong>严重事故</strong>：在移动端浏览器（尤其是 iOS Safari）中，这会直接把整个父级 Web 页面的原生垂直滚动完全锁死。正确的做法是完全交由 OpenLayers 的内部事件条件机制控制。</li>
+</ul>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMermaid() {
+          if (window.mermaid) {
+            if (window.__mermaidInitialized) {
+              return;
+            }
+            window.__mermaidInitialized = true;
+            mermaid.initialize({
+              startOnLoad: false,
+              theme: 'default',
+              securityLevel: 'loose'
+            });
+            const codeBlocks = document.querySelectorAll('pre code.language-mermaid, pre code.mermaid');
+            if (codeBlocks.length > 0) {
+              codeBlocks.forEach(function (el) {
+                const pre = el.parentElement;
+                const wrapper = pre.closest('.code-toolbar') || pre;
+                const div = document.createElement('div');
+                div.className = 'mermaid';
+                div.textContent = el.textContent;
+                wrapper.parentElement.replaceChild(div, wrapper);
+              });
+              mermaid.run();
+            }
+          } else {
+            setTimeout(renderMermaid, 50);
+          }
+        }
+        renderMermaid();
+      });
+    </script>
+  </body>
+</html>

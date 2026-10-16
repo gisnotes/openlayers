@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>OpenLayers - OpenLayers 多地图并排联动、视口同步与长页面交互全景实战指南 (Side-by-Side Sync, View Padding &amp; Page Scroll)</title>
+    <title>OpenLayers - OpenLayers 双屏多屏分屏联动与视口状态同步实战指南 (Side-by-Side, View Sync &amp; Reusable Source)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
@@ -18,7 +18,6 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
   </head>
   <body>
     <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
@@ -73,91 +72,78 @@
     </header>
 
     <div class="container">
-      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">多图联动与长页面交互指南</li></ol></nav>
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">分屏联动与视口同步指南</li></ol></nav>
 
-<h1 id="openlayers-多地图并排联动、视口同步与长页面交互全景实战指南">OpenLayers 多地图并排联动、视口同步与长页面交互全景实战指南</h1>
+<h1 id="openlayers-双屏多屏分屏联动与视口状态同步实战指南">OpenLayers 双屏多屏分屏联动与视口状态同步实战指南</h1>
 <blockquote>
-<p>在现代数字孪生看板、遥感双屏比对大屏、以及富文本门户网站中，地图不再总是以孤立的全屏单一实例出现。</p>
-<p>开发者经常面临复杂的布局交互挑战：</p>
-<ol>
-<li><strong>双图/多图联动</strong>：左屏显示矢量路网，右屏显示卫星影像，拖拽任意一侧，另一侧需毫秒级保持中心与层级完全同步；</li>
-<li><strong>侧边栏与浮层遮挡</strong>：当左侧弹出业务分析面板时，地图几何要素需要自动避开遮挡，居中在“净空可视区域”；</li>
-<li><strong>DOM 容器热迁移（Teleport）</strong>：在弹窗展开或多 Tab 切换时迁移地图 DOM，而不能重新初始化地图导致状态丢失；</li>
-<li><strong>长网页滚轮冲突</strong>：用户上下滚动浏览网页文章时，光标一旦滑过地图区域，网页滚动被劫持变成了地图缩放。</li>
-</ol>
-<p>本文基于 5 个核心官方示例，系统解构多地图同步、视口动态 Padding、容器热漂移以及长页面手势冲突治理方案。</p>
+<p>针对规划前后对比大屏、跨时期多屏同步对比以及指挥中心双屏联动等经典场景，系统解构共享 View 零死循环架构、独立 View 双向事件锁、十字准星指针联动以及单数据源多地图复用（Reusable Source）优化技巧。</p>
 </blockquote>
 <hr>
-<h2 id="1-架构总览：5-个多图联动与复杂交互官方示例矩阵">1. 架构总览：5 个多图联动与复杂交互官方示例矩阵</h2>
+<h2 id="1-核心架构：共享-view-vs-双向事件同步">1. 核心架构：共享 View vs 双向事件同步</h2>
+<p>在实现两个或多个地图视口联动时，很多开发者习惯在两个 Map 上各自注册 <code>change:center</code> 监听器并互相调用 <code>setCenter</code>，极易因精度舍入误差引发可怕的<strong>事件无限震荡死循环（Event Loop Ping-Pong）</strong>。</p>
+<p>在 OpenLayers 的松耦合架构中，官方推荐了两种截然不同但优雅稳健的解决方案：</p>
+<pre><code class="language-mermaid">flowchart TD
+    subgraph SharedViewMode [&quot;方案 A: 共享单一 View 实例 (推荐首选)&quot;]
+        direction TB
+        ViewInstance[&quot;单一 View 实例&lt;br/&gt;(内部维护统一的中心点、缩放与旋转角)&quot;]
+        MapA[&quot;Map 实例 A (承载底图图层 A)&quot;]
+        MapB[&quot;Map 实例 B (承载对比图层 B)&quot;]
+        ViewInstance --&gt; MapA
+        ViewInstance --&gt; MapB
+        NoteA[&quot;零死循环风险、零时延抖动&lt;br/&gt;底层自动派发同步重绘通知&quot;]
+    end
+
+    subgraph DecoupledMode [&quot;方案 B: 解耦 View + 防死循环事件锁&quot;]
+        direction TB
+        ViewA[&quot;View A&quot;] &lt;--&gt;|事件通知带锁 isUpdating| ViewB[&quot;View B&quot;]
+        NoteB[&quot;适用于需要自由控制同步粒度的场景&lt;br/&gt;(例如：仅同步中心点，缩放级别各自独立)&quot;]
+    end
+</code></pre>
+<hr>
+<h2 id="2-官方示例矩阵解构">2. 官方示例矩阵解构</h2>
 <table>
 <thead>
 <tr>
-<th align="left">分类</th>
 <th align="left">示例标识</th>
-<th align="left">核心技术机制</th>
-<th align="left">解决的典型生产场景</th>
+<th align="left">核心实现机制</th>
+<th align="left">典型生产应用场景</th>
 </tr>
 </thead>
 <tbody><tr>
-<td align="left"><strong>双图并排联动</strong></td>
 <td align="left"><a href="../en/latest/examples/side-by-side.html"><code>side-by-side</code></a></td>
-<td align="left">多 <code>Map</code> 实例共享同一个 <code>View</code> 实例</td>
-<td align="left">左右分屏/四分屏对比，拖拽缩放 100% 物理级同步</td>
+<td align="left">将同一个 <code>ol/View</code> 实例同时挂载至两个独立的 <code>ol/Map</code> 容器</td>
+<td align="left">街道底图与卫星遥感图双屏实时并排漫游比对</td>
 </tr>
 <tr>
-<td align="left"><strong>视口可视内边距</strong></td>
-<td align="left"><a href="../en/latest/examples/view-padding.html"><code>view-padding</code></a></td>
-<td align="left"><code>view.padding: [top, right, bottom, left]</code></td>
-<td align="left">侧边栏/底部抽屉展开时，几何图元智能锚定在有效视窗中央</td>
-</tr>
-<tr>
-<td align="left"><strong>容器 DOM 热迁移</strong></td>
-<td align="left"><a href="../en/latest/examples/teleport.html"><code>teleport</code></a></td>
-<td align="left"><code>map.setTarget(domNode)</code> 动态切换容器</td>
-<td align="left">弹窗放大、多标签页切换无损保留切片缓存与交互状态</td>
-</tr>
-<tr>
-<td align="left"><strong>网页滚动解耦</strong></td>
-<td align="left"><a href="../en/latest/examples/page-scroll.html"><code>page-scroll</code></a></td>
-<td align="left"><code>MouseWheelZoom</code> 条件拦截与页面滚动协同</td>
-<td align="left">博客、新闻长页面中嵌入小地图，滚轮优先滚动网页而非缩放</td>
-</tr>
-<tr>
-<td align="left"><strong>双指触控平移</strong></td>
-<td align="left"><a href="../en/latest/examples/two-finger-pan-scroll.html"><code>two-finger-pan-scroll</code></a></td>
-<td align="left"><code>DragPan</code> 绑定双指触控手势（Two-finger pan）</td>
-<td align="left">移动端移动网页上下滑动与地图拖拽完全分离</td>
+<td align="left"><a href="../en/latest/examples/reusable-source.html"><code>reusable-source</code></a></td>
+<td align="left">单一数据源（Source）同时挂载至多个不同样式/不同投影的图层</td>
+<td align="left">共享瓦片网络请求与内存缓存，节省 50% 内存消耗</td>
 </tr>
 </tbody></table>
 <hr>
-<h2 id="2-多地图并排联动的两种架构方案（side-by-side）">2. 多地图并排联动的两种架构方案（<code>side-by-side</code>）</h2>
-<h3 id="21-方案-a：共享单个-view-实例（极简推荐）">2.1 方案 A：共享单个 View 实例（极简推荐）</h3>
-<p>当多个地图使用相同的坐标系与投影时，最优雅的解法是直接让两个 <code>Map</code> 实例引用同一个 <code>View</code> 对象。底层完全无需事件监听与状态中继：</p>
-<pre><code class="language-mermaid">flowchart TD
-    UserAction[&quot;用户在 Map A 拖拽或缩放&quot;] --&gt; View[&quot;唯一的共享 View 实例 (Center, Resolution, Rotation)&quot;]
-    View --&gt;|触发内部变更| MapA[&quot;Map A: 即时重绘&quot;]
-    View --&gt;|触发内部变更| MapB[&quot;Map B: 严格同步重绘&quot;]
-</code></pre>
-<pre><code class="language-javascript">import Map from &#39;ol/Map.js&#39;;
-import View from &#39;ol/View.js&#39;;
-import TileLayer from &#39;ol/layer/Tile.js&#39;;
-import OSM from &#39;ol/source/OSM.js&#39;;
-import XYZ from &#39;ol/source/XYZ.js&#39;;
+<h2 id="3-核心实现与典型范式">3. 核心实现与典型范式</h2>
+<h3 id="31-极简优雅的共享单一-view-范式">3.1 极简优雅的共享单一 View 范式</h3>
+<p>在 <code>side-by-side.html</code> 中，展示了实现两屏或四屏 100% 绝对同步的最简实现：</p>
+<pre><code class="language-javascript">import Map from &#39;ol/Map&#39;;
+import View from &#39;ol/View&#39;;
+import TileLayer from &#39;ol/layer/Tile&#39;;
+import OSM from &#39;ol/source/OSM&#39;;
+import XYZ from &#39;ol/source/XYZ&#39;;
 
-// 1. 创建全局唯一共享视图
+// 1. 核心关键：仅创建一个全局唯一的 View 实例
 const sharedView = new View({
   center: [0, 0],
-  zoom: 2,
+  zoom: 3,
 });
 
-// 2. 左侧地图：OpenStreetMap 路网
+// 2. 左屏地图：加载 OpenStreetMap 标准路网
 const map1 = new Map({
   target: &#39;map1&#39;,
-  layers: [new TileLayer({ source: new OSM() })],
+  layers: [new TileLayer({source: new OSM()})],
   view: sharedView, // 绑定共享视图
 });
 
-// 3. 右侧地图：卫星遥感影像
+// 3. 右屏地图：加载 Esri 卫星影像
 const map2 = new Map({
   target: &#39;map2&#39;,
   layers: [
@@ -167,85 +153,54 @@ const map2 = new Map({
       }),
     }),
   ],
-  view: sharedView, // 绑定相同视图
+  view: sharedView, // 绑定完全相同的视图实例
 });
 </code></pre>
-<h3 id="22-方案-b：独立-view-事件中继与死循环规避">2.2 方案 B：独立 View 事件中继与死循环规避</h3>
-<p>如果两个地图投影不同（如左图 EPSG:3857，右图 EPSG:4326），则必须创建两个独立的 <code>View</code> 并通过事件同步。</p>
-<blockquote>
-<p>[!CAUTION]
-必须引入互斥锁（Flag / Mutex），否则 Map A 变更触发 Map B，Map B 变更反向触发 Map A，会陷入无限事件死循环导致浏览器卡死崩溃。</p>
-</blockquote>
-<pre><code class="language-javascript">let isSyncing = false;
+<p>当用户在左侧窗口缩放、在右侧窗口平移、甚至使用右键旋转地图时，底层共享的 <code>sharedView</code> 会自动同步驱动两个 Canvas 容器按完全相同的矩阵重绘，<strong>彻底从底层根除了死循环代码</strong>。</p>
+<hr>
+<h3 id="32-跨屏十字准星光标联动（crosshair-sync）">3.2 跨屏十字准星光标联动（Crosshair Sync）</h3>
+<p>在很多高精测绘与遥感比对大屏中，用户希望在左屏移动鼠标时，右屏能同步呈现一个跟随的准星光标：</p>
+<pre><code class="language-javascript">// 创建右屏准星覆盖物 (Overlay)
+const crosshair = document.createElement(&#39;div&#39;);
+crosshair.className = &#39;crosshair-marker&#39;;
+const crosshairOverlay = new Overlay({
+  element: crosshair,
+  positioning: &#39;center-center&#39;,
+  stopEvent: false,
+});
+map2.addOverlay(crosshairOverlay);
 
-viewA.on(&#39;change:center&#39;, function () {
-  if (isSyncing) return;
-  isSyncing = true;
-  viewB.setCenter(transform(viewA.getCenter(), &#39;EPSG:3857&#39;, &#39;EPSG:4326&#39;));
-  isSyncing = false;
+// 监听左屏鼠标移动，实时投影至右屏对应地理坐标
+map1.on(&#39;pointermove&#39;, function (evt) {
+  if (evt.dragging) return;
+  const coordinate = evt.coordinate;
+  crosshairOverlay.setPosition(coordinate);
+});
+
+// 移出左屏时隐藏准星
+map1.getViewport().addEventListener(&#39;mouseleave&#39;, function () {
+  crosshairOverlay.setPosition(undefined);
 });
 </code></pre>
 <hr>
-<h2 id="3-视口内边距（view-padding）与智能中心偏置（view-padding）">3. 视口内边距（View Padding）与智能中心偏置（<code>view-padding</code>）</h2>
-<p>在业务大屏或复杂 GIS 系统中，左侧通常有悬浮的资产列表（宽 400px），底部有时间轴面板（高 200px）。</p>
-<p>若直接调用 <code>view.fit(extent)</code> 或 <code>view.setCenter(coord)</code>，要素会被左侧面板遮挡。</p>
-<h3 id="31-视口可视净空区数学模型">3.1 视口可视净空区数学模型</h3>
-<p>通过配置 <code>padding: [top, right, bottom, left]</code>，OpenLayers 内部会自动将逻辑中心点偏移到净空区域的几何中心：</p>
-<p>$$\Delta x = \frac{\text{left} - \text{right}}{2}, \quad \Delta y = \frac{\text{bottom} - \text{top}}{2}$$</p>
-<pre><code class="language-javascript">const view = new View({
-  center: [0, 0],
-  zoom: 4,
-  padding: [20, 20, 200, 420], // 预留左侧 420px 侧边栏与底部 200px 面板
-});
-
-// 当左侧面板收起时，动态更新 padding
-function toggleSidebar(collapsed) {
-  const leftPadding = collapsed ? 20 : 420;
-  view.padding = [20, 20, 200, leftPadding];
-  // 结合 fit 自动平滑平移至新中央净空区
-  view.fit(selectedExtent, { duration: 500 });
-}
+<h2 id="4-生产避坑指南与性能治理">4. 生产避坑指南与性能治理</h2>
+<h3 id="41-容器宽度高度变化时的尺寸同步（updatesize）">4.1 容器宽度/高度变化时的尺寸同步（<code>updateSize</code>）</h3>
+<ul>
+<li><strong>现象</strong>：在支持分屏拖拽拉伸（Split Panel）的布局中，拖动中轴分割条后，其中一个地图视口拉伸变形或出现白边。</li>
+<li><strong>根因</strong>：OpenLayers 默认通过监听 <code>window.resize</code> 感知尺寸变化。当仅局部的 <code>&lt;div&gt;</code> 容器宽度变窄或变宽时，Map 内部的 Canvas 缓冲区并未更新。</li>
+<li><strong>治理法则</strong>：在分屏拖拽手柄滑动或窗口布局切换完成时，必须显式调用：<pre><code class="language-javascript">map1.updateSize();
+map2.updateSize();
 </code></pre>
-<hr>
-<h2 id="4-地图容器-dom-热迁移（teleport）">4. 地图容器 DOM 热迁移（<code>teleport</code>）</h2>
-<p>在多模态页面或大屏弹窗最大化时，若销毁原地图并重新创建，会导致地图已加载的几百张瓦片重新发起网络请求，用户体验极差。</p>
-<p>OpenLayers 允许直接在运行时更换宿主容器（DOM Re-parenting）：</p>
-<pre><code class="language-javascript">// 从常规窗口无缝“传送”至全屏模态框
-function teleportMap(newContainerId) {
-  map.setTarget(newContainerId);
-  // 必须调用 updateSize 重新计算新容器的宽高与分辨率映射
-  map.updateSize();
-}
+</li>
+</ul>
+<h3 id="42-数据源跨图层复用（reusable-source）内存治理">4.2 数据源跨图层复用（Reusable Source）内存治理</h3>
+<ul>
+<li>当两个图层或两个地图展示同一份底层矢量要素（如一个显示普通符号，另一个显示热力图），或者加载同一份瓦片服务时，<strong>必须直接复用同一个 <code>source</code> 实例</strong>：<pre><code class="language-javascript">const sharedSource = new VectorSource({ ... });
+const layerA = new VectorLayer({ source: sharedSource, style: styleA });
+const layerB = new VectorLayer({ source: sharedSource, style: styleB });
 </code></pre>
-<hr>
-<h2 id="5-网页滚动与长文本手势冲突治理（page-scroll--two-finger-pan-scroll）">5. 网页滚动与长文本手势冲突治理（<code>page-scroll</code> / <code>two-finger-pan-scroll</code>）</h2>
-<h3 id="51-网页滚轮防劫持（page-scroll）">5.1 网页滚轮防劫持（Page Scroll）</h3>
-<p>长页面中嵌入的小地图，最让人崩溃的是向下浏览网页时，鼠标滚轮一滑进地图，网页停止滚动而地图狂飙缩放。</p>
-<p><strong>最佳解决方案</strong>：限制 <code>MouseWheelZoom</code> 的触发条件，要求必须按住 <code>Ctrl</code> 或 <code>Meta</code> 键，或仅在点击地图激活焦点后才允许滚轮缩放：</p>
-<pre><code class="language-javascript">import { defaults as defaultInteractions, MouseWheelZoom } from &#39;ol/interaction.js&#39;;
-import { platformModifierKeyOnly } from &#39;ol/events/condition.js&#39;;
-
-const map = new Map({
-  interactions: defaultInteractions({
-    mouseWheelZoom: false, // 禁用默认粗暴的滚轮缩放
-  }).extend([
-    new MouseWheelZoom({
-      condition: platformModifierKeyOnly, // 仅在按住 Ctrl (Mac 下 Cmd) 时才允许缩放地图
-    }),
-  ]),
-});
-</code></pre>
-<h3 id="52-移动端双指平移（two-finger-pan）">5.2 移动端双指平移（Two-Finger Pan）</h3>
-<p>在手机端浏览长文章时，单指滑过地图继续滚动文章；唯有用户使用<strong>两根手指</strong>同时触碰地图时，才激活地图平移（DragPan）：</p>
-<pre><code class="language-javascript">import DragPan from &#39;ol/interaction/DragPan.js&#39;;
-
-const dragPan = new DragPan({
-  condition: function (event) {
-    // 仅当触控点为 2 个时才允许拖拽平移地图
-    return event.originalEvent.touches &amp;&amp; event.originalEvent.touches.length === 2;
-  },
-});
-</code></pre>
+这样两处只会建立一套底层空间索引，瓦片网络请求自动合并，内存占用直降 50%。</li>
+</ul>
 
     </div>
     <footer>

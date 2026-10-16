@@ -289,12 +289,8 @@
 
       <div class="row-fluid">
         <p id="shortdesc">Example of repeating an icon along a line, rotated to follow the line. / 演示如何使用 Icon 样式的 placement: &#x27;line&#x27; 与 repeat 选项实现沿折线切线方向周期性重复排布旋转图标。</p>
-        <div id="docs"><p>Example of using <code>placement: 'line'</code> and <code>repeat</code> on an <code>Icon</code> style to draw the
-  icon repeatedly along a line string, rotated to follow the local direction of the line. Draw a line string to see the
-  icon placed and rotated along it interactively.</p>
-<p>本示例展示了如何在 <code>ol/style/Icon</code> 图标样式中使用 <code>placement: 'line'</code> 与
-  <code>repeat</code>（重复间距）配置。图标会沿着折线（LineString）按照设定的像素步长周期性连续排布，且每个图标会自动计算其所在线段局部的切线航向角并自动旋转对齐。在地图中绘制一条折线，即可实时交互体验图标沿折线排布与切向旋转的渲染效果。
-</p><hr>
+        <div id="docs"><p>Example of using <code>placement: 'line'</code> and <code>repeat</code> on an <code>Icon</code> style to draw the icon repeatedly along a line string, rotated to follow the local direction of the line. Draw a line string to see the icon placed and rotated along it interactively.</p>
+<p>本示例展示了如何在 <code>ol/style/Icon</code> 图标样式中使用 <code>placement: 'line'</code> 与 <code>repeat</code>（重复间距）配置。图标会沿着折线（LineString）按照设定的像素步长周期性连续排布，且每个图标会自动计算其所在线段局部的切线航向角并自动旋转对齐。在地图中绘制一条折线，即可实时交互体验图标沿折线排布与切向旋转的渲染效果。</p><hr>
 <h3>📚 学习记录与技术深度解读 (Learning Notes)</h3>
 <h4>1. 核心架构与设计思想 (Core Architecture &amp; Design)</h4>
 <ul>
@@ -450,39 +446,6 @@ map.addInteraction(
           }
         }
         renderMath();
-      });
-    </script>
-    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        function renderMermaid() {
-          if (window.mermaid) {
-            if (window.__mermaidInitialized) {
-              return;
-            }
-            window.__mermaidInitialized = true;
-            mermaid.initialize({
-              startOnLoad: false,
-              theme: 'default',
-              securityLevel: 'loose'
-            });
-            const codeBlocks = document.querySelectorAll('pre code.language-mermaid, pre code.mermaid');
-            if (codeBlocks.length > 0) {
-              codeBlocks.forEach(function (el) {
-                const pre = el.parentElement;
-                const wrapper = pre.closest('.code-toolbar') || pre;
-                const div = document.createElement('div');
-                div.className = 'mermaid';
-                div.textContent = el.textContent;
-                wrapper.parentElement.replaceChild(div, wrapper);
-              });
-              mermaid.run();
-            }
-          } else {
-            setTimeout(renderMermaid, 50);
-          }
-        }
-        renderMermaid();
       });
     </script>
     <script src="./resources/common.js"></script>

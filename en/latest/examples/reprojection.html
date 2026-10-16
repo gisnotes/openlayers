@@ -678,7 +678,7 @@ renderEdgesCheckbox.onchange &#x3D; function () {
         &lt;option value&#x3D;&quot;osm&quot;&gt;OSM 瓦片 (EPSG:3857)&lt;/option&gt;
         &lt;option value&#x3D;&quot;wms4326&quot;&gt;WMS 全球地表 (EPSG:4326)&lt;/option&gt;
       &lt;/select&gt;
-    
+
       &lt;label for&#x3D;&quot;overlay-layer&quot;&gt;Overlay map / 叠加业务图层：&lt;/label&gt;
       &lt;select id&#x3D;&quot;overlay-layer&quot;&gt;
         &lt;option value&#x3D;&quot;bng&quot;&gt;British National Grid / 英国国家格网 (EPSG:27700)&lt;/option&gt;
@@ -686,7 +686,7 @@ renderEdgesCheckbox.onchange &#x3D; function () {
         &lt;option value&#x3D;&quot;wmts3413&quot;&gt;NASA Arctic WMTS / NASA 北极冰貌 WMTS (EPSG:3413)&lt;/option&gt;
         &lt;option value&#x3D;&quot;states&quot;&gt;United States / 美国本土州界 WMS (EPSG:3857)&lt;/option&gt;
       &lt;/select&gt;
-    
+
       &lt;label for&#x3D;&quot;view-projection&quot;&gt;View projection / 视图投影：&lt;/label&gt;
       &lt;select id&#x3D;&quot;view-projection&quot;&gt;
         &lt;option value&#x3D;&quot;EPSG:3857&quot;&gt;Spherical Mercator / 球形墨卡托 (EPSG:3857)&lt;/option&gt;
@@ -698,7 +698,7 @@ renderEdgesCheckbox.onchange &#x3D; function () {
         &lt;option value&#x3D;&quot;EPSG:3413&quot;&gt;NSIDC Polar Stereographic North / 北极极射赤平投影 (EPSG:3413)&lt;/option&gt;
         &lt;option value&#x3D;&quot;EPSG:5479&quot;&gt;RSRGD2000 / MSLC2000 南极兰勃特圆锥投影 (EPSG:5479)&lt;/option&gt;
       &lt;/select&gt;
-    
+
       &lt;label for&#x3D;&quot;render-edges&quot;&gt;Render reprojection edges / 渲染重投影三角网边缘：&lt;/label&gt;
       &lt;span&gt;&lt;input type&#x3D;&quot;checkbox&quot; id&#x3D;&quot;render-edges&quot; /&gt;&lt;/span&gt;
     &lt;/form&gt;
@@ -758,39 +758,6 @@ renderEdgesCheckbox.onchange &#x3D; function () {
           }
         }
         renderMath();
-      });
-    </script>
-    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
-    <script>
-      document.addEventListener('DOMContentLoaded', function () {
-        function renderMermaid() {
-          if (window.mermaid) {
-            if (window.__mermaidInitialized) {
-              return;
-            }
-            window.__mermaidInitialized = true;
-            mermaid.initialize({
-              startOnLoad: false,
-              theme: 'default',
-              securityLevel: 'loose'
-            });
-            const codeBlocks = document.querySelectorAll('pre code.language-mermaid, pre code.mermaid');
-            if (codeBlocks.length > 0) {
-              codeBlocks.forEach(function (el) {
-                const pre = el.parentElement;
-                const wrapper = pre.closest('.code-toolbar') || pre;
-                const div = document.createElement('div');
-                div.className = 'mermaid';
-                div.textContent = el.textContent;
-                wrapper.parentElement.replaceChild(div, wrapper);
-              });
-              mermaid.run();
-            }
-          } else {
-            setTimeout(renderMermaid, 50);
-          }
-        }
-        renderMermaid();
       });
     </script>
     <script src="./resources/common.js"></script>

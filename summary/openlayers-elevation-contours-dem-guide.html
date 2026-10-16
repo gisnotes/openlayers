@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>OpenLayers - OpenLayers DEM 高程地形、动态等高线与三维地表晕渲全景实战指南 (DEM, Elevation, Contours &amp; Shaded Relief)</title>
+    <title>OpenLayers - OpenLayers DEM 数字高程、等高线分析与地形渲染实战指南 (Elevation, Contour Interpolation &amp; Shaded Relief)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
@@ -18,7 +18,6 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
   </head>
   <body>
     <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
@@ -73,202 +72,120 @@
     </header>
 
     <div class="container">
-      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">DEM地形、等高线与晕渲指南</li></ol></nav>
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">数字高程与等高线地形指南</li></ol></nav>
 
-<h1 id="openlayers-dem-高程地形、动态等高线与三维地表晕渲全景实战指南">OpenLayers DEM 高程地形、动态等高线与三维地表晕渲全景实战指南</h1>
+<h1 id="openlayers-dem-数字高程、等高线分析与地形渲染实战指南">OpenLayers DEM 数字高程、等高线分析与地形渲染实战指南</h1>
 <blockquote>
-<p>数字高程模型（Digital Elevation Model, <strong>DEM</strong>）是地理信息、地质测绘、水利防汛与三维地貌分析的核心基石。</p>
-<p>传统的 GIS 方案通常依赖服务端生成静态等高线矢量图层或固化的地貌阴影图，但这种方式无法满足<strong>前端交互式调节太阳光照方位、动态平滑等高线间距（Contour Intervals）、以及毫秒级模拟海平面上升洪水淹没</strong>等现代分析需求。</p>
-<p>OpenLayers 通过 <code>RasterSource</code>（多线程 Web Worker 像素代数）与 <code>WebGLTile</code>（GPU 硬件着色器管线），支持直接对编码在 RGB 栅格瓦片中的高程数据进行纯前端实时解算。本文基于 6 个核心官方示例，系统解构 DEM 编码数学、动态等高线算法与三维地貌晕渲的工程实现。</p>
+<p>针对数字高程模型（DEM）、地表等高线自动插值提取、海平面淹没模拟以及山体阴影（Hillshade / Shaded Relief）动态光照渲染，深入解构 RGB 物理高程解码、WebGL 栅格着色器与双线性插值算法实现。</p>
 </blockquote>
 <hr>
-<h2 id="1-架构总览：6-个-dem-与地形分析核心官方示例矩阵">1. 架构总览：6 个 DEM 与地形分析核心官方示例矩阵</h2>
+<h2 id="1-核心架构与物理高程编码机制">1. 核心架构与物理高程编码机制</h2>
+<p>在传统 GIS 中，高程数据往往以沉重的 32 位浮点 GeoTIFF 文件存储。现代 WebGIS 则通过将真实地理高程压缩编码至常规的 24 位 RGB 栅格切片（PNG 格式）中，使得浏览器能够像加载普通街道切片一样秒级获取全球高程信息：</p>
+<pre><code class="language-mermaid">flowchart TD
+    TerrainTile[&quot;RGB 编码高程瓦片 (Terrarium / Mapbox Terrain-RGB)&quot;] --&gt; Decoder{&quot;解码方式选型&quot;}
+    Decoder --&gt;|CPU 像素运算 ol/source/Raster| CPURoute[&quot;读取 Uint8ClampedArray 像素&lt;br/&gt;按公式还原绝对物理海拔高度 (米)&quot;]
+    Decoder --&gt;|GPU 硬件着色 WebGLTile| GPURoute[&quot;片元着色器 Fragment Shader&lt;br/&gt;并行计算像素法向量与坡度坡向&quot;]
+    CPURoute --&gt; App1[&quot;等高线双线性插值提取 (Contour Interpolation)&quot;]
+    CPURoute --&gt; App2[&quot;海平面上升淹没分析 (Sea Level Simulation)&quot;]
+    GPURoute --&gt; App3[&quot;动态山体阴影渲染 (Dynamic Shaded Relief)&quot;]
+</code></pre>
+<h3 id="11-主流高程切片编码解码数学模型">1.1 主流高程切片编码解码数学模型</h3>
 <table>
 <thead>
 <tr>
-<th align="left">分类</th>
-<th align="left">示例标识</th>
-<th align="left">核心技术机制</th>
-<th align="left">解决的典型生产场景</th>
+<th align="left">数据标准</th>
+<th align="left">经典服务源</th>
+<th align="left">物理高程（米）解码公式</th>
 </tr>
 </thead>
 <tbody><tr>
-<td align="left"><strong>实时等高线插值</strong></td>
+<td align="left"><strong>Mapbox Terrain-RGB</strong></td>
+<td align="left">Mapbox, MapTiler</td>
+<td align="left">$\text{Elevation} = -10000 + (R \cdot 256^2 + G \cdot 256 + B) \cdot 0.1$</td>
+</tr>
+<tr>
+<td align="left"><strong>Mapzen Terrarium</strong></td>
+<td align="left">AWS Open Data, Stadia Maps</td>
+<td align="left">$\text{Elevation} = (R \cdot 256 + G + \frac{B}{256}) - 32768$</td>
+</tr>
+</tbody></table>
+<p>通过该公式，单个 24 位 RGB 像素能够以 <strong>0.1 米（分米级）精细度</strong> 覆盖从海平面下 10,000 米深渊到珠穆朗玛峰以上的全部地球陆表高度。</p>
+<hr>
+<h2 id="2-官方示例矩阵解构">2. 官方示例矩阵解构</h2>
+<table>
+<thead>
+<tr>
+<th align="left">示例标识</th>
+<th align="left">核心实现机制</th>
+<th align="left">典型生产应用场景</th>
+</tr>
+</thead>
+<tbody><tr>
 <td align="left"><a href="../en/latest/examples/contour-interpolation.html"><code>contour-interpolation</code></a></td>
-<td align="left"><code>RasterSource</code> + 邻域双线性内插提取等高线网格</td>
-<td align="left">鼠标滑动实时读取任意点高程并高亮当前等高线</td>
+<td align="left">高程瓦片取样 + 鼠标移动实时双线性插值 + 局部 Canvas 实时绘制闭合等高线</td>
+<td align="left">测绘工程勘察、登山越野路线等高距动态标注与坡度检测</td>
 </tr>
 <tr>
-<td align="left"><strong>动态等高线图层</strong></td>
-<td align="left"><a href="../en/latest/examples/contours.html"><code>contours</code></a></td>
-<td align="left">纯前端逐像素梯度运算提取任意步长等值线</td>
-<td align="left">交互式动态调整 10m、50m、100m 步进的等高线显示</td>
-</tr>
-<tr>
-<td align="left"><strong>CPU 栅格地表晕渲</strong></td>
-<td align="left"><a href="../en/latest/examples/shaded-relief.html"><code>shaded-relief</code></a></td>
-<td align="left"><code>RasterSource</code> + Sobel 算子斜率与坡向光照度量</td>
-<td align="left">动态调节太阳天顶角与方位角生成三维山体阴影</td>
-</tr>
-<tr>
-<td align="left"><strong>GPU 硬件地貌晕渲</strong></td>
-<td align="left"><a href="../en/latest/examples/webgl-shaded-relief.html"><code>webgl-shaded-relief</code></a></td>
-<td align="left"><code>WebGLTileLayer</code> + 自定义片元着色器实时光照解算</td>
-<td align="left">60 FPS 满帧极速渲染大范围超高精度立体地形</td>
-</tr>
-<tr>
-<td align="left"><strong>云原生单文件高程</strong></td>
 <td align="left"><a href="../en/latest/examples/pmtiles-elevation.html"><code>pmtiles-elevation</code></a></td>
-<td align="left">PMTiles 零服务端高程直读 + <code>ol/source/DataTile</code></td>
-<td align="left">纯静态服务器托管的海量高程数据直接前端渲染</td>
+<td align="left"><code>ol-pmtiles</code> + <code>DataTile</code> 解码单文件切片 + 自定义颜色表映射</td>
+<td align="left">无服务器（Serverless）架构下的全球三维数字地表快速呈现</td>
 </tr>
 <tr>
-<td align="left"><strong>海平面与洪水淹没</strong></td>
-<td align="left"><a href="../en/latest/examples/webgl-sea-level.html"><code>webgl-sea-level</code></a></td>
-<td align="left">WebGL 阈值逻辑片段着色器与动态调色板映射</td>
-<td align="left">毫秒级拖拽滑块模拟海平面上升与低洼地带淹没演进</td>
+<td align="left"><a href="../en/latest/examples/sea-level.html"><code>sea-level</code></a></td>
+<td align="left"><code>ol/source/Raster</code> 像素操作 + 滑块控制阈值 + 动态水体淹没掩膜</td>
+<td align="left">气候变暖极端海平面上升模拟、水库蓄水淹没面积测算</td>
+</tr>
+<tr>
+<td align="left"><a href="../en/latest/examples/shaded-relief.html"><code>shaded-relief</code></a></td>
+<td align="left">计算局部 $3 \times 3$ 像素高程差解算地表坡度（Slope）与坡向（Aspect）+ 太阳方位角光照方程</td>
+<td align="left">真实三维立体地貌地表阴影渲染、增强平缓山峦的质感</td>
 </tr>
 </tbody></table>
 <hr>
-<h2 id="2-dem-栅格编码规范与像素高程解算数学">2. DEM 栅格编码规范与像素高程解算数学</h2>
-<p>在网络传输中，高程通常打包压缩在 24 位或 32 位 RGB(A) 图像瓦片中。主流有两种国际编码规范：</p>
-<h3 id="21-mapzen-terrarium-编码公式">2.1 Mapzen Terrarium 编码公式</h3>
-<p>高程 $h$（单位：米）解码公式：
-$$h = \left(R \times 256 + G + \frac{B}{256}\right) - 32768$$</p>
-<ul>
-<li>有效高程范围：从海底 $-11000\text{m}$ 到珠穆朗玛峰 $+8848\text{m}$，精度可达 $1/256 \approx 0.0039\text{m}$。</li>
-</ul>
-<h3 id="22-mapbox-terrain-rgb-编码公式">2.2 Mapbox Terrain-RGB 编码公式</h3>
-<p>高程 $h$（单位：米）解码公式：
-$$h = -10000 + \left(R \times 256^2 + G \times 256 + B\right) \times 0.1$$</p>
-<ul>
-<li>精度为固定 $0.1\text{m}$。</li>
-</ul>
-<pre><code class="language-mermaid">flowchart LR
-    RGB[&quot;RGB 瓦片像素值 [R, G, B]&quot;] --&gt; Decode{&quot;选择解码公式&quot;}
-    Decode --&gt;|Terrarium| Formula1[&quot;(R*256 + G + B/256) - 32768&quot;]
-    Decode --&gt;|Terrain-RGB| Formula2[&quot;-10000 + (R*65536 + G*256 + B)*0.1&quot;]
-    Formula1 --&gt; Elevation[&quot;物理高程值 h (米)&quot;]
-    Formula2 --&gt; Elevation
-    Elevation --&gt; Pipeline1[&quot;等高线判定: h mod interval == 0&quot;]
-    Elevation --&gt; Pipeline2[&quot;地貌晕渲: 坡度与坡向反射率&quot;]
-    Elevation --&gt; Pipeline3[&quot;洪水淹没: h &lt;= seaLevel&quot;]
-</code></pre>
-<hr>
-<h2 id="3-动态等高线算法实现（contours）">3. 动态等高线算法实现（<code>contours</code>）</h2>
-<h3 id="31-邻域像素梯度判定与等高线着色">3.1 邻域像素梯度判定与等高线着色</h3>
-<p>等高线是地面上高程相同的相邻点连接构成的闭合曲线。在栅格瓦片上，通过计算当前像素高程与相邻像素高程之间是否跨越了等高距阈值 $I$（例如 $50\text{m}$）：</p>
-<p>$$\text{isContour} = \left\lfloor\frac{h_{\text{current}}}{I}\right\rfloor \ne \left\lfloor\frac{h_{\text{neighbor}}}{I}\right\rfloor$$</p>
-<pre><code class="language-javascript">import RasterSource from &#39;ol/source/Raster.js&#39;;
-import ImageLayer from &#39;ol/layer/Image.js&#39;;
-import XYZ from &#39;ol/source/XYZ.js&#39;;
+<h2 id="3-核心实现与典型范式">3. 核心实现与典型范式</h2>
+<h3 id="31-鼠标交互双线性等高线插值范式">3.1 鼠标交互双线性等高线插值范式</h3>
+<p>在 <code>contour-interpolation.html</code> 中，展示了如何根据当前鼠标位置的物理坐标提取周围高程像素并插值绘制等高线：</p>
+<pre><code class="language-javascript">import Map from &#39;ol/Map&#39;;
+import View from &#39;ol/View&#39;;
+import ImageTileSource from &#39;ol/source/ImageTile&#39;;
+import WebGLTileLayer from &#39;ol/layer/WebGLTile&#39;;
 
-const elevationTileSource = new XYZ({
+// 解码 Terrarium 物理高程
+function getElevation(r, g, b) {
+  return (r * 256 + g + b / 256) - 32768;
+}
+
+const demSource = new ImageTileSource({
   url: &#39;https://s3.amazonaws.com/elevation-tiles-prod/terrarium/{z}/{x}/{y}.png&#39;,
   crossOrigin: &#39;anonymous&#39;,
 });
 
-// 使用 RasterSource 在后台 Worker 中并发处理
-const raster = new RasterSource({
-  sources: [elevationTileSource],
-  operationType: &#39;pixel&#39;,
-  operation: function (pixels, data) {
-    const pixel = pixels[0];
-    if (!pixel || pixel[3] === 0) return [0, 0, 0, 0];
-
-    // 1. Terrarium 解码
-    const h = pixel[0] * 256 + pixel[1] + pixel[2] / 256 - 32768;
-    const interval = data.interval || 50; // 等高线间距
-
-    // 2. 检查是否处于等高线边沿
-    const mod = Math.abs(h % interval);
-    if (mod &lt; 1.0) {
-      // 满足等高线，输出深棕色像素
-      return [139, 69, 19, 255];
-    }
-    // 否则透明
-    return [0, 0, 0, 0];
-  },
-});
-
-const contourLayer = new ImageLayer({
-  source: raster,
+// 监听鼠标移动，从已加载的 Canvas 图像中直接采样
+map.on(&#39;pointermove&#39;, function (evt) {
+  const pixel = evt.pixel;
+  // 采样当前像素中心及周围 4 个点执行双线性插值 (Bilinear Interpolation)
+  // ...计算等高线几何路径并直接用矢量覆盖层绘制闭合环线
 });
 </code></pre>
 <hr>
-<h2 id="4-三维地貌晕渲（hillshade）数学与-gpu-着色器（webgl-shaded-relief）">4. 三维地貌晕渲（Hillshade）数学与 GPU 着色器（<code>webgl-shaded-relief</code>）</h2>
-<h3 id="41-光照模型数学原理（horn-算法）">4.1 光照模型数学原理（Horn 算法）</h3>
-<p>地貌晕渲模拟太阳平行光照射在地表起伏产生的明暗阴影。其核心是计算局部法向量：</p>
-<ol>
-<li><p><strong>太阳光照方向向量</strong>：由太阳方位角 $\theta_{\text{azimuth}}$ 与天顶距 $\phi_{\text{zenith}}$ 决定：
-$$\text{Azimuth}<em>{\text{rad}} = (360^\circ - \theta + 90^\circ) \times \frac{\pi}{180}$$
-$$\text{Zenith}</em>{\text{rad}} = \phi \times \frac{\pi}{180}$$</p>
-</li>
-<li><p><strong>局部坡度与坡向（偏导数 $dz/dx, dz/dy$）</strong>：
-$$\text{Slope} = \arctan\left(\sqrt{\left(\frac{\partial z}{\partial x}\right)^2 + \left(\frac{\partial z}{\partial y}\right)^2}\right)$$
-$$\text{Aspect} = \operatorname{atan2}\left(\frac{\partial z}{\partial y}, -\frac{\partial z}{\partial x}\right)$$</p>
-</li>
-<li><p><strong>最终光照反射强度（Hillshade Value）</strong>：
-$$\text{Shade} = 255 \times \Big( \cos(\text{Zenith}) \cos(\text{Slope}) + \sin(\text{Zenith}) \sin(\text{Slope}) \cos(\text{Azimuth} - \text{Aspect}) \Big)$$</p>
-</li>
-</ol>
-<h3 id="42-webgl-硬件着色器实战">4.2 WebGL 硬件着色器实战</h3>
-<p>OpenLayers 的 <code>WebGLTileLayer</code> 支持直接向管线注入声明式着色指令或自定义着色器，GPU 单个时钟周期即可完成并行像素渲染：</p>
-<pre><code class="language-javascript">import WebGLTileLayer from &#39;ol/layer/WebGLTile.js&#39;;
-
-const shadedReliefLayer = new WebGLTileLayer({
-  source: elevationTileSource,
-  style: {
-    exposure: 0,
-    contrast: 0,
-    saturation: 0,
-    variables: {
-      sunAzimuth: 315, // 太阳西北偏西照射
-      sunElevation: 45, // 仰角 45 度
-    },
-    // 利用 WebGL 着色器原生内置表达式计算坡向与明暗
-  },
-});
-</code></pre>
+<h3 id="32-动态山体阴影（hillshade）物理光照方程">3.2 动态山体阴影（Hillshade）物理光照方程</h3>
+<p>在 <code>shaded-relief.html</code> 中，利用 Lambert 漫反射光照模型实时计算阴影强度 $I$：</p>
+<p>$$I = \cos(\text{Zenith}) \cdot \cos(\text{Slope}) + \sin(\text{Zenith}) \cdot \sin(\text{Slope}) \cdot \cos(\text{Azimuth} - \text{Aspect})$$</p>
+<p>其中 $\text{Azimuth}$（太阳方位角，通常为西北 $315^\circ$）、$\text{Zenith}$（太阳天顶角）为可调参数。计算完成后直接输出 0~255 的明暗灰度值，叠加到底图上即可呈现出逼真的立体地形质感。</p>
 <hr>
-<h2 id="5-海平面上升与水文浸润模拟（webgl-sea-level）">5. 海平面上升与水文浸润模拟（<code>webgl-sea-level</code>）</h2>
-<p>水利防汛与气候变化评估中，需要动态模拟当海平面上升 $N$ 米时受影响的淹没区。</p>
-<pre><code class="language-javascript">const seaLevel = 15; // 假设海平面上升 15 米
-
-const floodLayer = new WebGLTileLayer({
-  source: elevationTileSource,
-  style: {
-    variables: {
-      seaLevel: 15,
-    },
-    color: [
-      &#39;case&#39;,
-      // 当地面高程小于等于当前海平面时，着色为半透明深蓝水体
-      [&#39;&lt;=&#39;, [&#39;elevation&#39;], [&#39;var&#39;, &#39;seaLevel&#39;]],
-      [0, 100, 255, 0.6],
-      // 否则完全透明显示正常地表
-      [0, 0, 0, 0],
-    ],
-  },
-});
-
-// 绑定 HTML 滑块动态更新海平面
-slider.addEventListener(&#39;input&#39;, function (evt) {
-  floodLayer.updateStyleVariables({
-    seaLevel: parseFloat(evt.target.value),
-  });
-});
-</code></pre>
-<hr>
-<h2 id="6-避坑指南与工程调优">6. 避坑指南与工程调优</h2>
-<h3 id="61-跨域与-cors-问题防范">6.1 跨域与 CORS 问题防范</h3>
+<h2 id="4-生产避坑指南与性能治理">4. 生产避坑指南与性能治理</h2>
+<h3 id="41-跨域访问与画布污染（tainted-canvas）">4.1 跨域访问与画布污染（Tainted Canvas）</h3>
 <ul>
-<li>栅格像素运算必须从瓦片中提取 ImageData。必须为高程切片源显式声明 <code>crossOrigin: &#39;anonymous&#39;</code>。</li>
-<li>若切片服务器未配置 <code>Access-Control-Allow-Origin: *</code>，Canvas 会被标记为污染（Tainted），抛出 <code>SecurityError</code> 导致渲染中止。</li>
+<li><strong>现象</strong>：执行 <code>context.getImageData()</code> 提取高程像素时，控制台抛出 <code>SecurityError: The operation is insecure</code>。</li>
+<li><strong>根因</strong>：加载第三方高程瓦片时，如果未显式声明 <code>crossOrigin: &#39;anonymous&#39;</code>，浏览器将禁止读取像素内存。</li>
+<li><strong>防范规范</strong>：在所有高程数据源中，必须显式配置 <code>crossOrigin: &#39;anonymous&#39;</code>，且服务端必须响应 <code>Access-Control-Allow-Origin: *</code> 响应头。</li>
 </ul>
-<h3 id="62-投影形变与高程比例尺（z-factor）修正">6.2 投影形变与高程比例尺（Z-Factor）修正</h3>
+<h3 id="42-垂直夸张系数（z-factor）随纬度自适应">4.2 垂直夸张系数（Z-Factor）随纬度自适应</h3>
 <ul>
-<li>Web 墨卡托投影（EPSG:3857）在高纬度地区存在明显的平面拉伸膨胀。计算坡度 $dz/dx$ 时，必须根据纬度 $\varphi$ 对水平距离乘以比例因子 $\cos(\varphi)$，否则高纬度地区的山体阴影会极度扁平失真。</li>
+<li>在 Web 墨卡托投影（EPSG:3857）下，纬度越高地图形变越大（赤道 1 像素代表数十米，高纬度地区 1 像素仅代表数米）。</li>
+<li>如果山体阴影的高程系数固定不变，会导致高纬度山峰极其陡峭突兀，而赤道山脉平缓无阴影。</li>
+<li><strong>治理法则</strong>：在光照着色器中，将高程乘以自适应校正系数：
+$$Z_{\text{factor}} = \frac{1}{\cos(\text{Latitude})}$$</li>
 </ul>
 
     </div>

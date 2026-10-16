@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name='viewport' content='width=device-width, initial-scale=1.0'>
-    <title>OpenLayers - OpenLayers 空间时序演化、多维时态切片与动态回放全景实战指南 (Temporal GIS, Dimensions &amp; Time-Lapse)</title>
+    <title>OpenLayers - OpenLayers 时空多维分析与时序动态图层全景实战指南 (WMS Time, WMTS Dimensions &amp; GeoZarr)</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
@@ -18,7 +18,6 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
     <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
-    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous"><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script><script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous" onload="renderMathInElement(document.body, {delimiters: [{left: '$$', right: '$$', display: true},{left: '$', right: '$', display: false}], throwOnError: false});"></script><script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script><script>document.addEventListener("DOMContentLoaded", function() { if (window.mermaid) { mermaid.initialize({startOnLoad: false}); document.querySelectorAll("pre code.language-mermaid").forEach(function(el) { const pre = el.parentElement; const div = document.createElement("div"); div.className = "mermaid"; div.textContent = el.textContent; pre.parentElement.replaceChild(div, pre); }); mermaid.run(); } });</script>
   </head>
   <body>
     <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
@@ -73,219 +72,144 @@
     </header>
 
     <div class="container">
-      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">空间时序与多维时态切片指南</li></ol></nav>
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">时空多维分析与时序图层指南</li></ol></nav>
 
-<h1 id="openlayers-空间时序演化、多维时态切片与动态回放全景实战指南">OpenLayers 空间时序演化、多维时态切片与动态回放全景实战指南</h1>
+<h1 id="openlayers-时空多维分析与时序动态图层全景实战指南">OpenLayers 时空多维分析与时序动态图层全景实战指南</h1>
 <blockquote>
-<p>在气象监测、水文防汛、海洋洋流、遥感环境监测与应急指挥调度中，空间数据不仅具有二维经纬度，更带有强烈的<strong>第四维度——时间（Time）</strong>与多维维度属性（如海拔高度、气压层级、预警级别）。</p>
-<p>直接在时间轴上快速拖拽或播放动态切片时，极易面临三大工程挑战：<strong>网络拉取切片白屏闪烁（Flickering）</strong>、<strong>高频更新导致内存剧增与缓存雪崩</strong>、以及<strong>多帧切片帧间过渡不平滑</strong>。</p>
-<p>OpenLayers 沉淀了完备的时空数据接入与播放体系：从标准的 OGC WMS/WMTS 多维参数体系，到基于 WebGL 硬件多帧混合平滑过渡，再到云原生 GeoZarr 多维张量切片。本文基于 5 个核心官方示例，系统解构时空时态数据的接入模式与无闪烁播放工程实践。</p>
+<p>针对气象雷达回波动态播放、卫星遥感时相序列监测与海洋高程等多维科学数据，系统解构 WMS Time、WMTS Dimensions 以及 GeoZarr 时空立方体的协议对接、平滑过渡动画（Tile Transition）与双缓冲预加载技术。</p>
 </blockquote>
 <hr>
-<h2 id="1-架构总览：5-个时序时态核心官方示例矩阵">1. 架构总览：5 个时序时态核心官方示例矩阵</h2>
+<h2 id="1-核心架构与多维时空数据模型">1. 核心架构与多维时空数据模型</h2>
+<p>地理信息数据正在从传统的静态 2D 平面图，向包含时间轴（$T$）、高程/深度（$Z$）以及传感器波段（$B$）的 $4\text{D} / 5\text{D}$ 时空数据立方体演进。</p>
+<p>在 OpenLayers 中，处理多维时序数据的核心链路如下图所示：</p>
+<pre><code class="language-mermaid">flowchart TD
+    TimeDriver[&quot;时间轴驱动器 (UI 滑块 / setInterval 定时器)&quot;] --&gt; TimeFormat[&quot;ISO 8601 标准化时间戳 (UTC)&quot;]
+    TimeFormat --&gt; SourceUpdate{&quot;数据服务协议类型&quot;}
+    SourceUpdate --&gt;|OGC WMS| WMSParams[&quot;source.updateParams({TIME: isoTime})&quot;]
+    SourceUpdate --&gt;|OGC WMTS| WMTSDim[&quot;source.updateDimensions({Time: isoTime, Elevation: ...})&quot;]
+    SourceUpdate --&gt;|GeoZarr 立方体| ZarrSlice[&quot;zarrSource.setSlice({time: sliceIndex})&quot;]
+    WMSParams --&gt; CacheTransition[&quot;Tile Transition 瓦片交叉淡入淡出机制&quot;]
+    WMTSDim --&gt; CacheTransition
+    ZarrSlice --&gt; CacheTransition
+    CacheTransition --&gt; SmoothRender[&quot;零闪烁平滑时序渲染输出&quot;]
+</code></pre>
+<h3 id="11-ogc-规范与-iso-8601-时间格式">1.1 OGC 规范与 ISO 8601 时间格式</h3>
+<p>在 OGC WMS 与 WMTS 规范中，时序查询遵循 ISO 8601 国际标准：</p>
+<ul>
+<li><strong>瞬时时间点（Instant）</strong>：<code>2026-10-15T12:00:00Z</code></li>
+<li><strong>时间范围（Interval）</strong>：<code>2026-10-01/2026-10-15/P1D</code>（表示从 1 号至 15 号，以 1 天为周期间隔）</li>
+<li><strong>多维组合维度</strong>：除时间外，还常携带深度参数，例如 <code>&amp;ELEVATION=-500</code>（海平面下 500 米海洋洋流数据）。</li>
+</ul>
+<hr>
+<h2 id="2-官方示例矩阵解构">2. 官方示例矩阵解构</h2>
 <table>
 <thead>
 <tr>
-<th align="left">分类</th>
 <th align="left">示例标识</th>
-<th align="left">核心技术机制</th>
-<th align="left">解决的典型生产场景</th>
+<th align="left">核心技术与数据源</th>
+<th align="left">典型生产应用场景</th>
 </tr>
 </thead>
 <tbody><tr>
-<td align="left"><strong>Canvas 2D WMS 时序</strong></td>
 <td align="left"><a href="../en/latest/examples/wms-time.html"><code>wms-time</code></a></td>
-<td align="left"><code>source.updateParams({ &#39;TIME&#39;: isoTime })</code> + 双缓冲帧切换</td>
-<td align="left">气象多普勒雷达回波图逐 5 分钟动态播放与时间轴滑块绑定</td>
+<td align="left"><code>TileWMS</code> + <code>updateParams({TIME})</code> + 播放/暂停时间轴控制器</td>
+<td align="left">气象降雨雷达多时相连续动态播放、台风气旋轨迹回溯</td>
 </tr>
 <tr>
-<td align="left"><strong>WebGL 高性能时序</strong></td>
 <td align="left"><a href="../en/latest/examples/wms-time-webgl.html"><code>wms-time-webgl</code></a></td>
-<td align="left"><code>WebGLTileLayer</code> + 硬件片元着色器多帧平滑交叉淡化</td>
-<td align="left">消除高频气象云图切片切换时的突兀闪烁，实现电影级平滑流动</td>
+<td align="left"><code>WebGLTile</code> + WMS 时序请求 + GPU 硬件级瓦片平滑淡入</td>
+<td align="left">超高频气象云图渲染、消除 CPU 软件渲染切换时的卡顿</td>
 </tr>
 <tr>
-<td align="left"><strong>WMTS 多维切片</strong></td>
 <td align="left"><a href="../en/latest/examples/wmts-dimensions.html"><code>wmts-dimensions</code></a></td>
-<td align="left"><code>optionsFromCapabilities</code> + <code>dimensions: { Time, Elevation }</code></td>
-<td align="left">气象海洋不同高度层级（0m, 500m, 1000m）与时相矩阵检索</td>
+<td align="left"><code>WMTS</code> + <code>updateDimensions</code> 动态注入时态与自定义切片矩阵参数</td>
+<td align="left">气象海洋国家标准切片服务接入、时序 WMTS 影像漫游</td>
 </tr>
 <tr>
-<td align="left"><strong>GeoZarr 多维张量</strong></td>
 <td align="left"><a href="../en/latest/examples/geozarr-dimensions.html"><code>geozarr-dimensions</code></a></td>
-<td align="left">云原生 Zarr 维度切片直接读取多波段时空数据立方体</td>
-<td align="left">卫星雷达遥感干涉条纹、多光谱多时相科学数据集直通可视化</td>
-</tr>
-<tr>
-<td align="left"><strong>时空故事线漫游</strong></td>
-<td align="left"><a href="../en/latest/examples/geozarr-storytelling.html"><code>geozarr-storytelling</code></a></td>
-<td align="left">时间轴里程碑（Keyframes）驱动相机飞行与数据切片联动</td>
-<td align="left">冰川融化、水体演变、城市扩张等地理时空叙事长图景演进</td>
+<td align="left">多维科学数组（Zarr）的 <code>time</code> 轴动态切片索引提取</td>
+<td align="left">气候科学全球降水网格、洋流温跃层时序多维切片解算</td>
 </tr>
 </tbody></table>
 <hr>
-<h2 id="2-ogc-wms-时间维参数与双缓冲无闪烁播放（wms-time）">2. OGC WMS 时间维参数与双缓冲无闪烁播放（<code>wms-time</code>）</h2>
-<h3 id="21-wms-time-参数更新机制">2.1 WMS TIME 参数更新机制</h3>
-<p>在 OGC WMS 规范中，服务端支持通过 URL 中的 <code>TIME</code> 参数获取特定时相的切片：
-$$\text{URL} = \text{baseWmsUrl} + \text{&quot;&amp;SERVICE=WMS&amp;REQUEST=GetMap&amp;...&amp;TIME=&quot;} + \text{ISO_8601_Timestamp}$$</p>
-<p>在 OpenLayers 中，调用 <code>source.updateParams({ &#39;TIME&#39;: newIsoString })</code> 会立即废弃当前所有瓦片并向服务器发起新一批切片请求。</p>
-<h3 id="22-白屏闪烁根因与双图层交替缓冲（double-buffering）">2.2 白屏闪烁根因与双图层交替缓冲（Double Buffering）</h3>
-<pre><code class="language-mermaid">flowchart TD
-    subgraph 单图层刷新 (产生白屏)
-        T1[&quot;当前帧完成渲染 (Frame t)&quot;] --&gt; ClearOld[&quot;updateParams 触发: 清除老切片&quot;]
-        ClearOld --&gt; BlankScreen[&quot;网络加载等待期 (白屏/空屏闪烁!)&quot;]
-        BlankScreen --&gt; T2[&quot;新帧切片加载完毕 (Frame t+1)&quot;]
-    end
+<h2 id="3-核心实现与典型范式">3. 核心实现与典型范式</h2>
+<h3 id="31-动态时序更新与零闪烁参数注入（updateparams）">3.1 动态时序更新与零闪烁参数注入（<code>updateParams</code>）</h3>
+<p>在 <code>wms-time.html</code> 中，展示了气象 NEXRAD 动态雷达图的优雅播放方式：</p>
+<pre><code class="language-javascript">import Map from &#39;ol/Map&#39;;
+import View from &#39;ol/View&#39;;
+import TileLayer from &#39;ol/layer/Tile&#39;;
+import TileWMS from &#39;ol/source/TileWMS&#39;;
 
-    subgraph 双图层交替缓冲 (无闪烁)
-        LayerA[&quot;图层 A: 处于可见状态 (显示 Frame t)&quot;]
-        LayerB[&quot;图层 B: 后台预加载 Frame t+1 切片&quot;]
-        LayerB --&gt; LoadFinish{&quot;图层 B 瓦片加载完成?&quot;}
-        LoadFinish --&gt;|是| Swap[&quot;原子切换: 图层 B 显示, 图层 A 隐藏待命&quot;]
-        Swap --&gt; LayerA_Next[&quot;图层 A 在后台预加载 Frame t+2&quot;]
-    end
-</code></pre>
-<h3 id="23-生产级双缓冲时钟播放器代码范式">2.3 生产级双缓冲时钟播放器代码范式</h3>
-<pre><code class="language-javascript">import TileLayer from &#39;ol/layer/Tile.js&#39;;
-import TileWMS from &#39;ol/source/TileWMS.js&#39;;
+const startDate = new Date(&#39;2026-10-15T00:00:00Z&#39;);
+let currentDate = startDate;
 
-// 时间序列数组（ISO 8601 标准）
-const timeSteps = [
-  &#39;2026-10-15T00:00:00Z&#39;,
-  &#39;2026-10-15T00:15:00Z&#39;,
-  &#39;2026-10-15T00:30:00Z&#39;,
-  &#39;2026-10-15T00:45:00Z&#39;,
-  &#39;2026-10-15T01:00:00Z&#39;,
-];
-
-let currentIndex = 0;
-
-// 构建双缓冲交替图层
-function createWmsLayer(initialTime) {
-  return new TileLayer({
-    source: new TileWMS({
-      url: &#39;https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi&#39;,
-      params: {
-        &#39;LAYERS&#39;: &#39;nexrad-n0r-wmst&#39;,
-        &#39;TRANSPARENT&#39;: true,
-        &#39;FORMAT&#39;: &#39;image/png&#39;,
-        &#39;TIME&#39;: initialTime,
-      },
-    }),
-    opacity: 0, // 初始透明
-  });
-}
-
-const layerA = createWmsLayer(timeSteps[0]);
-const layerB = createWmsLayer(timeSteps[1]);
-layerA.setOpacity(1); // 默认激活图层 A
-
-map.addLayer(layerA);
-map.addLayer(layerB);
-
-let activeLayer = layerA;
-let bufferLayer = layerB;
-
-// 动态步进切换函数
-function stepForward() {
-  currentIndex = (currentIndex + 1) % timeSteps.length;
-  const nextTime = timeSteps[currentIndex];
-
-  // 1. 让隐藏的 bufferLayer 更新时间参数并在后台预请求
-  bufferLayer.getSource().updateParams({ &#39;TIME&#39;: nextTime });
-
-  // 2. 监听后台图层首次加载就绪事件
-  const key = bufferLayer.getSource().once(&#39;tileloadend&#39;, function () {
-    // 3. 执行原子切换：隐藏旧图层，显示新图层
-    bufferLayer.setOpacity(1);
-    activeLayer.setOpacity(0);
-
-    // 4. 角色互换
-    const temp = activeLayer;
-    activeLayer = bufferLayer;
-    bufferLayer = temp;
-  });
-}
-
-// 启动 1000ms 定时轮播
-const timer = setInterval(stepForward, 1000);
-</code></pre>
-<hr>
-<h2 id="3-webgl-片元着色器硬件多帧平滑过渡（wms-time-webgl）">3. WebGL 片元着色器硬件多帧平滑过渡（<code>wms-time-webgl</code>）</h2>
-<p>在 Canvas 2D 下，即使用双缓冲也会产生“硬切（Hard Cut）”的不自然感。气象雷达回波图的最佳呈现方式是<strong>两帧之间执行线性插值淡化（Cross-fade Interpolation）</strong>：</p>
-<p>$$C_{\text{final}} = (1 - t) \cdot C_{\text{frame } A} + t \cdot C_{\text{frame } B}, \quad t \in [0, 1]$$</p>
-<p>OpenLayers 的 <code>WebGLTileLayer</code> 能够利用 GPU 直接对过渡期的切片进行混合计算：</p>
-<pre><code class="language-javascript">import WebGLTileLayer from &#39;ol/layer/WebGLTile.js&#39;;
-
-const webglTimeLayer = new WebGLTileLayer({
-  source: sourceWms,
-  // 启用 250ms 瓦片淡入淡出过渡时长
+const wmsSource = new TileWMS({
+  url: &#39;https://mesonet.agron.iastate.edu/cgi-bin/wms/nexrad/n0r-t.cgi&#39;,
+  params: {
+    LAYERS: &#39;nexrad-n0r-wmst&#39;,
+    TRANSPARENT: true,
+    FORMAT: &#39;image/png&#39;,
+    TIME: currentDate.toISOString(),
+  },
+  // 关键：开启 250ms 瓦片过渡动画，在新瓦片到达前保持旧瓦片不透明度
   transition: 250,
-  // 可结合片元着色器对气象雷达反射率 dBZ 进行 GPU 调色板映射
 });
+
+const radarLayer = new TileLayer({source: wmsSource});
+
+// 时间步进控制器
+function advanceTime() {
+  currentDate = new Date(currentDate.getTime() + 15 * 60 * 1000); // 步进 15 分钟
+  // 关键：使用 updateParams 触发增量更新，而非重新实例化数据源
+  wmsSource.updateParams({TIME: currentDate.toISOString()});
+  document.getElementById(&#39;time-display&#39;).innerText = currentDate.toISOString();
+}
+
+let timer = setInterval(advanceTime, 1000);
 </code></pre>
 <hr>
-<h2 id="4-wmts-多维维度参数（wmts-dimensions）">4. WMTS 多维维度参数（<code>wmts-dimensions</code>）</h2>
-<h3 id="41-ogc-wmts-维度切片规范">4.1 OGC WMTS 维度切片规范</h3>
-<p>WMTS 不仅能按时相切片，还能按高度（Elevation）、波段（Band）等维度切片。其切片模板 URL 格式为：
-<code>.../wmts?TIME={Time}&amp;ELEVATION={Elevation}&amp;...</code></p>
-<pre><code class="language-javascript">import WMTS, { optionsFromCapabilities } from &#39;ol/source/WMTS.js&#39;;
-import WMTSCapabilities from &#39;ol/format/WMTSCapabilities.js&#39;;
-
-// 从 Capabilities 文档自动初始化
-const options = optionsFromCapabilities(capabilities, {
-  layer: &#39;radar_composite&#39;,
-  matrixSet: &#39;EPSG:3857&#39;,
-});
+<h3 id="32-wmts-自定义维度动态注入（updatedimensions）">3.2 WMTS 自定义维度动态注入（<code>updateDimensions</code>）</h3>
+<p>在 <code>wmts-dimensions.html</code> 中，当服务为预生成的 WMTS 切片时，使用 <code>updateDimensions</code>：</p>
+<pre><code class="language-javascript">import WMTS from &#39;ol/source/WMTS&#39;;
+import WMTSTileGrid from &#39;ol/tilegrid/WMTS&#39;;
 
 const wmtsSource = new WMTS({
-  ...options,
+  url: &#39;https://example.com/wmts&#39;,
+  layer: &#39;TEMPORAL_TEMPERATURE&#39;,
+  matrixSet: &#39;EPSG:3857&#39;,
+  format: &#39;image/png&#39;,
   dimensions: {
-    &#39;Time&#39;: &#39;2026-10-15T00:00:00Z&#39;,
-    &#39;Elevation&#39;: &#39;500&#39;, // 高度层 500 米
+    Time: &#39;2026-10-15T00:00:00Z&#39;,
+    Elevation: &#39;0&#39;,
   },
+  tileGrid: tileGrid,
 });
 
-// 运行时动态更新维度
-function updateDimension(key, value) {
+// 动态切换时间或高度
+function setElevationLevel(level) {
   wmtsSource.updateDimensions({
-    [key]: value,
+    Elevation: level.toString(),
   });
 }
 </code></pre>
 <hr>
-<h2 id="5-云原生多维张量与时空故事漫游（geozarr）">5. 云原生多维张量与时空故事漫游（<code>geozarr</code>）</h2>
-<h3 id="51-geozarr-多维数据立方体（datacube）时序">5.1 GeoZarr 多维数据立方体（DataCube）时序</h3>
-<p>GeoZarr 将时空数据抽象为多维张量：$(T, C, Z, Y, X)$，即（时间、通道/波段、深度/高程、纬度、经度）。
-在前端无需后端切片服务，直接通过 HTTP Range 请求按需拉取特定时相 $T_i$ 的数据块：</p>
-<pre><code class="language-mermaid">graph LR
-    ZarrStorage[&quot;云对象存储 (S3 / OSS / MinIO)&quot;] --&gt;|HTTP Range Requests| OpenLayersZarr[&quot;ol/source/GeoZarr&quot;]
-    OpenLayersZarr --&gt; SliceT[&quot;时态切片过滤: T = 2026-10-15&quot;]
-    SliceT --&gt; BandSelect[&quot;波段合成: NDVI = (NIR - Red) / (NIR + Red)&quot;]
-    BandSelect --&gt; GPU[&quot;WebGLTile 直接渲染色彩映射&quot;]
-</code></pre>
-<h3 id="52-时空故事漫游联动（geozarr-storytelling）">5.2 时空故事漫游联动（<code>geozarr-storytelling</code>）</h3>
-<p>时空数据常与相机飞行动画结合，构建空间叙事故事线：</p>
-<ol>
-<li><strong>时间轴驱动</strong>：用户滚动长页面（ScrollMagic 或 IntersectionObserver）时，将滚动百分比映射为时间戳；</li>
-<li><strong>多轴联动</strong>：调用 <code>map.getView().animate({ center, zoom, duration })</code> 同步切换视口视角，实现“边讲故事边看地表历史变迁”。</li>
-</ol>
-<hr>
-<h2 id="6-避坑指南与时空性能优化">6. 避坑指南与时空性能优化</h2>
-<h3 id="61-瓦片缓存风暴与内存泄漏">6.1 瓦片缓存风暴与内存泄漏</h3>
+<h2 id="4-生产避坑指南与性能治理">4. 生产避坑指南与性能治理</h2>
+<h3 id="41-严禁销毁并重建-source">4.1 严禁销毁并重建 <code>Source</code></h3>
 <ul>
-<li><strong>现象</strong>：时间轴快速播放数分钟后，浏览器内存飙升至数 GB，出现卡顿甚至崩溃。</li>
-<li><strong>根因</strong>：OpenLayers 默认会对每个唯一 URL 的瓦片保留 LRU 缓存。每次更新 <code>TIME</code> 参数都会生成全新的 URL，导致短时间内积压数万张离屏 Image 缓存。</li>
-<li><strong>解法</strong>：为时序数据源设置紧凑的缓存上限：<pre><code class="language-javascript">const source = new TileWMS({
-  cacheSize: 256, // 限制最大缓存切片数，超出自动释放老时相切片
-});
-</code></pre>
-</li>
+<li><strong>常见误区</strong>：每次时间改变时，调用 <code>layer.setSource(new TileWMS(...))</code>。</li>
+<li><strong>灾难后果</strong>：这会清空 OpenLayers 内部建立的瓦片缓存池与请求队列，并在每次时间变更时引发整屏白屏闪烁（Flicker），同时产生大量待垃圾回收的死对象。</li>
+<li><strong>黄金准则</strong>：必须调用 <code>source.updateParams({ TIME: ... })</code>。OpenLayers 会保留旧瓦片作为底衬，直到新时间戳的瓦片下载并渲染完毕后执行淡入切换。</li>
 </ul>
-<h3 id="62-iso-8601-时间格式毫秒与时区对齐">6.2 ISO 8601 时间格式毫秒与时区对齐</h3>
+<h3 id="42-本地时区偏差导致的请求-404">4.2 本地时区偏差导致的请求 404</h3>
 <ul>
-<li>WMS 服务端通常对时间字符串格式要求极严（例如只接受 <code>2026-10-15T00:00:00Z</code>，多出毫秒 <code>.000Z</code> 就会报错 400）。</li>
-<li>在调用 <code>source.updateParams</code> 前，使用统一工具函数（如 <code>date.toISOString().split(&#39;.&#39;)[0] + &#39;Z&#39;</code>）格式化时间戳。</li>
+<li><strong>现象</strong>：在浏览器本地执行 <code>date.toString()</code> 传给后端 WMS 时，服务器频繁返回 400（Bad Request）或 404（No Data Available）。</li>
+<li><strong>根因</strong>：多数 GIS 服务器（如 GeoServer、MapServer、THREDDS）均严格以 <strong>UTC（零时区）</strong> 存储时序快照，而客户端默认输出本地时区字符串（如 <code>GMT+0800</code>）。</li>
+<li><strong>防范规范</strong>：必须统一使用 <code>date.toISOString()</code> 输出带 <code>Z</code> 结尾的标准时间字符串。</li>
+</ul>
+<h3 id="43-高速播放时的网络堆积与内存暴涨">4.3 高速播放时的网络堆积与内存暴涨</h3>
+<ul>
+<li><strong>治理法则</strong>：在自动播放模式下，如果用户设置播放速率过快（如每 100ms 一帧），而网络加载单帧需要 300ms，会导致大量过期的瓦片请求堆积在浏览器并发队列中。</li>
+<li><strong>最佳实践</strong>：监听数据源的 <code>tileloadend</code> 事件或利用“双缓冲异步队列”，保证前一帧的主要视口切片就绪后再派发下一帧时间步进。</li>
 </ul>
 
     </div>
