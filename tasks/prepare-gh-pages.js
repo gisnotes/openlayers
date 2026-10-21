@@ -35,46 +35,86 @@ fs.cpSync(examplesBuildDir, path.join(outDir, 'en', 'latest', 'examples'), {
 // 4. Create .nojekyll to bypass Jekyll processing on GitHub Pages
 fs.writeFileSync(path.join(outDir, '.nojekyll'), '');
 
-// 5. Rewrite links in HTML files (for GitHub Pages: add /openlayers; for local: clean root /)
+// 5. Rewrite links in HTML files and accelerate examples/data via jsDelivr CDN
 const repoPath = isLocal ? '' : '/openlayers';
-function processHtmlFiles(dir) {
+const enableCdn = !isLocal && !process.argv.includes('--no-cdn');
+const cdnDataBase =
+  process.env.OPENLAYERS_DATA_CDN ||
+  'https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/';
+
+function rewriteDataUrls(content) {
+  return content.replace(
+    /((?:&#x27;|&quot;|['"]))(?:\.\/)?data\/([a-zA-Z0-9_\-\.\/]+)(\1)/g,
+    (match, openQuote, relPath, closeQuote) => {
+      const localFilePath = path.join(rootDir, 'examples', 'data', relPath);
+      if (fs.existsSync(localFilePath) && fs.statSync(localFilePath).isFile()) {
+        return `${openQuote}${cdnDataBase}${relPath}${closeQuote}`;
+      }
+      return match;
+    },
+  );
+}
+
+let cdnReplacedCount = 0;
+function processDistributionFiles(dir) {
   const entries = fs.readdirSync(dir, {withFileTypes: true});
   for (const entry of entries) {
     const fullPath = path.join(dir, entry.name);
     if (entry.isDirectory()) {
-      processHtmlFiles(fullPath);
-    } else if (entry.isFile() && entry.name.endsWith('.html')) {
-      let content = fs.readFileSync(fullPath, 'utf8');
-      if (isLocal) {
-        content = content
-          .replaceAll('href="/openlayers/"', 'href="/"')
-          .replaceAll('href="/openlayers"', 'href="/"')
-          .replaceAll("href='/openlayers/'", "href='/'")
-          .replaceAll("href='/openlayers'", "href='/'");
-      } else {
-        content = content
-          .replaceAll('href="/theme/', `href="${repoPath}/theme/`)
-          .replaceAll("href='/theme/", `href='${repoPath}/theme/`)
-          .replaceAll('src="/theme/', `src="${repoPath}/theme/`)
-          .replaceAll("src='/theme/", `src='${repoPath}/theme/`)
-          .replaceAll('href="/doc/', `href="${repoPath}/doc/`)
-          .replaceAll("href='/doc/", `href='${repoPath}/doc/`)
-          .replaceAll('href="/download/', `href="${repoPath}/download/`)
-          .replaceAll("href='/download/", `href='${repoPath}/download/`)
-          .replaceAll('href="/summary/', `href="${repoPath}/summary/`)
-          .replaceAll("href='/summary/", `href='${repoPath}/summary/`)
-          .replaceAll('href="/workshop/', `href="${repoPath}/workshop/`)
-          .replaceAll("href='/workshop/", `href='${repoPath}/workshop/`)
-          .replaceAll('href="/3rd-party/', `href="${repoPath}/3rd-party/`)
-          .replaceAll("href='/3rd-party/", `href='${repoPath}/3rd-party/`)
-          .replaceAll('href="/en/', `href="${repoPath}/en/`)
-          .replaceAll("href='/en/", `href='${repoPath}/en/`)
-          .replaceAll('href="/"', `href="${repoPath}/"`)
-          .replaceAll("href='/'", `href='${repoPath}/'`);
+      processDistributionFiles(fullPath);
+    } else if (entry.isFile()) {
+      if (entry.name.endsWith('.html')) {
+        let content = fs.readFileSync(fullPath, 'utf8');
+        if (isLocal) {
+          content = content
+            .replaceAll('href="/openlayers/"', 'href="/"')
+            .replaceAll('href="/openlayers"', 'href="/"')
+            .replaceAll("href='/openlayers/'", "href='/'")
+            .replaceAll("href='/openlayers'", "href='/'");
+        } else {
+          content = content
+            .replaceAll('href="/theme/', `href="${repoPath}/theme/`)
+            .replaceAll("href='/theme/", `href='${repoPath}/theme/`)
+            .replaceAll('src="/theme/', `src="${repoPath}/theme/`)
+            .replaceAll("src='/theme/", `src='${repoPath}/theme/`)
+            .replaceAll('href="/doc/', `href="${repoPath}/doc/`)
+            .replaceAll("href='/doc/", `href='${repoPath}/doc/`)
+            .replaceAll('href="/download/', `href="${repoPath}/download/`)
+            .replaceAll("href='/download/", `href='${repoPath}/download/`)
+            .replaceAll('href="/summary/', `href="${repoPath}/summary/`)
+            .replaceAll("href='/summary/", `href='${repoPath}/summary/`)
+            .replaceAll('href="/workshop/', `href="${repoPath}/workshop/`)
+            .replaceAll("href='/workshop/", `href='${repoPath}/workshop/`)
+            .replaceAll('href="/3rd-party/', `href="${repoPath}/3rd-party/`)
+            .replaceAll("href='/3rd-party/", `href='${repoPath}/3rd-party/`)
+            .replaceAll('href="/en/', `href="${repoPath}/en/`)
+            .replaceAll("href='/en/", `href='${repoPath}/en/`)
+            .replaceAll('href="/"', `href="${repoPath}/"`)
+            .replaceAll("href='/'", `href='${repoPath}/'`);
+        }
+        if (enableCdn) {
+          const prev = content;
+          content = rewriteDataUrls(content);
+          if (content !== prev) {
+            cdnReplacedCount++;
+          }
+        }
+        fs.writeFileSync(fullPath, content, 'utf8');
+      } else if (entry.name.endsWith('.js') && enableCdn) {
+        const content = fs.readFileSync(fullPath, 'utf8');
+        const updated = rewriteDataUrls(content);
+        if (updated !== content) {
+          cdnReplacedCount++;
+          fs.writeFileSync(fullPath, updated, 'utf8');
+        }
       }
-      fs.writeFileSync(fullPath, content, 'utf8');
     }
   }
 }
-processHtmlFiles(outDir);
-console.log('Successfully prepared gh-pages distribution in:', outDir);
+processDistributionFiles(outDir);
+
+if (enableCdn) {
+  console.log(`Accelerated examples/data via jsDelivr CDN across ${cdnReplacedCount} files:`);
+  console.log(`  Base URL: ${cdnDataBase}`);
+}
+console.log('Successfully prepared distribution in:', outDir);

@@ -221,11 +221,15 @@ npm run build-examples
 npm run build-site
 ```
 
-### 3. 组织分发产物（必跑）
+### 3. 组织分发产物与 jsDelivr CDN 加速（必跑）
 ```powershell
 # 同时生成 GitHub Pages 发布产物 (build/gh-pages-dist) 与本地预览产物 (build/site-dist)
 node tasks/prepare-gh-pages.js; node tasks/prepare-gh-pages.js --local
 ```
+
+- **双模自动化机制**：
+  - **本地开发与本地预览（`--local`）**：产物 `build/site-dist` 严格保持本地相对路径（`data/...`），完全离线零依赖，开箱即测；
+  - **线上发布 GitHub Pages（默认）**：产物 `build/gh-pages-dist` 会自动将所有示例引用的 `data/...` 静态资源重写为 jsDelivr 高速 CDN 链接（`https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/...`）。享受全球 Anycast CDN 节点加速、原生 CORS 跨域许可以及自动 Gzip/Brotli 高压缩率（如 5.4MB 大体积 GeoJSON 压缩至 916KB 直出），彻底消除国内直连 GitHub Pages 静态数据卡顿的痛点。
 
 ### 4. 本地启动服务预览
 ```powershell
