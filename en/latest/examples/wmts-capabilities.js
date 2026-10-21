@@ -1,7 +1,7 @@
 import { l as WMTSCapabilities } from "./common.js";
 //#region examples/wmts-capabilities.js
 var parser = new WMTSCapabilities();
-fetch("data/WMTSCapabilities.xml").then(function(response) {
+fetch("https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/WMTSCapabilities.xml").then(function(response) {
 	return response.text();
 }).then(function(text) {
 	const result = parser.read(text);

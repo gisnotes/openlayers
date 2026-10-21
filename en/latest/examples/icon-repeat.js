@@ -13,7 +13,7 @@ new Map({
 				width: 2
 			}),
 			image: new Icon({
-				src: "data/arrow.png",
+				src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/arrow.png",
 				rotateWithView: true,
 				placement: "line",
 				repeat: 50

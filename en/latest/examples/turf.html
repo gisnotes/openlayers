@@ -284,7 +284,7 @@ const source &#x3D; new VectorSource();
 
 // Fetch roads GeoJSON and analyze with Turf.js
 // 异步拉取首尔道路网络 GeoJSON 并结合 Turf.js 进行空间分析
-fetch(&#x27;data/geojson/roads-seoul.geojson&#x27;)
+fetch(&#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/roads-seoul.geojson&#x27;)
   .then(function (response) {
     return response.json();
   })

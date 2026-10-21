@@ -78,8 +78,8 @@ function addPosition(position, heading, m, speed) {
 		m
 	]);
 	positions.setCoordinates(positions.getCoordinates().slice(-20));
-	if (heading && speed) markerEl.src = "data/geolocation_marker_heading.png";
-	else markerEl.src = "data/geolocation_marker.png";
+	if (heading && speed) markerEl.src = "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geolocation_marker_heading.png";
+	else markerEl.src = "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geolocation_marker.png";
 }
 function getCenterWithHeading(position, rotation, resolution) {
 	const height = map.getSize()[1];
@@ -107,7 +107,7 @@ geolocateBtn.addEventListener("click", function() {
 }, false);
 var simulationData;
 var client = new XMLHttpRequest();
-client.open("GET", "data/geolocation-orientation.json");
+client.open("GET", "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geolocation-orientation.json");
 /**
 * Handle data loading.
 * 解析模拟轨迹 JSON 数据

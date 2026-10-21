@@ -12,7 +12,7 @@ var iconFeature = new Feature({
 	rainfall: 500
 });
 var iconStyle = new Style({ image: new Icon({
-	src: "data/icon.png",
+	src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icon.png",
 	width: Number(widthInput.value),
 	height: Number(heightInput.value)
 }) });
@@ -20,7 +20,7 @@ iconFeature.setStyle(iconStyle);
 widthInput.addEventListener("input", (event) => {
 	const currentIcon = iconStyle.getImage();
 	iconStyle.setImage(new Icon({
-		src: "data/icon.png",
+		src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icon.png",
 		width: Number(event.target.value),
 		height: currentIcon.getHeight()
 	}));
@@ -29,7 +29,7 @@ widthInput.addEventListener("input", (event) => {
 heightInput.addEventListener("input", (event) => {
 	const currentIcon = iconStyle.getImage();
 	iconStyle.setImage(new Icon({
-		src: "data/icon.png",
+		src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icon.png",
 		height: Number(event.target.value),
 		width: currentIcon.getWidth()
 	}));
@@ -38,7 +38,7 @@ heightInput.addEventListener("input", (event) => {
 clearWidthButton.addEventListener("click", () => {
 	const currentIcon = iconStyle.getImage();
 	iconStyle.setImage(new Icon({
-		src: "data/icon.png",
+		src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icon.png",
 		height: currentIcon.getHeight()
 	}));
 	iconFeature.setStyle(iconStyle);
@@ -49,7 +49,7 @@ clearWidthButton.addEventListener("click", () => {
 clearHeightButton.addEventListener("click", () => {
 	const currentIcon = iconStyle.getImage();
 	iconStyle.setImage(new Icon({
-		src: "data/icon.png",
+		src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icon.png",
 		width: currentIcon.getWidth()
 	}));
 	iconFeature.setStyle(iconStyle);

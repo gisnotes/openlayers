@@ -115,7 +115,7 @@ var WMSGetFeatureInfo = class extends XMLFeature {
 };
 //#endregion
 //#region examples/getfeatureinfo-layers.js
-fetch("data/wmsgetfeatureinfo/osm-restaurant-hotel.xml").then(function(response) {
+fetch("https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/wmsgetfeatureinfo/osm-restaurant-hotel.xml").then(function(response) {
 	return response.text();
 }).then(function(response) {
 	const allFeatures = new WMSGetFeatureInfo().readFeatures(response);

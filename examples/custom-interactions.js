@@ -112,7 +112,7 @@ new Map({
 			polygonFeature
 		] }),
 		style: {
-			"icon-src": "data/icon.png",
+			"icon-src": "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icon.png",
 			"icon-opacity": .95,
 			"icon-anchor": [.5, 46],
 			"icon-anchor-x-units": "fraction",

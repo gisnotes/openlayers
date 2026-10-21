@@ -5,7 +5,7 @@ import { t as Modify } from "./Modify.js";
 import { t as Snap } from "./Snap2.js";
 //#region examples/line-styles.js
 var source = new VectorSource({
-	url: "data/geojson/line-samples.geojson",
+	url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/line-samples.geojson",
 	format: new GeoJSON()
 });
 var vector = new VectorLayer({ source });

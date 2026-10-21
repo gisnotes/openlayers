@@ -106,7 +106,7 @@ maxYearInput.addEventListener("input", function() {
 });
 updateStatusText();
 var client = new XMLHttpRequest();
-client.open("GET", "data/csv/meteorite_landings.csv");
+client.open("GET", "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/csv/meteorite_landings.csv");
 client.onload = function() {
 	const csv = client.responseText;
 	const features = [];

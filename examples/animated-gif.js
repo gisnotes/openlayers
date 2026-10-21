@@ -11,7 +11,7 @@ var map = new Map({
 		zoom: 2
 	})
 });
-gifler("data/globe.gif").frames(document.createElement("canvas"), function(ctx, frame) {
+gifler("https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/globe.gif").frames(document.createElement("canvas"), function(ctx, frame) {
 	if (!iconFeature.getStyle()) iconFeature.setStyle(new Style({ image: new Icon({
 		img: ctx.canvas,
 		opacity: .8

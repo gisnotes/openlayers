@@ -2,7 +2,7 @@ import { $n as VectorLayer, Cn as GeoJSON, Dr as Map, Ni as View, Un as VectorSo
 import { n as OSM } from "./OSM.js";
 //#region examples/center.js
 var source = new VectorSource({
-	url: "data/geojson/switzerland.geojson",
+	url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/switzerland.geojson",
 	format: new GeoJSON()
 });
 var vectorLayer = new VectorLayer({

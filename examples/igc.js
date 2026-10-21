@@ -25,11 +25,11 @@ var styleFunction = function(feature) {
 };
 var vectorSource = new VectorSource();
 var igcUrls = [
-	"data/igc/Clement-Latour.igc",
-	"data/igc/Damien-de-Baenst.igc",
-	"data/igc/Sylvain-Dhonneur.igc",
-	"data/igc/Tom-Payne.igc",
-	"data/igc/Ulrich-Prinz.igc"
+	"https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/igc/Clement-Latour.igc",
+	"https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/igc/Damien-de-Baenst.igc",
+	"https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/igc/Sylvain-Dhonneur.igc",
+	"https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/igc/Tom-Payne.igc",
+	"https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/igc/Ulrich-Prinz.igc"
 ];
 function get(url, callback) {
 	const client = new XMLHttpRequest();

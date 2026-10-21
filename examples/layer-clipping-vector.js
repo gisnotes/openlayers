@@ -11,7 +11,7 @@ var base = new TileLayer({ source: new OSM() });
 var clipLayer = new VectorLayer({
 	style: null,
 	source: new VectorSource({
-		url: "./data/geojson/switzerland.geojson",
+		url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/switzerland.geojson",
 		format: new GeoJSON()
 	})
 });

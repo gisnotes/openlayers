@@ -8,7 +8,7 @@ var map = new Map({
 		tileSize: 512,
 		maxZoom: 20
 	}) }), new VectorLayer({ source: new VectorSource({
-		url: "data/kml/2012-02-10.kml",
+		url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/kml/2012-02-10.kml",
 		format: new KML()
 	}) })],
 	target: document.getElementById("map"),

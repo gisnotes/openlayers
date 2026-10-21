@@ -546,7 +546,7 @@ function readKeywordList(node, objectStack) {
 //#endregion
 //#region examples/wms-capabilities.js
 var parser = new WMSCapabilities();
-fetch("data/ogcsample.xml").then(function(response) {
+fetch("https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/ogcsample.xml").then(function(response) {
 	return response.text();
 }).then(function(text) {
 	const result = parser.read(text);

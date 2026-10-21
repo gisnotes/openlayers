@@ -3,7 +3,7 @@ import { n as OSM } from "./OSM.js";
 //#region examples/view-padding.js
 /** @type {VectorSource<import('../src/ol/Feature.js').default<import('../src/ol/geom/SimpleGeometry.js').default>>} */
 var source = new VectorSource({
-	url: "data/geojson/switzerland.geojson",
+	url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/switzerland.geojson",
 	format: new GeoJSON()
 });
 var vectorLayer = new VectorLayer({

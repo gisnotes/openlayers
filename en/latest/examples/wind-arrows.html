@@ -458,7 +458,7 @@ const map &#x3D; new Map({
 });
 
 // 5. 异步加载 OpenWeather 实况气象站点数据，构造点要素并自动缩放视图至数据范围
-fetch(&#x27;data/openweather/weather.json&#x27;)
+fetch(&#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/openweather/weather.json&#x27;)
   .then(function (response) {
     return response.json();
   })

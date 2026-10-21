@@ -12,7 +12,7 @@ var iconStyle = new Style({ image: new Icon({
 	anchor: [.5, 46],
 	anchorXUnits: "fraction",
 	anchorYUnits: "pixels",
-	src: "data/icon.png"
+	src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icon.png"
 }) });
 iconFeature.setStyle(iconStyle);
 var vectorLayer = new VectorLayer({ source: new VectorSource({ features: [iconFeature] }) });

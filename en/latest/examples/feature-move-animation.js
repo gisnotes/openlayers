@@ -291,7 +291,7 @@ var map = new Map({
 		tileSize: 512
 	}) })]
 });
-fetch("data/polyline/route.json").then(function(response) {
+fetch("https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/polyline/route.json").then(function(response) {
 	response.json().then(function(result) {
 		const polyline = result.routes[0].geometry;
 		const route = new Polyline({ factor: 1e6 }).readGeometry(polyline, {
@@ -327,7 +327,7 @@ fetch("data/polyline/route.json").then(function(response) {
 			}) }),
 			"icon": new Style({ image: new Icon({
 				anchor: [.5, 1],
-				src: "data/icon.png"
+				src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icon.png"
 			}) }),
 			"geoMarker": new Style({ image: new CircleStyle({
 				radius: 7,

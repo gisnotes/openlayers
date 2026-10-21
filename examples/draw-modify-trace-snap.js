@@ -10,7 +10,7 @@ var raster = new TileLayer({ source: new ImageTileSource({
 var baseVector = new VectorLayer({
 	source: new VectorSource({
 		format: new GeoJSON(),
-		url: "data/geojson/fire.json"
+		url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/fire.json"
 	}),
 	style: {
 		"fill-color": "rgba(255, 0, 0, 0.3)",

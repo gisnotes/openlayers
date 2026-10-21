@@ -352,7 +352,7 @@ const raster &#x3D; new TileLayer({
 // 2. 创建 TopoJSON 矢量图层：加载全球 1:1.1亿 比例尺拓扑国家边界数据
 const vector &#x3D; new VectorLayer({
   source: new VectorSource({
-    url: &#x27;data/topojson/world-110m.json&#x27;,
+    url: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/topojson/world-110m.json&#x27;,
     format: new TopoJSON({
       // world-110m.json 的 objects 中同时包含 &#x27;land&#x27;（全球陆地外轮廓）和 &#x27;countries&#x27;（各国边界）两层，
       // 此处指定仅提取 &#x27;countries&#x27; 图层，避免与整个陆地多边形重复叠加绘制

@@ -3,13 +3,13 @@ import { n as OSM } from "./OSM.js";
 import { t as WebGLVectorLayer } from "./WebGLVector.js";
 //#region examples/webgl-points-layer.js
 var vectorSource = new VectorSource({
-	url: "data/geojson/world-cities.geojson",
+	url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/world-cities.geojson",
 	format: new GeoJSON(),
 	wrapX: true
 });
 var predefinedStyles = {
 	icons: {
-		"icon-src": "data/icon.png",
+		"icon-src": "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icon.png",
 		"icon-width": 18,
 		"icon-height": 28,
 		"icon-color": "lightyellow",

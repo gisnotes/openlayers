@@ -261,7 +261,7 @@ const newColor &#x3D; [180, 255, 200];
 // WebGL literal style with sprite atlas offset mapping and color interpolation
 // WebGL 字面量样式：结合精灵图偏移映射与年份颜色插值
 const style &#x3D; {
-  &#x27;icon-src&#x27;: &#x27;data/ufo_shapes.png&#x27;,
+  &#x27;icon-src&#x27;: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/ufo_shapes.png&#x27;,
   &#x27;icon-width&#x27;: 128,
   &#x27;icon-height&#x27;: 64,
   &#x27;icon-color&#x27;: [
@@ -342,7 +342,7 @@ function fillShapeSelect(shapeTypes) {
 // Load UFO sightings CSV dataset (approx 80k points)
 // 异步读取 UFO 目击事件 CSV 数据集（约 8 万条记录）
 const client &#x3D; new XMLHttpRequest();
-client.open(&#x27;GET&#x27;, &#x27;data/csv/ufo_sighting_data.csv&#x27;);
+client.open(&#x27;GET&#x27;, &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/csv/ufo_sighting_data.csv&#x27;);
 client.addEventListener(&#x27;load&#x27;, function () {
   const csv &#x3D; client.responseText;
   // Key is shape name, value is sightings count / 统计各形态频次

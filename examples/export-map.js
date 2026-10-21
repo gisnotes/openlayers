@@ -17,7 +17,7 @@ var map = new Map({
 		}
 	}), new Heatmap({
 		source: new VectorSource({
-			url: "data/geojson/world-cities.geojson",
+			url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/world-cities.geojson",
 			format: new GeoJSON()
 		}),
 		weight: function(feature) {

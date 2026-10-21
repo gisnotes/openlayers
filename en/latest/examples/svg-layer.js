@@ -16,7 +16,7 @@ var map = new Map({
 });
 var svgContainer = document.createElement("div");
 var xhr = new XMLHttpRequest();
-xhr.open("GET", "data/world.svg");
+xhr.open("GET", "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/world.svg");
 xhr.addEventListener("load", function() {
 	const svg = xhr.responseXML.documentElement;
 	svgContainer.ownerDocument.importNode(svg);

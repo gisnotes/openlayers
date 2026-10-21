@@ -62,7 +62,7 @@ var map = new Map({
 * Load TopoJSON data and instantiate the custom D3 layer
 * 加载 TopoJSON 数据并实例化自定义 D3 SVG 图层挂载至地图
 */
-json_default("data/topojson/us.json").then(function(us) {
+json_default("https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/topojson/us.json").then(function(us) {
 	const layer = new CanvasLayer({ features: feature_default(us, "counties") });
 	map.addLayer(layer);
 });

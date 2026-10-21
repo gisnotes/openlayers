@@ -2,7 +2,7 @@ import { Dr as Map, Ni as View, R as WMTS, l as WMTSCapabilities, yr as TileLaye
 import { n as OSM } from "./OSM.js";
 //#region examples/wmts-layer-from-capabilities.js
 var parser = new WMTSCapabilities();
-fetch("data/WMTSCapabilities.xml").then(function(response) {
+fetch("https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/WMTSCapabilities.xml").then(function(response) {
 	return response.text();
 }).then(function(text) {
 	const options = optionsFromCapabilities(parser.read(text), {

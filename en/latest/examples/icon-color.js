@@ -9,27 +9,27 @@ var berlin = new Feature({ geometry: new Point(fromLonLat([13.3884, 52.5169])) }
 rome.setStyle(new Style({ image: new Icon({
 	color: "#BADA55",
 	crossOrigin: "anonymous",
-	src: "data/square.svg"
+	src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/square.svg"
 }) }));
 london.setStyle(new Style({ image: new Icon({
 	color: "rgba(255, 0, 0, .5)",
 	crossOrigin: "anonymous",
-	src: "data/bigdot.png",
+	src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/bigdot.png",
 	scale: .2
 }) }));
 madrid.setStyle(new Style({ image: new Icon({
 	crossOrigin: "anonymous",
-	src: "data/bigdot.png",
+	src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/bigdot.png",
 	scale: .2
 }) }));
 paris.setStyle(new Style({ image: new Icon({
 	color: "#8959A8",
 	crossOrigin: "anonymous",
-	src: "data/dot.svg"
+	src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/dot.svg"
 }) }));
 berlin.setStyle(new Style({ image: new Icon({
 	crossOrigin: "anonymous",
-	src: "data/dot.svg"
+	src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/dot.svg"
 }) }));
 var vectorLayer = new VectorLayer({ source: new VectorSource({ features: [
 	rome,

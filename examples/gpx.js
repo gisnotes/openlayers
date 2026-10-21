@@ -28,7 +28,7 @@ var style = {
 var map = new Map({
 	layers: [raster, new VectorLayer({
 		source: new VectorSource({
-			url: "data/gpx/fells_loop.gpx",
+			url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/gpx/fells_loop.gpx",
 			format: new GPX()
 		}),
 		style: function(feature) {

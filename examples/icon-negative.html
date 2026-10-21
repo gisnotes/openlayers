@@ -431,7 +431,7 @@ function createStyle(src, img) {
 // 创建一个位于坐标原点 [0, 0] 的点要素
 const iconFeature &#x3D; new Feature(new Point([0, 0]));
 // 将初始样式保存在要素的自定义属性 &#x27;style&#x27; 中，便于图层渲染与后续 Select 交互读取原图
-iconFeature.set(&#x27;style&#x27;, createStyle(&#x27;data/icon.png&#x27;, undefined));
+iconFeature.set(&#x27;style&#x27;, createStyle(&#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icon.png&#x27;, undefined));
 
 const map &#x3D; new Map({
   layers: [

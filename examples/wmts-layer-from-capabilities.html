@@ -182,7 +182,7 @@ import WMTS, {optionsFromCapabilities} from &#x27;ol/source/WMTS.js&#x27;;
 const parser &#x3D; new WMTSCapabilities();
 let map;
 
-fetch(&#x27;data/WMTSCapabilities.xml&#x27;)
+fetch(&#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/WMTSCapabilities.xml&#x27;)
   .then(function (response) {
     return response.text();
   })

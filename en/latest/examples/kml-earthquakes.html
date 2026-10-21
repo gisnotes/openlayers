@@ -399,7 +399,7 @@ const styleFunction &#x3D; function (feature) {
 // 创建地震矢量图层：加载 2012 年 5 级以上地震 KML 数据（关闭 KML 内置样式提取）
 const vector &#x3D; new VectorLayer({
   source: new VectorSource({
-    url: &#x27;data/kml/2012_Earthquakes_Mag5.kml&#x27;,
+    url: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/kml/2012_Earthquakes_Mag5.kml&#x27;,
     format: new KML({
       extractStyles: false,
     }),

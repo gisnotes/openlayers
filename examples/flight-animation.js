@@ -18,7 +18,7 @@ var style = new Style({ stroke: new Stroke({
 var flightsSource = new VectorSource({
 	attributions: "Flight data by <a href=\"https://openflights.org/data.html\">OpenFlights</a>,",
 	loader: function() {
-		fetch("data/openflights/flights.json").then(function(response) {
+		fetch("https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/openflights/flights.json").then(function(response) {
 			return response.json();
 		}).then(function(json) {
 			const flightsData = json.flights;

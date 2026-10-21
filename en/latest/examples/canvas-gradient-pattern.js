@@ -14,7 +14,7 @@ new Map({
 	layers: [new VectorLayer({
 		background: "white",
 		source: new VectorSource({
-			url: "data/kml/states.kml",
+			url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/kml/states.kml",
 			format: new KML({ extractStyles: false })
 		}),
 		style: new Style({

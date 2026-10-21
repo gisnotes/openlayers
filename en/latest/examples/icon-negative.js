@@ -17,7 +17,7 @@ function createStyle(src, img) {
 	}) });
 }
 var iconFeature = new Feature(new Point([0, 0]));
-iconFeature.set("style", createStyle("data/icon.png", void 0));
+iconFeature.set("style", createStyle("https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icon.png", void 0));
 var map = new Map({
 	layers: [new TileLayer({ source: new StadiaMaps({ layer: "stamen_watercolor" }) }), new VectorLayer({
 		style: function(feature) {

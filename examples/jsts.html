@@ -275,7 +275,7 @@ const source &#x3D; new VectorSource();
 
 // Fetch roads GeoJSON and perform JSTS buffer operations
 // 异步拉取道路 GeoJSON 数据并执行 JSTS 空间拓扑缓冲区运算
-fetch(&#x27;data/geojson/roads-seoul.geojson&#x27;)
+fetch(&#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/roads-seoul.geojson&#x27;)
   .then(function (response) {
     return response.json();
   })

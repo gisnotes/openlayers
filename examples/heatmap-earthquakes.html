@@ -392,7 +392,7 @@ const radius &#x3D; document.getElementById(&#x27;radius&#x27;);
 // 创建基于 WebGL 渲染的热力图图层（ol/layer/Heatmap）
 const vector &#x3D; new HeatmapLayer({
   source: new VectorSource({
-    url: &#x27;data/kml/2012_Earthquakes_Mag5.kml&#x27;,
+    url: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/kml/2012_Earthquakes_Mag5.kml&#x27;,
     format: new KML({
       // 忽略 KML 文件内置的图标样式，仅提取点几何与属性用于热力图渲染
       extractStyles: false,

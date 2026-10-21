@@ -21,7 +21,7 @@ var styleVariables = {
 	patternOffset: 0
 };
 var source = new VectorSource({
-	url: "data/geojson/switzerland.geojson",
+	url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/switzerland.geojson",
 	format: new GeoJSON()
 });
 /**
@@ -54,7 +54,7 @@ var getStyle = (dash, pattern) => {
 		delete newStyle["stroke-color"];
 		newStyle = {
 			...newStyle,
-			"stroke-pattern-src": "data/dot.svg",
+			"stroke-pattern-src": "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/dot.svg",
 			"stroke-pattern-spacing": ["var", "patternSpacing"],
 			"stroke-pattern-start-offset": ["var", "patternOffset"]
 		};

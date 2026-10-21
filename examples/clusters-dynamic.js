@@ -24,8 +24,8 @@ var outerCircle = new CircleStyle({
 	radius: 20,
 	fill: outerCircleFill
 });
-var darkIcon = new Icon({ src: "data/icons/emoticon-cool.svg" });
-var lightIcon = new Icon({ src: "data/icons/emoticon-cool-outline.svg" });
+var darkIcon = new Icon({ src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icons/emoticon-cool.svg" });
+var lightIcon = new Icon({ src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icons/emoticon-cool-outline.svg" });
 /**
 * Single feature style, users for clusters with 1 feature and cluster circles.
 * 单个要素的图标样式函数（同时服务于仅含 1 个要素的聚合点，以及环形蛛网展开后的每个子要素点）
@@ -126,7 +126,7 @@ var clusterSource = new Cluster({
 	distance: 35,
 	source: new VectorSource({
 		format: new GeoJSON(),
-		url: "data/geojson/photovoltaic.json"
+		url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/photovoltaic.json"
 	})
 });
 var clusterHulls = new VectorLayer({

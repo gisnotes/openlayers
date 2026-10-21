@@ -431,7 +431,7 @@ const styleVariables &#x3D; {
 };
 
 const source &#x3D; new VectorSource({
-  url: &#x27;data/geojson/switzerland.geojson&#x27;,
+  url: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/switzerland.geojson&#x27;,
   format: new GeoJSON(),
 });
 
@@ -467,7 +467,7 @@ const getStyle &#x3D; (dash, pattern) &#x3D;&gt; {
     delete newStyle[&#x27;stroke-color&#x27;];
     newStyle &#x3D; {
       ...newStyle,
-      &#x27;stroke-pattern-src&#x27;: &#x27;data/dot.svg&#x27;,
+      &#x27;stroke-pattern-src&#x27;: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/dot.svg&#x27;,
       &#x27;stroke-pattern-spacing&#x27;: [&#x27;var&#x27;, &#x27;patternSpacing&#x27;],
       &#x27;stroke-pattern-start-offset&#x27;: [&#x27;var&#x27;, &#x27;patternOffset&#x27;],
     };

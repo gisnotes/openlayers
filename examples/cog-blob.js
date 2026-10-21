@@ -1,6 +1,6 @@
 import { $ as GeoTIFFSource, Dr as Map, at as WebGLTileLayer } from "./common.js";
 //#region examples/cog-blob.js
-fetch("data/example.tif").then((response) => response.blob()).then((blob) => {
+fetch("https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/example.tif").then((response) => response.blob()).then((blob) => {
 	const source = new GeoTIFFSource({ sources: [{ blob }] });
 	new Map({
 		target: "map",

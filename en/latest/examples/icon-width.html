@@ -411,7 +411,7 @@ const iconFeature &#x3D; new Feature({
 // 原图 data/icon.png 尺寸为 32x48，因此初始会被非等比拉伸为 40x40，内部 scale 为 [40/32, 40/48] &#x3D; [1.25, 0.83]
 const iconStyle &#x3D; new Style({
   image: new Icon({
-    src: &#x27;data/icon.png&#x27;,
+    src: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icon.png&#x27;,
     width: Number(widthInput.value),
     height: Number(heightInput.value),
   }),
@@ -423,7 +423,7 @@ widthInput.addEventListener(&#x27;input&#x27;, (event) &#x3D;&gt; {
   const currentIcon &#x3D; iconStyle.getImage();
   iconStyle.setImage(
     new Icon({
-      src: &#x27;data/icon.png&#x27;,
+      src: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icon.png&#x27;,
       width: Number(event.target.value),
       height: currentIcon.getHeight(),
     }),
@@ -437,7 +437,7 @@ heightInput.addEventListener(&#x27;input&#x27;, (event) &#x3D;&gt; {
   const currentIcon &#x3D; iconStyle.getImage();
   iconStyle.setImage(
     new Icon({
-      src: &#x27;data/icon.png&#x27;,
+      src: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icon.png&#x27;,
       height: Number(event.target.value),
       width: currentIcon.getWidth(),
     }),
@@ -451,7 +451,7 @@ clearWidthButton.addEventListener(&#x27;click&#x27;, () &#x3D;&gt; {
   const currentIcon &#x3D; iconStyle.getImage();
   iconStyle.setImage(
     new Icon({
-      src: &#x27;data/icon.png&#x27;,
+      src: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icon.png&#x27;,
       height: currentIcon.getHeight(),
     }),
   );
@@ -468,7 +468,7 @@ clearHeightButton.addEventListener(&#x27;click&#x27;, () &#x3D;&gt; {
   const currentIcon &#x3D; iconStyle.getImage();
   iconStyle.setImage(
     new Icon({
-      src: &#x27;data/icon.png&#x27;,
+      src: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icon.png&#x27;,
       width: currentIcon.getWidth(),
     }),
   );

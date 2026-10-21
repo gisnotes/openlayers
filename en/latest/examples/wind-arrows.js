@@ -38,7 +38,7 @@ var map = new Map({
 		zoom: 2
 	})
 });
-fetch("data/openweather/weather.json").then(function(response) {
+fetch("https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/openweather/weather.json").then(function(response) {
 	return response.json();
 }).then(function(data) {
 	const features = [];

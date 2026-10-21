@@ -17,7 +17,7 @@ var styleFunction = function(feature) {
 		styles.push(new Style({
 			geometry: new Point(end),
 			image: new Icon({
-				src: "data/arrow.png",
+				src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/arrow.png",
 				anchor: [.75, .5],
 				rotateWithView: true,
 				rotation: -rotation

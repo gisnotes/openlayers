@@ -5,7 +5,7 @@ var iconFeature = new Feature({ geometry: new Point([0, 0]) });
 var iconStyle = new Style({
 	image: new Icon({
 		anchor: [.5, 1],
-		src: "data/world.png"
+		src: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/world.png"
 	}),
 	text: new Text({
 		text: "World\nText",

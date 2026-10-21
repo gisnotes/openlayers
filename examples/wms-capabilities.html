@@ -185,7 +185,7 @@ const parser &#x3D; new WMSCapabilities();
 
 // Fetch sample WMS Capabilities XML document and parse it into a JavaScript object
 // 请求示例 WMS Capabilities XML 文档并将其解析为结构化 JavaScript 对象
-fetch(&#x27;data/ogcsample.xml&#x27;)
+fetch(&#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/ogcsample.xml&#x27;)
   .then(function (response) {
     return response.text();
   })

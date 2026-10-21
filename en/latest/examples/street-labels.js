@@ -22,7 +22,7 @@ new Map({
 		declutter: true,
 		source: new VectorSource({
 			format: new GeoJSON(),
-			url: "data/geojson/vienna-streets.geojson"
+			url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/vienna-streets.geojson"
 		}),
 		style: function(feature) {
 			style.getText().setText(feature.get("name"));

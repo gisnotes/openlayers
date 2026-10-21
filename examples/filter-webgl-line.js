@@ -4,11 +4,11 @@ import { t as IGC } from "./IGC2.js";
 import { t as WebGLVectorLayer } from "./WebGLVector.js";
 //#region examples/filter-webgl-line.js
 var igcUrls = [
-	"data/igc/Clement-Latour.igc",
-	"data/igc/Damien-de-Baenst.igc",
-	"data/igc/Sylvain-Dhonneur.igc",
-	"data/igc/Tom-Payne.igc",
-	"data/igc/Ulrich-Prinz.igc"
+	"https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/igc/Clement-Latour.igc",
+	"https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/igc/Damien-de-Baenst.igc",
+	"https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/igc/Sylvain-Dhonneur.igc",
+	"https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/igc/Tom-Payne.igc",
+	"https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/igc/Ulrich-Prinz.igc"
 ];
 var source = new VectorSource({ features: [] });
 var format = new IGC();

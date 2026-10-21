@@ -8,7 +8,7 @@ new Map({
 		tileSize: 512
 	}) }), new VectorLayer({
 		source: new VectorSource({
-			url: "data/topojson/world-110m.json",
+			url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/topojson/world-110m.json",
 			format: new TopoJSON({ layers: ["countries"] }),
 			overlaps: false
 		}),

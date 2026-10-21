@@ -824,7 +824,7 @@ function polygonStyleFunction(feature, resolution) {
 
 const vectorPolygons &#x3D; new VectorLayer({
   source: new VectorSource({
-    url: &#x27;data/geojson/polygon-samples.geojson&#x27;,
+    url: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/polygon-samples.geojson&#x27;,
     format: new GeoJSON(),
   }),
   style: polygonStyleFunction,
@@ -843,7 +843,7 @@ function lineStyleFunction(feature, resolution) {
 
 const vectorLines &#x3D; new VectorLayer({
   source: new VectorSource({
-    url: &#x27;data/geojson/line-samples.geojson&#x27;,
+    url: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/line-samples.geojson&#x27;,
     format: new GeoJSON(),
   }),
   style: lineStyleFunction,
@@ -863,7 +863,7 @@ function pointStyleFunction(feature, resolution) {
 
 const vectorPoints &#x3D; new VectorLayer({
   source: new VectorSource({
-    url: &#x27;data/geojson/point-samples.geojson&#x27;,
+    url: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/point-samples.geojson&#x27;,
     format: new GeoJSON(),
   }),
   style: pointStyleFunction,

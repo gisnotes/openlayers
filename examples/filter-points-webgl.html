@@ -345,7 +345,7 @@ updateStatusText();
 
 // Load CSV data / 异步加载陨石撞击 CSV 数据
 const client &#x3D; new XMLHttpRequest();
-client.open(&#x27;GET&#x27;, &#x27;data/csv/meteorite_landings.csv&#x27;);
+client.open(&#x27;GET&#x27;, &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/csv/meteorite_landings.csv&#x27;);
 client.onload &#x3D; function () {
   const csv &#x3D; client.responseText;
   const features &#x3D; [];

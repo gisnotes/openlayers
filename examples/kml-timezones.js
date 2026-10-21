@@ -20,7 +20,7 @@ var styleFunction = function(feature) {
 };
 var vector = new VectorLayer({
 	source: new VectorSource({
-		url: "data/kml/timezones.kml",
+		url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/kml/timezones.kml",
 		format: new KML({ extractStyles: false })
 	}),
 	style: styleFunction

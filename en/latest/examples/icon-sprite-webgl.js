@@ -20,7 +20,7 @@ var pointsLayer = new WebGLVectorLayer({
 	}),
 	style: [{
 		style: {
-			"icon-src": "data/ufo_shapes.png",
+			"icon-src": "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/ufo_shapes.png",
 			"icon-width": 128,
 			"icon-height": 64,
 			"icon-color": [
@@ -94,7 +94,7 @@ function fillShapeSelect(shapeTypes) {
 	});
 }
 var client = new XMLHttpRequest();
-client.open("GET", "data/csv/ufo_sighting_data.csv");
+client.open("GET", "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/csv/ufo_sighting_data.csv");
 client.addEventListener("load", function() {
 	const csv = client.responseText;
 	const shapeTypes = {};

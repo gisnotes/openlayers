@@ -420,10 +420,10 @@ const outerCircle &#x3D; new CircleStyle({
 });
 // 单个光伏设施图标：装机功率 &gt; 5kW 使用深色实心笑脸图标，&lt;&#x3D; 5kW 使用浅色轮廓笑脸图标
 const darkIcon &#x3D; new Icon({
-  src: &#x27;data/icons/emoticon-cool.svg&#x27;,
+  src: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icons/emoticon-cool.svg&#x27;,
 });
 const lightIcon &#x3D; new Icon({
-  src: &#x27;data/icons/emoticon-cool-outline.svg&#x27;,
+  src: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/icons/emoticon-cool-outline.svg&#x27;,
 });
 
 /**
@@ -566,7 +566,7 @@ function clusterStyle(feature) {
 // 原始光伏电站 GeoJSON 矢量数据源
 const vectorSource &#x3D; new VectorSource({
   format: new GeoJSON(),
-  url: &#x27;data/geojson/photovoltaic.json&#x27;,
+  url: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/photovoltaic.json&#x27;,
 });
 
 // 聚合数据源（聚合像素距离 35px），同时供给下方 3 个不同职责的 VectorLayer 共享使用

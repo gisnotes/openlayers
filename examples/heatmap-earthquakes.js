@@ -7,7 +7,7 @@ var blur = document.getElementById("blur");
 var radius = document.getElementById("radius");
 var vector = new Heatmap({
 	source: new VectorSource({
-		url: "data/kml/2012_Earthquakes_Mag5.kml",
+		url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/kml/2012_Earthquakes_Mag5.kml",
 		format: new KML({ extractStyles: false })
 	}),
 	blur: parseInt(blur.value, 10),

@@ -211,7 +211,7 @@ const map &#x3D; new Map({
 // 存放交互式 SVG DOM 节点的容器元素
 const svgContainer &#x3D; document.createElement(&#x27;div&#x27;);
 const xhr &#x3D; new XMLHttpRequest();
-xhr.open(&#x27;GET&#x27;, &#x27;data/world.svg&#x27;);
+xhr.open(&#x27;GET&#x27;, &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/world.svg&#x27;);
 xhr.addEventListener(&#x27;load&#x27;, function () {
   const svg &#x3D; xhr.responseXML.documentElement;
   svgContainer.ownerDocument.importNode(svg);

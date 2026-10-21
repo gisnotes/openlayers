@@ -831,7 +831,7 @@ var windData = new Promise((resolve, reject) => {
 	image.onerror = () => {
 		reject(/* @__PURE__ */ new Error("failed to load"));
 	};
-	image.src = "./data/wind.png";
+	image.src = "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/wind.png";
 });
 /**
 * 标量双线性插值函数：根据水平与垂直方向的小数偏移权重（xAlong, yAlong），对四个相邻格点值进行平滑插值

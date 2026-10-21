@@ -366,7 +366,7 @@ const flightsSource &#x3D; new VectorSource({
     &#x27;Flight data by &#x27; +
     &#x27;&lt;a href&#x3D;&quot;https://openflights.org/data.html&quot;&gt;OpenFlights&lt;/a&gt;,&#x27;,
   loader: function () {
-    const url &#x3D; &#x27;data/openflights/flights.json&#x27;;
+    const url &#x3D; &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/openflights/flights.json&#x27;;
     fetch(url)
       .then(function (response) {
         return response.json();

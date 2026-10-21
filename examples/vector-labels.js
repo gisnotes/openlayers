@@ -137,7 +137,7 @@ function polygonStyleFunction(feature, resolution) {
 }
 var vectorPolygons = new VectorLayer({
 	source: new VectorSource({
-		url: "data/geojson/polygon-samples.geojson",
+		url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/polygon-samples.geojson",
 		format: new GeoJSON()
 	}),
 	style: polygonStyleFunction
@@ -153,7 +153,7 @@ function lineStyleFunction(feature, resolution) {
 }
 var vectorLines = new VectorLayer({
 	source: new VectorSource({
-		url: "data/geojson/line-samples.geojson",
+		url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/line-samples.geojson",
 		format: new GeoJSON()
 	}),
 	style: lineStyleFunction
@@ -173,7 +173,7 @@ function pointStyleFunction(feature, resolution) {
 }
 var vectorPoints = new VectorLayer({
 	source: new VectorSource({
-		url: "data/geojson/point-samples.geojson",
+		url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/point-samples.geojson",
 		format: new GeoJSON()
 	}),
 	style: pointStyleFunction

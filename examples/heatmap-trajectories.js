@@ -6,7 +6,7 @@ var blur = document.getElementById("blur");
 var radius = document.getElementById("radius");
 var heatmap = new Heatmap({
 	source: new VectorSource({
-		url: "data/geojson/ship-trajectories.json",
+		url: "https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/ship-trajectories.json",
 		format: new GeoJSON(),
 		attributions: "Danish Maritime Authority"
 	}),

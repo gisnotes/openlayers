@@ -436,7 +436,7 @@ const styleCache &#x3D; {};
 // 地震矢量点图层：从 KML 加载数据，并通过动态 style 函数配合 toContext 离屏绘制闪电图标
 const vector &#x3D; new VectorLayer({
   source: new VectorSource({
-    url: &#x27;data/kml/2012_Earthquakes_Mag5.kml&#x27;,
+    url: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/kml/2012_Earthquakes_Mag5.kml&#x27;,
     format: new KML({
       // 禁用 KML 内置样式提取，完全由自定义 style 函数接管视觉表现
       extractStyles: false,

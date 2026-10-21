@@ -162,7 +162,7 @@ import GeoTIFF from &#x27;ol/source/GeoTIFF.js&#x27;;
 
 // Fetch the TIFF file as a binary Blob
 // 发起网络请求并将 TIFF 文件获取为二进制 Blob 对象
-fetch(&#x27;data/example.tif&#x27;)
+fetch(&#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/example.tif&#x27;)
   .then((response) &#x3D;&gt; response.blob())
   .then((blob) &#x3D;&gt; {
     // Construct a GeoTIFF source from the in-memory Blob

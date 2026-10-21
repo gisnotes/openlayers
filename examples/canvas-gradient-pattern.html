@@ -317,7 +317,7 @@ gradient.addColorStop(1, &#x27;purple&#x27;); // 6/6 处：紫
 const vectorLayer &#x3D; new VectorLayer({
   background: &#x27;white&#x27;, // 设置图层背景为纯白色（无需加载底图瓦片）
   source: new VectorSource({
-    url: &#x27;data/kml/states.kml&#x27;,
+    url: &#x27;https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/kml/states.kml&#x27;,
     // 关键配置：设为 false 以忽略 KML 文件内部自带的样式，从而让当前图层的渐变 style 生效
     format: new KML({extractStyles: false}),
   }),

@@ -89,7 +89,7 @@ function download(fullpath, filename) {
 	});
 }
 document.getElementById("download-kmz").addEventListener("click", function() {
-	download("data/kmz/iceland.kmz", "iceland.kmz");
+	download("https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/kmz/iceland.kmz", "iceland.kmz");
 });
 //#endregion
 

@@ -2,7 +2,7 @@ import { $n as VectorLayer, Cn as GeoJSON, Dr as Map, Jn as MultiPoint, Ki as Po
 import { n as OSM } from "./OSM.js";
 //#region examples/jsts.js
 var source = new VectorSource();
-fetch("data/geojson/roads-seoul.geojson").then(function(response) {
+fetch("https://cdn.jsdelivr.net/gh/gisnotes/openlayers@gh-pages/examples/data/geojson/roads-seoul.geojson").then(function(response) {
 	return response.json();
 }).then(function(json) {
 	const features = new GeoJSON().readFeatures(json, { featureProjection: "EPSG:3857" });
