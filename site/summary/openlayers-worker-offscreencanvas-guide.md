@@ -1,8 +1,15 @@
+---
+title: OpenLayers 离屏画布（OffscreenCanvas）与多线程 Web Worker 渲染实战架构指南
+layout: default.hbs
+---
+
+<nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">OffscreenCanvas 与 Web Worker 架构指南</li></ol></nav>
+
 # OpenLayers 离屏画布（OffscreenCanvas）与多线程 Web Worker 渲染实战架构指南
 
 > 在传统 WebGIS 架构中，所有图层渲染、投影计算、矢量瓦片（MVT PBF）反序列化和文本注记排版都运行在浏览器的**主线程（Main Thread）**上。当加载复杂矢量切片或高密度数据时，主线程 CPU 很容易被打满，导致页面滚动卡顿、按钮点击迟钝甚至掉帧白屏。
 >
-> 随着现代浏览器标准对 **`OffscreenCanvas`（离屏画布）** 与 **Transferable `ImageBitmap`（零拷贝显存转移）** 的完善支持，OpenLayers 实现了将繁重的渲染作业完全剥离到后台 **Web Worker** 子线程的革命性能力。本文基于 2 个官方核心前沿示例（`offscreen-canvas.html`、`tiled-layer-rendering-in-offscreen-canvas.html`），系统解构全图层委托与瓦片微任务多线程架构的底层原理与生产选型。
+> 随着现代浏览器标准对 **`OffscreenCanvas`（离屏画布）** 与 **Transferable `ImageBitmap`（零拷贝显存转移）** 的完善支持，OpenLayers 实现了将繁重的渲染作业完全剥离到后台 **Web Worker** 子线程的革命性能力。本文基于 2 个官方核心前沿示例（[`offscreen-canvas`](../en/latest/examples/offscreen-canvas.html)、[`tiled-layer-rendering-in-offscreen-canvas`](../en/latest/examples/tiled-layer-rendering-in-offscreen-canvas.html)），系统解构全图层委托与瓦片微任务多线程架构的底层原理与生产选型。
 
 ---
 
@@ -46,7 +53,7 @@ flowchart TD
 
 | 维度 / 模式 | 范式一：全幅图层委托架构 | 范式二：瓦片级微任务架构 |
 | :--- | :--- | :--- |
-| **典型示例** | `offscreen-canvas.html` | `tiled-layer-rendering-in-offscreen-canvas.html` |
+| **典型示例** | [`offscreen-canvas`](../en/latest/examples/offscreen-canvas.html) | [`tiled-layer-rendering-in-offscreen-canvas`](../en/latest/examples/tiled-layer-rendering-in-offscreen-canvas.html) |
 | **Worker 内部对象** | 无头图层组、TileQueue、MVT 解析器 | 完整的无头 `ol/Map` 与独立 `View` |
 | **画布规格** | 随视口动态调整（如 1920×1080） | 固定切片网格规格（如 512×512） |
 | **手势延迟补偿** | **必需**：通过 CSS Transform 补偿时空差 | **天然免除**：由主线程标准 TileLayer 自动无缝拼接 |
@@ -56,9 +63,9 @@ flowchart TD
 
 ---
 
-## 2. 全幅图层委托与时空仿射补偿机制（`offscreen-canvas.html`）
+## 2. 全幅图层委托与时空仿射补偿机制（[`offscreen-canvas`](../en/latest/examples/offscreen-canvas.html)）
 
-在 `offscreen-canvas.html` 中，主线程与 Worker 之间存在典型的“交互快、渲染慢”异步时空差。
+在 [`offscreen-canvas`](../en/latest/examples/offscreen-canvas.html) 中，主线程与 Worker 之间存在典型的“交互快、渲染慢”异步时空差。
 
 ### 2.1 仿射矩阵几何补偿（Anti-Jitter Transform）
 当用户拖拽地图时，主线程立刻获得最新的 `mainThreadFrameState`，而 Worker 可能还在渲染 16ms 之前的 `workerFrameState`。若直接将 Worker 传回的图像贴在屏幕上，会出现严重的画面拉扯和抖动。
@@ -101,7 +108,7 @@ createImageBitmap(image, 0, 0, image.width, image.height).then((imageBitmap) => 
 
 ---
 
-## 3. 瓦片级微任务架构与无头地图（`tiled-layer-rendering-in-offscreen-canvas.html`）
+## 3. 瓦片级微任务架构与无头地图（[`tiled-layer-rendering-in-offscreen-canvas`](../en/latest/examples/tiled-layer-rendering-in-offscreen-canvas.html)）
 
 瓦片级模式将主线程与子线程的关系精简到极致：
 
@@ -192,3 +199,10 @@ if (!rendering) {
 ### 5.3 跨域（CORS）与 Transferable 显存防暴涨
 - `ImageBitmap` 转移具有**破坏性**（调用 `transferToImageBitmap()` 后原画布内容被清空并重置）。
 - 确保所有瓦片和字体资源允许跨域访问（`Access-Control-Allow-Origin: *`），否则 `createImageBitmap()` 会抛出安全上下文受限异常。
+
+---
+
+## 6. 关联官方示例列表
+
+1. [`offscreen-canvas`](../en/latest/examples/offscreen-canvas.html) - 全幅图层委托、Mapbox 矢量切片多线程解码与仿射几何补偿
+2. [`tiled-layer-rendering-in-offscreen-canvas`](../en/latest/examples/tiled-layer-rendering-in-offscreen-canvas.html) - 瓦片级微任务架构、无头 Map 实例与 OffscreenCanvas 512×512 烘焙
