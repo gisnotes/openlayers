@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8">
+    <meta name='viewport' content='width=device-width, initial-scale=1.0'>
+    <title>OpenLayers - OpenLayers 图层选型指南：Vector 与 VectorImage 深度解析</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/toolbar/prism-toolbar.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.28.0/plugins/copy-to-clipboard/prism-copy-to-clipboard.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css?family=Quattrocento+Sans:400,400italic,700" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/fontawesome.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/solid.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@6.1.2/css/brands.css" crossorigin="anonymous">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/ol.css">
+    <link rel="stylesheet" type="text/css" href="/openlayers/theme/site.css">
+    <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-light.svg" media="(prefers-color-scheme: light)" />
+    <link rel="icon" type="image/svg+xml" href="/openlayers/theme/img/logo-dark.svg" media="(prefers-color-scheme: dark)" />
+  </head>
+  <body>
+    <header class="navbar navbar-expand-md navbar-dark mb-3 px-3 py-0 fixed-top" role="navigation">
+      <a class="navbar-brand" href="/openlayers"><img src="/openlayers/theme/img/logo-dark.svg" width="70" height="70" alt="">&nbsp;OpenLayers</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#olmenu" aria-controls="olmenu" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+      <!-- menu items that get hidden below 768px width -->
+      <nav class="collapse navbar-collapse" id="olmenu">
+        <ul class="nav navbar-nav ms-auto">
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="docdropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Docs</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="docdropdown">
+              <a class="dropdown-item" href="/openlayers/doc/">Docs</a>
+              <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/doc/quickstart.html"><i class="fa fa-check fa-fw me-2 fa-lg"></i>Quick Start</a>
+                <a class="dropdown-item" href="/openlayers/doc/faq.html"><i class="fa fa-question fa-fw me-2 fa-lg"></i>FAQ</a>
+                <a class="dropdown-item" href="/openlayers/doc/tutorials/"><i class="fa fa-book fa-fw me-2 fa-lg"></i>Tutorials</a>
+                <a class="dropdown-item" href="/openlayers/workshop/"><i class="fa fa-graduation-cap fa-fw me-2 fa-lg"></i>Workshop</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="https://stackoverflow.com/questions/tagged/openlayers"><i class="fab fa-stack-overflow fa-fw me-2"></i>Ask a Question</a>
+                <div class="dropdown-divider"></div>
+                <a class="dropdown-item" href="/openlayers/summary/"><i class="fa fa-clipboard-list fa-fw me-2 fa-lg"></i>Summary</a>
+            </div>
+          </li>
+          <li class="nav-item"><a class="nav-link" href="/openlayers/en/latest/examples/">Examples</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="apidropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+              <i class="fa fa-sitemap me-1"></i>API
+            </a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="apidropdown">
+              <a class="dropdown-item" href="/openlayers/en/latest/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>dev (latest)</a>
+              <a class="dropdown-item" href="/openlayers/en/v9.2.4/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v9.2.4</a>
+              <a class="dropdown-item" href="/openlayers/en/v8.2.0/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v8.2.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v7.5.2/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v7.5.2</a>
+              <a class="dropdown-item" href="/openlayers/en/v6.15.1/apidoc/"><i class="fa fa-sitemap a-fw me-2 fa-lg"></i>v6.15.1</a>
+              <a class="dropdown-item" href="/openlayers/en/v5.3.0/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v5.3.0</a>
+              <a class="dropdown-item" href="/openlayers/en/v4.6.5/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v4.6.5</a>
+              <a class="dropdown-item" href="/openlayers/en/v3.20.1/apidoc/"><i class="fa fa-sitemap fa-fw me-2 fa-lg"></i>v3.20.1</a>
+            </div>
+          </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" id="codedropdown" role="button" data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">Code</a>
+            <div class="dropdown-menu dropdown-menu-end mb-3" aria-labelledby="codedropdown">
+              <a class="dropdown-item" href="https://github.com/openlayers/openlayers"><i class="fab fa-github fa-fw me-2 fa-lg"></i>Repository</a>
+              <a class="dropdown-item" href="/openlayers/download/"><i class="fa fa-download fa-fw me-2 fa-lg"></i>Download</a>
+            </div>
+          </li>
+        </ul>
+      </nav>
+    </header>
+
+    <div class="container">
+      <nav aria-label="breadcrumb"><ol class="breadcrumb mb-4"><li class="breadcrumb-item"><a href="../">Home</a></li><li class="breadcrumb-item"><a href="./">Summary</a></li><li class="breadcrumb-item active" aria-current="page">Vector 与 VectorImage 选型指南</li></ol></nav>
+
+<h1 id="openlayers-图层选型指南：vector-与-vectorimage-深度解析">OpenLayers 图层选型指南：Vector 与 VectorImage 深度解析</h1>
+<p>在 WebGIS 开发（特别是管网大屏、轨迹监控、巡检业务）中，合理选择图层类型是保障地图渲染流畅度与消除显示异常的关键。本文系统总结 <code>ol/layer/Vector</code> 与 <code>ol/layer/VectorImage</code> 的底层渲染原理、性能差异、典型场景及架构最佳实践。</p>
+<hr>
+<h2 id="1-核心底层渲染机制对比">1. 核心底层渲染机制对比</h2>
+<table>
+<thead>
+<tr>
+<th align="left">维度</th>
+<th align="left"><code>ol/layer/Vector</code>（实时矢量图层）</th>
+<th align="left"><code>ol/layer/VectorImage</code>（离屏栅格快照图层）</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="left"><strong>渲染机制</strong></td>
+<td align="left"><strong>实时逐帧矢量重绘</strong><br>每帧（约 16ms / 60fps）直接通过 HTML5 Canvas 2D 上下文遍历当前视口要素，调用 <code>beginPath()</code>、<code>lineTo()</code>、<code>stroke()</code>、<code>fill()</code> 等实时重绘。</td>
+<td align="left"><strong>离屏栅格化快照（Offscreen Snapshot）</strong><br>在后台离屏 Canvas 中将矢量要素烘焙为一张“静态图片”，地图渲染时直接通过 <code>drawImage()</code> 贴图。</td>
+</tr>
+<tr>
+<td align="left"><strong>平移漫游（Pan）</strong></td>
+<td align="left">每一帧都重新实时计算几何坐标并绘制，要素多时（数万顶点）严重占用主线程，易造成<strong>掉帧和拖拽卡顿</strong>。</td>
+<td align="left">直接移动已生成的离屏图片，与普通切片底图一样轻量，<strong>平移极度丝滑</strong>。</td>
+</tr>
+<tr>
+<td align="left"><strong>缩放动画（Zoom）</strong></td>
+<td align="left">每一帧重新计算像素坐标，<strong>绝对锐利清晰、无锯齿变形</strong>。</td>
+<td align="left">缩放过程中对上一帧静态图片应用 CSS / Canvas 矩阵拉伸，待缩放停止后才重绘生成新快照，<strong>缩放瞬间有轻微像素拉伸感</strong>。</td>
+</tr>
+<tr>
+<td align="left"><strong>动态更新与要素追加</strong></td>
+<td align="left">要素增删改（<code>addFeature</code> / <code>setGeometry</code>）或坐标变化，下一帧立即精准响应，<strong>完美适配动画与高频数据流</strong>。</td>
+<td align="left">高频修改数据源会导致离屏 Canvas 频繁销毁重建；若与地图拖拽交互并发，易产生<strong>图像拉伸撕裂、残影与颜色拖影</strong>。</td>
+</tr>
+<tr>
+<td align="left"><strong>性能瓶颈</strong></td>
+<td align="left"><strong>几何复杂度与要素数量</strong><br>（受顶点数、线段数影响严重）</td>
+<td align="left"><strong>视口尺寸与离屏 Canvas 分辨率</strong><br>（对要素数量不敏感，但超大分辨率会有内存开销）</td>
+</tr>
+</tbody></table>
+<hr>
+<h2 id="2-为什么项目渲染大量管网时-vectorimage-表现优异？">2. 为什么项目渲染大量管网时 VectorImage 表现优异？</h2>
+<p>在地下管网（燃气、供水、排水、供热等）场景中：</p>
+<ol>
+<li><strong>数据体量庞大</strong>：一个城区或工业园区的管线往往包含数万至数十万个拐点和折线段；</li>
+<li><strong>数据具静态特征</strong>：管网数据载入地图后，走向、管径、拓扑关系固定，不会每秒频繁变动；</li>
+<li><strong>主要操作以平移漫游为主</strong>：用户主要在地图上平移查看各个路段与管段分布。</li>
+</ol>
+<blockquote>
+<ul>
+<li>若使用 <code>Vector</code>：每次鼠标微小拖动，浏览器必须在 16ms 限制内遍历数万个顶点进行数学投影转换并触发底层绘制，主线程被撑满，引起地图拖拽卡顿；</li>
+<li>若使用 <code>VectorImage</code>：管网载入后已预先烘焙在离屏图片中，拖拽地图时仅需执行一次 <code>ctx.drawImage(img, dx, dy, ...)</code>，性能消耗与要素数量无关，因此<strong>万级管线平移依然流畅如丝</strong>。</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="3-适用场景划分标准">3. 适用场景划分标准</h2>
+<h3 id="31-强烈推荐使用-vectorimage-的场景（海量--静态）">3.1 强烈推荐使用 <code>VectorImage</code> 的场景（“海量 + 静态”）</h3>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;海量要素 (数千~数十万)&quot;] --&gt; C[&quot;数据静态 (不随时间频繁变动)&quot;]
+    C --&gt; D[&quot;主要操作为地图平移/漫游&quot;]
+    D --&gt; E[&quot;选用 VectorImage&quot;]
+</code></pre>
+<ul>
+<li><strong>城市级管线管网系统</strong>：燃气中低压管线、供排水管网、供热管网、通信光缆；</li>
+<li><strong>复杂交通网络</strong>：道路中线、路网拓扑、铁路轨道线；</li>
+<li><strong>大范围面状区划</strong>：行政边界、供气片区边界、网格化巡检单元、地籍地块面；</li>
+<li><strong>密集背景要素点</strong>：阀门井、调压箱、防腐测试桩等万级静态打点。</li>
+</ul>
+<p><strong>优化配置建议</strong>：
+实例化 <code>VectorImage</code> 时可调优 <code>imageRatio</code> 参数（默认通常为 1.15~1.5）：</p>
+<pre><code class="language-javascript">import VectorImageLayer from &#39;ol/layer/VectorImage&#39;;
+
+const pipeLayer = new VectorImageLayer({
+  source: pipeSource,
+  imageRatio: 1.5, // 离屏画布扩展比率，增大可减少快速拖拽时的边缘留白
+  renderBuffer: 200,
+});
+</code></pre>
+<hr>
+<h3 id="32-必须使用标准-vector-的场景（动态--交互--小体量）">3.2 必须使用标准 <code>Vector</code> 的场景（“动态 + 交互 + 小体量”）</h3>
+<pre><code class="language-mermaid">flowchart LR
+    A[&quot;动态数据流 / 交互标绘&quot;] --&gt; C[&quot;高频位置更新 / 动画回放&quot;]
+    C --&gt; D[&quot;要素体量适中 (几百以内)&quot;]
+    D --&gt; E[&quot;选用 Vector (VectorLayer)&quot;]
+</code></pre>
+<ul>
+<li><strong>轨迹回放与 GPS 实时监控</strong>：<ul>
+<li>巡检人员、电瓶车、小黄车轨迹回放组件（如 <code>Playback.vue</code>）；</li>
+<li>定时器高频触发 <code>addFeature</code>、<code>setGeometry</code> 绘制线段与移动图标。</li>
+</ul>
+</li>
+<li><strong>交互编辑与标绘图层</strong>：<ul>
+<li>鼠标测距、测面工具；</li>
+<li>管网绘制、标注添加、要素顶点拖拽（<code>ol/interaction/Modify</code>、<code>Draw</code>）；</li>
+<li>鼠标悬浮高亮（Hover Highlight）。</li>
+</ul>
+</li>
+<li><strong>告警与动画特效</strong>：<ul>
+<li>压力超标报警闪烁点、水流动态箭头、粒子流向。</li>
+</ul>
+</li>
+<li><strong>业务详情弹窗局域展示</strong>：<ul>
+<li>弹窗内仅展示单条巡检轨迹或周边数十个隐患点时，<code>Vector</code> 耗时 &lt; 1ms，能提供最纯净、无失真的矢量表现。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="4-webgis-项目架构最佳实践：动静分层">4. WebGIS 项目架构最佳实践：“动静分层”</h2>
+<p>为兼顾海量数据的承载力与动态业务的零延迟、零残影，推荐在系统设计时贯彻<strong>动静分层管理</strong>模式：</p>
+<pre><code class="language-mermaid">flowchart TD
+    Map[&quot;OpenLayers Map 实例&quot;]
+    
+    subgraph StaticLayers [&quot;底图与海量业务底图 (性能优先)&quot;]
+        Tianditu[&quot;天地图 WMTS 瓦片底图&quot;]
+        PipeVecImg[&quot;管网图层 (VectorImage)&quot;]
+        BoundaryVecImg[&quot;网格/边界图层 (VectorImage)&quot;]
+    end
+    
+    subgraph DynamicLayers [&quot;动态业务与交互层 (实时精准)&quot;]
+        PlaybackLayer[&quot;轨迹回放图层 (Vector Layer)&quot;]
+        RealtimeGps[&quot;巡检员/车辆实时定位 (Vector Layer)&quot;]
+        AlarmLayer[&quot;告警闪烁点 (Vector Layer)&quot;]
+        DrawLayer[&quot;测量标绘/交互层 (Vector Layer)&quot;]
+    end
+    
+    Map --&gt; StaticLayers
+    Map --&gt; DynamicLayers
+</code></pre>
+<h3 id="总结口诀">总结口诀</h3>
+<ul>
+<li><strong>管线面网体量大，离屏快照用 <code>VectorImage</code>；</strong></li>
+<li><strong>轨迹动画高频动，实时绘制选 <code>Vector</code>。</strong></li>
+</ul>
+<hr>
+<h2 id="5-关联官方示例参考">5. 关联官方示例参考</h2>
+<ul>
+<li><a href="../en/latest/examples/image-vector-layer.html"><code>image-vector-layer</code></a> - <code>ol/layer/VectorImage</code> 离屏图片预渲染视口要素示例</li>
+<li><a href="../en/latest/examples/dynamic-data.html"><code>dynamic-data</code></a> - <code>postrender</code> 动态数据流与矢量动画实时渲染</li>
+<li><a href="../en/latest/examples/draw-and-modify-features.html"><code>draw-and-modify-features</code></a> - 矢量要素交互式绘制与顶点动态修改</li>
+</ul>
+
+    </div>
+    <footer>
+      Code licensed under the <a href='http://www.tldrlegal.com/license/bsd-2-clause-license-(freebsd)'>2-Clause BSD</a>.
+      All documentation <a href='http://creativecommons.org/licenses/by/3.0/'>CC BY 3.0</a>.
+      Thanks to our <a href='https://opencollective.com/openlayers'>sponsors</a>.
+      <br>
+      <a href="https://www.netlify.com">This site is powered by Netlify.</a>
+    </footer>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMath() {
+          if (typeof renderMathInElement === 'function') {
+            renderMathInElement(document.body, {
+              delimiters: [
+                {left: '$$', right: '$$', display: true},
+                {left: '$', right: '$', display: false},
+                {left: '\\(', right: '\\)', display: false},
+                {left: '\\[', right: '\\]', display: true}
+              ],
+              ignoredTags: ['script', 'noscript', 'style', 'textarea', 'pre', 'code'],
+              throwOnError: false
+            });
+          } else {
+            setTimeout(renderMath, 50);
+          }
+        }
+        renderMath();
+      });
+    </script>
+    <script defer src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+    <script>
+      document.addEventListener('DOMContentLoaded', function () {
+        function renderMermaid() {
+          if (window.mermaid) {
+            if (window.__mermaidInitialized) {
+              return;
+            }
+            window.__mermaidInitialized = true;
+            mermaid.initialize({
+              startOnLoad: false,
+              theme: 'default',
+              securityLevel: 'loose'
+            });
+            const codeBlocks = document.querySelectorAll('pre code.language-mermaid, pre code.mermaid');
+            if (codeBlocks.length > 0) {
+              codeBlocks.forEach(function (el) {
+                const pre = el.parentElement;
+                const wrapper = pre.closest('.code-toolbar') || pre;
+                const div = document.createElement('div');
+                div.className = 'mermaid';
+                div.textContent = el.textContent;
+                wrapper.parentElement.replaceChild(div, wrapper);
+              });
+              mermaid.run();
+            }
+          } else {
+            setTimeout(renderMermaid, 50);
+          }
+        }
+        renderMermaid();
+      });
+    </script>
+  </body>
+</html>
