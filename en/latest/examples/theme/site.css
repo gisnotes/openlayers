@@ -620,3 +620,24 @@ table.featureInfo {
   white-space: nowrap;
 }
 
+/* ==========================================================================
+   Mermaid Diagrams Styling
+   ========================================================================== */
+.mermaid {
+  text-align: center;
+  margin: 1.5rem auto;
+  padding: 1.25rem;
+  background-color: var(--ol-accent-background-color, #f8f9fa);
+  border: 1px solid #d0d7de;
+  border-radius: 6px;
+  overflow-x: auto;
+}
+
+.mermaid svg {
+  max-width: 100%;
+  height: auto;
+  display: block;
+  margin: 0 auto;
+}
+
+
