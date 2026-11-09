@@ -22,10 +22,14 @@ const isTemplateJs = /\/(?:bootstrap(?:\.bundle)?)(?:\.min)?\.js(?:\?.*)?$/;
 const isTemplateCss =
   /\/(?:bootstrap|fontawesome-free@[\d.]+\/css\/(?:fontawesome|brands|solid))(?:\.min)?\.css(?:\?.*)?$/;
 
-const exampleNames = fs
-  .readdirSync(examplesDir)
-  .filter((name) => /^(?!index).*\.html$/.test(name))
-  .map((name) => name.replace(/\.html$/, ''));
+// 动态读取示例列表，而不是在模块加载时缓存，这样 `vite serve` 期间
+// 新增 / 删除示例文件无需重启开发服务器即可生效。
+function getExampleNames() {
+  return fs
+    .readdirSync(examplesDir)
+    .filter((name) => /^(?!index).*\.html$/.test(name))
+    .map((name) => name.replace(/\.html$/, ''));
+}
 
 function getPackageInfo() {
   return fse.readJSON(path.resolve(repoRoot, 'package.json'));
@@ -325,6 +329,7 @@ class ExampleBuilder {
 }
 
 async function buildExamples(builder) {
+  const exampleNames = getExampleNames();
   const exampleData = await Promise.all(
     exampleNames.map((name) => builder.parseExample(examplesDir, name)),
   );
@@ -393,9 +398,9 @@ export default function exampleBuilder(config) {
   return {
     name: 'example-builder',
     configureServer(server) {
-      server.watcher.on('change', (file) => {
+      const normalizedDir = path.resolve(examplesDir);
+      const invalidateCache = (file) => {
         const normalizedFile = path.resolve(file);
-        const normalizedDir = path.resolve(examplesDir);
         if (
           normalizedFile.startsWith(normalizedDir) &&
           (file.endsWith('.html') ||
@@ -404,7 +409,12 @@ export default function exampleBuilder(config) {
         ) {
           cachedAssets = undefined;
         }
-      });
+      };
+      // `add` / `unlink` 让新增或删除示例后无需重启开发服务器，
+      // 标签汇总（`examples-info.js`）会自动重建。
+      server.watcher.on('change', invalidateCache);
+      server.watcher.on('add', invalidateCache);
+      server.watcher.on('unlink', invalidateCache);
 
       server.middlewares.use(async (req, res, next) => {
         try {
@@ -464,7 +474,7 @@ export default function exampleBuilder(config) {
           }
 
           const htmlMatch = url.match(/^\/([\w-]+)\.html$/);
-          if (htmlMatch && exampleNames.includes(htmlMatch[1])) {
+          if (htmlMatch && getExampleNames().includes(htmlMatch[1])) {
             const assets = await getAssets();
             let html = assets[`${htmlMatch[1]}.html`];
             if (html) {
